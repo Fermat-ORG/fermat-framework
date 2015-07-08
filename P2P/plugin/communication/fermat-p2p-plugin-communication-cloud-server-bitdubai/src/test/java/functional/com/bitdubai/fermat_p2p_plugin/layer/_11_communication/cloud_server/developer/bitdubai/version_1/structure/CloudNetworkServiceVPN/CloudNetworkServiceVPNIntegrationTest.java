@@ -56,13 +56,13 @@ public abstract class CloudNetworkServiceVPNIntegrationTest {
 	}
 	
 	protected FMPPacket requestConnection() throws Exception{
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionNetworkServiceVPNPacket(testNetworkService, testParticipants.iterator().next(), testParticipants.iterator().next(), testVPN.getPublicKeyIdentity());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionNetworkServiceVPNPacket(testNetworkService, testParticipants.iterator().next(), testParticipants.iterator().next(), testVPN.getIdentityPublicKey());
 		testClient.sendMessage(request);
 		return getResponse();
 	}
 	
 	protected FMPPacket registerConnection() throws Exception{
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testVPN.getPublicKeyIdentity());
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testVPN.getIdentityPublicKey());
 		testClient.sendMessage(register);
 		return getResponse();
 	}

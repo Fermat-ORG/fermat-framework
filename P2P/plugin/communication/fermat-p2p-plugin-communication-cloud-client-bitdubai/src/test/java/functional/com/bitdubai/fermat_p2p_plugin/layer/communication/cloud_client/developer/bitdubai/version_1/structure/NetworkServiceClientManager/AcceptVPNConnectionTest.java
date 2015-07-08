@@ -14,7 +14,7 @@ public class AcceptVPNConnectionTest extends NetworkServiceClientManagerIntegrat
 	@Test
 	public void AcceptPendingVPNRequest_ReceivesAcceptForward_ActiveVPNStarted() throws Exception{
 		setUp(TCP_PORT_PADDING + 3);
-		testClient.requestVPNConnection(testClient.getPublicKey());
+		testClient.requestVPNConnection(testClient.getIdentityPublicKey());
 		Thread.sleep(getThreadSleepMillis());
 		CloudClientCommunicationNetworkServiceVPN testVPN = testClient.getActiveVPN(CLIENT_PUBLIC_KEY);
 		assertThat(testVPN.isRunning()).isTrue();

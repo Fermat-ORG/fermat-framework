@@ -8,9 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.develope
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -24,13 +22,16 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventLis
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -109,6 +110,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
         try {
 
+            System.out.println("Starting plugin CloudServerCommunicationPluginRoot");
 
             cloudServiceManagersCache = new HashMap<>();
 
@@ -121,7 +123,6 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
              * Get all network interfaces of the device
              */
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-
 
             while (interfaces.hasMoreElements()) {
 
@@ -140,34 +141,54 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                     /*
                      * Create a cloud service for each ip
                      */
-                    while(networkInterface.getInetAddresses().hasMoreElements()) {
+                    for (InetAddress address : Collections.list(addresses)) {
+
+                        /**
+                         * look only for ipv4 addresses
+                         */
+                         if (address instanceof Inet6Address)
+                            continue;
 
                         /*
-                         * Create a new key pair
+                         * Create a new key pair for his identity
                          */
-                        ECCKeyPair keyPair = new ECCKeyPair();
+                        ECCKeyPair identity = new ECCKeyPair();
 
                         /*
                          * Create the communication chanel communicationChannelAddress
                          */
-                        CommunicationChannelAddress communicationChannelAddress = CommunicationChannelAddressFactory.constructCloudAddress(addresses.nextElement().getHostAddress(), CloudServerCommunicationPluginRoot.LISTENING_PORT);
-
-
-                        String name = networkInterface.getName();
+                        CommunicationChannelAddress communicationChannelAddress = CommunicationChannelAddressFactory.constructCloudAddress(address.getHostAddress(), CloudServerCommunicationPluginRoot.LISTENING_PORT);
 
                         /*
-                         * Create the new cloud service manager and Put into the cache
+                         * Create the new cloud service manager for this address and start
                          */
-                        cloudServiceManagersCache.put(name, new CloudServiceManager(communicationChannelAddress, executorService, keyPair));
+                        CloudServiceManager cloudServiceManager = new CloudServiceManager(communicationChannelAddress, executorService, identity);
+                        cloudServiceManager.start();
+
+                        /*
+                         * Put into the cache
+                         */
+                        cloudServiceManagersCache.put(networkInterface.getName(), cloudServiceManager);
+
+
+                        System.out.println("New CommunicationChannelAddress linked on " + networkInterface.getName());
+                        System.out.println("Host = " + communicationChannelAddress.getHost());
+                        System.out.println("Port = " + communicationChannelAddress.getPort());
+                        System.out.println("Identity Public Key = " + identity.getPublicKey());
+                        System.out.println("Cloud Service Manager on " + networkInterface.getName() + " started.");
 
                     }
 
                 }
+
             }
         } catch (SocketException e) {
             throw new RuntimeException(e);
+        }catch (CloudCommunicationException e) {
+            e.printStackTrace();
         }
 
+        System.out.println("Cloud Services Managers Cache Size = " + cloudServiceManagersCache.size());
 
         /*
          * Set the new status of the service
@@ -226,8 +247,8 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
         returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.CloudServerCommunicationPluginRoot");
         returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager");
         returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceVPN");
-        returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair");
         returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager");
+        returnedClasses.add("com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair");
         /**
          * I return the values.
          */

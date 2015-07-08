@@ -57,7 +57,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		/*
 		 * Validate that the destination is I
 		 */
-		if(!packet.getDestination().equals(getPublicKeyIdentity())) {
+		if(!packet.getDestination().equals(getIdentityPublicKey())) {
             throw constructIncorrectFMPPacketDestinationException(packet, identity.getPublicKey());
         }
 
@@ -120,9 +120,9 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
      */
 	private void processConnectionRequest(final SelectionKey connection, final FMPPacket dataPacket) throws FMPException{
 
-		String sender = getPublicKeyIdentity();
+		String sender = getIdentityPublicKey();
 		String destination = dataPacket.getSender();
-		String messageHash = getPublicKeyIdentity();
+		String messageHash = getIdentityPublicKey();
 		FMPPacketType type = FMPPacketType.CONNECTION_ACCEPT;
 		String signature = AsymmectricCryptography.createMessageSignature(messageHash, identity.getPrivateKey());
 		FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
@@ -132,7 +132,11 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	}
 	
 	private void processNetworkServiceConnectionRequest(final SelectionKey connection, final FMPPacket dataPacket) throws FMPException{
-		String sender = getPublicKeyIdentity();
+
+		System.out.println("Iniciando processNetworkServiceConnectionRequest()");
+
+
+		String sender = getIdentityPublicKey();
 		String destination = dataPacket.getSender();
 		FMPPacketType type;
 		String message;
@@ -140,6 +144,8 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		String signature;
 		
 		NetworkServices networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey()));
+
+		System.out.println("networkService = "+networkService);
 		
 		if(networkServicesRegistry.containsKey(networkService)){
 			type = FMPPacketType.CONNECTION_ACCEPT_FORWARD;
@@ -149,12 +155,15 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 					+ FMPPacket.MESSAGE_SEPARATOR
 					+ networkServicesRegistry.get(networkService).getCommunicationChannelAddress().getPort()
 					+ FMPPacket.MESSAGE_SEPARATOR
-					+ networkServicesRegistry.get(networkService).getPublicKeyIdentity();
+					+ networkServicesRegistry.get(networkService).getIdentityPublicKey();
 			
 		} else {
 			type = FMPPacketType.CONNECTION_DENY;
 			message = "NETWORK SERVICE " + networkService + " IS NOT SUPPORTED BY THE CLOUD SERVER";
 		}
+
+		System.out.println("message = "+message);
+
 		messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
 		signature = AsymmectricCryptography.createMessageSignature(messageHash, identity.getPrivateKey());
 		
@@ -167,7 +176,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		SelectionKey connection = unregisteredConnections.get(packet.getSender());
 		registeredConnections.put(packet.getSender(), connection);
 		unregisteredConnections.remove(packet.getSender());
-		String sender = getPublicKeyIdentity();
+		String sender = getIdentityPublicKey();
 		String destination = packet.getSender();
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey("REGISTERED", destination);		
 		FMPPacketType type = FMPPacketType.DATA_TRANSMIT;

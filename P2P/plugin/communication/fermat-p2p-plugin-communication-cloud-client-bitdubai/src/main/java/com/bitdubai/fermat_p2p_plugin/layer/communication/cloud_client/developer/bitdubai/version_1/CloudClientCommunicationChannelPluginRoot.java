@@ -48,6 +48,11 @@ import java.util.regex.Pattern;
 
 public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
+    private static final String HOST_CLOUD_SERVER = "192.168.1.6";
+
+    private static final int PORT_CLOUD_SERVER = 9090;
+
+
     /**
      * CommunicationChannel Interface member variables.
      */
@@ -88,24 +93,29 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     
     
     public CloudClientCommunicationChannelPluginRoot() {
-		// TODO Auto-generated constructor stub
+
     	this.pluginId = UUID.randomUUID();
     	this.eventManager = null;
     	this.errorManager = null;
-	}
+        this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(CloudClientCommunicationChannelPluginRoot.HOST_CLOUD_SERVER, CloudClientCommunicationChannelPluginRoot.PORT_CLOUD_SERVER);
+
+    }
     
     public CloudClientCommunicationChannelPluginRoot(final String serverHost, final Integer serverPort, final String serverPublicKey){
     	this();
     	this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(serverHost, serverPort);
     	this.serverPublicKey = serverPublicKey;
+        this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(CloudClientCommunicationChannelPluginRoot.HOST_CLOUD_SERVER, CloudClientCommunicationChannelPluginRoot.PORT_CLOUD_SERVER);
+
     }
     
-    public CloudClientCommunicationChannelPluginRoot(final UUID pluginId, final EventManager eventManager, 
-    		final ErrorManager errorManager, final PluginFileSystem pluginFileSystem){
+    public CloudClientCommunicationChannelPluginRoot(final UUID pluginId, final EventManager eventManager, final ErrorManager errorManager, final PluginFileSystem pluginFileSystem){
     	this.pluginId = UUID.fromString(pluginId.toString());
     	this.eventManager = eventManager;
     	this.errorManager = errorManager;
     	this.pluginFileSystem = pluginFileSystem;
+        this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(CloudClientCommunicationChannelPluginRoot.HOST_CLOUD_SERVER, CloudClientCommunicationChannelPluginRoot.PORT_CLOUD_SERVER);
+
     }
 
 	@Override
@@ -118,12 +128,17 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
      */	
     @Override
 	public String getChannelPublicKey() {
-		return cloudClient.getPublicKeyIdentity();
+		return cloudClient.getIdentityPublicKey();
 	}
 
 	@Override
 	public void registerNetworkService(final NetworkServices networkService, String networkServicePublicKey) {
 		try {
+
+            System.out.println("Iniciando registerNetworkService()");
+            System.out.println("networkService = "+networkService);
+            System.out.println("networkServicePublicKey = "+networkServicePublicKey);
+
 			cloudClient.registerNetworkService(networkService, networkServicePublicKey);
 		} catch (CloudCommunicationException e) {
 			System.out.println(errorManager.hashCode());
@@ -138,7 +153,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	@Override
 	public String getNetworkServiceChannelPublicKey(final NetworkServices networkService) {
 		try {
-			return cloudClient.getNetworkServiceClient(networkService).getPublicKeyIdentity();
+			return cloudClient.getNetworkServiceClient(networkService).getIdentityPublicKey();
 		} catch (CloudCommunicationException e) {
 			return null;
 		}
@@ -327,6 +342,10 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
      */
     @Override
     public void start() {
+
+        System.out.println("Starting plugin CloudClientCommunicationChannelPluginRoot");
+        System.out.println("serverAddress "+serverAddress);
+
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -335,13 +354,14 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	ExecutorService executor = Executors.newCachedThreadPool();
     	String clientKey = AsymmectricCryptography.createPrivateKey();
 		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
+
 		try{
     		cloudClient.start();
     		cloudClient.requestConnectionToServer();
     		this.serviceStatus = ServiceStatus.STARTED;
     	} catch(CommunicationException ex){
 			StringBuilder contextBuilder = new StringBuilder();
-			contextBuilder.append("Client Public Key: " + cloudClient.getPublicKeyIdentity());
+			contextBuilder.append("Client Public Key: " + cloudClient.getIdentityPublicKey());
 			contextBuilder.append(FermatException.CONTEXT_CONTENT_SEPARATOR);
 			contextBuilder.append("Server Address: " + cloudClient.getCommunicationChannelAddress().toString());
 

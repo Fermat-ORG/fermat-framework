@@ -27,7 +27,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 public class ConnectionRequestToNetworkServiceTest extends CloudServiceIntegrationTest{
 
 	public void registerConnection() throws Exception{
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKeyIdentity());
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getIdentityPublicKey());
 		testClient.sendMessage(register);
 		FMPPacket response = getResponse();
 		assertThat(response).isNotNull();
@@ -61,7 +61,7 @@ public class ConnectionRequestToNetworkServiceTest extends CloudServiceIntegrati
 		requestConnection();
 		registerConnection();
 		
-		FMPPacket requestNetworkService = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.INTRA_USER,testManager.getPublicKeyIdentity());
+		FMPPacket requestNetworkService = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.INTRA_USER,testManager.getIdentityPublicKey());
 		testClient.sendMessage(requestNetworkService);
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT_FORWARD);
@@ -75,7 +75,7 @@ public class ConnectionRequestToNetworkServiceTest extends CloudServiceIntegrati
 		requestConnection();
 		registerConnection();
 		
-		FMPPacket requestNetworkService = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.MONEY, testManager.getPublicKeyIdentity());
+		FMPPacket requestNetworkService = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.MONEY, testManager.getIdentityPublicKey());
 		testClient.sendMessage(requestNetworkService);
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);

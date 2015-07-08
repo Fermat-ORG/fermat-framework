@@ -129,7 +129,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	}
 	
 	private void acceptConnectionRequest(FMPPacket packet)  throws FMPException {
-		String sender = getPublicKeyIdentity();
+		String sender = getIdentityPublicKey();
 		String destination = packet.getSender();
 		String message = networkService.toString();
 		FMPPacketType type = FMPPacketType.CONNECTION_ACCEPT;
@@ -140,7 +140,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	}
 	
 	private void denyConnectionRequest(FMPPacket packet, final String reason) throws FMPException{
-		String sender = getPublicKeyIdentity();
+		String sender = getIdentityPublicKey();
 		String destination = packet.getSender();
 		String message = reason;
 		FMPPacketType type = FMPPacketType.CONNECTION_DENY;
@@ -154,7 +154,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		SelectionKey connection = unregisteredConnections.get(packet.getSender());
 		registeredConnections.put(packet.getSender(), connection);
 		unregisteredConnections.remove(packet.getSender());
-		String sender = getPublicKeyIdentity();
+		String sender = getIdentityPublicKey();
 		String destination = packet.getSender();
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey("REGISTERED", destination);		
 		FMPPacketType type = FMPPacketType.DATA_TRANSMIT;

@@ -26,7 +26,7 @@ public class ConnectionRegisterTest extends CloudServiceIntegrationTest{
 	public void ConnectionRegister_SendValidRequest_ClientGetsResponse() throws Exception{
 		setUpConnections(0);
 		requestConnection();
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKeyIdentity());
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getIdentityPublicKey());
 		testClient.sendMessage(register);
 		FMPPacket response = getResponse();
 		assertThat(response).isNotNull();
@@ -36,7 +36,7 @@ public class ConnectionRegisterTest extends CloudServiceIntegrationTest{
 	public void ConnectionRegister_SendValidRequest_ResponsePacketTypeDataTransmit() throws Exception{
 		setUpConnections(2);
 		requestConnection();
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKeyIdentity());
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getIdentityPublicKey());
 		testClient.sendMessage(register);
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.DATA_TRANSMIT);
@@ -46,7 +46,7 @@ public class ConnectionRegisterTest extends CloudServiceIntegrationTest{
 	public void ConnectionRegister_SendValidRequest_ResponseMessageDecrypted() throws Exception{
 		setUpConnections(4);
 		requestConnection();
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKeyIdentity());
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getIdentityPublicKey());
 		testClient.sendMessage(register);
 		FMPPacket response = getResponse();
 		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(response.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY);		
@@ -57,7 +57,7 @@ public class ConnectionRegisterTest extends CloudServiceIntegrationTest{
 	public void ConnectionRegister_SendValidRequest_ResponseSignatureIsValid() throws Exception{
 		setUpConnections(6);
 		requestConnection();
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKeyIdentity());
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getIdentityPublicKey());
 		testClient.sendMessage(register);
 		FMPPacket response = getResponse();
 		boolean signatureVerification = AsymmectricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());

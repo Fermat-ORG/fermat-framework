@@ -150,6 +150,10 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	
 	@Override
 	public void start() throws CloudCommunicationException {
+
+		System.out.println("Starting the CloudClientCommunicationManager for this device");
+
+
 		if(running.get())
 			throw new CloudFMPClientStartFailedException(CloudFMPClientStartFailedException.DEFAULT_MESSAGE, null, communicationChannelAddress.toString(), "The FMP Client is already running");
 		try{
@@ -164,6 +168,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 				unregisteredConnections.put(serverPublicKey, serverConnection);
 				executorService.execute(this);
 			} catch(IOException ex){
+                ex.printStackTrace();
 				throw wrapNIOSocketIOException(ex);
 		}
 	}

@@ -154,7 +154,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      *
      * @return String
      */
-    public String getPublicKeyIdentity(){
+    public String getIdentityPublicKey(){
         return this.identity.getPublicKey();
     }
 
@@ -371,6 +371,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      */
 	@Override
 	public void start() throws CloudCommunicationException {
+
+        System.out.println("Starting the CloudFMPConnectionManager in mode = "+mode);
+
 		if(mode == CloudFMPConnectionManagerMode.FMP_CLIENT){
 			initializeClient();
 			running.set(clientChannel.isConnected());
