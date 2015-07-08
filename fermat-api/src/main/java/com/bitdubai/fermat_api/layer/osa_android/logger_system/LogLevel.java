@@ -10,4 +10,6 @@ public enum LogLevel {
     MODERATE_LOGGING,
     AGGRESSIVE_LOGGING;
 
+
+
 }
