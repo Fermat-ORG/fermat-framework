@@ -120,13 +120,13 @@ public class LogToolsFragmentLevel2 extends Fragment {
             //TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
             //labelDatabase.setVisibility(View.GONE);
 
-            LogToolsFragment logToolsFragment = new LogToolsFragment();
+            //LogToolsFragment logToolsFragment = new LogToolsFragment();
 
-            FragmentTransaction FT = getFragmentManager().beginTransaction();
+            //FragmentTransaction FT = getFragmentManager().beginTransaction();
 
-            FT.replace(R.id.logContainer, logToolsFragment);
+            //FT.replace(R.id.logContainer, logToolsFragment);
 
-            FT.commit();
+            //FT.commit();
         } catch (Exception e) {
             System.out.println("*********** soy un error " + e.getMessage());
         }
@@ -395,9 +395,9 @@ public class LogToolsFragmentLevel2 extends Fragment {
             holder.btnLogger.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    //Toast.makeText(getActivity(), "Soy una estrella feliz1", Toast.LENGTH_SHORT).show();
                     String loggerText = holder.companyTextView.getText().toString();
                     PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+                    popupMenu.inflate(R.menu.popup_menu);
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
@@ -424,7 +424,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                         }
                     });
 
-                    popupMenu.inflate(R.menu.popup_menu);
+
 
 
                     popupMenu.show();
