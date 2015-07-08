@@ -16,9 +16,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     /*
      * BitcoinWalletTransactionRecord Interface member variables
      */
-    private UUID id;
-
-    private BalanceType balanceType;
+    private UUID transactionId;
 
     private String transactionHash;
 
@@ -30,8 +28,6 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     private TransactionType type;
 
-    private TransactionState state;
-
     private long timestamp;
 
     private String memo;
@@ -41,7 +37,8 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
      */
     private UUID walletId;
 
-    private UUID transactionId;
+    private TransactionState state;
+
 
     /*
      * BitcoinWalletTransactionRecord Interface method implementation
@@ -58,12 +55,12 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     @Override
     public UUID getIdTransaction() {
-        return this.id;
+        return this.transactionId;
     }
 
     @Override
     public void setIdTransaction(UUID id) {
-        this.id = id;
+        this.transactionId = transactionId;
     }
 
     @Override
@@ -85,7 +82,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     public void setAmount(long amount) {
         this.amount = amount;
     }
-
+/*
     @Override
     public BalanceType getBalanceType() {
         return this.balanceType;
@@ -95,7 +92,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     public void setBalanceType(BalanceType type) {
         this.balanceType = type;
     }
-
+*/
     @Override
     public TransactionType getType() {
         return type;
@@ -137,7 +134,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.transactionHash = tramsactionHash;
     }
 
-
+/*
     public UUID getTransactionId() {
         return transactionId;
     }
@@ -145,6 +142,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     public void setTransactionId(UUID transactionId) {
         this.transactionId = transactionId;
     }
+*/
 
     public UUID getWalletId() {
         return walletId;
@@ -152,5 +150,13 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     public void setWalletId(UUID walletId) {
         this.walletId = walletId;
+    }
+
+    public TransactionState getState() {
+        return this.state;
+    }
+
+    public void setState(TransactionState state) {
+        this.state = state;
     }
 }

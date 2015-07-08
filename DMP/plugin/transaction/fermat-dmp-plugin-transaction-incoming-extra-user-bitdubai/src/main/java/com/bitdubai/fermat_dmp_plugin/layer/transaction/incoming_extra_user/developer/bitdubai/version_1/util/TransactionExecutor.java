@@ -91,7 +91,10 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
                             break;
                         case ON_BLOCKCHAIN:
                             break;
-                        case REVERSED:
+                        //todo ezequiel, cambie de Reversed a REVERSED_ON_CRYPTO_NETWORK
+                        case REVERSED_ON_CRYPTO_NETWORK:
+                            break;
+                        case REVERSED_ON_BLOCKCHAIN:
                             break;
                         default:
                             throw new UnexpectedTransactionException("El crypto status no es esperado",null,"El cryptoStatus es: "+ transaction.getInformation().getCryptoStatus().getCode(),"");

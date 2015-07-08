@@ -79,6 +79,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.amount = amount;
     }
 
+    /*
     @Override
     public BalanceType getBalanceType() {
         return this.balanceType;
@@ -88,6 +89,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     public void setBalanceType(BalanceType type) {
         this.balanceType = type;
     }
+    */
 
     @Override
     public TransactionType getType() {
