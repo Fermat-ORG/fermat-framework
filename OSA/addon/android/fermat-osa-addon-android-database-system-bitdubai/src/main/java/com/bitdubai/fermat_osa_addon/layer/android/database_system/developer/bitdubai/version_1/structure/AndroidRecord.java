@@ -20,6 +20,7 @@ public class AndroidRecord implements DatabaseRecord {
     private String recordName;
     private String recordValue;
     private boolean recordChange;
+    private boolean ifvariable;
 
 
     /**
@@ -57,6 +58,16 @@ public class AndroidRecord implements DatabaseRecord {
     }
 
     /**
+     * Returns true if the record record was changed
+     *
+     * @return boolean if change
+     */
+    @Override
+    public boolean getUseValueofVariable(){
+        return this.ifvariable;
+    }
+
+    /**
      * Set the field record name
      * @param name field name
      */
@@ -82,6 +93,10 @@ public class AndroidRecord implements DatabaseRecord {
     @Override
     public void setChange (boolean change){
         this.recordChange = change;
+    }
+
+    public void setUseValueofVariable (boolean ifvariable){
+        this.ifvariable = ifvariable;
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseVariable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -161,13 +162,17 @@ public class AndroidDatabase implements Database, DatabaseFactory {
             throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
         }
 
+        List<DatabaseVariable> variablesResult = null;
+
         /**
          * I get tablets and records to insert or update
          * then make sql sentences
          */
+        List<DatabaseTable> selectTables = transaction.getTablesToSelect();
         List<DatabaseTable> insertTables = transaction.getTablesToInsert();
         List<DatabaseTable> updateTables = transaction.getTablesToUpdate();
         List<DatabaseTableRecord> updateRecords = transaction.getRecordsToUpdate();
+        List<DatabaseTableRecord> selectRecords = transaction.getRecordsToSelect();
         List<DatabaseTableRecord> insertRecords = transaction.getRecordsToInsert();
         try{
             if(!database.isOpen())
@@ -175,15 +180,28 @@ public class AndroidDatabase implements Database, DatabaseFactory {
 
             database.beginTransaction(); // EXCLUSIVE
 
+            DatabaseVariable variables;
+            //select
+            if(selectTables != null)
+                for (int i = 0; i < selectTables.size(); ++i){
+
+                    selectTables.get(i).selectRecord(selectRecords.get(i));
+                    //get list of variables and this values to pass at update and insert
+                    //I assume that only a select defined
+                    variablesResult =  selectTables.get(i).getVarialbesResult();
+                }
+
             //update
             if(updateTables != null)
                 for (int i = 0; i < updateTables.size(); ++i){
+                    updateTables.get(i).setVarialbesResult(variablesResult);
                     updateTables.get(i).updateRecord(updateRecords.get(i));
                 }
 
             //insert
             if(insertTables != null)
                 for (int i = 0; i < insertTables.size(); ++i){
+                    insertTables.get(i).setVarialbesResult(variablesResult);
                     insertTables.get(i).insertRecord(insertRecords.get(i));
                 }
 
