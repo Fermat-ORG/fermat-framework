@@ -435,4 +435,27 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
 
     }
 
+    public void insertNewTransactionWithNewConfidence(String hashAsString, CryptoStatus cryptoStatus) throws CantExecuteQueryException {
+        DatabaseTable cryptoTxTable;
+        cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        DatabaseTableRecord record = cryptoTxTable.getEmptyRecord();
+        /**
+         * I generate a new transaction Id
+         */
+        record.setStringValue(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, UUID.randomUUID().toString());
+        /**
+         * I use the same transaction hash
+         */
+        record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, hashAsString);
+        record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString());
+        record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.toString());
+
+        DatabaseTransaction dbTran = database.newTransaction();
+        dbTran.addRecordToInsert(cryptoTxTable, record);
+        try {
+            database.executeTransaction(dbTran);
+        } catch (DatabaseTransactionFailedException e) {
+            throw new CantExecuteQueryException("Error inserting new transaction because of transaction confidence changed.", e, "Transaction Hash:" + hashAsString + " CryptoStatus:" + cryptoStatus.toString(), "Error in database plugin.");
+        }
+    }
 }
