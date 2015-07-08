@@ -19,10 +19,14 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
     public boolean getChange();
 
+   public boolean getUseValueofVariable();
+
     public void setName (String name);
 
     public void setValue (String value);
 
     public void setChange (boolean change);
+
+   public void setUseValueofVariable (boolean ifvariable);
 
 }
