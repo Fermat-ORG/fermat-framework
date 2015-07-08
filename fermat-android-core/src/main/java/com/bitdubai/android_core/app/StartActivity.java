@@ -47,6 +47,9 @@ public class StartActivity extends FragmentActivity {
 
     public static final String START_ACTIVITY_INIT = "Init";
 
+    // Indicate if the app was loaded, for not load again the start activity.
+    private static boolean WAS_START_ACTIVITY_LOADED = false;
+
     private AppRuntimeManager appRuntimeMiddleware;
     private WalletRuntimeManager walletRuntimeMiddleware;
     private ErrorManager errorManager;
@@ -69,6 +72,12 @@ public class StartActivity extends FragmentActivity {
 
 
         try {
+
+            // Indicate if the app was loaded, for not load again the start activity.
+            if (WAS_START_ACTIVITY_LOADED) {
+                this.fermatInit ();
+            }
+
             try {
                 setContentView(R.layout.splash_screen);
             } catch (Exception e) {
@@ -199,6 +208,9 @@ public class StartActivity extends FragmentActivity {
             super.onPostExecute(result);
 
             mDialog.dismiss();
+
+            // Indicate that app was loaded.
+            WAS_START_ACTIVITY_LOADED = true;
             fermatInit();
         }
     }

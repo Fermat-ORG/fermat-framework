@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.os.SystemClock;
 
 import android.widget.Button;
 import android.widget.TextView;
@@ -56,6 +56,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     int showTypeBalance=TYPE_BALANCE_AVAILABLE;
 
     private static final String ARG_POSITION = "position";
+
+    // Check if a click was executed.
+    private long mLastClickTime = 0;
 
 
 
@@ -155,6 +158,13 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         textViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // mis-clicking prevention, using threshold of 6000 ms
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 6000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+
                 showBalanceBTC = !showBalanceBTC;
                 refreshBalance();
             }
