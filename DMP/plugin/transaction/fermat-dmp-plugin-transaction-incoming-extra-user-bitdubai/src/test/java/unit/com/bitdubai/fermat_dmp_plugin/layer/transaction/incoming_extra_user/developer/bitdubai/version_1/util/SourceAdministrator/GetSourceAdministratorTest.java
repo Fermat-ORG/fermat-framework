@@ -11,6 +11,7 @@ import static org.fest.assertions.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -29,9 +30,14 @@ public class GetSourceAdministratorTest {
 
     private SourceAdministrator testSourceAdministrator;
 
+    @Before
+    public void setUpMockRules(){
+        when(mockIncomingCryptoManager.getTransactionManager()).thenReturn(mockManager);
+    }
+
     @Test
     public void GetSourceAdministrator(){
-        when(mockIncomingCryptoManager.getTransactionManager()).thenReturn(mockManager);
+
 
         testSourceAdministrator = new SourceAdministrator();
         testSourceAdministrator.setIncomingCryptoManager(mockIncomingCryptoManager);
