@@ -25,7 +25,7 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
 
     private TransactionType type;
 
-    private TransactionState state;
+    //private TransactionState state;
 
     private long timestamp;
 
@@ -92,7 +92,7 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
     public void setType(TransactionType type) {
         this.type = type;
     }
-
+/*
     public TransactionState getState() {
         return state;
     }
@@ -100,7 +100,7 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
     public void setState(TransactionState state) {
         this.state = state;
     }
-
+*/
     @Override
     public long getTimestamp() {
         return timestamp;

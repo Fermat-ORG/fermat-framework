@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
@@ -16,9 +17,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     /*
      * BitcoinWalletTransactionRecord Interface member variables
      */
-    private UUID id;
-
-    private BalanceType balanceType;
+    private UUID transactionId;
 
     private String transactionHash;
 
@@ -30,18 +29,21 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     private TransactionType type;
 
-    private TransactionState state;
-
     private long timestamp;
 
     private String memo;
+
+    private BalanceType balanceType;
 
     /*
      * TransactionWrapper member variables
      */
     private UUID walletId;
 
-    private UUID transactionId;
+    private TransactionState state;
+
+    private CryptoStatus cryptoStatus;
+
 
     /*
      * BitcoinWalletTransactionRecord Interface method implementation
@@ -58,12 +60,12 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     @Override
     public UUID getIdTransaction() {
-        return this.id;
+        return this.transactionId;
     }
 
     @Override
     public void setIdTransaction(UUID id) {
-        this.id = id;
+        this.transactionId = transactionId;
     }
 
     @Override
@@ -137,20 +139,27 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.transactionHash = tramsactionHash;
     }
 
-
-    public UUID getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(UUID transactionId) {
-        this.transactionId = transactionId;
-    }
-
     public UUID getWalletId() {
         return walletId;
     }
 
     public void setWalletId(UUID walletId) {
         this.walletId = walletId;
+    }
+
+    public TransactionState getState() {
+        return this.state;
+    }
+
+    public void setState(TransactionState state) {
+        this.state = state;
+    }
+
+    public CryptoStatus getCryptoStatus() {
+        return this.cryptoStatus;
+    }
+
+    public void setCryptoStatus(CryptoStatus cryptoStatus) {
+        this.cryptoStatus = cryptoStatus;
     }
 }
