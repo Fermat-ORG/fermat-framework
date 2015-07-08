@@ -27,7 +27,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 public class ConnectionRequestToNetworkServiceTest extends CloudServiceIntegrationTest{
 
 	public void registerConnection() throws Exception{
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKey());
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKeyIdentity());
 		testClient.sendMessage(register);
 		FMPPacket response = getResponse();
 		assertThat(response).isNotNull();
@@ -57,11 +57,11 @@ public class ConnectionRequestToNetworkServiceTest extends CloudServiceIntegrati
 	@Test
 	public void ConnectionRegister_SendValidRequest_ClientGetsAcceptForward() throws Exception{
 		setUpConnections(1);
-		testManager.registerNetworkServiceManager(createNetworkServiceManager(testManager.getAddress().getPort()+1000));
+		testManager.registerNetworkServiceManager(createNetworkServiceManager(testManager.getCommunicationChannelAddress().getPort()+1000));
 		requestConnection();
 		registerConnection();
 		
-		FMPPacket requestNetworkService = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.INTRA_USER,testManager.getPublicKey());
+		FMPPacket requestNetworkService = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.INTRA_USER,testManager.getPublicKeyIdentity());
 		testClient.sendMessage(requestNetworkService);
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT_FORWARD);
@@ -71,11 +71,11 @@ public class ConnectionRequestToNetworkServiceTest extends CloudServiceIntegrati
 	@Test
 	public void ConnectionRegister_SendValidRequest_ClientGetsDeny() throws Exception{
 		setUpConnections(2);
-		testManager.registerNetworkServiceManager(createNetworkServiceManager(testManager.getAddress().getPort()+1000));
+		testManager.registerNetworkServiceManager(createNetworkServiceManager(testManager.getCommunicationChannelAddress().getPort()+1000));
 		requestConnection();
 		registerConnection();
 		
-		FMPPacket requestNetworkService = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.MONEY, testManager.getPublicKey());
+		FMPPacket requestNetworkService = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.MONEY, testManager.getPublicKeyIdentity());
 		testClient.sendMessage(requestNetworkService);
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);

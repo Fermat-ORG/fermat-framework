@@ -47,17 +47,17 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	}
 	
 	@Override
-	public synchronized void writeToKey(final SelectionKey key) throws CloudCommunicationException {
+	public synchronized void writeToConnection(final SelectionKey connection) throws CloudCommunicationException {
 		try{
-			SocketChannel channel = (SocketChannel) key.channel();
+			SocketChannel channel = (SocketChannel) connection.channel();
 			FMPPacket dataPacket = pendingOutgoingMessages.remove();
 			byte[] data = dataPacket.toString().getBytes(CHARSET_NAME);
 			channel.write(ByteBuffer.wrap(data));
 			if(!pendingOutgoingMessages.isEmpty())
-				writeToKey(key);
-			key.interestOps(SelectionKey.OP_READ);
+				writeToConnection(connection);
+			connection.interestOps(SelectionKey.OP_READ);
 		}catch(NoSuchElementException ex){
-			key.interestOps(SelectionKey.OP_READ);
+			connection.interestOps(SelectionKey.OP_READ);
 		}catch(IOException ex){
 			throw wrapNIOSocketIOException(ex);
 		}
@@ -74,11 +74,11 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		String serverAddress = dataPacket.getSender();
 		SelectionKey serverConnection = requestedConnections.get(serverAddress);
 		
-		String sender = eccPublicKey;
+		String sender = identity.getPublicKey();
 		String destination = dataPacket.getSender();
 		FMPPacketType type = FMPPacketType.CONNECTION_REGISTER;
-		String message = eccPublicKey;
-		String signature = AsymmectricCryptography.createMessageSignature(message, eccPrivateKey);
+		String message = identity.getPublicKey();
+		String signature = AsymmectricCryptography.createMessageSignature(message, identity.getPrivateKey());
 			
 		FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, message, signature);
 		pendingOutgoingMessages.add(packet);
@@ -89,7 +89,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	public void handleConnectionAcceptForward(final FMPPacket dataPacket) throws FMPException {
 		String decryptedMessage;
 		try{
-			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey);
+			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
 		}catch(Exception ex){
 			ex.printStackTrace();
 			return;
@@ -102,7 +102,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		Integer port = Integer.valueOf(messageComponents[2]);
 		CommunicationChannelAddress networkServiceServerAddress = CommunicationChannelAddressFactory.constructCloudAddress(host, port);
 		String networkServiceServerPublicKey = messageComponents[3];
-		CloudClientCommunicationNetworkServiceConnection networkServiceClient = new CloudClientCommunicationNetworkServiceConnection(networkServiceServerAddress, executor, AsymmectricCryptography.createPrivateKey(), networkServiceServerPublicKey, networkService);
+		CloudClientCommunicationNetworkServiceConnection networkServiceClient = new CloudClientCommunicationNetworkServiceConnection(networkServiceServerAddress, executorService, AsymmectricCryptography.createPrivateKey(), networkServiceServerPublicKey, networkService);
 		try{
 			networkServiceClient.start();
 		}catch(CloudCommunicationException ex){
@@ -113,7 +113,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 
 	@Override
 	public void handleConnectionDeny(final FMPPacket dataPacket) throws FMPException {
-		System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey));
+		System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey()));
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 
 	@Override
 	public void handleDataTransmit(final FMPPacket dataPacket) throws FMPException {
-		String message = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey);
+		String message = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
 		if(requestedConnections.isEmpty() || registeredConnections.containsKey(dataPacket.getSender()))
 			return;
 		if(!message.equals("REGISTERED"))
@@ -151,18 +151,18 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	@Override
 	public void start() throws CloudCommunicationException {
 		if(running.get())
-			throw new CloudFMPClientStartFailedException(CloudFMPClientStartFailedException.DEFAULT_MESSAGE, null, address.toString(), "The FMP Client is already running");
+			throw new CloudFMPClientStartFailedException(CloudFMPClientStartFailedException.DEFAULT_MESSAGE, null, communicationChannelAddress.toString(), "The FMP Client is already running");
 		try{
 				selector = Selector.open();
 				clientChannel = SocketChannel.open();
 				clientChannel.configureBlocking(false);
 				SelectionKey serverConnection = clientChannel.register(selector, SelectionKey.OP_CONNECT);
-				clientChannel.connect(address.getSocketAddress());
+				clientChannel.connect(communicationChannelAddress.getSocketAddress());
 				if(clientChannel.isConnectionPending())
 					clientChannel.finishConnect();
 				running.set(clientChannel.isConnected());
 				unregisteredConnections.put(serverPublicKey, serverConnection);
-				executor.execute(this);
+				executorService.execute(this);
 			} catch(IOException ex){
 				throw wrapNIOSocketIOException(ex);
 		}
@@ -173,11 +173,11 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			throw new ConnectionAlreadyRegisteredException(ConnectionAlreadyRegisteredException.DEFAULT_MESSAGE, null, getClass().toString(), "We've already registered our connection in the Server");
 		if(!requestedConnections.isEmpty())
 			throw new ConnectionAlreadyRequestedException(ConnectionAlreadyRequestedException.DEFAULT_MESSAGE, null, getClass().toString(), "We've already requested a connection to the FMP Server");
-		String sender = eccPublicKey;
+		String sender = identity.getPublicKey();
 		String destination = serverPublicKey;
 		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
-		String messageHash = eccPublicKey;
-		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
+		String messageHash = identity.getPublicKey();
+		String signature = AsymmectricCryptography.createMessageSignature(messageHash, identity.getPrivateKey());
 		try{
 			FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
 			pendingOutgoingMessages.add(packet);
@@ -195,7 +195,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		String destination = serverPublicKey;
 		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(networkService.toString(), serverPublicKey);
-		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
+		String signature = AsymmectricCryptography.createMessageSignature(messageHash, identity.getPrivateKey());
 		try{
 			FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
 			pendingOutgoingMessages.add(packet);
@@ -225,7 +225,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		String message = IllegalPacketSenderException.DEFAULT_MESSAGE;
 		String context = "Server Public Key: " + serverPublicKey;
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
-		context += "Client Public Key: " + eccPublicKey;
+		context += "Client Public Key: " + identity.getPublicKey();
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Packet Sender: " + packet.getSender();
 		String possibleReason = "This is a problem of the flow of the packets, this might be accidental or some echo loop.";

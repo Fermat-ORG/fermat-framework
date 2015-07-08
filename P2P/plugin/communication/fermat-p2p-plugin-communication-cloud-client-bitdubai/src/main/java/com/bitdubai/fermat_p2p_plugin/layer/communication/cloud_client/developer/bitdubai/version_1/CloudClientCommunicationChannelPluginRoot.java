@@ -34,7 +34,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.LogManager;
 import java.util.regex.Pattern;
 
 /**
@@ -119,7 +118,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
      */	
     @Override
 	public String getChannelPublicKey() {
-		return cloudClient.getPublicKey();
+		return cloudClient.getPublicKeyIdentity();
 	}
 
 	@Override
@@ -139,7 +138,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	@Override
 	public String getNetworkServiceChannelPublicKey(final NetworkServices networkService) {
 		try {
-			return cloudClient.getNetworkServiceClient(networkService).getPublicKey();
+			return cloudClient.getNetworkServiceClient(networkService).getPublicKeyIdentity();
 		} catch (CloudCommunicationException e) {
 			return null;
 		}
@@ -342,9 +341,9 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     		this.serviceStatus = ServiceStatus.STARTED;
     	} catch(CommunicationException ex){
 			StringBuilder contextBuilder = new StringBuilder();
-			contextBuilder.append("Client Public Key: " + cloudClient.getPublicKey());
+			contextBuilder.append("Client Public Key: " + cloudClient.getPublicKeyIdentity());
 			contextBuilder.append(FermatException.CONTEXT_CONTENT_SEPARATOR);
-			contextBuilder.append("Server Address: " + cloudClient.getAddress().toString());
+			contextBuilder.append("Server Address: " + cloudClient.getCommunicationChannelAddress().toString());
 
 			CantStartPluginException pluginException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, ex, contextBuilder.toString(), "The Cloud Client Failed To Initialize");
 

@@ -55,7 +55,7 @@ public class ConnectionRequestVPNTest extends
 	public void ConnectionRequestToVPN_RequestMessageIsNotEncrypted_ResponseTypeIsConnectionDeny() throws Exception{
 		setUpConnections(6);
 		assertThat(requestAndRegisterClient()).isNotNull();
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKeyIdentity());
 		testClient.sendMessage(request);
 		FMPPacket requestResponse= getResponse();
 		assertThat(requestResponse.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
@@ -87,7 +87,7 @@ public class ConnectionRequestVPNTest extends
 	}
 	
 	private FMPPacket requestVPN() throws Exception {
-		testClient.sendMessage(MockFMPPacketsFactory.mockRequestConnectionNetworkServiceToVPNPacket(testNetworkService, MockFMPPacketsFactory.MOCK_PUBLIC_KEY, MockFMPPacketsFactory.MOCK_PUBLIC_KEY, testManager.getPublicKey()));
+		testClient.sendMessage(MockFMPPacketsFactory.mockRequestConnectionNetworkServiceToVPNPacket(testNetworkService, MockFMPPacketsFactory.MOCK_PUBLIC_KEY, MockFMPPacketsFactory.MOCK_PUBLIC_KEY, testManager.getPublicKeyIdentity()));
 		return getResponse();
 	}
 	

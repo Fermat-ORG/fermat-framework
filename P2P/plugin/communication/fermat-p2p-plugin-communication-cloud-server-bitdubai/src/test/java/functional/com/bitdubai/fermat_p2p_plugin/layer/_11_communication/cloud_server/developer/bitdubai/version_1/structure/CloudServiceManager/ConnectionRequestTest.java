@@ -27,7 +27,7 @@ public class ConnectionRequestTest extends CloudServiceIntegrationTest {
 	@Test
 	public void ConnectionRequest_SendValidRequest_ClientGetsResponse() throws Exception{
 		setUpConnections(0);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKeyIdentity());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertThat(response).isNotNull();
@@ -36,7 +36,7 @@ public class ConnectionRequestTest extends CloudServiceIntegrationTest {
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseTypeConnectionAccept() throws Exception{
 		setUpConnections(1);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKeyIdentity());
 		testClient.sendMessage(request);				
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT);
@@ -45,7 +45,7 @@ public class ConnectionRequestTest extends CloudServiceIntegrationTest {
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseDestinationEqualsRequestSender() throws Exception{
 		setUpConnections(2);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKeyIdentity());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertThat(response.getDestination()).isEqualTo(request.getSender());
@@ -54,7 +54,7 @@ public class ConnectionRequestTest extends CloudServiceIntegrationTest {
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseMessagePublicKey() throws Exception{
 		setUpConnections(3);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKeyIdentity());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertThat(response.getMessage()).isEqualTo(testPublicKey);
@@ -63,7 +63,7 @@ public class ConnectionRequestTest extends CloudServiceIntegrationTest {
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseSignatureVerified() throws Exception{
 		setUpConnections(4);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKeyIdentity());
 		testClient.sendMessage(request);		
 		FMPPacket response = getResponse();		
 		boolean signatureVerification = AsymmectricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());

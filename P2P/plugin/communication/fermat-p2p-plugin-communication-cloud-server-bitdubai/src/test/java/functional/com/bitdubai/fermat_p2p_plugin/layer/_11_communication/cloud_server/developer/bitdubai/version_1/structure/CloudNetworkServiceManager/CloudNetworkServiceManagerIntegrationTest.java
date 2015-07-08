@@ -59,13 +59,13 @@ public abstract class CloudNetworkServiceManagerIntegrationTest {
 	}
 	
 	protected FMPPacket requestConnection() throws Exception{
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(testNetworkService, testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(testNetworkService, testManager.getPublicKeyIdentity());
 		testClient.sendMessage(request);
 		return getResponse();
 	}
 	
 	protected FMPPacket registerConnection() throws Exception{
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKey());
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterConnectionPacket(testManager.getPublicKeyIdentity());
 		testClient.sendMessage(register);
 		return getResponse();
 	}

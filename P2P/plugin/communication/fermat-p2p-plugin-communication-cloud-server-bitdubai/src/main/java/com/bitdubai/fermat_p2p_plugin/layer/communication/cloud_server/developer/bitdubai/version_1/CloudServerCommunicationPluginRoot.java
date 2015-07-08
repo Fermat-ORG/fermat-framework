@@ -148,7 +148,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                         ECCKeyPair keyPair = new ECCKeyPair();
 
                         /*
-                         * Create the communication chanel address
+                         * Create the communication chanel communicationChannelAddress
                          */
                         CommunicationChannelAddress communicationChannelAddress = CommunicationChannelAddressFactory.constructCloudAddress(addresses.nextElement().getHostAddress(), CloudServerCommunicationPluginRoot.LISTENING_PORT);
 
