@@ -24,11 +24,12 @@
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
                 android:gravity="right"
-                android:layout_weight="0.25"
+                android:layout_weight="0.15"
                 android:textColor="@color/black_overlay"
                 android:layout_alignParentTop="true"
                 android:layout_column="2"
-                android:layout_gravity="right" />
+                android:layout_gravity="right"
+                android:visibility="gone"/>
             <ImageView
                 android:id="@+id/image_view"
                 android:layout_width="wrap_content"
@@ -54,7 +55,7 @@
                 android:textColor="@color/black_overlay"
                 android:textStyle="bold"
                 android:layout_weight="0.45"
-                android:textSize="8sp"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
     </RelativeLayout>

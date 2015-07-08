@@ -113,7 +113,7 @@ class BitcoinEventListeners implements BlockChainListener, DealsWithLogger,  Pee
         logAggresive.append(System.getProperty("line.separator"));
         logAggresive.append("Blocks info: " + block.toString());
         LogLevel logLevel = BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName());
-        logManager.log(logLevel, "Block Downloaded", "Block downloaded. Blocks left " + blocksLeft, logAggresive.toString());
+        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "Block Downloaded", "Block downloaded. Blocks left " + blocksLeft, logAggresive.toString());
     }
 
     /**
@@ -123,7 +123,7 @@ class BitcoinEventListeners implements BlockChainListener, DealsWithLogger,  Pee
      */
     @Override
     public void onChainDownloadStarted(Peer peer, int blocksLeft) {
-        System.out.println("BitcoinCryptoNetwork information message: Blockchain Download started. Blocks left: " + blocksLeft);
+        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "BitcoinCryptoNetwork information message: Blockchain Download started. Blocks left: " + blocksLeft, "Peer used: " + peer.toString(), null);
     }
 
     /**
@@ -133,12 +133,10 @@ class BitcoinEventListeners implements BlockChainListener, DealsWithLogger,  Pee
      */
     @Override
     public void onPeerConnected(Peer peer, int peerCount) {
-        System.out.println("BitcoinCryptoNetwork information message: Peer connected (total: " + peerCount + "). Peer info: " + peer.toString());
-
         StringBuilder logAggresive = new StringBuilder("New connection to Peer " + peer.toString());
         logAggresive.append(System.getProperty("line.separator"));
         logAggresive.append("Total connected peers: " + peerCount);
-        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "Connected to Peer.", "Connected to peer. Total peers are " + peerCount, logAggresive.toString());
+        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "Connected to Peer.", "Total peers are " + peerCount, logAggresive.toString());
     }
 
     /**
@@ -148,7 +146,7 @@ class BitcoinEventListeners implements BlockChainListener, DealsWithLogger,  Pee
      */
     @Override
     public void onPeerDisconnected(Peer peer, int peerCount) {
-        System.out.println("BitcoinCryptoNetwork information message: Peer disconnected. Total Peers are " + peerCount);
+        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "BitcoinCryptoNetwork information message: Peer disconnected. Total Peers are " + peerCount, "peer info: " + peer.toString(), null);
     }
 
     /**

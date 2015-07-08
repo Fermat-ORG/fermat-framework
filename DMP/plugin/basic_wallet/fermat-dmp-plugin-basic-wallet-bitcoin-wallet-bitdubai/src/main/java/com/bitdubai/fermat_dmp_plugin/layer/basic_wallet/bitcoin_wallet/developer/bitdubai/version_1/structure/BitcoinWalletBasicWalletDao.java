@@ -4,14 +4,12 @@ package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CabtStoreMemoException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException;
@@ -24,11 +22,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExcecuteBitconTransaction;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
@@ -50,13 +46,10 @@ public class BitcoinWalletBasicWalletDao {
      */
     private Database database;
 
-
-
-
     /**
      * Constructor.
      */
-    public BitcoinWalletBasicWalletDao( Database database){
+    public BitcoinWalletBasicWalletDao(Database database){
         /**
          * The only one who can set the pluginId is the Plugin Root.
          */
@@ -112,7 +105,7 @@ public class BitcoinWalletBasicWalletDao {
      * getBookBalance must get actual Book Balance of wallet, select record from balances table
      */
 
-    long getAvilableBalance() throws CantCalculateBalanceException {
+    long getAvailableBalance() throws CantCalculateBalanceException {
 
         long balance = 0;
 
@@ -406,10 +399,8 @@ public class BitcoinWalletBasicWalletDao {
 
 
     public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException {
-
         // create the database objects
         DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
-
 
         /**
          *  I will load the information of table into a memory structure, filter for count of records and page
@@ -473,7 +464,7 @@ public class BitcoinWalletBasicWalletDao {
     }
 
 
-    public void updateMemoFiled(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException {
+    public void updateMemoFiled(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException {
 
         // create the database objects
         DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
@@ -511,7 +502,7 @@ public class BitcoinWalletBasicWalletDao {
 
             } catch (CantUpdateRecordException cantUpdateRecord) {
 
-                throw new CabtStoreMemoException("Transaction Memo Update Error",cantUpdateRecord,"Error update memo of Transaction " + transactionID.toString(), "");
+                throw new CantStoreMemoException("Transaction Memo Update Error",cantUpdateRecord,"Error update memo of Transaction " + transactionID.toString(), "");
             }
 
         }

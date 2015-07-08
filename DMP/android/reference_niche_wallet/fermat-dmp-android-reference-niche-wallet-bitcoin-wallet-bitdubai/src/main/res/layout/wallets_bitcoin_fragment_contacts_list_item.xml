@@ -20,14 +20,5 @@
             android:background="#8bba9e"
             android:gravity="center"
             android:textColor="#FFFFFFFF"/>
-        <TextView
-            android:id="@+id/contact_address"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="24dp"
-            android:text="Luis Molina"
-            android:background="#8bba9e"
-            android:gravity="center"
-            android:textColor="#FFFFFFFF"/>
     </LinearLayout>
 </RelativeLayout>
