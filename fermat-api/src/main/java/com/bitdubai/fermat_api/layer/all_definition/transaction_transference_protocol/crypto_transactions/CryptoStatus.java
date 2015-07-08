@@ -10,7 +10,8 @@ public enum CryptoStatus {
     ON_CRYPTO_NETWORK ("OCN"),
     ON_BLOCKCHAIN ("OBC"),
     IRREVERSIBLE ("IRR"),
-    REVERSED ("RVS");
+    REVERSED_ON_BLOCKCHAIN ("ROB"),
+    REVERSED_ON_CRYPTO_NETWORK ("RON");
 
     private final String code;
 
@@ -27,7 +28,8 @@ public enum CryptoStatus {
             case "OCN": return CryptoStatus.ON_CRYPTO_NETWORK;
             case "OBC": return CryptoStatus.ON_BLOCKCHAIN;
             case "IRR": return CryptoStatus.IRREVERSIBLE;
-            case "RVS": return CryptoStatus.REVERSED;
+            case "ROB": return CryptoStatus.REVERSED_ON_BLOCKCHAIN;
+            case "RON": return CryptoStatus.REVERSED_ON_CRYPTO_NETWORK;
         }
 
         /**
