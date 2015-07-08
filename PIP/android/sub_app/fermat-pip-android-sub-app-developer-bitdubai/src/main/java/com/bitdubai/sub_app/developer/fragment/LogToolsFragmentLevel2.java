@@ -34,7 +34,6 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
-import com.bitdubai.sub_app.developer.common.IconizedMenu;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
 
@@ -78,6 +77,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         try {
             ToolManager toolManager = platform.getToolManager();
@@ -287,7 +287,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
 
                         popupMenu.inflate(R.menu.popup_menu);
-                        boolean founded=false;
+                        /*boolean founded=false;
                         int counter=0;
                         while(!founded && counter<popupMenu.getMenu().size()){
                             MenuItem menuItem = popupMenu.getMenu().getItem(counter);
@@ -295,7 +295,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                             menuItem.setIcon(R.drawable.icono_banco_2);
                             //menuItem.
                             counter++;
-                        }
+                        }*/
 
                         popupMenu.show();
 
