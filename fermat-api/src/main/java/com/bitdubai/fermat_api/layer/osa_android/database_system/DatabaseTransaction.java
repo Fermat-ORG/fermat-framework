@@ -20,11 +20,17 @@ import java.util.List;
 
     public void addRecordToInsert(DatabaseTable transfersTable, DatabaseTableRecord transferRecord);
 
+   public void addRecordToSelect(DatabaseTable selectTable, DatabaseTableRecord selectRecord);
+
     public List<DatabaseTableRecord> getRecordsToUpdate();
+
+   public List<DatabaseTableRecord> getRecordsToSelect();
 
     public List<DatabaseTableRecord> getRecordsToInsert();
 
     public List<DatabaseTable> getTablesToUpdate();
 
     public List<DatabaseTable> getTablesToInsert();
+
+   public List<DatabaseTable> getTablesToSelect();
 }

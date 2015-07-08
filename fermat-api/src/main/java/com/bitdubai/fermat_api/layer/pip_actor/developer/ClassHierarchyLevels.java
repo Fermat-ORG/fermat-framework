@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.pip_actor.developer;
 
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+
 /**
  * Created by rodrigo on 2015.07.01..
  */
@@ -9,6 +11,7 @@ public class ClassHierarchyLevels {
     String level2;
     String level3;
     String fullPath;
+    LogLevel logLevel;
 
 
     public String getLevel0() {
@@ -49,5 +52,13 @@ public class ClassHierarchyLevels {
 
     public void setLevel3(String level3) {
         this.level3 = level3;
+    }
+
+    public LogLevel getLogLevel() {
+        return logLevel;
+    }
+
+    public void setLogLevel(LogLevel logLevel) {
+        this.logLevel = logLevel;
     }
 }
