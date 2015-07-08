@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantCreateBlockStoreFileException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantDisconnectFromNetworkException;
 
@@ -230,14 +231,14 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             InetSocketAddress inetSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
             PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
             peers.addAddress(peerAddress);
-            System.out.println("CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString());
+            logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString(), null, null);
         }
         else
         /**
          * If it is not RegTest, then I will get the Peers by DNSDiscovery
          */
         {
-            System.out.println("CryptoNetwork information: Using " + networkParameters.toString() + " network.");
+            logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using " + networkParameters.toString() + " network.", null, null);
             peers.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
         }
 
