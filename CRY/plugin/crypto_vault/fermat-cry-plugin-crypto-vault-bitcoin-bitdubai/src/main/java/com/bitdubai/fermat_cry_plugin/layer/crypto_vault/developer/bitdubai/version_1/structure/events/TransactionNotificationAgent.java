@@ -187,6 +187,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
          * how often I will search for transactions to notify
          */
         public final int SLEEP_TIME = CryptoVaultTransactionNotificationAgent.AGENT_SLEEP_TIME;
+        int iteration = 0;
 
         /**
          * PluginDatabaseSystem interfaz member variables
@@ -262,7 +263,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
              * this will run in an infinite loop
              */
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction Protocol Notification Agent: running...", null, null);
-            int iteration = 0;
+
             while (true)
             {
                 /**
@@ -312,14 +313,9 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in ON_CRYPTO_NETWORK Status! Raising INCOMING_CRYPTO_ON_CRYPTO_NETWORK event.", null, null);
                 eventManager.raiseEvent(event);
 
-                /**
-                 * I need to increase the counter of the iterations. If the value excedes the threashold, then there might be
-                 * an error in the platform, so I will raise an error.
-                 */
-                int iterations = db.updateTransactionProtocolStatus(true);
 
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.",null);
-                if (ITERATIONS_THRESHOLD < iterations){
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + this.iteration+ " without other plugins consuming transaction.",null);
+                if (ITERATIONS_THRESHOLD < this.iteration){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
             }
@@ -335,14 +331,10 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in ON_BLOCKCHAIN Status! Raising INCOMING_CRYPTO_ON_BLOCKCHAIN event.", null, null);
                 eventManager.raiseEvent(event);
 
-                /**
-                 * I need to increase the counter of the iterations. If the value excedes the threashold, then there might be
-                 * an error in the platform, so I will raise an error.
-                 */
-                int iterations = db.updateTransactionProtocolStatus(true);
 
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.",null);
-                if (ITERATIONS_THRESHOLD < iterations){
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.",null);
+                if (ITERATIONS_THRESHOLD < this.iteration){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
             }
@@ -358,14 +350,9 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in REVERSED_ON_CRYPTO_NETWORK Status! Raising INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK event.", null, null);
                 eventManager.raiseEvent(event);
 
-                /**
-                 * I need to increase the counter of the iterations. If the value excedes the threashold, then there might be
-                 * an error in the platform, so I will raise an error.
-                 */
-                int iterations = db.updateTransactionProtocolStatus(true);
 
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.",null);
-                if (ITERATIONS_THRESHOLD < iterations){
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.",null);
+                if (ITERATIONS_THRESHOLD < this.iteration){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
             }
@@ -381,14 +368,9 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in REVERSED_ON_BLOCKCHAIN Status! Raising INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN event.", null, null);
                 eventManager.raiseEvent(event);
 
-                /**
-                 * I need to increase the counter of the iterations. If the value excedes the threashold, then there might be
-                 * an error in the platform, so I will raise an error.
-                 */
-                int iterations = db.updateTransactionProtocolStatus(true);
 
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.",null);
-                if (ITERATIONS_THRESHOLD < iterations){
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.",null);
+                if (ITERATIONS_THRESHOLD < this.iteration){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
             }
@@ -397,7 +379,11 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
             */
             if (!found){
                 db.updateTransactionProtocolStatus(false);
+                this.iteration = 0;
+            } else {
+                 this.iteration = db.updateTransactionProtocolStatus(true);
             }
+
 
 
         }
