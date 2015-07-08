@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 
 /**
@@ -23,4 +25,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
     public DatabaseTransaction newTransaction();
 
     public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException;
+
+    public DatabaseFactory getDatabaseFactory();
+
+    public void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException;
+
+    public void closeDatabase();
 }

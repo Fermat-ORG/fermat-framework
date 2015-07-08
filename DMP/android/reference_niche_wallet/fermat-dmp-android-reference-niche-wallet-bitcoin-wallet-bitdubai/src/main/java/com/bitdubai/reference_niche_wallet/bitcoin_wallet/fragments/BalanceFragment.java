@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.os.SystemClock;
 
 import android.widget.Button;
 import android.widget.TextView;
@@ -56,6 +56,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     int showTypeBalance=TYPE_BALANCE_AVAILABLE;
 
     private static final String ARG_POSITION = "position";
+
+    // Check if a click was executed.
+    private long mLastClickTime = 0;
 
 
 
@@ -129,12 +132,14 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
             public void onClick(View view) {
                 refreshBalance();
                 if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
-                    labelBalance.setText("Available balance");
+                    labelBalance.setText("available balance");
+                    textViewBalance.setText(formatBalanceString(balanceAvailable));
                     showTypeBalance=TYPE_BALANCE_BOOK;
                     //fab_change_balance.setImageResource(R.drawable.wallet);
                     //labelBalance.setText();
                 }else if (showTypeBalance==TYPE_BALANCE_BOOK){
-                    labelBalance.setText("Book Balance");
+                    labelBalance.setText("book Balance");
+                    textViewBalance.setText(formatBalanceString(bookBalance));
                     showTypeBalance=TYPE_BALANCE_AVAILABLE;
                     //fab_change_balance.setImageResource(R.drawable.ic_action_about);
                     //labelBalance.setText();
@@ -155,6 +160,13 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         textViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // mis-clicking prevention, using threshold of 6000 ms
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 6000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
+
                 showBalanceBTC = !showBalanceBTC;
                 refreshBalance();
             }

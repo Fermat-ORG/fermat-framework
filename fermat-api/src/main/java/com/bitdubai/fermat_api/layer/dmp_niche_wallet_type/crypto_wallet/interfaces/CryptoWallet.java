@@ -54,8 +54,11 @@ public interface CryptoWallet {
      */
     CryptoAddress requestAddress(String actorName, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
 
-    /**
-     * Send money methods
-     */
+    CryptoAddress requestAddress(UUID actorId, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
+
+
+        /**
+         * Send money methods
+         */
     void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID) throws CantSendCryptoException, InsufficientFundsException;
 }

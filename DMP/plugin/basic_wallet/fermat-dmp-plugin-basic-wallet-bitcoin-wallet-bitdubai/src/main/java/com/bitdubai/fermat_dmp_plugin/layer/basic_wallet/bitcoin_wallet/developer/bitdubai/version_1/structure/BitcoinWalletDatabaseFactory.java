@@ -35,7 +35,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
 
         Database database;
 
@@ -69,9 +69,10 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                database.getDatabaseFactory().createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
+                database.closeDatabase();
                 throw new CantCreateDatabaseException();
             }
 
@@ -83,6 +84,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
              * but anyway, if this happens, I can not continue.
              * * *
              */
+            database.closeDatabase();
             throw new CantCreateDatabaseException("I COUNLDN'T CREATE THE DATABASE",invalidOwnerId,"OwnerId: " + ownerId + FermatException.CONTEXT_CONTENT_SEPARATOR + "TableName: " + BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME,"");
         }
 
@@ -104,9 +106,10 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                database.getDatabaseFactory().createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
+                database.closeDatabase();
                 throw new CantCreateDatabaseException();
             }
 
@@ -127,9 +130,9 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
 
             try {
                 bitcoinbalancewalletTable.insertRecord(balancesRecord);
-
             } catch (CantInsertRecordException e) {
-                throw new CantCreateDatabaseException("I COUNLDN'T CREATE THE DATABASE",e,"Can't insert first empty balance record","");
+                database.closeDatabase();
+                throw new CantCreateDatabaseException("I COULDN'T CREATE THE DATABASE",e,"","Can't insert first empty balance record");
             }
 
         }
@@ -139,9 +142,10 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
              * but anyway, if this happens, I can not continue.
              * * *
              */
+            database.closeDatabase();
             throw new CantCreateDatabaseException("I COUNLDN'T CREATE THE DATABASE",invalidOwnerId,"OwnerId: " + ownerId + FermatException.CONTEXT_CONTENT_SEPARATOR + "TableName: " + BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME,"");
         }
-
+        database.closeDatabase();
         return database;
     }
 

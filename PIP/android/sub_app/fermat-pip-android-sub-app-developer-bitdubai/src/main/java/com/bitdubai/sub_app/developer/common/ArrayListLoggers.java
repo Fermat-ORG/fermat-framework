@@ -114,7 +114,7 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
             case LEVEL_3:{
                 for (Loggers log:this){
                     if(log.classHierarchyLevels.getLevel3()!=null) {
-                        if (log.classHierarchyLevels.getLevel3().compareTo(logger.classHierarchyLevels.getLevel3()) == 0) {
+                        if (log.classHierarchyLevels.getLevel2().compareTo(logger.classHierarchyLevels.getLevel2()) == 0) {
                             lstLoggers.add(log);
                         }
                     }

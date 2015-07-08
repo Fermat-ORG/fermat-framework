@@ -236,6 +236,28 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
+    public CryptoAddress requestAddress(UUID actorId, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException {
+        try {
+            CryptoAddress deliveredCryptoAddress;
+            try {
+                deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletId, platformWalletType);
+            } catch (CantRequestOrRegisterCryptoAddressException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
+            }
+            try {
+                actorAddressBookRegistry.registerActorAddressBook(actorId, actorType, deliveredCryptoAddress);
+            } catch (CantRegisterActorAddressBookException e) {
+                throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
+            }
+            return deliveredCryptoAddress;
+        } catch (CantCreateOrRegisterActorException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
+        }
+    }
+
+    @Override
     public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException {
         try {
             walletContactsRegistry.updateWalletContact(contactId, receivedCryptoAddress, actorName);
