@@ -20,4 +20,5 @@ public class OutgoingExtraUserDatabaseConstants {
     public static final String OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME = "TransactionStatus";
     public static final String OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME = "Description";
     public static final String OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME = "Timestamp";
+    public static final String OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME = "CryptoStatus";
 }

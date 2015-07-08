@@ -25,7 +25,7 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
 
     private TransactionType type;
 
-    private TransactionState state;
+    //private TransactionState state;
 
     private long timestamp;
 
@@ -73,15 +73,12 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
         this.amount = amount;
     }
 
-    /* TODO: NATALIA - Borrar estos dos métodos
-     *       No se debería esperar este dato de otro módulo, cuando llaman a operaciones del book
-     *       balance van a ser de tipo book y cuando llaman a las de Available balance van a ser del
-     *       tipo available. Eso lo podés decidir internamente por lo que no deberías esperarlo de aguera
-     */
+    @Override
     public BalanceType getBalanceType() {
         return balanceType;
     }
 
+    @Override
     public void setBalanceType(BalanceType type) {
         this.balanceType = type;
     }
@@ -95,7 +92,7 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
     public void setType(TransactionType type) {
         this.type = type;
     }
-
+/*
     public TransactionState getState() {
         return state;
     }
@@ -103,7 +100,7 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
     public void setState(TransactionState state) {
         this.state = state;
     }
-
+*/
     @Override
     public long getTimestamp() {
         return timestamp;

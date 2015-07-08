@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
@@ -32,12 +33,16 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     private String memo;
 
+    private BalanceType balanceType;
+
     /*
      * TransactionWrapper member variables
      */
     private UUID walletId;
 
     private TransactionState state;
+
+    private CryptoStatus cryptoStatus;
 
 
     /*
@@ -82,7 +87,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     public void setAmount(long amount) {
         this.amount = amount;
     }
-/*
+
     @Override
     public BalanceType getBalanceType() {
         return this.balanceType;
@@ -92,7 +97,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     public void setBalanceType(BalanceType type) {
         this.balanceType = type;
     }
-*/
+
     @Override
     public TransactionType getType() {
         return type;
@@ -134,16 +139,6 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.transactionHash = tramsactionHash;
     }
 
-/*
-    public UUID getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(UUID transactionId) {
-        this.transactionId = transactionId;
-    }
-*/
-
     public UUID getWalletId() {
         return walletId;
     }
@@ -158,5 +153,13 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     public void setState(TransactionState state) {
         this.state = state;
+    }
+
+    public CryptoStatus getCryptoStatus() {
+        return this.cryptoStatus;
+    }
+
+    public void setCryptoStatus(CryptoStatus cryptoStatus) {
+        this.cryptoStatus = cryptoStatus;
     }
 }
