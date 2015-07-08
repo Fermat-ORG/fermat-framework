@@ -5,5 +5,5 @@ package com.bitdubai.fermat_cry_api.layer.crypto_vault;
  */
 public interface CryptoVaultTransactionNotificationAgent {
     public final int AGENT_SLEEP_TIME = 10000;
-    public final int ITERATIONS_THRESHOLD = 10;
+    public final int ITERATIONS_THRESHOLD = 50;
 }
