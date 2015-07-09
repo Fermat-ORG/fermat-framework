@@ -3,7 +3,16 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnBlockchainEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.listeners.IncomingCryptoReversedOnBlockchainEventListener;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnBlockchainEventHandler;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkEventHandler;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnBlockchainEventHandler;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnCryptoNetworkEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoTransactionsWaitingTransferenceEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
@@ -71,7 +80,28 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
     /**
      * IncomingCryptoEventRecorder Interface implementation.
      */
+    @Deprecated
     public void incomingCryptoWaitingTransference(IncomingCryptoTransactionsWaitingTransferenceEvent event) throws CantSaveEvent {
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        //System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
+    }
+
+    public void incomingCryptoWaitingTransference(IncomingCryptoOnCryptoNetworkEvent event) throws CantSaveEvent {
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        //System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
+    }
+
+    public void incomingCryptoWaitingTransference(IncomingCryptoOnBlockchainEvent event) throws CantSaveEvent {
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        //System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
+    }
+
+    public void incomingCryptoWaitingTransference(IncomingCryptoReversedOnCryptoNetworkEvent event) throws CantSaveEvent {
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        //System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
+    }
+
+    public void incomingCryptoWaitingTransference(IncomingCryptoReversedOnBlockchainEvent event) throws CantSaveEvent {
         this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
     }
@@ -96,6 +126,38 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
+        /**
+         * Issue #543
+         * Added the handlers for the new four events raised in the vault.
+         */
+        /*
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+        eventHandler = new IncomingCryptoOnCryptoNetworkEventHandler();
+        ((IncomingCryptoOnCryptoNetworkEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);*/
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
+        eventHandler = new IncomingCryptoOnBlockchainEventHandler();
+        ((IncomingCryptoOnBlockchainEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+        eventHandler = new IncomingCryptoReversedOnCryptoNetworkEventHandler();
+        ((IncomingCryptoReversedOnCryptoNetworkEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+        eventHandler = new IncomingCryptoReversedOnBlockchainEventHandler();
+        ((IncomingCryptoReversedOnBlockchainEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
         

@@ -2,8 +2,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.dev
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnBlockchainNetworkWaitingTransferenceExtraUserEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartServiceException;
@@ -72,11 +77,7 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
         this.registry = registry;
     }
 
-
-    /**
-     * IncomingCryptoEventRecorder Interface implementation.
-     */
-    public void incomingCryptoWaitingTransference(IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent event) throws CantSaveEventException {
+    public void saveEvent(PlatformEvent event) throws CantSaveEventException {
         if(!serviceStatus.equals(ServiceStatus.STARTED))
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, null, null, "You must start the service first");
 
@@ -93,15 +94,25 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-        EventListener eventListener;
-        EventHandler eventHandler;
+        EventListener onBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+        EventListener onCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+        EventListener reversedOnBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+        EventListener reversedOnCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
-        eventHandler = new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        onBlockchainEventListener.setEventHandler(new IncomingCryptoOnBlockchainNetworkWaitingTransferenceExtraUserEventHandler(this));
+        onCryptoNetworkEventListener.setEventHandler(new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
+        reversedOnBlockchainEventListener.setEventHandler(new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventHandler(this));
+        reversedOnCryptoNetworkEventListener.setEventHandler(new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
 
+        eventManager.addListener(onBlockchainEventListener);
+        eventManager.addListener(onCryptoNetworkEventListener);
+        eventManager.addListener(reversedOnBlockchainEventListener);
+        eventManager.addListener(reversedOnCryptoNetworkEventListener);
+
+        listenersAdded.add(onBlockchainEventListener);
+        listenersAdded.add(onCryptoNetworkEventListener);
+        listenersAdded.add(reversedOnBlockchainEventListener);
+        listenersAdded.add(reversedOnCryptoNetworkEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
         

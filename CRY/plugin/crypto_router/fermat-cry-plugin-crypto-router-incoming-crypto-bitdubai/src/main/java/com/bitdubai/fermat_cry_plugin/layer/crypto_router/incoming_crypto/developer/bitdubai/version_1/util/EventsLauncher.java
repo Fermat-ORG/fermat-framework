@@ -29,9 +29,30 @@ public class EventsLauncher implements DealsWithEvents {
 
             switch (specialist) {
                 case EXTRA_USER_SPECIALIST:
-                    PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
-                    platformEvent.setSource(EventSource.CRYPTO_ROUTER);
-                    eventManager.raiseEvent(platformEvent);
+                    /**
+                     * Issue #553
+                     */
+                    //PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
+                    //platformEvent.setSource(EventSource.CRYPTO_ROUTER);
+                    //eventManager.raiseEvent(platformEvent);
+
+                    PlatformEvent platformEventOnCryptoNetwork = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+                    platformEventOnCryptoNetwork.setSource(EventSource.CRYPTO_ROUTER);
+                    eventManager.raiseEvent(platformEventOnCryptoNetwork);
+
+                    PlatformEvent platformEventOnBlockchain = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+                    platformEventOnBlockchain.setSource(EventSource.CRYPTO_ROUTER);
+                    eventManager.raiseEvent(platformEventOnBlockchain);
+
+                    PlatformEvent platformEventReversedOnCryptoNetwork = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+                    platformEventReversedOnCryptoNetwork.setSource(EventSource.CRYPTO_ROUTER);
+                    eventManager.raiseEvent(platformEventReversedOnCryptoNetwork);
+
+                    PlatformEvent platformEventReversedOnBlockChain = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+                    platformEventReversedOnBlockChain.setSource(EventSource.CRYPTO_ROUTER);
+                    eventManager.raiseEvent(platformEventReversedOnBlockChain);
+
+
                     System.out.println("TTF - INCOMING CRYPTO RELAY: EVENTSLAUNCHER - EVENTS RAISED");
                     break;
                 default:

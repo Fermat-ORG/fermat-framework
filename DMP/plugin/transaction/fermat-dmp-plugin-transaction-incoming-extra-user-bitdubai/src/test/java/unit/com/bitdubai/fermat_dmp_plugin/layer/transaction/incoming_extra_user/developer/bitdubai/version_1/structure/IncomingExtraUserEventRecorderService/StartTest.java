@@ -35,7 +35,7 @@ public class StartTest {
 
     @Test
     public void Start_EventManagerSetWithValidEventListener_ServiceStarted() throws Exception{
-        when(mockEventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER)).thenReturn(mockEventListener);
+        when(mockEventManager.getNewListener(any(EventType.class))).thenReturn(mockEventListener);
         testRegistry = new IncomingExtraUserRegistry();
 
         testEventRecorderService = new IncomingExtraUserEventRecorderService(mockEventManager, testRegistry);

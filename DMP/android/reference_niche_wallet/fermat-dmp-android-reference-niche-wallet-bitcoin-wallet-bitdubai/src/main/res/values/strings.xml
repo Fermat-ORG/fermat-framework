@@ -111,4 +111,10 @@
     <string name="title_activity_activity_main">Main Activity</string>
     <string name="empty_view">Empty List view</string>
 
+
+    <!-- TAB BALANCE STRINGS  -->
+    <string name="available_balance">available balance</string>
+    <string name="book_balance">book balance</string>
+
+
 </resources>

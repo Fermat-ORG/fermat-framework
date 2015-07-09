@@ -325,13 +325,18 @@ public class LogToolsFragmentLevel2 extends Fragment {
                     //String[] level1_splitted=item.level1.split(".");
                     //tringToShowLevel=level1_splitted[level1_splitted.length-1];
                     //Toast.makeText(getActivity(),item.level1,Toast.LENGTH_SHORT);
-                    stringToShowLevel=item.classHierarchyLevels.getLevel1().substring(item.classHierarchyLevels.getLevel1().length() - 25, item.classHierarchyLevels.getLevel1().length());
-                    stringToShowLevel=StringUtils.replaceStringByPoint(stringToShowLevel);
-                    stringToShowLevel=StringUtils.replaceStringByUnderScore(stringToShowLevel);
+
+
+                    stringToShowLevel=item.classHierarchyLevels.getLevel1();
                     if(item.classHierarchyLevels.getLevel2()==null){
                         stringToShowLevel=StringUtils.splitCamelCase(stringToShowLevel);
                         item.picture="java_class";
                         holder.imageView.setOnClickListener(null);
+                    }else{
+                        String[] stringToFormat=item.classHierarchyLevels.getLevel1().split("\\.");
+                        stringToShowLevel=stringToFormat[stringToFormat.length-1];
+                        stringToShowLevel=StringUtils.replaceStringByPoint(stringToShowLevel);
+                        stringToShowLevel=StringUtils.replaceStringByUnderScore(stringToShowLevel);
                     }
                     //stringToShowLevel=item.level1;
                     break;
@@ -381,55 +386,6 @@ public class LogToolsFragmentLevel2 extends Fragment {
                     break;
             }
 
-            holder.btnLogger= (ImageView) convertView.findViewById(R.id.imageView_logger);
-            holder.btnLogger.setImageResource(R.drawable.ic_menu_drawer);
-
-            holder.btnLogger.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    String loggerText = holder.companyTextView.getText().toString();
-                    /*PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-                    popupMenu.inflate(R.menu.popup_menu);
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            boolean result=false;
-                            int itemId = menuItem.getItemId();
-                            if (itemId == R.id.menu_no_logging) {
-                                //TODO: HAcer el cambio acá para que haga el changelevel
-                                changeLogLevel(item.pluginKey,LogLevel.NOT_LOGGING,item.classHierarchyLevels.getFullPath());
-                                //changeLogLevel();
-                                result=true;
-                            } else if (itemId == R.id.menu_minimal) {
-                                changeLogLevel(item.pluginKey,LogLevel.MINIMAL_LOGGING,item.classHierarchyLevels.getFullPath());
-                                result= true;
-                            } else if (itemId == R.id.menu_moderate) {
-                                changeLogLevel(item.pluginKey,LogLevel.MODERATE_LOGGING,item.classHierarchyLevels.getFullPath());
-                                result= true;
-                            } else if (itemId == R.id.menu_aggresive) {
-                                changeLogLevel(item.pluginKey,LogLevel.AGGRESSIVE_LOGGING,item.classHierarchyLevels.getFullPath());
-                                result= true;
-
-                            }
-
-                            return result;
-                        }
-                    });
-
-
-
-
-                    popupMenu.show();
-
-
-
-
-                    */
-
-
-                    return true;
-                }
-            });
 
             return convertView;
         }
