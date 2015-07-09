@@ -18,6 +18,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develope
 
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.WalletManagerMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.WalletStoreMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.bank_notes_wallet.developer.bitdubai.version_1.BankNotesWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.CryptoWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.discount_wallet.developer.bitdubai.version_1.DiscountWalletNicheWalletTypePluginRoot;
@@ -72,7 +76,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 42;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 46;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -727,7 +731,53 @@ public class PluginsIdentityManager {
             }
         }
 
+        if (pluginIndex == 0) {
+            try {
+                WalletFactoryMiddlewarePluginRoot tryType;
+                tryType = (WalletFactoryMiddlewarePluginRoot) plugin;
+                pluginIndex = 42;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
 
+        if (pluginIndex == 0) {
+            try {
+                WalletManagerMiddlewarePluginRoot tryType;
+                tryType = (WalletManagerMiddlewarePluginRoot) plugin;
+                pluginIndex = 43;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                WalletPublisherMiddlewarePluginRoot tryType;
+                tryType = (WalletPublisherMiddlewarePluginRoot) plugin;
+                pluginIndex = 44;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                WalletStoreMiddlewarePluginRoot tryType;
+                tryType = (WalletStoreMiddlewarePluginRoot) plugin;
+                pluginIndex = 45;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
 
 
         if (pluginIndex > 0) {
