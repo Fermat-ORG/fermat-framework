@@ -14,7 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bitdubai.sub_app.wallet_factory.common.MyApplication;
+//import com.bitdubai.sub_app.wallet_factory.common.MyApplication;
 
 /**
  * Created by ciencias on 01.12.14.
@@ -35,13 +35,13 @@ public class MyLayoutInflaterFactory implements LayoutInflater.Factory {
                         // set the background drawable if you want that
                         //or keep it default -- either an image, border
                         //gradient, drawable, etc.
-                        view.setBackgroundResource(R.drawable.banner_kid_yellow_blue);
-                        ((TextView) view).setTextSize(20);
+                       // view.setBackgroundResource(R.drawable.banner_kid_yellow_blue);
+                      //  ((TextView) view).setTextSize(20);
 
                         // set the text color
-                        Typeface face = MyApplication.getDefaultTypeface();
-                        ((TextView) view).setTypeface(face);
-                        ((TextView) view).setTextColor(Color.WHITE);
+                       // Typeface face = MyApplication.getDefaultTypeface();
+                       // ((TextView) view).setTypeface(face);
+                       // ((TextView) view).setTextColor(Color.WHITE);
                     }
                 });
                 return view;

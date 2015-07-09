@@ -155,7 +155,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             //get actual activity to execute
             this.activity = walletRuntimeMiddleware.getLasActivity();
 
-
             ApplicationSession.setActivityId(activity.getType().getKey());
 
 
