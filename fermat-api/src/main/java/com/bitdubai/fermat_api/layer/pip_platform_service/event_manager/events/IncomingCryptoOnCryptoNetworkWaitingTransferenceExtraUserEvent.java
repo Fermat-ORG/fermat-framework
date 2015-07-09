@@ -7,26 +7,10 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventTyp
 /**
  * Created by rodrigo on 2015.07.08..
  */
-public class IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent implements PlatformEvent {
-    private EventType eventType;
-    private EventSource eventSource;
+public class IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent extends AbstractPlatformEvent {
 
-    public IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(EventType eventType){
-        this.eventType = eventType;
+    public IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(){
+        super(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
     }
 
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
-
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
-    }
 }

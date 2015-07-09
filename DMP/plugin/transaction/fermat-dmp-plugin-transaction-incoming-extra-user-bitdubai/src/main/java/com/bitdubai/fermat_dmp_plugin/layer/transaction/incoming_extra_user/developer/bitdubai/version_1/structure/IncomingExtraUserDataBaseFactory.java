@@ -11,13 +11,16 @@ import java.util.*;
 /**
  * Created by Arturo Vallone on 25/04/15
  */
-class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem {
+public class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    public IncomingExtraUserDataBaseFactory(final PluginDatabaseSystem pluginDatabaseSystem){
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
 
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
@@ -31,7 +34,7 @@ class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem 
      * IncomingExtraUserDataBaseFactory methods.
      * The whole login of this module should be redesigned
      */
-    protected Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
         DatabaseFactory databaseFactory = database.getDatabaseFactory();
         DatabaseTableFactory table;

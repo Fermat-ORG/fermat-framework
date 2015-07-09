@@ -57,6 +57,8 @@ public class RuntimeActivity implements Activity {
         this.tabStrip = tabStrip;
     }
 
+    public void setStatusBarColor(String color){this.statusBarColor=color;}
+
     /**
      * SubApp interface implementation.
      */

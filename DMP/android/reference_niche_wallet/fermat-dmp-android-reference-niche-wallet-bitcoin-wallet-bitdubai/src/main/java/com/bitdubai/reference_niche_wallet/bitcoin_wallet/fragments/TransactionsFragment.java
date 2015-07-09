@@ -66,6 +66,10 @@ public class TransactionsFragment extends Fragment {
     private int cantTransactions=10;
 
 
+    //Type face font
+    Typeface tf ;
+
+
 
     public static TransactionsFragment newInstance(int position) {
         TransactionsFragment f = new TransactionsFragment();
@@ -78,6 +82,10 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+
             cryptoWalletManager = platform.getCryptoWalletManager();
         errorManager = platform.getErrorManager();
 
@@ -109,7 +117,9 @@ public class TransactionsFragment extends Fragment {
         // Set the emptyView to the ListView
 
 
-        listViewTransactions.setEmptyView(rootView.findViewById(R.id.emptyElement));
+        TextView textViewEmptyListView =(TextView) rootView.findViewById(R.id.emptyElement);
+        textViewEmptyListView.setTypeface(tf);
+        listViewTransactions.setEmptyView(textViewEmptyListView);
 
         // Assign adapter to ListView
        listViewTransactions.setAdapter(transactionArrayAdapter);

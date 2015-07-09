@@ -52,7 +52,7 @@ public class StopTest {
     }
 
     @Test
-    public void Start_ParametersProperlySet_ThreadStarted() throws Exception{
+    public void Stop_AgentStops_TheThreadIsStoppedInmediately() throws Exception{
 
         testMonitorAgent = new IncomingExtraUserMonitorAgent(mockErrorManager, mockCryptoManager, testRegistry);
         testMonitorAgent.start();

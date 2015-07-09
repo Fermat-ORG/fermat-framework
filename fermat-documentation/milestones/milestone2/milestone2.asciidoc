@@ -257,11 +257,28 @@ Los fragmentos ya están instalados em el dispositivo, de manera que lo que falt
 
 == Lista de Plug-ins y subApps a Crear/Editar
 
-* Wallet Statistics Network Service
-* Wallet Store DMP Network Service
-* Wallet Resources Network Service
-* Wallet Factory SubApp y Wallet Factory plugin en la capa Module
-* Actividad que ejecute las wallets pidiendo la estructura de navegación y recursos al Wallet Factory plugin de Module
-* Wallet Publisher SubApp y Wallet Publisher plugin en la capa Module
-* Wallet Store SubApp y Wallet Store plugin en la capa Module
-* Wallet Manager SubApp y Wallet Manager plugin en la capa Module|
+. Sub Apps
+
+Ya están todos creados
+
+. Module
+
+* PIP / Developer
+
+. Middleware
+
+* DMP / Wallet Factory
+* DMP / Wallet Publisher
+* DMP / Wallet Store
+* DMP / Wallet Manager
+
+. Identity
+
+* PIP / Developer
+
+. Network Service
+
+* DMP / Wallet Statistics
+* DMP / Wallet Store
+* DMP / Wallet Resources
+
