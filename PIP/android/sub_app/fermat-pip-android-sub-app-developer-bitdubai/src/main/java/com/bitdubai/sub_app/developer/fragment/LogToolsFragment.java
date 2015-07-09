@@ -402,13 +402,13 @@ public class LogToolsFragment extends Fragment {
 
         ListView list;
         String[] web = {
-                "Google Plus",
-                "Twitter",
-                "Windows",
-                "Bing"
+                "Not logging",
+                "Minimal logging",
+                "Moderate logging",
+                "Agressive logging"
         } ;
         Integer[] imageId = {
-                R.drawable.wallet_1,
+                R.drawable.ic_action_accept_grey,
                 R.drawable.wallet_4,
                 R.drawable.wallet_1,
                 R.drawable.wallet_4
