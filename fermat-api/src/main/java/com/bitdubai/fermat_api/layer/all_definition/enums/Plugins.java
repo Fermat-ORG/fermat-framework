@@ -58,7 +58,8 @@ public enum Plugins {
     BITDUBAI_WALLET_MANAGER_MIDDLEWARE("Wallet Manager Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE("Wallet Publisher Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_STORE_MIDDLEWARE("Wallet Store Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("Wallet Statistics Network Service", Developers.BITDUBAI);
+    BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("Wallet Statistics Network Service", Developers.BITDUBAI),
+    BITDUBAI_DEVELOPER_IDENTITY("Developer Identity", Developers.BITDUBAI);
 
 
     private final String key;
