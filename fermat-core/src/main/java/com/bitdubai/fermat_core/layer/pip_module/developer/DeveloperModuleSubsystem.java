@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_core.layer.pip_identity.developer;
+package com.bitdubai.fermat_core.layer.pip_module.developer;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.pip_identity.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.pip_identity.IdentitySubsystem;
-import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer.pip_module.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.pip_module.ModuleSubsystem;
+import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
@@ -11,7 +11,7 @@ import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitduba
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperIdentitySubsystem implements IdentitySubsystem {
+public class DeveloperModuleSubsystem implements ModuleSubsystem {
 
     Plugin plugin;
 

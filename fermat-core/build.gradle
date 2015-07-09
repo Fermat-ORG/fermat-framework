@@ -39,6 +39,8 @@ dependencies {
 
     compile project(':fermat-pip-plugin-identity-developer-bitdubai')
 
+    compile project(':fermat-pip-plugin-module-developer-bitdubai')
+
 // P2P Projects
 
     compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
