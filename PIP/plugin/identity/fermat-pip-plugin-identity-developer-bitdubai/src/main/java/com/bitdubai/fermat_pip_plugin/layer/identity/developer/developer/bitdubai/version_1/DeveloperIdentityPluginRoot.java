@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_plugin.layer.identity.developer.bitdubai.version_1;
+package com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
