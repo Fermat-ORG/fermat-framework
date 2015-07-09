@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.DatabasesTable;
 import com.bitdubai.sub_app.developer.common.Resource;
+import com.bitdubai.sub_app.developer.common.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -236,7 +237,10 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             }
 
             TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
-            textView.setText(item.databases);
+            String formatedString = StringUtils.replaceStringByUnderScore(item.databases);
+            formatedString=StringUtils.splitCamelCase(formatedString);
+            textView.setText(formatedString);
+
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             textView.setTypeface(tf);
             holder.companyTextView = textView;

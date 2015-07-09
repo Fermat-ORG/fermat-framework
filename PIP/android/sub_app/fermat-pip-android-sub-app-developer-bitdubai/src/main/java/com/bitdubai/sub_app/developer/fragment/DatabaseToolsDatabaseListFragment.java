@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
+import com.bitdubai.sub_app.developer.common.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,7 +227,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.databases);
+            holder.companyTextView.setText(StringUtils.splitCamelCase(item.databases));
             // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
 
 
