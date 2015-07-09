@@ -9,29 +9,21 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.SystemClock;
 
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
-import com.melnykov.fab.FloatingActionButton;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -39,11 +31,11 @@ import java.util.UUID;
 /**
  * Created by Natalia on 02/06/2015.
  */
-public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class BalanceFragment extends Fragment {
     
     final int TYPE_BALANCE_AVAILABLE=1;
     final int TYPE_BALANCE_BOOK=2;
-    
+
     View rootView;
     SwipeRefreshLayout swipeLayout;
 
@@ -52,7 +44,7 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     long bookBalance;
 
     boolean showBalanceBTC = false;
-    
+
     int showTypeBalance=TYPE_BALANCE_AVAILABLE;
 
     private static final String ARG_POSITION = "position";
@@ -73,9 +65,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private static Platform platform = new Platform();
     CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
-    
-    private TextView labelBalance;
-    private TextView textViewBalance;
+
+    private TextView txtViewTypeBalance;
+    private TextView txtViewBalance;
 
     public static BalanceFragment newInstance(int position) {
         BalanceFragment f = new BalanceFragment();
@@ -125,55 +117,37 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
 
-        labelBalance =(TextView) rootView.findViewById(R.id.labelbalance);
-        labelBalance.setTypeface(tf);
-        labelBalance.setOnClickListener(new View.OnClickListener() {
+        txtViewTypeBalance =(TextView) rootView.findViewById(R.id.txtViewTypeBalance);
+        txtViewTypeBalance.setTypeface(tf);
+        txtViewTypeBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                refreshBalance();
-                if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
-                    labelBalance.setText("available balance");
-                    textViewBalance.setText(formatBalanceString(balanceAvailable));
-                    showTypeBalance=TYPE_BALANCE_BOOK;
-                    //fab_change_balance.setImageResource(R.drawable.wallet);
-                    //labelBalance.setText();
-                }else if (showTypeBalance==TYPE_BALANCE_BOOK){
-                    labelBalance.setText("book Balance");
-                    textViewBalance.setText(formatBalanceString(bookBalance));
-                    showTypeBalance=TYPE_BALANCE_AVAILABLE;
-                    //fab_change_balance.setImageResource(R.drawable.ic_action_about);
-                    //labelBalance.setText();
-                }
+                changeBalanceType();
             }
         });
         showTypeBalance=TYPE_BALANCE_AVAILABLE;
-        
-        if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
-            //labelBalance.setText();
-        }
 
-        textViewBalance = ((TextView) rootView.findViewById(R.id.balance));
-        textViewBalance.setTypeface(tf);
-        textViewBalance.setText(formatBalanceString(balanceAvailable));
+        txtViewBalance = ((TextView) rootView.findViewById(R.id.txtViewBalance));
+        txtViewBalance.setTypeface(tf);
+        txtViewBalance.setText(formatBalanceString(balanceAvailable));
 
 
-        textViewBalance.setOnClickListener(new View.OnClickListener() {
+        txtViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // mis-clicking prevention, using threshold of 6000 ms
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 6000){
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-
-                showBalanceBTC = !showBalanceBTC;
-                refreshBalance();
+                changeBalance();
+                //refreshBalance();
             }
         });
 
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshBalanceContent();
+            }
+        });
 
         //final Button b = (Button) rootView.findViewById(R.id.changeFormatBtn);
         //b.setTypeface(tf);
@@ -196,6 +170,26 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return rootView;
     }
 
+    private void changeBalanceType() {
+        if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
+            txtViewBalance.setText(formatBalanceString(bookBalance));
+            txtViewTypeBalance.setText(R.string.book_balance);
+            showTypeBalance=TYPE_BALANCE_BOOK;
+        }else if (showTypeBalance==TYPE_BALANCE_BOOK){
+            txtViewBalance.setText(formatBalanceString(balanceAvailable));
+            txtViewTypeBalance.setText(R.string.available_balance);
+            showTypeBalance=TYPE_BALANCE_AVAILABLE;
+        }
+    }
+    private void changeBalance(){
+        showBalanceBTC = !showBalanceBTC;
+        if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
+            txtViewBalance.setText(formatBalanceString(balanceAvailable));
+        }else if (showTypeBalance==TYPE_BALANCE_BOOK){
+            txtViewBalance.setText(formatBalanceString(bookBalance));
+        }
+    }
+
     private String formatBalanceString(long balance) {
         String stringBalance = "";
         if (showBalanceBTC) {
@@ -210,15 +204,16 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return stringBalance;
     }
 
-    @Override
-    public void onRefresh() {
+    private void refreshBalanceContent(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                swipeLayout.setRefreshing(false);
                 refreshBalance();
+                //transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTransactions);
+                //listViewTransactions.setAdapter(transactionArrayAdapter);
+                swipeLayout.setRefreshing(false);
             }
-        }, 3000);
+        }, 2000);
     }
 
     private void refreshBalance() {
@@ -237,9 +232,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
 
             if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
-                textViewBalance.setText(formatBalanceString(balanceAvailable));
+                txtViewBalance.setText(formatBalanceString(balanceAvailable));
             }else if(showTypeBalance==TYPE_BALANCE_BOOK){
-                textViewBalance.setText(formatBalanceString(bookBalance));
+                txtViewBalance.setText(formatBalanceString(bookBalance));
             }
 
 
