@@ -336,3 +336,9 @@ project(':fermat-dmp-plugin-middleware-wallet-manager-bitdubai').projectDir = ne
 
 include ':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai'
 project(':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-statistics-bitdubai')
+
+
+// Milestone 2 project identity:
+
+include ':fermat-pip-plugin-identity-developer-bitdubai'
+project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-developer-bitdubai')

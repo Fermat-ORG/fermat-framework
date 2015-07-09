@@ -1,12 +1,30 @@
 package com.bitdubai.fermat_api.layer.pip_user;
 
-/**
- * Created by ciencias on 22.01.15.
- */
-public class CantStartSubsystemException extends Exception {
+import com.bitdubai.fermat_api.FermatException;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5508018409434741628L;
+/**
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
+ */
+public class CantStartSubsystemException extends FermatException {
+
+	private static final String DEFAULT_MESSAGE = "CAN'T START THE IDENTITY LAYER DUE TO AN EXCEPTION: ";
+
+	public CantStartSubsystemException(final String message, final Exception cause, final String context, final String possibleReason){
+		super(DEFAULT_MESSAGE + message, cause, context, possibleReason);
+	}
+
+	public CantStartSubsystemException(final String message, final Exception cause){
+		this(DEFAULT_MESSAGE + message, cause, "", "");
+	}
+
+	public CantStartSubsystemException(final String message){
+		this(message, null);
+	}
+
+	public CantStartSubsystemException(){
+		this("");
+	}
 }

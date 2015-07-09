@@ -10,7 +10,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/wallet_3"
+            android:id="@+id/sub_apps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="4dp"
