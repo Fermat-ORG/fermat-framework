@@ -53,19 +53,22 @@ public class SubAppDesktopFragment extends Fragment {
         String[] installed =
                 {  "true",
                         "true",
+                        "true",
                         "true"
                 };
         String[] sub_app_names =
                 { "Developer",
                    "Wallet Factory",
-                   "Wallet Publisher"
+                   "Wallet Publisher",
+                        "Wallet Store"
                 };
 
 
         String[] sub_app_picture =
                 {"developer_sub_app",
                         "wallet_factory",
-                        "wallet_publisher"
+                        "wallet_publisher",
+                        "wallet_store"
                 };
 
         mlist = new ArrayList<App>();
@@ -193,6 +196,12 @@ public class SubAppDesktopFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.publisher);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
+                    break;
+
+                case "wallet_store":
+                    holder.imageView.setImageResource(R.drawable.store);
+                    holder.imageView.setTag("StoreFrontActivity|1");
+                    linearLayout.setTag("StoreFrontActivity|1");
                     break;
 
             }

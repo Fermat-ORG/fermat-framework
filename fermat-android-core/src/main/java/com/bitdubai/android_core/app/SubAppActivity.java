@@ -59,6 +59,10 @@ import com.bitdubai.fermat.R;
 
 
 import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.sub_app.wallet_store.fragment.AcceptedNearbyFragment;
+import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
+import com.bitdubai.sub_app.wallet_store.fragment.FreeFragment;
+import com.bitdubai.sub_app.wallet_store.fragment.PaidFragment;
 
 
 import java.util.List;
@@ -492,6 +496,13 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     startActivity(intent);
 
                     break;
+
+                case CWP_WALLET_RUNTIME_STORE_MAIN:
+                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+                    intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+                    startActivity(intent);
+
+                    break;
             }
 
         } catch (Exception e) {
@@ -643,6 +654,20 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 try {
                     switch (fragmentType) {
 
+                        //wallet store
+                        case CWP_SHOP_MANAGER_MAIN:
+                            currentFragment = AllFragment.newInstance(position);
+                            break;
+                        case CWP_SHOP_MANAGER_FREE:
+                            currentFragment = FreeFragment.newInstance(position);
+                            break;
+                        case CWP_SHOP_MANAGER_PAID:
+                            currentFragment = PaidFragment.newInstance(position);
+                            break;
+                        case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
+                            currentFragment = AcceptedNearbyFragment.newInstance(position);
+                            break;
+                        //**
                         case CWP_WALLET_MANAGER_MAIN:
                             currentFragment = WalletDesktopFragment.newInstance(position);
                             break;
@@ -657,6 +682,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         case CWP_WALLET_PUBLISHER_MAIN:
                             currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);
                             break;
+
+
 
                     }
 
