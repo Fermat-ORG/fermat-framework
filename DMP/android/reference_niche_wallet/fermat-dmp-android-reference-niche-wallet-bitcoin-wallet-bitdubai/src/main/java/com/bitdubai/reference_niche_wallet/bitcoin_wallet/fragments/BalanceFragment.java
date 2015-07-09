@@ -49,11 +49,6 @@ public class BalanceFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
-    // Check if a click was executed.
-    private long mLastClickTime = 0;
-
-
-
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
     Typeface tf ;
@@ -79,6 +74,7 @@ public class BalanceFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
@@ -117,6 +113,9 @@ public class BalanceFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
 
+
+
+        // Loading a setting textView Balance type
         txtViewTypeBalance =(TextView) rootView.findViewById(R.id.txtViewTypeBalance);
         txtViewTypeBalance.setTypeface(tf);
         txtViewTypeBalance.setOnClickListener(new View.OnClickListener() {
@@ -125,13 +124,15 @@ public class BalanceFragment extends Fragment {
                 changeBalanceType();
             }
         });
+
+        // Setting type balance
         showTypeBalance=TYPE_BALANCE_AVAILABLE;
 
+
+        // Loading a setting textView Balance amount
         txtViewBalance = ((TextView) rootView.findViewById(R.id.txtViewBalance));
         txtViewBalance.setTypeface(tf);
         txtViewBalance.setText(formatBalanceString(balanceAvailable));
-
-
         txtViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,7 +142,9 @@ public class BalanceFragment extends Fragment {
             }
         });
 
-        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+
+        // Loading a setting SwipeRefreshLayout
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -149,27 +152,13 @@ public class BalanceFragment extends Fragment {
             }
         });
 
-        //final Button b = (Button) rootView.findViewById(R.id.changeFormatBtn);
-        //b.setTypeface(tf);
-
-        /*b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (showBalanceBTC)
-                    b.setText("Show in BTC");
-                else
-                    b.setText("Show in bits");
-
-                showBalanceBTC = !showBalanceBTC;
-                refreshBalance();
-            }
-        });
-        */
-
 
         return rootView;
     }
 
+    /*
+        Method to change the balance type
+     */
     private void changeBalanceType() {
         if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
             txtViewBalance.setText(formatBalanceString(bookBalance));
@@ -181,6 +170,10 @@ public class BalanceFragment extends Fragment {
             showTypeBalance=TYPE_BALANCE_AVAILABLE;
         }
     }
+
+    /*
+        Method to change the balance amount
+     */
     private void changeBalance(){
         showBalanceBTC = !showBalanceBTC;
         if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
@@ -190,6 +183,12 @@ public class BalanceFragment extends Fragment {
         }
     }
 
+
+    /**
+     *  Formationg balance amount
+     * @param balance
+     * @return
+     */
     private String formatBalanceString(long balance) {
         String stringBalance = "";
         if (showBalanceBTC) {
@@ -204,6 +203,10 @@ public class BalanceFragment extends Fragment {
         return stringBalance;
     }
 
+
+    /**
+     *  Method to run the swipeRefreshLayout
+     */
     private void refreshBalanceContent(){
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -213,12 +216,13 @@ public class BalanceFragment extends Fragment {
                 //listViewTransactions.setAdapter(transactionArrayAdapter);
                 swipeLayout.setRefreshing(false);
             }
-        }, 2000);
+        }, 5000);
     }
 
+    /**
+     *  Method to refresh amount of BookBalance and AvailableBalance
+     */
     private void refreshBalance() {
-
-
         try {
             try {
                 balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);

@@ -32,7 +32,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_column="2" />
             <TextView android:text="App Name"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
 
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
@@ -43,7 +43,8 @@
                 android:textColor="@color/black_overlay"
                 android:textStyle="bold"
                 android:layout_weight="0.7"
-                android:textSize="8sp"/>
+                android:textSize="8sp"
+                android:maxHeight="50sp"/>
 
         </LinearLayout>
     </RelativeLayout>
