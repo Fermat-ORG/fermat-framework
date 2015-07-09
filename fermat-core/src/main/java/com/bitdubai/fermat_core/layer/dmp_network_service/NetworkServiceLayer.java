@@ -10,6 +10,7 @@ import com.bitdubai.fermat_core.layer.dmp_network_service.intra_user.IntraUserSu
 import com.bitdubai.fermat_core.layer.dmp_network_service.money.MoneySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_community.WalletCommunitySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_resources.WalletResourcesSubsystem;
+import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_statistics.WalletStatisticsSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_store.WalletStoreSubsystem;
 
 /**
@@ -17,42 +18,48 @@ import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_store.WalletSto
  */
 public class NetworkServiceLayer implements PlatformLayer {
 
-    private Plugin mUserPlugin;
-
     private Plugin mBankNotesPlugin;
-    
-    private Plugin mWalletResources;
 
-    private Plugin mWalletStore;
-    
-    private Plugin mWalletCommunity;
-    
     private Plugin mMoney;
 
+    private Plugin mUserPlugin;
 
-    public Plugin getUserPlugin() {
-        return mUserPlugin;
-    }
+    private Plugin mWalletCommunity;
+
+    private Plugin mWalletResources;
+
+    private Plugin mWalletStatistics;
+
+    private Plugin mWalletStore;
+
 
     public Plugin getBankNotesPlugin() {
         return mBankNotesPlugin;
     }
 
-    public Plugin getWalletResources() {
-        return mWalletResources;
+    public Plugin getMoney() {
+        return mMoney;
+
     }
 
-    public Plugin getWalletStore() {
-        return mWalletStore;
+    public Plugin getUserPlugin() {
+        return mUserPlugin;
     }
 
     public Plugin getWalletCommunity() {
         return mWalletCommunity;
     }
 
-    public Plugin getMoney(){
-        return mMoney;
-        
+    public Plugin getWalletResources() {
+        return mWalletResources;
+    }
+
+    public Plugin getWalletStatistics() {
+        return mWalletStatistics;
+    }
+
+    public Plugin getWalletStore() {
+        return mWalletStore;
     }
 
     @Override
@@ -77,7 +84,7 @@ public class NetworkServiceLayer implements PlatformLayer {
 
             //TODO: Change exceptions.
             throw new CantStartLayerException();
-    
+
         }
 
 
@@ -103,25 +110,16 @@ public class NetworkServiceLayer implements PlatformLayer {
         }
 
 
-        /**
-         * Let's try to start the Wallet Resources subsystem.
-         */
-
-        NetworkSubsystem walletResourcesSubsystem = new WalletResourcesSubsystem();
+        NetworkSubsystem moneySubsystem = new MoneySubsystem();
 
         try {
-            walletResourcesSubsystem.start();
-            mWalletResources = (walletResourcesSubsystem).getPlugin();
+            moneySubsystem.start();
+            mMoney = (moneySubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
 
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-
             throw new CantStartLayerException();
-
         }
 
         /**
@@ -144,7 +142,43 @@ public class NetworkServiceLayer implements PlatformLayer {
             throw new CantStartLayerException();
 
         }
-        
+
+        /**
+         * Let's try to start the Wallet Resources subsystem.
+         */
+
+        NetworkSubsystem walletResourcesSubsystem = new WalletResourcesSubsystem();
+
+        try {
+            walletResourcesSubsystem.start();
+            mWalletResources = (walletResourcesSubsystem).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+
+            throw new CantStartLayerException();
+
+        }
+
+        /**
+         * Let's try to start the Wallet Statistics subsystem.
+         */
+
+        NetworkSubsystem walletStatisticsSubsystem = new WalletStatisticsSubsystem();
+
+        try {
+            walletStatisticsSubsystem.start();
+            mWalletStatistics = (walletStatisticsSubsystem).getPlugin();
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+
+            throw new CantStartLayerException();
+        }
+
         /**
          * Let's try to start the Wallet Store subsystem.
          */
@@ -161,20 +195,6 @@ public class NetworkServiceLayer implements PlatformLayer {
             /**
              * Since this is the only implementation, if this does not start, then the layer can't start either.
              */
-
-            throw new CantStartLayerException();
-
-        }
-        
-        NetworkSubsystem moneySubsystem = new MoneySubsystem();
-        
-        try {
-            moneySubsystem.start();
-            mMoney = (moneySubsystem).getPlugin();
-            
-        }catch (CantStartSubsystemException e){
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
-
             throw new CantStartLayerException();
         }
     }

@@ -1,12 +1,12 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 
 import java.util.UUID;
 
@@ -21,7 +21,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletStoreMiddlewarePluginRoot implements DealsWithErrors, Plugin, Service, WalletStoreManager {
+public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors, NetworkService, Plugin, Service, WalletStatisticsManager {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -29,32 +29,37 @@ public class WalletStoreMiddlewarePluginRoot implements DealsWithErrors, Plugin,
     ErrorManager errorManager;
 
     /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
-
-    /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+    /**
+     * Plugin Interface member variables.
+     */
+    UUID pluginId;
 
+
+
+    /**
+     * Service Interface implementation.
+     */
     @Override
-    public void start() throws CantStartPluginException {
+    public void start() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
+
     @Override
-    public void pause(){
+    public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
-    public void resume(){
+    public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -65,7 +70,16 @@ public class WalletStoreMiddlewarePluginRoot implements DealsWithErrors, Plugin,
 
 
     /**
-     * DealWithErrors Interface implementation. 
+     * NetworkService Interface implementation.
+     */
+    
+    @Override
+    public UUID getId() {
+        return pluginId;
+    }
+
+    /**
+     *DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {

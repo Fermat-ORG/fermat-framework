@@ -86,6 +86,7 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-community-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-resources-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-store-bitdubai')
+    compile project(':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
 
     compile project(':fermat-dmp-plugin-module-wallet-manager-bitdubai')

@@ -26,6 +26,11 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStore;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.DealsWithWalletStatisticsNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.DealsWithNicheWalletTypeCryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWithOutgoingExtraUser;
@@ -594,6 +599,14 @@ public class Platform  {
         setPluginReferencesAndStart(walletStoreNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
 
         /**
+         * -----------------------------
+         * Plugin Wallet Statistics Network Service
+         * -----------------------------
+         */
+        Plugin walletStatisticsNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletStatistics();
+        setPluginReferencesAndStart(walletStatisticsNetworkService, Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE);
+
+        /**
          * -------------------------------
          * Plugin App Runtime Middleware 
          * -------------------------------
@@ -894,8 +907,17 @@ public class Platform  {
             if (plugin instanceof DealsWithWalletPublisher)
                 ((DealsWithWalletPublisher) plugin).setWalletPublisherManager((WalletPublisherManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE));
 
+            if (plugin instanceof DealsWithWalletResources)
+                ((DealsWithWalletResources) plugin).setWalletResourcesManager((WalletResourcesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+
+            if (plugin instanceof DealsWithWalletStatisticsNetworkService)
+                ((DealsWithWalletStatisticsNetworkService) plugin).setWalletStatisticsManager((WalletStatisticsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE));
+
             if (plugin instanceof DealsWithWalletStore)
                 ((DealsWithWalletStore) plugin).setWalletStoreManager((WalletStoreManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE));
+
+            if (plugin instanceof DealsWithWalletStoreNetworkService)
+                ((DealsWithWalletStoreNetworkService) plugin).setWalletStoreManager((com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE));
 
             if (plugin instanceof DealsWithIncomingCrypto)
                 ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION));
