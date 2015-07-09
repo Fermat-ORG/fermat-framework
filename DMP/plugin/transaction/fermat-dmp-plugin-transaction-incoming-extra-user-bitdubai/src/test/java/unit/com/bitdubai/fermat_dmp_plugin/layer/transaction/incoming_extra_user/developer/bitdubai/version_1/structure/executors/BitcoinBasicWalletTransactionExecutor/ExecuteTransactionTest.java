@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
 
 import org.junit.Before;
@@ -75,6 +76,16 @@ public class ExecuteTransactionTest {
         testTransaction = setUpTransaction(CryptoStatus.REVERSED_ON_BLOCKCHAIN);
         catchException(testExecutor).executeTransaction(testTransaction);
         assertThat(caughtException()).isNull();
+    }
+
+    @Test
+    public void ExecuteTransaction_UnsupportedCryptoStatus_InvocationSuccessfull() throws Exception {
+        testExecutor = new BitcoinBasicWalletTransactionExecutor(mockBitcoinWallet);
+        testTransaction = setUpTransaction(CryptoStatus.PENDING_SUBMIT);
+        catchException(testExecutor).executeTransaction(testTransaction);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(UnexpectedTransactionException.class);
     }
 
     private Transaction<CryptoTransaction> setUpTransaction(final CryptoStatus testStatus){

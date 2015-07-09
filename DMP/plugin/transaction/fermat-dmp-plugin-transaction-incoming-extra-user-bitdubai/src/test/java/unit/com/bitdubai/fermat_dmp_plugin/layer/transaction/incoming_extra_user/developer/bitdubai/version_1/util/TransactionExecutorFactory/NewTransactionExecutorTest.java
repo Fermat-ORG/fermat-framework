@@ -34,6 +34,15 @@ public class NewTransactionExecutorTest {
 
 
     @Test
+    public void newTransactionExecutor_PlatformWalletTypeNotSupported_TransactionExecutorCreated() throws Exception{
+        when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWallet);
+
+        testExecutorFactory = new TransactionExecutorFactory(mockBitcoinWalletManager);
+        testExecutor = testExecutorFactory.newTransactionExecutor(PlatformWalletType.COMPOSITE_WALLET_MULTI_ACCOUNT, UUID.randomUUID());
+        assertThat(testExecutor).isNull();
+    }
+
+    @Test
     public void newTransactionExecutor_WalletRecognizedByManager_TransactionExecutorCreated() throws Exception{
         when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWallet);
 
