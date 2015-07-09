@@ -3,8 +3,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.*;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 
@@ -37,6 +35,7 @@ import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 
+import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
@@ -151,10 +150,10 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                         //Matias this flag is because this fragment appair two times and when press the back button in a fragment
                         //the application crash
-                        if (!flag) {
+                      //  if (!flag) {
                             fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
-                            flag = true;
-                        }
+                           // flag = true;
+                       // }
                         break;
                     case CWP_WALLET_MANAGER_SHOP:
                          break;
@@ -422,6 +421,24 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     startActivity(intent);
 
                     break;
+                //wallet factory
+                case CWP_WALLET_FACTORY_MAIN:
+
+                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+
+                    intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+                    startActivity(intent);
+
+                    break;
+
+                //wallet publisher
+                case CWP_WALLET_PUBLISHER_MAIN:
+
+                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
+                    intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+                    startActivity(intent);
+
+                    break;
             }
 
         } catch (Exception e) {
@@ -581,7 +598,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                             currentFragment = SubAppDesktopFragment.newInstance(position);
                             break;
 
-
+                        case CWP_WALLET_FACTORY_MAIN:
+                            currentFragment = MainFragment.newInstance(position);
+                            break;
+                        case CWP_WALLET_PUBLISHER_MAIN:
+                            currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);
+                            break;
 
                     }
 
