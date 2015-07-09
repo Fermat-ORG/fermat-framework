@@ -47,6 +47,8 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.DealsWithToolManager;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DealsWithDeveloperIdentity;
 import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
+import com.bitdubai.fermat_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule;
+import com.bitdubai.fermat_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -124,6 +126,7 @@ public class Platform  {
     PlatformLayer mNicheWalletTypeLayer = new NicheWalletTypeLayer();
     PlatformLayer mActorLayer = new ActorLayer();
     PlatformLayer mIdentityLayer = new IdentityLayer();
+    PlatformLayer mModuleLayerPip = new com.bitdubai.fermat_core.layer.pip_module.ModuleLayer();
 
 
 
@@ -210,6 +213,10 @@ public class Platform  {
 
     public PlatformLayer getIdentityLayer() {
         return mIdentityLayer;
+    }
+
+    public PlatformLayer getmModuleLayerPip() {
+        return mModuleLayerPip;
     }
 
 
@@ -386,6 +393,7 @@ public class Platform  {
             mNicheWalletTypeLayer.start();
             mActorLayer.start();
             mIdentityLayer.start();
+            mModuleLayerPip.start();
         } catch (CantStartLayerException cantStartLayerException) {
             ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, cantStartLayerException);
             throw new CantStartPlatformException();
@@ -534,6 +542,14 @@ public class Platform  {
          */
         Plugin developerIdentity = ((IdentityLayer) mIdentityLayer).getMdeveloperIdentity();
         setPluginReferencesAndStart(developerIdentity, Plugins.BITDUBAI_DEVELOPER_IDENTITY);
+
+        /**
+         * -----------------------------
+         * Plugin Developer Module
+         * -----------------------------
+         */
+        Plugin developerModule = ((com.bitdubai.fermat_core.layer.pip_module.ModuleLayer) mModuleLayerPip).getmDeveloperModule();
+        setPluginReferencesAndStart(developerModule, Plugins.BITDUBAI_DEVELOPER_MODULE);
 
         /**
          *---------------------------------
@@ -882,6 +898,9 @@ public class Platform  {
 
             if (plugin instanceof DealsWithDeveloperIdentity)
                 ((DealsWithDeveloperIdentity) plugin).setDeveloperIdentityManager((DeveloperIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_IDENTITY));
+
+            if (plugin instanceof DealsWithDeveloperModule)
+                ((DealsWithDeveloperModule) plugin).setDeveloperModuleManager((DeveloperModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE));
 
             if (plugin instanceof DealsWithDeviceUsers)
                 ((DealsWithDeviceUsers) plugin).setDeviceUserManager((DeviceUserManager) corePlatformContext.getAddon(Addons.DEVICE_USER));
