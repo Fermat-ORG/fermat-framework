@@ -129,8 +129,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
             database.closeDatabase();
         } catch (DatabaseNotFoundException e) {
-            IncomingExtraUserDataBaseFactory databaseFactory = new IncomingExtraUserDataBaseFactory();
-            databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            IncomingExtraUserDataBaseFactory databaseFactory = new IncomingExtraUserDataBaseFactory(pluginDatabaseSystem);
 
             try {
                 database = databaseFactory.createDatabase(pluginId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);

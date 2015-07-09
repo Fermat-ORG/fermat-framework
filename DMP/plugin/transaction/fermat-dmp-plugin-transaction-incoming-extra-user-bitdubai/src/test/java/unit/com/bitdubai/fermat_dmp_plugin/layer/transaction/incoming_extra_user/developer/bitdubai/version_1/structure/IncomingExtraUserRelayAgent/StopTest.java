@@ -1,11 +1,14 @@
-package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
+package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +18,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -37,11 +38,13 @@ public class StopTest {
     private IncomingExtraUserRegistry testRegistry;
 
     @Mock
-    private IncomingCryptoManager mockCryptoManager;
+    private BitcoinWalletManager mockBitcoinWalletManager;
+    @Mock
+    private WalletAddressBookManager mockWalletAddressBookManager;
 
     private MockErrorManager mockErrorManager = new MockErrorManager();
 
-    private IncomingExtraUserMonitorAgent testMonitorAgent;
+    private IncomingExtraUserRelayAgent testRelayAgent;
 
     @Before
     public void setUpRegistry() throws Exception{
@@ -54,21 +57,22 @@ public class StopTest {
     @Test
     public void Stop_AgentStops_TheThreadIsStoppedInmediately() throws Exception{
 
-        testMonitorAgent = new IncomingExtraUserMonitorAgent(mockErrorManager, mockCryptoManager, testRegistry);
-        testMonitorAgent.start();
+        testRelayAgent = new IncomingExtraUserRelayAgent(mockBitcoinWalletManager, mockErrorManager, testRegistry, mockWalletAddressBookManager);
 
+        testRelayAgent.start();
         Thread.sleep(100);
+        assertThat(testRelayAgent.isRunning()).isTrue();
+
         int i = 0;
-        while(testMonitorAgent.isRunning()){
+        while(testRelayAgent.isRunning()){
             ++i;
             if(i>5)
-                testMonitorAgent.stop();
+                testRelayAgent.stop();
             Thread.sleep(100);
-            if(i>200)
+            if(i>20)
                 break;
         }
-        assertThat(i).isLessThan(200);
-
+        assertThat(i).isLessThan(20);
     }
 
 }
