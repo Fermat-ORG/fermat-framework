@@ -184,13 +184,13 @@ public class SubAppDesktopFragment extends Fragment {
                     linearLayout.setTag("DevelopersActivity|1");
                     break;
                 case "wallet_factory":
-                    holder.imageView.setImageResource(R.drawable.ic_launcher);
+                    holder.imageView.setImageResource(R.drawable.factory);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
                     break;
 
                 case "wallet_publisher":
-                    holder.imageView.setImageResource(R.drawable.ic_launcher);
+                    holder.imageView.setImageResource(R.drawable.publisher);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
                     break;

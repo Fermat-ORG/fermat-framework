@@ -73,7 +73,7 @@ import java.util.Vector;
 import com.bitdubai.fermat.R;
 
 /**
- * Created by natalia on 22/06/15.
+ * Created by natalia on 22/06/factory.
  */
 public class WalletActivity extends FragmentActivity implements com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment.NavigationDrawerCallbacks{
 

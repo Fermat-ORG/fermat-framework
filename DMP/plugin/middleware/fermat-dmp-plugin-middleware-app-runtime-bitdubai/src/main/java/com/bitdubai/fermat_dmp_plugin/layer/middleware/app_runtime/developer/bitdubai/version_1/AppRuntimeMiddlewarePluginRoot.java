@@ -378,8 +378,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
 
             runtimeTitleBar = new RuntimeTitleBar();
             runtimeTitleBar.setLabel("Wallet Factory");
-            //runtimeTitleBar.setColor("#d07b62");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
+             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             runtimeTabStrip = new RuntimeTabStrip();
             runtimeTabStrip.setTabsColor("#d07b62");
@@ -427,7 +426,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             runtimeTabStrip.setTabsIndicateColor("#b46a54");
 
             runtimeTab = new RuntimeTab();
-            runtimeTab.setLabel("");
+            runtimeTab.setLabel("Wallet Publisher");
             runtimeTab.setFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN);
 
             runtimeTabStrip.addTab(runtimeTab);
