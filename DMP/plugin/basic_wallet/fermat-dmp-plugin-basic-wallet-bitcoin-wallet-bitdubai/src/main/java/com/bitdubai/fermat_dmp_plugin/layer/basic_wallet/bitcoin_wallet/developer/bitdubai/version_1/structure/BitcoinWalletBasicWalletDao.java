@@ -348,9 +348,7 @@ public class BitcoinWalletBasicWalletDao {
                 debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME, runningBalance);
                 debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, 0);
 
-            }
-            else
-            {
+            } else {
                 if(cryptoTransaction.getType() == TransactionType.CREDIT)
                     runningBalance = balance + cryptoTransaction.getAmount();
                 else
@@ -366,24 +364,18 @@ public class BitcoinWalletBasicWalletDao {
 
             try {
                 BitcoinWalletBasicWalletDaoTransaction bitcoinWalletBasicWalletDaoTransaction = new BitcoinWalletBasicWalletDaoTransaction(this.database);
-                try
-                {
+                try{
                     balanceRecord = getBalancesRecord();
 
                     //set total balances to update
-                    if(balanceType == BalanceType.AVILABLE)
-                    {
+                    if(balanceType == BalanceType.AVILABLE){
                         balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, balance);
 
-                    }
-                    else
-                    {
+                    } else {
                         balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, balance);
 
                     }
-                }
-                catch (CantGetBalanceRecordException e)
-                {
+                } catch (CantGetBalanceRecordException e) {
                     throw new CantRegisterCreditException("Error to add debit transaction to wallet",e,"Error to execute balance transaction insert and update" , "");
 
                 }
