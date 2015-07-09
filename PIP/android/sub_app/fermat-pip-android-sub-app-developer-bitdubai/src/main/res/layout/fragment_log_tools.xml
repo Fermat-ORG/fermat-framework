@@ -17,9 +17,4 @@
         android:textColor="#000000">
     </GridView>
 
-    <TextSwitcher
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textSwitcher"
-        android:layout_gravity="right" />
 </LinearLayout>

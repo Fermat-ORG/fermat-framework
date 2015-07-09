@@ -1,6 +1,8 @@
 package com.bitdubai.sub_app.developer.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,10 +17,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -307,7 +312,7 @@ public class LogToolsFragment extends Fragment {
                     @Override
                     public boolean onLongClick(View view) {
                         String loggerText = holder.companyTextView.getText().toString();
-                        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+                        /*PopupMenu popupMenu = new PopupMenu(getActivity(), view);
 
                         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
@@ -315,7 +320,6 @@ public class LogToolsFragment extends Fragment {
                                 boolean result = false;
                                 int itemId = menuItem.getItemId();
                                 if (itemId == R.id.menu_no_logging) {
-                                    //TODO: HAcer el cambio acá para que haga el changelevel
                                     changeLogLevel(item.pluginKey, LogLevel.NOT_LOGGING, item.classHierarchyLevels.getFullPath());
                                     //changeLogLevel();
                                     result = true;
@@ -336,6 +340,9 @@ public class LogToolsFragment extends Fragment {
                         });
                         popupMenu.inflate(R.menu.popup_menu);
                         popupMenu.show();
+                        */
+                        CustomDialogClass cdd=new CustomDialogClass(getActivity());
+                        cdd.show();
                         return true;
                     }
                 });
@@ -344,14 +351,16 @@ public class LogToolsFragment extends Fragment {
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;
+                String textToShow=item.classHierarchyLevels.getLevel0();
 
+                holder.companyTextView.setText(textToShow);
 
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.classHierarchyLevels.getLevel0());
+
 
 
             switch (item.picture) {
@@ -381,8 +390,103 @@ public class LogToolsFragment extends Fragment {
 
         public ImageView imageView;
         public TextView companyTextView;
-        public ImageView btnLogger;
 
+
+    }
+
+    public class CustomDialogClass extends Dialog implements
+            android.view.View.OnClickListener {
+        public Activity c;
+        public Dialog d;
+        public Button yes, no;
+
+        ListView list;
+        String[] web = {
+                "Google Plus",
+                "Twitter",
+                "Windows",
+                "Bing"
+        } ;
+        Integer[] imageId = {
+                R.drawable.wallet_1,
+                R.drawable.wallet_4,
+                R.drawable.wallet_1,
+                R.drawable.wallet_4
+        };
+
+        public CustomDialogClass(Activity a) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.c = a;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.popup);
+            yes = (Button) findViewById(R.id.btn_yes);
+            no = (Button) findViewById(R.id.btn_no);
+            yes.setOnClickListener(this);
+            no.setOnClickListener(this);
+
+
+            CustomList adapter = new
+                    CustomList(c, web, imageId);
+            list = (ListView) findViewById(R.id.listView);
+            list.setAdapter(adapter);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    Toast.makeText(c, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            int i = v.getId();
+            if (i == R.id.btn_yes) {
+                c.finish();
+
+            } else if (i == R.id.btn_no) {
+                dismiss();
+
+            } else {
+            }
+            dismiss();
+        }
+
+        public class CustomList extends ArrayAdapter<String>{
+
+            private final Activity context;
+            private final String[] web;
+            private final Integer[] imageId;
+            public CustomList(Activity context,
+                              String[] web, Integer[] imageId) {
+                super(context, R.layout.list_single, web);
+                this.context = context;
+                this.web = web;
+                this.imageId = imageId;
+
+            }
+            @Override
+            public View getView(int position, View view, ViewGroup parent) {
+                LayoutInflater inflater = context.getLayoutInflater();
+                View rowView= inflater.inflate(R.layout.list_single, null, true);
+                TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
+
+                ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
+                txtTitle.setText(web[position]);
+
+                imageView.setImageResource(imageId[position]);
+                return rowView;
+            }
+        }
 
     }
 }
