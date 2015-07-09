@@ -56,6 +56,9 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
         this.platformDatabaseSystem = platformDatabaseSystem;
     }
 
+
+
+
     /**
      * This method open or creates the database i'll be working with
      *
