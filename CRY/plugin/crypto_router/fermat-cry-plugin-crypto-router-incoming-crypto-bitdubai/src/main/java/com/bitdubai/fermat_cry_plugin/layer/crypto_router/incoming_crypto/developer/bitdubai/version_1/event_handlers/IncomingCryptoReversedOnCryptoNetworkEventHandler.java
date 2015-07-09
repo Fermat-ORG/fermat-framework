@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
@@ -32,7 +33,7 @@ public class IncomingCryptoReversedOnCryptoNetworkEventHandler implements EventH
 
             try
             {
-                this.incomingCryptoEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoTransactionsWaitingTransferenceEvent) platformEvent);
+                this.incomingCryptoEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoReversedOnCryptoNetworkEvent) platformEvent);
             }
             catch (CantSaveEvent cantSaveEvent)
             {
