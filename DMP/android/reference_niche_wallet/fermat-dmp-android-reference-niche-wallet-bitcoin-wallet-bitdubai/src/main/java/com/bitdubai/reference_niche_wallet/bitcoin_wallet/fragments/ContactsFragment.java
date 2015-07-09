@@ -2,7 +2,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.opengl.Visibility;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,11 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
@@ -50,6 +50,9 @@ public class ContactsFragment extends Fragment {
 
     List<WalletContact> contacts;
 
+    //Type face font
+    Typeface tf ;
+
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -60,7 +63,9 @@ public class ContactsFragment extends Fragment {
     private ErrorManager errorManager;
 
     LinearLayout linearLayout;
-    ListView listView;
+    ListView listViewContacs;
+
+    Button addContactButton;
 
     public static ContactsFragment newInstance(int position) {
         ContactsFragment f = new ContactsFragment();
@@ -83,6 +88,9 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         platform = new Platform();
         errorManager = platform.getErrorManager();
@@ -94,6 +102,8 @@ public class ContactsFragment extends Fragment {
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage("Unexpected error get Contact list - " + e.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -115,17 +125,24 @@ public class ContactsFragment extends Fragment {
             }
 
             // Get ListView object from xml
-            listView = (ListView) rootView.findViewById(R.id.contactlist);
+            listViewContacs = (ListView) rootView.findViewById(R.id.contactlist);
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            listViewContacs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                    WalletContact walletContact = (WalletContact) listView.getItemAtPosition(position);
+                    WalletContact walletContact = (WalletContact) listViewContacs.getItemAtPosition(position);
                     showMessage("Contact Address:\n" + walletContact.address);
                 }
             });
 
+
+            TextView textViewEmptyListView =(TextView) rootView.findViewById(R.id.emptyElement);
+            textViewEmptyListView.setTypeface(tf);
+            listViewContacs.setEmptyView(textViewEmptyListView);
+
+
+            // Loading contact
             contacts = new ArrayList<>();
             for (WalletContactRecord wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress()));
@@ -143,14 +160,14 @@ public class ContactsFragment extends Fragment {
             });
 
             // add_contact button definition
-            final Button addContactButton = (Button) rootView.findViewById(R.id.add_contact_btn);
+            addContactButton = (Button) rootView.findViewById(R.id.add_contact_btn);
             addContactButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                 addContact(inputSearch.getText().toString());
                 }
             });
             adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, contacts);
-            listView.setAdapter(adapter);
+            listViewContacs.setAdapter(adapter);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -170,7 +187,7 @@ public class ContactsFragment extends Fragment {
         FT.replace(R.id.contacts_container, createContactFragment);
         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         linearLayout.setVisibility(View.GONE);
-        listView.setVisibility(View.GONE);
+        listViewContacs.setVisibility(View.GONE);
         FT.commit();
     }
 
