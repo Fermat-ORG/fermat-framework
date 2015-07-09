@@ -154,12 +154,12 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
         TableLayout tableLayout= new TableLayout(getActivity());
         TableLayout.LayoutParams tableLayoutParams = new TableLayout.LayoutParams();
-        tableLayout.setBackgroundColor(Color.BLACK);
+        tableLayout.setBackgroundColor(Color.parseColor("#b46a54"));
         tableLayout.setPadding(3,3,3,3);
         try {
             TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
-            tableRowParams.setMargins(5, 5, 5, 5);
-            tableRowParams.weight = 1;
+            tableRowParams.setMargins(3, 3, 3, 3);
+            tableRowParams.weight =0.14f;
 
             TableRow tableRow = new TableRow(getActivity());
             if(lstColumns!=null) {

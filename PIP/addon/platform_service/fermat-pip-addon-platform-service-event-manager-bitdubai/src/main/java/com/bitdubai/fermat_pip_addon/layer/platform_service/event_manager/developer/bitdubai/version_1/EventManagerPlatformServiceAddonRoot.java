@@ -77,6 +77,14 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersIncomingCryptoReversedOnBlockchainEvent = new ArrayList<>();
 
     /**
+     * Issue #543
+     */
+    private List<EventListener> listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent = new ArrayList<>();
+
+    /**
      * DealsWithEventMonitor member variables
      */
     EventMonitor eventMonitor;
@@ -229,6 +237,21 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
                 return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER,this.eventMonitor);
+
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER,this.eventMonitor);
+
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER,this.eventMonitor);
+
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER,this.eventMonitor);
+
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER,this.eventMonitor);
         }
         return null;
     }
@@ -372,6 +395,19 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
                 return new IncomingCryptoReversedOnBlockchainEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
             case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
                 return new IncomingCryptoReversedOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+
         }
         return null;
     }
@@ -554,6 +590,17 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
                 listenersIncomingCryptoReversedOnBlockchainEvent.add(listener);
 
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent.add(listener);
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent.add(listener);
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent.add(listener);
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent.add(listener);
         }
     }
 
@@ -739,7 +786,23 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
                 listeners = listenersIncomingCryptoReversedOnBlockchainEvent;
                 break;
-            
+
+
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent;
+                break;
         }
 
         listeners.remove(listener);
@@ -931,6 +994,23 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
                 listeners = listenersIncomingCryptoReversedOnBlockchainEvent;
                 break;
+
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent;
+                break;
+
         }
 
         for (EventListener eventListener : listeners) {
