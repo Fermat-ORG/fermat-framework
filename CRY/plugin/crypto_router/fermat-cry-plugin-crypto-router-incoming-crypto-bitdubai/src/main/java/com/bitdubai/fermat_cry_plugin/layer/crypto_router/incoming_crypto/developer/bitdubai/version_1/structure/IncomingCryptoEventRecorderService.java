@@ -119,24 +119,24 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
         EventListener eventListener;
         EventHandler eventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
+        /*eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
         eventHandler = new IncomingCryptoTransactionsWaitingTransferenceEventHandler();
         ((IncomingCryptoTransactionsWaitingTransferenceEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        listenersAdded.add(eventListener);*/
 
         /**
          * Issue #543
          * Added the handlers for the new four events raised in the vault.
          */
-        /*
+
         eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
         eventHandler = new IncomingCryptoOnCryptoNetworkEventHandler();
         ((IncomingCryptoOnCryptoNetworkEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);*/
+        listenersAdded.add(eventListener);
 
         eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
         eventHandler = new IncomingCryptoOnBlockchainEventHandler();
