@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.pip_identity.CantStartSubsystemException;
 import com.bitdubai.fermat_core.layer.pip_identity.developer.DeveloperIdentitySubsystem;
 
 /**
- * The interface <code>com.bitdubai.fermat_core.layer.pip_actor.ActorLayer</code>
+ * The interface <code>com.bitdubai.fermat_core.layer.pip_identity.IdentityLayer</code>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  * @version 1.0
