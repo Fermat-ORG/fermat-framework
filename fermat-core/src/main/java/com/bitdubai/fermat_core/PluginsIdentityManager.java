@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 
+import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
 
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
@@ -71,7 +72,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 41;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 42;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -707,6 +708,18 @@ public class PluginsIdentityManager {
                 ActorDeveloperPluginRoot tryType;
                 tryType = (ActorDeveloperPluginRoot) plugin;
                 pluginIndex = 40;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                ExtraUserUserAddonRoot tryType;
+                tryType = (ExtraUserUserAddonRoot) plugin;
+                pluginIndex = 41;
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.
