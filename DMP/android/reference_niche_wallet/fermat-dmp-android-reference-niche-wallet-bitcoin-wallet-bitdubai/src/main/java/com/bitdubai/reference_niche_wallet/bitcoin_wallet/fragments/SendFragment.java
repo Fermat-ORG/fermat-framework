@@ -44,7 +44,7 @@ import java.util.UUID;
 /**
  * Created by natalia on 19/06/15.
  */
-public class SendFragment extends Fragment implements View.OnClickListener {
+public class SendFragment extends Fragment{
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -62,6 +62,16 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
 
+
+
+
+    private EditText contact_name;
+    private EditText editAddress;
+    private EditText editAmount;
+    private LinearLayout linear_notes;
+    private LinearLayout linear_send;
+
+
     public static SendFragment newInstance(int position) {
         SendFragment f = new SendFragment();
         Bundle b = new Bundle();
@@ -72,6 +82,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         this.savedInstanceState = savedInstanceState;
         cryptoWalletManager = platform.getCryptoWalletManager();
@@ -93,18 +104,54 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
         try {
 
-            EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
-            final EditText editAddress = (EditText) rootView.findViewById(R.id.address);
-            final EditText editAmount = (EditText) rootView.findViewById(R.id.amount);
-            final LinearLayout linear_notes = (LinearLayout) rootView.findViewById(R.id.linear_notes);
-            final LinearLayout linear_send = (LinearLayout) rootView.findViewById(R.id.linear_send);
+            contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+            editAddress = (EditText) rootView.findViewById(R.id.address);
+            editAmount = (EditText) rootView.findViewById(R.id.amount);
+            linear_notes = (LinearLayout) rootView.findViewById(R.id.linear_notes);
+            linear_send = (LinearLayout) rootView.findViewById(R.id.linear_send);
 
             contact_name.setText(name);
             if (cryptoAddress.getAddress() != null)
                 editAddress.setText(cryptoAddress.getAddress());
 
             ImageView b = (ImageView) rootView.findViewById(R.id.send_button);
-            b.setOnClickListener(this);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+
+                    EditText editAddress = (EditText) rootView.findViewById(R.id.address);
+
+                    EditText editNotes = (EditText) rootView.findViewById(R.id.notes);
+
+                    CryptoAddress validAddress = validateAddress(editAddress.getText().toString());
+                    if (validAddress != null) {
+                        EditText amount = (EditText) rootView.findViewById(R.id.amount);
+                        try {
+                            cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+                        } catch (CantCreateWalletContactException e) {
+                            // TODO que hacer si no puedo crear el contacto? igual envio el dinero
+                            //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
+                        }
+
+                        try {
+
+                            cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
+
+                            Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
+                        } catch (InsufficientFundsException e) {
+                            Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
+
+                        } catch (CantSendCryptoException e) {
+                            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            showMessage("Error send satoshis - " + e.getMessage());
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
+
+                    }
+                }
+            });
 
             editAddress.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {
@@ -238,42 +285,6 @@ public class SendFragment extends Fragment implements View.OnClickListener {
         return null;
     }
 
-    @Override
-    public void onClick(View v) {
-
-        EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
-
-        EditText editAddress = (EditText) rootView.findViewById(R.id.address);
-
-        EditText editNotes = (EditText) rootView.findViewById(R.id.notes);
-
-        CryptoAddress validAddress = validateAddress(editAddress.getText().toString());
-        if (validAddress != null) {
-            EditText amount = (EditText) rootView.findViewById(R.id.amount);
-            try {
-                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-            } catch (CantCreateWalletContactException e) {
-                // TODO que hacer si no puedo crear el contacto? igual envio el dinero
-                //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
-            }
-
-            try {
-
-                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
-
-                Toast.makeText(this.getActivity(), "Send OK", Toast.LENGTH_LONG).show();
-            } catch (InsufficientFundsException e) {
-                Toast.makeText(this.getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
-
-            } catch (CantSendCryptoException e) {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage("Error send satoshis - " + e.getMessage());
-            }
-        } else {
-            Toast.makeText(this.getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
-
-        }
-    }
 
     public void setName(String name) {
         this.name = name;

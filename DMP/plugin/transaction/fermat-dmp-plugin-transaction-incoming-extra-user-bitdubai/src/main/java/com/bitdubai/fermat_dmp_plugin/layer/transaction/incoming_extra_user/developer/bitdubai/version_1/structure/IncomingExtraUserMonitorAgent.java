@@ -234,6 +234,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 /**
                  * Now I do the main task.
                  */
+                registry.openRegistry();
                 doTheMainTask();
 
                 /**

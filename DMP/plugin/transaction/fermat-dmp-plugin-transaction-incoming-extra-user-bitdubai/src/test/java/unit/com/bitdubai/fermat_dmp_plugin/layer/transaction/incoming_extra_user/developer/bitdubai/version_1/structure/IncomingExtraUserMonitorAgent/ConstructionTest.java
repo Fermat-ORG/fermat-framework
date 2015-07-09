@@ -18,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 /**
  * Created by jorgegonzalez on 2015.07.02..
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
     @Mock
@@ -31,6 +32,7 @@ public class ConstructionTest {
 
     private IncomingExtraUserMonitorAgent testMonitorAgent;
 
+    @Test
     public void Construction_ValidParameters_NewObjectCreated() {
         testMonitorAgent = new IncomingExtraUserMonitorAgent(mockErrorManager, mockIncomingCryptoManager, mockRegistry);
         assertThat(testMonitorAgent).isNotNull();

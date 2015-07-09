@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
+import com.bitdubai.sub_app.developer.common.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +77,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         try {
             ToolManager toolManager = platform.getToolManager();
@@ -96,13 +99,6 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
     private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
         try {
-            //String name = resource.split(" - ")[0];
-            // String type = resource.split(" - ")[1];
-            // if (type.equals("Addon")) {
-            //    Addons addon = Addons.getByKey(name);
-            //     logTool.setLogLevel(addon, logLevel);
-            // } else // por ahora no tengo como detectar si es un plug in o no.if (type.equals("Plugin"))
-            //{
             //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
             Plugins plugin = Plugins.getByKey(pluginKey);
 
@@ -115,18 +111,6 @@ public class LogToolsFragmentLevel2 extends Fragment {
             data.put(resource, logLevel);
             logTool.setNewLogLevelInClass(plugin, data);
 
-            //}
-
-            //TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
-            //labelDatabase.setVisibility(View.GONE);
-
-            //LogToolsFragment logToolsFragment = new LogToolsFragment();
-
-            //FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-            //FT.replace(R.id.logContainer, logToolsFragment);
-
-            //FT.commit();
         } catch (Exception e) {
             System.out.println("*********** soy un error " + e.getMessage());
         }
@@ -271,6 +255,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                     public boolean onLongClick(View view) {
                         String loggerText = holder.companyTextView.getText().toString();
                         PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+
                         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -302,7 +287,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
 
                         popupMenu.inflate(R.menu.popup_menu);
-                        boolean founded=false;
+                        /*boolean founded=false;
                         int counter=0;
                         while(!founded && counter<popupMenu.getMenu().size()){
                             MenuItem menuItem = popupMenu.getMenu().getItem(counter);
@@ -310,9 +295,12 @@ public class LogToolsFragmentLevel2 extends Fragment {
                             menuItem.setIcon(R.drawable.icono_banco_2);
                             //menuItem.
                             counter++;
-                        }
+                        }*/
 
                         popupMenu.show();
+
+
+
                         return true;
                     }
                 });
@@ -337,24 +325,33 @@ public class LogToolsFragmentLevel2 extends Fragment {
                     //String[] level1_splitted=item.level1.split(".");
                     //tringToShowLevel=level1_splitted[level1_splitted.length-1];
                     //Toast.makeText(getActivity(),item.level1,Toast.LENGTH_SHORT);
-                    stringToShowLevel=item.classHierarchyLevels.getLevel1().substring(item.classHierarchyLevels.getLevel1().length() - 20, item.classHierarchyLevels.getLevel1().length());
+
+
+                    stringToShowLevel=item.classHierarchyLevels.getLevel1();
                     if(item.classHierarchyLevels.getLevel2()==null){
+                        stringToShowLevel=StringUtils.splitCamelCase(stringToShowLevel);
                         item.picture="java_class";
                         holder.imageView.setOnClickListener(null);
+                    }else{
+                        String[] stringToFormat=item.classHierarchyLevels.getLevel1().split("\\.");
+                        stringToShowLevel=stringToFormat[stringToFormat.length-1];
+                        stringToShowLevel=StringUtils.replaceStringByPoint(stringToShowLevel);
+                        stringToShowLevel=StringUtils.replaceStringByUnderScore(stringToShowLevel);
                     }
                     //stringToShowLevel=item.level1;
                     break;
                 }
                 case ArrayListLoggers.LEVEL_2:{
-                    stringToShowLevel=item.classHierarchyLevels.getLevel2();
+                    stringToShowLevel= StringUtils.splitCamelCase(item.classHierarchyLevels.getLevel2());
                     if(item.classHierarchyLevels.getLevel3()==null){
                         item.picture="java_class";
                         holder.imageView.setOnClickListener(null);
+
                     }
                     break;
                 }
                 case ArrayListLoggers.LEVEL_3:{
-                    stringToShowLevel=formatResource(item.classHierarchyLevels.getLevel3());
+                    stringToShowLevel=item.classHierarchyLevels.getLevel3();
                     item.picture="java_class";
                     holder.imageView.setOnClickListener(null);
                     break;
@@ -389,68 +386,9 @@ public class LogToolsFragmentLevel2 extends Fragment {
                     break;
             }
 
-            holder.btnLogger= (ImageView) convertView.findViewById(R.id.imageView_logger);
-            holder.btnLogger.setImageResource(R.drawable.ic_menu_drawer);
-
-            holder.btnLogger.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    String loggerText = holder.companyTextView.getText().toString();
-                    PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-                    popupMenu.inflate(R.menu.popup_menu);
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            boolean result=false;
-                            int itemId = menuItem.getItemId();
-                            if (itemId == R.id.menu_no_logging) {
-                                //TODO: HAcer el cambio acá para que haga el changelevel
-                                changeLogLevel(item.pluginKey,LogLevel.NOT_LOGGING,item.classHierarchyLevels.getFullPath());
-                                //changeLogLevel();
-                                result=true;
-                            } else if (itemId == R.id.menu_minimal) {
-                                changeLogLevel(item.pluginKey,LogLevel.MINIMAL_LOGGING,item.classHierarchyLevels.getFullPath());
-                                result= true;
-                            } else if (itemId == R.id.menu_moderate) {
-                                changeLogLevel(item.pluginKey,LogLevel.MODERATE_LOGGING,item.classHierarchyLevels.getFullPath());
-                                result= true;
-                            } else if (itemId == R.id.menu_aggresive) {
-                                changeLogLevel(item.pluginKey,LogLevel.AGGRESSIVE_LOGGING,item.classHierarchyLevels.getFullPath());
-                                result= true;
-
-                            }
-
-                            return result;
-                        }
-                    });
-
-
-
-
-                    popupMenu.show();
-                    return true;
-                }
-            });
 
             return convertView;
         }
-
-
-        //Method to format a resource
-        // example CryptoNetworkPluginRoot to Crypto Network Plugin Root.
-        private String formatResource(String resource){
-            String resourceFormated="";
-
-            String str = "blancoRojo:amarillo.verde_azul";
-            String [] cadenas = str.split("[-:._[A-Z]]");
-            for(int i = 0; i<cadenas.length; i++){
-                //System.out.println(cadenas[i]);
-                resourceFormated+=cadenas;
-                resourceFormated+=" ";
-            }
-            return resourceFormated;
-        }
-
 
     }
     /**

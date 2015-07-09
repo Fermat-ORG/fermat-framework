@@ -1,6 +1,8 @@
 package com.bitdubai.sub_app.developer.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,10 +17,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -79,6 +84,7 @@ public class LogToolsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         try {
             ToolManager toolManager = platform.getToolManager();
@@ -105,22 +111,26 @@ public class LogToolsFragment extends Fragment {
 
 
     private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
-        //try {
-
-        Plugins plugin = null;
         try {
-            plugin = Plugins.getByKey(pluginKey);
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
+            //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
+            Plugins plugin = Plugins.getByKey(pluginKey);
+
+
+            //logTool.setLogLevel(plugin, logLevel);
+            /**
+             * Now I must look in pluginClasses map the match of the selected class to pass the full path
+             */
+            HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
+            data.put(resource, logLevel);
+            logTool.setNewLogLevelInClass(plugin, data);
+
+        } catch (Exception e) {
+            System.out.println("*********** soy un error " + e.getMessage());
         }
-
-        HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
-        data.put(resource, logLevel);
-        logTool.setNewLogLevelInClass(plugin, data);
-
     }
 
-    @Override
+
+        @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
 
@@ -156,10 +166,12 @@ public class LogToolsFragment extends Fragment {
                     log.level3=classes.getLevel3();
                     log.fullPath=classes.getFullPath();
                     */
+
                     log.type=Loggers.TYPE_PLUGIN;
                     log.classHierarchyLevels=classes;
                     log.picture="plugin";
                     log.pluginKey=plugin.getKey();
+                    //log.logLevel=classes.
                     lstLoggers.add(log);
                 }
 
@@ -295,18 +307,60 @@ public class LogToolsFragment extends Fragment {
                         FT.commit();
                     }
                 });
+
+                holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        String loggerText = holder.companyTextView.getText().toString();
+                        /*PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+
+                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                boolean result = false;
+                                int itemId = menuItem.getItemId();
+                                if (itemId == R.id.menu_no_logging) {
+                                    changeLogLevel(item.pluginKey, LogLevel.NOT_LOGGING, item.classHierarchyLevels.getFullPath());
+                                    //changeLogLevel();
+                                    result = true;
+                                } else if (itemId == R.id.menu_minimal) {
+                                    changeLogLevel(item.pluginKey, LogLevel.MINIMAL_LOGGING, item.classHierarchyLevels.getFullPath());
+                                    result = true;
+                                } else if (itemId == R.id.menu_moderate) {
+                                    changeLogLevel(item.pluginKey, LogLevel.MODERATE_LOGGING, item.classHierarchyLevels.getFullPath());
+                                    result = true;
+                                } else if (itemId == R.id.menu_aggresive) {
+                                    changeLogLevel(item.pluginKey, LogLevel.AGGRESSIVE_LOGGING, item.classHierarchyLevels.getFullPath());
+                                    result = true;
+
+                                }
+
+                                return result;
+                            }
+                        });
+                        popupMenu.inflate(R.menu.popup_menu);
+                        popupMenu.show();
+                        */
+                        CustomDialogClass cdd=new CustomDialogClass(getActivity());
+                        cdd.show();
+                        return true;
+                    }
+                });
+
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;
+                String textToShow=item.classHierarchyLevels.getLevel0();
 
+                holder.companyTextView.setText(textToShow);
 
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.classHierarchyLevels.getLevel0());
+
 
 
             switch (item.picture) {
@@ -323,45 +377,6 @@ public class LogToolsFragment extends Fragment {
                     holder.imageView.setTag("CPWWRWAKAV1M|3");
                     break;
             }
-            holder.btnLogger= (ImageView) convertView.findViewById(R.id.imageView_logger);
-            holder.btnLogger.setImageResource(R.drawable.ic_menu_drawer);
-
-            holder.btnLogger.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    //Toast.makeText(getActivity(), "Soy una estrella feliz1", Toast.LENGTH_SHORT).show();
-                    String loggerText = holder.companyTextView.getText().toString();
-                    PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            int itemId = menuItem.getItemId();
-                            if (itemId == R.id.menu_no_logging) {
-                                //TODO: HAcer el cambio acá para que haga el changelevel
-                                changeLogLevel(item.pluginKey,LogLevel.NOT_LOGGING,item.classHierarchyLevels.getFullPath());
-                                //changeLogLevel();
-                                return true;
-                            } else if (itemId == R.id.menu_minimal) {
-                                changeLogLevel(item.pluginKey,LogLevel.MINIMAL_LOGGING,item.classHierarchyLevels.getFullPath());
-                                return true;
-                            } else if (itemId == R.id.menu_moderate) {
-                                changeLogLevel(item.pluginKey,LogLevel.MODERATE_LOGGING,item.classHierarchyLevels.getFullPath());
-                                return true;
-                            } else if (itemId == R.id.menu_aggresive) {
-                                changeLogLevel(item.pluginKey,LogLevel.AGGRESSIVE_LOGGING,item.classHierarchyLevels.getFullPath());
-                                return true;
-
-                            }
-
-                            return false;
-                        }
-                    });
-
-                    popupMenu.inflate(R.menu.popup_menu);
-                    popupMenu.show();
-                    return true;
-                }
-            });
             return convertView;
         }
 
@@ -375,8 +390,103 @@ public class LogToolsFragment extends Fragment {
 
         public ImageView imageView;
         public TextView companyTextView;
-        public ImageView btnLogger;
 
+
+    }
+
+    public class CustomDialogClass extends Dialog implements
+            android.view.View.OnClickListener {
+        public Activity c;
+        public Dialog d;
+        public Button yes, no;
+
+        ListView list;
+        String[] web = {
+                "Not logging",
+                "Minimal logging",
+                "Moderate logging",
+                "Agressive logging"
+        } ;
+        Integer[] imageId = {
+                R.drawable.ic_action_accept_grey,
+                R.drawable.wallet_4,
+                R.drawable.wallet_1,
+                R.drawable.wallet_4
+        };
+
+        public CustomDialogClass(Activity a) {
+            super(a);
+            // TODO Auto-generated constructor stub
+            this.c = a;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.popup);
+            yes = (Button) findViewById(R.id.btn_yes);
+            no = (Button) findViewById(R.id.btn_no);
+            yes.setOnClickListener(this);
+            no.setOnClickListener(this);
+
+
+            CustomList adapter = new
+                    CustomList(c, web, imageId);
+            list = (ListView) findViewById(R.id.listView);
+            list.setAdapter(adapter);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    Toast.makeText(c, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            int i = v.getId();
+            if (i == R.id.btn_yes) {
+                c.finish();
+
+            } else if (i == R.id.btn_no) {
+                dismiss();
+
+            } else {
+            }
+            dismiss();
+        }
+
+        public class CustomList extends ArrayAdapter<String>{
+
+            private final Activity context;
+            private final String[] web;
+            private final Integer[] imageId;
+            public CustomList(Activity context,
+                              String[] web, Integer[] imageId) {
+                super(context, R.layout.list_single, web);
+                this.context = context;
+                this.web = web;
+                this.imageId = imageId;
+
+            }
+            @Override
+            public View getView(int position, View view, ViewGroup parent) {
+                LayoutInflater inflater = context.getLayoutInflater();
+                View rowView= inflater.inflate(R.layout.list_single, null, true);
+                TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
+
+                ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
+                txtTitle.setText(web[position]);
+
+                imageView.setImageResource(imageId[position]);
+                return rowView;
+            }
+        }
 
     }
 }
