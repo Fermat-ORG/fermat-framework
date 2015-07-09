@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletNavigationStructure;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.enums.Repositories;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
@@ -179,9 +181,29 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
 
-    @Override
+    //@Override
     public void setwalletType(Wallets type) {
         this.walletType = type;
+    }
+
+    @Override
+    public WalletResources getWalletResources(UUID resourcesId) {
+        return null;
+    }
+
+    @Override
+    public WalletNavigationStructure getWalletNavigationStructure(UUID walletNavigationStructureId) {
+        return null;
+    }
+
+    @Override
+    public void sevaaNavigationStructure(UUID walletNavigationStructureId, WalletNavigationStructure walletNavigationStructure) {
+
+    }
+
+    @Override
+    public void sevaaWalletResources(UUID resourcesId, WalletResources walletResources) {
+
     }
 
     /**
@@ -307,7 +329,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @return byte image object
      * @throws CantGetResourcesException
      */
-    @Override
+    //@Override
     public byte[] getImageResource(String imageName) throws CantGetResourcesException {
 
         byte[] imageResource = new byte[16384];
@@ -346,7 +368,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @return string layout object
      * @throws CantGetResourcesException
      */
-    @Override
+    //@Override
     public String getLayoutResource(String layoutName) throws CantGetResourcesException {
 
         String content = "";
