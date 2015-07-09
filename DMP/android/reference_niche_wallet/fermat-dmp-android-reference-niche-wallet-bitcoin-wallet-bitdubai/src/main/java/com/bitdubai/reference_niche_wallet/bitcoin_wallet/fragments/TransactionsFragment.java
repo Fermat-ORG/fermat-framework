@@ -106,10 +106,13 @@ public class TransactionsFragment extends Fragment {
         // Create the adapter to convert the array to views
         transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(), lstTransactions);
         //adapter.
+        // Set the emptyView to the ListView
 
+
+        listViewTransactions.setEmptyView(rootView.findViewById(R.id.emptyElement));
 
         // Assign adapter to ListView
-        listViewTransactions.setAdapter(transactionArrayAdapter);
+       listViewTransactions.setAdapter(transactionArrayAdapter);
 
 
         //swipeRefreshLayout.setColorSchemeColors(android.R.color);
@@ -174,7 +177,7 @@ public class TransactionsFragment extends Fragment {
             try {
                 List<BitcoinWalletTransactionRecord> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
                 for(BitcoinWalletTransactionRecord transaction: lst){
-                    lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
+                   lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
                 }
 
             } catch (CantGetTransactionsException e)
