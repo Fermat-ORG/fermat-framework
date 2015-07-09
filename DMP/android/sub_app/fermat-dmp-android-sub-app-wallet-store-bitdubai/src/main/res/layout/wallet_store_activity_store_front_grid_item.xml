@@ -9,7 +9,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f3e4c4"
+
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
@@ -29,7 +29,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f3e4c4"
+
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
         android:paddingTop="4dp"
@@ -104,8 +104,6 @@
         android:paddingBottom="0dp"
 
         />
-
-
 
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
