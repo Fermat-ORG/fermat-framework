@@ -318,7 +318,7 @@ include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
 
 
-// Milestone 2 project:
+// Milestone 2 project middlware:
 
 include ':fermat-dmp-plugin-middleware-wallet-factory-bitdubai'
 project(':fermat-dmp-plugin-middleware-wallet-factory-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-factory-bitdubai')
@@ -331,3 +331,8 @@ project(':fermat-dmp-plugin-middleware-wallet-publisher-bitdubai').projectDir = 
 
 include ':fermat-dmp-plugin-middleware-wallet-manager-bitdubai'
 project(':fermat-dmp-plugin-middleware-wallet-manager-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-manager-bitdubai')
+
+// Milestone 2 project netwrk svce:
+
+include ':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai'
+project(':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-statistics-bitdubai')
