@@ -3,6 +3,7 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_use
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,9 +12,10 @@ import java.util.UUID;
  */
 public class MockDatabaseTableRecord implements DatabaseTableRecord {
 
+
     @Override
     public String getStringValue(String columnName) {
-        return "THIS IS A MOCK COLUMN";
+        return "THIS_IS_A_MOCK_COLUMN";
     }
 
     @Override
@@ -39,6 +41,11 @@ public class MockDatabaseTableRecord implements DatabaseTableRecord {
     @Override
     public double getDoubleValue(String columnName) {
         return 1.0;
+    }
+
+    @Override
+    public String getVariableName(String columnName) {
+        return "THIS_IS_A_MOCK_VARIABLE";
     }
 
     @Override
@@ -72,8 +79,18 @@ public class MockDatabaseTableRecord implements DatabaseTableRecord {
     }
 
     @Override
+    public void setVariableValue(String columnName, String variableName) {
+
+    }
+
+    @Override
+    public void setSelectField(String columnName) {
+
+    }
+
+    @Override
     public List<DatabaseRecord> getValues() {
-        return null;
+        return new ArrayList<>(0);
     }
 
     @Override

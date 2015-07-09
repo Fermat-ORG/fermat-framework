@@ -372,7 +372,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              * */
 
             /**
-             * Fermat Bitcoin Reference Wallet definition.
+             * Fermat Bitcoin Reference Walletc definition.
              *
              * Structure:
              *

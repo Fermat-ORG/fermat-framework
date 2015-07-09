@@ -129,8 +129,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
             database.closeDatabase();
         } catch (DatabaseNotFoundException e) {
-            IncomingExtraUserDataBaseFactory databaseFactory = new IncomingExtraUserDataBaseFactory();
-            databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            IncomingExtraUserDataBaseFactory databaseFactory = new IncomingExtraUserDataBaseFactory(pluginDatabaseSystem);
 
             try {
                 database = databaseFactory.createDatabase(pluginId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
@@ -215,6 +214,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
     protected EventWrapper getNextPendingEvent() throws CantReadEventException {
         try {
+            database.openDatabase();
             DatabaseTable eventsTable = database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME);
             eventsTable.setStringFilter(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING", DatabaseFilterType.EQUAL);
 
@@ -239,6 +239,8 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantReadEventException(CantReadEventException.DEFAULT_MESSAGE, exception, null, "There is no way to gracefully handle this, check the cause");
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+            throw new CantReadEventException(CantReadEventException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
         }
     }
 
@@ -469,8 +471,9 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         );
 
         try {
+            database.openDatabase();
             registryTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+        } catch (FermatException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
         }

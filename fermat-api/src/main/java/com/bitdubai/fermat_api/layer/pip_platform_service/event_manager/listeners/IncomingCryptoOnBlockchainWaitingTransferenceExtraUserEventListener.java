@@ -9,43 +9,10 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventTyp
 /**
  * Created by rodrigo on 2015.07.08..
  */
-public class IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener implements EventListener {
+public class IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener extends GenericEventListener {
 
-    EventMonitor eventMonitor;
-    private EventType eventType;
-    private EventHandler eventHandler;
-
-    public IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener(EventType eventType, EventMonitor eventMonitor){
-        this.eventType = eventType;
-        this.eventMonitor = eventMonitor;
+    public IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener(final EventMonitor eventMonitor){
+        super(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER, eventMonitor);
     }
 
-    @Override
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    @Override
-    public void setEventHandler(EventHandler eventHandler) {
-        this.eventHandler = eventHandler;
-    }
-
-    @Override
-    public EventHandler getEventHandler() {
-        return this.eventHandler;
-    }
-
-    @Override
-    public void raiseEvent(PlatformEvent platformEvent) {
-
-        try
-        {
-            this.eventHandler.handleEvent(platformEvent);
-        }
-        catch (Exception exception)
-        {
-            eventMonitor.handleEventException(exception, platformEvent);
-        }
-
-    }
 }

@@ -421,30 +421,6 @@ public class Platform  {
         corePlatformContext.addAddon((Addon) deviceUser, Addons.DEVICE_USER);
 
         /**
-         *---------------------------------
-         * Addon Extra User
-         * -------------------------------
-         */
-        Service extraUser = (Service) ((UserLayer) mUserLayer).getExtraUser();
-
-        ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
-        ((DealsWithPlatformDatabaseSystem) extraUser).setPlatformDatabaseSystem(databaseSystemOs.getPlatformDatabaseSystem());
-        ((DealsWithEvents) extraUser).setEventManager((EventManager) eventManager);
-
-        corePlatformContext.addAddon((Addon) extraUser, Addons.EXTRA_USER);
-
-        try {
-            ((Service) extraUser).start();
-        } catch (Exception e) {
-            ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-            /**
-             * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
-             * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
-             * * *
-             */
-        }
-
-        /**
          *-------------------------------
          * Addon Intra User
          * -----------------------------
@@ -527,6 +503,14 @@ public class Platform  {
          */
         Plugin actorDeveloper = ((ActorLayer) mActorLayer).getmActorDeveloper();
         setPluginReferencesAndStart(actorDeveloper, Plugins.BITDUBAI_ACTOR_DEVELOPER);
+
+        /**
+         *---------------------------------
+         * Plugin Extra User
+         * -------------------------------
+         */
+        Plugin extraUser = ((ActorLayer) mActorLayer).getmActorExtraUser();
+        setPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_USER_EXTRA_USER);
 
         /**
          * -----------------------------
@@ -835,7 +819,7 @@ public class Platform  {
                 ((DealsWithEvents) plugin).setEventManager((EventManager) corePlatformContext.getAddon(Addons.EVENT_MANAGER));
 
             if (plugin instanceof DealsWithExtraUsers)
-                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getAddon(Addons.EXTRA_USER));
+                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_USER_EXTRA_USER));
 
             if (plugin instanceof DealsWithLogger)
                 ((DealsWithLogger) plugin).setLogManager(loggerSystemOs.getLoggerManager());
