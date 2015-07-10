@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.os.SystemClock;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
@@ -216,7 +217,8 @@ public class BalanceFragment extends Fragment {
                 //listViewTransactions.setAdapter(transactionArrayAdapter);
                 swipeLayout.setRefreshing(false);
             }
-        }, 5000);
+        }, 3000);
+
     }
 
     /**
@@ -228,6 +230,7 @@ public class BalanceFragment extends Fragment {
                 balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
 
                 bookBalance= cryptoWallet.getBookBalance(wallet_id);
+
             } catch (CantGetBalanceException e)
             {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

@@ -29,3 +29,10 @@ originalmente.
 * Al igual que los recursos, mantiene la estructura de navegación de los distintos tipos de wallets instalados, garantizando de que los tendrá localmente mientras ese tipo de wallet tenga al menos una instancia instalada.
 * Mantiene la estructura de navegación de wallets no instaladas para servirlas a otros peers corriendo el mismo network service, habilitando de esta manera la decentralización de este tipo de información.
 * Sabe como localizar la Estructura de Navegación del repositorio centralizado desde donde nace ese tipo de wallet.
+
+
+A considerar
+
+Queremos mantener independientes los recursos, el idioma y la estructura de navegación de la wallet.
+De esta manera, cuando un usuario quiera descargar una wallet podrá elegir entre distintos paquetes
+de idiomas y skins (diseños gráficos). Además de las opciones para el usuario,

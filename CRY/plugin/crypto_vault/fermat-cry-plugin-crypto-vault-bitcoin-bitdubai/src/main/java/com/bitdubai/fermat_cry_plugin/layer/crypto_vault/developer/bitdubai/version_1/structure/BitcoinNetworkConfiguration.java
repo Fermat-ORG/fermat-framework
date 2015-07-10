@@ -15,7 +15,7 @@ import org.bitcoinj.params.TestNet3Params;
  * Used to get the configuration of the Bitcoin network. One static method witch retrieves the network parameters
  * that we are using in all the plug in objects.
  */
-class BitcoinNetworkConfiguration  implements BitcoinManager {
+public class BitcoinNetworkConfiguration  implements BitcoinManager {
     /**
      * Static method.
      * @return the nerwork parameters for the network specified in BitcoinManager's interface

@@ -3,10 +3,16 @@ package com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdub
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantGetDeveloperException;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.DeveloperLoginFailedException;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -83,4 +89,23 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
         this.errorManager = errorManager;
     }
 
+    @Override
+    public List<DeveloperIdentity> getDevelopersFromActualUser() throws CantGetUserDeveloperIdentitiesException {
+        return null;
+    }
+
+    @Override
+    public void createNewDeveloper(String alias) throws CantCreateNewDeveloperException {
+
+    }
+
+    @Override
+    public void login(String alias) throws DeveloperLoginFailedException {
+
+    }
+
+    @Override
+    public DeveloperIdentity getActualDeveloper() throws CantGetDeveloperException {
+        return null;
+    }
 }

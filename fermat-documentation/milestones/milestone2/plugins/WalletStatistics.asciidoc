@@ -1,8 +1,14 @@
 = Wallet Statistics
 
-Este plug-in escucha el evento de la Wallet Store sub App que anuncia que una wallet se está instalando y envía información al wallet community del developer informando la actualización.
+Este plug-in escucha el evento de la Wallet Store sub App que anuncia que una wallet se está
+instalando y envía información al wallet statistic del developer informando la actualización.
+Como receptor lanza un evento que dice que un usuario
 
-Posiblemente se informen otros datos del usuario que instaló la wallet como por ejemplo la localización del mismo. También registrará la calificación que el usuario le de a la wallet, comentarios, etc.
+Posiblemente se informen otros datos del usuario que instaló la wallet como por ejemplo la localización del mismo.
+También registrará la calificación que el usuario le de a la wallet, comentarios, etc.
+
+
+== A futuro
 
 Sería iteresante que este (u otro) plugin registre diversas estadísticas del uso de una wallet. Entre otras:
 
