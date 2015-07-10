@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fbf7ed"
+    android:textColor="#000000"
+    android:id="@+id/send_contacts_container">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/send_contacts_container2">
+
+        <EditText android:id="@+id/send_inputSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:hint="@string/search_contacts_hint"
+            android:inputType="textVisiblePassword"
+            android:layout_marginTop="3dp"
+            android:layout_weight="0.21"
+            android:textSize="24dp"
+            android:background="#72af9c"
+            android:gravity="center"
+            android:textColor="#0B3B0B"/>
+
+        <Button
+            android:id="@+id/send_add_contact_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:background="@color/green"
+            android:textColor="#FFFFFF"
+            android:layout_weight="0.03"
+            android:layout_margin="2dip"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/send_contactlist"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="0.14"
+        android:headerDividersEnabled="false"
+        android:divider="#000000"
+        android:textColor="#000000" >
+    </ListView>
+
+</LinearLayout>

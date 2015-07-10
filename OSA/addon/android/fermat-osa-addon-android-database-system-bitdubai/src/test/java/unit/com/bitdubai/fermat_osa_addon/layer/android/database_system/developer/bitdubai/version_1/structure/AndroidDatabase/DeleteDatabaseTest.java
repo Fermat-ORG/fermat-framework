@@ -44,14 +44,14 @@ public class DeleteDatabaseTest {
     public void DeleteDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);
-        catchException(testDatabase).deleteDatabase(testDatabaseName);
+        catchException(testDatabase).deleteDatabase();
         assertThat(caughtException()).isNull();
     }
 
     @Test
     public void DeleteDatabase_NoDatabaseInPath_ThrowException() throws Exception{
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
-        catchException(testDatabase).deleteDatabase(testDatabaseName);
+        catchException(testDatabase).deleteDatabase();
         caughtException().printStackTrace();
         assertThat(caughtException()).isInstanceOf(DatabaseNotFoundException.class);
     }

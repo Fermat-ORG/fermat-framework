@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
      * DatabaseTableRecord Interface member variables.
      */
      private List<DatabaseRecord> values;
+
+    private List<DatabaseVariable> variables;
 
     public AndroidDatabaseRecord (){
 
@@ -77,7 +80,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
 
         for (int i = 0; i < values.size(); i++) {
             if(values.get(i).getName().equals(columnName)){
-                return Long.parseLong (values.get(i).getValue());
+                return Long.parseLong(values.get(i).getValue());
             }
         }
         return 0;
@@ -128,6 +131,15 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         return 0;
     }
 
+    @Override
+    public String getVariableName(String columnName){
+        for (int i = 0; i < variables.size(); i++) {
+            if(variables.get(i).getName().equals(columnName)){
+                return variables.get(i).getValue();
+            }
+        }
+        return "";
+    }
 
     /**
      * <p>Set String field record value
@@ -247,6 +259,31 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         record.setName(columnName);
         record.setValue(Double.toString(value));
         record.setChange(true);
+        values.add(record);
+    }
+
+    @Override
+    public void setVariableValue (String columnName, String variableName){
+        if(values == null)
+            values = new ArrayList<DatabaseRecord>();
+
+        DatabaseRecord record = new AndroidRecord();
+
+        record.setName(columnName);
+        record.setValue(variableName);
+        record.setChange(true);
+        record.setUseValueofVariable(true);
+        values.add(record);
+    }
+
+    @Override
+    public void setSelectField (String columnName){
+        if(values == null)
+            values = new ArrayList<DatabaseRecord>();
+
+        DatabaseRecord record = new AndroidRecord();
+
+        record.setName(columnName);
         values.add(record);
     }
 

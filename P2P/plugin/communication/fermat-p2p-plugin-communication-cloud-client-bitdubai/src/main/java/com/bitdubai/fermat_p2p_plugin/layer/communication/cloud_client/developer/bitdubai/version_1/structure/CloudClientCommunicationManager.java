@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -154,18 +153,18 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		if(running.get())
 			throw new CloudFMPClientStartFailedException(CloudFMPClientStartFailedException.DEFAULT_MESSAGE, null, address.toString(), "The FMP Client is already running");
 		try{
-			selector = Selector.open();
-			clientChannel = SocketChannel.open();
-			clientChannel.configureBlocking(false);
-			SelectionKey serverConnection = clientChannel.register(selector, SelectionKey.OP_CONNECT);
-			clientChannel.connect(address.getSocketAddress());
-			if(clientChannel.isConnectionPending())
-				clientChannel.finishConnect();
-			running.set(clientChannel.isConnected());
-			unregisteredConnections.put(serverPublicKey, serverConnection);
-			executor.execute(this);
-		} catch(IOException ex){
-			throw wrapNIOSocketIOException(ex);
+				selector = Selector.open();
+				clientChannel = SocketChannel.open();
+				clientChannel.configureBlocking(false);
+				SelectionKey serverConnection = clientChannel.register(selector, SelectionKey.OP_CONNECT);
+				clientChannel.connect(address.getSocketAddress());
+				if(clientChannel.isConnectionPending())
+					clientChannel.finishConnect();
+				running.set(clientChannel.isConnected());
+				unregisteredConnections.put(serverPublicKey, serverConnection);
+				executor.execute(this);
+			} catch(IOException ex){
+				throw wrapNIOSocketIOException(ex);
 		}
 	}
 	
@@ -191,8 +190,8 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		}
 	}
 	
-	public void registerNetworkService(final NetworkServices networkService) throws CloudCommunicationException {
-		String sender = eccPublicKey;
+	public void registerNetworkService(final NetworkServices networkService, String networkServicePublicKey) throws CloudCommunicationException {
+		String sender = networkServicePublicKey;
 		String destination = serverPublicKey;
 		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(networkService.toString(), serverPublicKey);

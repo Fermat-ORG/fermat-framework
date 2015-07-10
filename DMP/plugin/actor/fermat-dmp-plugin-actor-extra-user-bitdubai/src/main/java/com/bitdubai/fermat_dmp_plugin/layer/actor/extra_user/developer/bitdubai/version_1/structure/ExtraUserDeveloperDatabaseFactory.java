@@ -1,25 +1,29 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantInitializeExtraUserRegistryException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleDeveloperDatabaseFactory</code> have
@@ -31,7 +35,7 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 
-public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, DealsWithPlatformDatabaseSystem {
+public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -41,7 +45,9 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
      */
-    PlatformDatabaseSystem platformDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+    UUID pluginId;
 
     Database database;
 
@@ -49,11 +55,12 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
      * Constructor
      *
      * @param errorManager
-     * @param platformDatabaseSystem
+     * @param pluginDatabaseSystem
      */
-    public ExtraUserDeveloperDatabaseFactory(ErrorManager errorManager, PlatformDatabaseSystem platformDatabaseSystem) {
+    public ExtraUserDeveloperDatabaseFactory(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.errorManager = errorManager;
-        this.platformDatabaseSystem = platformDatabaseSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
     }
 
     /**
@@ -68,11 +75,11 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
          */
         try {
 
-            this.database = this.platformDatabaseSystem.openDatabase("ExtraUser");
+            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, "ExtraUser");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
 
             ExtraUserDatabaseFactory databaseFactory = new ExtraUserDatabaseFactory();
-            databaseFactory.setPlatformDatabaseSystem(this.platformDatabaseSystem);
+            databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             databaseFactory.setErrorManager(this.errorManager);
 
             /**
@@ -81,9 +88,10 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
 
             try {
 
-                this.database = databaseFactory.createDatabase();
+                this.database = databaseFactory.createDatabase(pluginId);
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
 
                 /**
                  * The database cannot be created. I can not handle this situation.
@@ -91,6 +99,7 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
                 throw new CantInitializeExtraUserRegistryException();
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
 
             /**
              * The database exists but cannot be open. I can not handle this situation.
@@ -112,12 +121,12 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
 
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
-        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
+        List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
         /**
          * extraUserTable columns
          */
-        List<String> extraUserTableColumns = new ArrayList<String>();
+        List<String> extraUserTableColumns = new ArrayList<>();
         extraUserTableColumns.add(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME);
         extraUserTableColumns.add(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME);
         extraUserTableColumns.add(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME);
@@ -136,7 +145,7 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
         /**
          * Will get the records for the given table
          */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
+        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 
 
         /**
@@ -146,6 +155,8 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
         try {
             selectedTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadTableToMemory);
+
             /**
              * if there was an error, I will returned an empty list.
              */
@@ -153,11 +164,11 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
         for (DatabaseTableRecord row : records) {
             /**
              * for each row in the table list
              */
+            List<String> developerRow = new ArrayList<String>();
             for (DatabaseRecord field : row.getValues()) {
                 /**
                  * I get each row and save them into a List<String>
@@ -189,7 +200,12 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
      * DealsWithPlatformDatabaseSystem interface implementation.
      */
     @Override
-    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
-        this.platformDatabaseSystem = platformDatabaseSystem;
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
     }
 }

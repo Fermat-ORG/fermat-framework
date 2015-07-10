@@ -2,6 +2,8 @@
 <resources>
 
     <string name="swype_refresh">Swype down to refresh</string>
+    <string name="search_contacts_hint">Search contacts...</string>
+
     <string name="action_settings">Settings</string>
     <string name="action_help">Help</string>
     <string name="action_share">Share</string>
@@ -108,5 +110,11 @@
     <string name="title_activity_requests_received">Requests Received</string>
     <string name="title_activity_activity_main">Main Activity</string>
     <string name="empty_view">Empty List view</string>
+
+
+    <!-- TAB BALANCE STRINGS  -->
+    <string name="available_balance">available balance</string>
+    <string name="book_balance">book balance</string>
+
 
 </resources>

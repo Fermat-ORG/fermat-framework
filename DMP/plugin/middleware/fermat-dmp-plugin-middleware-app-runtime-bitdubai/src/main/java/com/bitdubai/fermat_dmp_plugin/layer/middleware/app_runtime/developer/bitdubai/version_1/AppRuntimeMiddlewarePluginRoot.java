@@ -362,18 +362,39 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_SHELL_LOGIN);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_SHELL_LOGIN,runtimeFragment);
+        listFragments.put(Fragments.CWP_SHELL_LOGIN, runtimeFragment);
 
 
-
+        //wallet factory app
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
         runtimeApp.addSubApp(runtimeSubApp);
-        listSubApp.put(SubApps.CWP_WALLET_FACTORY,runtimeSubApp);
+        listSubApp.put(SubApps.CWP_WALLET_FACTORY, runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
-        runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setStatusBarColor("#b46a54");
+
+            runtimeTitleBar = new RuntimeTitleBar();
+            runtimeTitleBar.setLabel("Wallet Factory");
+             runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeTabStrip = new RuntimeTabStrip();
+            runtimeTabStrip.setTabsColor("#d07b62");
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+            runtimeTabStrip.setTabsIndicateColor("#b46a54");
+
+            runtimeTab = new RuntimeTab();
+            runtimeTab.setLabel("Wallet Factory");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_MAIN);
+
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeActivity.setTabStrip(runtimeTabStrip);
+
+
+            runtimeSubApp.addActivity(runtimeActivity);
         listActivities.put(Activities.CWP_WALLET_FACTORY_MAIN, runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
@@ -381,6 +402,46 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_WALLET_FACTORY_MAIN,runtimeFragment);
 
+            /**End Wallet Publisher*/
+
+            //wallet Publisher app
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CWP_WALLET_PUBLISHER);
+            runtimeApp.addSubApp(runtimeSubApp);
+            listSubApp.put(SubApps.CWP_WALLET_PUBLISHER, runtimeSubApp);
+
+            runtimeActivity= new RuntimeActivity();
+            runtimeActivity.setType(Activities.CWP_WALLET_PUBLISHER_MAIN);
+            runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setStatusBarColor("#b46a54");
+
+            runtimeTitleBar = new RuntimeTitleBar();
+            runtimeTitleBar.setLabel("Wallet Publisher");
+
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeTabStrip = new RuntimeTabStrip();
+            runtimeTabStrip.setTabsColor("#d07b62");
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+            runtimeTabStrip.setTabsIndicateColor("#b46a54");
+
+            runtimeTab = new RuntimeTab();
+            runtimeTab.setLabel("Wallet Publisher");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN);
+
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeActivity.setTabStrip(runtimeTabStrip);
+
+            runtimeSubApp.addActivity(runtimeActivity);
+            listActivities.put(Activities.CWP_WALLET_PUBLISHER_MAIN, runtimeActivity);
+
+            runtimeFragment = new RuntimeFragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_PUBLISHER_MAIN);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_WALLET_PUBLISHER_MAIN,runtimeFragment);
+
+            /**End Wallet Publisher*/
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_MANAGER);
@@ -564,25 +625,31 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         /*-- wallet store --*/
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
-        runtimeActivity.setColor("#84DCF5");
-        runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setStatusBarColor("#b46a54");
+
+            runtimeTitleBar = new RuntimeTitleBar();
+            runtimeTitleBar.setLabel("Wallet Store");
+
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeTabStrip = new RuntimeTabStrip();
+            runtimeTabStrip.setTabsColor("#d07b62");
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+            runtimeTabStrip.setTabsIndicateColor("#b46a54");
+            runtimeSubApp.addActivity(runtimeActivity);
         listActivities.put(Activities.CWP_WALLET_RUNTIME_STORE_MAIN, runtimeActivity);
 
 
 
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Wallet Store");
 
         //mati
         RuntimeSearchView runtimeSearchView= new RuntimeSearchView();
         runtimeSearchView.setLabel("Search");
         runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
 
-
-
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
-
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
@@ -603,11 +670,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeTabStrip.addTab(runtimeTab);
 
 
-        runtimeTabStrip.setDividerColor(0xFFFFFFFF);
-        runtimeTabStrip.setIndicatorColor(0xFFFFFFFF);
-        runtimeTabStrip.setIndicatorHeight(9);
-        runtimeTabStrip.setBackgroundColor(0xFF87D2FA);
-        runtimeTabStrip.setTextColor(0xFFFFFFFF);
+
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();

@@ -58,6 +58,22 @@ public class TransactionConfidenceCalculator {
         return txHash.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME);
     }
 
+    private CryptoStatus getPreviousCryptoStatus(String txHash){
+        DatabaseTable cryptoTransactionsTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        cryptoTransactionsTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME,txHash, DatabaseFilterType.EQUAL);
+        try {
+            cryptoTransactionsTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        }
+
+        if (cryptoTransactionsTable.getRecords().size() > 0){
+            DatabaseTableRecord record = cryptoTransactionsTable.getRecords().get(0);
+            return CryptoStatus.valueOf(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+        } else
+        return CryptoStatus.ON_CRYPTO_NETWORK;
+    }
+
     /**
      * Will get the transaction from the vault
      * @return
@@ -95,33 +111,39 @@ public class TransactionConfidenceCalculator {
                  * if the depth is one block, then the status is RECEIVED
                  */
                 if (height == 1)
-                    return CryptoStatus.RECEIVED;
+                    return CryptoStatus.ON_BLOCKCHAIN;
 
                 /**
                  * if the height is equal or exceeds the threshold defined in DepthInBlocksThreshold.DEPTH, then changes to CONFIRMED
                  */
                 if (height >= TARGET_DEPTH)
-                    return CryptoStatus.CONFIRMED;
+                    return CryptoStatus.IRREVERSIBLE;
             case DEAD:
                 /**
                  * If DEAD, then it means the transaction won’t confirm unless there is another re-org, because some other transaction is spending one of its inputs.
                  * When this happens, it change to REVERSED status.
+                 * UPDATE: If the transaction was previously in ON_BLOCKCHAIN status, then I will set the new status to REVERSED_ON_BLOCKCHAIN.
+                 * If it was in ON_CRYPTO_STATUS, then I will change it to REVERSED_ON_CRYPTO_STATUS
                  */
-                return CryptoStatus.REVERSED;
+                if (getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_CRYPTO_NETWORK )
+                    return CryptoStatus.REVERSED_ON_CRYPTO_NETWORK;
+
+                if (getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_BLOCKCHAIN)
+                    return CryptoStatus.REVERSED_ON_BLOCKCHAIN;
             case PENDING:
                 /**
                  * If PENDING, then the transaction is unconfirmed and should be included shortly as long as it is
                  * being broadcast from time to time and is considered valid by the network.
                  * This is IDENTIFIED in the protocol.
                  */
-                return CryptoStatus.IDENTIFIED;
+                return CryptoStatus.ON_CRYPTO_NETWORK;
             case UNKNOWN:
                 /**
                  * UNKNOWN is the default state. I'm translating it to IDENTIFIED in the Transaction Protocol
                  */
-                return CryptoStatus.IDENTIFIED;
+                return CryptoStatus.PENDING_SUBMIT;
             default:
-                return CryptoStatus.IDENTIFIED;
+                return CryptoStatus.PENDING_SUBMIT;
         }
 
     }

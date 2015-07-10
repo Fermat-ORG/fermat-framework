@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -49,7 +50,7 @@ public class WalletDesktopFragment extends Fragment {
     private static int tabId;
 
     private int position;
-
+    Typeface tf;
 
 
     //private SearchView mSearchView;
@@ -65,20 +66,21 @@ public class WalletDesktopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         setHasOptionsMenu(true);
         String[] installed =
-                {"true",
-                        "true",
-                        "true",
-                        "true",
-                        "true",
-                        "true",
-                        "true",
+                {"false",
+                        "false",
+                        "false",
                         "true",
                         "false",
                         "false",
                         "false",
-                        "true",
+                        "false",
+                        "false",
+                        "false",
+                        "false",
+                        "false",
                         "false",
                         "false",
                         "false",
@@ -263,7 +265,7 @@ public class WalletDesktopFragment extends Fragment {
             }
 
             holder.companyTextView.setText(item.company);
-           // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.companyTextView.setTypeface(tf,Typeface.BOLD);
 
 
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);

@@ -47,14 +47,18 @@ public class DeveloperDatabaseFactory {
          */
         List<String> basicWalletBitcoinWalletColumns = new ArrayList<>();
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME);
+
 
         /**
          * basicWalletBitcoinWalletColumns table

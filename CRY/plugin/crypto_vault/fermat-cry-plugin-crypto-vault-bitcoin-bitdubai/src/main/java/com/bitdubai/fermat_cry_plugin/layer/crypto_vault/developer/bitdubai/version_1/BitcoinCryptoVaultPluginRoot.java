@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -42,6 +43,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
@@ -285,9 +287,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void start() throws CantStartPluginException {
-        //logManager.log(logLevel, "CryptoVault7 Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
-        System.out.println("Crypto Vault Starting....");
-
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault Starting...", null, null);
+        System.out.println("CryptoVault starting...");
 
         /**
          * I get the userId from the deviceUserManager
@@ -344,6 +345,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              */
             try {
                 vault = new BitcoinCryptoVault(this.userId);
+                vault.setLogManager(logManager);
                 vault.setErrorManager(errorManager);
                 vault.setPluginDatabaseSystem(pluginDatabaseSystem);
                 vault.setDatabase(this.database);
@@ -393,7 +395,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              * the service is started.
              */
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("CryptoVault started.");
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
     }
 
     /**

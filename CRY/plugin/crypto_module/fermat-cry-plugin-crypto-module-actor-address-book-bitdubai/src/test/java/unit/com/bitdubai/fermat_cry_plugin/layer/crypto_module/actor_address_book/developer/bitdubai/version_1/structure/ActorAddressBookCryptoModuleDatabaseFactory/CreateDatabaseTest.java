@@ -17,6 +17,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 
@@ -28,6 +31,9 @@ public class CreateDatabaseTest extends TestCase {
 
     @Mock
     DatabaseTableFactory table;
+
+    @Mock
+    Database database;
 
     ActorAddressBookCryptoModuleDatabaseFactory databaseFactory;
 
@@ -41,10 +47,11 @@ public class CreateDatabaseTest extends TestCase {
     }
 
     @Ignore
-    public void testCreateDatabase_NotNul() throws Exception {
+    public void testCreateDatabase_NotNull() throws Exception {
         /*
          * TODO This test should pass but there is a wrong design decision that makes a cast of the Database interface into the DatabaseFactory; we should really look into that
          */
+        doReturn(database).when(pluginDatabaseSystem).createDatabase(any(UUID.class), anyString());
         Database database = databaseFactory.createDatabase(pluginId, pluginId);
         assertNotNull(database);
     }

@@ -9,26 +9,19 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.os.SystemClock;
 
-
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
@@ -38,13 +31,21 @@ import java.util.UUID;
 /**
  * Created by Natalia on 02/06/2015.
  */
-public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class BalanceFragment extends Fragment {
+    
+    final int TYPE_BALANCE_AVAILABLE=1;
+    final int TYPE_BALANCE_BOOK=2;
+
     View rootView;
     SwipeRefreshLayout swipeLayout;
 
-    long balance;
+    long balanceAvailable;
+
+    long bookBalance;
 
     boolean showBalanceBTC = false;
+
+    int showTypeBalance=TYPE_BALANCE_AVAILABLE;
 
     private static final String ARG_POSITION = "position";
 
@@ -60,6 +61,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
 
+    private TextView txtViewTypeBalance;
+    private TextView txtViewBalance;
+
     public static BalanceFragment newInstance(int position) {
         BalanceFragment f = new BalanceFragment();
         Bundle b = new Bundle();
@@ -70,12 +74,14 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         errorManager = platform.getErrorManager();
         try {
-            balance = 0;
+            balanceAvailable = 0;
+            bookBalance=0;
             cryptoWalletManager = platform.getCryptoWalletManager();
 
             try {
@@ -87,7 +93,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             }
             try {
-                balance = cryptoWallet.getBalance(wallet_id);
+                balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
+
+                bookBalance= cryptoWallet.getBookBalance(wallet_id);
             } catch (CantGetBalanceException e)
             {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -107,41 +115,81 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
 
 
-        TextView textViewBalance = ((TextView) rootView.findViewById(R.id.balance));
-        textViewBalance.setTypeface(tf);
-        textViewBalance.setText(formatBalanceString());
-
-        textViewBalance.setOnClickListener(new View.OnClickListener() {
+        // Loading a setting textView Balance type
+        txtViewTypeBalance =(TextView) rootView.findViewById(R.id.txtViewTypeBalance);
+        txtViewTypeBalance.setTypeface(tf);
+        txtViewTypeBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showBalanceBTC = !showBalanceBTC;
-                refreshBalance();
+                changeBalanceType();
             }
         });
 
-        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
+        // Setting type balance
+        showTypeBalance=TYPE_BALANCE_AVAILABLE;
 
-        //final Button b = (Button) rootView.findViewById(R.id.changeFormatBtn);
-        //b.setTypeface(tf);
 
-        /*b.setOnClickListener(new View.OnClickListener() {
+        // Loading a setting textView Balance amount
+        txtViewBalance = ((TextView) rootView.findViewById(R.id.txtViewBalance));
+        txtViewBalance.setTypeface(tf);
+        txtViewBalance.setText(formatBalanceString(balanceAvailable));
+        txtViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (showBalanceBTC)
-                    b.setText("Show in BTC");
-                else
-                    b.setText("Show in bits");
+            public void onClick(View view) {
 
-                showBalanceBTC = !showBalanceBTC;
-                refreshBalance();
+                changeBalance();
+                //refreshBalance();
             }
         });
-        */
+
+
+        // Loading a setting SwipeRefreshLayout
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshBalanceContent();
+            }
+        });
+
+
         return rootView;
     }
 
-    private String formatBalanceString() {
+    /*
+        Method to change the balance type
+     */
+    private void changeBalanceType() {
+        if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
+            txtViewBalance.setText(formatBalanceString(bookBalance));
+            txtViewTypeBalance.setText(R.string.book_balance);
+            showTypeBalance=TYPE_BALANCE_BOOK;
+        }else if (showTypeBalance==TYPE_BALANCE_BOOK){
+            txtViewBalance.setText(formatBalanceString(balanceAvailable));
+            txtViewTypeBalance.setText(R.string.available_balance);
+            showTypeBalance=TYPE_BALANCE_AVAILABLE;
+        }
+    }
+
+    /*
+        Method to change the balance amount
+     */
+    private void changeBalance(){
+        showBalanceBTC = !showBalanceBTC;
+        if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
+            txtViewBalance.setText(formatBalanceString(balanceAvailable));
+        }else if (showTypeBalance==TYPE_BALANCE_BOOK){
+            txtViewBalance.setText(formatBalanceString(bookBalance));
+        }
+    }
+
+
+    /**
+     *  Formationg balance amount
+     * @param balance
+     * @return
+     */
+    private String formatBalanceString(long balance) {
         String stringBalance = "";
         if (showBalanceBTC) {
             DecimalFormat df = new DecimalFormat();
@@ -155,30 +203,45 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return stringBalance;
     }
 
-    @Override
-    public void onRefresh() {
+
+    /**
+     *  Method to run the swipeRefreshLayout
+     */
+    private void refreshBalanceContent(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                swipeLayout.setRefreshing(false);
                 refreshBalance();
+                //transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTransactions);
+                //listViewTransactions.setAdapter(transactionArrayAdapter);
+                swipeLayout.setRefreshing(false);
             }
-        }, 3000);
+        }, 5000);
     }
 
+    /**
+     *  Method to refresh amount of BookBalance and AvailableBalance
+     */
     private void refreshBalance() {
         try {
             try {
-                balance = cryptoWallet.getBalance(wallet_id);
-            } catch (CantGetBalanceException e) {
+                balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
 
+                bookBalance= cryptoWallet.getBookBalance(wallet_id);
+            } catch (CantGetBalanceException e)
+            {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("CantGetBalanceException- " + e.getMessage());
 
             }
-            TextView textViewBalance = ((TextView) rootView.findViewById(R.id.balance));
-            textViewBalance.setText(formatBalanceString());
-            textViewBalance.setTypeface(tf);
+
+            if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
+                txtViewBalance.setText(formatBalanceString(balanceAvailable));
+            }else if(showTypeBalance==TYPE_BALANCE_BOOK){
+                txtViewBalance.setText(formatBalanceString(bookBalance));
+            }
+
+
         } catch (Exception ex) {
 
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);

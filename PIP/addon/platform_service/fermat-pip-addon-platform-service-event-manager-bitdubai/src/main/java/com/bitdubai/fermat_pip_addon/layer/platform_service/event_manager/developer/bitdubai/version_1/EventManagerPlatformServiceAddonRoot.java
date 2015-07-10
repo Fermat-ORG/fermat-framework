@@ -69,9 +69,30 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersTransactopnWaitingTransferenceExtraUserEvent = new ArrayList<>();
 
     /**
+     * Issue #522
+     */
+    private List<EventListener> listenersIncomingCryptoOnCryptoNetworkEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoOnBlockchainEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedOnCryptoNetworkEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedOnBlockchainEvent = new ArrayList<>();
+
+    /**
+     * Issue #543
+     */
+    private List<EventListener> listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent = new ArrayList<>();
+
+    private List<EventListener> listenersIncomingExtraUserOnCryptoNetworkWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingExtraUserOnBlockchainWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingExtraUserReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingExtraUserReversedOnBlockchainWaitingTransferenceExtraUserEvent = new ArrayList<>();
+
+    /**
      * DealsWithEventMonitor member variables
      */
-    EventMonitor eventMonitor;
+    private EventMonitor eventMonitor;
 
 
     /**
@@ -84,124 +105,159 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
         switch (eventType) {
 
             case DEVICE_USER_CREATED:
-                return new DeviceUserCreatedEventListener(EventType.DEVICE_USER_CREATED, this.eventMonitor);
+                return new DeviceUserCreatedEventListener(eventType, this.eventMonitor);
 
             case DEVICE_USER_LOGGED_IN:
-                return new DeviceUserLoggedInEventListener(EventType.DEVICE_USER_LOGGED_IN, this.eventMonitor);
+                return new DeviceUserLoggedInEventListener(eventType, this.eventMonitor);
 
             case DEVICE_USER_LOGGED_OUT:
-                return new DeviceUserLoggedOutEventListener(EventType.DEVICE_USER_LOGGED_OUT, this.eventMonitor);
+                return new DeviceUserLoggedOutEventListener(eventType, this.eventMonitor);
 
             case WALLET_CREATED:
-                return new WalletCreatedEventListener(EventType.WALLET_CREATED, this.eventMonitor);
+                return new WalletCreatedEventListener(eventType, this.eventMonitor);
             
             case WALLET_WENT_ONLINE:
-                return new WalletWentOnlineEventListener(EventType.WALLET_WENT_ONLINE, this.eventMonitor);
+                return new WalletWentOnlineEventListener(eventType, this.eventMonitor);
             
             case WALLET_OPENED:
-                return new WalletOpenedEventListener(EventType.WALLET_OPENED, this.eventMonitor);
+                return new WalletOpenedEventListener(eventType, this.eventMonitor);
             
             case WALLET_CLOSED:
-                return new WalletClosedEventListener(EventType.WALLET_CLOSED, this.eventMonitor);
+                return new WalletClosedEventListener(eventType, this.eventMonitor);
 
             case WALLET_INSTALLED:
-                return new WalletInstalledEventListener(EventType.WALLET_INSTALLED, this.eventMonitor);
+                return new WalletInstalledEventListener(eventType, this.eventMonitor);
 
             case WALLET_UNINSTALLED:
-                return new WalletUninstalledEventListener(EventType.WALLET_UNINSTALLED, this.eventMonitor);
+                return new WalletUninstalledEventListener(eventType, this.eventMonitor);
 
             case BEGUN_WALLET_INSTALLATION:
-                return new BegunWalletInstallationEventListener(EventType.BEGUN_WALLET_INSTALLATION, this.eventMonitor);
+                return new BegunWalletInstallationEventListener(eventType, this.eventMonitor);
 
             case WALLET_RESOURCES_INSTALLED:
-                return new WalletResourcesInstalledEventListener(EventType.WALLET_RESOURCES_INSTALLED, this.eventMonitor);
+                return new WalletResourcesInstalledEventListener(eventType, this.eventMonitor);
             
             case NAVIGATION_STRUCTURE_UPDATED:
-                return new NavigationStructureUpdatedEventListener(EventType.NAVIGATION_STRUCTURE_UPDATED, this.eventMonitor);
+                return new NavigationStructureUpdatedEventListener(eventType, this.eventMonitor);
             
             case FINISHED_WALLET_INSTALLATION:
-                return new FinishedWalletInstallationEventListener(EventType.FINISHED_WALLET_INSTALLATION, this.eventMonitor);
+                return new FinishedWalletInstallationEventListener(eventType, this.eventMonitor);
 
             case INTRA_USER_CONTACT_CREATED:
-                return new IntraUserContactCreatedEventListener(EventType.INTRA_USER_CONTACT_CREATED, this.eventMonitor);
+                return new IntraUserContactCreatedEventListener(eventType, this.eventMonitor);
             
             case MONEY_RECEIVED:
-                return new MoneyReceivedEventListener(EventType.MONEY_RECEIVED, this.eventMonitor);
+                return new MoneyReceivedEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_RECEIVED:
-                return new IncomingCryptoReceivedEventListener(EventType.INCOMING_CRYPTO_RECEIVED, this.eventMonitor);
+                return new IncomingCryptoReceivedEventListener(eventType, this.eventMonitor);
+
+            /**
+             * Incoming Crypto new event types issue #522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                return new IncomingCryptoOnCryptoNetworkEventListener(eventType, this.eventMonitor);
+
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                return new IncomingCryptoOnBlockchainEventListener(eventType, this.eventMonitor);
+
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                return new IncomingCryptoReversedOnCryptoNetworkEventListener(eventType, this.eventMonitor);
+
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                return new IncomingCryptoReversedOnBlockchainEventListener(eventType, this.eventMonitor);
+            /**
+             * End incoming Crypto new event Types
+             */
+
             
             case INCOMING_CRYPTO_RECEPTION_CONFIRMED:
-                return new IncomingCryptoReceptionConfirmedEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED, this.eventMonitor);
+                return new IncomingCryptoReceptionConfirmedEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_REVERSED:
-                return new IncomingCryptoReversedEventListener(EventType.INCOMING_CRYPTO_REVERSED, this.eventMonitor);
+                return new IncomingCryptoReversedEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER:
-                return new IncomingCryptoIdentifiedFromExtraUserEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER, this.eventMonitor);
+                return new IncomingCryptoIdentifiedFromExtraUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER:
-                return new IncomingCryptoIdentifiedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER, this.eventMonitor);
+                return new IncomingCryptoIdentifiedFromIntraUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER:
-                return new IncomingCryptoIdentifiedFromDeviceUserEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER, this.eventMonitor);
+                return new IncomingCryptoIdentifiedFromDeviceUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER:
-                return new IncomingCryptoReceivedFromExtraUserEventListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER, this.eventMonitor);
+                return new IncomingCryptoReceivedFromExtraUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER:
-                return new IncomingCryptoReceivedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER,this.eventMonitor);
+                return new IncomingCryptoReceivedFromIntraUserEventListener(eventType,this.eventMonitor);
             
             case INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER:
-                return new IncomingCryptoReceivedFromDeviceUserEventListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER, this.eventMonitor);
+                return new IncomingCryptoReceivedFromDeviceUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER:
-                return new IncomingCryptoReceptionConfirmedFromExtraUserEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER, this.eventMonitor);
+                return new IncomingCryptoReceptionConfirmedFromExtraUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER:
-                return new IncomingCryptoReceptionConfirmedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER, this.eventMonitor);
+                return new IncomingCryptoReceptionConfirmedFromIntraUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER:
-                return new IncomingCryptoReceptionConfirmedFromDeviceUserEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER, this.eventMonitor);
+                return new IncomingCryptoReceptionConfirmedFromDeviceUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER:
-                return new IncomingCryptoReversedFromExtraUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER, this.eventMonitor);
+                return new IncomingCryptoReversedFromExtraUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
-                return new IncomingCryptoReversedFromDeviceUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER, this.eventMonitor);
+                return new IncomingCryptoReversedFromDeviceUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER:
-                return new IncomingCryptoReversedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER, this.eventMonitor);
+                return new IncomingCryptoReversedFromIntraUserEventListener(eventType, this.eventMonitor);
             
             case INCOMING_CRYPTO_IDENTIFIED:
-                return new IncomingCryptoReceivedEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED, this.eventMonitor);
+                return new IncomingCryptoReceivedEventListener(eventType, this.eventMonitor);
             
             case INTRA_USER_LOGGED_IN:
-                return new IntraUserLoggedInEventListener(EventType.INTRA_USER_LOGGED_IN, this.eventMonitor);
+                return new IntraUserLoggedInEventListener(eventType, this.eventMonitor);
             
             case INCOMING_MONEY_REQUEST_RECEIVED:
-                return new IncomingMoneyRequestReceivedEventListener(EventType.INCOMING_MONEY_REQUEST_RECEIVED, this.eventMonitor);
+                return new IncomingMoneyRequestReceivedEventListener(eventType, this.eventMonitor);
             
             case OUTGOING_MONEY_REQUEST_DELIVERED:
-                return new OutgoingMoneyRequestDeliveredEventListener(EventType.OUTGOING_MONEY_REQUEST_DELIVERED, this.eventMonitor);
+                return new OutgoingMoneyRequestDeliveredEventListener(eventType, this.eventMonitor);
             
             case OUTGOING_MONEY_REQUEST_APPROVED:
-                return new OutgoingMoneyRequestApprovedEventListener(EventType.OUTGOING_MONEY_REQUEST_APPROVED, this.eventMonitor);
+                return new OutgoingMoneyRequestApprovedEventListener(eventType, this.eventMonitor);
             
             case OUTGOING_MONEY_REQUEST_REJECTED:
-                return new OutgoingMoneyRequestRejectedEventListener(EventType.OUTGOING_MONEY_REQUEST_REJECTED, this.eventMonitor);
+                return new OutgoingMoneyRequestRejectedEventListener(eventType, this.eventMonitor);
             
             case INCOMING_MONEY_REQUEST_APPROVED:
-                return new IncomingMoneyRequestApprovedEventListener(EventType.INCOMING_MONEY_REQUEST_APPROVED, this.eventMonitor);
+                return new IncomingMoneyRequestApprovedEventListener(eventType, this.eventMonitor);
             
             case INCOMING_MONEY_REQUEST_REJECTED:
-                return new IncomingMoneyRequestRejectedEventListener(EventType.INCOMING_MONEY_REQUEST_REJECTED, this.eventMonitor);
+                return new IncomingMoneyRequestRejectedEventListener(eventType, this.eventMonitor);
 
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE:
-                return new IncomingCryptoTransactionsWaitingTransferenceEventListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE,this.eventMonitor);
+                return new IncomingCryptoTransactionsWaitingTransferenceEventListener(eventType,this.eventMonitor);
 
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
-                return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER,this.eventMonitor);
+                return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventListener(eventType,this.eventMonitor);
+
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor);
+
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener(eventMonitor);
+
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor);
+
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(eventMonitor);
+
         }
         return null;
     }
@@ -333,6 +389,30 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case NEW_NETWORK_SERVICE_MESSAGE_RECEIVE:
                 return new NewNetworkServiceMessageReceivedEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
+
+            /**
+             * #Issue 522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                return new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                return new IncomingCryptoOnBlockchainEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                return new IncomingCryptoReversedOnBlockchainEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                return new IncomingCryptoReversedOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent();
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent();
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent();
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent();
 
         }
         return null;
@@ -504,8 +584,29 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
                 listenersTransactopnWaitingTransferenceExtraUserEvent.add(listener);
                 break;
+            /**
+             * #Issue 522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                listenersIncomingCryptoOnCryptoNetworkEvent.add(listener);
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                listenersIncomingCryptoOnBlockchainEvent.add(listener);
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                listenersIncomingCryptoReversedOnCryptoNetworkEvent.add(listener);
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                listenersIncomingCryptoReversedOnBlockchainEvent.add(listener);
 
-
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent.add(listener);
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent.add(listener);
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent.add(listener);
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent.add(listener);
         }
     }
 
@@ -675,7 +776,39 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
                 listeners = listenersTransactopnWaitingTransferenceExtraUserEvent;
                 break;
-            
+
+            /**
+             * #Issue 522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                listeners = listenersIncomingCryptoOnCryptoNetworkEvent;
+                break;
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                listeners = listenersIncomingCryptoOnBlockchainEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                listeners = listenersIncomingCryptoReversedOnCryptoNetworkEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                listeners = listenersIncomingCryptoReversedOnBlockchainEvent;
+                break;
+
+
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent;
+                break;
         }
 
         listeners.remove(listener);
@@ -851,6 +984,39 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
                 listeners = listenersTransactopnWaitingTransferenceExtraUserEvent;
                 break;
+
+            /**
+             * issue #522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                listeners = listenersIncomingCryptoOnCryptoNetworkEvent;
+                break;
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                listeners = listenersIncomingCryptoOnBlockchainEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                listeners = listenersIncomingCryptoReversedOnCryptoNetworkEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                listeners = listenersIncomingCryptoReversedOnBlockchainEvent;
+                break;
+
+            /**
+             * Issue #543
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent;
+                break;
+
         }
 
         for (EventListener eventListener : listeners) {

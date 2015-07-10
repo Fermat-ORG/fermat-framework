@@ -82,8 +82,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
     private List<EventListener> listenersAdded = new ArrayList<>();
 
-
-
     /*
      * DatabaseManagerForDevelopers methods implementation
      */
@@ -104,10 +102,11 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        Database database;
+        List<DeveloperDatabaseTableRecord> databaseTableRecords = new ArrayList<>();
         try {
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
-            return DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database , developerDatabaseTable);
+            Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
+            databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
+            database.closeDatabase();
         }
         catch (CantOpenDatabaseException cantOpenDatabaseException){
             /**
@@ -121,7 +120,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         // If we are here the database could not be opened, so we return an empry list
-        return new ArrayList<>();
+        return databaseTableRecords;
     }
 
 

@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.DealWithEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -186,6 +187,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
          * how often I will search for transactions to notify
          */
         public final int SLEEP_TIME = CryptoVaultTransactionNotificationAgent.AGENT_SLEEP_TIME;
+        int iteration = 0;
 
         /**
          * PluginDatabaseSystem interfaz member variables
@@ -260,8 +262,8 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
             /**
              * this will run in an infinite loop
              */
-            //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
-            int iteration = 0;
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction Protocol Notification Agent: running...", null, null);
+
             while (true)
             {
                 /**
@@ -279,7 +281,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  */
                 try {
 
-                    //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Iteration number " + iteration, "Iteration number " + iteration);
+                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iteration, null, null);
                     doTheMainTask();
                 } catch (CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -293,45 +295,118 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
          * Implements the agent
          */
         private void doTheMainTask() throws CantExecuteQueryException, TransactionProtocolAgentMaxIterationsReachedException {
+            boolean found = false;
             /**
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
 
-            if (isTransactionToBeNotified()){
-                PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
+            /**
+             * If I found transactions on Crypto_Statuts  ON_CryptoNetwork and Protocol_Status PENDING_NOTIFIED, lanzo el evento
+             */
+            if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)){
+                found = true;
+                PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
-                //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.","Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in ON_CRYPTO_NETWORK Status! Raising INCOMING_CRYPTO_ON_CRYPTO_NETWORK event.", null, null);
                 eventManager.raiseEvent(event);
 
-                /**
-                 * I need to increase the counter of the iterations. If the value excedes the threashold, then there might be
-                 * an error in the platform, so I will raise an error.
-                 */
-                int iterations = db.updateTransactionProtocolStatus(true);
 
-                //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.","Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
-                if (ITERATIONS_THRESHOLD < iterations){
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + this.iteration+ " without other plugins consuming transaction.",null);
+                if (ITERATIONS_THRESHOLD < this.iteration){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
-
-            } else
-            {
-                /**
-                 * there are no transactions pending. I will reset the counter to 0.
-                 */
-                db.updateTransactionProtocolStatus(false);
             }
+
+            /**
+             * If I found transactions on Crypto_Statuts  ON_BLOCKCHAIN and Protocol_Status PENDING_NOTIFIED, lanzo el evento
+             */
+            if (isTransactionToBeNotified(CryptoStatus.ON_BLOCKCHAIN)){
+                found = true;
+                PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
+                event.setSource(EventSource.CRYPTO_VAULT);
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in ON_BLOCKCHAIN Status! Raising INCOMING_CRYPTO_ON_BLOCKCHAIN event.", null, null);
+                eventManager.raiseEvent(event);
+
+
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.",null);
+                if (ITERATIONS_THRESHOLD < this.iteration){
+                    throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
+                }
+            }
+
+            /**
+             * If I found transactions on Crypto_Statuts  REVERSED_ON_CryptoNetwork and Protocol_Status PENDING_NOTIFIED, lanzo el evento
+             */
+            if (isTransactionToBeNotified(CryptoStatus.REVERSED_ON_CRYPTO_NETWORK)){
+                found = true;
+                PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+                event.setSource(EventSource.CRYPTO_VAULT);
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in REVERSED_ON_CRYPTO_NETWORK Status! Raising INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK event.", null, null);
+                eventManager.raiseEvent(event);
+
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.",null);
+                if (ITERATIONS_THRESHOLD < this.iteration){
+                    throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
+                }
+            }
+
+            /**
+             * If I found transactions on Crypto_Statuts  REVERSED_ON_BLOCKCHAIN and Protocol_Status PENDING_NOTIFIED, lanzo el evento
+             */
+            if (isTransactionToBeNotified(CryptoStatus.REVERSED_ON_BLOCKCHAIN)){
+                found = true;
+                PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+                event.setSource(EventSource.CRYPTO_VAULT);
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in REVERSED_ON_BLOCKCHAIN Status! Raising INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN event.", null, null);
+                eventManager.raiseEvent(event);
+
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.",null);
+                if (ITERATIONS_THRESHOLD < this.iteration){
+                    throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
+                }
+            }
+            /**
+            * there are no transactions pending. I will reset the counter to 0.
+            */
+            if (!found){
+                db.updateTransactionProtocolStatus(false);
+                this.iteration = 0;
+            } else {
+                 this.iteration = db.updateTransactionProtocolStatus(true);
+            }
+
+
 
         }
 
 
+        /**
+         * Used to return transactions with Protocol_STatus pending notified.
+         * @return
+         * @throws CantExecuteQueryException
+         */
+        @Deprecated
         private boolean isTransactionToBeNotified() throws CantExecuteQueryException {
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             boolean isPending =db.isPendingTransactions();
            return isPending;
-
         }
+
+
+        private boolean isTransactionToBeNotified(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            boolean isPending =db.isPendingTransactions(cryptoStatus);
+            return isPending;
+        }
+
     }
 }

@@ -1,5 +1,8 @@
 package com.bitdubai.sub_app.developer.common;
 
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
+
 /**
  * Created by mati on 2015.07.03..
  */
@@ -19,15 +22,11 @@ public class Loggers {
 
     public String picture;
 
-    public String level0;
+    public String pluginKey;
 
-    public String level1;
+    public ClassHierarchyLevels classHierarchyLevels;
 
-    public String level2;
-
-    public String level3;
-
-    public String fullPath;
+    public LogLevel logLevel;
 
     public String developer;
 

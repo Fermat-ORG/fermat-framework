@@ -53,7 +53,12 @@ public enum Plugins {
     BITDUBAI_BITCOIN_WALLET_BASIC_WALLET("Bitcoin Wallet Basic Wallet", Developers.BITDUBAI ),
     BITDUBAI_DEVICE_CONNECTIVITY("Bitcoin Device Connectivity", Developers.BITDUBAI ),
     BITDUBAI_LOCATION_WORLD("Location World", Developers.BITDUBAI),
-    BITDUBAI_ACTOR_DEVELOPER("Actor Developer", Developers.BITDUBAI);
+    BITDUBAI_ACTOR_DEVELOPER("Actor Developer", Developers.BITDUBAI),
+    BITDUBAI_WALLET_FACTORY_MIDDLEWARE("Wallet Factory Middleware", Developers.BITDUBAI),
+    BITDUBAI_WALLET_MANAGER_MIDDLEWARE("Wallet Manager Middleware", Developers.BITDUBAI),
+    BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE("Wallet Publisher Middleware", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STORE_MIDDLEWARE("Wallet Store Middleware", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("Wallet Statistics Network Service", Developers.BITDUBAI);
 
 
     private final String key;

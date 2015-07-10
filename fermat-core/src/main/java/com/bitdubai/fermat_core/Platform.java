@@ -18,6 +18,19 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStore;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.DealsWithWalletStatisticsNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.DealsWithNicheWalletTypeCryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWithOutgoingExtraUser;
@@ -421,30 +434,6 @@ public class Platform  {
         corePlatformContext.addAddon((Addon) deviceUser, Addons.DEVICE_USER);
 
         /**
-         *---------------------------------
-         * Addon Extra User
-         * -------------------------------
-         */
-        Service extraUser = (Service) ((UserLayer) mUserLayer).getExtraUser();
-
-        ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
-        ((DealsWithPlatformDatabaseSystem) extraUser).setPlatformDatabaseSystem(databaseSystemOs.getPlatformDatabaseSystem());
-        ((DealsWithEvents) extraUser).setEventManager((EventManager) eventManager);
-
-        corePlatformContext.addAddon((Addon) extraUser, Addons.EXTRA_USER);
-
-        try {
-            ((Service) extraUser).start();
-        } catch (Exception e) {
-            ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-            /**
-             * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
-             * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
-             * * *
-             */
-        }
-
-        /**
          *-------------------------------
          * Addon Intra User
          * -----------------------------
@@ -529,6 +518,14 @@ public class Platform  {
         setPluginReferencesAndStart(actorDeveloper, Plugins.BITDUBAI_ACTOR_DEVELOPER);
 
         /**
+         *---------------------------------
+         * Plugin Extra User
+         * -------------------------------
+         */
+        Plugin extraUser = ((ActorLayer) mActorLayer).getmActorExtraUser();
+        setPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_USER_EXTRA_USER);
+
+        /**
          * -----------------------------
          * Plugin Bitcoin Crypto Network
          * -----------------------------
@@ -602,6 +599,14 @@ public class Platform  {
         setPluginReferencesAndStart(walletStoreNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
 
         /**
+         * -----------------------------
+         * Plugin Wallet Statistics Network Service
+         * -----------------------------
+         */
+        Plugin walletStatisticsNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletStatistics();
+        setPluginReferencesAndStart(walletStatisticsNetworkService, Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE);
+
+        /**
          * -------------------------------
          * Plugin App Runtime Middleware 
          * -------------------------------
@@ -640,6 +645,38 @@ public class Platform  {
          */
         Plugin walletContactsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getWalletContactsPlugin();
         setPluginReferencesAndStart(walletContactsMiddleware, Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Contacts Middleware
+         * ----------------------------------
+         */
+        Plugin walletFactoryMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletFactoryPlugin();
+        setPluginReferencesAndStart(walletFactoryMiddleware, Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE);
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Contacts Middleware
+         * ----------------------------------
+         */
+        Plugin walletManagerMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletManagerPlugin();
+        setPluginReferencesAndStart(walletManagerMiddleware, Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE);
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Contacts Middleware
+         * ----------------------------------
+         */
+        Plugin walletPublisherMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletPublisherPlugin();
+        setPluginReferencesAndStart(walletPublisherMiddleware, Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE);
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Contacts Middleware
+         * ----------------------------------
+         */
+        Plugin walletStoreMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletStorePlugin();
+        setPluginReferencesAndStart(walletStoreMiddleware, Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE);
 
         /**
          * ----------------------------------
@@ -835,7 +872,7 @@ public class Platform  {
                 ((DealsWithEvents) plugin).setEventManager((EventManager) corePlatformContext.getAddon(Addons.EVENT_MANAGER));
 
             if (plugin instanceof DealsWithExtraUsers)
-                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getAddon(Addons.EXTRA_USER));
+                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_USER_EXTRA_USER));
 
             if (plugin instanceof DealsWithLogger)
                 ((DealsWithLogger) plugin).setLogManager(loggerSystemOs.getLoggerManager());
@@ -860,6 +897,27 @@ public class Platform  {
 
             if (plugin instanceof DealsWithWalletContacts)
                 ((DealsWithWalletContacts) plugin).setWalletContactsManager((WalletContactsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE));
+
+            if (plugin instanceof DealsWithWalletFactory)
+                ((DealsWithWalletFactory) plugin).setWalletFactoryManager((WalletFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE));
+
+            if (plugin instanceof DealsWithWalletManager)
+                ((DealsWithWalletManager) plugin).setWalletManagerManager((WalletManagerManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE));
+
+            if (plugin instanceof DealsWithWalletPublisher)
+                ((DealsWithWalletPublisher) plugin).setWalletPublisherManager((WalletPublisherManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE));
+
+            if (plugin instanceof DealsWithWalletResources)
+                ((DealsWithWalletResources) plugin).setWalletResourcesManager((WalletResourcesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+
+            if (plugin instanceof DealsWithWalletStatisticsNetworkService)
+                ((DealsWithWalletStatisticsNetworkService) plugin).setWalletStatisticsManager((WalletStatisticsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE));
+
+            if (plugin instanceof DealsWithWalletStore)
+                ((DealsWithWalletStore) plugin).setWalletStoreManager((WalletStoreManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE));
+
+            if (plugin instanceof DealsWithWalletStoreNetworkService)
+                ((DealsWithWalletStoreNetworkService) plugin).setWalletStoreManager((com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE));
 
             if (plugin instanceof DealsWithIncomingCrypto)
                 ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION));
@@ -886,7 +944,7 @@ public class Platform  {
                  * * *
                  */
             } catch (Exception e){
-                System.err.println("PluginNotRecognizedException: " + e.getMessage());
+                System.err.println(descriptor.getKey().toString()+" - PluginNotRecognizedException: " + e.getMessage());
                 errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
                 /**
                  * This is worse than the previous catch since the plugin didn't even throw an expected exception.

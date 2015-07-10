@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
@@ -15,6 +17,8 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     /*
      * BitcoinWalletTransactionRecord Interface member variables
      */
+    private UUID transactionId;
+
     private String transactionHash;
 
     private CryptoAddress addressFrom;
@@ -25,18 +29,21 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     private TransactionType type;
 
-    private TransactionState state;
-
     private long timestamp;
 
     private String memo;
+
+    private BalanceType balanceType;
 
     /*
      * TransactionWrapper member variables
      */
     private UUID walletId;
 
-    private UUID transactionId;
+    private TransactionState state;
+
+    private CryptoStatus cryptoStatus;
+
 
     /*
      * BitcoinWalletTransactionRecord Interface method implementation
@@ -49,6 +56,16 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     @Override
     public void setAddressFrom(CryptoAddress addressFrom) {
         this.addressFrom = addressFrom;
+    }
+
+    @Override
+    public UUID getIdTransaction() {
+        return this.transactionId;
+    }
+
+    @Override
+    public void setIdTransaction(UUID id) {
+        this.transactionId = transactionId;
     }
 
     @Override
@@ -72,6 +89,16 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     }
 
     @Override
+    public BalanceType getBalanceType() {
+        return this.balanceType;
+    }
+
+    @Override
+    public void setBalanceType(BalanceType type) {
+        this.balanceType = type;
+    }
+
+    @Override
     public TransactionType getType() {
         return type;
     }
@@ -81,15 +108,6 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.type = type;
     }
 
-    @Override
-    public TransactionState getState() {
-        return state;
-    }
-
-    @Override
-    public void setState(TransactionState state) {
-        this.state = state;
-    }
 
     @Override
     public long getTimestamp() {
@@ -121,20 +139,27 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.transactionHash = tramsactionHash;
     }
 
-
-    public UUID getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(UUID transactionId) {
-        this.transactionId = transactionId;
-    }
-
     public UUID getWalletId() {
         return walletId;
     }
 
     public void setWalletId(UUID walletId) {
         this.walletId = walletId;
+    }
+
+    public TransactionState getState() {
+        return this.state;
+    }
+
+    public void setState(TransactionState state) {
+        this.state = state;
+    }
+
+    public CryptoStatus getCryptoStatus() {
+        return this.cryptoStatus;
+    }
+
+    public void setCryptoStatus(CryptoStatus cryptoStatus) {
+        this.cryptoStatus = cryptoStatus;
     }
 }

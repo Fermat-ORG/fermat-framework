@@ -100,10 +100,10 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
 
     @Override
-    public void registerNetworkService(NetworkServices networkService) throws CommunicationException{
+    public void registerNetworkService(NetworkServices networkService, String networkServicePublicKey) throws CommunicationException{
         this.networkServices.add(networkService);
         
-        ((CommunicationChannel) mCloudPlugin).registerNetworkService(networkService);
+        ((CommunicationChannel) mCloudPlugin).registerNetworkService(networkService, networkServicePublicKey);
         
     }
 

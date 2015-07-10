@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,12 +27,14 @@ public class OutgoingExtraUserDatabaseFactory implements DealsWithPluginDatabase
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
+
+
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
 
         Database database;
 
@@ -56,13 +60,15 @@ public class OutgoingExtraUserDatabaseFactory implements DealsWithPluginDatabase
          */
         try {
 
-            DatabaseTableFactory table;
 
+
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+            DatabaseTableFactory table;
 
             /**
              * Then the value chunks table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
@@ -72,11 +78,13 @@ public class OutgoingExtraUserDatabaseFactory implements DealsWithPluginDatabase
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENY_COLUMN_NAME, DatabaseDataType.STRING, 3,false);
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
 
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());

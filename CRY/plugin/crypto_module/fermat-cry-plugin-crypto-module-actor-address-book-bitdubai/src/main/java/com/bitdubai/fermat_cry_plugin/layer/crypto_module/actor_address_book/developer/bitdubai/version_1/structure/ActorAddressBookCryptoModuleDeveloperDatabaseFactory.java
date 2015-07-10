@@ -74,7 +74,7 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            throw new CantInitializeActorAddressBookCryptoModuleException();
+            throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
 
             ActorAddressBookCryptoModuleDatabaseFactory databaseFactory = new ActorAddressBookCryptoModuleDatabaseFactory();
@@ -92,7 +92,7 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
                 /**
                  * The database cannot be created. I can not handle this situation.
                  */
-                throw new CantInitializeActorAddressBookCryptoModuleException();
+                throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot create the database.");
             }
         }
     }
@@ -153,21 +153,22 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
+        for (DatabaseTableRecord row: records){
             /**
              * for each row in the table list
              */
-            for (DatabaseRecord field : row.getValues()) {
+            List<String> developerRow = new ArrayList<String>();
+            for (DatabaseRecord field : row.getValues()){
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record
              */
             returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+
         }
 
 

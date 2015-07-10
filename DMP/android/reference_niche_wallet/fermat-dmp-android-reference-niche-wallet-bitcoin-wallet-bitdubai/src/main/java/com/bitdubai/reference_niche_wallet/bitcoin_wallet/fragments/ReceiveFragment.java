@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +35,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -40,13 +44,17 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.WalletContact;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.WalletContactListAdapter;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -58,6 +66,10 @@ public class ReceiveFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
     View rootView;
+
+    private AutoCompleteTextView autocompleteContacts;
+    private WalletContactListAdapter adapter;
+
 
     private String user_address_wallet = "";
     final int colorQR = Color.BLACK;
@@ -108,20 +120,11 @@ public class ReceiveFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_receive, container, false);
 
-        final EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
-        contact_name.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                resetForm();
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-        });
-
         // request_address button definition
         final Button requestAdressBtn = (Button) rootView.findViewById(R.id.request_btn);
         requestAdressBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                requestAddress();
+                requestAddress(null);
             }
         });
 
@@ -140,7 +143,45 @@ public class ReceiveFragment extends Fragment {
                 copyToClipboard();
             }
         });
+
+        autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.autocomplete_contacts);
+        adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
+        autocompleteContacts.setAdapter(adapter);
+
+        autocompleteContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                requestAddress((WalletContact) arg0.getItemAtPosition(position));
+            }
+        });
+
+        autocompleteContacts.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                resetForm();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
         return rootView;
+    }
+
+    private List<WalletContact> getWalletContactList() {
+        List<WalletContact> contacts = new ArrayList<>();
+        try {
+            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            for (WalletContactRecord wcr : walletContactRecords) {
+                contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
+            }
+        } catch (CantGetAllWalletContactsException e) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+        }
+        return contacts;
     }
 
     public void resetForm() {
@@ -149,14 +190,18 @@ public class ReceiveFragment extends Fragment {
         TextView string_address = (TextView) rootView.findViewById(R.id.string_address);
         string_address.setVisibility(View.GONE);
         Button share_btn = (Button) rootView.findViewById(R.id.share_btn);
-        share_btn.setVisibility(View.GONE);
+        share_btn.setEnabled(false);
+        share_btn.setFocusable(false);
+        share_btn.setTextColor(Color.parseColor("#b46a54"));
     }
 
-    public void requestAddress() {
-        final EditText nameText = (EditText)rootView.findViewById(R.id.contact_name);
-
-        if (nameText != null && nameText.getText().toString() != null && !nameText.getText().toString().equals("")) {
-            getWalletAddress(nameText.getText().toString());
+    public void requestAddress(WalletContact walletcontact) {
+        if (autocompleteContacts != null && autocompleteContacts.getText().toString() != null && !autocompleteContacts.getText().toString().equals("")) {
+            if (walletcontact == null) {
+                getWalletAddress(autocompleteContacts.getText().toString());
+            } else {
+                getWalletAddress(walletcontact);
+            }
             showQRCodeAndAddress();
         } else {
             Toast.makeText(getActivity().getApplicationContext(), "Enter a name to share your address", Toast.LENGTH_SHORT).show();
@@ -188,7 +233,9 @@ public class ReceiveFragment extends Fragment {
 
             // show share_btn
             Button share_btn = (Button) rootView.findViewById(R.id.share_btn);
-            share_btn.setVisibility(View.VISIBLE);
+            share_btn.setEnabled(true);
+            share_btn.setFocusable(true);
+            share_btn.setTextColor(Color.parseColor("#72af9c"));
 
             //TODO SHOW BUTTON SHARE AND ADDRESS IN SCREEN
         } catch (WriterException writerException) {
@@ -205,6 +252,19 @@ public class ReceiveFragment extends Fragment {
     private void getWalletAddress(String contact_name) {
         try {
             CryptoAddress cryptoAddress = cryptoWallet.requestAddress(contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            user_address_wallet = cryptoAddress.getAddress();
+        }
+        catch (CantRequestCryptoAddressException e)
+        {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
+
+        }
+    }
+
+    private void getWalletAddress(WalletContact walletContact) {
+        try {
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
         }
         catch (CantRequestCryptoAddressException e)
