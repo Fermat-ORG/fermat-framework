@@ -89,6 +89,16 @@ public class WalletManagerMiddlewarePluginRoot implements DealsWithErrors, Plugi
     }
 
     @Override
+    public void openWallet(UUID walletIdInThisDevice) {
+
+    }
+
+    @Override
+    public void uninstallWallet(UUID walletIdInThisDevice) {
+
+    }
+
+    @Override
     public void installWallet(WalletInstallationInformation walletInstallationInformation) {
 
     }
