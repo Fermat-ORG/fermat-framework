@@ -41,7 +41,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_column="2"
                 android:paddingLeft="5sp"
-
+                android:paddingBottom="10sp"
                 android:gravity="center"
                 android:textColor="@color/black_overlay"
                 android:textStyle="bold"
