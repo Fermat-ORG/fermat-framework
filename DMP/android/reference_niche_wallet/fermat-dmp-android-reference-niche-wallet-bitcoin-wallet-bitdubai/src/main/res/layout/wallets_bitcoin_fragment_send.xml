@@ -85,7 +85,8 @@
             android:textColor="#72af9c"
             android:textSize="20sp"
             android:textStyle="normal"
-            android:hint="BTC 0.0000"
+            android:textColorHint="#72af9c"
+            android:hint="0 bits"
             android:layout_weight="0.54"
             android:inputType="number"
             android:state_selected = "true"/>
@@ -107,6 +108,7 @@
             android:textStyle="normal"
             android:hint="Notes"
             android:paddingTop="7dip"
+            android:textColorHint="#72af9c"
             android:background="#f3e4c4"
             android:textColor="#72af9c"
             android:paddingLeft="14dip"
