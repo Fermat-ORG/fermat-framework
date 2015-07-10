@@ -116,8 +116,10 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
          */
         List<String> actorAddressBookTableColumns = new ArrayList<String>();
         actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID);
-        actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID);
-        actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE);
+        actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_BY_ACTOR_ID);
+        actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_BY_ACTOR_TYPE);
+        actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_TO_ACTOR_ID);
+        actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_TO_ACTOR_TYPE);
         actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
         actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY);
         actorAddressBookTableColumns.add(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP);
