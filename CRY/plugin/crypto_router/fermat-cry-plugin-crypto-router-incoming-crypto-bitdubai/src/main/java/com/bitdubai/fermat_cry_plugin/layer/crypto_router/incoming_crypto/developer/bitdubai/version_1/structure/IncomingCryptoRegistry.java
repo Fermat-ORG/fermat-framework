@@ -86,10 +86,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         CryptoTransaction c = new CryptoTransaction("random",
                 new CryptoAddress("addFrom", CryptoCurrency.BITCOIN),
                 new CryptoAddress("addTo", CryptoCurrency.BITCOIN),
-                CryptoCurrency.BITCOIN, 1, CryptoStatus.CONFIRMED
+                CryptoCurrency.BITCOIN, 1, CryptoStatus.IRREVERSIBLE
         );
         /*
-        Campos del BitcoinTransaction
+        Campos del BitcoinWalletTransactionRecord
         String transactionHash,
         CryptoAddress addressFrom,
         CryptoAddress addressTo,
@@ -552,7 +552,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 registryTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException cantUpdateRecord) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
-                throw new CantConfirmTransactionException();
+                throw new CantConfirmTransactionException(null, cantUpdateRecord, null,null);
                 // TODO: MANAGE EXCEPTION.
             }
 

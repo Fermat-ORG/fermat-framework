@@ -1,0 +1,4 @@
+[[Platform-SubApps-WalletStore]]
+= Wallet Store
+
+This subapp shows the user the different wallets he can download and install in his device.

@@ -1,14 +1,20 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+
+import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.25..
  */
-public class BitcoinTransactionWrapper implements BitcoinTransaction{
+public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord {
+
+    private UUID transactionId;
+
     private String transactionHash;
 
     private CryptoAddress addressFrom;
@@ -25,6 +31,8 @@ public class BitcoinTransactionWrapper implements BitcoinTransaction{
 
     private String memo;
 
+    private BalanceType balanceType;
+
     @Override
     public CryptoAddress getAddressFrom() {
         return addressFrom;
@@ -33,6 +41,16 @@ public class BitcoinTransactionWrapper implements BitcoinTransaction{
     @Override
     public void setAddressFrom(CryptoAddress addressFrom) {
         this.addressFrom = addressFrom;
+    }
+
+    @Override
+    public UUID getIdTransaction() {
+        return this.transactionId;
+    }
+
+    @Override
+    public void setIdTransaction(UUID id) {
+        this.transactionId = id;
     }
 
     @Override
@@ -56,6 +74,16 @@ public class BitcoinTransactionWrapper implements BitcoinTransaction{
     }
 
     @Override
+    public BalanceType getBalanceType() {
+        return balanceType;
+    }
+
+    @Override
+    public void setBalanceType(BalanceType type) {
+        this.balanceType = type;
+    }
+
+    @Override
     public TransactionType getType() {
         return type;
     }
@@ -65,12 +93,10 @@ public class BitcoinTransactionWrapper implements BitcoinTransaction{
         this.type = type;
     }
 
-    @Override
     public TransactionState getState() {
         return state;
     }
 
-    @Override
     public void setState(TransactionState state) {
         this.state = state;
     }

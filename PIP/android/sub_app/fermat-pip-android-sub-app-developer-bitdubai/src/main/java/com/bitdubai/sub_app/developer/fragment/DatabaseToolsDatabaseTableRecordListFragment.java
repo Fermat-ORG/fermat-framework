@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.developer.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -79,7 +80,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setRetainInstance(true);
         try {
             ToolManager toolManager = platform.getToolManager();
             try {
@@ -112,6 +113,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
             columnNames = developerDatabaseTable.getFieldNames();
             int i=0;
+
 
             if (developerDatabaseTableRecordList.size() > 0) {
                 i=0;
@@ -148,7 +150,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     }
 
     private TableLayout createTable(List<List<String>> lstRows, List<String> lstColumns,int rowCount, int columnCount){
-
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         TableLayout tableLayout= new TableLayout(getActivity());
         TableLayout.LayoutParams tableLayoutParams = new TableLayout.LayoutParams();
@@ -159,7 +161,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             tableRowParams.setMargins(5, 5, 5, 5);
             tableRowParams.weight = 1;
 
-
             TableRow tableRow = new TableRow(getActivity());
             if(lstColumns!=null) {
 
@@ -168,6 +169,8 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
                     textView.setBackgroundColor(Color.WHITE);
                     textView.setText(lstColumns.get(i));
                     textView.setTextColor(Color.BLACK);
+                    textView.setPadding(10, 10, 10, 10);
+                    textView.setTypeface(tf);
                     // 2) create tableRow params
 
                     tableRow.addView(textView, tableRowParams);
@@ -183,20 +186,13 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
                         textView.setBackgroundColor(Color.WHITE);
                         textView.setText(values);
                         textView.setTextColor(Color.BLACK);
+                        textView.setPadding(10, 10, 10, 10);
+                        textView.setTypeface(tf);
                         tableRow.addView(textView, tableRowParams);
                     }
                     tableLayout.addView(tableRow,tableLayoutParams);
                 }
 
-                /*for (int i = 0; i < lstRows.size(); i++) {
-                    TextView textView = new TextView(getActivity());
-                    textView.setBackgroundColor(Color.WHITE);
-                    textView.setText(lstRows.get(i));
-                    textView.setTextColor(Color.BLACK);
-                    tableRow.addView(textView, tableRowParams);
-
-                }*/
-                //tableLayout.addView(tableRow,tableLayoutParams);
             }
 
         }catch (Exception e){

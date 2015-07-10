@@ -7,10 +7,13 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
@@ -78,21 +81,36 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
     private Thread toSend;
 
     /**
+     * Represent the eccKeyPair
+     */
+    private ECCKeyPair eccKeyPair;
+
+    /**
+     * Represent the public key of the remote network service
+     */
+    private String remoteNetworkServicePublicKey;
+
+    /**
      * Constructor with parameters
      *
+     * @param eccKeyPair from the plugin root
+     * @param remoteNetworkServicePublicKey the public key
      * @param serviceToServiceOnlineConnection  the serviceToServiceOnlineConnection instance
      * @param errorManager  instance
      * @param incomingMessageDataAccessObject instance
      * @param outgoingMessageDataAccessObject instance
      */
-    public IntraUserNetworkServiceRemoteAgent(ServiceToServiceOnlineConnection serviceToServiceOnlineConnection, ErrorManager errorManager, IncomingMessageDataAccessObject incomingMessageDataAccessObject, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
+    public IntraUserNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, String remoteNetworkServicePublicKey, ServiceToServiceOnlineConnection serviceToServiceOnlineConnection, ErrorManager errorManager, IncomingMessageDataAccessObject incomingMessageDataAccessObject, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
 
         super();
+        this.eccKeyPair                       = eccKeyPair;
+        this.remoteNetworkServicePublicKey    = remoteNetworkServicePublicKey;
         this.serviceToServiceOnlineConnection = serviceToServiceOnlineConnection;
         this.errorManager                     = errorManager;
         this.running                          = Boolean.FALSE;
         this.incomingMessageDataAccessObject  = incomingMessageDataAccessObject;
         this.outgoingMessageDataAccessObject  = outgoingMessageDataAccessObject;
+
 
         //Create a thread to receive the messages
         this.toReceive = new Thread(new Runnable() {
@@ -156,8 +174,8 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
     }
 
     /**
-     * This method decrypt the content of the message received and save on the
-     * data base in the table <code>inbox_messages</code> and notify all observers
+     * This method process the message received and save on the
+     * data base in the table <code>incoming_messages</code> and notify all observers
      * to the new messages received
      */
     private void processMessageReceived(){
@@ -183,7 +201,21 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
                      *  Cast the message to IncomingIntraUserNetworkServiceMessage
                      */
                     IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = (IncomingIntraUserNetworkServiceMessage) message;
-                    incomingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.SENT); //validar el estatus que debe tener al recibirlo
+
+                    /*
+                     * Validate the message signature
+                     */
+                    AsymmectricCryptography.verifyMessageSignature(incomingIntraUserNetworkServiceMessage.getSignature(), incomingIntraUserNetworkServiceMessage.getTextContent(), remoteNetworkServicePublicKey);
+
+                    /*
+                     * Decrypt the message content
+                     */
+                    incomingIntraUserNetworkServiceMessage.setTextContent(AsymmectricCryptography.decryptMessagePrivateKey(incomingIntraUserNetworkServiceMessage.getTextContent(), eccKeyPair.getPrivateKey()));
+
+                    /*
+                     * Change to the new status
+                     */
+                    incomingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.NEW_RECEIVED);
 
                     /*
                      * Save to the data base table
@@ -239,6 +271,16 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
                     for (OutgoingIntraUserNetworkServiceMessage message: messages){
 
                         /*
+                         * Encrypt the content of the message whit the remote public key
+                         */
+                        message.setTextContent(AsymmectricCryptography.encryptMessagePublicKey(message.getTextContent(), remoteNetworkServicePublicKey));
+
+                        /*
+                         * Sing the message
+                         */
+                        AsymmectricCryptography.createMessageSignature(message.getTextContent(), eccKeyPair.getPrivateKey());
+
+                        /*
                          * Send the message
                          */
                         serviceToServiceOnlineConnection.sendMessage(message);
@@ -255,6 +297,8 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message to remote network service "));
                 } catch (CantUpdateRecordDataBaseException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
+                } catch (CantReadRecordDataBaseException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
                 }
 
             }

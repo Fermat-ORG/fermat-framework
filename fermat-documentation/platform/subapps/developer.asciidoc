@@ -1,0 +1,4 @@
+[[Platform-SubApps-Developer]]
+= Developer
+
+This subapp should let user contact the developers of their wallets. +

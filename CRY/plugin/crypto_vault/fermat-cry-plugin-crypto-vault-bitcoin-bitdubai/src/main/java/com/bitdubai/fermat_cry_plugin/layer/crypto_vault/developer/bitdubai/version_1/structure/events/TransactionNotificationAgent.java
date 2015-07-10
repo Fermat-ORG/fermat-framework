@@ -1,7 +1,14 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.event.DealWithEventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
@@ -22,13 +29,18 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNotificationAgent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.LimitReachedTransactionNotificationAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.TransactionProtocolAgentMaxIterationsReachedException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -112,7 +124,6 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
              * I cant continue if this happens.
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeCryptoRegistryException);
-            throw new CantStartAgentException();
         }
 
         /**
@@ -145,7 +156,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
     }
 
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
@@ -230,6 +241,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                      */
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                     throw new CantInitializeMonitorAgentException();
+
                 }
             }
             catch (CantOpenDatabaseException cantOpenDatabaseException){
@@ -271,15 +283,16 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                     doTheMainTask();
                 } catch (CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+               } catch (FermatException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
 
         }
-
         /**
          * Implements the agent
          */
-        private void doTheMainTask() throws CantExecuteQueryException {
+        private void doTheMainTask() throws CantExecuteQueryException, TransactionProtocolAgentMaxIterationsReachedException {
             /**
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
@@ -300,8 +313,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
 
                 //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.","Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
                 if (ITERATIONS_THRESHOLD < iterations){
-                    System.err.println("Transaction Protocol Notification Agent: reached threshold of maximun iterations without any plugin consuming transactions.");
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new LimitReachedTransactionNotificationAgentException());
+                    throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
 
             } else

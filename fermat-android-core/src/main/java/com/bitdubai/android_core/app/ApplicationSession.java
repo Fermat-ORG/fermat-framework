@@ -222,7 +222,8 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
             tabs = pTabs;
             // Change the title of the action bar and the typeface
             SpannableString s = new SpannableString("");
-            String color = "#F0E173";
+            //String color = "#F0E173";
+            String color ="";
             mTitle = pTitle;
 
             Drawable bg = context.getDrawable(R.drawable.transparent);
@@ -352,7 +353,9 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
             // Update the action bar title with the TypefaceSpan instance
             actionBar.setTitle(s);
 
-            changeColor(Color.parseColor(color), context);
+            // TODO: Comentado porque hay que sacar este switch de acá,
+            // TODO: Toda está funcion deberia hacerse sin setear nada, si no solo leer de lo que me trae el middleware
+            //if(pTabs!=null) changeColor(Color.parseColor(color), context);
 
             window.getDecorView().setBackground(wallpaper);
             if (bg.isVisible() == true) {actionBar.setBackgroundDrawable(bg);}

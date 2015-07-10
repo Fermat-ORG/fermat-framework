@@ -9,6 +9,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -108,6 +109,11 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     private Database dataBase;
 
     /**
+     * Represent the eccKeyPair
+     */
+    private ECCKeyPair eccKeyPair;
+
+    /**
      * Constructor
      */
     public IntraUserNetworkServicePluginRoot() {
@@ -195,11 +201,35 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
          * If all resources are inject
          */
         if (communicationLayerManager != null && pluginDatabaseSystem != null && errorManager != null && eventManager  != null) {
+
             try {
+
+                /*
+                 * Create a new key pair for this execution
+                 */
+                eccKeyPair = new ECCKeyPair();
+
                 /*
                  * Initialize the data base
                  */
                 initializeDb();
+
+                /*
+                 * Register this network service whit the communicationLayerManager
+                 */
+                communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER, eccKeyPair.getPublicKey());
+
+
+                /*
+                 * Its all ok, set the new status
+                */
+                this.serviceStatus = ServiceStatus.STARTED;
+
+
+            } catch (CommunicationException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
+                throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+
             } catch (CantInitializeNetworkIntraUserDataBaseException exception) {
                 /*
                  * We are going to throw a CantStartPluginException which is inherited from FermatException
@@ -224,33 +254,27 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 throw pluginStartException;
             }
 
-            try{
-                /*
-                 * Register this network service whit the communicationLayerManager
-                 */
-                communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER);
-
-                /*
-                 * Obtain the public key generate for this network service at register
-                 */
-                // this method might work here because the asynchronous call might not be yet processed
-                // publicKey = communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.INTRA_USER);
-
-                /*
-                 * Its all ok, set the new status
-                */
-                this.serviceStatus = ServiceStatus.STARTED;
-
-
-            } catch (CommunicationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
-                throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
-
-            }
-
         } else {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("No all required resource are injected"));
-            throw new CantStartPluginException(new Exception("No all required resource are injected"), Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationLayerManager: " + communicationLayerManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "No all required resource are injected";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+
+
         }
 
     }
@@ -321,9 +345,20 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
          * Unregister whit the communicationLayerManager
          */
         try {
+
             communicationLayerManager.unregisterNetworkService(NetworkServices.INTRA_USER);
+
         } catch (CommunicationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("No all required resource are injected"));
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Communication Layer Manager error";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
         }
 
         /*
@@ -407,7 +442,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         /*
          * Create a new instance
          */
-        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(communicationLayerManager, dataBase, errorManager, eventManager);
+        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events

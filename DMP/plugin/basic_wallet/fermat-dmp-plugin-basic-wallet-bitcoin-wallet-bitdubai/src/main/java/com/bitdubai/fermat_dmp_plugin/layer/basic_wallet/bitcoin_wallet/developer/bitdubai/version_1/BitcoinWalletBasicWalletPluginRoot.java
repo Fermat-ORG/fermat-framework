@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -261,26 +261,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             }
         }
 
-        /* TODO: Delete this wallet creation
-         *       The next wallet is created because the Wallet Manager is not
-         *       doing it yet for us.
-         */
-        BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
-
-        bitcoinWallet.setPluginFileSystem(pluginFileSystem);
-        bitcoinWallet.setPluginDatabaseSystem(pluginDatabaseSystem);
-        bitcoinWallet.setErrorManager(errorManager);
-        try {
-            UUID internalWalletId;
-            internalWalletId = bitcoinWallet.create(UUID.fromString("25428311-deb3-4064-93b2-69093e859871"));
-            this.walletIds.put(UUID.fromString("25428311-deb3-4064-93b2-69093e859871"), internalWalletId);
-        }
-        catch (CantCreateWalletException cantCreateWalletException)
-        {
-
-        }
-
-
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -325,7 +305,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
 
     @Override
-    public BitcoinWallet loadWallet(UUID walletId) throws CantLoadWalletException {
+    public BitcoinWalletWallet loadWallet(UUID walletId) throws CantLoadWalletException {
 
         BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
         bitcoinWallet.setErrorManager(this.errorManager);
@@ -373,7 +353,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             internalWalletId = bitcoinWallet.create(walletId);
         }catch(CantCreateWalletException cantInitializeBitcoinWallet)
         {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeBitcoinWallet);
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeBitcoinWallet);
             throw new CantCreateWalletException("Wallet Creation Failed",cantInitializeBitcoinWallet,"walletId: "+walletId.toString(),"");
         }
         this.walletIds.put(walletId,internalWalletId);

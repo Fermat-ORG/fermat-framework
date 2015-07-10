@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CabtStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
@@ -8,7 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -37,13 +38,13 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 /**
  * Created by eze on 2015.06.23..
  */
-public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors, DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem {
+public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithErrors, DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem {
 
     /**
      * BitcoinWalletBasicWallet member variables.
      */
     private Database database;
-    private UUID internalWalletId;
+    //private UUID internalWalletId;
 
     private final String WALLET_IDS_FILE_NAME = "walletsIds";
 
@@ -112,7 +113,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     }
 
     /**
-     * BitcoinWallet member variables.
+     * BitcoinWalletWallet member variables.
      */
 
     /* At the moment of creation the plug-in root gives us the walletId
@@ -138,14 +139,15 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
         // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
         //       We need to change this in the near future
-        this.internalWalletId = UUID.fromString("35f1b7bc-886a-458a-8ae3-51a16a28889a"); //UUID.randomUUID();
+        UUID internalWalletId = UUID.randomUUID();
+        //this.internalWalletId = UUID.fromString("35f1b7bc-886a-458a-8ae3-51a16a28889a"); //UUID.randomUUID();
 
         /**
          * We will create the database where I am going to store the information of this wallet.
          */
         try {
             // We will create wallet data base with new internal wallet id
-            this.database =  databaseFactory.createDatabase(this.pluginId, this.internalWalletId);
+            this.database =  databaseFactory.createDatabase(this.pluginId, internalWalletId);
 
         }
         catch (CantCreateDatabaseException cantCreateDatabaseException){
@@ -153,7 +155,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
             /**
              * The database cannot be created. I can not handle this situation.
              */
-            throw new CantCreateWalletException("Database could not be created",cantCreateDatabaseException,"internalWalletId: "+this.internalWalletId.toString(),"");
+            throw new CantCreateWalletException("Database could not be created",cantCreateDatabaseException,"internalWalletId: "+internalWalletId.toString(),"");
         }
 
         PluginTextFile walletIdsFile;
@@ -207,7 +209,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
 
         // We add the new Id pair
-        walletIds.put(walletId,this.internalWalletId);
+        walletIds.put(walletId,internalWalletId);
 
         /**
          * Now we will generate the file content.
@@ -236,57 +238,26 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
              */
             throw new CantCreateWalletException("Could not persist in file",cantPersistFileException,"stringBuilder: " + stringBuilder.toString(),"");
         }
-        return this.internalWalletId;
+        return internalWalletId;
     }
 
 
     @Override
     public UUID getWalletId() {
 
-       // return this.internalWalletId;
+        // return this.internalWalletId;
         return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
     }
 
-    @Override
-    public long getBalance() throws CantCalculateBalanceException {
-        //suma los debitos y los creditos los resta
-        long balance;
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        balance = bitcoinWalletBasicWalletDao.getBalance();
-
-        return balance;
-    }
 
 
 
-    /*
-     * NOTA:
-     *  El debit y el credit debería mirar primero si la tramsacción que
-     *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
-     *  debería ignorar la transacción.
-     */
-    @Override
-    public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
-
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
-    }
 
     @Override
-    public void credit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException {
+    public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException {
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
-    }
-
-    @Override
-    public List<BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
-
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager, this.database);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
 
         return bitcoinWalletBasicWalletDao.getTransactions(max, offset);
     }
@@ -295,9 +266,21 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     public void setDescription(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException {
         //update memo field
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager, this.database);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
 
         bitcoinWalletBasicWalletDao.updateMemoFiled(transactionID, memo);
+    }
+
+    @Override
+    public BitcoinWalletBalance getAvailableBalance() {
+
+        return new BitcoinWalletBasicWalletAvailableBalance(this.errorManager,this.pluginDatabaseSystem, this.database);
+    }
+
+
+    @Override
+    public BitcoinWalletBalance getBookBalance() {
+        return new BitcoinWalletBasicWalletBookBalance(this.errorManager, this.pluginDatabaseSystem, this.database);
     }
 
     /**

@@ -103,6 +103,10 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         return getAllInState(TransactionStatus.NEW);
     }
 
+    public List<TransactionWrapper> getDiscountedAvailableBalance() throws CantLoadTableToMemoryException, InvalidParameterException {
+        return getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
+    }
+
     public List<TransactionWrapper> getPersistedInWalletTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
         return getAllInState(TransactionStatus.PERSISTED_IN_WALLET);
     }
@@ -117,6 +121,10 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
     public void setToNew(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         setToState(bitcoinTransaction, TransactionStatus.NEW);
+    }
+
+    public void setToPIA(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
+        setToState(bitcoinTransaction, TransactionStatus.PERSISTED_IN_AVAILABLE);
     }
 
     public void setToPIW(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
@@ -145,7 +153,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         databaseTableRecord.setLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.NEW.getCode());
 
-        // TODO: This have to be changed fir the tinestamp when the network recognize the transaction
+        // TODO: This have to be changed for the tinestamp when the network recognize the transaction
         databaseTableRecord.setLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis()/1000L);
     }
 
@@ -216,7 +224,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         bitcoinTransaction.setAddressTo(addressTo);
         bitcoinTransaction.setAmount(amount);
         bitcoinTransaction.setType(type);
-        bitcoinTransaction.setState(state);
+      //  bitcoinTransaction.setState(state);
         bitcoinTransaction.setTimestamp(timestamp);
         bitcoinTransaction.setMemo(memo);
 

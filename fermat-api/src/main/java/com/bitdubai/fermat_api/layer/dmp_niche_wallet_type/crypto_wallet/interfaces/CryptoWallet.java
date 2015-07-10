@@ -2,7 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.*;
@@ -33,7 +33,7 @@ public interface CryptoWallet {
 
     void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException;
 
-    WalletContactRecord getWalletContactByContainsLikeAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
+    List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
 
     /**
      * Balance Fragment methods
@@ -43,7 +43,7 @@ public interface CryptoWallet {
     /**
      * Transactions Fragment methods
      */
-    List<BitcoinTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException;
+    List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException;
 
     /**
      * Receive methods

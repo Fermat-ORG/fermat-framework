@@ -29,7 +29,7 @@ class BitcoinEventListeners implements BlockChainListener, DealsWithLogger,  Pee
 
     LogManager logManager;
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
