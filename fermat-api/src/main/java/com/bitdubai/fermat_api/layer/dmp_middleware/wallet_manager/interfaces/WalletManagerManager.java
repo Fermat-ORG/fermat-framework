@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces;
 
+import java.util.List;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletManagerManager</code>
  * indicates the functionality of a WalletManagerManager
@@ -10,5 +12,6 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces;
  * @since Java JDK 1.7
  */
 public interface WalletManagerManager {
-
+    public List<InstalledWallet> getInstalledWallets();
+    public void installWallet(WalletInstallationInformation walletInstallationInformation);
 }

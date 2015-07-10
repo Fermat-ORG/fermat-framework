@@ -7,16 +7,11 @@ import java.util.UUID;
  */
 public interface WalletSearchParameters {
 
-    public void setWalletName(String walletName);
     public String getWalletName();
 
-    public void setDeveloperName(String developerName);
     public String getDeveloperName();
 
-    public void setWalletVersion(String version);
     public String getWalletVersion();
 
-    public void setWalletDescripción(String walletDescripción);
-    public String getWalletDescripción();
-
+    public String getWalletDescription();
 }
