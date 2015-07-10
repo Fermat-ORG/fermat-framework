@@ -309,35 +309,6 @@ public class LogToolsFragment extends Fragment {
                     @Override
                     public boolean onLongClick(View view) {
                         String loggerText = holder.companyTextView.getText().toString();
-                        /*PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                boolean result = false;
-                                int itemId = menuItem.getItemId();
-                                if (itemId == R.id.menu_no_logging) {
-                                    changeLogLevel(item.pluginKey, LogLevel.NOT_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    //changeLogLevel();
-                                    result = true;
-                                } else if (itemId == R.id.menu_minimal) {
-                                    changeLogLevel(item.pluginKey, LogLevel.MINIMAL_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-                                } else if (itemId == R.id.menu_moderate) {
-                                    changeLogLevel(item.pluginKey, LogLevel.MODERATE_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-                                } else if (itemId == R.id.menu_aggresive) {
-                                    changeLogLevel(item.pluginKey, LogLevel.AGGRESSIVE_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-
-                                }
-
-                                return result;
-                            }
-                        });
-                        popupMenu.inflate(R.menu.popup_menu);
-                        popupMenu.show();
-                        */
                         CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
                         cdd.show();
                         return true;
@@ -421,19 +392,17 @@ public class LogToolsFragment extends Fragment {
             super(a);
             this.logger=loggers;
             this.pluginKey=pluginKey;
-            testing();
-            //loadEnumsLogger();
-            // TODO Auto-generated constructor stub
+            loadDisplayName();
             this.c = a;
             setLogLevelImage();
 
             logger.logLevel = LogLevel.NOT_LOGGING;
         }
 
-        private void testing(){
+        private void loadDisplayName(){
             lstEnum=new ArrayList<>();
             for(int i=0;i<LogLevel.values().length;i++){
-                lstEnum.add(LogLevel.values()[i].toString());
+                lstEnum.add(LogLevel.values()[i].getDisplayName());
             }
         }
         private void setLogLevelImage(){
@@ -465,24 +434,6 @@ public class LogToolsFragment extends Fragment {
             }
         }
 
-        /*private void loadEnumsLogger(){
-            LogLevel[] enum_logLevel = LogLevel.values();
-            List<String> lstEnum = new ArrayList<String>();
-            for(int i=0;i<enum_logLevel.length;i++){
-                lstEnum.add(enum_logLevel[i].getDisplayName());
-            }
-        }
-        private void setIconSelected(){
-            if(logger!=null){
-                logger.logLevel.getCode();
-            }else{
-                //logger=new LogLevel(LogLevel.);
-            }
-
-        }*/
-
-
-
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -500,7 +451,7 @@ public class LogToolsFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    Toast.makeText(c, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+                    Toast.makeText(c,web[+ position] + " activated", Toast.LENGTH_SHORT).show();
                     String item =list.getItemAtPosition(position).toString();
                     if(item.compareTo(LogLevel.NOT_LOGGING.toString())==0) {
                         changeLogLevel(pluginKey, LogLevel.NOT_LOGGING, logger.classHierarchyLevels.getFullPath());

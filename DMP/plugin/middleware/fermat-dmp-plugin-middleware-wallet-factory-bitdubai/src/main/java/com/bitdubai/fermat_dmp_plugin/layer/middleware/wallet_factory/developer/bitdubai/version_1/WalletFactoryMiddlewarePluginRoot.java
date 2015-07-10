@@ -79,4 +79,9 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Plugi
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
+    @Override
+    public void createWalletFactoryProject() {
+
+    }
 }

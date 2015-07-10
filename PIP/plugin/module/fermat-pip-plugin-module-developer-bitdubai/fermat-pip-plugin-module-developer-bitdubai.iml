@@ -8,7 +8,7 @@
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>
-        <option name="BUILD_FOLDER_PATH" />
+        <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/build" />
       </configuration>
     </facet>
   </component>
