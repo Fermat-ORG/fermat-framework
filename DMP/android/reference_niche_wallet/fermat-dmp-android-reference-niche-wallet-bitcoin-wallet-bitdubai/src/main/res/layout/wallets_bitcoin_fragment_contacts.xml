@@ -26,11 +26,18 @@
             android:textColor="#72af9c"
             android:textColorHint="#BDBDBD"/>
 
-        <Button android:id="@+id/add_contact_btn"
+
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#8bba9e"
-            android:src="@drawable/ic_action_add_grey"/>
+            android:background="#8bba9e">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_add_grey"
+                android:id="@+id/action_add_contact" />
+        </FrameLayout>
+
     </LinearLayout>
 
     <ListView
