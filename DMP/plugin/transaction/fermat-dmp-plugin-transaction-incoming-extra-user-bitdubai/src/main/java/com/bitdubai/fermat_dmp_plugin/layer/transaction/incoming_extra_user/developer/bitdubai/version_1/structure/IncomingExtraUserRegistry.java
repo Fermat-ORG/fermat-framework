@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.xml.crypto.Data;
+
 /**
  * Created by ciencias on 3/30/15.
  * Modified by Arturo Vallone 25/04/2015
@@ -99,7 +101,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     }
 
     public void closeRegistry(){
-        database.closeDatabase();
+        //database.closeDatabase();
     }
 
     /**
@@ -127,13 +129,11 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
-            database.closeDatabase();
         } catch (DatabaseNotFoundException e) {
             IncomingExtraUserDataBaseFactory databaseFactory = new IncomingExtraUserDataBaseFactory(pluginDatabaseSystem);
 
             try {
                 database = databaseFactory.createDatabase(pluginId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
-                database.closeDatabase();
             } catch (CantCreateDatabaseException exception) {
                 throw new CantInitializeCryptoRegistryException(CantInitializeCryptoRegistryException.DEFAULT_MESSAGE, exception, "", "Check the cause to see why the Database couldn't be created");
             }
@@ -145,45 +145,33 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     // Used by the Monitor Agent
     // Las coloca en (A,TBN)
     public void acknowledgeTransactions(List<Transaction<CryptoTransaction>> transactionList) throws CantAcknowledgeTransactionException{ // throws CantAcknowledgeTransactionException
-        try {
-            database.openDatabase();
-            DatabaseTable registryTable = database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
-            //DatabaseTransaction databaseTransaction = this.database.newTransaction();
-            for(Transaction<CryptoTransaction> transaction : transactionList) {
-                // We first check if we have this transaction registered as (A,TBN). This would not be
-                // a mistake. It just mean that the system shut down before we could confirm reception to
-                // the sender and the sender sent it again.
-                registryTable.setUUIDFilter(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+        DatabaseTable registryTable = database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
+        for(Transaction<CryptoTransaction> transaction : transactionList) {
+            // We first check if we have this transaction registered as (A,TBN). This would not be
+            // a mistake. It just mean that the system shut down before we could confirm reception to
+            // the sender and the sender sent it again.
+            registryTable.setUUIDFilter(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
-                try {
-                    registryTable.loadToMemory();
-                } catch (CantLoadTableToMemoryException exception) {
-                    database.closeDatabase();
-                    //TODO: MANAGE EXCEPTION
-                    throw new CantAcknowledgeTransactionException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE, exception, null, "We cant load the table to memory, there is no way we can circunvent this problem");
-                }
-
-                List<DatabaseTableRecord> records = registryTable.getRecords();
-                if (records.isEmpty()) {
-                    // if it is empty this is a new transaction
-                    // If it is a new transaction we save it as usual
-                    DatabaseTableRecord transactionRecord = registryTable.getEmptyRecord();
-                    fillRegistryTableRecord(transactionRecord, transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED);
-                    try {
-                        registryTable.insertRecord(transactionRecord);
-                    } catch (CantInsertRecordException cantInsertRecord) {
-                        database.closeDatabase();
-                        // TODO: MANAGE EXCEPTION.
-                        throw new CantAcknowledgeTransactionException(CantAcknowledgeTransactionException.DEFAULT_MESSAGE, cantInsertRecord, null, "This is a database level issue, check the cause to see the reason");
-                    }
-                }
-
-                // if it is not empty we ignore the transaction because we already have it.
-                registryTable.clearAllFilters();
-                database.closeDatabase();
+            try {
+                registryTable.loadToMemory();
+            } catch (CantLoadTableToMemoryException exception) {
+                throw new CantAcknowledgeTransactionException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE, exception, registryTable.toString(), "We cant load the table to memory, there is no way we can circunvent this problem");
             }
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
-            throw new CantAcknowledgeTransactionException(CantAcknowledgeTransactionException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
+            List<DatabaseTableRecord> records = registryTable.getRecords();
+            if (records.isEmpty()) {
+                // if it is empty this is a new transaction
+                // If it is a new transaction we save it as usual
+                DatabaseTableRecord transactionRecord = registryTable.getEmptyRecord();
+                fillRegistryTableRecord(transactionRecord, transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED);
+                try {
+                    registryTable.insertRecord(transactionRecord);
+                } catch (CantInsertRecordException cantInsertRecord) {
+                    throw new CantAcknowledgeTransactionException(CantAcknowledgeTransactionException.DEFAULT_MESSAGE, cantInsertRecord, "Table : " + registryTable.toString(), "This is a database level issue, check the cause to see the reason");
+                }
+            }
+
+            // if it is not empty we ignore the transaction because we already have it.
+            registryTable.clearAllFilters();
         }
     }
 
@@ -203,9 +191,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             eventRecord.setLongValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName, unixTime);
             dbTrx.addRecordToInsert(eventsTable, eventRecord);
             database.executeTransaction(dbTrx);
-            database.closeDatabase();
         } catch (DatabaseTransactionFailedException exception) {
-            database.closeDatabase();
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, "The Transaction Failed. Check the Cause");
         } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
@@ -214,6 +200,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
     protected EventWrapper getNextPendingEvent() throws CantReadEventException {
         try {
+            database.openDatabase();
             DatabaseTable eventsTable = database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME);
             eventsTable.setStringFilter(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING", DatabaseFilterType.EQUAL);
 
@@ -222,12 +209,10 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             List<DatabaseTableRecord> events = eventsTable.getRecords();
 
             if (events == null || events.isEmpty()) {
-                database.closeDatabase();
                 return null;
             }
 
             DatabaseTableRecord event = events.get(0);
-            database.closeDatabase();
             return new EventWrapper(
                     event.getUUIDValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName),
                     event.getStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_EVENT_COLUMN.columnName),
@@ -238,6 +223,8 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantReadEventException(CantReadEventException.DEFAULT_MESSAGE, exception, null, "There is no way to gracefully handle this, check the cause");
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+            throw new CantReadEventException(CantReadEventException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
         }
     }
 
@@ -255,19 +242,15 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             }
             List<DatabaseTableRecord> records = eventsTable.getRecords();
             if (records == null || records.isEmpty()) {
-                database.closeDatabase();
                 throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, null, "Event ID: " + eventId, "I couldn't find the event with the given Id");
             } else if (records.size() > 1) {
-                database.closeDatabase();
                 throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, null, "Event ID: " + eventId, "More than one Event with the given Id");
             }
             DatabaseTableRecord eventRecord = records.get(0);
             eventRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "DISABLED");
             dbTrx.addRecordToUpdate(eventsTable, eventRecord);
             database.executeTransaction(dbTrx);
-            database.closeDatabase();
         }  catch (DatabaseTransactionFailedException exception) {
-            database.closeDatabase();
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, "The Transaction Failed. Check the Cause");
         } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
@@ -295,7 +278,6 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         try {
             registryTable.loadToMemory();
         } catch (CantLoadTableToMemoryException exception) {
-            database.closeDatabase();
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             return tbaList;
         }
@@ -307,7 +289,6 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
         registryTable.clearAllFilters();
 
-        database.closeDatabase();
         return tbaList;
     }
 
@@ -340,11 +321,9 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             );
             registryTable.updateRecord(recordToUpdate);
 
-            database.closeDatabase();
         } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
             throw new CantAcquireResponsibilityException(CantAcquireResponsibilityException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
         } catch (FermatException exception) {
-            database.closeDatabase();
             throw new CantAcquireResponsibilityException(CantAcquireResponsibilityException.DEFAULT_MESSAGE, exception, null, "Check the Cause");
         }
 
@@ -383,12 +362,10 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
             registryTable.updateRecord(recordToUpdate);
 
-            database.closeDatabase();
 
         } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
             throw new CantAccessTransactionsException(CantAccessTransactionsException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
         } catch (FermatException exception) {
-            database.closeDatabase();
             throw new CantAccessTransactionsException(CantAccessTransactionsException.DEFAULT_MESSAGE, exception, null, "Check the Cause");
         }
     }
@@ -455,28 +432,28 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     }
 
     private List<DatabaseTableRecord> getAllRecordsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) {
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
-
-        registryTable.setStringFilter(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
-                transactionStatus.getCode(),
-                DatabaseFilterType.EQUAL
-        );
-
-        registryTable.setStringFilter(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
-                protocolStatus.getCode(),
-                DatabaseFilterType.EQUAL
-        );
-
         try {
+            database.openDatabase();
+            DatabaseTable registryTable = this.database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
+
+            registryTable.setStringFilter(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
+                    transactionStatus.getCode(),
+                    DatabaseFilterType.EQUAL
+            );
+
+            registryTable.setStringFilter(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
+                    protocolStatus.getCode(),
+                    DatabaseFilterType.EQUAL
+            );
             registryTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            registryTable.clearAllFilters();
+
+            return registryTable.getRecords();
+        } catch (FermatException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
+            return new ArrayList<>(0);
         }
-
-        registryTable.clearAllFilters();
-
-        return registryTable.getRecords();
     }
 
     private List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) {
@@ -494,7 +471,6 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         for(DatabaseTableRecord r : records)
             returnList.add(getTransactionFromRecord(r));
 
-        database.closeDatabase();
         return returnList;
     }
 

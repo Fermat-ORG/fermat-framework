@@ -23,14 +23,14 @@ public class BitcoinWalletDatabaseConstants {
     public static final String BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME = "memo";
     public static final String BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME = "transactionHash";
     public static final String BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME = "runningBookBalance";
-    public static final String BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME = "runningAvailableBalance";
+    public static final String BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME = "runningAvailableBalance";
 
 
     // tabla nueva movimientos- balance y book balance, id
 
     public static final String BITCOIN_WALLET_BALANCE_TABLE_NAME = "BitcoinWalletWalletTotalBalances";
     public static final String BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME = "Id";
-    public static final String BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME = "avilableBalance";
+    public static final String BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME = "availableBalance";
     public static final String BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME = "bookBalance";
 
 }

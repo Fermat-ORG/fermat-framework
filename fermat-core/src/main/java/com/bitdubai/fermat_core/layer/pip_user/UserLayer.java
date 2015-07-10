@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.pip_user.UserSubsystem;
 import com.bitdubai.fermat_api.layer.pip_user.CantStartSubsystemException;
 import com.bitdubai.fermat_core.layer.pip_user.device_user.DeviceUserSubsystem;
-import com.bitdubai.fermat_core.layer.pip_user.extra_user.ExtraUserSubsystem;
 import com.bitdubai.fermat_core.layer.pip_user.intra_user.IntraUserSubsystem;
 
 /**
@@ -15,29 +14,16 @@ import com.bitdubai.fermat_core.layer.pip_user.intra_user.IntraUserSubsystem;
 public class UserLayer implements PlatformLayer {
 
     Addon deviceUser;
-    Addon extraUser;
     Addon intraUser;
 
-
-
-
-
-
-    public Addon getExtraUser(){
-        return extraUser;
-    }
 
     public Addon getDeviceUser() {
         return deviceUser;
     }
 
-    public Addon getIntraUser(){
+    public Addon getIntraUser() {
         return intraUser;
     }
-
-
-
-
 
 
     public void start() throws CantStartLayerException {
@@ -57,7 +43,6 @@ public class UserLayer implements PlatformLayer {
             throw new CantStartLayerException();
         }
 
-
         /**
          * Let's start the Intra User Subsystem;
          */
@@ -72,24 +57,5 @@ public class UserLayer implements PlatformLayer {
 
             throw new CantStartLayerException();
         }
-
-        /**
-         * Let's start the Extra User Subsystem;
-         */
-        UserSubsystem extraUserSubsystem = new ExtraUserSubsystem();
-
-        try {
-            extraUserSubsystem.start();
-            extraUser = extraUserSubsystem.getAddon();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartSubsystemException: " + e.getMessage());
-
-            throw new CantStartLayerException();
-        }
-
     }
-
-
-
 }

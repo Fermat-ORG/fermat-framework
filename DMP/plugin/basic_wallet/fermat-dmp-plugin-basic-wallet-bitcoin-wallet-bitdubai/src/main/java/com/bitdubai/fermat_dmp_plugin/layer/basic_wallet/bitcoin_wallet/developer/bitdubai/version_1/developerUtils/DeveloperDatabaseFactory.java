@@ -57,7 +57,8 @@ public class DeveloperDatabaseFactory {
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME);
-        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+
 
 
         /**
@@ -65,6 +66,23 @@ public class DeveloperDatabaseFactory {
          */
         DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME, basicWalletBitcoinWalletColumns);
         tables.add(cryptoTransactionsTable);
+
+        /**
+         * Added new table BitcoinWalletWalletTotalBalances
+         */
+        List<String> bitcoinWalletWalletTotalBalancesColumns = new ArrayList<>();
+        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME);
+        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
+        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
+
+
+
+        /**
+         * basicWalletBitcoinWalletColumns table
+         */
+        DeveloperDatabaseTable  bitcoinWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME, bitcoinWalletWalletTotalBalancesColumns);
+        tables.add(bitcoinWalletWalletTotalBalances);
+
 
         return tables;
     }

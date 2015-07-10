@@ -32,18 +32,23 @@
                 android:layout_alignParentTop="true"
                 android:layout_column="2" />
             <TextView android:text="App Name"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
 
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
-                android:layout_below="@+id/image12"
+                android:layout_below="@+id/image_view"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_column="2"
                 android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/black_overlay"
                 android:textStyle="bold"
                 android:layout_weight="0.7"
-                android:textSize="8sp"/>
+                android:textSize="8sp"
+
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
         </LinearLayout>
     </RelativeLayout>

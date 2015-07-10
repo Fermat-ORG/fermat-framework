@@ -210,6 +210,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
                 /**
                  * Now I do the main task.
                  */
+                registry.openRegistry();
                 doTheMainTask();
 
                 /**
@@ -232,7 +233,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             if(responsibleTransactionList.isEmpty())
                 return;
 
-            System.out.println("TTF - EXTRA USER RELAY: " +responsibleTransactionList.size() + "TRANSACTION(s) TO BE APPLIED");
+            System.out.println("TTF - EXTRA USER RELAY: " +responsibleTransactionList.size() + " TRANSACTION(s) TO BE APPLIED");
             // Por cada transacción en estado (RESPONSIBLE,TO_BE_APPLIED)
             // Aplica la transacción en la wallet correspondiente
             // y luego pasa la transacción al estado (RESPONSIBLE,APPLIED)

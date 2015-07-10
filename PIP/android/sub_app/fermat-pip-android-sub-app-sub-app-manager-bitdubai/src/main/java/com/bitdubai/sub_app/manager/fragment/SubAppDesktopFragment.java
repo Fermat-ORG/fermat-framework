@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.sub_app.manager.R;
-//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +33,8 @@ public class SubAppDesktopFragment extends Fragment {
     private ArrayList<App> mlist;
     private static int tabId;
 
-    private int position;  Typeface tf;
+    private int position;
+    Typeface tf;
 
     public static SubAppDesktopFragment newInstance(int position) {
         SubAppDesktopFragment f = new SubAppDesktopFragment();
@@ -50,17 +51,24 @@ public class SubAppDesktopFragment extends Fragment {
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         String[] installed =
-                {  "true"
+                {  "true",
+                        "true",
+                        "true",
+                        "true"
                 };
         String[] sub_app_names =
-                { "Developer"
+                { "Developer",
+                   "Wallet Factory",
+                   "Wallet Publisher",
+                        "Wallet Store"
                 };
 
 
         String[] sub_app_picture =
-                {"ic_launcher"
-
-
+                {"developer_sub_app",
+                        "wallet_factory",
+                        "wallet_publisher",
+                        "wallet_store"
                 };
 
         mlist = new ArrayList<App>();
@@ -170,13 +178,30 @@ public class SubAppDesktopFragment extends Fragment {
             holder.companyTextView.setText(item.company);
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
-            LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);
+            LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.sub_apps);
             switch (item.picture)
             {
-                case "ic_launcher":
+                case "developer_sub_app":
                     holder.imageView.setImageResource(R.drawable.developer_sub_app);
                   holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
+                    break;
+                case "wallet_factory":
+                    holder.imageView.setImageResource(R.drawable.factory);
+                    holder.imageView.setTag("FactoryActivity|1");
+                    linearLayout.setTag("FactoryActivity|1");
+                    break;
+
+                case "wallet_publisher":
+                    holder.imageView.setImageResource(R.drawable.publisher);
+                    holder.imageView.setTag("PublisherActivity|1");
+                    linearLayout.setTag("PublisherActivity|1");
+                    break;
+
+                case "wallet_store":
+                    holder.imageView.setImageResource(R.drawable.store);
+                    holder.imageView.setTag("StoreFrontActivity|1");
+                    linearLayout.setTag("StoreFrontActivity|1");
                     break;
 
             }

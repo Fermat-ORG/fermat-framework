@@ -50,21 +50,25 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
 
     private void processOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException{
         BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
+        record.setIdTransaction(transaction.getTransactionID());
         bitcoinWallet.getBookBalance().credit(record);
     }
 
     private void processOnBlockChainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException{
         BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
+        record.setIdTransaction(transaction.getTransactionID());
         bitcoinWallet.getAvailableBalance().credit(record);
     }
 
     private void processReversedOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitDebitException{
         BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
+        record.setIdTransaction(transaction.getTransactionID());
         bitcoinWallet.getBookBalance().debit(record);
     }
 
     private void processReversedOnBlockchainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitDebitException{
         BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
+        record.setIdTransaction(transaction.getTransactionID());
         bitcoinWallet.getAvailableBalance().debit(record);
     }
 

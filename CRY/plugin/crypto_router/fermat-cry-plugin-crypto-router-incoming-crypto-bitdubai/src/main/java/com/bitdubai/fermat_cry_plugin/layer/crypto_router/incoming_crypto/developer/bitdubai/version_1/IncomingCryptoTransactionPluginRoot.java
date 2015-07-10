@@ -58,7 +58,7 @@ import java.util.regex.Pattern;
  * Created by loui on 18/03/15.
  * Modified by Arturo Vallone 25/04/2015
  */
-public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManager,DatabaseManagerForDevelopers ,DealsWithActorAddressBook,DealsWithCryptoVault,DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManager, DatabaseManagerForDevelopers, DealsWithActorAddressBook, DealsWithCryptoVault, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, Plugin, Service {
 
     /*
      * DealsWithActorAddressBook member variables
@@ -130,21 +130,19 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
             return IncomingCryptoDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
-        }catch (CantOpenDatabaseException cantOpenDatabaseException){
-                /**
-                 * The database exists but cannot be open. I can not handle this situation.
-                 */
-                FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
-                FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-            }
-            // If we are here the database could not be opened, so we return an empry list
-            return new ArrayList<>();
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            FermatException e = new CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        // If we are here the database could not be opened, so we return an empry list
+        return new ArrayList<>();
     }
-
 
 
     /*
@@ -165,7 +163,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
     }
 
     /**
-     *DealsWithErrors Interface implementation.
+     * DealsWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -232,18 +230,19 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
 
     /**
      * Static method to get the logging level from any class under root.
+     *
      * @param className
      * @return
      */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
             /**
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return IncomingCryptoTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
@@ -272,7 +271,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
      * IncomingCryptoManager interface implementation.
      */
     @Override
-    public TransactionProtocolManager<CryptoTransaction> getTransactionManager(){
+    public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
         return this.registry;
     }
 
@@ -289,9 +288,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
      * Service Interface implementation.
      */
     @Override
-    public void start()  throws CantStartPluginException {
-
-
+    public void start() throws CantStartPluginException {
         /**
          * I will initialize the Registry, which in turn will create the database if necessary.
          */
@@ -301,15 +298,14 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             this.registry.setErrorManager(this.errorManager);
             this.registry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             this.registry.initialize(this.pluginId);
-        }
-        catch (CantInitializeCryptoRegistryException cantInitializeCryptoRegistryException) {
+        } catch (CantInitializeCryptoRegistryException cantInitializeCryptoRegistryException) {
 
             /**
              * If I can not initialize the Registry then I can not start the service.
              */
-            this.serviceStatus = ServiceStatus.STARTED;
+            this.serviceStatus = ServiceStatus.STOPPED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
-            throw new CantStartPluginException("Registry failed to start",cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(),"");
+            throw new CantStartPluginException("Registry failed to start", cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(), "");
         }
 
         /**
@@ -321,15 +317,14 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
 
         try {
             this.eventRecorder.start();
-        }
-        catch (CantStartServiceException cantStartServiceException) {
-           
+        } catch (CantStartServiceException cantStartServiceException) {
+
             /**
              * I cant continue if this happens.
              */
-            this.serviceStatus = ServiceStatus.STARTED;
+            this.serviceStatus = ServiceStatus.STOPPED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
-            throw new CantStartPluginException("Event Recorded could not be started",cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(),"");
+            throw new CantStartPluginException("Event Recorded could not be started", cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(), "");
         }
 
         /**
@@ -343,8 +338,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             ((DealsWithEvents) this.relay).setEventManager(this.eventManager);
             ((DealsWithRegistry) this.relay).setRegistry(this.registry);
             this.relay.start();
-        }
-        catch (CantStartAgentException cantStartAgentException) {
+        } catch (CantStartAgentException cantStartAgentException) {
 
             /**
              * Note that I stop previously started services and agents.
@@ -354,10 +348,10 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             /**
              * I cant continue if this happens.
              */
-            this.serviceStatus = ServiceStatus.STARTED;
+            this.serviceStatus = ServiceStatus.STOPPED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
-            throw new CantStartPluginException("Relay Agent could not be started",cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(),"");
+            throw new CantStartPluginException("Relay Agent could not be started", cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(), "");
         }
 
         /**
@@ -369,8 +363,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
             ((DealsWithRegistry) this.monitor).setRegistry(this.registry);
             this.monitor.start();
-        }
-        catch (CantStartAgentException cantStartAgentException) {
+        } catch (CantStartAgentException cantStartAgentException) {
 
             /**
              * Note that I stop previously started services and agents.
@@ -381,28 +374,24 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             /**
              * I cant continue if this happens.
              */
-            this.serviceStatus = ServiceStatus.STARTED;
+            this.serviceStatus = ServiceStatus.STOPPED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
-            throw new CantStartPluginException("Monitor agent could not be started",cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(),"");
+            throw new CantStartPluginException("Monitor agent could not be started", cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(), "");
         }
-        
+
+        // I will indicate that the service is started just if all of the agents are running.
         this.serviceStatus = ServiceStatus.STARTED;
-        
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
@@ -411,7 +400,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         this.eventRecorder.stop();
         this.relay.stop();
         this.monitor.stop();
-        
+
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 

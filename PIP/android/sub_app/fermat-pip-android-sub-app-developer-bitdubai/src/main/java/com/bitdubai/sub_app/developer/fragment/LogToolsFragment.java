@@ -1,32 +1,30 @@
 package com.bitdubai.sub_app.developer.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -41,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * The Class <code>com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.LogToolsFragment</code>
@@ -68,6 +67,8 @@ public class LogToolsFragment extends Fragment {
 
     private GridView gridView;
 
+    Typeface tf;
+
     public static LogToolsFragment newInstance(int position) {
         LogToolsFragment f = new LogToolsFragment();
         Bundle b = new Bundle();
@@ -80,6 +81,7 @@ public class LogToolsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        tf= Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         try {
             ToolManager toolManager = platform.getToolManager();
@@ -307,35 +309,8 @@ public class LogToolsFragment extends Fragment {
                     @Override
                     public boolean onLongClick(View view) {
                         String loggerText = holder.companyTextView.getText().toString();
-                        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                boolean result = false;
-                                int itemId = menuItem.getItemId();
-                                if (itemId == R.id.menu_no_logging) {
-                                    //TODO: HAcer el cambio acá para que haga el changelevel
-                                    changeLogLevel(item.pluginKey, LogLevel.NOT_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    //changeLogLevel();
-                                    result = true;
-                                } else if (itemId == R.id.menu_minimal) {
-                                    changeLogLevel(item.pluginKey, LogLevel.MINIMAL_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-                                } else if (itemId == R.id.menu_moderate) {
-                                    changeLogLevel(item.pluginKey, LogLevel.MODERATE_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-                                } else if (itemId == R.id.menu_aggresive) {
-                                    changeLogLevel(item.pluginKey, LogLevel.AGGRESSIVE_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-
-                                }
-
-                                return result;
-                            }
-                        });
-                        popupMenu.inflate(R.menu.popup_menu);
-                        popupMenu.show();
+                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
+                        cdd.show();
                         return true;
                     }
                 });
@@ -344,14 +319,16 @@ public class LogToolsFragment extends Fragment {
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;
+                String textToShow=item.classHierarchyLevels.getLevel0();
 
+                holder.companyTextView.setText(textToShow);
 
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.classHierarchyLevels.getLevel0());
+
 
 
             switch (item.picture) {
@@ -381,8 +358,166 @@ public class LogToolsFragment extends Fragment {
 
         public ImageView imageView;
         public TextView companyTextView;
-        public ImageView btnLogger;
 
+
+    }
+
+    public class CustomDialogClass extends Dialog implements
+            android.view.View.OnClickListener {
+
+
+        private Loggers logger;
+        private String pluginKey;
+        public Activity c;
+        public Dialog d;
+
+        ListView list;
+        String[] web = {
+                "Not logging",
+                "Minimal logging",
+                "Moderate logging",
+                "Agressive logging"
+        } ;
+
+        List<String> lstEnum;
+
+        Integer[] img ={
+                R.drawable.ic_action_accept_grey,
+                0,
+                0,
+                0
+        };
+
+        public CustomDialogClass(Activity a,Loggers loggers,String pluginKey) {
+            super(a);
+            this.logger=loggers;
+            this.pluginKey=pluginKey;
+            loadDisplayName();
+            this.c = a;
+            setLogLevelImage();
+
+            logger.logLevel = LogLevel.NOT_LOGGING;
+        }
+
+        private void loadDisplayName(){
+            lstEnum=new ArrayList<>();
+            for(int i=0;i<LogLevel.values().length;i++){
+                lstEnum.add(LogLevel.values()[i].getDisplayName());
+            }
+        }
+        private void setLogLevelImage(){
+            if(logger.logLevel!=null) {
+                switch (logger.logLevel) {
+                    case NOT_LOGGING:
+                        img = new Integer[]{
+                                1, 0, 0, 0
+                        };
+                        break;
+                    case MINIMAL_LOGGING:
+                        img = new Integer[]{
+                                0, 1, 0, 0
+                        };
+                        break;
+                    case MODERATE_LOGGING:
+                        img = new Integer[]{
+                                0, 0, 1, 0
+                        };
+                        break;
+                    case AGGRESSIVE_LOGGING:
+                        img = new Integer[]{
+                                0, 0, 0, 1
+                        };
+                        break;
+                }
+            }else{
+                logger.logLevel= LogLevel.NOT_LOGGING;
+            }
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.popup);
+
+
+
+            CustomList adapter = new
+                    CustomList(c, lstEnum, img);
+            list = (ListView) findViewById(R.id.listView);
+            list.setAdapter(adapter);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    Toast.makeText(c,web[+ position] + " activated", Toast.LENGTH_SHORT).show();
+                    String item =list.getItemAtPosition(position).toString();
+                    if(item.compareTo(LogLevel.NOT_LOGGING.toString())==0) {
+                        changeLogLevel(pluginKey, LogLevel.NOT_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.NOT_LOGGING;
+                    }else if (item.compareTo(LogLevel.MINIMAL_LOGGING.toString())==0){
+                        changeLogLevel(pluginKey, LogLevel.MINIMAL_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.MINIMAL_LOGGING;
+                    }else if(item.compareTo(LogLevel.MODERATE_LOGGING.toString())==0){
+                        changeLogLevel(pluginKey, LogLevel.MODERATE_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.MODERATE_LOGGING;
+                    }else if (item.compareTo(LogLevel.AGGRESSIVE_LOGGING.toString())==0){
+                        changeLogLevel(pluginKey, LogLevel.AGGRESSIVE_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.AGGRESSIVE_LOGGING;
+                    }
+                    dismiss();
+                }
+            });
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            int i = v.getId();
+            /*if (i == R.id.btn_yes) {
+                c.finish();
+
+            } else if (i == R.id.btn_no) {
+                dismiss();
+
+            } else {
+            }*/
+            dismiss();
+        }
+
+        public class CustomList extends ArrayAdapter<String>{
+
+            private final Activity context;
+            private final List<String> listEnumsToDisplay;
+            private final Integer[] imageId;
+            public CustomList(Activity context,
+                              List<String> listEnumsToDisplay, Integer[] imageId) {
+                super(context, R.layout.list_single, listEnumsToDisplay);
+                this.context = context;
+                this.listEnumsToDisplay = listEnumsToDisplay;
+                this.imageId = imageId;
+
+            }
+            @Override
+            public View getView(int position, View view, ViewGroup parent) {
+                LayoutInflater inflater = context.getLayoutInflater();
+                View rowView= inflater.inflate(R.layout.list_single, null, true);
+                TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
+
+                ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
+                txtTitle.setTextColor(Color.WHITE);
+                txtTitle.setText(listEnumsToDisplay.get(position));
+                //txtTitle.setText(LogLevel.MINIMAL_LOGGING.toString());
+
+                setLogLevelImage();
+                if(imageId[position]!=0){
+                    imageView.setImageResource(R.drawable.ic_action_accept_grey);
+                }
+
+                return rowView;
+            }
+        }
 
     }
 }
