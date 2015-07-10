@@ -7,31 +7,24 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -73,6 +66,8 @@ public class LogToolsFragment extends Fragment {
 
     private GridView gridView;
 
+    Typeface tf;
+
     public static LogToolsFragment newInstance(int position) {
         LogToolsFragment f = new LogToolsFragment();
         Bundle b = new Bundle();
@@ -85,6 +80,7 @@ public class LogToolsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        tf= Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         try {
             ToolManager toolManager = platform.getToolManager();
@@ -341,7 +337,7 @@ public class LogToolsFragment extends Fragment {
                         popupMenu.inflate(R.menu.popup_menu);
                         popupMenu.show();
                         */
-                        CustomDialogClass cdd=new CustomDialogClass(getActivity());
+                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
                         cdd.show();
                         return true;
                     }
@@ -396,9 +392,12 @@ public class LogToolsFragment extends Fragment {
 
     public class CustomDialogClass extends Dialog implements
             android.view.View.OnClickListener {
+
+
+        private Loggers logger;
+        private String pluginKey;
         public Activity c;
         public Dialog d;
-        public Button yes, no;
 
         ListView list;
         String[] web = {
@@ -407,32 +406,65 @@ public class LogToolsFragment extends Fragment {
                 "Moderate logging",
                 "Agressive logging"
         } ;
-        Integer[] imageId = {
+        List<Integer> lstIconsToShow;/* = {
                 R.drawable.ic_action_accept_grey,
                 R.drawable.wallet_4,
                 R.drawable.wallet_1,
                 R.drawable.wallet_4
-        };
+        };*/
 
-        public CustomDialogClass(Activity a) {
+        List<String> lstEnum;
+
+        public CustomDialogClass(Activity a,Loggers loggers,String pluginKey) {
             super(a);
+            this.logger=loggers;
+            this.pluginKey=pluginKey;
+            testing();
+            //loadEnumsLogger();
             // TODO Auto-generated constructor stub
             this.c = a;
         }
+
+        private void testing(){
+            lstEnum=new ArrayList<>();
+            for(int i=0;i<web.length;i++){
+                lstEnum.add(web[i]);
+            }
+        }
+
+        /*private void loadEnumsLogger(){
+            LogLevel[] enum_logLevel = LogLevel.values();
+            List<String> lstEnum = new ArrayList<String>();
+            for(int i=0;i<enum_logLevel.length;i++){
+                lstEnum.add(enum_logLevel[i].getDisplayName());
+            }
+        }
+        private void setIconSelected(){
+            if(logger!=null){
+                logger.logLevel.getCode();
+            }else{
+                //logger=new LogLevel(LogLevel.);
+            }
+
+        }*/
+
+        Integer[] img ={
+                R.drawable.ic_action_accept_grey,
+                0,
+                0,
+                0
+        };
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.popup);
-            yes = (Button) findViewById(R.id.btn_yes);
-            no = (Button) findViewById(R.id.btn_no);
-            yes.setOnClickListener(this);
-            no.setOnClickListener(this);
+
 
 
             CustomList adapter = new
-                    CustomList(c, web, imageId);
+                    CustomList(c, lstEnum, img);
             list = (ListView) findViewById(R.id.listView);
             list.setAdapter(adapter);
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -441,7 +473,17 @@ public class LogToolsFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
                     Toast.makeText(c, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
-
+                    String item =list.getItemAtPosition(position).toString();
+                    if(item.compareTo("Not logging")==0){
+                        changeLogLevel(pluginKey, LogLevel.NOT_LOGGING, logger.classHierarchyLevels.getFullPath());
+                    }else if (item.compareTo("Minimal logging")==0){
+                        changeLogLevel(pluginKey, LogLevel.MINIMAL_LOGGING, logger.classHierarchyLevels.getFullPath());
+                    }else if(item.compareTo("Moderate logging")==0){
+                        changeLogLevel(pluginKey, LogLevel.MODERATE_LOGGING, logger.classHierarchyLevels.getFullPath());
+                    }else if (item.compareTo("Agressive logging")==0){
+                        changeLogLevel(pluginKey, LogLevel.AGGRESSIVE_LOGGING, logger.classHierarchyLevels.getFullPath());
+                    }
+                    dismiss();
                 }
             });
 
@@ -450,27 +492,27 @@ public class LogToolsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             int i = v.getId();
-            if (i == R.id.btn_yes) {
+            /*if (i == R.id.btn_yes) {
                 c.finish();
 
             } else if (i == R.id.btn_no) {
                 dismiss();
 
             } else {
-            }
+            }*/
             dismiss();
         }
 
         public class CustomList extends ArrayAdapter<String>{
 
             private final Activity context;
-            private final String[] web;
+            private final List<String> listEnumsToDisplay;
             private final Integer[] imageId;
             public CustomList(Activity context,
-                              String[] web, Integer[] imageId) {
-                super(context, R.layout.list_single, web);
+                              List<String> listEnumsToDisplay, Integer[] imageId) {
+                super(context, R.layout.list_single, listEnumsToDisplay);
                 this.context = context;
-                this.web = web;
+                this.listEnumsToDisplay = listEnumsToDisplay;
                 this.imageId = imageId;
 
             }
@@ -481,9 +523,14 @@ public class LogToolsFragment extends Fragment {
                 TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
 
                 ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-                txtTitle.setText(web[position]);
+                txtTitle.setTextColor(Color.WHITE);
+                txtTitle.setText(listEnumsToDisplay.get(position));
 
-                imageView.setImageResource(imageId[position]);
+
+                if(imageId[position]!=0){
+                    imageView.setImageResource(R.drawable.ic_action_accept_grey);
+                }
+
                 return rowView;
             }
         }

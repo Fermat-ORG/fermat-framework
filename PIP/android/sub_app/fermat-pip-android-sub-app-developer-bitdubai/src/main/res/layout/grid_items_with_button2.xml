@@ -13,10 +13,10 @@
            android:id="@+id/wallet_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
             android:orientation="vertical">
             <ImageView
                 android:id="@+id/image_view"
@@ -26,29 +26,30 @@
                 android:textColor="@color/black_overlay"
                 android:textStyle="bold"
                 android:textSize="13sp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
                 android:src="@drawable/wallet_1"
                 android:layout_alignParentTop="true"
-                android:layout_column="2" />
+                android:layout_column="2"
+                android:layout_gravity="center"/>
             <TextView android:text="App Name"
-                android:layout_width="wrap_content"
-
+                android:layout_width="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_height="wrap_content"
                 android:id="@+id/company_text_view"
                 android:layout_below="@+id/image_view"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_column="2"
+                android:paddingLeft="5sp"
+
                 android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/black_overlay"
                 android:textStyle="bold"
                 android:layout_weight="0.7"
-                android:textSize="8sp"
+                android:textSize="13sp"
+                android:layout_centerVertical="true"
 
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                />
 
         </LinearLayout>
     </RelativeLayout>
