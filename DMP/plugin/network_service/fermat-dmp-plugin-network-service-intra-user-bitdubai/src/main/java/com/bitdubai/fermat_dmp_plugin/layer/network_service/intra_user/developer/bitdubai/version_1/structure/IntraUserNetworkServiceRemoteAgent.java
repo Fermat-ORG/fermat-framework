@@ -41,7 +41,7 @@ import java.util.Observable;
 public class IntraUserNetworkServiceRemoteAgent extends Observable {
 
     /*
-     * Represent the sleep time for the toRead (2000 milliseconds)
+     * Represent the sleep time for the read or send (2000 milliseconds)
      */
     private static final long SLEEP_TIME = 2000;
 

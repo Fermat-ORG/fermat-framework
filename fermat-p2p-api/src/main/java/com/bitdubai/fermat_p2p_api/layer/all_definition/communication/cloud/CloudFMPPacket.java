@@ -4,6 +4,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.MalformedFMPPacketException;
 
+import java.util.ArrayList;
+
 public class CloudFMPPacket implements FMPPacket {
 	
 	private static final int HASH_PRIME_NUMBER_PRODUCT = 4517;
@@ -16,6 +18,7 @@ public class CloudFMPPacket implements FMPPacket {
 	private final String signature;
 	
 	public CloudFMPPacket(final String packetData) throws FMPException {
+
 		String[] validatedData =  validatePacketDataString(packetData);
 		this.sender = validatedData[0];
 		this.destination = validatedData[1];
@@ -58,7 +61,9 @@ public class CloudFMPPacket implements FMPPacket {
 	public String getSignature() {
 		return signature;
 	}
-	
+
+
+
 	@Override
 	public String convertToString(){
 		StringBuilder builder = new StringBuilder();

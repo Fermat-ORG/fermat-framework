@@ -24,6 +24,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -44,6 +45,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 1.0
  */
 public abstract class CloudFMPConnectionManager implements CloudConnectionManager, FMPPacketHandler, Runnable {
+
+    /*
+     * Represent the sleep time (3000 milliseconds)
+     */
+    private static final long SLEEP_TIME = 3000;
 
     /**
      * Represent the SELECTOR_SELECT_TIMEOUT value 20
@@ -185,14 +191,14 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
             /*
              * Get the connections
              */
-            Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
+            Iterator<SelectionKey> connections = selector.selectedKeys().iterator();
 
             /*
              * Iterate over the connections and perform the operation by state of the connection
              */
-            while(keys.hasNext()){
+            while(connections.hasNext()){
 
-                SelectionKey connection = keys.next();
+                SelectionKey connection = connections.next();
 
                 //If is valid
                 if(!connection.isValid())
@@ -231,12 +237,33 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	@Override
 	public void acceptNewConnection(final SelectionKey connection) throws CloudCommunicationException {
 		try {
+
+			/*
+             * Extract the socket chanel from the connection
+             */
 			ServerSocketChannel serverSocketChannel = (ServerSocketChannel) connection.channel();
+
+			/*
+			 * Accept the new connection
+			 */
 			SocketChannel socketChannel = serverSocketChannel.accept();
+
+            /**
+             * If was accepted
+             */
 			if(socketChannel!=null){
-				socketChannel.configureBlocking(false);		
+
+                /*
+                 * Set blocking to false
+                 */
+				socketChannel.configureBlocking(false);
+
+                /*
+                 * Register the connection to read
+                 */
 				socketChannel.register(selector, SelectionKey.OP_READ);
 			}
+
 		} catch(IOException ex) {
 			throw wrapNIOSocketIOException(ex);
 		}
@@ -255,11 +282,33 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
              * Extract the socket chanel from the connection
              */
 			SocketChannel socketChannel = (SocketChannel) connection.channel();
-			if(socketChannel.isConnectionPending())
-				socketChannel.finishConnect();
+
+            /*
+             * Is connection pending
+             */
+			if(socketChannel.isConnectionPending()) {
+
+                /*
+                 * Complete the connect process
+                 */
+                socketChannel.finishConnect();
+            }
+
+            /*
+             * Set blocking to false
+             */
 			socketChannel.configureBlocking(false);
+
+            /*
+             * Register the connection to read
+             */
 			socketChannel.register(selector, SelectionKey.OP_READ);
+
+            /*
+             * Set to running
+             */
 			running.set(socketChannel.isConnected());
+
 		} catch(IOException ex){
 			throw wrapNIOSocketIOException(ex);
 		}
@@ -288,14 +337,14 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
             /*
              * Read from channel into the buffer
              */
-            int read = channel.read(readBuffer);
+            int bytesRead = channel.read(readBuffer);
 
             /*
-             * Validate the read
+             * Validate that he read
              */
-            if(read==-1){
+            if(bytesRead == -1){
 
-                closeSocketChannelAndCancelKey(channel, connection);
+                closeSocketChannelAndCancelConnection(channel, connection);
                 String message = CloudCommunicationException.DEFAULT_MESSAGE;
                 String context = "";
                 String possibleReason = "The channel has reached end-of-stream";
@@ -308,14 +357,14 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
             readBuffer.flip();
 
             /*
-             * Prepare the array of byte of the data
+             * Prepare the array of byte for the data
              */
-            byte[] data = new byte[read];
+            byte[] data = new byte[bytesRead];
 
             /*
              * Put the data from the read buffer into the array of byte
              */
-            readBuffer.get(data, 0, read);
+            readBuffer.get(data, 0, bytesRead);
 
             /*
              * Create a string from the array of byte
@@ -332,12 +381,17 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
              */
 			processIncomingPacket(incomingPacket, connection);
 
+            /**
+             * Clean the buffer
+             */
+            readBuffer.clear();
+
 		} catch(UnsupportedEncodingException ex){
 			System.out.println("THIS IS NEVER GOING TO HAPPEN");
 		} catch (FMPException ex) {
 			System.out.println(ex.getMessage());
 		}catch(IOException ex){
-            closeSocketChannelAndCancelKey(channel, connection);
+            closeSocketChannelAndCancelConnection(channel, connection);
             throw wrapNIOSocketIOException(ex);
          }
 	}
@@ -348,18 +402,38 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      */
 	@Override
 	public synchronized void writeToConnection(final SelectionKey connection) throws CloudCommunicationException {
-		if(connection.attachment() == null || !(connection.attachment() instanceof FMPPacket))
-			throw new CloudCommunicationException(CloudCommunicationException.DEFAULT_MESSAGE, null, "", "The Connection has no FMPPacket attached for the write operation");
+
+		if(connection.attachment() == null || !(connection.attachment() instanceof FMPPacket)) {
+            throw new CloudCommunicationException(CloudCommunicationException.DEFAULT_MESSAGE, null, "", "The Connection has no FMPPacket attached for the write operation");
+        }
+
 		try{
 
 			/*
              * Extract the socket chanel from the connection
              */
             SocketChannel channel = (SocketChannel) connection.channel();
+
+            /*
+             * Get the attachment packet
+             */
 			FMPPacket dataPacket = (FMPPacket) connection.attachment();
-			byte[] data = dataPacket.toString().getBytes(CHARSET_NAME);
-			channel.write(ByteBuffer.wrap(data));
+
+            /*
+             * Convert to bytes
+             */
+            byte[] data = dataPacket.toString().getBytes(CHARSET_NAME);
+
+            /*
+             * Wrap into a bytebuffer and write into the channel
+             */
+            channel.write(ByteBuffer.wrap(data));
+
+            /*
+             * Mark the connection with new activity read
+             */
 			connection.interestOps(SelectionKey.OP_READ);
+
 		}catch(IOException ex){
 			throw wrapNIOSocketIOException(ex);
 		}
@@ -374,14 +448,37 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 
         System.out.println("Starting the CloudFMPConnectionManager in mode = "+mode);
 
+        /*
+         *  Validate the mode to run
+         */
 		if(mode == CloudFMPConnectionManagerMode.FMP_CLIENT){
+
+            /*
+             * Initialize the component
+             */
 			initializeClient();
+
+            /*
+             * Mark tu running
+             */
 			running.set(clientChannel.isConnected());
-		}
-		if(mode == CloudFMPConnectionManagerMode.FMP_SERVER){
+
+		} else if(mode == CloudFMPConnectionManagerMode.FMP_SERVER){
+
+            /*
+             * Initialize the component
+             */
 			initializeServer();
+
+            /*
+             * Mark tu running
+             */
 			running.set(serverChannel.isOpen()  && serverChannel.socket().isBound());
 		}
+
+        /*
+         * Hold the this thread on the pool
+         */
 		executorService.execute(this);
 	}
 
@@ -391,7 +488,27 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      */
 	@Override
 	public void stop() throws CloudCommunicationException {
+
+        /*
+         * Iterate over all connection
+         */
+        for (SelectionKey connection : selector.keys()){
+
+            /*
+             * Cancel the connection
+             */
+            connection.cancel();
+        }
+
+        /*
+         * Mark to no running
+         */
 		running.set(false);
+
+        /*
+         * Shutdown executor service
+         */
+        executorService.shutdown();
 	}
 
     /**
@@ -414,41 +531,50 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 
 		try {
 
-            dataPacket = pendingIncomingMessages.remove();
+            /**
+             * Validate are pending incoming messages
+             */
+            if (!pendingIncomingMessages.isEmpty()){
 
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST) {
-                handleConnectionRequest(dataPacket);
-            }
+                dataPacket = pendingIncomingMessages.remove();
 
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT){
-				handleConnectionAccept(dataPacket);
-            }
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST) {
+                    handleConnectionRequest(dataPacket);
+                }
 
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT_FORWARD) {
-                handleConnectionAcceptForward(dataPacket);
-            }
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT){
+                    handleConnectionAccept(dataPacket);
+                }
 
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DENY) {
-                handleConnectionDeny(dataPacket);
-            }
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT_FORWARD) {
+                    handleConnectionAcceptForward(dataPacket);
+                }
 
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REGISTER) {
-                handleConnectionRegister(dataPacket);
-            }
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_DENY) {
+                    handleConnectionDeny(dataPacket);
+                }
 
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DEREGISTER) {
-                handleConnectionDeregister(dataPacket);
-            }
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_REGISTER) {
+                    handleConnectionRegister(dataPacket);
+                }
 
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_END) {
-                handleConnectionEnd(dataPacket);
-            }
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_DEREGISTER) {
+                    handleConnectionDeregister(dataPacket);
+                }
 
-			if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT) {
-                handleDataTransmit(dataPacket);
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_END) {
+                    handleConnectionEnd(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT) {
+                    handleDataTransmit(dataPacket);
+                }
+
             }
 
 		}catch(FMPException fMPException){
+
+            System.out.println("fMPException = "+fMPException.getMessage());
 
 			String message = CloudCommunicationException.DEFAULT_MESSAGE;
 			FermatException cause = fMPException;
@@ -485,10 +611,17 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                  */
 				processDataPackets();
 
+                /*
+                 * Sleep for a time
+                 */
+                Thread.sleep(CloudFMPConnectionManager.SLEEP_TIME);
+
 			} catch(CloudCommunicationException ex){
 				System.err.println(ex.toString());
-			}
-		}
+			} catch (InterruptedException e) {
+                System.err.println(e.toString());
+            }
+        }
 	}
 
     /**
@@ -498,13 +631,43 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      */
 	private void initializeClient() throws CloudCommunicationException {
 		try{
+
+            /*
+             * Open the selector
+             */
 			selector = Selector.open();
+
+            /*
+             * Open a socket channel
+             */
 			clientChannel = SocketChannel.open();
+
+            /*
+             * Set the blocking to false
+             */
 			clientChannel.configureBlocking(false);
+
+            /*
+             * Register the channel to connect
+             */
 			clientChannel.register(selector, SelectionKey.OP_CONNECT);
+
+            /*
+             * Connect the channel to the socket address
+             */
 			clientChannel.connect(communicationChannelAddress.getSocketAddress());
-			if(clientChannel.isConnectionPending())
-				clientChannel.finishConnect();
+
+            /*
+             * Is connection pending
+             */
+            if(clientChannel.isConnectionPending()) {
+
+                /*
+                 * Complete the connect process
+                 */
+                clientChannel.finishConnect();
+            }
+
 		}catch(IOException ex){
 			throw wrapNIOSocketIOException(ex);
 		}		 
@@ -517,21 +680,58 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      */
 	private void initializeServer() throws CloudCommunicationException {
 		try{
+
+            /*
+             * Open the selector
+             */
 			selector = Selector.open();
+
+            /*
+             * Open a server socket channel
+             */
 			serverChannel = ServerSocketChannel.open();
+
+            /*
+             * Set the blocking to false
+             */
 			serverChannel.configureBlocking(false);
+
+            /*
+             * Bind a socket to a socket address
+             */
 			serverChannel.socket().bind(communicationChannelAddress.getSocketAddress());
+
+            /*
+             * Register the channel to accept
+             */
 			serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+
 		}catch(IOException ex){
 			throw wrapNIOSocketIOException(ex);
 		}
 	}
 
+    /**
+     * Method that close socket chanel and cancel connection
+     *
+     * @param channel to close
+     * @param connection to cancel
+     * @throws CloudCommunicationException
+     */
+	private void closeSocketChannelAndCancelConnection(final SocketChannel channel, final SelectionKey connection) throws CloudCommunicationException {
 
-	private void closeSocketChannelAndCancelKey(final SocketChannel channel, final SelectionKey key) throws CloudCommunicationException {
 		try {
+
+            /*
+             * Close the channel
+             */
 			channel.close();
-			key.cancel();
+
+            /*
+             * Cancel the connection
+             */
+            connection.cancel();
+
 		} catch(IOException ex) {
 			throw wrapNIOSocketIOException(ex);
 		}
@@ -562,6 +762,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
          * cache the packet again
          */
 		pendingIncomingMessages.add(packet);
+
 	}
 
     /**
@@ -571,8 +772,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      * @return CloudCommunicationException the new exception
      */
 	protected CloudCommunicationException wrapNIOSocketIOException(final IOException iOException) {
+
 		/*
-		 * We prepare the values for the exception that is going to be thrown
+		 * Prepare the values for the exception that is going to be thrown
 		 */
 		String message = CloudCommunicationException.DEFAULT_MESSAGE;
 		FermatException cause = FermatException.wrapException(iOException);
@@ -582,7 +784,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		possibleReason += "with the read/write operations on the network.";
 
 		/*
-		 * We create the exception and then throw it
+		 * Create the exception and then throw it
 		*/
 		return new CloudCommunicationException(message, cause, context, possibleReason);
 	}

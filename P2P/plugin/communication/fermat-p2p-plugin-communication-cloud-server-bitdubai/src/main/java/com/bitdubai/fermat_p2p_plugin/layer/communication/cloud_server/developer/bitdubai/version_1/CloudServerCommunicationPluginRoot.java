@@ -110,6 +110,9 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
         try {
 
+            if (true) //skip Start the server
+                return;
+
             System.out.println("Starting plugin CloudServerCommunicationPluginRoot");
 
             cloudServiceManagersCache = new HashMap<>();
@@ -152,7 +155,8 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                         /*
                          * Create a new key pair for his identity
                          */
-                        ECCKeyPair identity = new ECCKeyPair();
+                        ECCKeyPair identity = new ECCKeyPair("9723c5ab03c0b73efa1a033fc481d8617a787af9aba240c955611240e8e8d343",
+                                                             "04195304BEE8FA81246F23C119D8A294E481F1916B91112FFD402C72B157B934759B287C5654D510653136169495B2CFA0A72958C011D924A5AD651AAB23E0391A");
 
                         /*
                          * Create the communication chanel communicationChannelAddress
@@ -169,7 +173,6 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                          * Put into the cache
                          */
                         cloudServiceManagersCache.put(networkInterface.getName(), cloudServiceManager);
-
 
                         System.out.println("New CommunicationChannelAddress linked on " + networkInterface.getName());
                         System.out.println("Host = " + communicationChannelAddress.getHost());

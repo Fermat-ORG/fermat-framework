@@ -48,9 +48,9 @@ import java.util.regex.Pattern;
 
 public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
-    private static final String HOST_CLOUD_SERVER = "192.168.1.6";
+    public static final String HOST_CLOUD_SERVER = "192.168.1.6";
 
-    private static final int PORT_CLOUD_SERVER = 9090;
+    public static final int PORT_CLOUD_SERVER = 9090;
 
 
     /**
@@ -98,15 +98,13 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	this.eventManager = null;
     	this.errorManager = null;
         this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(CloudClientCommunicationChannelPluginRoot.HOST_CLOUD_SERVER, CloudClientCommunicationChannelPluginRoot.PORT_CLOUD_SERVER);
-
+		this.serverPublicKey = "04195304BEE8FA81246F23C119D8A294E481F1916B91112FFD402C72B157B934759B287C5654D510653136169495B2CFA0A72958C011D924A5AD651AAB23E0391A";
     }
     
     public CloudClientCommunicationChannelPluginRoot(final String serverHost, final Integer serverPort, final String serverPublicKey){
     	this();
     	this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(serverHost, serverPort);
     	this.serverPublicKey = serverPublicKey;
-        this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(CloudClientCommunicationChannelPluginRoot.HOST_CLOUD_SERVER, CloudClientCommunicationChannelPluginRoot.PORT_CLOUD_SERVER);
-
     }
     
     public CloudClientCommunicationChannelPluginRoot(final UUID pluginId, final EventManager eventManager, final ErrorManager errorManager, final PluginFileSystem pluginFileSystem){
@@ -344,7 +342,8 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     public void start() {
 
         System.out.println("Starting plugin CloudClientCommunicationChannelPluginRoot");
-        System.out.println("serverAddress "+serverAddress);
+        System.out.println("Trying to connect to server: "+serverAddress);
+		System.out.println("Server Identity Public Key:  "+serverPublicKey);
 
         /**
          * I will initialize the handling of com.bitdubai.platform events.

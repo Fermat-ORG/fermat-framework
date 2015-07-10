@@ -27,7 +27,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
 
-        plugin = new CloudClientCommunicationChannelPluginRoot("localhost", 9090, "04F0F591F89E3CA948824F3CA8FD7D2115AE20B801EDE4CA090E3DA1856C1AC199CAB9BCF755162159C3C999F921ACE78B9529DFE67715C321DA8208B483DC74DB");
+        plugin = new CloudClientCommunicationChannelPluginRoot();
 
     }
 
