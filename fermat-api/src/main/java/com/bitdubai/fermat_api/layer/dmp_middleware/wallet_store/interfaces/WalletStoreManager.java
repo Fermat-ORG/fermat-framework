@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletStoreManager</code>
  * indicates the functionality of a WalletStoreManager
@@ -10,5 +13,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces;
  * @since Java JDK 1.7
  */
 public interface WalletStoreManager {
+    public List<WalletInformation> getWalletCatalog();
 
+    public void installWallet(UUID walletCatalogId);
 }
