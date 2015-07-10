@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces;
 
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletStatisticsManager</code>
  * indicates the functionality of a WalletStatisticsManager
@@ -11,5 +13,5 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.inte
  * @since Java JDK 1.7
  */
 public interface WalletStatisticsManager {
-
+    public long getNumberOfDownloads(UUID walletCatalogId);
 }

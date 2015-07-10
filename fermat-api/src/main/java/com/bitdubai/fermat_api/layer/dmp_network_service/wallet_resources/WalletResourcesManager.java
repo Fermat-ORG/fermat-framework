@@ -37,8 +37,8 @@ public interface  WalletResourcesManager {
 
     public WalletNavigationStructure getWalletNavigationStructure(UUID walletNavigationStructureId);
 
-    public void sevaaNavigationStructure(UUID walletNavigationStructureId, WalletNavigationStructure walletNavigationStructure);
+    public void saveNavigationStructure(UUID walletNavigationStructureId, WalletNavigationStructure walletNavigationStructure);
 
-    public void sevaaWalletResources(UUID resourcesId, WalletResources walletResources);
+    public void saveWalletResources(UUID resourcesId, NewWalletResources walletResources);
 
 }

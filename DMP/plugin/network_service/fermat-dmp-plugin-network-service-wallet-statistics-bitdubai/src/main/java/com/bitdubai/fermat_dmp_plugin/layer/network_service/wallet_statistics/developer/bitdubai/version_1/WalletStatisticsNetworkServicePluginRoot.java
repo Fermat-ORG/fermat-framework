@@ -93,4 +93,9 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
+    @Override
+    public long getNumberOfDownloads(UUID walletCatalogId) {
+        return 0;
+    }
 }

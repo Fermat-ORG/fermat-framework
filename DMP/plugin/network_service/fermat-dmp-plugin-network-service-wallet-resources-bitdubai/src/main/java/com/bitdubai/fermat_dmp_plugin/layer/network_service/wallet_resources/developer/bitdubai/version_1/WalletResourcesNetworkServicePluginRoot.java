@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.NewWalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
@@ -197,12 +198,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
-    public void sevaaNavigationStructure(UUID walletNavigationStructureId, WalletNavigationStructure walletNavigationStructure) {
+    public void saveNavigationStructure(UUID walletNavigationStructureId, WalletNavigationStructure walletNavigationStructure) {
 
     }
 
     @Override
-    public void sevaaWalletResources(UUID resourcesId, WalletResources walletResources) {
+    public void saveWalletResources(UUID resourcesId, NewWalletResources walletResources) {
 
     }
 
