@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
@@ -351,7 +352,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException
      */
 
-    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException {
+    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
@@ -363,7 +364,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * Already sent, this might be an error. I'm not going to send it again.
              */
-                throw new CouldNotSendMoneyException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
+                throw new CryptoTransactionAlreadySentException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
 
 
         } catch (CantExecuteQueryException e) {
