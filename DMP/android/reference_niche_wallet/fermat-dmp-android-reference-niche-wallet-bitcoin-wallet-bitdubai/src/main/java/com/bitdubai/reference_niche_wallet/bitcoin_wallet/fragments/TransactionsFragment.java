@@ -171,6 +171,7 @@ public class TransactionsFragment extends Fragment {
             try {
                 List<BitcoinWalletTransactionRecord> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
                 for(BitcoinWalletTransactionRecord transaction: lst){
+
                     lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
                 }
 
@@ -236,20 +237,22 @@ public class TransactionsFragment extends Fragment {
             if (null == convertView) {
                 //Si no existe, entonces inflarlo con image_list_view.xml
                 listItemView = inflater.inflate(
-                        R.layout.wallets_bitcoin_fragment_transactions_list_items,
+                        R.layout.wallets_bitcoin_fragment_transactions_list_items2,
                         parent,
                         false);
             }
 
             //Get TextViews
-            TextView contact_name = (TextView)listItemView.findViewById(R.id.contact_name);
-            TextView amount = (TextView)listItemView.findViewById(R.id.amount);
-            TextView notes = (TextView)listItemView.findViewById(R.id.notes);
-            TextView when = (TextView)listItemView.findViewById(R.id.when);
-            TextView type = (TextView)listItemView.findViewById(R.id.type);
+            TextView contact_name = (TextView)listItemView.findViewById(R.id.textView_contact_name);
+            TextView amount = (TextView)listItemView.findViewById(R.id.textView_amount);
+            TextView notes = (TextView)listItemView.findViewById(R.id.textView_notes);
+            TextView when = (TextView)listItemView.findViewById(R.id.textView_time);
+            TextView type = (TextView)listItemView.findViewById(R.id.textView_status);
 
             //Getting Transactions instance at the current position
             Transactions item = getItem(position);
+
+
 
             contact_name.setText(item.getName());
             amount.setText(item.getAmount());
