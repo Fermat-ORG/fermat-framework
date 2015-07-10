@@ -47,6 +47,7 @@ public class ContactsFragment extends Fragment {
 
     EditText inputSearch;
     WalletContactListAdapter adapter;
+    TextView textViewEmptyListView;
 
     List<WalletContact> contacts;
 
@@ -121,7 +122,6 @@ public class ContactsFragment extends Fragment {
             } catch (CantGetAllWalletContactsException e) {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("CantGetAllWalletContactsException- " + e.getMessage());
-
             }
 
             // Get ListView object from xml
@@ -136,11 +136,9 @@ public class ContactsFragment extends Fragment {
                 }
             });
 
-
-            TextView textViewEmptyListView =(TextView) rootView.findViewById(R.id.emptyElement);
+            textViewEmptyListView =(TextView) rootView.findViewById(R.id.emptyElement);
             textViewEmptyListView.setTypeface(tf);
             listViewContacs.setEmptyView(textViewEmptyListView);
-
 
             // Loading contact
             contacts = new ArrayList<>();
@@ -149,7 +147,7 @@ public class ContactsFragment extends Fragment {
             }
 
             inputSearch = (EditText) rootView.findViewById(R.id.inputSearch);
-
+            inputSearch.setTypeface(tf);
             inputSearch.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
@@ -161,11 +159,13 @@ public class ContactsFragment extends Fragment {
 
             // add_contact button definition
             addContactButton = (Button) rootView.findViewById(R.id.add_contact_btn);
+            addContactButton.setTypeface(tf);
             addContactButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                addContact(inputSearch.getText().toString());
+                    addContact(inputSearch.getText().toString());
                 }
             });
+
             adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, contacts);
             listViewContacs.setAdapter(adapter);
 
@@ -188,6 +188,7 @@ public class ContactsFragment extends Fragment {
         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         linearLayout.setVisibility(View.GONE);
         listViewContacs.setVisibility(View.GONE);
+        textViewEmptyListView.setVisibility(View.GONE);
         FT.commit();
     }
 

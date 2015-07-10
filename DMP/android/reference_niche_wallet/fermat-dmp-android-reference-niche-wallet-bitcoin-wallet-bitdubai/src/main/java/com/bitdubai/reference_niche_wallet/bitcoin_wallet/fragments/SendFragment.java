@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -15,6 +16,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,7 +30,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.InsufficientFundsException;
@@ -38,7 +43,11 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentResult;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.WalletContact;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.WalletContactListAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -50,8 +59,8 @@ public class SendFragment extends Fragment{
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
-    String name;
-    CryptoAddress cryptoAddress;
+    Typeface tf ;
+
 
     Bundle savedInstanceState;
     /**
@@ -62,12 +71,13 @@ public class SendFragment extends Fragment{
     CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
 
+    private AutoCompleteTextView autocompleteContacts;
+    private WalletContactListAdapter adapter;
 
-
-
-    private EditText contact_name;
     private EditText editAddress;
     private EditText editAmount;
+    private EditText editNotes;
+
     private LinearLayout linear_notes;
     private LinearLayout linear_send;
 
@@ -83,6 +93,7 @@ public class SendFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         this.savedInstanceState = savedInstanceState;
         cryptoWalletManager = platform.getCryptoWalletManager();
@@ -103,53 +114,40 @@ public class SendFragment extends Fragment{
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_send, container, false);
 
         try {
-
-            contact_name = (EditText) rootView.findViewById(R.id.contact_name);
             editAddress = (EditText) rootView.findViewById(R.id.address);
+            editAddress.setTypeface(tf);
             editAmount = (EditText) rootView.findViewById(R.id.amount);
+            editAmount.setTypeface(tf);
+            editNotes = (EditText) rootView.findViewById(R.id.notes);
+            editNotes.setTypeface(tf);
             linear_notes = (LinearLayout) rootView.findViewById(R.id.linear_notes);
             linear_send = (LinearLayout) rootView.findViewById(R.id.linear_send);
 
-            contact_name.setText(name);
-            if (cryptoAddress.getAddress() != null)
-                editAddress.setText(cryptoAddress.getAddress());
+            autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
+            adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
+            autocompleteContacts.setAdapter(adapter);
+            autocompleteContacts.setTypeface(tf);
+
+            autocompleteContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                    WalletContact walletContact = (WalletContact) arg0.getItemAtPosition(position);
+                    editAddress.setText(walletContact.address);
+                }
+            });
+
+            try {
+                long availableBalance = cryptoWallet.getAvailableBalance(wallet_id);
+                editAmount.setHint("available funds: "+availableBalance+ " bits");
+            } catch (Exception ex) {
+
+            }
 
             ImageView b = (ImageView) rootView.findViewById(R.id.send_button);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
-
-                    EditText editAddress = (EditText) rootView.findViewById(R.id.address);
-
-                    EditText editNotes = (EditText) rootView.findViewById(R.id.notes);
-
-                    CryptoAddress validAddress = validateAddress(editAddress.getText().toString());
-                    if (validAddress != null) {
-                        EditText amount = (EditText) rootView.findViewById(R.id.amount);
-                        try {
-                            cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-                        } catch (CantCreateWalletContactException e) {
-                            // TODO que hacer si no puedo crear el contacto? igual envio el dinero
-                            //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
-                        }
-
-                        try {
-
-                            cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
-
-                            //Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
-                        } catch (InsufficientFundsException e) {
-                            Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
-
-                        } catch (CantSendCryptoException e) {
-                            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            showMessage("Error send satoshis - " + e.getMessage());
-                        }
-                    } else {
-                        Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
-
-                    }
+                    sendCrypto();
                 }
             });
 
@@ -219,6 +217,50 @@ public class SendFragment extends Fragment{
         return rootView;
     }
 
+    private List<WalletContact> getWalletContactList() {
+        List<WalletContact> contacts = new ArrayList<>();
+        try {
+            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            for (WalletContactRecord wcr : walletContactRecords) {
+                contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
+            }
+        } catch (CantGetAllWalletContactsException e) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+        }
+        return contacts;
+    }
+
+    private void sendCrypto() {
+
+        CryptoAddress validAddress = validateAddress(editAddress.getText().toString());
+        if (validAddress != null) {
+            EditText amount = (EditText) rootView.findViewById(R.id.amount);
+            try {
+                cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            } catch (CantCreateWalletContactException e) {
+                // TODO que hacer si no puedo crear el contacto? igual envio el dinero
+                //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
+            }
+
+            try {
+
+                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
+
+                //Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
+            } catch (InsufficientFundsException e) {
+                Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
+
+            } catch (CantSendCryptoException e) {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                showMessage("Error send satoshis - " + e.getMessage());
+            }
+        } else {
+            Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
     private void pasteFromClipboard(View rootView) {
         ClipboardManager clipboard = (ClipboardManager) rootView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -257,6 +299,7 @@ public class SendFragment extends Fragment{
 
                     } else {
                         //load into text address
+                        showMessage(contantsString);
                         textResult.setText(contantsString);
                     }
                 } else {
@@ -283,15 +326,6 @@ public class SendFragment extends Fragment{
             }
         }
         return null;
-    }
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCryptoAddress(CryptoAddress cryptoAddress) {
-        this.cryptoAddress = cryptoAddress;
     }
 
     @Override
