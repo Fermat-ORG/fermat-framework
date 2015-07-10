@@ -4,7 +4,7 @@ package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums;
  * Created by natalia on 06/07/15.
  */
 public enum BalanceType {
-    AVILABLE("AVILABLE"),
+    AVAILABLE("AVAILABLE"),
     BOOK("BOOK");
 
     private final String code;
@@ -19,13 +19,13 @@ public enum BalanceType {
 
         switch (code) {
             case "BOOK": return BalanceType.BOOK;
-            case "AVILABLE": return BalanceType.AVILABLE;
+            case "AVAILABLE": return BalanceType.AVAILABLE;
 
         }
 
         /**
          * Return by default.
          */
-        return BalanceType.AVILABLE;
+        return BalanceType.AVAILABLE;
     }
 }
