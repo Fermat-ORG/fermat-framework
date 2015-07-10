@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.dev
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.*;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -320,7 +321,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException {
+    public List<BitcoinWalletTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
             return bitcoinWalletWallet.getTransactions(max, offset);

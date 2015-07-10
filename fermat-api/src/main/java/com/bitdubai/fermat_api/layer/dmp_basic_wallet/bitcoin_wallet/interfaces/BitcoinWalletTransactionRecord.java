@@ -36,8 +36,7 @@ public interface BitcoinWalletTransactionRecord {
     public TransactionType getType();
 
     public void setType(TransactionType type);
-
-
+    
     public long getTimestamp();
 
     public void setTimestamp(long timestamp);
