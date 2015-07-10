@@ -416,6 +416,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * I'm good to go. I'm saving the transaction and comitting it.
              */
             db.persistNewTransaction(FermatTxId.toString(), txHash);
+
             /**
              * new Transaction, I will persist it as a Fermat transaction.
              */
@@ -434,18 +435,13 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         ListenableFuture<Transaction> future = peers.broadcastTransaction(request.tx);
 
         try {
-
-            future.get();
             /**
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
+            future.get();
 
 
-            /**
-             * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
-             * I will deal with any DB error later when I control the transactions.
-             */
 
         } catch (InterruptedException e) {
             /**
