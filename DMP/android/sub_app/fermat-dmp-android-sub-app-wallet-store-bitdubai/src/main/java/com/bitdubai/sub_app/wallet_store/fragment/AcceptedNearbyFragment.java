@@ -142,7 +142,7 @@ public class AcceptedNearbyFragment extends Fragment {
 
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);
-
+                holder.downloadIcon = (ImageView) convertView.findViewById(R.id.download);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();

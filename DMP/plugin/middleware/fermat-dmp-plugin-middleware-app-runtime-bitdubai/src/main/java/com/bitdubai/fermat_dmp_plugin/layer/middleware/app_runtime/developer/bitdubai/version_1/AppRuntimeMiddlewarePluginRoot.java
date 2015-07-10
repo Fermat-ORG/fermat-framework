@@ -378,8 +378,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
 
             runtimeTitleBar = new RuntimeTitleBar();
             runtimeTitleBar.setLabel("Wallet Factory");
-            //runtimeTitleBar.setColor("#d07b62");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
+             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             runtimeTabStrip = new RuntimeTabStrip();
             runtimeTabStrip.setTabsColor("#d07b62");
@@ -427,7 +426,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             runtimeTabStrip.setTabsIndicateColor("#b46a54");
 
             runtimeTab = new RuntimeTab();
-            runtimeTab.setLabel("");
+            runtimeTab.setLabel("Wallet Publisher");
             runtimeTab.setFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN);
 
             runtimeTabStrip.addTab(runtimeTab);
@@ -626,25 +625,31 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         /*-- wallet store --*/
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
-        runtimeActivity.setColor("#84DCF5");
-        runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setStatusBarColor("#b46a54");
+
+            runtimeTitleBar = new RuntimeTitleBar();
+            runtimeTitleBar.setLabel("Wallet Store");
+
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeTabStrip = new RuntimeTabStrip();
+            runtimeTabStrip.setTabsColor("#d07b62");
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+            runtimeTabStrip.setTabsIndicateColor("#b46a54");
+            runtimeSubApp.addActivity(runtimeActivity);
         listActivities.put(Activities.CWP_WALLET_RUNTIME_STORE_MAIN, runtimeActivity);
 
 
 
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Wallet Store");
 
         //mati
         RuntimeSearchView runtimeSearchView= new RuntimeSearchView();
         runtimeSearchView.setLabel("Search");
         runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
 
-
-
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
-
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
@@ -665,11 +670,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeTabStrip.addTab(runtimeTab);
 
 
-        runtimeTabStrip.setDividerColor(0xFFFFFFFF);
-        runtimeTabStrip.setIndicatorColor(0xFFFFFFFF);
-        runtimeTabStrip.setIndicatorHeight(9);
-        runtimeTabStrip.setBackgroundColor(0xFF87D2FA);
-        runtimeTabStrip.setTextColor(0xFFFFFFFF);
+
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
