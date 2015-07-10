@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -70,6 +71,8 @@ public class ReceiveFragment extends Fragment {
     private AutoCompleteTextView autocompleteContacts;
     private WalletContactListAdapter adapter;
 
+    Typeface tf ;
+
 
     private String user_address_wallet = "";
     final int colorQR = Color.BLACK;
@@ -96,8 +99,10 @@ public class ReceiveFragment extends Fragment {
     }
 
     public void onCreate(Bundle savedInstanceState) {
-        //setHasOptionsMenu(false);
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+
         try {
             errorManager = platform.getErrorManager();
             cryptoWalletManager = platform.getCryptoWalletManager();
@@ -127,6 +132,8 @@ public class ReceiveFragment extends Fragment {
                 requestAddress(null);
             }
         });
+        requestAdressBtn.setTypeface(tf);
+
 
         // share_address button definition
         final Button shareAddressBtn = (Button) rootView.findViewById(R.id.share_btn);
@@ -135,6 +142,8 @@ public class ReceiveFragment extends Fragment {
                 shareAddress();
             }
         });
+        shareAddressBtn.setTypeface(tf);
+
 
         // share_address button definition
         final TextView stringAddressTextView = (TextView) rootView.findViewById(R.id.string_address);
@@ -143,10 +152,12 @@ public class ReceiveFragment extends Fragment {
                 copyToClipboard();
             }
         });
+        stringAddressTextView.setTypeface(tf);
 
         autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.autocomplete_contacts);
         adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
         autocompleteContacts.setAdapter(adapter);
+        autocompleteContacts.setTypeface(tf);
 
         autocompleteContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -251,7 +262,8 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(String contact_name) {
         try {
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType (first two, null, null)
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(null, null, contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
         }
         catch (CantRequestCryptoAddressException e)
@@ -264,7 +276,8 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(WalletContact walletContact) {
         try {
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType (first two, null, null)
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(null, null, walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
         }
         catch (CantRequestCryptoAddressException e)

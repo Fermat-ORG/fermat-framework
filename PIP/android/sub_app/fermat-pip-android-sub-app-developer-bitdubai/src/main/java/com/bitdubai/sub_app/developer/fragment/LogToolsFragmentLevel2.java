@@ -455,7 +455,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
         private void testing(){
             lstEnum=new ArrayList<>();
             for(int i=0;i<LogLevel.values().length;i++){
-                lstEnum.add(LogLevel.values()[i].toString());
+                lstEnum.add(LogLevel.values()[i].getDisplayName());
             }
         }
         private void setLogLevelImage(){
@@ -522,7 +522,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    Toast.makeText(c, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+                    Toast.makeText(c,web[+ position]+" activated", Toast.LENGTH_SHORT).show();
                     String item =list.getItemAtPosition(position).toString();
                     if(item.compareTo(LogLevel.NOT_LOGGING.toString())==0) {
                         changeLogLevel(pluginKey, LogLevel.NOT_LOGGING, logger.classHierarchyLevels.getFullPath());
