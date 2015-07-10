@@ -52,13 +52,13 @@ public interface CryptoWallet {
     /**
      * Receive methods
      */
-    CryptoAddress requestAddress(String actorName, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
+    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
 
-    CryptoAddress requestAddress(UUID actorId, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
+    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
 
+    /**
+     * Send money methods
+     */
+    void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
 
-        /**
-         * Send money methods
-         */
-    void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID) throws CantSendCryptoException, InsufficientFundsException;
 }
