@@ -245,7 +245,7 @@ public class SendFragment extends Fragment{
 
             try {
 
-                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
+                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id, null, null, null, null);
 
                 //Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
             } catch (InsufficientFundsException e) {
