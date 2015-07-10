@@ -59,6 +59,8 @@ public class SendFragment extends Fragment{
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
+    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
+
     Typeface tf ;
 
 
@@ -240,8 +242,8 @@ public class SendFragment extends Fragment{
                 //TODO que pasa si no puedo crear el user?
                 WalletContactRecord walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
 
-                // TODO falta deliveredByActorId and deliveredByActorType
-                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id, null, null, walletContactRecord.getActorId(), walletContactRecord.getActorType());
+                // TODO harcoded deliveredbyactorid
+                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
 
                 //Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
             } catch (InsufficientFundsException e) {
@@ -254,8 +256,6 @@ public class SendFragment extends Fragment{
                 // TODO que hacer si no puedo crear el contacto? igual envio el dinero?
                 //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
             }
-
-
         } else {
             Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
 
