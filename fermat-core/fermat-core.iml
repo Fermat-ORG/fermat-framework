@@ -71,9 +71,9 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-publisher-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-factory-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-engine-wallet-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-engine-sub-app-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
