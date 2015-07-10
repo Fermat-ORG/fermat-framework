@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
+import com.bitdubai.sub_app.developer.common.StringUtils;
 
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -167,7 +168,9 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
                 for (int i = 0; i < lstColumns.size(); i++) {
                     TextView textView = new TextView(getActivity());
                     textView.setBackgroundColor(Color.WHITE);
-                    textView.setText(lstColumns.get(i));
+                    String tableHeader=StringUtils.splitCamelCase(lstColumns.get(i));
+                    tableHeader=StringUtils.replaceStringByUnderScore(tableHeader);
+                    textView.setText(tableHeader);
                     textView.setTextColor(Color.BLACK);
                     textView.setPadding(10, 10, 10, 10);
                     textView.setTypeface(tf);
