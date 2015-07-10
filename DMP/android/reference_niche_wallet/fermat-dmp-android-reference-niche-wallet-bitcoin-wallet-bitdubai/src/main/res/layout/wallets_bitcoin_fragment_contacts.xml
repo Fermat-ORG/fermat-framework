@@ -17,14 +17,14 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:hint="name"
-            android:textColorHint="#72af9c"
             android:inputType="textVisiblePassword"
             android:layout_marginTop="3dp"
             android:layout_weight="0.21"
             android:gravity="center"
             android:textSize="24dp"
             android:background="#fbf7ed"
-            android:textColor="#0B3B0B"/>
+            android:textColor="#72af9c"
+            android:textColorHint="#BDBDBD"/>
 
         <Button android:id="@+id/add_contact_btn"
             android:layout_width="wrap_content"
