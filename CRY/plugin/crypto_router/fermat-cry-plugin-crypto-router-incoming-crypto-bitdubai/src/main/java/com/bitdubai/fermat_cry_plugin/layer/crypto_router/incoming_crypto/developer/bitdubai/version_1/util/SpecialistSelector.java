@@ -73,6 +73,7 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
                 throw new CantSelectSpecialistException("Can't get actor address from registry", cantGetActorAddressBookException,"CryptoAddress: "+ cryptoAddress.getAddress(),"Address not stored");
             }
         }
+
         throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Registry is null","");
     }
 }
