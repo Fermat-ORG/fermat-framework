@@ -80,6 +80,7 @@ public class ReceiveFragment extends Fragment {
     final int width = 400;
     final int height = 400;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -262,8 +263,8 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(String contact_name) {
         try {
-            //TODO parameters deliveredByActorId deliveredByActorType (first two, null, null)
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(null, null, contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
         }
         catch (CantRequestCryptoAddressException e)
@@ -276,8 +277,8 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(WalletContact walletContact) {
         try {
-            //TODO parameters deliveredByActorId deliveredByActorType (first two, null, null)
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(null, null, walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
         }
         catch (CantRequestCryptoAddressException e)
