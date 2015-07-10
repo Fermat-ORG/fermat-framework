@@ -25,7 +25,7 @@ middleware y no se almacenará en el catálogo.
 Debemos pensar cómo manejar las múltiples versiones de una wallet a nivel del catálogo. +
 La plataforma posee el código de las diferentes versiones de cada wallet. En principio podríamos
 permitir al usuario descargar la versión que prefiera. Para esto tendríamos que almacenar una lista
-de versiones en lugar de una sola versión-
+de versiones en lugar de una sola versión.
 
 Una forma inicial de determinar este conjunto es colocar las wallets más descargadas en la región
 del usuario, podemos añadir otros factores de filtros como edad, género, etc. +

@@ -46,13 +46,14 @@ proveer un método que permita consultar la identidad de Developer actualmente l
 
 En esta versión primitiva debería exponer los métodos:
 
-* List<Developer> getDevelopersAssociated() que retorna la lista de developers asociados al usuario
-actualmente logeado. El plugin Developer de la capa Identity es a quien se delega esta tarea.
-* void createNewDeveloper(String alias) que crea una nueva identidad como developer para el usuario
-actualmente logeado. El plugin Developer de la capa Identity es a quien se delega esta tarea.
-* void login(String alias) throws InexistentDeveloperException : Se loguea con la identidad que se pasa
+* List<DeveloperIdentity> getDevelopersFromActualUser() throws CantGetUserDeveloperIdentitiesException
+que retorna la lista de developers asociados al usuario actualmente logeado.
+* void createNewDeveloper(String alias) throws CantCreateNewDeveloperException que crea una nueva
+identidad como developer para el usuario actualmente logeado. El plugin Developer de la capa Identity
+es a quien se delega esta tarea.
+* void login(String alias) throws DeveloperLoginFailedException : Se loguea con la identidad que se pasa
 como argumento. Si este developer no existe se lanza la excepción mostrada.
-* Developer getActualDeveloper() throws NoDeveloperFoundException : Retorna el developer con quien se
-está identificando actualmente. Si no hay ninguno logeado se lanza la excepción NoDeveloperFoundException.
+* DeveloperIdentity getActualDeveloper() throws CantGetDeveloperException : Retorna el developer con
+quien se está identificando actualmente.
 
-La interfaz developer debería permitir obtener las claves (pública y privada) y el alias.
+La interfaz DeveloperIdentity debería permitir obtener las claves (pública y privada) y el alias.
