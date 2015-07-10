@@ -46,7 +46,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
 
     private final String WALLET_IDS_FILE_NAME = "walletsIds";
 
-    Map<UUID, UUID> walletIds =  new HashMap<>();
+    private Map<UUID, UUID> walletIds =  new HashMap<>();
 
     private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
 
@@ -111,9 +111,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
         }
     }
 
-    /**
-     * BitcoinWalletWallet member variables.
-     */
 
     /* At the moment of creation the plug-in root gives us the walletId
      * the external modules use ti identify this wallet. We will create
@@ -150,7 +147,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
             database.closeDatabase();
         }
         catch (CantCreateDatabaseException cantCreateDatabaseException){
-
             /**
              * The database cannot be created. I can not handle this situation.
              */
@@ -248,10 +244,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
         return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
     }
-
-
-
-
 
     @Override
     public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException {

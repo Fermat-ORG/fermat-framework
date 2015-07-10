@@ -15,10 +15,13 @@ public class BitcoinWalletDatabaseConstants {
     public static final String BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME = "VerificationId";
     public static final String BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME = "addressFrom";
     public static final String BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME = "addressTo";
+    public static final String BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME= "actorTo";
+    public static final String BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME= "actorTo";
+    public static final String BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME= "actorToType";
+    public static final String BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME= "actorToType";
     public static final String BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME = "amount";
     public static final String BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME = "type";
     public static final String BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME = "balanceType";
-    //public static final String BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME = "state";
     public static final String BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME = "timestamp";
     public static final String BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME = "memo";
     public static final String BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME = "transactionHash";
