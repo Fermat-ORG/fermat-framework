@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
@@ -104,7 +105,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
      */
 
     @Override
-    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount, String notes) throws InsufficientFundsException, CantSendFundsException {
+    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException {
         OutgoingExtraUserDao dao = new OutgoingExtraUserDao();
         dao.setErrorManager(this.errorManager);
         dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);

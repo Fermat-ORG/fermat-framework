@@ -262,7 +262,8 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(String contact_name) {
         try {
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType (first two, null, null)
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(null, null, contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
         }
         catch (CantRequestCryptoAddressException e)
@@ -275,7 +276,8 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(WalletContact walletContact) {
         try {
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType (first two, null, null)
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(null, null, walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
         }
         catch (CantRequestCryptoAddressException e)
