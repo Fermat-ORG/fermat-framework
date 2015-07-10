@@ -12,7 +12,9 @@ import java.util.UUID;
  */
 public interface BitcoinWalletTransaction {
 
-    public String getTramsactionHash();
+    public UUID getTransactionId();
+
+    public String getTransactionHash();
 
     public CryptoAddress getAddressFrom();
 
@@ -26,15 +28,17 @@ public interface BitcoinWalletTransaction {
 
     public Actors getActorFromType();
 
+    public BalanceType getBalanceType();
+
+    public TransactionType getTransactionType();
+
+    public long getTimestamp();
+
+    public long getAmount();
+
     public long getRunningBookBalance();
 
     public long getRunningAvailableBalance();
-
-    public BalanceType getBalanceType();
-
-    public TransactionType getType();
-
-    public long getTimestamp();
 
     public String getMemo();
 

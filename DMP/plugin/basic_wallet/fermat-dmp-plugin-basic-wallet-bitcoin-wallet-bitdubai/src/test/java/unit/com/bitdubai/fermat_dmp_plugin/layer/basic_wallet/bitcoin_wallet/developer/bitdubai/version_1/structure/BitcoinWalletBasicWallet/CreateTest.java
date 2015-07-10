@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -67,6 +68,7 @@ public class CreateTest {
         mockWalletIdsFile = new MockWalletIdsFile();
     }
 
+    @Ignore
     @Test
     public void Create_ValidWalletId_ReturnsInternalWalletId() throws Exception{
         when(mockPluginDatabaseSystem.createDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
