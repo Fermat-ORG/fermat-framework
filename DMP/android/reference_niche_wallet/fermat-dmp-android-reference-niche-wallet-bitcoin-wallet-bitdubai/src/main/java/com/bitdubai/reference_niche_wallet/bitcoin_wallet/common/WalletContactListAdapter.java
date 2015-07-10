@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,11 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
     private List<WalletContact> originalData = null;
     private List<WalletContact> filteredData = null;
 
+    Typeface tf ;
+
     public WalletContactListAdapter(Context context, int resource, List<WalletContact> items) {
         super(context, resource, items);
+        tf=Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
         this.filteredData = items;
         this.originalData = items;
     }
@@ -41,10 +45,13 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
         WalletContact p = getItem(position);
 
         if (p != null) {
+
+
             TextView tt1 = (TextView) v.findViewById(R.id.contact_name);
 
             if (tt1 != null) {
                 tt1.setText(p.name);
+                tt1.setTypeface(tf, Typeface.BOLD);
             }
         }
 

@@ -16,24 +16,21 @@
         <EditText android:id="@+id/inputSearch"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:hint="@string/search_contacts_hint"
+            android:hint="name"
             android:inputType="textVisiblePassword"
             android:layout_marginTop="3dp"
             android:layout_weight="0.21"
-            android:textSize="24dp"
-            android:background="#72af9c"
             android:gravity="center"
-            android:textColor="#0B3B0B"/>
+            android:textSize="24dp"
+            android:background="#fbf7ed"
+            android:textColor="#72af9c"
+            android:textColorHint="#BDBDBD"/>
 
-        <Button
-            android:id="@+id/add_contact_btn"
+        <Button android:id="@+id/add_contact_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add"
-            android:background="@color/green"
-            android:textColor="#FFFFFF"
-            android:layout_weight="0.03"
-            android:layout_margin="2dip"/>
+            android:background="#8bba9e"
+            android:src="@drawable/ic_action_add_grey"/>
     </LinearLayout>
 
     <ListView
@@ -57,8 +54,6 @@
         style="@android:style/TextAppearance.Large"
         android:gravity="center"
         android:textColor="#FF666666"
-        android:visibility="gone"
-
-        />
+        android:visibility="gone"/>
 
 </LinearLayout>
