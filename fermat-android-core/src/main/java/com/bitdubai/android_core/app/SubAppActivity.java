@@ -1,6 +1,9 @@
 package com.bitdubai.android_core.app;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
@@ -11,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 //import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,9 +42,11 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeMana
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ViewGroup;
@@ -53,6 +59,10 @@ import com.bitdubai.fermat.R;
 
 
 import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.sub_app.wallet_store.fragment.AcceptedNearbyFragment;
+import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
+import com.bitdubai.sub_app.wallet_store.fragment.FreeFragment;
+import com.bitdubai.sub_app.wallet_store.fragment.PaidFragment;
 
 
 import java.util.List;
@@ -222,9 +232,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 this.NavigationDrawerFragment.setUp(
                         R.id.navigation_drawer,
                         (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-            }
-            else
-            {
+            } else {
                 setContentView(R.layout.runtime_app_activity_runtime);
 
             }
@@ -239,6 +247,33 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
 
+
+            String status_color = activity.getStatusBarColor();
+            if (activity.getStatusBarColor() != null) {
+                setStatusBarColor(this.activity.getStatusBarColor());
+
+            }
+
+            if (activity.getTabStrip() != null)
+            {
+                if (activity.getTabStrip().getTabsColor()!=null){
+                    tabStrip.setBackgroundColor(Color.parseColor(this.activity.getTabStrip().getTabsColor()));
+                    //tabStrip.setDividerColor(Color.TRANSPARENT);
+
+                }
+                if(activity.getTabStrip().getTabsTextColor()!=null){
+                    tabStrip.setTextColor(Color.parseColor(this.activity.getTabStrip().getTabsTextColor()));
+                }
+
+                if(this.activity.getTabStrip().getTabsIndicateColor()!=null){
+                    tabStrip.setIndicatorColor(Color.parseColor(this.activity.getTabStrip().getTabsIndicateColor()));
+                }
+            }
+
+            Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
+            if (tabStrip != null){
+                tabStrip.setTypeface(tf,1 );
+            }
 
             ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
@@ -363,6 +398,28 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(String color){
+        if(Build.VERSION.SDK_INT>20) {
+            try {
+
+                Window window = this.getWindow();
+
+                // clear FLAG_TRANSLUCENT_STATUS flag:
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+                // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+                // finally change the color
+                // window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
+                Color color_status = new Color();
+                window.setStatusBarColor(color_status.parseColor(color));
+            } catch (Exception e) {
+                Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
+            }
+        }
+    }
 
 
 
@@ -435,6 +492,13 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 case CWP_WALLET_PUBLISHER_MAIN:
 
                     this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
+                    intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+                    startActivity(intent);
+
+                    break;
+
+                case CWP_WALLET_RUNTIME_STORE_MAIN:
+                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
                     intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                     startActivity(intent);
 
@@ -590,6 +654,20 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 try {
                     switch (fragmentType) {
 
+                        //wallet store
+                        case CWP_SHOP_MANAGER_MAIN:
+                            currentFragment = AllFragment.newInstance(position);
+                            break;
+                        case CWP_SHOP_MANAGER_FREE:
+                            currentFragment = FreeFragment.newInstance(position);
+                            break;
+                        case CWP_SHOP_MANAGER_PAID:
+                            currentFragment = PaidFragment.newInstance(position);
+                            break;
+                        case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
+                            currentFragment = AcceptedNearbyFragment.newInstance(position);
+                            break;
+                        //**
                         case CWP_WALLET_MANAGER_MAIN:
                             currentFragment = WalletDesktopFragment.newInstance(position);
                             break;
@@ -604,6 +682,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         case CWP_WALLET_PUBLISHER_MAIN:
                             currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);
                             break;
+
+
 
                     }
 

@@ -79,6 +79,7 @@ dependencies {
 
     compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
 
     /*
 
