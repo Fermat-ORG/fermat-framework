@@ -275,7 +275,7 @@ public class BitcoinWalletBasicWalletDao {
         if (balanceType == BalanceType.AVAILABLE)
             return getBalancesRecord().getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
         else
-            return getBalancesRecord().getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
+            return getBalancesRecord().getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
     }
 
     private DatabaseTableRecord getBalancesRecord() throws CantGetBalanceRecordException{

@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * The Class <code>com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.LogToolsFragment</code>
@@ -406,14 +407,15 @@ public class LogToolsFragment extends Fragment {
                 "Moderate logging",
                 "Agressive logging"
         } ;
-        List<Integer> lstIconsToShow;/* = {
-                R.drawable.ic_action_accept_grey,
-                R.drawable.wallet_4,
-                R.drawable.wallet_1,
-                R.drawable.wallet_4
-        };*/
 
         List<String> lstEnum;
+
+        Integer[] img ={
+                R.drawable.ic_action_accept_grey,
+                0,
+                0,
+                0
+        };
 
         public CustomDialogClass(Activity a,Loggers loggers,String pluginKey) {
             super(a);
@@ -423,12 +425,43 @@ public class LogToolsFragment extends Fragment {
             //loadEnumsLogger();
             // TODO Auto-generated constructor stub
             this.c = a;
+            setLogLevelImage();
+
+            logger.logLevel = LogLevel.NOT_LOGGING;
         }
 
         private void testing(){
             lstEnum=new ArrayList<>();
-            for(int i=0;i<web.length;i++){
-                lstEnum.add(web[i]);
+            for(int i=0;i<LogLevel.values().length;i++){
+                lstEnum.add(LogLevel.values()[i].toString());
+            }
+        }
+        private void setLogLevelImage(){
+            if(logger.logLevel!=null) {
+                switch (logger.logLevel) {
+                    case NOT_LOGGING:
+                        img = new Integer[]{
+                                1, 0, 0, 0
+                        };
+                        break;
+                    case MINIMAL_LOGGING:
+                        img = new Integer[]{
+                                0, 1, 0, 0
+                        };
+                        break;
+                    case MODERATE_LOGGING:
+                        img = new Integer[]{
+                                0, 0, 1, 0
+                        };
+                        break;
+                    case AGGRESSIVE_LOGGING:
+                        img = new Integer[]{
+                                0, 0, 0, 1
+                        };
+                        break;
+                }
+            }else{
+                logger.logLevel= LogLevel.NOT_LOGGING;
             }
         }
 
@@ -448,12 +481,7 @@ public class LogToolsFragment extends Fragment {
 
         }*/
 
-        Integer[] img ={
-                R.drawable.ic_action_accept_grey,
-                0,
-                0,
-                0
-        };
+
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -474,14 +502,18 @@ public class LogToolsFragment extends Fragment {
                                         int position, long id) {
                     Toast.makeText(c, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
                     String item =list.getItemAtPosition(position).toString();
-                    if(item.compareTo("Not logging")==0){
+                    if(item.compareTo(LogLevel.NOT_LOGGING.toString())==0) {
                         changeLogLevel(pluginKey, LogLevel.NOT_LOGGING, logger.classHierarchyLevels.getFullPath());
-                    }else if (item.compareTo("Minimal logging")==0){
+                        logger.logLevel = LogLevel.NOT_LOGGING;
+                    }else if (item.compareTo(LogLevel.MINIMAL_LOGGING.toString())==0){
                         changeLogLevel(pluginKey, LogLevel.MINIMAL_LOGGING, logger.classHierarchyLevels.getFullPath());
-                    }else if(item.compareTo("Moderate logging")==0){
+                        logger.logLevel = LogLevel.MINIMAL_LOGGING;
+                    }else if(item.compareTo(LogLevel.MODERATE_LOGGING.toString())==0){
                         changeLogLevel(pluginKey, LogLevel.MODERATE_LOGGING, logger.classHierarchyLevels.getFullPath());
-                    }else if (item.compareTo("Agressive logging")==0){
+                        logger.logLevel = LogLevel.MODERATE_LOGGING;
+                    }else if (item.compareTo(LogLevel.AGGRESSIVE_LOGGING.toString())==0){
                         changeLogLevel(pluginKey, LogLevel.AGGRESSIVE_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.AGGRESSIVE_LOGGING;
                     }
                     dismiss();
                 }
@@ -525,8 +557,9 @@ public class LogToolsFragment extends Fragment {
                 ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
                 txtTitle.setTextColor(Color.WHITE);
                 txtTitle.setText(listEnumsToDisplay.get(position));
+                //txtTitle.setText(LogLevel.MINIMAL_LOGGING.toString());
 
-
+                setLogLevelImage();
                 if(imageId[position]!=0){
                     imageView.setImageResource(R.drawable.ic_action_accept_grey);
                 }

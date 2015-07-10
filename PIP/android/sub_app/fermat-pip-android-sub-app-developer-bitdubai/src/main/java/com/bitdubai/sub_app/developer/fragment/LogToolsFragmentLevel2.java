@@ -1,10 +1,13 @@
 package com.bitdubai.sub_app.developer.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,11 +21,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +43,7 @@ import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -255,7 +261,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                     @Override
                     public boolean onLongClick(View view) {
                         String loggerText = holder.companyTextView.getText().toString();
-                        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+                        /*PopupMenu popupMenu = new PopupMenu(getActivity(), view);
 
                         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
@@ -298,9 +304,10 @@ public class LogToolsFragmentLevel2 extends Fragment {
                             counter++;
                         }*/
 
-                        popupMenu.show();
+                        //popupMenu.show();
 
-
+                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
+                        cdd.show();
 
                         return true;
                     }
@@ -403,6 +410,185 @@ public class LogToolsFragmentLevel2 extends Fragment {
         public ImageView imageView;
         public TextView companyTextView;
         public ImageView btnLogger;
+
+    }
+
+    public class CustomDialogClass extends Dialog implements
+            android.view.View.OnClickListener {
+
+
+        private Loggers logger;
+        private String pluginKey;
+        public Activity c;
+        public Dialog d;
+
+        ListView list;
+        String[] web = {
+                "Not logging",
+                "Minimal logging",
+                "Moderate logging",
+                "Agressive logging"
+        } ;
+
+        List<String> lstEnum;
+
+        Integer[] img ={
+                R.drawable.ic_action_accept_grey,
+                0,
+                0,
+                0
+        };
+
+        public CustomDialogClass(Activity a,Loggers loggers,String pluginKey) {
+            super(a);
+            this.logger=loggers;
+            this.pluginKey=pluginKey;
+            testing();
+            //loadEnumsLogger();
+            // TODO Auto-generated constructor stub
+            this.c = a;
+            setLogLevelImage();
+
+            logger.logLevel = LogLevel.NOT_LOGGING;
+        }
+
+        private void testing(){
+            lstEnum=new ArrayList<>();
+            for(int i=0;i<LogLevel.values().length;i++){
+                lstEnum.add(LogLevel.values()[i].toString());
+            }
+        }
+        private void setLogLevelImage(){
+            if(logger.logLevel!=null) {
+                switch (logger.logLevel) {
+                    case NOT_LOGGING:
+                        img = new Integer[]{
+                                1, 0, 0, 0
+                        };
+                        break;
+                    case MINIMAL_LOGGING:
+                        img = new Integer[]{
+                                0, 1, 0, 0
+                        };
+                        break;
+                    case MODERATE_LOGGING:
+                        img = new Integer[]{
+                                0, 0, 1, 0
+                        };
+                        break;
+                    case AGGRESSIVE_LOGGING:
+                        img = new Integer[]{
+                                0, 0, 0, 1
+                        };
+                        break;
+                }
+            }else{
+                logger.logLevel= LogLevel.NOT_LOGGING;
+            }
+        }
+
+        /*private void loadEnumsLogger(){
+            LogLevel[] enum_logLevel = LogLevel.values();
+            List<String> lstEnum = new ArrayList<String>();
+            for(int i=0;i<enum_logLevel.length;i++){
+                lstEnum.add(enum_logLevel[i].getDisplayName());
+            }
+        }
+        private void setIconSelected(){
+            if(logger!=null){
+                logger.logLevel.getCode();
+            }else{
+                //logger=new LogLevel(LogLevel.);
+            }
+
+        }*/
+
+
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.popup);
+
+
+
+            CustomList adapter = new
+                    CustomList(c, lstEnum, img);
+            list = (ListView) findViewById(R.id.listView);
+            list.setAdapter(adapter);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    Toast.makeText(c, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+                    String item =list.getItemAtPosition(position).toString();
+                    if(item.compareTo(LogLevel.NOT_LOGGING.toString())==0) {
+                        changeLogLevel(pluginKey, LogLevel.NOT_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.NOT_LOGGING;
+                    }else if (item.compareTo(LogLevel.MINIMAL_LOGGING.toString())==0){
+                        changeLogLevel(pluginKey, LogLevel.MINIMAL_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.MINIMAL_LOGGING;
+                    }else if(item.compareTo(LogLevel.MODERATE_LOGGING.toString())==0){
+                        changeLogLevel(pluginKey, LogLevel.MODERATE_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.MODERATE_LOGGING;
+                    }else if (item.compareTo(LogLevel.AGGRESSIVE_LOGGING.toString())==0){
+                        changeLogLevel(pluginKey, LogLevel.AGGRESSIVE_LOGGING, logger.classHierarchyLevels.getFullPath());
+                        logger.logLevel = LogLevel.AGGRESSIVE_LOGGING;
+                    }
+                    dismiss();
+                }
+            });
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            int i = v.getId();
+            /*if (i == R.id.btn_yes) {
+                c.finish();
+
+            } else if (i == R.id.btn_no) {
+                dismiss();
+
+            } else {
+            }*/
+            dismiss();
+        }
+
+        public class CustomList extends ArrayAdapter<String>{
+
+            private final Activity context;
+            private final List<String> listEnumsToDisplay;
+            private final Integer[] imageId;
+            public CustomList(Activity context,
+                              List<String> listEnumsToDisplay, Integer[] imageId) {
+                super(context, R.layout.list_single, listEnumsToDisplay);
+                this.context = context;
+                this.listEnumsToDisplay = listEnumsToDisplay;
+                this.imageId = imageId;
+
+            }
+            @Override
+            public View getView(int position, View view, ViewGroup parent) {
+                LayoutInflater inflater = context.getLayoutInflater();
+                View rowView= inflater.inflate(R.layout.list_single, null, true);
+                TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
+
+                ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
+                txtTitle.setTextColor(Color.WHITE);
+                txtTitle.setText(listEnumsToDisplay.get(position));
+                //txtTitle.setText(LogLevel.MINIMAL_LOGGING.toString());
+
+                setLogLevelImage();
+                if(imageId[position]!=0){
+                    imageView.setImageResource(R.drawable.ic_action_accept_grey);
+                }
+
+                return rowView;
+            }
+        }
 
     }
 }
