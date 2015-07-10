@@ -5,8 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseSystemException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExcecuteBitconTransaction;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 
 /**
  * Created by ciencias on 7/6/15.
@@ -34,7 +33,7 @@ public class BitcoinWalletBasicWalletDaoTransaction {
     }
 
 
-    public void executeTransaction(DatabaseTable transactionTable ,DatabaseTableRecord transactionRecord,DatabaseTable updateTable,DatabaseTableRecord updateRecord) throws CantExcecuteBitconTransaction
+    public void executeTransaction(DatabaseTable transactionTable ,DatabaseTableRecord transactionRecord,DatabaseTable updateTable,DatabaseTableRecord updateRecord) throws CantExecuteBitconTransactionException
     {
         try {
             DatabaseTransaction dbTransaction = database.newTransaction();
@@ -45,7 +44,7 @@ public class BitcoinWalletBasicWalletDaoTransaction {
 
             database.executeTransaction(dbTransaction);
         }catch(DatabaseSystemException e){
-            throw new CantExcecuteBitconTransaction("Error to insert and update transaction records",e, null, "Error execute database transaction" );
+            throw new CantExecuteBitconTransactionException("Error to insert and update transaction records",e, null, "Error execute database transaction" );
         }
     }
 
