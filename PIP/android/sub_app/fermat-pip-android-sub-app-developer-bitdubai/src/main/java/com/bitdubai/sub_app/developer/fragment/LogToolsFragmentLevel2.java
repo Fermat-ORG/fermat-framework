@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -211,7 +212,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
             final ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.grid_items_with_button, parent, false);
+                convertView = inflater.inflate(R.layout.grid_items_with_button2, parent, false);
 
 
                 holder = new ViewHolder();
@@ -309,6 +310,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
+                textView.setGravity(Gravity.CENTER);
                 holder.companyTextView = textView;
 
 
