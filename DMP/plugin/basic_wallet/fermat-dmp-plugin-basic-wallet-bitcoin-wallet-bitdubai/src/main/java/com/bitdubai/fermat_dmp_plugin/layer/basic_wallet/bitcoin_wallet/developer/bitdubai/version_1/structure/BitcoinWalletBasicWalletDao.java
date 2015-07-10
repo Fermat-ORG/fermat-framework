@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 
@@ -14,7 +15,6 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -26,7 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
-import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExcecuteBitconTransaction;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.util.BitcoinTransactionWrapper;
 
@@ -53,356 +53,73 @@ public class BitcoinWalletBasicWalletDao {
         /**
          * The only one who can set the pluginId is the Plugin Root.
          */
-
         this.database = database;
     }
-
-    /**
-     * BitcoinWalletBasicWalletDao Interface implementation.
-     */
-
 
     /*
      * getBookBalance must get actual Book Balance of wallet, select record from balances table
      */
-    long getBookBalance() throws CantCalculateBalanceException {
-
-        long balance= 0;
-
-        // create the database objects
-        DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
-
-
-
-        try {
-            bitcoinwalletTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-            throw new CantCalculateBalanceException("Get Book Balance",cantLoadTableToMemory,"Error load wallet balance table ", "");
-
-
+    public long getBookBalance() throws CantCalculateBalanceException {
+        try{
+            return getCurrentBookBalance();
+        } catch (CantGetBalanceRecordException exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         }
-
-
-        // Read record data and get book balance field
-
-        for(DatabaseTableRecord record : bitcoinwalletTable.getRecords())
-        {
-            balance = record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
-
-        }
-
-
-        // Now we return balance
-
-        return balance;
-
     }
 
-/*
+    /*
      * getBookBalance must get actual Book Balance of wallet, select record from balances table
      */
 
-    long getAvailableBalance() throws CantCalculateBalanceException {
-
-        long balance = 0;
-
-        // create the database objects
-        DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
-
-
-        try {
-            bitcoinwalletTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-            throw new CantCalculateBalanceException("Get Book Balance",cantLoadTableToMemory,"Error load wallet balance table ", "");
-
-
+    public long getAvailableBalance() throws CantCalculateBalanceException {
+        try{
+            return getCurrentAvailableBalance();
+        } catch (CantGetBalanceRecordException exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         }
-
-
-        // Read record data and get book balance field
-
-        for(DatabaseTableRecord record : bitcoinwalletTable.getRecords())
-        {
-            balance = record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME);
-
-        }
-
-
-        // Now we return balance
-
-        return balance;
-
     }
     /*
      * Add a new debit transaction.
      */
-    public void addDebit(BitcoinWalletTransactionRecord cryptoTransaction,BalanceType balanceType) throws CantRegisterDebitDebitException {
+    public void addDebit(final BitcoinWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterDebitDebitException {
 
-        long totalCredit = 0;
-        long totalDebit = 0;
-        long balance = 0;
-        long runningBalance = 0;
+        try{
+            if(isTransactionInTable(transactionRecord.getIdTransaction(), transactionRecord.getType(), balanceType))
+                throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
-        // create the database objects
-        DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
-        DatabaseTableRecord debitRecord;
+            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
 
+            long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount);
+            long bookRunningBalance = calculateBookRunningBalance(-bookAmount);
 
-        DatabaseTable bitcoinwalletBalanceTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
-        DatabaseTableRecord balanceRecord = null;
+            executeTransaction(transactionRecord, balanceType, availableRunningBalance, bookRunningBalance);
 
-        //First check if the trasacction exist
-
-        /**
-         *  I will load the information of table into a memory structure, filter by transaction hash .
-         */
-        bitcoinwalletTable.setUUIDFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, cryptoTransaction.getIdTransaction(), DatabaseFilterType.EQUAL);
-        bitcoinwalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME,TransactionType.DEBIT.getCode(),DatabaseFilterType.EQUAL);
-        bitcoinwalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME,balanceType.getCode(),DatabaseFilterType.EQUAL);
-
-        try {
-            bitcoinwalletTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-
-            throw new CantRegisterDebitDebitException("Error to add debit transaction to wallet",cantLoadTableToMemory,"Error load wallet table" , "");
-
-
+        } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteBitconTransactionException exception){
+            throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         }
-
-        if (bitcoinwalletTable.getRecords().size() == 0) {
-
-            //sum all debit record and sum all credit record, for this balance type
-
-            totalDebit = getTotalTransactions(balanceType, TransactionType.CREDIT);
-            totalCredit= getTotalTransactions(balanceType, TransactionType.DEBIT);
-
-            balance = totalCredit - totalDebit;
-
-
-            // Now we complete the debit new record
-            debitRecord = bitcoinwalletTable.getEmptyRecord();
-
-            UUID debitRecordId = UUID.randomUUID();
-
-            debitRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, debitRecordId);
-            debitRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, cryptoTransaction.getIdTransaction());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, cryptoTransaction.getType().getCode());
-            debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, cryptoTransaction.getAmount());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, cryptoTransaction.getMemo());
-            debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, cryptoTransaction.getTimestamp());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, cryptoTransaction.getTramsactionHash());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, cryptoTransaction.getAddressFrom().getAddress());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, cryptoTransaction.getAddressTo().getAddress());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
-
-            //check balance transaction type to insert running balance field
-
-            if(balanceType == BalanceType.AVILABLE)
-            {
-                //calculate running balances
-                if(cryptoTransaction.getType() == TransactionType.CREDIT)
-                    runningBalance = balance + cryptoTransaction.getAmount();
-                else
-                    runningBalance = balance- cryptoTransaction.getAmount();
-
-                debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME, runningBalance);
-                debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, 0);
-
-            }
-            else
-            {
-                if(cryptoTransaction.getType() == TransactionType.CREDIT)
-                    runningBalance = balance + cryptoTransaction.getAmount();
-                else
-                    runningBalance = balance- cryptoTransaction.getAmount();
-
-                debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME, 0);
-                debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, runningBalance);
-            }
-
-
-
-            // Now I insert debit record.
-            //Use transaction to insert wallet record, delete balance record and insert new total balances
-
-            try {
-                BitcoinWalletBasicWalletDaoTransaction bitcoinWalletBasicWalletDaoTransaction = new BitcoinWalletBasicWalletDaoTransaction(this.database);
-                try
-                {
-                    balanceRecord = getBalancesRecord();
-
-                    //set total balances to update
-                    if(balanceType == BalanceType.AVILABLE)
-                    {
-                        balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, balance);
-
-                    }
-                    else
-                    {
-                        balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, balance);
-
-                    }
-                }
-                catch (CantGetBalanceRecordException e)
-                {
-                    throw new CantRegisterDebitDebitException("Error to add debit transaction to wallet",e,"Error to execute balance transaction insert and update" , "");
-
-                }
-
-                bitcoinWalletBasicWalletDaoTransaction.executeTransaction(bitcoinwalletTable, debitRecord, bitcoinwalletBalanceTable, balanceRecord);
-
-            } catch (CantExcecuteBitconTransaction cantInsertRecordException) {
-
-                throw new CantRegisterDebitDebitException("Error to add debit transaction to wallet",cantInsertRecordException,"Error to execute balance transaction insert and update" , "");
-
-
-            }
-
-
-
-        }
-
     }
-
-
-
 
     /*
      * Add a new Credit transaction.
      */
-    public void addCredit(BitcoinWalletTransactionRecord cryptoTransaction,BalanceType balanceType) throws CantRegisterCreditException {
+    public void addCredit(final BitcoinWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterCreditException{
+        try{
+            if(isTransactionInTable(transactionRecord.getIdTransaction(), transactionRecord.getType(), balanceType))
+                throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
-        long totalCredit = 0;
-        long totalDebit = 0;
-        long balance = 0;
-        long runningBalance = 0;
+            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
+            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
 
-        // create the database objects
-        DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
-        DatabaseTableRecord debitRecord;
+            long availableRunningBalance = calculateAvailableRunningBalance(availableAmount);
+            long bookRunningBalance = calculateBookRunningBalance(bookAmount);
 
+            executeTransaction(transactionRecord, balanceType, availableRunningBalance, bookRunningBalance);
 
-        DatabaseTable bitcoinwalletBalanceTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
-        DatabaseTableRecord balanceRecord = null;
-
-        //First check if the trasacction exist
-
-        /**
-         *  I will load the information of table into a memory structure, filter by transaction hash .
-         */
-        bitcoinwalletTable.setUUIDFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, cryptoTransaction.getIdTransaction(), DatabaseFilterType.EQUAL);
-        bitcoinwalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME,TransactionType.CREDIT.getCode(),DatabaseFilterType.EQUAL);
-        bitcoinwalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME,balanceType.getCode(),DatabaseFilterType.EQUAL);
-
-        try {
-            bitcoinwalletTable.loadToMemory();
+        } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteBitconTransactionException exception){
+            throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         }
-        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-
-            throw new CantRegisterCreditException("Error to add credit transaction to wallet",cantLoadTableToMemory,"Error to load wallet table" , "");
-
-
-        }
-
-        if(bitcoinwalletTable.getRecords().size() == 0)
-        {
-            // Now we complete the debit new record
-            debitRecord = bitcoinwalletTable.getEmptyRecord();
-
-            UUID debitRecordId = UUID.randomUUID();
-
-            debitRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, debitRecordId);
-            debitRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, cryptoTransaction.getIdTransaction());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, cryptoTransaction.getType().getCode());
-            debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, cryptoTransaction.getAmount());
-            //  debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME, cryptoTransaction.getState().getCode());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, cryptoTransaction.getMemo());
-            debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, cryptoTransaction.getTimestamp());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, cryptoTransaction.getTramsactionHash());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, cryptoTransaction.getAddressFrom().getAddress());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, cryptoTransaction.getAddressTo().getAddress());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
-
-            //check balance transaction type to insert running balance field
-
-            if(balanceType == BalanceType.AVILABLE)
-            {
-                //calculate running balances
-                if(cryptoTransaction.getType() == TransactionType.CREDIT)
-                    runningBalance = balance + cryptoTransaction.getAmount();
-                else
-                    runningBalance = balance- cryptoTransaction.getAmount();
-
-                debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME, runningBalance);
-                debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, 0);
-
-            }
-            else
-            {
-                if(cryptoTransaction.getType() == TransactionType.CREDIT)
-                    runningBalance = balance + cryptoTransaction.getAmount();
-                else
-                    runningBalance = balance- cryptoTransaction.getAmount();
-
-                debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME, 0);
-                debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, runningBalance);
-            }
-
-
-            // Now I insert debit record.
-            //Use transaction to insert wallet record, delete balance record and insert new total balances
-
-            try {
-                BitcoinWalletBasicWalletDaoTransaction bitcoinWalletBasicWalletDaoTransaction = new BitcoinWalletBasicWalletDaoTransaction(this.database);
-                try
-                {
-                    balanceRecord = getBalancesRecord();
-
-                    //set total balances to update
-                    if(balanceType == BalanceType.AVILABLE)
-                    {
-                        balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, balance);
-
-                    }
-                    else
-                    {
-                        balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, balance);
-
-                    }
-                }
-                catch (CantGetBalanceRecordException e)
-                {
-                    throw new CantRegisterCreditException("Error to add debit transaction to wallet",e,"Error to execute balance transaction insert and update" , "");
-
-                }
-
-                bitcoinWalletBasicWalletDaoTransaction.executeTransaction(bitcoinwalletTable, debitRecord, bitcoinwalletBalanceTable, balanceRecord);
-
-            } catch (CantExcecuteBitconTransaction cantInsertRecordException) {
-
-                throw new CantRegisterCreditException("Error to add debit transaction to wallet",cantInsertRecordException,"Error to execute balance transaction insert and update" , "");
-
-
-            }
-        }
-
-
-
     }
-
-
 
     public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException {
         // create the database objects
@@ -516,66 +233,113 @@ public class BitcoinWalletBasicWalletDao {
 
     }
 
-
-    private long getTotalTransactions(BalanceType balanceType,TransactionType transactionType ) throws CantRegisterDebitDebitException {
-
-
-        long totalTransactiones = 0;
-
-        // create the database objects
-        DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
-
-        //sum all debit record and sum all credit record, calculate book balance and update total balances table and runningBookBalance field
-
-        // We set the filter to get the Send Transactions
-        bitcoinwalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-
-        // We set the filter to get the Send Transactions for balance type
-        bitcoinwalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-
-
-        // now we apply the filter
-        try {
-            bitcoinwalletTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-            throw new CantRegisterDebitDebitException("Error to add debit wallet transacction", cantLoadTableToMemory, "Error load wallet table to get debit records", "");
-
-        }
-
-        // and finally we calculate the balance
-        for (DatabaseTableRecord record : bitcoinwalletTable.getRecords()) {
-            totalTransactiones += record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
-        }
-
-        return totalTransactiones;
+    /**
+     * We use this method to check if the given transaction is already in the table, we do a query to the table with the specifics of the record
+     * and then check if it's not empty
+     * @param transactionId
+     * @param transactionType
+     * @param balanceType
+     * @return
+     * @throws CantLoadTableToMemoryException
+     */
+    private boolean isTransactionInTable(final UUID transactionId, final TransactionType transactionType, final BalanceType balanceType) throws CantLoadTableToMemoryException {
+        DatabaseTable bitCoinWlletTable = getBitcoinWalletTable();
+        bitCoinWlletTable.setUUIDFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        bitCoinWlletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        bitCoinWlletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+        bitCoinWlletTable.loadToMemory();
+        return !bitCoinWlletTable.getRecords().isEmpty();
     }
 
+    private DatabaseTable getBitcoinWalletTable(){
+        return database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
+    }
 
-    private DatabaseTableRecord getBalancesRecord() throws CantGetBalanceRecordException
-    {
-        // create the database objects
-        DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
+    private long calculateAvailableRunningBalance(final long transactionAmount) throws CantGetBalanceRecordException{
+        return  getCurrentAvailableBalance() + transactionAmount;
+    }
 
+    private long calculateBookRunningBalance(final long transactionAmount) throws CantGetBalanceRecordException{
+        return  getCurrentBookBalance() + transactionAmount;
+    }
 
-        /**
-         *  I will load the information of table into a memory structure;
-         */
+    private long getCurrentBookBalance() throws CantGetBalanceRecordException{
+        return getCurrentBalance(BalanceType.BOOK);
+    }
 
+    private long getCurrentAvailableBalance() throws CantGetBalanceRecordException{
+        return getCurrentBalance(BalanceType.AVAILABLE);
+    }
 
+    private long getCurrentBalance(final BalanceType balanceType) throws CantGetBalanceRecordException {
+        if (balanceType == BalanceType.AVAILABLE)
+            return getBalancesRecord().getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
+        else
+            return getBalancesRecord().getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
+    }
+
+    private DatabaseTableRecord getBalancesRecord() throws CantGetBalanceRecordException{
         try {
+            DatabaseTable bitcoinwalletTable = getBalancesTable();
             bitcoinwalletTable.loadToMemory();
+            return bitcoinwalletTable.getRecords().get(0);
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
             throw new CantGetBalanceRecordException("Error to get balances record",cantLoadTableToMemory,"Can't load balance table" , "");
-
         }
-        return bitcoinwalletTable.getRecords().get(0);
-
-
     }
+
+    private DatabaseTable getBalancesTable(){
+        return database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
+    }
+
+    private void executeTransaction(final BitcoinWalletTransactionRecord transactionRecord, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance) throws CantExecuteBitconTransactionException {
+        try{
+            DatabaseTableRecord bitcoinWalletRecord = constructBitcoinWalletRecord(transactionRecord, balanceType, availableRunningBalance, bookRunningBalance);
+            DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance);
+
+            BitcoinWalletBasicWalletDaoTransaction bitcoinWalletBasicWalletDaoTransaction = new BitcoinWalletBasicWalletDaoTransaction(database);
+
+            bitcoinWalletBasicWalletDaoTransaction.executeTransaction(getBitcoinWalletTable(), bitcoinWalletRecord, getBalancesTable(), balanceRecord);
+        } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException exception){
+            throw new CantExecuteBitconTransactionException(CantExecuteBitconTransactionException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        }
+    }
+
+    /**
+     * This method constructs a Table Record using the data from the transactionRecord, the balance type and the runningBalances that have already been calculated
+     * @param transactionRecord
+     * @param balanceType
+     * @param availableRunningBalance
+     * @param bookRunningBalance
+     * @return
+     * @throws CantLoadTableToMemoryException
+     */
+    private DatabaseTableRecord constructBitcoinWalletRecord(final BitcoinWalletTransactionRecord transactionRecord, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance) throws CantLoadTableToMemoryException{
+        DatabaseTableRecord record = getBitcoinWalletEmptyRecord();
+        record.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
+        record.setUUIDValue(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionRecord.getIdTransaction());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionRecord.getType().getCode());
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, transactionRecord.getAmount());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, transactionRecord.getMemo());
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, transactionRecord.getTimestamp());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, transactionRecord.getTramsactionHash());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, transactionRecord.getAddressFrom().getAddress());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, transactionRecord.getAddressTo().getAddress());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
+        return record;
+    }
+
+    private DatabaseTableRecord getBitcoinWalletEmptyRecord() throws CantLoadTableToMemoryException{
+        return getBitcoinWalletTable().getEmptyRecord();
+    }
+
+    private DatabaseTableRecord constructBalanceRecord(final long availableRunningBalance, final long bookRunningBalance) throws CantGetBalanceRecordException{
+        DatabaseTableRecord record = getBalancesRecord();
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
+        return record;
+    }
+
 }

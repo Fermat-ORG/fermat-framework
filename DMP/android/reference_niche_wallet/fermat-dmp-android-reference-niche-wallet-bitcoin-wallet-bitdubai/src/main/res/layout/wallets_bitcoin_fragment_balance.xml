@@ -13,42 +13,52 @@
     android:gravity="center"
     android:id="@+id/swipeRefreshLayout">
 
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-        <TextView
-            android:id="@+id/txtViewTypeBalance"
+        android:textAlignment="center"
+        android:layout_gravity="center">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-            android:paddingTop="3dip"
-            android:paddingBottom="3dip"
-            android:textColor="#FF666666"
-            android:textSize="30sp"
-            android:text="available balance"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
             <TextView
-                android:id="@+id/txtViewBalance"
+                android:id="@+id/txtViewTypeBalance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingLeft="2dip"
-                android:paddingRight="2dip"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
                 android:paddingTop="3dip"
                 android:paddingBottom="3dip"
                 android:textColor="#FF666666"
-                android:textSize="45sp"
-                android:textStyle="bold"
-                android:text="mBTC     0"
+                android:textSize="30sp"
+                android:text="available balance"
                 />
+                <TextView
+                    android:id="@+id/txtViewBalance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="2dip"
+                    android:paddingRight="2dip"
+                    android:paddingTop="3dip"
+                    android:paddingBottom="3dip"
+                    android:textColor="#FF666666"
+                    android:textSize="45sp"
+                    android:textStyle="bold"
+                    android:text="mBTC     0"
+                    />
 
 
-    </LinearLayout>
-
+            </LinearLayout>
+    </FrameLayout>
+</ScrollView>
 
 </android.support.v4.widget.SwipeRefreshLayout>

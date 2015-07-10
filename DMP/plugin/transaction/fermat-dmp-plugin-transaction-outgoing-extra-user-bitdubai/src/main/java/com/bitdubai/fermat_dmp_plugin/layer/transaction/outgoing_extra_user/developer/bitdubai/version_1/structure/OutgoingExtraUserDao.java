@@ -156,6 +156,8 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
         UUID transactionId = UUID.randomUUID();
 
+        System.out.println("UUID ASSIGN: " + transactionId.toString());
+
         databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME,transactionId);
         databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, walletId);
 

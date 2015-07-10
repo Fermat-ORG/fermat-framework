@@ -26,7 +26,7 @@ public class EventsLauncher implements DealsWithEvents {
 
     public void sendEvents(EnumSet<Specialist> specialists) throws SpecialistNotRegisteredException {
         for(Specialist specialist : specialists) {
-
+// TODO WHEN THE SPECIALIST IS NOT FOUNDED I RAISE AN EXCEPTION BUT WHAT DO I DO WHIT THE REST OF SPECIALISTS?
             switch (specialist) {
                 case EXTRA_USER_SPECIALIST:
                     /**

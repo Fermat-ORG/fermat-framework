@@ -71,7 +71,7 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         try {
             database.openDatabase();
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction,BalanceType.AVILABLE);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction,BalanceType.AVAILABLE);
             database.closeDatabase();
         } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, e, "", "Check the cause");
@@ -86,7 +86,7 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         try {
             database.openDatabase();
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction,BalanceType.AVILABLE);
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction,BalanceType.AVAILABLE);
             database.closeDatabase();
         } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, e, "", "Check the cause");
