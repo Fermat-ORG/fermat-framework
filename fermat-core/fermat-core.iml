@@ -40,6 +40,8 @@
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-remote-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-plugin-actor-developer-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-plugin-identity-developer-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-plugin-module-developer-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-server-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-actor-extra-user-bitdubai" exported="" />
@@ -65,6 +67,7 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-community-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-resources-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-statistics-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-publisher-bitdubai" exported="" />
@@ -75,6 +78,10 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-factory-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-store-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-publisher-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" exported="" />

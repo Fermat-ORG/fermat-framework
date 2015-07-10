@@ -332,7 +332,7 @@ project(':fermat-dmp-plugin-middleware-wallet-publisher-bitdubai').projectDir = 
 include ':fermat-dmp-plugin-middleware-wallet-manager-bitdubai'
 project(':fermat-dmp-plugin-middleware-wallet-manager-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-manager-bitdubai')
 
-// Milestone 2 project netwrk svce:
+// Milestone 2 project network service:
 
 include ':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai'
 project(':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-statistics-bitdubai')
