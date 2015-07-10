@@ -299,7 +299,6 @@ public class SendFragment extends Fragment{
 
                     } else {
                         //load into text address
-                        showMessage(contantsString);
                         textResult.setText(contantsString);
                     }
                 } else {
