@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
@@ -30,6 +31,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.deve
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by eze on 2015.06.25..
@@ -93,17 +95,25 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
     public void start() {
 
         this.transactionProcessorAgent = new TransactionProcessorAgent();
-        this.transactionProcessorAgent.setErrorManager(this.errorManager);
-        this.transactionProcessorAgent.initialize(this.dao,this.bitcoinWalletManager,this.cryptoVaultManager);
+
+        this.transactionProcessorAgent.initialize(this.errorManager,this.dao,this.bitcoinWalletManager,this.cryptoVaultManager);
         this.agentThread = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
 
     }
 
+    public boolean isRunning(){
+        if(this.transactionProcessorAgent == null)
+            return false;
+
+        return this.transactionProcessorAgent.isRunning();
+    }
+
     @Override
     public void stop() {
 
-        this.agentThread.interrupt();
+        if(isRunning())
+            this.transactionProcessorAgent.stop();
 
     }
 
@@ -124,8 +134,9 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
 
 
 
-    private static class TransactionProcessorAgent implements DealsWithErrors, Runnable  {
+    private static class TransactionProcessorAgent implements  Runnable  {
 
+        private AtomicBoolean running = new AtomicBoolean(false);
         private ErrorManager errorManager;
         private BitcoinWalletManager bitcoinWalletManager;
         private CryptoVaultManager cryptoVaultManager;
@@ -134,13 +145,23 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
         private static final int SLEEP_TIME = 5000;
         private OutgoingExtraUserDao dao;
 
+
         /**
          * MonitorAgent interface implementation.
          */
-        private void initialize (OutgoingExtraUserDao dao, BitcoinWalletManager bitcoinWalletManager, CryptoVaultManager cryptoVaultManager) {
+        private void initialize (ErrorManager errorManager,OutgoingExtraUserDao dao, BitcoinWalletManager bitcoinWalletManager, CryptoVaultManager cryptoVaultManager) {
             this.dao = dao;
             this.bitcoinWalletManager = bitcoinWalletManager;
             this.cryptoVaultManager = cryptoVaultManager;
+            this.errorManager = errorManager;
+        }
+
+        public boolean isRunning(){
+            return running.get();
+        }
+
+        public void stop(){
+            running.set(false);
         }
 
         /**
@@ -151,10 +172,11 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
         @Override
         public void run() {
 
+            running.set(true);
             /**
              * Infinite loop.
              */
-            while (true) {
+            while (running.get()) {
 
                 /**
                  * Sleep for a while.
@@ -334,13 +356,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
 
         }
 
-        /*
-         * DealsWithErrors Interface method implementation
-         */
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
-        }
+
     }
 
 }
