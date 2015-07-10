@@ -99,8 +99,8 @@ public class ReceiveFragment extends Fragment {
     }
 
     public void onCreate(Bundle savedInstanceState) {
-        //setHasOptionsMenu(false);
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         try {
