@@ -482,7 +482,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * I will loop the array, If I get a false, then I return false.
          */
-        for (int x=0; x<size-1; x++){
+        for (int x=0; x<size; x++){
             if (!confirmaciones[x])
                 return false;
         }
