@@ -55,6 +55,13 @@ public class OutgoingExtraUserDeveloperDatabaseFactory {
         outgoingExtraUserTableColumns.add(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME);
         outgoingExtraUserTableColumns.add(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME);
         outgoingExtraUserTableColumns.add(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME);
+
+        outgoingExtraUserTableColumns.add(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME);
+        outgoingExtraUserTableColumns.add(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME);
+        outgoingExtraUserTableColumns.add(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
+        outgoingExtraUserTableColumns.add(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME);
+
+
         /**
          * outgoingExtraUser table
          */

@@ -55,13 +55,16 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
         if (actorsRegistry != null) {
             try {
                 actor = actorsRegistry.getActorAddressBookByCryptoAddress(cryptoAddress);
-                switch (actor.getActorType()) {
+                switch (actor.getDeliveredToActorType()) {
                     case DEVICE_USER:
                         return Specialist.DEVICE_USER_SPECIALIST;
                     case INTRA_USER:
                         return Specialist.INTRA_USER_SPECIALIST;
                     case EXTRA_USER:
                         return Specialist.EXTRA_USER_SPECIALIST;
+                    default:
+                        // Here we have a serious problem
+                        throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Actor: " + actor.getDeliveredToActorType() + " with code " + actor.getDeliveredToActorType().getCode(),"Actor not considered in switch statement");
                 }
 
             } catch (CantGetActorAddressBookException|ActorAddressBookNotFoundException cantGetActorAddressBookException) {
@@ -71,9 +74,6 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
             }
         }
 
-
-        // Here we have a serious problem
-        throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Actor: " + actor.getActorType() + " with code " + actor.getActorType().getCode(),"Actor not considered in switch statement");
-
+        throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Registry is null","");
     }
 }

@@ -21,8 +21,6 @@ public interface ActorAddressBookRegistry {
 
     ActorAddressBookRecord getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBookException, ActorAddressBookNotFoundException;
 
-    List<ActorAddressBookRecord> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBookException, ActorAddressBookNotFoundException;
-
-    void registerActorAddressBook(UUID actorId, Actors actorType, CryptoAddress cryptoAddress) throws CantRegisterActorAddressBookException;
+    void registerActorAddressBook(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, CryptoAddress cryptoAddress) throws CantRegisterActorAddressBookException;
 
 }

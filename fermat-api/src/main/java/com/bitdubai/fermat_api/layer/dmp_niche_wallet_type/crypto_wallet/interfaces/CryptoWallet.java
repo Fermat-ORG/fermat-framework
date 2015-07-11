@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
@@ -47,18 +48,18 @@ public interface CryptoWallet {
     /**
      * Transactions Fragment methods
      */
-    List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException;
+    List<CryptoWalletTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException;
 
     /**
      * Receive methods
      */
-    CryptoAddress requestAddress(String actorName, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
+    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
 
-    CryptoAddress requestAddress(UUID actorId, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
+    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException;
 
+    /**
+     * Send money methods
+     */
+    void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
 
-        /**
-         * Send money methods
-         */
-    void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID) throws CantSendCryptoException, InsufficientFundsException;
 }
