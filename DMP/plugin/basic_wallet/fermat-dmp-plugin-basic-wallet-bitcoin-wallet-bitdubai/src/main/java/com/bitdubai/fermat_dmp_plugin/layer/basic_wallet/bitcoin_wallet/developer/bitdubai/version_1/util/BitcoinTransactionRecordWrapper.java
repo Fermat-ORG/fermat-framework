@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.06.25..
  */
-public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord {
+public class BitcoinTransactionRecordWrapper implements BitcoinWalletTransactionRecord {
 
     private UUID transactionId;
 

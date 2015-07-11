@@ -201,6 +201,7 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return ExtraUserUserAddonRoot.newLoggingLevel.get(correctedClass[0]);
+
         } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
