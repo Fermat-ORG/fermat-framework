@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
@@ -46,7 +47,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
 
     private final String WALLET_IDS_FILE_NAME = "walletsIds";
 
-    Map<UUID, UUID> walletIds =  new HashMap<>();
+    private Map<UUID, UUID> walletIds =  new HashMap<>();
 
     private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
 
@@ -111,9 +112,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
         }
     }
 
-    /**
-     * BitcoinWalletWallet member variables.
-     */
 
     /* At the moment of creation the plug-in root gives us the walletId
      * the external modules use ti identify this wallet. We will create
@@ -150,7 +148,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
             database.closeDatabase();
         }
         catch (CantCreateDatabaseException cantCreateDatabaseException){
-
             /**
              * The database cannot be created. I can not handle this situation.
              */
@@ -249,16 +246,12 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
 
     }
 
-
-
-
-
     @Override
-    public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException {
+    public List<BitcoinWalletTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
         try{
             database.openDatabase();
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            List<BitcoinWalletTransactionRecord> transactionRecords = bitcoinWalletBasicWalletDao.getTransactions(max, offset);
+            List<BitcoinWalletTransaction> transactionRecords = bitcoinWalletBasicWalletDao.getTransactions(max, offset);
             database.closeDatabase();
             return transactionRecords;
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception){

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.excepti
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
@@ -62,7 +63,7 @@ public class TransactionsFragment extends Fragment {
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
 
-    List<BitcoinWalletTransactionRecord> lstTransactions = new ArrayList<BitcoinWalletTransactionRecord>();
+    List<CryptoWalletTransaction> lstTransactions = new ArrayList<CryptoWalletTransaction>();
 
     ListView listViewTransactions;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -172,10 +173,10 @@ public class TransactionsFragment extends Fragment {
         return rootView;
     }
 
-    private List<BitcoinWalletTransactionRecord> showTransactionListSelected(List<BitcoinWalletTransactionRecord> lstTransactions, BalanceType balanceType) {
-        List<BitcoinWalletTransactionRecord> lstToShow = new ArrayList<BitcoinWalletTransactionRecord>();
-        for (BitcoinWalletTransactionRecord t : lstTransactions) {
-            if (t.getBalanceType()==(balanceType)) {
+    private List<CryptoWalletTransaction> showTransactionListSelected(List<CryptoWalletTransaction> lstTransactions, BalanceType balanceType) {
+        List<CryptoWalletTransaction> lstToShow = new ArrayList<CryptoWalletTransaction>();
+        for (CryptoWalletTransaction t : lstTransactions) {
+            if (t.getBitcoinWalletTransaction().getBalanceType()==(balanceType)) {
                 lstToShow.add(t);
             }
         }
@@ -204,8 +205,8 @@ public class TransactionsFragment extends Fragment {
         if(lstTransactions.isEmpty())
             //Toast.makeText(getActivity(),"No transactions",Toast.LENGTH_SHORT).show();
             try {
-                List<BitcoinWalletTransactionRecord> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
-                for(BitcoinWalletTransactionRecord transaction: lst){
+                List<CryptoWalletTransaction> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                for(CryptoWalletTransaction transaction: lst){
                     lstTransactions.add(0, transaction);
                 }
 
@@ -220,8 +221,8 @@ public class TransactionsFragment extends Fragment {
             }
         else{
             try {
-                List<BitcoinWalletTransactionRecord> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
-                for(BitcoinWalletTransactionRecord transaction: lst){
+                List<CryptoWalletTransaction> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+                for(CryptoWalletTransaction transaction: lst){
                    lstTransactions.add(0, transaction);
                 }
 
@@ -253,9 +254,9 @@ public class TransactionsFragment extends Fragment {
 
     }
 
-    public class TransactionArrayAdapter extends ArrayAdapter<BitcoinWalletTransactionRecord> {
+    public class TransactionArrayAdapter extends ArrayAdapter<CryptoWalletTransaction> {
 
-        public TransactionArrayAdapter(Context context, List<BitcoinWalletTransactionRecord> lstTrasactions) {
+        public TransactionArrayAdapter(Context context, List<CryptoWalletTransaction> lstTrasactions) {
             super(context, 0, lstTrasactions);
         }
 
@@ -286,19 +287,22 @@ public class TransactionsFragment extends Fragment {
             TextView txtView_type = (TextView)listItemView.findViewById(R.id.textView_status);
 
             //Getting Transactions instance at the current position
-            BitcoinWalletTransactionRecord item = getItem(position);
+            CryptoWalletTransaction item = getItem(position);
 
 
 
-            txtView_contact_name.setText(item.getAddressFrom().toString());
-            txtView_amount.setText(Platform.formatBalanceString(item.getAmount()));
+            txtView_contact_name.setText(item.getInvolvedActorName());
+            if(Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.AVAILABLE){
+                txtView_amount.setText(Platform.formatBalanceString(item.getBitcoinWalletTransaction().getRunningAvailableBalance()));
+            }else if (Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.BOOK)
+                txtView_amount.setText(Platform.formatBalanceString(item.getBitcoinWalletTransaction().getRunningBookBalance()));
 
-            if(item.getMemo()!=null){
-                txtView_notes.setText(item.getMemo());
+            if(item.getBitcoinWalletTransaction().getMemo()!=null){
+                txtView_notes.setText(item.getBitcoinWalletTransaction().getMemo());
             }
 
-            txtView_when.setText(Platform.getTimeAgo(item.getTimestamp()));
-            txtView_type.setText(item.getType().toString());
+            txtView_when.setText(Platform.getTimeAgo(item.getBitcoinWalletTransaction().getTimestamp()));
+            txtView_type.setText(item.getBitcoinWalletTransaction().getTransactionType().toString());
 
             return listItemView;
 

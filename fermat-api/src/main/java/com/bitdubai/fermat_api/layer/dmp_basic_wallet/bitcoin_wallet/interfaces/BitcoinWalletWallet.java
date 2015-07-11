@@ -21,7 +21,7 @@ public interface BitcoinWalletWallet {
 
     public BitcoinWalletBalance getBookBalance();
 
-    public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException;
+    public List<BitcoinWalletTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException;
 
     public void setDescription(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException;
 }
