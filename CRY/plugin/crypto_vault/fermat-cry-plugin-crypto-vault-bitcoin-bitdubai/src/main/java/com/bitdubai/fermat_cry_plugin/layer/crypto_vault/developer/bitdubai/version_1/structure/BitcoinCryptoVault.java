@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
@@ -351,7 +352,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException
      */
 
-    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException {
+    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
@@ -363,7 +364,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * Already sent, this might be an error. I'm not going to send it again.
              */
-                throw new CouldNotSendMoneyException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
+                throw new CryptoTransactionAlreadySentException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
 
 
         } catch (CantExecuteQueryException e) {
@@ -416,6 +417,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * I'm good to go. I'm saving the transaction and comitting it.
              */
             db.persistNewTransaction(FermatTxId.toString(), txHash);
+
             /**
              * new Transaction, I will persist it as a Fermat transaction.
              */
@@ -434,18 +436,13 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         ListenableFuture<Transaction> future = peers.broadcastTransaction(request.tx);
 
         try {
-
-            future.get();
             /**
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
+            future.get();
 
 
-            /**
-             * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
-             * I will deal with any DB error later when I control the transactions.
-             */
 
         } catch (InterruptedException e) {
             /**
@@ -486,7 +483,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * I will loop the array, If I get a false, then I return false.
          */
-        for (int x=0; x<size-1; x++){
+        for (int x=0; x<size; x++){
             if (!confirmaciones[x])
                 return false;
         }
