@@ -15,7 +15,7 @@ public interface User {
 
     public void setId(UUID id);
     
-    public String getName(String name);
+    public String getName();
     
     public UUID getId();
     

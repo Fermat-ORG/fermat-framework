@@ -48,7 +48,7 @@ public interface CryptoWallet {
     /**
      * Transactions Fragment methods
      */
-    List<BitcoinWalletTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException;
+    List<CryptoWalletTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException;
 
     /**
      * Receive methods
