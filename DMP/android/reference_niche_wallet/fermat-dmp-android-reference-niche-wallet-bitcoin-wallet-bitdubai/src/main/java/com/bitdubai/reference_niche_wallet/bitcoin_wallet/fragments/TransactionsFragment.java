@@ -62,7 +62,7 @@ public class TransactionsFragment extends Fragment {
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
 
-    List<Transactions> lstTransactions = new ArrayList<Transactions>();
+    List<BitcoinWalletTransactionRecord> lstTransactions = new ArrayList<BitcoinWalletTransactionRecord>();
 
     ListView listViewTransactions;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -101,7 +101,6 @@ public class TransactionsFragment extends Fragment {
             showMessage("CantGetCryptoWalletException- " + e.getMessage());
 
         }
-        refreshTransactionsContent();
     }
 
 
@@ -113,21 +112,39 @@ public class TransactionsFragment extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 
 
-        // Create the adapter to convert the array to views
-        transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(), showTransactionListSelected(lstTransactions, Platform.TYPE_BALANCE_TYPE_SELECTED));
+
         //adapter.
         // Set the emptyView to the ListView
 
 
-        TextView textViewEmptyListView = (TextView) rootView.findViewById(R.id.emptyElement);
-        refreshTransactionsContent();
-        textViewEmptyListView.setTypeface(tf);
-        listViewTransactions.setEmptyView(textViewEmptyListView);
+        /*TextView textViewEmptyListView = (TextView) rootView.findViewById(R.id.emptyElement);
+
+
+        if(lstTransactions.isEmpty()){
+            textViewEmptyListView.setTypeface(tf);
+            listViewTransactions.setEmptyView(textViewEmptyListView);
+        }*/
+
+
+
+
+
+        // Create the adapter to convert the array to views
+        try {
+            lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+        } catch (CantGetTransactionsException e) {
+            e.printStackTrace();
+        }
+
+        BalanceType balanceType = Platform.TYPE_BALANCE_TYPE_SELECTED;
+        lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
+
+        transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(),lstTransactions); //showTransactionListSelected(lstTransactions, Platform.TYPE_BALANCE_TYPE_SELECTED));
+
+        //loadNewTransactions();
 
         // Assign adapter to ListView
         listViewTransactions.setAdapter(transactionArrayAdapter);
-
-
         //swipeRefreshLayout.setColorSchemeColors(android.R.color);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -155,10 +172,10 @@ public class TransactionsFragment extends Fragment {
         return rootView;
     }
 
-    private List<Transactions> showTransactionListSelected(List<Transactions> lstTransactions, BalanceType balanceType) {
-        List<Transactions> lstToShow = new ArrayList<Transactions>();
-        for (Transactions t : lstTransactions) {
-            if (t.balanceType == balanceType) {
+    private List<BitcoinWalletTransactionRecord> showTransactionListSelected(List<BitcoinWalletTransactionRecord> lstTransactions, BalanceType balanceType) {
+        List<BitcoinWalletTransactionRecord> lstToShow = new ArrayList<BitcoinWalletTransactionRecord>();
+        for (BitcoinWalletTransactionRecord t : lstTransactions) {
+            if (t.getBalanceType()==(balanceType)) {
                 lstToShow.add(t);
             }
         }
@@ -189,7 +206,7 @@ public class TransactionsFragment extends Fragment {
             try {
                 List<BitcoinWalletTransactionRecord> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
                 for(BitcoinWalletTransactionRecord transaction: lst){
-                    lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), transaction.getTimestamp(), transaction.getAmount(), transaction.getMemo(), transaction.getType(),transaction.getBalanceType()));
+                    lstTransactions.add(0, transaction);
                 }
 
             } catch (CantGetTransactionsException e)
@@ -205,7 +222,7 @@ public class TransactionsFragment extends Fragment {
             try {
                 List<BitcoinWalletTransactionRecord> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
                 for(BitcoinWalletTransactionRecord transaction: lst){
-                   lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), transaction.getTimestamp(),transaction.getAmount(), transaction.getMemo(), transaction.getType(),transaction.getBalanceType()));
+                   lstTransactions.add(0, transaction);
                 }
 
             } catch (CantGetTransactionsException e)
@@ -220,7 +237,7 @@ public class TransactionsFragment extends Fragment {
 
             }
         }
-        pointerOffset=lstTransactions.size();
+        //pointerOffset=lstTransactions.size();
 
         showTransactionListSelected(lstTransactions,Platform.TYPE_BALANCE_TYPE_SELECTED);
 
@@ -236,9 +253,9 @@ public class TransactionsFragment extends Fragment {
 
     }
 
-    public class TransactionArrayAdapter extends ArrayAdapter<Transactions> {
+    public class TransactionArrayAdapter extends ArrayAdapter<BitcoinWalletTransactionRecord> {
 
-        public TransactionArrayAdapter(Context context, List<Transactions> lstTrasactions) {
+        public TransactionArrayAdapter(Context context, List<BitcoinWalletTransactionRecord> lstTrasactions) {
             super(context, 0, lstTrasactions);
         }
 
@@ -262,104 +279,32 @@ public class TransactionsFragment extends Fragment {
             }
 
             //Get TextViews
-            TextView contact_name = (TextView)listItemView.findViewById(R.id.textView_contact_name);
-            TextView amount = (TextView)listItemView.findViewById(R.id.textView_amount);
-            TextView notes = (TextView)listItemView.findViewById(R.id.textView_notes);
-            TextView when = (TextView)listItemView.findViewById(R.id.textView_time);
-            TextView type = (TextView)listItemView.findViewById(R.id.textView_status);
+            TextView txtView_contact_name = (TextView)listItemView.findViewById(R.id.textView_contact_name);
+            TextView txtView_amount = (TextView)listItemView.findViewById(R.id.textView_amount);
+            TextView txtView_notes = (TextView)listItemView.findViewById(R.id.textView_notes);
+            TextView txtView_when = (TextView)listItemView.findViewById(R.id.textView_time);
+            TextView txtView_type = (TextView)listItemView.findViewById(R.id.textView_status);
 
             //Getting Transactions instance at the current position
-            Transactions item = getItem(position);
+            BitcoinWalletTransactionRecord item = getItem(position);
 
 
 
-            contact_name.setText(item.getName());
-            amount.setText(Platform.formatBalanceString(item.getAmount()));
+            txtView_contact_name.setText(item.getAddressFrom().toString());
+            txtView_amount.setText(Platform.formatBalanceString(item.getAmount()));
 
             if(item.getMemo()!=null){
-                notes.setText(item.getMemo());
+                txtView_notes.setText(item.getMemo());
             }
 
-            when.setText(Platform.getTimeAgo(item.getDate()));
-            type.setText(item.getType());
+            txtView_when.setText(Platform.getTimeAgo(item.getTimestamp()));
+            txtView_type.setText(item.getType().toString());
 
             return listItemView;
 
         }
     }
 
-
-
-
-    public class Transactions{
-
-        private String name;
-        private long date;
-        private long amount;
-        private String memo;
-        private String type;
-        private BalanceType balanceType;
-        private TransactionType transactionType;
-
-        public Transactions(String name,long date,long amount, String memo,TransactionType transactionType,BalanceType balanceType){
-            this.name = name;
-            this.date = date;
-            this.amount=amount;
-            this.memo=memo;
-            this.transactionType=transactionType;
-            this.balanceType=balanceType;
-        }
-
-        public void setname(String name){
-            this.name = name;
-        }
-
-        public void setDate(long date){
-            this.date = date;
-        }
-
-        public void setAmount(long amount){
-            this.amount=amount;
-        }
-
-        public void setMemo(String memo){
-            this.memo=memo;
-        }
-
-        public void setType(String type){
-            this.type=type;
-        }
-
-        public String getName(){
-            return this.name;}
-        public long getDate(){return this.date;}
-        public long getAmount() {
-            return this.amount;
-        }
-
-        public String getMemo() {
-            return this.memo;
-        }
-
-        public String getType() {
-            return this.type;
-        }
-        public BalanceType getBalanceType() {
-            return balanceType;
-        }
-
-        public void setBalanceType(BalanceType balanceType) {
-            this.balanceType = balanceType;
-        }
-        public TransactionType getTransactionType() {
-            return transactionType;
-        }
-
-        public void setTransactionType(TransactionType transactionType) {
-            this.transactionType = transactionType;
-        }
-
-    }
 
     private void showMessage(String text){
         AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
