@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.excepti
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
@@ -170,10 +171,10 @@ public class TransactionsFragment extends Fragment {
         if(lstTransactions.isEmpty())
             //Toast.makeText(getActivity(),"No transactions",Toast.LENGTH_SHORT).show();
             try {
-                List<BitcoinWalletTransaction> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
-                for(BitcoinWalletTransaction transaction: lst){
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                for(CryptoWalletTransaction cwt: lst){
 
-                    lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getTransactionType().toString()));
+                    lstTransactions.add(0, new Transactions(cwt.getBitcoinWalletTransaction().getAddressFrom().getAddress().toString(), String.valueOf(cwt.getBitcoinWalletTransaction().getTimestamp()), String.valueOf(cwt.getBitcoinWalletTransaction().getAmount()), cwt.getBitcoinWalletTransaction().getMemo(), cwt.getBitcoinWalletTransaction().getTransactionType().toString()));
                 }
 
             } catch (CantGetTransactionsException e)
@@ -187,9 +188,9 @@ public class TransactionsFragment extends Fragment {
             }
         else{
             try {
-                List<BitcoinWalletTransaction> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
-                for(BitcoinWalletTransaction transaction: lst){
-                   lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getTransactionType().toString()));
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+                for(CryptoWalletTransaction cwt: lst){
+                   lstTransactions.add(0, new Transactions(cwt.getBitcoinWalletTransaction().getAddressFrom().getAddress().toString(), String.valueOf(cwt.getBitcoinWalletTransaction().getTimestamp()), String.valueOf(cwt.getBitcoinWalletTransaction().getAmount()), cwt.getBitcoinWalletTransaction().getMemo(), cwt.getBitcoinWalletTransaction().getTransactionType().toString()));
                 }
 
             } catch (CantGetTransactionsException e)
