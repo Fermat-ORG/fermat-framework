@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.dev
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.*;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -13,6 +15,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.excepti
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWithOutgoingExtraUser;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantGetTransactionManagerException;
@@ -46,6 +49,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.deve
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -177,11 +181,11 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
        return  walletContactRecord;
     }
 
-    private UUID createAndRegisterActor(String actorName, Actors actorType, CryptoAddress cryptoAddress) throws CantCreateOrRegisterActorException {
-        UUID actorId = createActor(actorName, actorType);
+    private UUID createAndRegisterActor(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, CryptoAddress cryptoAddress) throws CantCreateOrRegisterActorException {
+        UUID deliveredToActorId = createActor(deliveredToActorName, deliveredToActorType);
         try {
-            actorAddressBookRegistry.registerActorAddressBook(actorId, actorType, cryptoAddress);
-            return actorId;
+            actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, cryptoAddress);
+            return deliveredToActorId;
         } catch (CantRegisterActorAddressBookException e) {
             throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
         }
@@ -218,7 +222,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public CryptoAddress requestAddress(String actorName, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException {
+    public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
             try {
@@ -227,7 +231,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
             }
-            createAndRegisterActor(actorName, actorType, deliveredCryptoAddress);
+            createAndRegisterActor(deliveredByActorId, deliveredByActorType, deliveredToActorName, deliveredToActorType, deliveredCryptoAddress);
             return deliveredCryptoAddress;
         } catch (CantCreateOrRegisterActorException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -236,7 +240,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public CryptoAddress requestAddress(UUID actorId, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException {
+    public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, PlatformWalletType platformWalletType, UUID walletId) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
             try {
@@ -246,7 +250,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
                 throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
             }
             try {
-                actorAddressBookRegistry.registerActorAddressBook(actorId, actorType, deliveredCryptoAddress);
+                actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, deliveredCryptoAddress);
             } catch (CantRegisterActorAddressBookException e) {
                 throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
             }
@@ -320,20 +324,56 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException {
+    public List<CryptoWalletTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
-            return bitcoinWalletWallet.getTransactions(max, offset);
+            List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
+            List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.getTransactions(max, offset);
+
+            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+                cryptoWalletTransactionList.add(enrichTransaction(bwt));
+            }
+
+            return cryptoWalletTransactionList;
         } catch (CantLoadWalletException|com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e);
         }
     }
 
+    private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction) {
+        String involvedActorName = null;
+        switch(bitcoinWalletTransaction.getTransactionType()) {
+            case CREDIT:
+                involvedActorName = getActorNameByActorIdAndType(bitcoinWalletTransaction.getActorFrom(), bitcoinWalletTransaction.getActorFromType());
+                break;
+            case DEBIT:
+                try {
+                    WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorId(bitcoinWalletTransaction.getActorTo());
+                    involvedActorName = walletContactRecord.getActorName();
+                } catch(Exception e) {
+                    involvedActorName = getActorNameByActorIdAndType(bitcoinWalletTransaction.getActorTo(), bitcoinWalletTransaction.getActorToType());
+                }
+                break;
+        }
+        return new CryptoWalletNicheWalletTypeTransaction(bitcoinWalletTransaction, involvedActorName);
+    }
+
+    private String getActorNameByActorIdAndType(UUID actorId, Actors actorType) {
+        switch (actorType) {
+            case EXTRA_USER:
+                User user = extraUserManager.getUser(actorId);
+                return user.getName();
+            default:
+                return null;
+        }
+        // TODO ADD cant get extrauser EXCEPTION IN PLUGIN EXTRA USER
+    }
+
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID) throws CantSendCryptoException, InsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException {
         try {
-            outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount, notes);
+            outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
         } catch (com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE, e);
