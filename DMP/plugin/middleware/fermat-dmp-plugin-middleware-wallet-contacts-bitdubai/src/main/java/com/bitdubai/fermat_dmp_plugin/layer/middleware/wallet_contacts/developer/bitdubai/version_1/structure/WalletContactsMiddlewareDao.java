@@ -382,25 +382,25 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
     /**
      * Method that find a WalletContactRecord in database by contact id.
      *
-     *  @param contactId UUID contact id
+     *  @param actorId UUID actor id
      * */
-    public WalletContactRecord findById(UUID contactId) throws CantGetWalletContactException {
+    public WalletContactRecord findByActorId(UUID actorId) throws CantGetWalletContactException {
 
         WalletContactRecord walletContactRecord;
 
-        if (contactId == null) {
-            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, null, "", "The id is required, can not be null");
+        if (actorId == null) {
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, null, "", "The actorId is required, can not be null");
 
         }
 
         try {
             DatabaseTable walletContactAddressBookTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
-            walletContactAddressBookTable.setUUIDFilter(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME, contactId, DatabaseFilterType.EQUAL);
+            walletContactAddressBookTable.setUUIDFilter(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME, actorId, DatabaseFilterType.EQUAL);
             walletContactAddressBookTable.loadToMemory();
             DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0);
 
+            UUID contactId = record.getUUIDValue(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME);
             UUID walletId = record.getUUIDValue(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME);
-            UUID actorId = record.getUUIDValue(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME);
             String actorName = record.getStringValue(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME);
             Actors actorType = Actors.getByCode(record.getStringValue(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME));
 

@@ -185,6 +185,12 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
         private void doTheMainTask() {
 
 
+            /*
+             * TODO: The first thing to do is to ask the crypto vault
+             *       the source address, transaction hash and then the
+             *       timestamp of the event ON_CRYPTO_NETWORK
+             */
+
             BitcoinWalletWallet bitcoinWalletWallet = null;
 
             /* TODO: Reemplazar por el que se lee de la transacción
@@ -272,25 +278,25 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
                         dao.cancelTransaction(transaction);
                     } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e2) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e2);
-                        return;
+                        continue;
                     }
                     // And we filally report the error
                     Exception inconsistentFundsException = new InconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent",e,"","");
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, inconsistentFundsException);
-                    return;
+                    continue;
 
                 } catch (InvalidSendToAddressException | CouldNotSendMoneyException e) {
                     try {
                         dao.cancelTransaction(transaction);
                     } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e2) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e2);
-                        return;
+                        continue;
                     }
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
+                    continue;
                 } catch (CantLoadTableToMemoryException | CantUpdateRecordException | InconsistentTableStateException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
+                    continue;
                 } catch (CryptoTransactionAlreadySentException e) {
                     /**
                      * TODO: Verify what to do when the transaction has already been sent.

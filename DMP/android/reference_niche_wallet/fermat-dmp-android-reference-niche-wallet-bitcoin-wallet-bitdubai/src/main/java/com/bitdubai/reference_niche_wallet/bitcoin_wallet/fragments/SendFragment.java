@@ -59,6 +59,8 @@ public class SendFragment extends Fragment{
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
+    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
+
     Typeface tf ;
 
 
@@ -237,15 +239,11 @@ public class SendFragment extends Fragment{
         if (validAddress != null) {
             EditText amount = (EditText) rootView.findViewById(R.id.amount);
             try {
-                cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-            } catch (CantCreateWalletContactException e) {
-                // TODO que hacer si no puedo crear el contacto? igual envio el dinero
-                //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
-            }
+                //TODO que pasa si no puedo crear el user?
+                WalletContactRecord walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
 
-            try {
-
-                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
+                // TODO harcoded deliveredbyactorid
+                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
 
                 //Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
             } catch (InsufficientFundsException e) {
@@ -254,6 +252,9 @@ public class SendFragment extends Fragment{
             } catch (CantSendCryptoException e) {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("Error send satoshis - " + e.getMessage());
+            } catch (CantCreateWalletContactException e) {
+                // TODO que hacer si no puedo crear el contacto? igual envio el dinero?
+                //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
