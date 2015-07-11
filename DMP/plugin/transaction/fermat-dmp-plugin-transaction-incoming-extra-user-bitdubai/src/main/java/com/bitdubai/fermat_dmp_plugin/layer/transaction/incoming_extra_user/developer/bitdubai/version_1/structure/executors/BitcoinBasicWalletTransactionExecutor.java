@@ -59,8 +59,7 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
 
     private void processOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException {
         try {
-            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
-            record.setIdTransaction(transaction.getTransactionID());
+            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.CREDIT);
             bitcoinWallet.getBookBalance().credit(record);
         } catch (CantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
@@ -69,8 +68,7 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
 
     private void processOnBlockChainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException{
         try {
-            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
-            record.setIdTransaction(transaction.getTransactionID());
+            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.CREDIT);
             bitcoinWallet.getAvailableBalance().credit(record);
         } catch (CantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
@@ -79,8 +77,7 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
 
     private void processReversedOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitDebitException{
         try {
-            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.DEBIT);
-            record.setIdTransaction(transaction.getTransactionID());
+            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
             bitcoinWallet.getBookBalance().debit(record);
         } catch (CantGenerateTransactionException e) {
             throw new CantRegisterDebitDebitException("I couldn't generate the transaction",e,"","");
@@ -89,8 +86,7 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
 
     private void processReversedOnBlockchainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitDebitException{
         try {
-            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.DEBIT);
-            record.setIdTransaction(transaction.getTransactionID());
+            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
             bitcoinWallet.getAvailableBalance().debit(record);
         } catch (CantGenerateTransactionException e) {
             throw new CantRegisterDebitDebitException("I couldn't generate the transaction",e,"","");
@@ -98,27 +94,35 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
     }
 
 
-    private BitcoinWalletTransactionRecord generateBitcoinTransaction(final CryptoTransaction cryptoTransaction, final TransactionType transactionType) throws CantGenerateTransactionException {
+    private BitcoinWalletTransactionRecord generateBitcoinTransaction(final Transaction<CryptoTransaction> transaction, final TransactionType transactionType) throws CantGenerateTransactionException {
 
         try {
+            CryptoTransaction cryptoTransaction = transaction.getInformation();
+
             ActorAddressBookRegistry actorAddressBookRegistry = this.actorAddressBookManager.getActorAddressBookRegistry();
             ActorAddressBookRecord actorAddressBookRecord = actorAddressBookRegistry.getActorAddressBookByCryptoAddress(cryptoTransaction.getAddressTo());
 
-            /*
-             * TODO: AGREGAR LOS 4 CAMPOS
-             */
 
-            long timestamp = System.currentTimeMillis() / 1000L;
-            BitcoinWalletTransactionRecord bitcoinWalletTransactionRecord = new TransactionWrapper();
-            bitcoinWalletTransactionRecord.setTramsactionHash(cryptoTransaction.getTransactionHash());
+            long timestamp = transaction.getTimestamp();
+            TransactionWrapper bitcoinWalletTransactionRecord = new TransactionWrapper();
+
+            bitcoinWalletTransactionRecord.setIdTransaction(transaction.getTransactionID());
+            bitcoinWalletTransactionRecord.setTransactionHash(cryptoTransaction.getTransactionHash());
             bitcoinWalletTransactionRecord.setAddressFrom(cryptoTransaction.getAddressFrom());
             bitcoinWalletTransactionRecord.setAddressTo(cryptoTransaction.getAddressTo());
             bitcoinWalletTransactionRecord.setAmount(cryptoTransaction.getCryptoAmount());
-            bitcoinWalletTransactionRecord.setType(transactionType);
             bitcoinWalletTransactionRecord.setTimestamp(timestamp);
             bitcoinWalletTransactionRecord.setMemo("No information");
 
+            bitcoinWalletTransactionRecord.setActorFromId(actorAddressBookRecord.getDeliveredToActorId());
+            bitcoinWalletTransactionRecord.setActorFromType(actorAddressBookRecord.getDeliveredToActorType());
+            bitcoinWalletTransactionRecord.setActorToId(actorAddressBookRecord.getDeliveredByActorId());
+            bitcoinWalletTransactionRecord.setActorToType(actorAddressBookRecord.getDeliveredByActorType());
+
+
+
             return bitcoinWalletTransactionRecord;
+
         } catch (CantGetActorAddressBookRegistryException e) {
             throw new CantGenerateTransactionException("I couldn't get actor address book registry",e,"","");
         } catch (CantGetActorAddressBookException e) {

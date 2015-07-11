@@ -184,6 +184,12 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
         private void doTheMainTask() {
 
 
+            /*
+             * TODO: The first thing to do is to ask the crypto vault
+             *       the source address, transaction hash and then the
+             *       timestamp of the event ON_CRYPTO_NETWORK
+             */
+
             BitcoinWalletWallet bitcoinWalletWallet = null;
 
             /* TODO: Reemplazar por el que se lee de la transacción

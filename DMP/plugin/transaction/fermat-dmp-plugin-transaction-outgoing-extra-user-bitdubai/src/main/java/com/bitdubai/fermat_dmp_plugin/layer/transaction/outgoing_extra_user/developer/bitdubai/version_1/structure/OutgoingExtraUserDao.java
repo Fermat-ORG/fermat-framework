@@ -260,23 +260,30 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
                 CryptoCurrency.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENY_COLUMN_NAME))
         );
         long amount = record.getLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME);
-        TransactionType type = TransactionType.DEBIT;
         TransactionState state = TransactionState.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME));
         long timestamp = record.getLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME);
         String memo = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME);
         CryptoStatus cryptoStatus = CryptoStatus.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME));
 
+        Actors actorFromType = Actors.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME));
+        Actors actorToType  = Actors.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME));
+        UUID actorFromId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME);
+        UUID actorToId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
+
         bitcoinTransaction.setWalletId(walletId);
         bitcoinTransaction.setIdTransaction(transactionId);
-        bitcoinTransaction.setTramsactionHash(transactionHash);
+        bitcoinTransaction.setTransactionHash(transactionHash);
         bitcoinTransaction.setAddressFrom(addressFrom);
         bitcoinTransaction.setAddressTo(addressTo);
         bitcoinTransaction.setAmount(amount);
-        bitcoinTransaction.setType(type);
         bitcoinTransaction.setState(state);
         bitcoinTransaction.setTimestamp(timestamp);
         bitcoinTransaction.setMemo(memo);
         bitcoinTransaction.setCryptoStatus(cryptoStatus);
+        bitcoinTransaction.setActorFromId(actorFromId);
+        bitcoinTransaction.setActorFromType(actorFromType);
+        bitcoinTransaction.setActorToId(actorToId);
+        bitcoinTransaction.setActorToType(actorToType);
 
         return bitcoinTransaction;
     }
