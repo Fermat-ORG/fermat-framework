@@ -30,5 +30,6 @@
     <orderEntry type="module" module-name="fermat-api" exported="" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.11" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" name="fermat-dmp-plugin-middleware-wallet-publisher-bitdubai.fermat-dmp-plugin-middleware-wallet-publisher-bitdubai-1.0" level="project" />
   </component>
 </module>
