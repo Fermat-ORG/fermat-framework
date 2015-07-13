@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
@@ -51,6 +52,8 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     */
     private BitcoinWalletManager bitcoinWalletManager;
 
+    private ActorAddressBookManager actorAddressBookManager;
+
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -76,8 +79,9 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     /**
      * The Specialized Constructor
      */
-    public IncomingExtraUserRelayAgent(final BitcoinWalletManager bitcoinWalletManager, final ErrorManager errorManager, final IncomingExtraUserRegistry registry, final WalletAddressBookManager walletAddressBookManager){
+    public IncomingExtraUserRelayAgent(final BitcoinWalletManager bitcoinWalletManager, final ActorAddressBookManager actorAddressBookManager,final ErrorManager errorManager, final IncomingExtraUserRegistry registry, final WalletAddressBookManager walletAddressBookManager){
         this.bitcoinWalletManager = bitcoinWalletManager;
+        this.actorAddressBookManager = actorAddressBookManager;
         this.errorManager = errorManager;
         this.registry = registry;
         this.walletAddressBookManager = walletAddressBookManager;
@@ -123,7 +127,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     @Override
     public void start() throws CantStartAgentException {
 
-        relayAgent = new RelayAgent(bitcoinWalletManager, walletAddressBookManager, errorManager, registry);
+        relayAgent = new RelayAgent(bitcoinWalletManager,actorAddressBookManager ,walletAddressBookManager, errorManager, registry);
         try {
             relayAgent.initialize();
             agentThread = new Thread(this.relayAgent);
@@ -158,12 +162,14 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
         private final WalletAddressBookManager walletAddressBookManager;
         private final ErrorManager errorManager;
         private final IncomingExtraUserRegistry registry;
+        private final ActorAddressBookManager actorAddressBookManager;
         private IncomingExtraUserTransactionHandler transactionHandler;
 
         private static final int SLEEP_TIME = 5000;
 
-        public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final WalletAddressBookManager walletAddressBookManager, final ErrorManager errorManager, final IncomingExtraUserRegistry registry){
+        public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final ActorAddressBookManager actorAddressBookManager,final WalletAddressBookManager walletAddressBookManager, final ErrorManager errorManager, final IncomingExtraUserRegistry registry){
             this.bitcoinWalletManager = bitcoinWalletManager;
+            this.actorAddressBookManager = actorAddressBookManager;
             this.walletAddressBookManager = walletAddressBookManager;
             this.errorManager = errorManager;
             this.registry = registry;
@@ -183,6 +189,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
         private void initialize () {
             transactionHandler = new IncomingExtraUserTransactionHandler();
             transactionHandler.setBitcoinWalletManager(this.bitcoinWalletManager);
+            transactionHandler.setActorAddressBookManager(this.actorAddressBookManager);
             transactionHandler.setWalletAddressBookManager(this.walletAddressBookManager);
         }
 

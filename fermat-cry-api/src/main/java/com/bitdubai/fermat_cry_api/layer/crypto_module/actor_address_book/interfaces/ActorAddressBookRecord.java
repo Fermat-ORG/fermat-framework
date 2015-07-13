@@ -10,9 +10,13 @@ import java.util.UUID;
  */
 public interface ActorAddressBookRecord {
 
-    UUID getActorId();
+    UUID getDeliveredByActorId();
 
-    Actors getActorType();
+    Actors getDeliveredByActorType();
+
+    UUID getDeliveredToActorId();
+
+    Actors getDeliveredToActorType();
 
     CryptoAddress getCryptoAddress();
 }

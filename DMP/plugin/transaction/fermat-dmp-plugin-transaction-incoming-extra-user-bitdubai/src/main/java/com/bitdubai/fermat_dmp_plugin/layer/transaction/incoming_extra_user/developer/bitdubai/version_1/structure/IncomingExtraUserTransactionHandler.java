@@ -9,6 +9,8 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.WalletAddressBookNotFoundException;
@@ -25,13 +27,17 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.06.22..
  */
-public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWallet, DealsWithWalletAddressBook {
+public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWallet, DealsWithActorAddressBook, DealsWithWalletAddressBook {
 
     /*
      * DealsWithBitcoinWallet Interface member variables
     */
     private BitcoinWalletManager bitcoinWalletManager;
 
+    /*
+     * DealsWithActorAddressBook Interface member variables
+     */
+    private ActorAddressBookManager actorAddressBookManager;
     /*
     * DealsWithWalletAddressBook member variables
     */
@@ -43,6 +49,14 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
     @Override
     public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
         this.bitcoinWalletManager = bitcoinWalletManager;
+    }
+
+    /*
+     * DealsWithActorAddressBook Interface method implementation
+     */
+    @Override
+    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBookManager) {
+        this.actorAddressBookManager = actorAddressBookManager;
     }
 
     /*
@@ -61,7 +75,7 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
             PlatformWalletType platformWalletType = walletAddressBookRecord.getWalletType();
             UUID walletID = walletAddressBookRecord.getWalletId();
 
-            TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager);
+            TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager,actorAddressBookManager);
             TransactionExecutor executor = executorFactory.newTransactionExecutor(platformWalletType, walletID);
 
             executor.executeTransaction(transaction);
@@ -71,5 +85,6 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
         }
 
     }
+
 
 }
