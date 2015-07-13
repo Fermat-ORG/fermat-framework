@@ -166,10 +166,10 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
     }
 
     @Override
-    public WalletContactRecord getWalletContactByContactId(UUID contactId) throws CantGetWalletContactException {
+    public WalletContactRecord getWalletContactByActorId(UUID actorId) throws CantGetWalletContactException {
         WalletContactRecord walletContactRecord;
         try {
-            walletContactRecord = walletContactsMiddlewareDao.findById(contactId);
+            walletContactRecord = walletContactsMiddlewareDao.findByActorId(actorId);
             return walletContactRecord;
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

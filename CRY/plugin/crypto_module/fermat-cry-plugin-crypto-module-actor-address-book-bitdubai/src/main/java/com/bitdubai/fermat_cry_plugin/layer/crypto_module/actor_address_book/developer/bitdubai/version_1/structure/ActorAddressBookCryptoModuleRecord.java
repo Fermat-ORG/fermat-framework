@@ -18,32 +18,46 @@ public class ActorAddressBookCryptoModuleRecord implements ActorAddressBookRecor
     /**
      * ActorAddressBookRecord Interface member variables.
      */
-    private UUID actorId ;
-    private Actors actorType;
+    private UUID deliveredByActorId ;
+    private Actors deliveredByActorType;
+    private UUID deliveredToActorId ;
+    private Actors deliveredToActorType;
     private CryptoAddress cryptoAddress;
 
 
     /**
      * Constructor.
      */
-    public ActorAddressBookCryptoModuleRecord(UUID actorId, Actors actorType, CryptoAddress cryptoAddress){
+    public ActorAddressBookCryptoModuleRecord(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, CryptoAddress cryptoAddress){
         /**
          * Set actor settings.
          */
-        this.actorId = actorId;
-        this.actorType = actorType;
+        this.deliveredByActorId = deliveredByActorId;
+        this.deliveredByActorType = deliveredByActorType;
+        this.deliveredToActorId = deliveredToActorId;
+        this.deliveredToActorType = deliveredToActorType;
         this.cryptoAddress = cryptoAddress;
     }
 
 
     @Override
-    public UUID getActorId(){
-        return this.actorId;
+    public UUID getDeliveredByActorId() {
+        return deliveredByActorId;
     }
 
     @Override
-    public Actors getActorType(){
-        return this.actorType;
+    public Actors getDeliveredByActorType() {
+        return deliveredByActorType;
+    }
+
+    @Override
+    public UUID getDeliveredToActorId() {
+        return deliveredToActorId;
+    }
+
+    @Override
+    public Actors getDeliveredToActorType() {
+        return deliveredToActorType;
     }
 
     @Override
