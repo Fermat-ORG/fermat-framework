@@ -398,6 +398,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
         try {
             vault.completeTx(request);
+            /**
+             * I define the lock time.
+             */
+            request.tx.setLockTime(System.currentTimeMillis() / 1000L);
+
         } catch (InsufficientMoneyException e) {
             /**
              * this shouldn't happen because the money is checked by previois modules, but if it does I will throw it so that the user can handle this.
@@ -650,6 +655,13 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
 
+        long timestamp =tx.getLockTime();
+        if (timestamp == 0)
+        /**
+         * If the transaction doesn't have a locktime, I will return the current timestamp
+         */
+            return System.currentTimeMillis() / 1000L;
+        else
         /**
          * I get the current timestamp
          */
