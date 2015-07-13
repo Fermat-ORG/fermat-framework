@@ -1,21 +1,27 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionManager;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantSendFundsException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -80,6 +86,9 @@ public class sendTest {
     private DatabaseTable mockTable;
 
 
+    @Mock
+    private DatabaseTableRecord mockRecord;
+
     private CryptoAddress cryptoAddress;
     private UUID testId;
     private UUID testwalletID;
@@ -101,13 +110,14 @@ public class sendTest {
     public void setUpGeneralMockitoRules() throws Exception{
 
         when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
+        when(mockPluginDatabaseSystem.openDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
         when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWalletWallet);
         when(mockBitcoinWalletWallet.getAvailableBalance()).thenReturn(mockBitcoinWalletBalance);
 
         when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
-
+        when(mockTable.getEmptyRecord()).thenReturn(mockRecord);
     }
 
     @Before
@@ -116,10 +126,28 @@ public class sendTest {
         setUpGeneralMockitoRules();
     }
 
-    //TODO:I need execute before OutgoingExtraUserDao.initialize because database object is null
+
 
     @Test
-    public void Send_ThrowsInsufficientFundsException() throws Exception {
+    public void Send_Succesfully() throws Exception {
+
+        testTransactionManager = new OutgoingExtraUserTransactionManager();
+        testTransactionManager.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        testTransactionManager.setPluginId(testId);
+        testTransactionManager.setErrorManager(mockErrorManager);
+
+        testTransactionManager.setBitcoinWalletManager(mockBitcoinWalletManager);
+        testTransactionManager.setCryptoVaultManager(mockCryptoVaultManager);
+
+           catchException(testTransactionManager).send(testwalletID, cryptoAddress, 0, "test", UUID.randomUUID(), Actors.EXTRA_USER, UUID.randomUUID(), Actors.EXTRA_USER);
+
+        assertThat(caughtException()).isNull();
+
+
+    }
+
+    @Test
+    public void Send_InsufficientFunds_TrowsInsufficientFundsException() throws Exception {
         testTransactionManager = new OutgoingExtraUserTransactionManager();
         testTransactionManager.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         testTransactionManager.setPluginId(testId);
@@ -130,31 +158,62 @@ public class sendTest {
         testTransactionManager.setBitcoinWalletManager(mockBitcoinWalletManager);
         testTransactionManager.setCryptoVaultManager(mockCryptoVaultManager);
 
-        catchException(testTransactionManager).send(testwalletID, cryptoAddress, 20, "test");
+        catchException(testTransactionManager).send(testwalletID, cryptoAddress, 20, "test", UUID.randomUUID(), Actors.EXTRA_USER, UUID.randomUUID(), Actors.EXTRA_USER);
 
         assertThat(caughtException()).isInstanceOf(InsufficientFundsException.class);
 
 
     }
 
+
     @Test
-    public void Send_ThrowsCantSendFundsException() throws Exception {
+    public void Send_FailedCalculateBalance_ThrowsCantSendFundsException() throws Exception {
+        when(mockBitcoinWalletWallet.getAvailableBalance().getBalance()).thenThrow(new CantCalculateBalanceException("Mock", null, null, null));
 
         testTransactionManager = new OutgoingExtraUserTransactionManager();
         testTransactionManager.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         testTransactionManager.setPluginId(testId);
         testTransactionManager.setErrorManager(mockErrorManager);
-
-
-
         testTransactionManager.setBitcoinWalletManager(mockBitcoinWalletManager);
         testTransactionManager.setCryptoVaultManager(mockCryptoVaultManager);
 
+        catchException(testTransactionManager).send(testwalletID, cryptoAddress, 0, "test", UUID.randomUUID(),Actors.EXTRA_USER,UUID.randomUUID(),Actors.EXTRA_USER);
 
-        catchException(testTransactionManager).send(testwalletID, cryptoAddress, 0, "test");
+        assertThat(caughtException()).isInstanceOf(CantSendFundsException.class);
+    }
 
-        assertThat(caughtException()).isInstanceOf(CantInsertRecordException.class);
+    @Test
+    public void Send_FailedDaoInitialize_ThrowsCantSendFundsException() throws Exception {
+        when(mockPluginDatabaseSystem.openDatabase(testId, testDataBaseName)).thenThrow(new CantOpenDatabaseException());
 
+        testTransactionManager = new OutgoingExtraUserTransactionManager();
+        testTransactionManager.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        testTransactionManager.setPluginId(testId);
+        testTransactionManager.setErrorManager(mockErrorManager);
+        testTransactionManager.setBitcoinWalletManager(mockBitcoinWalletManager);
+        testTransactionManager.setCryptoVaultManager(mockCryptoVaultManager);
+
+        catchException(testTransactionManager).send(testwalletID, cryptoAddress, 0, "test", UUID.randomUUID(),Actors.EXTRA_USER,UUID.randomUUID(),Actors.EXTRA_USER);
+
+        assertThat(caughtException()).isInstanceOf(CantSendFundsException.class);
+    }
+
+
+
+    @Test
+    public void Send_FailedWalletLoad_ThrowsCantSendFundsException() throws Exception {
+        when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenThrow(new CantLoadWalletException("Mock", null, null, null));
+
+        testTransactionManager = new OutgoingExtraUserTransactionManager();
+        testTransactionManager.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        testTransactionManager.setPluginId(testId);
+        testTransactionManager.setErrorManager(mockErrorManager);
+        testTransactionManager.setBitcoinWalletManager(mockBitcoinWalletManager);
+        testTransactionManager.setCryptoVaultManager(mockCryptoVaultManager);
+
+        catchException(testTransactionManager).send(testwalletID, cryptoAddress, 0, "test", UUID.randomUUID(),Actors.EXTRA_USER,UUID.randomUUID(),Actors.EXTRA_USER);
+
+        assertThat(caughtException()).isInstanceOf(CantSendFundsException.class);
     }
 
 }
