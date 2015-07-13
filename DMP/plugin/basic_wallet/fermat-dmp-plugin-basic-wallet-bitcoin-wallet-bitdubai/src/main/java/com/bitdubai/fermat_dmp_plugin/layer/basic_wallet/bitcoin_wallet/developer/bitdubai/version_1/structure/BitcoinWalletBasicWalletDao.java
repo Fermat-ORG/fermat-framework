@@ -25,8 +25,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.util.BitcoinWalletTransactionWrapper;
@@ -205,6 +207,13 @@ public class BitcoinWalletBasicWalletDao {
 
     private DatabaseTableRecord getBalancesRecord() throws CantGetBalanceRecordException{
         try {
+            database.openDatabase();
+        } catch (CantOpenDatabaseException e) {
+            e.printStackTrace();
+        } catch (DatabaseNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
             DatabaseTable bitcoinwalletTable = getBalancesTable();
             bitcoinwalletTable.loadToMemory();
             return bitcoinwalletTable.getRecords().get(0);
@@ -253,6 +262,10 @@ public class BitcoinWalletBasicWalletDao {
         record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
         record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
         record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
+        record.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, transactionRecord.getActorFrom());
+        record.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, transactionRecord.getActorTo());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME, transactionRecord.getActorFromType().getCode());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, transactionRecord.getActorToType().getCode());
         return record;
     }
 
