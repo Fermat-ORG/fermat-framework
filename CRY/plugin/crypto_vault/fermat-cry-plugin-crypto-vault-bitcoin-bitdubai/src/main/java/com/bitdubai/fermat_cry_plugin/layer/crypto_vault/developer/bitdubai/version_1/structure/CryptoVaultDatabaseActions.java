@@ -327,6 +327,8 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
          */
         if (cryptoTxTable.getRecords().size() > 1)
             throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxId:" + txId.toString(), "duplicated Transaction Hash.");
+        else if (cryptoTxTable.getRecords().size() == 0)
+            throw new UnexpectedResultReturnedFromDatabaseException("No values returned when trying to get CryptoStatus from transaction in database.", null, "TxId:" + txId.toString(), "transaction not yet persisted in database.");
         else
             currentRecord = cryptoTxTable.getRecords().get(0);
 
