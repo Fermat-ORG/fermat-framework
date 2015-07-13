@@ -219,7 +219,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
-            if (cryptoTxTable.getRecords().size() > 1)
+            if (cryptoTxTable.getRecords().size() != 1)
                 throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxHash:" + txHash + " CryptoStatus:" + newState.toString(), "duplicated Transaction Hash.");
             else
                 toUpdate = cryptoTxTable.getRecords().get(0);
