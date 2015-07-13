@@ -76,9 +76,9 @@ public class CreateDatabaseTest {
         testDatabaseFactory = new BitcoinWalletDatabaseFactory();
         testDatabaseFactory.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
-        catchException(testDatabaseFactory).createDatabase(testOwnerId, testWalletId);
+        Database checkDatabase = testDatabaseFactory.createDatabase(testOwnerId, testWalletId);
 
-        assertThat(caughtException()).isNull();
+        assertThat(checkDatabase).isEqualTo(mockDatabase);
     }
 
     @Test
