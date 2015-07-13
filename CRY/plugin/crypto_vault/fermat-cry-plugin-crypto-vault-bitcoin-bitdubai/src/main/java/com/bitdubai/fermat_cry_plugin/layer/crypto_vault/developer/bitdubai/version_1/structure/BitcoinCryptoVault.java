@@ -398,11 +398,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
         try {
             vault.completeTx(request);
-            /**
-             * I define the lock time.
-             */
-            request.tx.setLockTime(System.currentTimeMillis() / 1000L);
-
         } catch (InsufficientMoneyException e) {
             /**
              * this shouldn't happen because the money is checked by previois modules, but if it does I will throw it so that the user can handle this.
