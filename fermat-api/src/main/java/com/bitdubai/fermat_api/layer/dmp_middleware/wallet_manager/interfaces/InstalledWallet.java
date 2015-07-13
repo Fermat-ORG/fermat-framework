@@ -11,5 +11,5 @@ public interface InstalledWallet {
     UUID getWalletIdInThisDevice();
     String getWalletName();
     PlatformWalletType getWalletType();
-    byte[] getIcon();
+    String getIcon();
 }

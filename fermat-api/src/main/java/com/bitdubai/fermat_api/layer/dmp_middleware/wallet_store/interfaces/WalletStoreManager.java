@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.WalletInstallationStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetInstallationStatusException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalogue;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +17,13 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 public interface WalletStoreManager {
-    public List<WalletInformation> getWalletCatalog();
+    public WalletInformation getWalletInformation(UUID walletCatalogId);
 
-    public void installWallet(UUID walletCatalogId);
+    public WalletInstallationStatus getInstallationStatus(UUID walletCatalogId) throws CantGetInstallationStatusException;
+
+    // Marca a la wallet en estado INTALLING
+    public void setWalletToInstalling(UUID walletCatalogId);
+
+    // Lo llama el Wallet manager cuando culmina el proceso de instalación
+    public void setWalletToInstalled(UUID walletCatalogId);
 }

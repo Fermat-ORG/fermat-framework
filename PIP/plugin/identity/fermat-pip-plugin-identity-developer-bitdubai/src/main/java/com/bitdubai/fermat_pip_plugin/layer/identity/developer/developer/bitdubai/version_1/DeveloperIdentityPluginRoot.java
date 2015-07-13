@@ -95,17 +95,7 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
     }
 
     @Override
-    public void createNewDeveloper(String alias) throws CantCreateNewDeveloperException {
-
-    }
-
-    @Override
-    public void login(String alias) throws DeveloperLoginFailedException {
-
-    }
-
-    @Override
-    public DeveloperIdentity getActualDeveloper() throws CantGetDeveloperException {
+    public String createNewDeveloper(String alias) throws CantCreateNewDeveloperException {
         return null;
     }
 }

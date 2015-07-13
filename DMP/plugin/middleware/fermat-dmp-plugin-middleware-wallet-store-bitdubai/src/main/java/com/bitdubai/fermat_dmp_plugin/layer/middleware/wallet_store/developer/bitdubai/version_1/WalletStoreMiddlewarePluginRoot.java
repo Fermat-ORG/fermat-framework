@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.WalletInstallationStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetInstallationStatusException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -83,12 +85,22 @@ public class WalletStoreMiddlewarePluginRoot implements DealsWithErrors, Plugin,
     }
 
     @Override
-    public List<WalletInformation> getWalletCatalog() {
+    public WalletInformation getWalletInformation(UUID walletCatalogId) {
         return null;
     }
 
     @Override
-    public void installWallet(UUID walletCatalogId) {
+    public WalletInstallationStatus getInstallationStatus(UUID walletCatalogId) throws CantGetInstallationStatusException {
+        return null;
+    }
+
+    @Override
+    public void setWalletToInstalling(UUID walletCatalogId) {
+
+    }
+
+    @Override
+    public void setWalletToInstalled(UUID walletCatalogId) {
 
     }
 }
