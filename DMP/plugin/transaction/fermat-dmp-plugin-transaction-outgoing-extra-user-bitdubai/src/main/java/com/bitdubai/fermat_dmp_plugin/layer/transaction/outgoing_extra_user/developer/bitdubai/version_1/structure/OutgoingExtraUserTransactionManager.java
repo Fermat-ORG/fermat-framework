@@ -145,7 +145,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
         }
 
         try {
-            dao.registerNewTransaction(walletID, destinationAddress, cryptoAmount,notes);
+            dao.registerNewTransaction(walletID, destinationAddress, cryptoAmount,notes,deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
         } catch (CantInsertRecordException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendFundsException("I couldn't insert new record",e,"","");

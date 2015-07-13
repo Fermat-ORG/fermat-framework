@@ -71,7 +71,7 @@ public class ReceiveFragment extends Fragment {
     private AutoCompleteTextView autocompleteContacts;
     private WalletContactListAdapter adapter;
 
-    Typeface tf ;
+    Typeface tf;
 
 
     private String user_address_wallet = "";
@@ -80,6 +80,7 @@ public class ReceiveFragment extends Fragment {
     final int width = 400;
     final int height = 400;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -101,17 +102,14 @@ public class ReceiveFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         try {
             errorManager = platform.getErrorManager();
             cryptoWalletManager = platform.getCryptoWalletManager();
-            try
-            {
+            try {
                 cryptoWallet = cryptoWalletManager.getCryptoWallet();
-            }
-            catch (CantGetCryptoWalletException e)
-            {
+            } catch (CantGetCryptoWalletException e) {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("Unexpected error init Crypto Manager - " + e.getMessage());
             }
@@ -219,10 +217,11 @@ public class ReceiveFragment extends Fragment {
         }
     }
 
-    public void shareAddress(){
-        Intent intent2 = new Intent(); intent2.setAction(Intent.ACTION_SEND);
+    public void shareAddress() {
+        Intent intent2 = new Intent();
+        intent2.setAction(Intent.ACTION_SEND);
         intent2.setType("text/plain");
-        intent2.putExtra(Intent.EXTRA_TEXT, user_address_wallet );
+        intent2.putExtra(Intent.EXTRA_TEXT, user_address_wallet);
         startActivity(Intent.createChooser(intent2, "Share via"));
     }
 
@@ -247,8 +246,6 @@ public class ReceiveFragment extends Fragment {
             share_btn.setEnabled(true);
             share_btn.setFocusable(true);
             share_btn.setTextColor(Color.parseColor("#72af9c"));
-
-            //TODO SHOW BUTTON SHARE AND ADDRESS IN SCREEN
         } catch (WriterException writerException) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, writerException);
 
@@ -262,12 +259,10 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(String contact_name) {
         try {
-            //TODO parameters deliveredByActorId deliveredByActorType (first two, null, null)
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(null, null, contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
-        }
-        catch (CantRequestCryptoAddressException e)
-        {
+        } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
 
@@ -276,12 +271,10 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(WalletContact walletContact) {
         try {
-            //TODO parameters deliveredByActorId deliveredByActorType (first two, null, null)
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(null, null, walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
-        }
-        catch (CantRequestCryptoAddressException e)
-        {
+        } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
 
@@ -294,7 +287,7 @@ public class ReceiveFragment extends Fragment {
 
     public void copyToClipboard() {
 
-        ClipboardManager myClipboard = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData myClip = ClipData.newPlainText("text", this.user_address_wallet);
         myClipboard.setPrimaryClip(myClip);
         Toast.makeText(getActivity().getApplicationContext(), "Text Copied",
@@ -315,14 +308,14 @@ public class ReceiveFragment extends Fragment {
      * Encode a string into a QR Code and return a bitmap image of the QR code
      *
      * @param contentsToEncode String to be encoded, this will often be a URL, but could be any string
-     * @param imageWidth number of pixels in width for the resultant image
-     * @param imageHeight number of pixels in height for the resultant image
-     * @param marginSize the EncodeHintType.MARGIN parameter into zxing engine
-     * @param color data color for QR code
-     * @param colorBack background color for QR code
+     * @param imageWidth       number of pixels in width for the resultant image
+     * @param imageHeight      number of pixels in height for the resultant image
+     * @param marginSize       the EncodeHintType.MARGIN parameter into zxing engine
+     * @param color            data color for QR code
+     * @param colorBack        background color for QR code
      * @return bitmap containing QR code image
      * @throws com.google.zxing.WriterException zxing engine is unable to create QR code data
-     * @throws IllegalStateException when executed on the UI thread
+     * @throws IllegalStateException            when executed on the UI thread
      */
     static public Bitmap generateBitmap(@NonNull String contentsToEncode,
                                         int imageWidth, int imageHeight,
@@ -359,7 +352,7 @@ public class ReceiveFragment extends Fragment {
     }
 
     //show alert
-    private void showMessage(String text){
+    private void showMessage(String text) {
         AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
         alertDialog.setTitle("Warning");
         alertDialog.setMessage(text);

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -89,13 +90,12 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         }
     }
 
-    public void registerNewTransaction(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount,String notes) throws CantInsertRecordException {
+    public void registerNewTransaction(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount,String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantInsertRecordException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
         DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
 
-        loadRecordAsNew(recordToInsert, walletID, destinationAddress, cryptoAmount, notes);
-
+        loadRecordAsNew(recordToInsert, walletID, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
         transactionTable.insertRecord(recordToInsert);
     }
 
@@ -152,11 +152,9 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
 
 
-    private  void loadRecordAsNew(DatabaseTableRecord databaseTableRecord, UUID walletId, CryptoAddress destinationAddress, long cryptoAmount,String notes){
+    private  void loadRecordAsNew(DatabaseTableRecord databaseTableRecord, UUID walletId, CryptoAddress destinationAddress, long cryptoAmount,String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType){
 
         UUID transactionId = UUID.randomUUID();
-
-        System.out.println("UUID ASSIGN: " + transactionId.toString());
 
         databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME,transactionId);
         databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, walletId);
@@ -175,6 +173,12 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         databaseTableRecord.setLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis()/1000L);
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME, notes);
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode());
+
+
+        databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME,deliveredByActorId);
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME,deliveredByActorType.getCode());
+        databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME,deliveredToActorId);
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME,deliveredByActorType.getCode());
     }
 
 
@@ -256,23 +260,30 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
                 CryptoCurrency.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENY_COLUMN_NAME))
         );
         long amount = record.getLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME);
-        TransactionType type = TransactionType.DEBIT;
         TransactionState state = TransactionState.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME));
         long timestamp = record.getLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME);
         String memo = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME);
         CryptoStatus cryptoStatus = CryptoStatus.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME));
 
+        Actors actorFromType = Actors.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME));
+        Actors actorToType  = Actors.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME));
+        UUID actorFromId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME);
+        UUID actorToId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
+
         bitcoinTransaction.setWalletId(walletId);
         bitcoinTransaction.setIdTransaction(transactionId);
-        bitcoinTransaction.setTramsactionHash(transactionHash);
+        bitcoinTransaction.setTransactionHash(transactionHash);
         bitcoinTransaction.setAddressFrom(addressFrom);
         bitcoinTransaction.setAddressTo(addressTo);
         bitcoinTransaction.setAmount(amount);
-        bitcoinTransaction.setType(type);
         bitcoinTransaction.setState(state);
         bitcoinTransaction.setTimestamp(timestamp);
         bitcoinTransaction.setMemo(memo);
         bitcoinTransaction.setCryptoStatus(cryptoStatus);
+        bitcoinTransaction.setActorFromId(actorFromId);
+        bitcoinTransaction.setActorFromType(actorFromType);
+        bitcoinTransaction.setActorToId(actorToId);
+        bitcoinTransaction.setActorToType(actorToType);
 
         return bitcoinTransaction;
     }

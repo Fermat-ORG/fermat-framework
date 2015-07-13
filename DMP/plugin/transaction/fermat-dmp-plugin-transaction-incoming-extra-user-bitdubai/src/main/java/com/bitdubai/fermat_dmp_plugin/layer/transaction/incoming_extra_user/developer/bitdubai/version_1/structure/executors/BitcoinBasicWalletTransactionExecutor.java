@@ -10,8 +10,15 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.ActorAddressBookNotFoundException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.*;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.TransactionWrapper;
@@ -22,9 +29,11 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 public class BitcoinBasicWalletTransactionExecutor implements TransactionExecutor {
 
     private BitcoinWalletWallet bitcoinWallet;
+    private ActorAddressBookManager actorAddressBookManager;
 
-    public BitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet){
+    public BitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final ActorAddressBookManager actorAddressBookManager){
         this.bitcoinWallet = bitcoinWallet;
+        this.actorAddressBookManager = actorAddressBookManager;
     }
 
     @Override
@@ -48,43 +57,78 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
         }
     }
 
-    private void processOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException{
-        BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
-        record.setIdTransaction(transaction.getTransactionID());
-        bitcoinWallet.getBookBalance().credit(record);
+    private void processOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException {
+        try {
+            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.CREDIT);
+            bitcoinWallet.getBookBalance().credit(record);
+        } catch (CantGenerateTransactionException e) {
+            throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
+        }
     }
 
     private void processOnBlockChainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException{
-        BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
-        record.setIdTransaction(transaction.getTransactionID());
-        bitcoinWallet.getAvailableBalance().credit(record);
+        try {
+            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.CREDIT);
+            bitcoinWallet.getAvailableBalance().credit(record);
+        } catch (CantGenerateTransactionException e) {
+            throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
+        }
     }
 
     private void processReversedOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitDebitException{
-        BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
-        record.setIdTransaction(transaction.getTransactionID());
-        bitcoinWallet.getBookBalance().debit(record);
+        try {
+            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
+            bitcoinWallet.getBookBalance().debit(record);
+        } catch (CantGenerateTransactionException e) {
+            throw new CantRegisterDebitDebitException("I couldn't generate the transaction",e,"","");
+        }
     }
 
     private void processReversedOnBlockchainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitDebitException{
-        BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction.getInformation(), TransactionType.CREDIT);
-        record.setIdTransaction(transaction.getTransactionID());
-        bitcoinWallet.getAvailableBalance().debit(record);
+        try {
+            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
+            bitcoinWallet.getAvailableBalance().debit(record);
+        } catch (CantGenerateTransactionException e) {
+            throw new CantRegisterDebitDebitException("I couldn't generate the transaction",e,"","");
+        }
     }
 
 
-    private BitcoinWalletTransactionRecord generateBitcoinTransaction(final CryptoTransaction cryptoTransaction, final TransactionType transactionType){
-        long timestamp = System.currentTimeMillis() / 1000L;
-        BitcoinWalletTransactionRecord bitcoinWalletTransactionRecord = new TransactionWrapper();
-        bitcoinWalletTransactionRecord.setTramsactionHash(cryptoTransaction.getTransactionHash());
-        bitcoinWalletTransactionRecord.setAddressFrom(cryptoTransaction.getAddressFrom());
-        bitcoinWalletTransactionRecord.setAddressTo(cryptoTransaction.getAddressTo());
-        bitcoinWalletTransactionRecord.setAmount(cryptoTransaction.getCryptoAmount());
-        bitcoinWalletTransactionRecord.setType(transactionType);
-        bitcoinWalletTransactionRecord.setTimestamp(timestamp);
-        bitcoinWalletTransactionRecord.setMemo("No information");
+    private BitcoinWalletTransactionRecord generateBitcoinTransaction(final Transaction<CryptoTransaction> transaction, final TransactionType transactionType) throws CantGenerateTransactionException {
 
-        return bitcoinWalletTransactionRecord;
+        try {
+            CryptoTransaction cryptoTransaction = transaction.getInformation();
+
+            ActorAddressBookRegistry actorAddressBookRegistry = this.actorAddressBookManager.getActorAddressBookRegistry();
+            ActorAddressBookRecord actorAddressBookRecord = actorAddressBookRegistry.getActorAddressBookByCryptoAddress(cryptoTransaction.getAddressTo());
+
+
+            long timestamp = transaction.getTimestamp();
+            TransactionWrapper bitcoinWalletTransactionRecord = new TransactionWrapper();
+
+            bitcoinWalletTransactionRecord.setIdTransaction(transaction.getTransactionID());
+            bitcoinWalletTransactionRecord.setTransactionHash(cryptoTransaction.getTransactionHash());
+            bitcoinWalletTransactionRecord.setAddressFrom(cryptoTransaction.getAddressFrom());
+            bitcoinWalletTransactionRecord.setAddressTo(cryptoTransaction.getAddressTo());
+            bitcoinWalletTransactionRecord.setAmount(cryptoTransaction.getCryptoAmount());
+            bitcoinWalletTransactionRecord.setTimestamp(timestamp);
+            bitcoinWalletTransactionRecord.setMemo("No information");
+
+            bitcoinWalletTransactionRecord.setActorFromId(actorAddressBookRecord.getDeliveredToActorId());
+            bitcoinWalletTransactionRecord.setActorFromType(actorAddressBookRecord.getDeliveredToActorType());
+            bitcoinWalletTransactionRecord.setActorToId(actorAddressBookRecord.getDeliveredByActorId());
+            bitcoinWalletTransactionRecord.setActorToType(actorAddressBookRecord.getDeliveredByActorType());
+
+
+
+            return bitcoinWalletTransactionRecord;
+
+        } catch (CantGetActorAddressBookRegistryException e) {
+            throw new CantGenerateTransactionException("I couldn't get actor address book registry",e,"","");
+        } catch (CantGetActorAddressBookException e) {
+            throw new CantGenerateTransactionException("I couldn't get actor address book",e,"","");
+        } catch (ActorAddressBookNotFoundException e) {
+            throw new CantGenerateTransactionException("I couldn't find the actor",e,"","");
+        }
     }
-
 }
