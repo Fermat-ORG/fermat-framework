@@ -25,8 +25,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.util.BitcoinWalletTransactionWrapper;
@@ -204,6 +206,13 @@ public class BitcoinWalletBasicWalletDao {
     }
 
     private DatabaseTableRecord getBalancesRecord() throws CantGetBalanceRecordException{
+        try {
+            database.openDatabase();
+        } catch (CantOpenDatabaseException e) {
+            e.printStackTrace();
+        } catch (DatabaseNotFoundException e) {
+            e.printStackTrace();
+        }
         try {
             DatabaseTable bitcoinwalletTable = getBalancesTable();
             bitcoinwalletTable.loadToMemory();

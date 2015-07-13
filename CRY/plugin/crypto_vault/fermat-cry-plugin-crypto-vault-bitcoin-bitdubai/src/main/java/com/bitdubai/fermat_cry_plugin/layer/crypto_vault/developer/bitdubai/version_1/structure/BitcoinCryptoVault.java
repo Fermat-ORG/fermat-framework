@@ -544,7 +544,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                 String txHash = entry.getValue();
 
                 /**
-                 * I get the transaction from the vault
+                 * I get the address from the vault.
                  */
                 String[] addresses = getAddressFromTransaction(txHash);
                 CryptoAddress addressFrom = new CryptoAddress(addresses[0], CryptoCurrency.BITCOIN);
@@ -553,15 +553,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
 
                 /**
-                 * Will calculate the correct Confidence of the transaction
+                 * For issue #620, I will get the transaction status from database, instead from the vault.
+                 * I need to sent the transaction status of the snapshot of the transaction, not the current crypto status
                  */
-                TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(txId, database, vault);
-                CryptoStatus cryptoStatus;
-                try{
-                    cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
-                } catch (CantCalculateTransactionConfidenceException cantCalculateTransactionConfidenceException){
-                    cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
-                }
+                CryptoStatus cryptoStatus = db.getCryptoStatus(txId);
+
 
                 CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
 
