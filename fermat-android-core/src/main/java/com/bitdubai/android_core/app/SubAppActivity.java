@@ -42,7 +42,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeMana
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 
 import android.view.View;
 import android.view.Window;

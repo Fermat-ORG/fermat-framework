@@ -58,13 +58,14 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.location.developer.bitdubai.ve
  */
 
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.ActorDeveloperPluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
 import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 47;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 48;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -785,6 +786,18 @@ public class PluginsIdentityManager {
                 WalletStatisticsNetworkServicePluginRoot tryType;
                 tryType = (WalletStatisticsNetworkServicePluginRoot) plugin;
                 pluginIndex = 46;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                DeveloperIdentityPluginRoot tryType;
+                tryType = (DeveloperIdentityPluginRoot) plugin;
+                pluginIndex = 47;
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.

@@ -249,7 +249,8 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
             throw new CantStartPluginException(cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
-        System.err.println("INCOMING CRYPTO: REGISTRY INITIALIZED");
+        // TODO : COMMENTED PRINTLN
+        //System.err.println("INCOMING CRYPTO: REGISTRY INITIALIZED");
 
 
         /**
@@ -315,7 +316,8 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
-        System.out.println("IncomingExtraUser Plugin Started");
+        // TODO COMMENTED PRINTLN
+        //System.out.println("IncomingExtraUser Plugin Started");
     }
 
     @Override

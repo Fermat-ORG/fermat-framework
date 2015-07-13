@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptio
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtraUserTransactionPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserDao;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionManager;
 
@@ -35,6 +37,7 @@ import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -73,6 +76,10 @@ public class sendTest {
     @Mock
     private Database mockDatabase;
 
+    @Mock
+    private DatabaseTable mockTable;
+
+
     private CryptoAddress cryptoAddress;
     private UUID testId;
     private UUID testwalletID;
@@ -98,6 +105,9 @@ public class sendTest {
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
         when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWalletWallet);
         when(mockBitcoinWalletWallet.getAvailableBalance()).thenReturn(mockBitcoinWalletBalance);
+
+        when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
+
     }
 
     @Before
@@ -106,8 +116,10 @@ public class sendTest {
         setUpGeneralMockitoRules();
     }
 
+    //TODO:I need execute before OutgoingExtraUserDao.initialize because database object is null
+
     @Test
-    public void Send_ThrowsInsufficientFundsException_InsufficientFundsException() throws Exception {
+    public void Send_ThrowsInsufficientFundsException() throws Exception {
         testTransactionManager = new OutgoingExtraUserTransactionManager();
         testTransactionManager.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         testTransactionManager.setPluginId(testId);
@@ -126,7 +138,8 @@ public class sendTest {
     }
 
     @Test
-    public void Send_ThrowsInsufficientFundsException_CantSendFundsException() throws Exception {
+    public void Send_ThrowsCantSendFundsException() throws Exception {
+
         testTransactionManager = new OutgoingExtraUserTransactionManager();
         testTransactionManager.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         testTransactionManager.setPluginId(testId);
@@ -137,7 +150,8 @@ public class sendTest {
         testTransactionManager.setBitcoinWalletManager(mockBitcoinWalletManager);
         testTransactionManager.setCryptoVaultManager(mockCryptoVaultManager);
 
-        catchException(testTransactionManager).send(testwalletID, cryptoAddress, 20, "test");
+
+        catchException(testTransactionManager).send(testwalletID, cryptoAddress, 0, "test");
 
         assertThat(caughtException()).isInstanceOf(CantInsertRecordException.class);
 

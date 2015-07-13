@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -44,7 +45,6 @@ import java.util.UUID;
 public class CreateContactFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
-    private static final String ARG_PLATFORM = "platform";
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
@@ -52,7 +52,8 @@ public class CreateContactFragment extends Fragment {
 
     String contactName;
 
-    String creatingFrom;
+    Typeface tf ;
+
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -81,6 +82,7 @@ public class CreateContactFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         platform = new Platform();
         errorManager = platform.getErrorManager();
@@ -109,6 +111,7 @@ public class CreateContactFragment extends Fragment {
                     saveContact();
                 }
             });
+            saveContactButton.setTypeface(tf);
 
             // add_contact button definition
             ImageView pasteFromClipboardButton = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
@@ -120,9 +123,11 @@ public class CreateContactFragment extends Fragment {
 
             TextView textView = (TextView) rootView.findViewById(R.id.contact_name);
             textView.setText(contactName);
+            textView.setTypeface(tf);
+
 
             editAddress = (TextView) rootView.findViewById(R.id.contact_address);
-
+            editAddress.setTypeface(tf);
             editAddress.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {
                     if (validateAddress(editAddress.getText().toString()) != null) {

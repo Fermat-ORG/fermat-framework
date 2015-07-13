@@ -10,5 +10,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
  * @since Java JDK 1.7
  */
 public interface WalletFactoryManager {
+    // TODO: Discutir con Matías los parámetros más convenientes a utilizar
 
+    public void createWalletFactoryProject();
 }

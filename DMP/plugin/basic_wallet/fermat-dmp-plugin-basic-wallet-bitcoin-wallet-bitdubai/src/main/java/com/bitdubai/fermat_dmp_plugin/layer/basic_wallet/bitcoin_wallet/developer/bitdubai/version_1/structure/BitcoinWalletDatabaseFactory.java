@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -67,7 +66,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200,false);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
             try {
                 database.getDatabaseFactory().createTable(ownerId, table);
@@ -103,7 +102,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
              */
             table = ((DatabaseFactory) database).newTableFactory(ownerId, BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
             try {
@@ -125,7 +124,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
             UUID balanceRecordId = UUID.randomUUID();
 
             balancesRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId);
-            balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, 0);
+            balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
             balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
 
 

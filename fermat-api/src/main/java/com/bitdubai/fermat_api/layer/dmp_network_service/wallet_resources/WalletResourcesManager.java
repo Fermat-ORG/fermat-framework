@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesExcep
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 
+import java.util.UUID;
+
 /**
  *
  *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesManager/code> is a interface
@@ -16,13 +18,27 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
  * */
 public interface  WalletResourcesManager {
 
-
+/*
+    Esto venía de un prototipo/prueba de concepto
+    // DEPRECATED - NO USAR - SE ANALIZAR SI SE ELIMINARÁ
+    */
     public void checkResources() throws CantCheckResourcesException;
-
+/*
+    // DEPRECATED - NO USAR - SE DEBE LIMPIAR
     public byte[] getImageResource(String imageName) throws CantGetResourcesException;
 
+    // DEPRECATED - NO USAR - SE DEBE LIMPIAR
     public String getLayoutResource(String layoutName) throws CantGetResourcesException;
 
+    // DEPRECATED - NO USAR - SE DEBE LIMPIAR
     public void setwalletType(Wallets type);
+*/
+    public WalletResources getWalletResources(UUID resourcesId);
+
+    public WalletNavigationStructure getWalletNavigationStructure(UUID walletNavigationStructureId);
+
+    public void saveNavigationStructure(UUID walletNavigationStructureId, WalletNavigationStructure walletNavigationStructure);
+
+    public void saveWalletResources(UUID resourcesId, NewWalletResources walletResources);
 
 }
