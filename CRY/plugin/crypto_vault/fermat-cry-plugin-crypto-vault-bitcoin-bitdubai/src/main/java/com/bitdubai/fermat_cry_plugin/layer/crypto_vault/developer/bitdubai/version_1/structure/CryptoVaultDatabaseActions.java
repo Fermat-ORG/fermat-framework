@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkEvent;
@@ -114,6 +115,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
              */
 
             PlatformEvent event = new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+            event.setSource(EventSource.CRYPTO_VAULT);
             eventManager.raiseEvent(event);
         }
     }
