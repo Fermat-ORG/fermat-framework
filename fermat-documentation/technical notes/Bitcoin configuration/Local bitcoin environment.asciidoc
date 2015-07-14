@@ -48,7 +48,8 @@ bitcoin-qt
 [source, java]
  public final String REGTEST_SERVER_ADDRESS = "yourIpAddress";
 
-* *Remember not to commit this change and upload your IP to the repository.*
+[TIP]
+*Remember not to commit this change and upload your IP to the repository.*
 
 == Generate new blocks and add bitcoins to your client.
 
