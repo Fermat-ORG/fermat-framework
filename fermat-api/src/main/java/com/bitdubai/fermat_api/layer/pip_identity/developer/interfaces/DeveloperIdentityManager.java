@@ -24,8 +24,7 @@ public interface DeveloperIdentityManager {
      * @return the list of Developers associated to the current logged in Device User.
      * @throws CantGetUserDeveloperIdentitiesException
      */
-    public List<DeveloperIdentity> getDevelopersFromActualDeviceUser() throws CantGetUserDeveloperIdentitiesException;
-
+    List<DeveloperIdentity> getDevelopersFromCurrentDeviceUser() throws CantGetUserDeveloperIdentitiesException;
 
     /**
      * This method creates a new Developer Identity for the logged in Device User and returns the
@@ -35,5 +34,6 @@ public interface DeveloperIdentityManager {
      * @return the public key associated to this new Device User
      * @throws CantCreateNewDeveloperException
      */
-    public String createNewDeveloper(String alias) throws CantCreateNewDeveloperException;
+    DeveloperIdentity createNewDeveloper(String alias) throws CantCreateNewDeveloperException;
+
 }

@@ -3,29 +3,42 @@ package com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdub
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DealsWithDeviceUser;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DeviceUserManager;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * TODO: This plugin do .
- * <p/>
- * TODO: DETAIL...............................................
- * <p/>
+ * Manage Developer identities.
+ * Keeps the registry of the different identities and its relation with the Device User.
+ *
+ * Listen the events DeviceUserLoggedIn and DeviceUserLoggedOut to know whom is logged in or not.
+ *
+ * Allows to create new Developers and automatically link them with the Current logged Device User.
+ * Serves above layers listing the link between Device User and Developers.
+ *
+ * In a near future this plugins will sign messages (belongs private and public keys).
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, DealsWithErrors, Service, Plugin {
+public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWithErrors, DeveloperIdentityManager, DealsWithPluginDatabaseSystem, Service, Plugin {
 
+    /**
+     * DealsWithDeviceUser Interface member variables.
+     */
+    DeviceUserManager deviceUserManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -33,7 +46,12 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
     ErrorManager errorManager;
 
     /**
-     * DeviceUser Interface member variables
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * Plugin Interface member variables
      */
     private UUID pluginId;
 
@@ -45,7 +63,6 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
     /**
      * Service Interface implementation.
      */
-
     @Override
     public void start() {
         this.serviceStatus = ServiceStatus.STARTED;
@@ -71,14 +88,48 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
         return this.serviceStatus;
     }
 
+    /**
+     * DeveloperIdentityManager Interface implementation.
+     */
 
+    /**
+     * no params.
+     *
+     * @return List<DeveloperIdentity> returns the list of developers linked to the current logged device user.
+     * @throws CantGetUserDeveloperIdentitiesException
+     */
     @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+    public List<DeveloperIdentity> getDevelopersFromCurrentDeviceUser() throws CantGetUserDeveloperIdentitiesException {
+        // TODO getLoggedInDeviceUser TO GET THE Developers LINKED TO A DeviceUser THROW DeveloperIdentityDao
+        return null;
     }
 
     /**
-     * DealWithErrors Interface implementation.
+     * throw an alias creates a new developer (check before if the alias already exists)
+     *
+     * @param alias the alias that the user choose as developer identity
+     * @return DeveloperIdentity with the public key of the new developer
+     * @throws CantCreateNewDeveloperException
+     */
+    @Override
+    public DeveloperIdentity createNewDeveloper(String alias) throws CantCreateNewDeveloperException {
+        // TODO CREATE ECCKeyPair AND getLoggedInDeviceUser TO CREATE THE Developer THROW DeveloperIdentityDao
+        return null;
+    }
+
+
+    /**
+     * DealsWithDeviceUser Interface implementation.
+     */
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        if (deviceUserManager == null)
+            throw new IllegalArgumentException();
+        this.deviceUserManager = deviceUserManager;
+    }
+
+    /**
+     * DealsWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -87,13 +138,19 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
         this.errorManager = errorManager;
     }
 
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
     @Override
-    public List<DeveloperIdentity> getDevelopersFromActualDeviceUser() throws CantGetUserDeveloperIdentitiesException {
-        return null;
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+    /**
+     * Plugin Interface implementation.
+     */
     @Override
-    public String createNewDeveloper(String alias) throws CantCreateNewDeveloperException {
-        return null;
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
     }
 }
