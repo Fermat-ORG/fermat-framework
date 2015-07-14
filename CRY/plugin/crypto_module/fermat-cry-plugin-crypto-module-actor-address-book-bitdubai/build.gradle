@@ -18,10 +18,16 @@ dependencies {
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 }
 
+def jacocoHtmlReport = ""
+
 jacocoTestReport{
     reports{
-        println html.destination
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
     }
+}
+
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
 }
 
 jacocoTestReport.dependsOn clean, test
