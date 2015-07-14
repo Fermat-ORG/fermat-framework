@@ -43,8 +43,14 @@ bitcoin-qt
 ----
 
 == Modify the Fermat platform to connect to your local bitcoin network
-* get your ip address
-* and change it in com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager interface
+* get your ip address with the following command
+[source,linux]
+----
+ifconfig -a
+----
+Your IP address might be something like 192.168.0.x
+
+* Change it in com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager interface
 [source, java]
  public final String REGTEST_SERVER_ADDRESS = "yourIpAddress";
 
@@ -73,8 +79,8 @@ bitcoin-cli setgenerate true 1
 
 == Sending and recieving bitcoins
 
-* Sending bitcoins to your Fermat wallet is the first step. A good tip to get the Basic Wallet Bitcoin Address is to install an aplication
-to be able to scan QR code like QtQR.
+* Sending bitcoins to your Fermat wallet is the first step. A good tip to get the Basic Wallet Bitcoin Address is to install an application
+to be able to scan QR code like QtQR. Of course, this is only useful if you run the app in a cellphone instead of an emulator.
 
 [source, linux]
 ----
@@ -90,3 +96,27 @@ sudo apt-get install qtqr
 ----
 bitcoin-cli setgenerate true 1
 ----
+
+
+== Troubleshooting
+
+If you have problems sending bitcoins to the Fermat Bitcoin wallet, you should:
+[square]
+* Verify that the Fermat Wallet is connected to the local server by executing the following command:
+[source, linux]
+----
+bitcoin-cli getpeerinfo
+----
+
+This should return at least one peer connected sucesfully.
+
+* Restart the bitcoin core application by running
+[source, linux]
+----
+bitcoin-cli stop
+bitcoin-qt
+----
+
+* Verify that the configuration file created before has all the parameters setted correctly.
+
+* Verify that you correctly configured the Fermat Wallet to connect to your ip by modifying the BitcoinManager interface.
