@@ -21,8 +21,6 @@ import java.util.UUID;
  * Manage Developer identities.
  * Keeps the registry of the different identities and its relation with the Device User.
  *
- * Listen the events DeviceUserLoggedIn and DeviceUserLoggedOut to know whom is logged in or not.
- *
  * Allows to create new Developers and automatically link them with the Current logged Device User.
  * Serves above layers listing the link between Device User and Developers.
  *
