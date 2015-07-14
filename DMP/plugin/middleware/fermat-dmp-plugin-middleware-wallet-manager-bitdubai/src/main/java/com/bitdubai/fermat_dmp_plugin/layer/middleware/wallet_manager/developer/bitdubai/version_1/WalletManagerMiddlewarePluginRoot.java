@@ -83,15 +83,12 @@ public class WalletManagerMiddlewarePluginRoot implements DealsWithErrors, Plugi
         this.pluginId = pluginId;
     }
 
+
     @Override
     public List<InstalledWallet> getInstalledWallets() {
         return null;
     }
 
-    @Override
-    public void openWallet(UUID walletIdInThisDevice) {
-
-    }
 
     @Override
     public void uninstallWallet(UUID walletIdInThisDevice) {
@@ -101,5 +98,10 @@ public class WalletManagerMiddlewarePluginRoot implements DealsWithErrors, Plugi
     @Override
     public void installWallet(WalletInstallationInformation walletInstallationInformation) {
 
+    }
+
+    @Override
+    public int getInstallationProgress() {
+        return 0;
     }
 }

@@ -13,7 +13,7 @@ public interface DeviceUser {
 
     public void createUser()  throws CantCreateDeviceUserException;
 
-    public void loadUser  (UUID id) throws CantLoadDeviceUserException;
+    public void loadUser (UUID id) throws CantLoadDeviceUserException;
 
     public UUID getId();
 
@@ -21,10 +21,5 @@ public interface DeviceUser {
 
     public DeviceUserStatus getStatus();
 
-
     public void login (String password) throws LoginFailedException;
-
-
-
-
 }
