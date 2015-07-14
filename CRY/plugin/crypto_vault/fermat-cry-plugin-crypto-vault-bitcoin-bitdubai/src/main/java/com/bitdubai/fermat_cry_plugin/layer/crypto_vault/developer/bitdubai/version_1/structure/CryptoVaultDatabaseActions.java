@@ -214,7 +214,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
     public void updateCryptoTransactionStatus(String txId, String txHash, CryptoStatus newState) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-        DatabaseTableRecord toUpdate;
+        DatabaseTableRecord toUpdate=null;
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
 
@@ -226,6 +226,8 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
                 toUpdate = cryptoTxTable.getRecords().get(0);
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
+        } catch (IndexOutOfBoundsException e){
+            // I will ignore this because at this point the transaction might not yet be persisted in db.
         }
 
 
