@@ -24,6 +24,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 	private static final int TYPE_ITEM = 0;
 	private static final int TYPE_SECTION = 1;
 	private static final int TYPE_MAX_COUNT = TYPE_SECTION + 1;
+	private final ContactsFragment contactsFragment;
 
 	LayoutInflater mLayoutInflater;
 	int mCurrentSectionPosition = 0, mNextSectionPostion = 0;
@@ -37,10 +38,11 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 	// context object
 	Context mContext;
 
-	public PinnedHeaderAdapter(Context context, ArrayList<String> listItems,ArrayList<Integer> listSectionPos) {
+	public PinnedHeaderAdapter(Context context, ArrayList<String> listItems,ArrayList<Integer> listSectionPos,ContactsFragment contactsFragment) {
 		this.mContext = context;
 		this.mListItems = listItems;
 		this.mListSectionPos = listSectionPos;
+		this.contactsFragment= contactsFragment;
 
 		mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -162,8 +164,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
 	@Override
 	public Filter getFilter() {
-		//return ((ContactsFragment)mContext).new ListFilter();//(/*(MainActivity)*/ mContext).new ListFilter();
-		return null;
+		return contactsFragment.new ListFilter();//(/*(MainActivity)*/ mContext).new ListFilter();
+		//return ;
 	}
 
 	public static class ViewHolder {

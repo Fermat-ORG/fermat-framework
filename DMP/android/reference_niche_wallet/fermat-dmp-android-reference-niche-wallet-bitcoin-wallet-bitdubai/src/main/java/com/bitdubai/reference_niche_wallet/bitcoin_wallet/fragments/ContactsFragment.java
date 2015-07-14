@@ -151,8 +151,7 @@ public class ContactsFragment extends Fragment {
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
         imageView_add_contact = (ImageView)rootView.findViewById(R.id.imageView_add_contact);
-        btn_add_contact = (Button) rootView.findViewById(R.id.btn_add_contact);
-        btn_add_contact.setOnClickListener(new View.OnClickListener() {
+        imageView_add_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showAddContact("MAti");
@@ -211,7 +210,7 @@ public class ContactsFragment extends Fragment {
 
 
         //get contacts list
-        /*List<WalletContactRecord> walletContactRecords = new ArrayList<>();
+        List<WalletContactRecord> walletContactRecords = new ArrayList<>();
         try {
             walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
         } catch (CantGetAllWalletContactsException e) {
@@ -223,10 +222,10 @@ public class ContactsFragment extends Fragment {
 
         for(WalletContactRecord walletContactRecords1:walletContactRecords){
             mItems.add(walletContactRecords1.getActorName());
-        }*/
+        }
 
         // Array to ArrayList
-        mItems = new ArrayList<String>(Arrays.asList(ITEMS));
+       // mItems = new ArrayList<String>(Arrays.asList(ITEMS));
         mListSectionPos = new ArrayList<Integer>();
         mListItems = new ArrayList<String>();
 
@@ -286,7 +285,7 @@ public class ContactsFragment extends Fragment {
 
     private void setListAdaptor() {
         // create instance of PinnedHeaderAdapter and set adapter to list view
-        mAdaptor = new PinnedHeaderAdapter(getActivity(), mListItems, mListSectionPos);
+        mAdaptor = new PinnedHeaderAdapter(getActivity(), mListItems, mListSectionPos,this);
         mListView.setAdapter(mAdaptor);
 
         LayoutInflater inflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
