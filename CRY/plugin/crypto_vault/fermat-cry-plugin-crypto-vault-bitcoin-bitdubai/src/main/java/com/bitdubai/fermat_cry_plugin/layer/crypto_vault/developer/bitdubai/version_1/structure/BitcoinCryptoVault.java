@@ -371,8 +371,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
         } catch (CantExecuteQueryException e) {
             throw new CouldNotSendMoneyException("I coudln't persist the internal transaction Id.", e, "Transaction ID: " + FermatTxId.toString(), "An error in the Database plugin..");
-        }catch (Exception e){
-            throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", e, "Address to:" + addressTo.getAddress() + ", transaction Id:" + FermatTxId.toString(), "Unknown." );
         }
 
 
@@ -387,8 +385,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * If the address is incorrectly formated, then I will throw the exception so that other plug ins can handle it.
              */
             throw new InvalidSendToAddressException("The SendTo address is not correct." , e, "Address: " + addressTo.getAddress(), "Incorrect generation by scanner or user entry");
-        }catch (Exception e){
-            throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", e, "Address to:" + addressTo.getAddress() + ", transaction Id:" + FermatTxId.toString(), "Unknown." );
         }
 
         /**
@@ -403,8 +399,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * this shouldn't happen because the money is checked by previois modules, but if it does I will throw it so that the user can handle this.
              */
             throw new com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException("Not enought money in Vault to complete the transaction", e, "AddressTo:" + addressTo.getAddress() + ", Satoshis: " + amount, "Transaction confidence level too low to spend money. Wait for at least another block generation." );
-        } catch (Exception e){
-            throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", e, "Address to:" + addressTo.getAddress() + ", transaction Id:" + FermatTxId.toString(), "Error in Bitcoinj." );
         }
 
 
