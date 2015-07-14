@@ -5,7 +5,6 @@ apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'jacoco'
 
-
 group = "com.bitdubai.fermat.dmp"
 version = '1.0.0'
 sourceCompatibility = 1.7
@@ -20,7 +19,6 @@ jar {
                 'Implementation-Version': '1.0.0'
     }
 }
-
 
 repositories {
     mavenCentral ()
@@ -38,9 +36,6 @@ pmd {
 }
 
 dependencies {
-
-    //compile 'com.bitdubai.fermat.pip:fermat-pip-api:1.8.0'
-
     compile project(':fermat-api')
     compile project(':fermat-cry-api')
 
@@ -76,3 +71,13 @@ tasks.withType(FindBugs) {
         html.enabled = true
     }
 }
+
+jacocoTestReport{
+    reports{
+        println html.destination
+    }
+}
+
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean

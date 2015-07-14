@@ -32,6 +32,12 @@ tasks.withType(FindBugs) {
     }
 }
 
+jacocoTestReport{
+    reports{
+        println html.destination
+    }
+}
+
 jacocoTestReport.dependsOn clean, test
 test.mustRunAfter clean
 jacocoTestReport.mustRunAfter test

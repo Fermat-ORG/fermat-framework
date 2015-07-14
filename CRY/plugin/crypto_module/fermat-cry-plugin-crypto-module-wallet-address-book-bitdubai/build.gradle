@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 version = '1.0'
@@ -6,8 +7,6 @@ version = '1.0'
 repositories {
     mavenCentral()
 }
-
-
 
 dependencies {
     compile project(':fermat-api')
@@ -18,3 +17,13 @@ dependencies {
     testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 }
+
+jacocoTestReport{
+    reports{
+        println html.destination
+    }
+}
+
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean

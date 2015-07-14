@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 version = '1.0'
@@ -15,3 +16,13 @@ dependencies {
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
 }
+
+jacocoTestReport{
+    reports{
+        println html.destination
+    }
+}
+
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean

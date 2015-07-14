@@ -4,6 +4,7 @@ apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'eclipse'
+apply plugin: 'jacoco'
 
 group = "com.bitdubai.fermat.cry"
 sourceCompatibility = 1.7
@@ -71,4 +72,13 @@ tasks.withType(FindBugs) {
     }
 }
 
+jacocoTestReport{
+    reports{
+        println html.destination
+    }
+}
+
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean
 
