@@ -240,7 +240,7 @@ public class TransactionsFragment2 extends Fragment {
 
             }
         }
-        //pointerOffset=lstTransactions.size();
+        pointerOffset=lstTransactions.size();
 
         showTransactionListSelected(lstTransactions,Platform.TYPE_BALANCE_TYPE_SELECTED);
 

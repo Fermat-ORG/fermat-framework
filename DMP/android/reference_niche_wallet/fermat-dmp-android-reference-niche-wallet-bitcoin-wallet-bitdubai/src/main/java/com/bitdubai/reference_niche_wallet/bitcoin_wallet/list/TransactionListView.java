@@ -9,6 +9,7 @@ public interface TransactionListView {
     public static final int TYPE_HEADER=0;
     public static final int TYPE_TRANSACTION=1;
 
+
     public int getType();
     public Object getObject();
 }

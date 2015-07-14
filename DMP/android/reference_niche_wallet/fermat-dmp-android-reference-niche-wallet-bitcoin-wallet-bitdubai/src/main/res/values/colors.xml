@@ -6,4 +6,9 @@
     <color name="wallet_factory_orange">#ff9900</color>
     <color name="green">#8bba9e</color>
 
+
+    <color name="color_black">#000000</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_gray_light">#99C9C9C9</color>
+    <color name="color_black_light">#99000000</color>
 </resources>
