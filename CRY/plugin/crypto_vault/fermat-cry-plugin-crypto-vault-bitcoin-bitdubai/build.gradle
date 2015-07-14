@@ -8,8 +8,6 @@ repositories {
     mavenCentral()
 }
 
-
-
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-cry-api')
@@ -20,10 +18,16 @@ dependencies {
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
 }
 
+def jacocoHtmlReport = ""
+
 jacocoTestReport{
     reports{
-        println html.destination
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
     }
+}
+
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
 }
 
 jacocoTestReport.dependsOn clean, test
