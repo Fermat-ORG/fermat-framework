@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.07.09..
  */
-public interface WalletPublicationInformation extends WalletInstallationInformation{
+public interface NewCatalogueItem {
 
     // Pensar si agregar una imagen y el formato
 
@@ -20,5 +20,11 @@ public interface WalletPublicationInformation extends WalletInstallationInformat
     public String getWalletVersion();
 
     public String getWalletDescription();
+
+    public UUID getWalletCatalogId();
+
+    public UUID getResourcesId();
+
+    public UUID getNavigationStructureId();
 
 }

@@ -13,9 +13,11 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 public interface WalletManagerManager {
-    // TODO: Discutir con Matías los parámetros más convenientes a utilizar
     public List<InstalledWallet> getInstalledWallets();
-    public void openWallet(UUID walletIdInThisDevice);
     public void uninstallWallet(UUID walletIdInThisDevice);
     public void installWallet(WalletInstallationInformation walletInstallationInformation);
+
+    // Retorna un entero que representa el
+    // porcentaje que refleja el progreso de la instalación
+    public int getInstallationProgress();
 }

@@ -356,6 +356,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Sending bitcoins...", "Address to:" + addressTo.getAddress() + "TxId: " + FermatTxId, null);
+
         CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
         db.setVault(vault);
 
@@ -426,6 +428,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             vault.commitTx(request.tx);
         } catch (CantExecuteQueryException e) {
             throw new CouldNotSendMoneyException("Error trying to persist into database the Transaction Id.", e, "Address to:" + addressTo.getAddress() + ", transaction Id:" + FermatTxId.toString(), "Error in the database plugin." );
+        }catch (Exception e){
+            throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", e, "Address to:" + addressTo.getAddress() + ", transaction Id:" + FermatTxId.toString(), "Unkwnown." );
         }
 
         PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
@@ -451,6 +455,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             throw new CouldNotSendMoneyException("An error occured waiting for confirmation from the Bitcoin network.", e, null, "No peers connected at this time.");
         } catch (ExecutionException e) {
             throw new CouldNotSendMoneyException("Unknown error trying to send money", e, null, null);
+        }catch (Exception e){
+            throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", e, "Address to:" + addressTo.getAddress() + ", transaction Id:" + FermatTxId.toString(), "Unknown." );
         }
 
 
@@ -638,6 +644,13 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
 
+        long timestamp =tx.getLockTime();
+        if (timestamp == 0)
+        /**
+         * If the transaction doesn't have a locktime, I will return the current timestamp
+         */
+            return System.currentTimeMillis() / 1000L;
+        else
         /**
          * I get the current timestamp
          */

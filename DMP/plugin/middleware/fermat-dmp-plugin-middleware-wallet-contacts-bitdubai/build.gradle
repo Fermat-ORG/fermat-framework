@@ -3,6 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'jacoco'
 
 group = "com.bitdubai.fermat.dmp"
 version = '1.1.0'
@@ -18,7 +19,6 @@ jar {
                    'Implementation-Version': '1.1.0'
     }
 }
-
 
 repositories {
     mavenCentral ()
@@ -42,6 +42,7 @@ dependencies {
 
     deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
     testCompile 'junit:junit:4.11'
+    testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 }
 
 test {
@@ -69,3 +70,19 @@ tasks.withType(FindBugs) {
         html.enabled = true
     }
 }
+
+def jacocoHtmlReport = ""
+
+jacocoTestReport{
+    reports{
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
+    }
+}
+
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
+}
+
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean

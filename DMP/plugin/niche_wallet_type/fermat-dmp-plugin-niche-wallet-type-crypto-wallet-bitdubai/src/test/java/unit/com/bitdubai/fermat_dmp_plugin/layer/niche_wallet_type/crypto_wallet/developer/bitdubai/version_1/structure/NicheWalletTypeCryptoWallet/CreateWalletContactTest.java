@@ -24,6 +24,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.deve
 import junit.framework.TestCase;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -131,6 +132,7 @@ public class CreateWalletContactTest extends TestCase {
     }
 
     // CONTACTS ALREADY EXISTS TEST
+    @Ignore
     @Test
     public void testCreateWalletContact_ContactAlreadyExists() throws Exception {
         doReturn(walletContactRecord).when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));

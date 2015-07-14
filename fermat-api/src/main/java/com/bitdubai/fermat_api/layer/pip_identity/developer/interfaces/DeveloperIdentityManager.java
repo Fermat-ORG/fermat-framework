@@ -17,8 +17,23 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 public interface DeveloperIdentityManager {
-    public List<DeveloperIdentity> getDevelopersFromActualUser() throws CantGetUserDeveloperIdentitiesException;
-    public void createNewDeveloper(String alias) throws CantCreateNewDeveloperException;
-    public void login(String alias) throws DeveloperLoginFailedException;
-    public DeveloperIdentity getActualDeveloper() throws CantGetDeveloperException;
+
+    /**
+     * This method will give us a list of all the developers associated to the actual Device User logged in
+     *
+     * @return the list of Developers associated to the current logged in Device User.
+     * @throws CantGetUserDeveloperIdentitiesException
+     */
+    public List<DeveloperIdentity> getDevelopersFromActualDeviceUser() throws CantGetUserDeveloperIdentitiesException;
+
+
+    /**
+     * This method creates a new Developer Identity for the logged in Device User and returns the
+     * associated public key
+     *
+     * @param alias the alias that the user choose as developer identity
+     * @return the public key associated to this new Device User
+     * @throws CantCreateNewDeveloperException
+     */
+    public String createNewDeveloper(String alias) throws CantCreateNewDeveloperException;
 }

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserDeveloperDatabaseFactory;
 import org.fest.assertions.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class TestGetDatabaseTableList {
     DeveloperObjectFactory developerObjectFactory;
     DeveloperDatabaseTable developerDatabaseTable;
 
+    @Ignore
     @Test
     public void testGetDatabaseTableList() throws Exception {
 
