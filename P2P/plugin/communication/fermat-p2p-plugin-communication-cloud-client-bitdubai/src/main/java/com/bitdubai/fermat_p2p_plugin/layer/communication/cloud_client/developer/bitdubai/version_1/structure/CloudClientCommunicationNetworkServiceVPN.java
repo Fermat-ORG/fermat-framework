@@ -84,13 +84,15 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		if(requestedConnections.isEmpty())
 			return;
 		
-		String sender = identity.getPublicKey();
-		String destination = dataPacket.getSender();
-		FMPPacketType type = FMPPacketType.CONNECTION_REGISTER;
-		String message = AsymmectricCryptography.encryptMessagePublicKey(networkService.toString(), vpnPublicKey);
-		String signature = AsymmectricCryptography.createMessageSignature(message, identity.getPrivateKey());
-		FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, message, signature);
-		pendingPackets.add(packet);
+        FMPPacket responsePacket = FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(identity.getPublicKey(),     //sender
+                dataPacket.getSender(),             //destination
+                networkService.toString(),   // message
+                FMPPacketType.CONNECTION_REGISTER,
+                NetworkServices.UNDEFINED,
+                identity.getPrivateKey());
+
+
+		pendingPackets.add(responsePacket);
 		
 		SelectionKey serverConnection = requestedConnections.get(vpnPublicKey);
 		serverConnection.interestOps(SelectionKey.OP_WRITE);
@@ -171,13 +173,19 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		String message = AsymmectricCryptography.encryptMessagePublicKey(networkService.toString(), vpnPublicKey);
 		String signature = AsymmectricCryptography.createMessageSignature(message, identity.getPrivateKey());
 		try{
-			FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, message, signature);
-			pendingPackets.add(packet);
-			SelectionKey serverConnection = unregisteredConnections.get(vpnPublicKey);
+
+            FMPPacket responsePacket = FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(identity.getPublicKey(),     //sender
+                    peerPublicKey,             //destination
+                    networkService.toString(),   // message
+                    FMPPacketType.CONNECTION_REQUEST,
+                    NetworkServices.UNDEFINED,
+                    identity.getPrivateKey());
+
+			pendingPackets.add(responsePacket);
+			SelectionKey serverConnection = unregisteredConnections.remove(vpnPublicKey);
+            requestedConnections.put(vpnPublicKey, serverConnection);
 			serverConnection.interestOps(SelectionKey.OP_WRITE);
-			unregisteredConnections.remove(vpnPublicKey);
-			requestedConnections.put(vpnPublicKey, serverConnection);
-			registered.set(true);
+            registered.set(true);
 		} catch(FMPException ex){
 			throw wrapFMPException(sender, destination, type.toString(), message, signature, ex);
 		}
@@ -198,13 +206,15 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 	public void sendMessage(String message) throws FMPException, CloudCommunicationException {
 		if(!isRegistered())
 			throw new CloudCommunicationException(CloudCommunicationException.DEFAULT_MESSAGE, null, "", "We haven't registered the connection to the server");
-		String sender = identity.getPublicKey();
-		String destination = peerPublicKey;
-		FMPPacketType type = FMPPacketType.DATA_TRANSMIT;
-		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, peerPublicKey);
-		String signature = AsymmectricCryptography.createMessageSignature(messageHash, identity.getPrivateKey());
-		FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
-		pendingPackets.add(packet);
+
+            FMPPacket responsePacket = FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(identity.getPublicKey(),     //sender
+                                        peerPublicKey,             //destination
+                                        message,   // message
+                                        FMPPacketType.DATA_TRANSMIT,
+                                        NetworkServices.UNDEFINED,
+                                        identity.getPrivateKey());
+
+		pendingPackets.add(responsePacket);
 		registeredConnections.get(vpnPublicKey).interestOps(SelectionKey.OP_WRITE);
 	}
 

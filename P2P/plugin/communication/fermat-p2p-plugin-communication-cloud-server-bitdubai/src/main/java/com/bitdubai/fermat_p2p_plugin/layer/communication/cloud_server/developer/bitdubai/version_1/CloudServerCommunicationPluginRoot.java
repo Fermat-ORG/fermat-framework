@@ -87,7 +87,6 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-
     /**
      * DealsWithPluginIdentity Interface member variables.
      */

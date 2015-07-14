@@ -1,127 +1,263 @@
+/*
+ * @#CloudFMPPacket.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.MalformedFMPPacketException;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
+/**
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPPacket</code> implements
+ * the package to transport the data
+ * <p/>
+ *
+ * Created by Jorge Gonzales
+ * Update by Roberto Requena - (rart3001@gmail.com) on 11/06/15.
+ *
+ * @version 1.0
+ */
 public class CloudFMPPacket implements FMPPacket {
-	
-	private static final int HASH_PRIME_NUMBER_PRODUCT = 4517;
-	private static final int HASH_PRIME_NUMBER_ADD = 7523;
-	
-	private final String sender;
-	private final String destination;
-	private final FMPPacketType type;
-	private final String message;
-	private final String signature;
-	
-	public CloudFMPPacket(final String packetData) throws FMPException {
 
-		String[] validatedData =  validatePacketDataString(packetData);
-		this.sender = validatedData[0];
-		this.destination = validatedData[1];
-		this.type = FMPPacketType.valueOf(validatedData[2]);
-		this.message = validatedData[3];
-		this.signature = validatedData[4];
-	}
-	
-	public CloudFMPPacket(final String sender, final String destination, final FMPPacketType type, final String message) throws FMPException{
-		this.sender = null;
-		this.destination = null;
-		this.type = null;
-		this.message = null;
-		this.signature = null;
-	}
+    /**
+     * Represent the sender
+     */
+	private String sender;
 
-	/*
-	 *	Implementation methods for the FMP interface
-	 */
-	@Override
-	public String getSender() {
-		return sender;
-	}
+    /**
+     * Represent the destination
+     */
+	private String destination;
 
-	public String getDestination() {
-		return destination;
-	}	
+    /**
+     * Represent the type
+     */
+	private FMPPacketType type;
 
-	@Override
-	public FMPPacketType getType() {
-		return type;
-	}
+    /**
+     * Represent the message
+     */
+	private String message;
 
-	@Override
-	public String getMessage() {
-		return message;
-	}
+    /**
+     * Represent the signature
+     */
+	private String signature;
 
-	@Override
-	public String getSignature() {
-		return signature;
-	}
+    /**
+     * Represent the networkServicesType
+     */
+    private NetworkServices networkServicesType;
 
+    /**
+     * Constructor
+     */
+    public CloudFMPPacket() {
+        this.destination = null;
+        this.sender = null;
+        this.type = null;
+        this.message = null;
+        this.signature = null;
+        this.networkServicesType = null;
+    }
 
+    /**
+     * Constructor with parameters
+     *
+     * @param destination
+     * @param sender
+     * @param type
+     * @param message
+     * @param signature
+     * @param networkServicesType
+     */
+    public CloudFMPPacket(String destination, String sender, FMPPacketType type, String message, String signature, NetworkServices networkServicesType) {
+        this.destination = destination;
+        this.sender = sender;
+        this.type = type;
+        this.message = message;
+        this.signature = signature;
+        this.networkServicesType = networkServicesType;
+    }
 
-	@Override
-	public String convertToString(){
-		StringBuilder builder = new StringBuilder();
-                builder.append(sender);
-                builder.append(FMPPacket.PACKET_SEPARATOR);
-                builder.append(destination);
-                builder.append(FMPPacket.PACKET_SEPARATOR);
-                builder.append(type);
-                builder.append(FMPPacket.PACKET_SEPARATOR);
-                builder.append(message);
-                builder.append(FMPPacket.PACKET_SEPARATOR);
-                builder.append(signature);
-                return builder.toString();
-	}
+    /**
+     * (non-Javadoc)
+     * @see FMPPacket#getDestination()
+     */
+    @Override
+    public String getDestination() {
+        return destination;
+    }
 
-	@Override
-	public String toString(){
-		return convertToString();
-	}
-	
-	@Override
-	public boolean equals(Object o){
-		if(o instanceof FMPPacket){
-			FMPPacket compare = (FMPPacket) o;
-			return compare.getSender().equals(sender) 
-					&& compare.getDestination().equals(destination)
-					&& compare.getType().equals(type)
-					&& compare.getMessage().equals(message)
-					&& compare.getSignature().equals(signature);
-		}
-		return false;
-	}
-	
-	@Override
-	public int hashCode() {
-		int c = 0;
-		c += sender.hashCode();
-		c+= destination.hashCode();
-		c+= type.hashCode();
-		c+= message.hashCode();
-		c+= signature.hashCode();
-		return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
-	}
+    /**
+     * Set the destination of the packet
+     *
+     * @param destination
+     */
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
 
-	/*
-	 *	private methods
-	*/
-	private String[] validatePacketDataString(final String packetData) throws FMPException {
-		if(packetData == null)
-			throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, null, "", "The packet data is null");
-		if(packetData.isEmpty())
-			throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, null, "", "The packet data is empty");
-		String[] splitData = packetData.split(PACKET_SEPARATOR);
-		if(splitData.length < PACKET_SEPARATOR_PARTS)
-			throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, null, packetData, "The packet data is not properly assembled");
-		if(splitData.length > PACKET_SEPARATOR_PARTS)
-			throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, null, packetData, "The packet data is not properly assembled");
-		return splitData;
-	}
+    /**
+     * (non-Javadoc)
+     * @see FMPPacket#getType()
+     */
+    @Override
+    public FMPPacketType getType() {
+        return type;
+    }
 
+    /**
+     * Set the type of the packet
+     *
+     * @param type
+     */
+    public void setType(FMPPacketType type) {
+        this.type = type;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FMPPacket#getSignature()
+     */
+    @Override
+    public String getSignature() {
+        return signature;
+    }
+
+    /**
+     * Set the signature of the packet
+     *
+     * @return String
+     */
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FMPPacket#getSender()
+     */
+    @Override
+    public String getSender() {
+        return sender;
+    }
+
+    /**
+     * Set the sender of the packet
+     *
+     * @param sender
+     */
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FMPPacket#getNetworkServicesType()
+     */
+    @Override
+    public NetworkServices getNetworkServicesType() {
+        return networkServicesType;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FMPPacket#setNetworkServicesType(NetworkServices)
+     */
+    @Override
+    public void setNetworkServicesType(NetworkServices networkServicesType) {
+        this.networkServicesType = networkServicesType;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FMPPacket#getMessage()
+     */
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Set the message of the packet
+     *
+     * @param message
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    /**
+     * Convert this object to json string
+     *
+     * @return String json
+     */
+    public String toJson(){
+
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see FMPPacket#fromJson(String)
+     */
+    @Override
+    public FMPPacket fromJson(String json){
+
+        Gson gson = new Gson();
+        return gson.fromJson(json, CloudFMPPacket.class);
+
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see Object#equals(Object)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CloudFMPPacket)) return false;
+        CloudFMPPacket that = (CloudFMPPacket) o;
+        return Objects.equals(getSender(), that.getSender()) &&
+                Objects.equals(getDestination(), that.getDestination()) &&
+                Objects.equals(getType(), that.getType()) &&
+                Objects.equals(getMessage(), that.getMessage()) &&
+                Objects.equals(getSignature(), that.getSignature()) &&
+                Objects.equals(getNetworkServicesType(), that.getNetworkServicesType());
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSender(), getDestination(), getType(), getMessage(), getSignature(), getNetworkServicesType());
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "CloudFMPPacket{" +
+                "destination='" + destination + '\'' +
+                ", sender='" + sender + '\'' +
+                ", type=" + type +
+                ", message='" + message + '\'' +
+                ", signature='" + signature + '\'' +
+                ", networkServicesType=" + networkServicesType +
+                '}';
+    }
 }

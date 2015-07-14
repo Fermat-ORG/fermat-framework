@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
@@ -17,13 +18,18 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacketHandler;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -52,9 +58,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
     private static final long SLEEP_TIME = 3000;
 
     /**
-     * Represent the SELECTOR_SELECT_TIMEOUT value 20
+     * Represent the SELECTOR_SELECT_TIMEOUT value 30
      */
-    private static final int SELECTOR_SELECT_TIMEOUT = 20;
+    private static final int SELECTOR_SELECT_TIMEOUT = 30;
 
     /**
      * Represent the CHARSET_NAME value UTF-8
@@ -339,52 +345,50 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
              */
             int bytesRead = channel.read(readBuffer);
 
-            /*
-             * Validate that he read
-             */
-            if(bytesRead == -1){
+           /*
+            * Create a string from the array of byte
+            */
+            StringBuffer stringBuffer = new StringBuffer();
 
-                closeSocketChannelAndCancelConnection(channel, connection);
-                String message = CloudCommunicationException.DEFAULT_MESSAGE;
-                String context = "";
-                String possibleReason = "The channel has reached end-of-stream";
-                throw new CloudCommunicationException(message, null, context, possibleReason);
+
+            while (bytesRead > 0) {
+
+                System.out.println("--- bytesRead= "+bytesRead);
+
+                /*
+                 * Flips this buffer.
+                 */
+                readBuffer.flip();
+
+                while(readBuffer.hasRemaining()){
+                    stringBuffer.append(Character.toString((char) readBuffer.get()));
+                }
+
+                readBuffer.clear(); //make buffer ready for writing
+                bytesRead = channel.read(readBuffer);
             }
 
-            /*
-             * Flips this buffer.
-             */
-            readBuffer.flip();
+            System.out.println("--- Received encryptedJson = "+stringBuffer);
+            System.out.println("---  encryptedJson.length() = "+stringBuffer.length());
 
             /*
-             * Prepare the array of byte for the data
+             * Decrypt the data packet json object string
              */
-            byte[] data = new byte[bytesRead];
+            String decryptedJson = AsymmectricCryptography.decryptMessagePrivateKey(stringBuffer.toString(), identity.getPrivateKey());
+
+
+            System.out.println("--- Received json = " + decryptedJson);
 
             /*
-             * Put the data from the read buffer into the array of byte
+             * Create a new FMPPacket whit the decrypted string of data
              */
-            readBuffer.get(data, 0, bytesRead);
-
-            /*
-             * Create a string from the array of byte
-             */
-			StringBuffer stringBuffer = new StringBuffer(new String(data, CHARSET_NAME));
-
-            /*
-             * Create a new FMPPacket whit the string of data
-             */
-			FMPPacket incomingPacket = FMPPacketFactory.constructCloudPacket(stringBuffer.toString().trim());
+			FMPPacket incomingPacket = FMPPacketFactory.constructCloudFMPPacket(decryptedJson);
 
             /**
              * Process the new incoming packet
              */
 			processIncomingPacket(incomingPacket, connection);
 
-            /**
-             * Clean the buffer
-             */
-            readBuffer.clear();
 
 		} catch(UnsupportedEncodingException ex){
 			System.out.println("THIS IS NEVER GOING TO HAPPEN");
@@ -420,19 +424,46 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			FMPPacket dataPacket = (FMPPacket) connection.attachment();
 
             /*
-             * Convert to bytes
+             * Prepare the write buffer
              */
-            byte[] data = dataPacket.toString().getBytes(CHARSET_NAME);
+            ByteBuffer writeBuffer = ByteBuffer.allocate(FMPPacket.PACKET_MAX_BYTE_SIZE);
+            writeBuffer.clear();
+
+            System.out.println("--- Sending jsom = "+dataPacket.toJson());
 
             /*
-             * Wrap into a bytebuffer and write into the channel
+             * Encrypt the data packet json object string
              */
-            channel.write(ByteBuffer.wrap(data));
+            String encryptedJson = AsymmectricCryptography.encryptMessagePublicKey(dataPacket.toJson(), dataPacket.getDestination());
+
+            System.out.println("--- Sending encryptedJson = "+encryptedJson);
+            System.out.println("---  encryptedJson.length() = "+encryptedJson.length());
+
+            /*
+             * Get json format and convert to bytes
+             */
+            InputStream inputStream = new ByteArrayInputStream(encryptedJson.getBytes(CHARSET_NAME));
+
+
+            byte[] data = new byte[FMPPacket.PACKET_MAX_BYTE_SIZE];
+
+            ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+
+
+            while(inputChannel.read(writeBuffer) != -1){
+
+                //System.out.println("--- data = "+ Arrays.toString(data));
+                //System.out.println("--- data.length = "+data.length);
+
+                writeBuffer.flip();
+                channel.write(writeBuffer);
+                writeBuffer.compact();
+            }
 
             /*
              * Mark the connection with new activity read
              */
-			connection.interestOps(SelectionKey.OP_READ);
+            connection.interestOps(SelectionKey.OP_READ);
 
 		}catch(IOException ex){
 			throw wrapNIOSocketIOException(ex);
