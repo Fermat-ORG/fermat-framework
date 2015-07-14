@@ -89,18 +89,4 @@ public class WalletStoreMiddlewarePluginRoot implements DealsWithErrors, Plugin,
         return null;
     }
 
-    @Override
-    public WalletInstallationStatus getInstallationStatus(UUID walletCatalogId) throws CantGetInstallationStatusException {
-        return null;
-    }
-
-    @Override
-    public void setWalletToInstalling(UUID walletCatalogId) {
-
-    }
-
-    @Override
-    public void setWalletToInstalled(UUID walletCatalogId) {
-
-    }
 }

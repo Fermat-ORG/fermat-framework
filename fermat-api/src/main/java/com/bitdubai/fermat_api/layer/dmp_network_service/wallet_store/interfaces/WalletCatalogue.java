@@ -5,11 +5,19 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import java.util.List;
 
 /**
- * Created by eze on 2015.07.13..
+ * This interface represents the wallets catalogue
+ *
+ * @author Ezequiel Postan
  */
 public interface WalletCatalogue {
-    public List<NewCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsCatalogueException;
-    public void addFilter(WalletCatalogueFilter walletFilter);
-    public void clearFilters();
 
+    /**
+     * This method give us a list of wallets in the catalogue
+     *
+     * @param offset the offset (position) in the catalogue where we stand
+     * @param top the maximum number of wallets to get as a result
+     * @return A list of at most "top" catalogue items (wallets)
+     * @throws CantGetWalletsCatalogueException
+     */
+    public List<NewCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsCatalogueException;
 }
