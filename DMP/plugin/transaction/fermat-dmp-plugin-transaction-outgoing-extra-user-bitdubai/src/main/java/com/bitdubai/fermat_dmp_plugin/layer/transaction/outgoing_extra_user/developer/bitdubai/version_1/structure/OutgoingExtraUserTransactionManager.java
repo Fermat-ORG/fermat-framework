@@ -125,8 +125,13 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
          */
 
         BitcoinWalletWallet bitcoinWalletWallet;
+
+
+
         try {
-            bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletID);
+                 bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletID);
+
+
         } catch (CantLoadWalletException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendFundsException("I couldn't load the wallet",e,"WalletId: "+ walletID.toString(),"");
