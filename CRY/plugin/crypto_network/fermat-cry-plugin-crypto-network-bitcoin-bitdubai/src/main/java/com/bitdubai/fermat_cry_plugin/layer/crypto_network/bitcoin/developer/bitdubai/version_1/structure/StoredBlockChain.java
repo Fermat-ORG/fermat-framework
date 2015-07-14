@@ -34,7 +34,7 @@ import static com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.develo
  * Holds the blockchain data.
  */
 
-class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginIdentity{
+public class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginIdentity{
     /**
      * StoredBlockChain members variables
      */
@@ -108,7 +108,8 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
         String blockChainFileName = userId.toString() + ".spv";
         try {
             /**
-             * I will save the blockchain into disk.             */
+             * I will save the blockchain into disk.
+             */
 
             PluginTextFile blockchainFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             blockchainFile.persistToMedia();
