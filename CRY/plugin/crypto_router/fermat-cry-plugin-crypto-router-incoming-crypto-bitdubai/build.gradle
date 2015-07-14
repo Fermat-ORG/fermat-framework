@@ -72,11 +72,18 @@ tasks.withType(FindBugs) {
     }
 }
 
+def jacocoHtmlReport = ""
+
 jacocoTestReport{
     reports{
-        println html.destination
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
     }
 }
+
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
+}
+
 
 jacocoTestReport.dependsOn clean, test
 jacocoTestReport.mustRunAfter test
