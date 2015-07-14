@@ -101,8 +101,10 @@ bitcoin-cli setgenerate true 1
 == Troubleshooting
 
 If you have problems sending bitcoins to the Fermat Bitcoin wallet, you should:
+
 [square]
 * Verify that the Fermat Wallet is connected to the local server by executing the following command:
+
 [source, linux]
 ----
 bitcoin-cli getpeerinfo
