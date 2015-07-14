@@ -49,7 +49,7 @@ bitcoin-qt
  public final String REGTEST_SERVER_ADDRESS = "yourIpAddress";
 
 [TIP]
-*Remember not to commit this change and upload your IP to the repository.*
+*Remember not to commit this change and upload your IP to the repository!!*
 
 == Generate new blocks and add bitcoins to your client.
 
@@ -85,4 +85,8 @@ sudo apt-get install qtqr
 
 * Copy that address in the Send tab of the Bitcoin core client and send as many bitcoins as you want.
 
-* Confirm the bitcoins you just recieved by generating a new block in the blockchain as explained before.
+* Confirm the bitcoins you just recieved by generating a new block in the blockchain.
+[source, linux]
+----
+bitcoin-cli setgenerate true 1
+----
