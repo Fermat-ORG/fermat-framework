@@ -25,8 +25,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.util.BitcoinWalletTransactionWrapper;
@@ -79,25 +81,37 @@ public class BitcoinWalletBasicWalletDao {
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         }
     }
+
+    public List<BitcoinWalletTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
+        try {
+            DatabaseTable bitcoinwalletTable = filterBitcoinWalletTableMaxOffset(max, offset);
+            return createTransactionList(bitcoinwalletTable.getRecords());
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        }
+    }
+
     /*
      * Add a new debit transaction.
      */
     public void addDebit(final BitcoinWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterDebitDebitException {
 
-        try{
-            if(isTransactionInTable(transactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType))
-                throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
-
-            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
-            long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount);
-            long bookRunningBalance = calculateBookRunningBalance(-bookAmount);
-
-            executeTransaction(transactionRecord,TransactionType.DEBIT ,balanceType, availableRunningBalance, bookRunningBalance);
-
-
-        } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteBitconTransactionException exception){
-            throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        try {
+            if (isTransactionInTable(transactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType)) {
+                //todo update if the record exists. The record might exists if many send request are executed.
+            } else {
+                try {
+                    long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
+                    long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
+                    long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount);
+                    long bookRunningBalance = calculateBookRunningBalance(-bookAmount);
+                    executeTransaction(transactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance);
+                } catch (CantGetBalanceRecordException | CantExecuteBitconTransactionException exception) {
+                    throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+                }
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, e, null, "Check the cause");
         }
     }
 
@@ -113,23 +127,13 @@ public class BitcoinWalletBasicWalletDao {
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
             long availableRunningBalance = calculateAvailableRunningBalance(availableAmount);
             long bookRunningBalance = calculateBookRunningBalance(bookAmount);
-
             executeTransaction(transactionRecord,TransactionType.CREDIT ,balanceType, availableRunningBalance, bookRunningBalance);
-
         } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteBitconTransactionException exception){
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         }
     }
 
-    public List<BitcoinWalletTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
-        try {
-            DatabaseTable bitcoinwalletTable = filterBitcoinWalletTableMaxOffset(max, offset);
-            return createTransactionList(bitcoinwalletTable.getRecords());
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
 
-        }
-    }
 
     public void updateMemoFiled(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException {
         // create the database objects
@@ -168,12 +172,12 @@ public class BitcoinWalletBasicWalletDao {
      * @throws CantLoadTableToMemoryException
      */
     private boolean isTransactionInTable(final UUID transactionId, final TransactionType transactionType, final BalanceType balanceType) throws CantLoadTableToMemoryException {
-        DatabaseTable bitCoinWlletTable = getBitcoinWalletTable();
-        bitCoinWlletTable.setUUIDFilter(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
-        bitCoinWlletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-        bitCoinWlletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-        bitCoinWlletTable.loadToMemory();
-        return !bitCoinWlletTable.getRecords().isEmpty();
+        DatabaseTable bitCoinWalletTable = getBitcoinWalletTable();
+        bitCoinWalletTable.setUUIDFilter(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        bitCoinWalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        bitCoinWalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+        bitCoinWalletTable.loadToMemory();
+        return !bitCoinWalletTable.getRecords().isEmpty();
     }
 
     private DatabaseTable getBitcoinWalletTable(){
@@ -205,11 +209,12 @@ public class BitcoinWalletBasicWalletDao {
 
     private DatabaseTableRecord getBalancesRecord() throws CantGetBalanceRecordException{
         try {
-            DatabaseTable bitcoinwalletTable = getBalancesTable();
-            bitcoinwalletTable.loadToMemory();
-            return bitcoinwalletTable.getRecords().get(0);
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantGetBalanceRecordException("Error to get balances record",cantLoadTableToMemory,"Can't load balance table" , "");
+            database.openDatabase();
+            DatabaseTable balancesTable = getBalancesTable();
+            balancesTable.loadToMemory();
+            return balancesTable.getRecords().get(0);
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantLoadTableToMemoryException exception) {
+            throw new CantGetBalanceRecordException("Error to get balances record",exception,"Can't load balance table" , "");
         }
     }
 
