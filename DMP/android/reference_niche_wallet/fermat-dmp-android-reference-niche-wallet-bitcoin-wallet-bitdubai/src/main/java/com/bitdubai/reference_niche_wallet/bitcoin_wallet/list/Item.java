@@ -1,0 +1,9 @@
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.list;
+
+import android.view.LayoutInflater;
+import android.view.View;
+
+public interface Item {
+    public int getViewType();
+    public View getView(LayoutInflater inflater, View convertView);
+}
