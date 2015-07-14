@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1;
 
 import org.fest.assertions.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  */
 public class TestGetClassesFullPatch {
     ExtraUserUserAddonRoot extraUserUserAddonRoot = new ExtraUserUserAddonRoot();
+    @Ignore
     @Test
     public void testGetClassesFullPath() throws Exception {
         List<String> returnedClasses;

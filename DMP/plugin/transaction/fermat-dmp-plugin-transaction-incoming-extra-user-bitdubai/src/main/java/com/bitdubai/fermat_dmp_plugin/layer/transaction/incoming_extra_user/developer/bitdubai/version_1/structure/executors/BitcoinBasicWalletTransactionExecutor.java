@@ -119,8 +119,6 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
             bitcoinWalletTransactionRecord.setActorToId(actorAddressBookRecord.getDeliveredByActorId());
             bitcoinWalletTransactionRecord.setActorToType(actorAddressBookRecord.getDeliveredByActorType());
 
-
-
             return bitcoinWalletTransactionRecord;
 
         } catch (CantGetActorAddressBookRegistryException e) {

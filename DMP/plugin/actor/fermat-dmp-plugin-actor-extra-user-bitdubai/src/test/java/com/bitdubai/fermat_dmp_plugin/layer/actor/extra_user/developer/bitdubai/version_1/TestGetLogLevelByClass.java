@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import org.fest.assertions.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class TestGetLogLevelByClass implements  LogManagerForDevelopers{
     DeveloperObjectFactory developerObjectFactory;
     DeveloperDatabase developerDatabase;
     DeveloperDatabaseTable developerDatabaseTable;
+    @Ignore
     @Test
     public void testGetLogLevelByClass() throws Exception {
         LogLevel logLevel;

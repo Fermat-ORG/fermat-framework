@@ -10,10 +10,10 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * Created by francisco on 08/07/15.
  */
-public class TestCrateDatabase {
+public class TestCreateDatabase {
         ExtraUserDatabaseFactory extraUserDatabaseFactory = new ExtraUserDatabaseFactory();
         Database database;
-    @Test
+    /*@Test
     public void testCreateDatabase() throws Exception {
        database=extraUserDatabaseFactory.createDatabase();
 
@@ -29,5 +29,5 @@ public class TestCrateDatabase {
             exception=e;
         }
         Assertions.assertThat(exception).isNull();
-    }
+    }*/
 }

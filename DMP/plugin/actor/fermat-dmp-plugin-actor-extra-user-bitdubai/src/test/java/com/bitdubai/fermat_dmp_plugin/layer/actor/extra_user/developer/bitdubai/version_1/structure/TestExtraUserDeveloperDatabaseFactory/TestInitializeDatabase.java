@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantInitializeExtraUserRegistryException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserDeveloperDatabaseFactory;
 import org.fest.assertions.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -15,6 +16,7 @@ public class TestInitializeDatabase {
     CantCreateDatabaseException cantCreateDatabaseException;
 
     CantInitializeExtraUserRegistryException cantInitializeExtraUserRegistryException;
+    @Ignore
     @Test
     public void testInitializeDatabase_InitializeExtraUserRegistry() throws Exception {
         cantCreateDatabaseException=null;

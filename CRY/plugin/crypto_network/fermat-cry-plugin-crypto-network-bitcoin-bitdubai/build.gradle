@@ -3,6 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'jacoco'
 
 group = "com.bitdubai.fermat.cry"
 version = '1.0.1'
@@ -72,3 +73,13 @@ tasks.withType(FindBugs) {
         html.enabled = true
     }
 }
+
+jacocoTestReport{
+    reports{
+        println html.destination
+    }
+}
+
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean
