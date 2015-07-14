@@ -15,6 +15,12 @@ dependencies {
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 }
 
+jacocoTestReport{
+    reports{
+        println html.destination
+    }
+}
+
 jacocoTestReport.dependsOn clean, test
 jacocoTestReport.mustRunAfter test
 test.mustRunAfter clean

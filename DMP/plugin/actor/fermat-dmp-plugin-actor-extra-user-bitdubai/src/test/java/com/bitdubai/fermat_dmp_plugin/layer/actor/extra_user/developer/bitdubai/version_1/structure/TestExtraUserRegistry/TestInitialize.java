@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantInitializeExtraUserRegistryException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserRegistry;
 import org.fest.assertions.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -11,6 +12,7 @@ import org.junit.Test;
 public class TestInitialize {
     ExtraUserRegistry extraUserRegistry = new ExtraUserRegistry();
     CantInitializeExtraUserRegistryException cantInitializeExtraUserRegistryException;
+    @Ignore
     @Test
     public void testInitialize() throws Exception {
         cantInitializeExtraUserRegistryException=null;

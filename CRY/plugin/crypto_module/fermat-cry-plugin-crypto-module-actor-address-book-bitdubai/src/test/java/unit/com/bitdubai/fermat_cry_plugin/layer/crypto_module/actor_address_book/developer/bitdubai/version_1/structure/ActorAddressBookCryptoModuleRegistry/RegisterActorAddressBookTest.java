@@ -50,6 +50,10 @@ public class RegisterActorAddressBookTest extends TestCase {
 
     Actors actorType;
 
+    UUID actorIdTo;
+
+    Actors actorTypeTo;
+
     CryptoAddress cryptoAddress;
 
 
@@ -61,6 +65,8 @@ public class RegisterActorAddressBookTest extends TestCase {
     public void setUp() throws Exception {
         actorId = UUID.randomUUID();
         actorType = Actors.EXTRA_USER;
+        actorIdTo = UUID.randomUUID();
+        actorTypeTo = Actors.INTRA_USER;
         cryptoAddress = new CryptoAddress("asdadas", CryptoCurrency.BITCOIN);
         pluginId = UUID.randomUUID();
         registry = new ActorAddressBookCryptoModuleRegistry();
@@ -76,7 +82,7 @@ public class RegisterActorAddressBookTest extends TestCase {
     public void testRegister_NotNull() throws Exception {
         when(database.getTable(anyString())).thenReturn(databaseTable);
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
-        registry.registerActorAddressBook(actorId, actorType, cryptoAddress);
+        registry.registerActorAddressBook(actorId, actorType, actorIdTo, actorTypeTo, cryptoAddress);
     }
 
     @Test(expected=CantRegisterActorAddressBookException.class)
@@ -85,21 +91,21 @@ public class RegisterActorAddressBookTest extends TestCase {
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
         doThrow(new CantInsertRecordException()).when(databaseTable).insertRecord(any(DatabaseTableRecord.class));
 
-        registry.registerActorAddressBook(actorId, actorType, cryptoAddress);
+        registry.registerActorAddressBook(actorId, actorType, actorIdTo, actorTypeTo, cryptoAddress);
     }
 
     @Test(expected=CantRegisterActorAddressBookException.class)
     public void testRegister_actorIdNull_CantRegisterActorAddressBookException() throws Exception {
-        registry.registerActorAddressBook(null, actorType, cryptoAddress);
+        registry.registerActorAddressBook(null, actorType, actorIdTo, actorTypeTo, cryptoAddress);
     }
 
     @Test(expected=CantRegisterActorAddressBookException.class)
     public void testRegister_actorTypeNull_CantRegisterActorAddressBookException() throws Exception {
-        registry.registerActorAddressBook(actorId, null, cryptoAddress);
+        registry.registerActorAddressBook(actorId, null, actorIdTo, actorTypeTo, cryptoAddress);
     }
 
     @Test(expected=CantRegisterActorAddressBookException.class)
     public void testRegister_cryptoAddressNull_CantRegisterActorAddressBookException() throws Exception {
-        registry.registerActorAddressBook(actorId, actorType, null);
+        registry.registerActorAddressBook(actorId, actorType, actorIdTo, actorTypeTo, null);
     }
 }
