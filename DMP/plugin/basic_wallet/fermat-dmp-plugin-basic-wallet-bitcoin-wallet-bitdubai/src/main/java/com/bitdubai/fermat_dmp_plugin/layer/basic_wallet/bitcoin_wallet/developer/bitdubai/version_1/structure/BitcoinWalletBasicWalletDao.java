@@ -96,17 +96,22 @@ public class BitcoinWalletBasicWalletDao {
      */
     public void addDebit(final BitcoinWalletTransactionRecord transactionRecord, final BalanceType balanceType) throws CantRegisterDebitDebitException {
 
-        try{
-            if(isTransactionInTable(transactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType))
-                throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
-
-            long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
-            long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
-            long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount);
-            long bookRunningBalance = calculateBookRunningBalance(-bookAmount);
-            executeTransaction(transactionRecord,TransactionType.DEBIT ,balanceType, availableRunningBalance, bookRunningBalance);
-        } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteBitconTransactionException exception){
-            throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        try {
+            if (isTransactionInTable(transactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType)) {
+                //todo update if the record exists. The record might exists if many send request are executed.
+            } else {
+                try {
+                    long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
+                    long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
+                    long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount);
+                    long bookRunningBalance = calculateBookRunningBalance(-bookAmount);
+                    executeTransaction(transactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance);
+                } catch (CantGetBalanceRecordException | CantExecuteBitconTransactionException exception) {
+                    throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+                }
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, e, null, "Check the cause");
         }
     }
 
