@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectManifestException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CentGetWalletFactoryProjectLanguageFileException;
@@ -37,7 +36,7 @@ public interface WalletFactoryProjectVersion {
      * @param skinName the name of the Skin file without the path structure.
      * @return The content of the file
      */
-    public WalletFactorySkin getSkin(String skinName) throws CentGetWalletFactoryProjectSkinFileException;
+    public WalletFactoryProjectSkin getSkin(String skinName) throws CentGetWalletFactoryProjectSkinFileException;
 
     public String getLanguageFile(String fileName) throws CentGetWalletFactoryProjectLanguageFileException;
 
