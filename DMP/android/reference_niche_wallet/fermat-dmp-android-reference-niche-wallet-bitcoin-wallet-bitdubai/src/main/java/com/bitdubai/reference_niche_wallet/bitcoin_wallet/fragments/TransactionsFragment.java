@@ -54,13 +54,18 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
 /**
- * Created by natalia on 17/06/15.
+ * Created by Matias
  */
 public class TransactionsFragment extends Fragment{
 
@@ -99,6 +104,8 @@ public class TransactionsFragment extends Fragment{
 
     TransactionArrayAdapterBasic transactionArrayAdapterBasic;
 
+    Map<Date,Set<CryptoWalletTransaction>> mapTransactionPerDate;
+
     public static TransactionsFragment newInstance(int position) {
         TransactionsFragment f = new TransactionsFragment();
         Bundle b = new Bundle();
@@ -125,6 +132,8 @@ public class TransactionsFragment extends Fragment{
             showMessage("CantGetCryptoWalletException- " + e.getMessage());
 
         }
+
+        mapTransactionPerDate= new HashMap<Date, Set<CryptoWalletTransaction>>();
     }
 
 
@@ -149,7 +158,7 @@ public class TransactionsFragment extends Fragment{
 
 
 
-        /*
+
 
         // Create the adapter to convert the array to views
 
@@ -177,9 +186,11 @@ public class TransactionsFragment extends Fragment{
                 refreshTransactionsContent();
             }
         });
-        */
+
 
         //TODO: Fin de lo tagueado
+
+
 
 
 
@@ -219,6 +230,13 @@ public class TransactionsFragment extends Fragment{
         items.add(new EntryItem("Sony Ericson", "Xperia"));
         items.add(new EntryItem("Nokiya", "Lumia"));
 
+
+
+        //TODO:
+        loadTransactionMap();
+
+
+
         EntryAdapter adapter = new EntryAdapter(getActivity(), items);
         listViewTransactions.setAdapter(adapter);
         //listViewTransactions.setOnItemClickListener(this);
@@ -226,6 +244,19 @@ public class TransactionsFragment extends Fragment{
 
 
         return rootView;
+    }
+
+    private void loadTransactionMap(){
+        for(CryptoWalletTransaction transaction:lstTransactions){
+            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
+            if(!mapTransactionPerDate.containsKey(date)){
+                Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
+                cryptoWalletTransactionSet.add(transaction);
+                mapTransactionPerDate.put(date,cryptoWalletTransactionSet);
+            }else{
+                mapTransactionPerDate.get(date).add(transaction);
+            }
+        }
     }
 
 
