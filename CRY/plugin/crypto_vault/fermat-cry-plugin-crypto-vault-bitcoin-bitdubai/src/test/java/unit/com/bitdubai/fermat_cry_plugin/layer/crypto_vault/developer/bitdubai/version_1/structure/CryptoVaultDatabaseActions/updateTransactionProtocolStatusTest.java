@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -42,6 +43,10 @@ import java.util.List;
 import java.util.UUID;
 
 import unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.Common.MockedPluginDatabaseSystem;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by rodrigo on 2015.07.15..
@@ -414,5 +419,38 @@ public class updateTransactionProtocolStatusTest {
         public void setContext(Object context) {
 
         }
+    }
+
+    @Mock Database database;
+    @Mock DatabaseTable databaseTable;
+    @Mock DatabaseTableRecord databaseTableRecord;
+    @Mock DatabaseTransaction transaction;
+
+    @Test
+    public void updateTransactionProtocolStatus_RecordEmpty_return0_Test() throws CantExecuteQueryException {
+        List<DatabaseTableRecord> records = new ArrayList<DatabaseTableRecord>();
+        //records.add(databaseTableRecord);
+        when(database.getTable(anyString())).thenReturn(databaseTable);
+        when(databaseTable.getRecords()).thenReturn(records);
+        when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
+        when(database.newTransaction()).thenReturn(transaction);
+
+
+        CryptoVaultDatabaseActions cryptoVaultDatabaseActions = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+        Assert.assertEquals(cryptoVaultDatabaseActions.updateTransactionProtocolStatus(true), 0);
+
+
+    }
+
+    @Test (expected =  CantExecuteQueryException.class)
+    public void updateTransactionProtocolStatus_CantLoadTableToMemomyException() throws CantExecuteQueryException, CantLoadTableToMemoryException {
+        when(database.getTable(anyString())).thenReturn(databaseTable);
+        doThrow(new CantLoadTableToMemoryException()).when(databaseTable).loadToMemory();
+
+
+        CryptoVaultDatabaseActions cryptoVaultDatabaseActions = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+        cryptoVaultDatabaseActions.updateTransactionProtocolStatus(true);
+
+
     }
 }
