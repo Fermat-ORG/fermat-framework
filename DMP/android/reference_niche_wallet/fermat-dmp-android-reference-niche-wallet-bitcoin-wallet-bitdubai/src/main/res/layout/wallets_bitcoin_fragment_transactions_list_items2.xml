@@ -9,14 +9,6 @@
         android:background="#fbf7ed"
         >
 
-        <TextView
-        android:id="@+id/separator"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/darker_gray"
-            android:text="Today"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,6 +21,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/person"
                 android:padding="5sp"
+                android:id="@+id/imageView_contact"
                 />
 
 
@@ -96,7 +89,7 @@
                     android:layout_weight="1"
                     />
                 <TextView
-                    android:id="@+id/textView_tyme"
+                    android:id="@+id/textView_time"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="12sp"

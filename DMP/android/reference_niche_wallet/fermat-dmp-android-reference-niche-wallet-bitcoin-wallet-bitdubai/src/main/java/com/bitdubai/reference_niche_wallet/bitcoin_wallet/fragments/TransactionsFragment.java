@@ -455,15 +455,21 @@ public class TransactionsFragment extends Fragment{
 
                 }else{
                     EntryItem ei = (EntryItem)i;
-                    v = vi.inflate(R.layout.list_item_enty, null);
-                    final TextView title = (TextView)v.findViewById(R.id.list_item_entry_title);
-                    final TextView subtitle = (TextView)v.findViewById(R.id.list_item_entry_summary);
+                    //v = vi.inflate(R.layout.list_item_enty, null);
+                    //final TextView title = (TextView)v.findViewById(R.id.list_item_entry_title);
+                    //final TextView subtitle = (TextView)v.findViewById(R.id.list_item_entry_summary);
+                    v = vi.inflate(R.layout.wallets_bitcoin_fragment_transactions_list_items2,null);
+                    final TextView textView_contact_name =(TextView)v.findViewById(R.id.textView_contact_name);
+                    final TextView textView_type =(TextView)v.findViewById(R.id.textView_type);
+                    final TextView textView_amount =(TextView)v.findViewById(R.id.textView_amount);
+                    final TextView textView_time =(TextView)v.findViewById(R.id.textView_time);
+                    final ImageView imageView_contact =(ImageView)v.findViewById(R.id.imageView_contact);
 
 
-                    if (title != null)
-                        title.setText(ei.title);
-                    if(subtitle != null)
-                        subtitle.setText(ei.subtitle);
+                    if (textView_contact_name != null)
+                        textView_contact_name.setText(ei.title);
+                    if(textView_amount != null)
+                        textView_amount.setText(ei.subtitle);
                 }
             }
             return v;
