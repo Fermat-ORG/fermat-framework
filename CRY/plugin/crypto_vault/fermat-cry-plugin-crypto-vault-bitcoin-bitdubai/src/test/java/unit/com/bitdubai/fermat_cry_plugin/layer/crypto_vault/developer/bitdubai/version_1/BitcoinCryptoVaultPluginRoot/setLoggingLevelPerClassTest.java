@@ -1,9 +1,7 @@
-package test.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
+package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
-
-import junit.framework.Assert;
 
 import org.junit.Test;
 
@@ -22,7 +20,7 @@ public class setLoggingLevelPerClassTest {
     public void test(){
         BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
         Map<String, LogLevel> c = new HashMap<String, LogLevel>() ;
-        c.put(classToTest, logLevel );
+        c.put(classToTest, logLevel);
         /**
          * I save the Log level for class Test
          */
@@ -32,6 +30,16 @@ public class setLoggingLevelPerClassTest {
          * I retrieved the LogLevel for class Test.
          */
         assertEquals(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(classToTest), logLevel );
+
+        LogLevel newLogLevel = LogLevel.MINIMAL_LOGGING;
+        c.clear();
+        c.put(classToTest, newLogLevel);
+        root.setLoggingLevelPerClass(c);
+
+        /**
+         * I retrieved the LogLevel for class Test.
+         */
+        assertEquals(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(classToTest), newLogLevel);
     }
 
 }
