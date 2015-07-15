@@ -207,13 +207,13 @@ public class CreateContactFragment extends Fragment {
     }
 
     private void returnToContacts() {
-        ContactsFragment contactsFragment = new ContactsFragment();
+        /*ContactsFragment contactsFragment = new ContactsFragment();
 
         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
         FT.replace(R.id.contacts_container, contactsFragment);
         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        FT.commit();
+        FT.commit();*/
     }
 
     private void pasteFromClipboard(View rootView) {

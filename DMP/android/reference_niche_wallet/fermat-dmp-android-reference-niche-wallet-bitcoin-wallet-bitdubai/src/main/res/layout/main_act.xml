@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:id="@+id/fragment_container"
+    >
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/fragment_container2">
+
+        <EditText
+            android:id="@+id/search_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:drawableLeft="@drawable/ic_search"
+            android:hint="@string/search_hint"
+            android:singleLine="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_add_person_grey"
+            android:layout_gravity="right"
+            android:layout_alignRight="@id/search_view"
+            android:layout_alignBottom="@id/search_view"
+            android:id="@+id/imageView_add_contact"
+            />
+
+
+    </RelativeLayout>
+
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <include
+            layout="@layout/loading_empty_view"
+            />
+
+        <com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.PinnedHeaderListView
+            android:id="@+id/list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollingCache="false" />
+    </FrameLayout>
+
+</LinearLayout>

@@ -142,7 +142,7 @@ public class TransactionsFragment extends Fragment {
         lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
 
         //transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(),lstTransactions); //showTransactionListSelected(lstTransactions, Platform.TYPE_BALANCE_TYPE_SELECTED));
-        TransactionArrayAdapterBasic transactionArrayAdapterBasic = new TransactionArrayAdapterBasic(getActivity(),lstTransactions);
+        transactionArrayAdapterBasic = new TransactionArrayAdapterBasic(getActivity(),lstTransactions);
 
         //loadNewTransactions();
 
@@ -240,11 +240,12 @@ public class TransactionsFragment extends Fragment {
 
             }
         }
-        //pointerOffset=lstTransactions.size();
+        pointerOffset=lstTransactions.size();
 
         showTransactionListSelected(lstTransactions,Platform.TYPE_BALANCE_TYPE_SELECTED);
 
-        transactionArrayAdapter.notifyDataSetChanged();
+        //transactionArrayAdapter.notifyDataSetChanged();
+        transactionArrayAdapterBasic.notifyDataSetChanged();
     }
 
     @Override

@@ -343,6 +343,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             }
 
         } catch (Exception e) {
+
+            // TODO:  Error manager null
             this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Can't CreateoptionMenu: " + e.getMessage(), Toast.LENGTH_LONG).show();
