@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.FermatListViewFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +50,7 @@ import java.util.UUID;
 /**
  * Created by natalia on 19/06/15.
  */
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends Fragment implements FermatListViewFragment{
 
     private static final String ARG_POSITION = "position";
     private static final String ARG_PLATFORM = "platform";
@@ -142,7 +143,6 @@ public class ContactsFragment extends Fragment {
 
     //image view button to add contact
     ImageView imageView_add_contact;
-    Button btn_add_contact;
 
 
     private void setupViews(View rootView) {
@@ -320,6 +320,10 @@ public class ContactsFragment extends Fragment {
 
             }
         });
+    }
+
+    public ListFilter instanceOfListFilter(){
+        return new ListFilter();
     }
 
     public class ListFilter extends Filter {
