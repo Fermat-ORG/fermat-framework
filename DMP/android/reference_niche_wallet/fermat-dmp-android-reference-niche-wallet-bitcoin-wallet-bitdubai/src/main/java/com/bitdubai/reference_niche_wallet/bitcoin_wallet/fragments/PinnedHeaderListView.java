@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -244,8 +245,8 @@ public class PinnedHeaderListView extends ListView implements IIndexBarFilter {
 		}
 	}
 
-	
-	@Override
+
+    @Override
 	public void filterList(float indexBarY, int position,String previewText) {
 		this.mIndexBarY=indexBarY;
 

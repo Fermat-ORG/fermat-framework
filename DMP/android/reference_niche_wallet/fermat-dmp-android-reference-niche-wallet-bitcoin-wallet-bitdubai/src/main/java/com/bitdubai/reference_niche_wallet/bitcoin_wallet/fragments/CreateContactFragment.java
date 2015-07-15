@@ -207,13 +207,18 @@ public class CreateContactFragment extends Fragment {
     }
 
     private void returnToContacts() {
-        /*ContactsFragment contactsFragment = new ContactsFragment();
+        ContactsFragment contactsFragment = new ContactsFragment();
 
         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
-        FT.replace(R.id.contacts_container, contactsFragment);
         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        FT.commit();*/
+        //linearLayout.setVisibility(View.GONE);
+        //listViewContacs.setVisibility(View.GONE);
+        //textViewEmptyListView.setVisibility(View.GONE);
+        //createContactFragment.detach(createContactFragment);
+        //FT.attach(createContactFragment);
+        FT.replace(R.id.fragment_container2,contactsFragment);
+        FT.commit();
     }
 
     private void pasteFromClipboard(View rootView) {
