@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.NewWalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
@@ -209,15 +208,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         return null;
     }
 
-    @Override
-    public void saveNavigationStructure(UUID walletNavigationStructureId, WalletNavigationStructure walletNavigationStructure) {
-
-    }
-
-    @Override
-    public void saveWalletResources(UUID resourcesId, NewWalletResources walletResources) {
-
-    }
 
     /**
      * <p>This method read wallet manifest file to get resources names, to download from repository.

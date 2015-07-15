@@ -145,10 +145,9 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
          */
 
         boolean existWallet = false;
-       // try
-      //  {
+        try{
             //load user's wallets ids
-       /*     this.loadUserWallets(userId);
+            this.loadUserWallets(userId);
 
             Iterator iterator = walletIds.entrySet().iterator();
 
@@ -156,9 +155,9 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
                 if( mapEntry.getValue().toString().equals(walletId.toString()))
                     existWallet = true;
-            }*/
+            }
 
-         /*   if(!existWallet)
+            if(!existWallet)
             {
                 //Create new Bitcoin Wallet
 
@@ -172,21 +171,16 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
                     //Save wallet id on file
 
-                    try
-                    {
+                    try {
                         this.persistWallet(walletId);
                     }
-                    catch (CantPersistWalletException cantPersistWalletException)
-                    {
-                        //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistWalletException);
+                    catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 
                     }
 
                 }
-                catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException cantCreateWalletException)
-                {
-                    //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateWalletException);
+                catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException cantCreateWalletException) {
                     throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 
                 }
@@ -195,9 +189,9 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
         }
         catch(CantLoadWalletsException cantLoadWalletsException)
         {
-      //      errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
+           errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
             throw new CantStartPluginException();
-        }*/
+        }
 
 
 

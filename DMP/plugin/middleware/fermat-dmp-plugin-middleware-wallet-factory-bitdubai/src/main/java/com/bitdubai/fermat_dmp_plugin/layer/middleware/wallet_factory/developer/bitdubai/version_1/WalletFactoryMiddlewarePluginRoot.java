@@ -5,7 +5,10 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -96,10 +99,6 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsW
         this.pluginId = pluginId;
     }
 
-    @Override
-    public void createWalletFactoryProject() {
-
-    }
 
 
     /**
@@ -146,4 +145,23 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsW
 
     }
 
+    @Override
+    public void createEmptyWalletFactoryProject(String name) {
+
+    }
+
+    @Override
+    public void importWalletFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException {
+
+    }
+
+    @Override
+    public void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException {
+
+    }
+
+    @Override
+    public WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException {
+        return null;
+    }
 }
