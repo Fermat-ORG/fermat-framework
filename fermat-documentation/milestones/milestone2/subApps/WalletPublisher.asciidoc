@@ -30,7 +30,6 @@ de la plataforma.
 
 Algunas de las funcionalidades específicas de este módulo serán:
 
-* **ESTO SE ECHÓ ATRÁS:** Toma un WFP y publica los recursos y estructura de navegación en al network service Wallet Resources. +
 * Comunica al Wallet Store Network Service que se tiene una nueva wallet en el catálogo completando
 la información de la versión, nombre, id de la wallet, desarrollador y descripción.
 * A futuro: llevar algunas estadísticas sobre la wallet. Por ejemplo, cómo ha crecido el número de

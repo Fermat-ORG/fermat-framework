@@ -126,6 +126,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             this.walletRuntimeMiddleware = (WalletRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
             this.errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
+            ApplicationSession.setErrorManager(errorManager);
 
             NavigateActivity();
         } catch (Exception e) {
@@ -192,7 +193,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
 
         } catch (Exception ex) {
-            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
             Toast.makeText(getApplicationContext(), "Can't Load tabs: " + ex.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -304,7 +305,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             }
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Error in NavigateActivity " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -319,12 +320,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     // TODO: En definitiva, tenemos que llegar al punto de que la parametrización este en el plugin WalletRuntime y APPRuntime y solo ahi.
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         try {
             this.menu = menu;
-            MenuInflater inflater = getMenuInflater();
+            //MenuInflater inflater = getMenuInflater();
 
 
             switch (this.activity.getType()) {
@@ -345,12 +346,13 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         } catch (Exception e) {
 
             // TODO:  Error manager null
-            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+//            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            e.printStackTrace();
 
             Toast.makeText(getApplicationContext(), "Can't CreateoptionMenu: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -386,7 +388,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
 
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             //Matias
             //por ahora lo saco porque no me toma el tag del parametro, vamos a ver como implementarlo
             //Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -508,7 +510,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             }
 
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             //Esto va a habr que cambiarlo porque no me toma el tag, Matias
             //Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -582,7 +584,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             this.PagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Can't Clean Windows: " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -684,20 +686,17 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         case CWP_WALLET_PUBLISHER_MAIN:
                             currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);
                             break;
-
-
-
                     }
 
                 } catch (Exception ex) {
-                    errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+                    ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
                     Toast.makeText(getApplicationContext(), "Error in PagerAdapter GetItem " + ex.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
                 return currentFragment;
             } catch (Exception e) {
-                errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
                 Toast.makeText(getApplicationContext(), "Can't getItem PageAdpater: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 return null;

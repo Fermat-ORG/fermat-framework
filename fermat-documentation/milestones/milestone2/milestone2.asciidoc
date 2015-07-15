@@ -89,7 +89,7 @@ y enviarlo a la Wallet Store para que otros usuarios puedan descargar la wallet.
 de que puedan haber diferentes versiones (actualizaciones) de la misma wallet. Cuando desarrollamos
 una nueva versión de la Niche Wallet, exportamos el proyecto de Wallet Factory para que pueda ser
 abierto por el Wallet Publisher como una versión nueva de la Niche Wallet. +
-Desde el Wallet Publisher publicamos la wallet importada en el Wallet Store. Adenpas permite
+Desde el Wallet Publisher publicamos la wallet importada en el Wallet Store. Adenás permite
 monitorear la cantidad de instalaciones de cada versión de la wallet en el sistema Fermat. Para subir
 una nueva version de la Reference Niche Wallet a la Wallet Store, se comunica con el Network Service
 DMP Wallet Store, que en el fondo es un nodo de la DAPP Wallet Store.
