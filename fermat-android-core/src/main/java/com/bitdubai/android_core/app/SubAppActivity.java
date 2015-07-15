@@ -319,7 +319,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     // TODO: En definitiva, tenemos que llegar al punto de que la parametrización este en el plugin WalletRuntime y APPRuntime y solo ahi.
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         try {
@@ -350,7 +350,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             Toast.makeText(getApplicationContext(), "Can't CreateoptionMenu: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
