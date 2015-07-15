@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 27/05/15.
  */
-class BitcoinEventListeners implements BlockChainListener, DealsWithLogger,  PeerEventListener{
+public class BitcoinEventListeners implements BlockChainListener, DealsWithLogger,  PeerEventListener{
 
     LogManager logManager;
     @Override

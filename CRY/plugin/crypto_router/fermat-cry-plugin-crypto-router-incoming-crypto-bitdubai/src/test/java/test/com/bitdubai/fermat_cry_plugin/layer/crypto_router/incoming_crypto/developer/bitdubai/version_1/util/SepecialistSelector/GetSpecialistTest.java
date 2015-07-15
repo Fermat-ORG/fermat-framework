@@ -61,7 +61,7 @@ public class GetSpecialistTest extends TestCase {
         cryptoTransaction = new CryptoTransaction("ernseto", cryptoAddress, cryptoAddress, CryptoCurrency.BITCOIN, 10, CryptoStatus.ON_BLOCKCHAIN);
         doReturn(actorAddressBookRegistry).when(actorAddressBookManager).getActorAddressBookRegistry();
         doReturn(actorAddressBookRecord).when(actorAddressBookRegistry).getActorAddressBookByCryptoAddress(any(CryptoAddress.class));
-        doReturn(Actors.DEVICE_USER).when(actorAddressBookRecord).getActorType();
+        doReturn(Actors.DEVICE_USER).when(actorAddressBookRecord).getDeliveredToActorType();
     }
 
 
@@ -99,7 +99,7 @@ public class GetSpecialistTest extends TestCase {
     // test if i cannot found a specialist
     @Test(expected = CantSelectSpecialistException.class)
     public void testGetSpecialist_CantFoundSpecialist() throws Exception {
-        doReturn(Actors.SHOP).when(actorAddressBookRecord).getActorType();
+        doReturn(Actors.SHOP).when(actorAddressBookRecord).getDeliveredToActorType();
 
         specialistSelector.getSpecialist(cryptoTransaction);
     }

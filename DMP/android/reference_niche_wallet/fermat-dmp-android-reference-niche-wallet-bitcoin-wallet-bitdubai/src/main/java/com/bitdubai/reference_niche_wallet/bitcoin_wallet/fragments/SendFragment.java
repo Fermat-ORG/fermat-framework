@@ -245,7 +245,7 @@ public class SendFragment extends Fragment{
                 // TODO harcoded deliveredbyactorid
                 cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
 
-                //Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
             } catch (InsufficientFundsException e) {
                 Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,8 @@ public class TransactionsFragment extends Fragment {
     Typeface tf;
 
 
+    TransactionArrayAdapterBasic transactionArrayAdapterBasic;
+
     public static TransactionsFragment newInstance(int position) {
         TransactionsFragment f = new TransactionsFragment();
         Bundle b = new Bundle();
@@ -112,8 +115,6 @@ public class TransactionsFragment extends Fragment {
         listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 
-
-
         //adapter.
         // Set the emptyView to the ListView
 
@@ -140,7 +141,8 @@ public class TransactionsFragment extends Fragment {
         BalanceType balanceType = Platform.TYPE_BALANCE_TYPE_SELECTED;
         lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
 
-        transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(),lstTransactions); //showTransactionListSelected(lstTransactions, Platform.TYPE_BALANCE_TYPE_SELECTED));
+        //transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(),lstTransactions); //showTransactionListSelected(lstTransactions, Platform.TYPE_BALANCE_TYPE_SELECTED));
+        transactionArrayAdapterBasic = new TransactionArrayAdapterBasic(getActivity(),lstTransactions);
 
         //loadNewTransactions();
 
@@ -238,11 +240,12 @@ public class TransactionsFragment extends Fragment {
 
             }
         }
-        //pointerOffset=lstTransactions.size();
+        pointerOffset=lstTransactions.size();
 
         showTransactionListSelected(lstTransactions,Platform.TYPE_BALANCE_TYPE_SELECTED);
 
-        transactionArrayAdapter.notifyDataSetChanged();
+        //transactionArrayAdapter.notifyDataSetChanged();
+        transactionArrayAdapterBasic.notifyDataSetChanged();
     }
 
     @Override
@@ -282,9 +285,9 @@ public class TransactionsFragment extends Fragment {
             //Get TextViews
             TextView txtView_contact_name = (TextView)listItemView.findViewById(R.id.textView_contact_name);
             TextView txtView_amount = (TextView)listItemView.findViewById(R.id.textView_amount);
-            TextView txtView_notes = (TextView)listItemView.findViewById(R.id.textView_notes);
+            //TextView txtView_notes = (TextView)listItemView.findViewById(R.id.textView_notes);
             TextView txtView_when = (TextView)listItemView.findViewById(R.id.textView_time);
-            TextView txtView_type = (TextView)listItemView.findViewById(R.id.textView_status);
+            //TextView txtView_type = (TextView)listItemView.findViewById(R.id.textView_status);
 
             //Getting Transactions instance at the current position
             CryptoWalletTransaction item = getItem(position);
@@ -297,12 +300,58 @@ public class TransactionsFragment extends Fragment {
             }else if (Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.BOOK)
                 txtView_amount.setText(Platform.formatBalanceString(item.getBitcoinWalletTransaction().getRunningBookBalance()));
 
-            if(item.getBitcoinWalletTransaction().getMemo()!=null){
+            /*if(item.getBitcoinWalletTransaction().getMemo()!=null){
                 txtView_notes.setText(item.getBitcoinWalletTransaction().getMemo());
             }
+            */
 
-            txtView_when.setText(Platform.getTimeAgo(item.getBitcoinWalletTransaction().getTimestamp()));
-            txtView_type.setText(item.getBitcoinWalletTransaction().getTransactionType().toString());
+            txtView_when.setText((DateFormat.format("hh:mm:ss", item.getBitcoinWalletTransaction().getTimestamp())));
+            //txtView_type.setText(item.getBitcoinWalletTransaction().getTransactionType().toString());
+
+            TextView textView_type = (TextView) listItemView.findViewById(R.id.textView_type);
+            textView_type.setText("Received");
+
+            return listItemView;
+
+        }
+    }
+
+    public class TransactionArrayAdapterBasic extends ArrayAdapter<CryptoWalletTransaction> {
+
+        List<CryptoWalletTransaction> lstTrasactions = new ArrayList<CryptoWalletTransaction>();
+
+        public TransactionArrayAdapterBasic(Context context, List<CryptoWalletTransaction> lstTrasactions) {
+            super(context, 0, lstTrasactions);
+            this.lstTrasactions=lstTrasactions;
+
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+
+            //get inflater
+            LayoutInflater inflater = (LayoutInflater)getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
+            View listItemView = convertView;
+
+            //if view exist
+            if (null == convertView) {
+                //Si no existe, entonces inflarlo con image_list_view.xml
+                listItemView = inflater.inflate(
+                        R.layout.wallets_bitcoin_fragment_transactions1,
+                        parent,
+                        false);
+            }
+
+            //Get TextViews
+            TextView txtViewDay = (TextView)listItemView.findViewById(R.id.txtViewDay);
+
+
+            //inflate ListView
+            ListView listView = (ListView) listItemView.findViewById(R.id.transactionlist);
+            transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTrasactions);
 
             return listItemView;
 

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
@@ -29,6 +30,8 @@ import static org.mockito.Mockito.when;
  @RunWith(MockitoJUnitRunner.class)
 public class StopTest {
 
+    @Mock
+    private ActorAddressBookManager mockActorAddressBookManager;
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
     @Mock
@@ -57,7 +60,7 @@ public class StopTest {
     @Test
     public void Stop_AgentStops_TheThreadIsStoppedInmediately() throws Exception{
 
-        testRelayAgent = new IncomingExtraUserRelayAgent(mockBitcoinWalletManager, mockErrorManager, testRegistry, mockWalletAddressBookManager);
+        testRelayAgent = new IncomingExtraUserRelayAgent(mockBitcoinWalletManager, mockActorAddressBookManager, mockErrorManager, testRegistry, mockWalletAddressBookManager);
 
         testRelayAgent.start();
         Thread.sleep(100);

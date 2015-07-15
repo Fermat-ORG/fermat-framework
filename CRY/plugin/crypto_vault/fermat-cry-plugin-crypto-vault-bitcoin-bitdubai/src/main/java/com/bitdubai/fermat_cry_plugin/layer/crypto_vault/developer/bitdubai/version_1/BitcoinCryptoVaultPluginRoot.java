@@ -354,6 +354,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 vault.setPluginFileSystem(pluginFileSystem);
                 vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
                 vault.setPluginId(pluginId);
+                vault.setEventManager(eventManager);
 
                 vault.loadOrCreateVault();
 

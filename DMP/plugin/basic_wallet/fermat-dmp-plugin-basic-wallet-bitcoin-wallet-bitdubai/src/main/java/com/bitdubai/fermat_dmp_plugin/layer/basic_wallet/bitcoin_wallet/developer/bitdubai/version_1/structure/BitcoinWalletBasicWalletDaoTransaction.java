@@ -33,8 +33,7 @@ public class BitcoinWalletBasicWalletDaoTransaction {
     }
 
 
-    public void executeTransaction(DatabaseTable transactionTable ,DatabaseTableRecord transactionRecord,DatabaseTable updateTable,DatabaseTableRecord updateRecord) throws CantExecuteBitconTransactionException
-    {
+    public void executeTransaction(DatabaseTable transactionTable ,DatabaseTableRecord transactionRecord,DatabaseTable updateTable,DatabaseTableRecord updateRecord) throws CantExecuteBitconTransactionException{
         try {
             DatabaseTransaction dbTransaction = database.newTransaction();
 

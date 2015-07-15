@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIrreversibleEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
@@ -30,6 +32,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import org.bitcoinj.core.AbstractWalletEventListener;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.GetDataMessage;
 import org.bitcoinj.core.Message;
 import org.bitcoinj.core.Peer;
@@ -37,6 +40,7 @@ import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.script.Script;
 
 import java.util.List;
 import java.util.UUID;
@@ -153,7 +157,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
-        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(fullPath), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx , "Transaction confidence changed. Transaction: " + tx);
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(fullPath), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx, "Transaction confidence changed. Transaction: " + tx);
 
         TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
         CryptoStatus cryptoStatus;
@@ -171,7 +175,9 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
                 /**
                  * I create the transaction in the DB and raise the event
                  */
-                eventManager.raiseEvent(new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK));
+                PlatformEvent eventON_CRYPTO_NETWORK = new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+                eventON_CRYPTO_NETWORK.setSource(EventSource.CRYPTO_VAULT);
+                eventManager.raiseEvent(eventON_CRYPTO_NETWORK);
             }
 
             if (cryptoStatus == CryptoStatus.ON_BLOCKCHAIN) {
@@ -179,29 +185,42 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
                  * I create the transaction in the DB and raise the event
                  */
                 dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
-                eventManager.raiseEvent(new IncomingCryptoOnBlockchainEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN));
+                PlatformEvent eventINCOMING_CRYPTO_ON_BLOCKCHAIN = new IncomingCryptoOnBlockchainEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
+                eventINCOMING_CRYPTO_ON_BLOCKCHAIN.setSource(EventSource.CRYPTO_VAULT);
+                eventManager.raiseEvent(eventINCOMING_CRYPTO_ON_BLOCKCHAIN);
             }
 
             if (cryptoStatus == CryptoStatus.IRREVERSIBLE)
             /**
              * I don't create a new transaction for this CryptoStatus
-             */
-                eventManager.raiseEvent(new IncomingCryptoIrreversibleEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE));
-
+             */ {
+                PlatformEvent eventINCOMING_CRYPTO_IRREVERSIBLE = new IncomingCryptoIrreversibleEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
+                eventINCOMING_CRYPTO_IRREVERSIBLE.setSource(EventSource.CRYPTO_VAULT);
+                eventManager.raiseEvent(eventINCOMING_CRYPTO_IRREVERSIBLE);
+                }
 
             if (cryptoStatus == CryptoStatus.REVERSED_ON_CRYPTO_NETWORK)
             /**
              * I create the transaction in the DB and raise the event
-             */
+             */{
                 dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
-                eventManager.raiseEvent(new IncomingCryptoReversedOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK));
+                PlatformEvent eventREVERSED_ON_CRYPTO_NETWORK = new IncomingCryptoReversedOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+                eventREVERSED_ON_CRYPTO_NETWORK.setSource(EventSource.CRYPTO_VAULT);
+                eventManager.raiseEvent(eventREVERSED_ON_CRYPTO_NETWORK);
+                }
+
 
             if (cryptoStatus == CryptoStatus.REVERSED_ON_BLOCKCHAIN)
             /**
              * I create the transaction in the DB and raise the event
-             */
+             */{
                 dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
-                eventManager.raiseEvent(new IncomingCryptoReversedOnBlockchainEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN));
+
+                PlatformEvent eventREVERSED_ON_BLOCKCHAIN = new IncomingCryptoReversedOnBlockchainEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+                eventREVERSED_ON_BLOCKCHAIN.setSource(EventSource.CRYPTO_VAULT);
+                eventManager.raiseEvent(eventREVERSED_ON_BLOCKCHAIN);
+                }
+
 
 
         } catch (CantExecuteQueryException e) {
