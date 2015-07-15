@@ -123,7 +123,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     public BitcoinCryptoNetworkMonitoringAgent(Wallet wallet, UUID UserId){
         this.wallet = wallet;
         this.userId = UserId;
-        this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
+        this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration(null);
         peers = null;
     }
 
@@ -151,24 +151,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          */
         peers.stopAsync();
         peers.awaitTerminated();
-
-        if (peers.isRunning())
-        /**
-         * If it didn't stop, then I will re try after 10 seconds.
-         */
-            try {
-                peers.awaitTerminated(10, TimeUnit.SECONDS);
-            } catch (TimeoutException e) {
-                try {
-                    StringBuilder context = new StringBuilder("Current amount of connected Peers: " + peers.getConnectedPeers().size());
-                    context.append(CantDisconnectFromNetworkException.CONTEXT_CONTENT_SEPARATOR);
-                    context.append("Is running: " + peers.isRunning());
-                    throw new CantDisconnectFromNetworkException("Could not stop CryptoNetwork agent and terminate connection.", e, context.toString(),"Service is already stopped.");
-                } catch (CantDisconnectFromNetworkException e1) {
-
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e1);
-                }
-            }
     }
 
     /**

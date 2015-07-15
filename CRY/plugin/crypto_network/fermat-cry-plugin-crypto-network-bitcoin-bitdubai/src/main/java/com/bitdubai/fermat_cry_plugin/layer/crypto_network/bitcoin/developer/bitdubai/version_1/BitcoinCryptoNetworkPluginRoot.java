@@ -239,4 +239,12 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
             return DEFAULT_LOG_LEVEL;
         }
     }
+
+    /**
+     * gets the amount if peers connected.
+     * @return
+     */
+    public int getConnectedPeers(){
+        return bitcoinCryptoNetworkMonitoringAgent.getConnectedPeers();
+    }
 }

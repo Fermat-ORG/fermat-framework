@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletNavigationStructureException;
+
 import java.util.UUID;
 
 /**
@@ -9,5 +11,5 @@ public interface WalletNavigationStructure {
 
     public UUID getNavigationStructureId();
 
-    public String getWalletNavigationStructure();
+    public String getWalletNavigationStructure() throws CantGetWalletNavigationStructureException;
 }
