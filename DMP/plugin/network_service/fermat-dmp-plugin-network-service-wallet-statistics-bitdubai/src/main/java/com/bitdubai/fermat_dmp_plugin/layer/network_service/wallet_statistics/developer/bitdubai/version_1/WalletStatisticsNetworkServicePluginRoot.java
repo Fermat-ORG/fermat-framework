@@ -3,6 +3,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.d
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.exceptions.CantGetWalletStatisticsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.WalletStatistics;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -95,7 +97,7 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     }
 
     @Override
-    public long getNumberOfDownloads(UUID walletCatalogId) {
-        return 0;
+    public WalletStatistics getWalletStatistics(UUID walletCatalogId) throws CantGetWalletStatisticsException{
+        return null;
     }
 }
