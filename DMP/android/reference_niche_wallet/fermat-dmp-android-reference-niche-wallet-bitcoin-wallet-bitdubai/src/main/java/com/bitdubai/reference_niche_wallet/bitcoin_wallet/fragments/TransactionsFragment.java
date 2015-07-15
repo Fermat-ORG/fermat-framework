@@ -38,7 +38,10 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.EntryItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.FermatListViewFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.Item;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.SectionItem;
 
 
 import android.widget.ProgressBar;
@@ -92,8 +95,9 @@ public class TransactionsFragment extends Fragment{
     Typeface tf;
 
 
-    TransactionArrayAdapterBasic transactionArrayAdapterBasic;
+    ArrayList<Item> items = new ArrayList<Item>();
 
+    TransactionArrayAdapterBasic transactionArrayAdapterBasic;
 
     public static TransactionsFragment newInstance(int position) {
         TransactionsFragment f = new TransactionsFragment();
@@ -108,8 +112,6 @@ public class TransactionsFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
-                .penaltyDeath().build());
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
@@ -128,11 +130,10 @@ public class TransactionsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
-        // Get ListView object from xml
-        //listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
-        //swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
+        // Get ListView object from xml
+        listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 
         //adapter.
         // Set the emptyView to the ListView
@@ -148,12 +149,12 @@ public class TransactionsFragment extends Fragment{
 
 
 
-
+        /*
 
         // Create the adapter to convert the array to views
 
         //TODO: Esto es lo tagueado
-        /*try {
+        try {
             lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
         } catch (CantGetTransactionsException e) {
             e.printStackTrace();
@@ -163,12 +164,12 @@ public class TransactionsFragment extends Fragment{
         lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
 
         //transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(),lstTransactions); //showTransactionListSelected(lstTransactions, Platform.TYPE_BALANCE_TYPE_SELECTED));
-        transactionArrayAdapterBasic = new TransactionArrayAdapterBasic(getActivity(),lstTransactions);
+        //transactionArrayAdapterBasic = new TransactionArrayAdapterBasic(getActivity(),lstTransactions);
 
         //loadNewTransactions();
 
         // Assign adapter to ListView
-        listViewTransactions.setAdapter(transactionArrayAdapter);
+        //listViewTransactions.setAdapter(transactionArrayAdapter);
         //swipeRefreshLayout.setColorSchemeColors(android.R.color);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -176,8 +177,12 @@ public class TransactionsFragment extends Fragment{
                 refreshTransactionsContent();
             }
         });
-          */
+        */
+
         //TODO: Fin de lo tagueado
+
+
+
 
         /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -194,6 +199,31 @@ public class TransactionsFragment extends Fragment{
 
             }
         });*/
+
+        //listViewTransactions=(ListView)findViewById(R.id.listView_main);
+
+        items.add(new SectionItem("My Friends"));
+        items.add(new EntryItem("Abhi Tripathi", "Champpu"));
+        items.add(new EntryItem("Sandeep Pal", "Sandy kaliya"));
+        items.add(new EntryItem("Amit Verma", "Budhiya"));
+        items.add(new EntryItem("Awadhesh Diwaker ", "Dadda"));
+
+        items.add(new SectionItem("Android Version"));
+        items.add(new EntryItem("Jelly Bean", "android 4.2"));
+        items.add(new EntryItem("IceCream Sandwich", "android 4.0"));
+        items.add(new EntryItem("Honey Comb", "android 3.0"));
+        items.add(new EntryItem("Ginger Bread ", "android 2.2"));
+
+        items.add(new SectionItem("Android Phones"));
+        items.add(new EntryItem("Samsung", "Gallexy"));
+        items.add(new EntryItem("Sony Ericson", "Xperia"));
+        items.add(new EntryItem("Nokiya", "Lumia"));
+
+        EntryAdapter adapter = new EntryAdapter(getActivity(), items);
+        listViewTransactions.setAdapter(adapter);
+        //listViewTransactions.setOnItemClickListener(this);
+
+
 
         return rootView;
     }
@@ -391,5 +421,54 @@ public class TransactionsFragment extends Fragment{
         alertDialog.show();
     }
 
+
+    public class EntryAdapter extends ArrayAdapter<Item> {
+
+        private Context context;
+        private ArrayList<Item> items;
+        private LayoutInflater vi;
+
+        public EntryAdapter(Context context,ArrayList<Item> items) {
+            super(context,0, items);
+            this.context = context;
+            this.items = items;
+            vi = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = convertView;
+
+            final Item i = items.get(position);
+            if (i != null) {
+                if(i.isSection()){
+                    SectionItem si = (SectionItem)i;
+                    v = vi.inflate(R.layout.list_item_section, null);
+
+                    v.setOnClickListener(null);
+                    v.setOnLongClickListener(null);
+                    v.setLongClickable(false);
+
+                    final TextView sectionView = (TextView) v.findViewById(R.id.list_item_section_text);
+                    sectionView.setText(si.getTitle());
+
+                }else{
+                    EntryItem ei = (EntryItem)i;
+                    v = vi.inflate(R.layout.list_item_enty, null);
+                    final TextView title = (TextView)v.findViewById(R.id.list_item_entry_title);
+                    final TextView subtitle = (TextView)v.findViewById(R.id.list_item_entry_summary);
+
+
+                    if (title != null)
+                        title.setText(ei.title);
+                    if(subtitle != null)
+                        subtitle.setText(ei.subtitle);
+                }
+            }
+            return v;
+        }
+
+    }
 
 }
