@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdu
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordInstalledWalletException;
@@ -15,6 +16,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -28,7 +32,9 @@ import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdub
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreCatalog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -42,7 +48,14 @@ import java.util.UUID;
  * * *
  */
 
-public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginFileSystem, Plugin, Service, WalletStoreManager{
+public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithLogger,DealsWithPluginFileSystem, LogManagerForDevelopers,Plugin, Service, WalletStoreManager{
+
+    /**
+     * DealsWithLogger interface member variable
+     */
+    LogManager logManager;
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
      * PlatformService Interface member variables.
@@ -307,4 +320,54 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     public List<Wallet> getWallets() throws CantGetWalletsException {
        return catalog.getWallets();
     }
+
+
+    /**
+     * DealsWithLogger Interface implementation.
+     */
+
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
+
+    /**
+     * LogManagerForDevelopers Interface implementation.
+     */
+
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreCatalog");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreDatabaseFactory");
+
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
+    }
+
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (WalletStoreModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                WalletStoreModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                WalletStoreModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                WalletStoreModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+
+    }
+
 }
