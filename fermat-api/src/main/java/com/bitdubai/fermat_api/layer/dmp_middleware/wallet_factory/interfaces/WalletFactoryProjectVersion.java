@@ -6,16 +6,24 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CentGetWalletFactoryProjectLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CentGetWalletFactoryProjectSkinFileException;
 
+import java.util.List;
+
 /**
  * Created by eze on 2015.07.15..
  */
 public interface WalletFactoryProjectVersion {
+
+    public List<String> getSkinList();
+
+    public List<String> getLanguages();
 
     public String getProjectVersion();
 
     public String getProjectName();
 
     public String getWalletNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException;
+
+
 
     /**
      *
@@ -26,18 +34,12 @@ public interface WalletFactoryProjectVersion {
     /**
      *
      *
-     * @param fileName the name of the Skin file without the path structure.
+     * @param skinName the name of the Skin file without the path structure.
      * @return The content of the file
      */
-    public String getSkinFile(String fileName) throws CentGetWalletFactoryProjectSkinFileException;
+    public WalletFactorySkin getSkin(String skinName) throws CentGetWalletFactoryProjectSkinFileException;
 
     public String getLanguageFile(String fileName) throws CentGetWalletFactoryProjectLanguageFileException;
 
-    public byte[] getImageResource(String imageName) throws CantGetFactoryProjectResourceException;
 
-    public byte[] getVideoResource(String videoName) throws CantGetFactoryProjectResourceException;
-
-    public byte[] getSoundResource(String soundName) throws CantGetFactoryProjectResourceException;
-
-    public String getLayoutResource(String layoutName) throws CantGetFactoryProjectResourceException;
 }
