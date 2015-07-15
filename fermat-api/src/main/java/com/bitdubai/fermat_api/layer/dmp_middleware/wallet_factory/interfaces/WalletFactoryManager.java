@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
  */
 public interface WalletFactoryManager {
 
-    public void createEmptyWalletFactoryProject(String name);
+    public void createEmptyWalletFactoryProject(String name) throws CantCreateWalletFactoryProjectException;
 
     public void importWalletFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException;
 
