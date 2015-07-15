@@ -6,15 +6,23 @@ import android.content.Context;
 
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -30,22 +38,28 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.FermatListViewFragment;
 
 
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 
 /**
  * Created by natalia on 17/06/15.
  */
-public class TransactionsFragment extends Fragment {
+public class TransactionsFragment extends Fragment{
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -80,6 +94,7 @@ public class TransactionsFragment extends Fragment {
 
     TransactionArrayAdapterBasic transactionArrayAdapterBasic;
 
+
     public static TransactionsFragment newInstance(int position) {
         TransactionsFragment f = new TransactionsFragment();
         Bundle b = new Bundle();
@@ -92,6 +107,9 @@ public class TransactionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
+                .penaltyDeath().build());
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
@@ -110,10 +128,11 @@ public class TransactionsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
+        //rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
         // Get ListView object from xml
-        listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        //listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
+        //swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
 
         //adapter.
         // Set the emptyView to the ListView
@@ -132,7 +151,9 @@ public class TransactionsFragment extends Fragment {
 
 
         // Create the adapter to convert the array to views
-        try {
+
+        //TODO: Esto es lo tagueado
+        /*try {
             lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
         } catch (CantGetTransactionsException e) {
             e.printStackTrace();
@@ -155,6 +176,8 @@ public class TransactionsFragment extends Fragment {
                 refreshTransactionsContent();
             }
         });
+          */
+        //TODO: Fin de lo tagueado
 
         /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -174,6 +197,7 @@ public class TransactionsFragment extends Fragment {
 
         return rootView;
     }
+
 
     private List<CryptoWalletTransaction> showTransactionListSelected(List<CryptoWalletTransaction> lstTransactions, BalanceType balanceType) {
         List<CryptoWalletTransaction> lstToShow = new ArrayList<CryptoWalletTransaction>();
@@ -248,14 +272,8 @@ public class TransactionsFragment extends Fragment {
         transactionArrayAdapterBasic.notifyDataSetChanged();
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
 
-
-
-    }
 
     public class TransactionArrayAdapter extends ArrayAdapter<CryptoWalletTransaction> {
 

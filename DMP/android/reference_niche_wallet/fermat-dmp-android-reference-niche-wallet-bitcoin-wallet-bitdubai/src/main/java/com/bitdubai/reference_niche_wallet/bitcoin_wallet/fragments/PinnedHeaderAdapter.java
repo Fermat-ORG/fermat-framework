@@ -12,8 +12,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment.ListFilter;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.FermatListViewFragment;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -24,7 +27,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 	private static final int TYPE_ITEM = 0;
 	private static final int TYPE_SECTION = 1;
 	private static final int TYPE_MAX_COUNT = TYPE_SECTION + 1;
-	private final ContactsFragment contactsFragment;
+	private final FermatListViewFragment contactsFragment;
 
 	LayoutInflater mLayoutInflater;
 	int mCurrentSectionPosition = 0, mNextSectionPostion = 0;
@@ -38,7 +41,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 	// context object
 	Context mContext;
 
-	public PinnedHeaderAdapter(Context context, ArrayList<String> listItems,ArrayList<Integer> listSectionPos,ContactsFragment contactsFragment) {
+	public PinnedHeaderAdapter(Context context, ArrayList<String> listItems,ArrayList<Integer> listSectionPos,FermatListViewFragment contactsFragment) {
 		this.mContext = context;
 		this.mListItems = listItems;
 		this.mListSectionPos = listSectionPos;
@@ -164,7 +167,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
 	@Override
 	public Filter getFilter() {
-		return contactsFragment.new ListFilter();//(/*(MainActivity)*/ mContext).new ListFilter();
+		return contactsFragment.instanceOfListFilter(); //(/*(MainActivity)*/ mContext).new ListFilter();
 		//return ;
 	}
 
