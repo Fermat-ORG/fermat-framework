@@ -68,7 +68,7 @@ public class GetBalanceTest {
     }
 
     @Test
-    public void GetBalance_OpenDatabaseCantOpenDatabase_ReturnsAvailableBalance() throws Exception{
+    public void GetBalance_OpenDatabaseCantOpenDatabase_ThrowsCantCalculateBalanceException() throws Exception{
         doThrow(new CantOpenDatabaseException("MOCK", null, null, null)).when(mockDatabase).openDatabase();
 
         catchException(testBalance).getBalance();
@@ -78,7 +78,7 @@ public class GetBalanceTest {
     }
 
     @Test
-    public void GetBalance_OpenDatabaseDatabaseNotFound_ReturnsAvailableBalance() throws Exception{
+    public void GetBalance_OpenDatabaseDatabaseNotFound_ThrowsCantCalculateBalanceException() throws Exception{
         doThrow(new DatabaseNotFoundException("MOCK", null, null, null)).when(mockDatabase).openDatabase();
 
         catchException(testBalance).getBalance();
@@ -88,7 +88,7 @@ public class GetBalanceTest {
     }
 
     @Test
-    public void GetBalance_DaoCantCalculateBalanceException_ReturnsAvailableBalance() throws Exception{
+    public void GetBalance_DaoCantCalculateBalanceException_ThrowsCantCalculateBalanceException() throws Exception{
         doThrow(new CantLoadTableToMemoryException("MOCK", null, null, null)).when(mockTable).loadToMemory();
 
         catchException(testBalance).getBalance();
