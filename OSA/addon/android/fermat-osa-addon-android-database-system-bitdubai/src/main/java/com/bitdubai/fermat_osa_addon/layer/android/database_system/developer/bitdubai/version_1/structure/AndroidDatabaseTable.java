@@ -442,11 +442,11 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                 offsetSentence = " OFFSET " + this.offset;
 
 
-            Cursor c = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
+            Cursor cursor = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
 
             List<String> columns = getColumns();
 
-            if (c.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 do {
                     /**
                      * Get columns name to read values of files
@@ -458,7 +458,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                     for (int i = 0; i < columns.size(); ++i) {
                         DatabaseRecord recordValue = new AndroidRecord();
                         recordValue.setName(columns.get(i).toString());
-                        recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i).toString())));
+                        recordValue.setValue(cursor.getString(cursor.getColumnIndex(columns.get(i).toString())));
                         recordValue.setChange(false);
                         recordValue.setUseValueofVariable(false);
                         recordValues.add(recordValue);
@@ -466,10 +466,9 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                     tableRecord1.setValues(recordValues);
                     this.records.add(tableRecord1);
 
-                } while (c.moveToNext());
+                } while (cursor.moveToNext());
             }
-
-
+            cursor.close();
         } catch (Exception e) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
