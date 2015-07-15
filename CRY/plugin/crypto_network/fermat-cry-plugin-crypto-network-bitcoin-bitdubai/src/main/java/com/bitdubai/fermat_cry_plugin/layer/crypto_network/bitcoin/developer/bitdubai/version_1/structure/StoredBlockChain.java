@@ -96,7 +96,7 @@ public class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsW
      * @throws CantInitializeMonitorAgentException
      */
     public StoredBlockChain (Wallet wallet, UUID UserID) {
-        this.networkParameters = getNetworkConfiguration();
+        this.networkParameters = getNetworkConfiguration(null);
         this.wallet = wallet;
         this.userId = UserID;
     }

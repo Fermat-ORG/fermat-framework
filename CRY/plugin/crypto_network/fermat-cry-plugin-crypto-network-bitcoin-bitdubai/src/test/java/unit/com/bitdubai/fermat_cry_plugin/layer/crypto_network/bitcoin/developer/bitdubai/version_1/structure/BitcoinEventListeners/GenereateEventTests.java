@@ -5,7 +5,10 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 
 import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.AbstractBlockChain.NewBlockType;
+import org.bitcoinj.core.GetDataMessage;
+import org.bitcoinj.core.Message;
 import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.junit.Test;
@@ -29,6 +32,15 @@ public class GenereateEventTests {
     LogManager logManager;
     @Mock
     Peer peer;
+
+    @Mock
+    Message message;
+
+    @Mock
+    GetDataMessage getDataMessage;
+
+    @Mock
+    Sha256Hash sha256Hash;
 
 
     @Test
@@ -55,6 +67,42 @@ public class GenereateEventTests {
         bitcoinEventListeners.setLogManager(logManager);
 
 
-        bitcoinEventListeners.onPeerDisconnected(peer,2);
+        bitcoinEventListeners.onPeerDisconnected(peer, 2);
     }
+
+    @Test
+    public void testisTransactionRelevant(){
+        BitcoinEventListeners bitcoinEventListeners = new BitcoinEventListeners();
+        bitcoinEventListeners.setLogManager(logManager);
+
+
+        bitcoinEventListeners.isTransactionRelevant(tx);
+    }
+
+    @Test
+    public void testonPreMessageReceived(){
+        BitcoinEventListeners bitcoinEventListeners = new BitcoinEventListeners();
+        bitcoinEventListeners.setLogManager(logManager);
+
+
+        bitcoinEventListeners.onPreMessageReceived(peer, message);
+    }
+    @Test
+    public void testGetData(){
+        BitcoinEventListeners bitcoinEventListeners = new BitcoinEventListeners();
+        bitcoinEventListeners.setLogManager(logManager);
+
+
+        bitcoinEventListeners.getData(peer, getDataMessage);
+    }
+
+    @Test
+    public void testnotifyTransactionIsInBlock(){
+        BitcoinEventListeners bitcoinEventListeners = new BitcoinEventListeners();
+        bitcoinEventListeners.setLogManager(logManager);
+
+
+        bitcoinEventListeners.notifyTransactionIsInBlock(sha256Hash, storedBlock, newBlockType, 1);
+    }
+
 }

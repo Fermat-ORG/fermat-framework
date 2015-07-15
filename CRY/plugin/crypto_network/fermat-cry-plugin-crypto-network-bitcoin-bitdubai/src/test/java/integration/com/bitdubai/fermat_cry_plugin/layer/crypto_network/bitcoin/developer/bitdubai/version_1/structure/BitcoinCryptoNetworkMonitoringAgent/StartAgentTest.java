@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
 
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,8 +35,8 @@ public class StartAgentTest {
     @Mock LogManager logManager;
 
     @Test
-    public void test() throws CantStartAgentException, InterruptedException, CantCreateBlockStoreFileException {
-        Wallet wallet = new Wallet(TestNet3Params.get());
+    public void testRegTest() throws CantStartAgentException, InterruptedException, CantCreateBlockStoreFileException {
+        Wallet wallet = new Wallet(RegTestParams.get());
 
         BitcoinCryptoNetworkMonitoringAgent bitcoinCryptoNetworkMonitoringAgent = new BitcoinCryptoNetworkMonitoringAgent(wallet, UUID.randomUUID());
 
@@ -48,6 +49,7 @@ public class StartAgentTest {
         bitcoinCryptoNetworkMonitoringAgent.setPluginId(UUID.randomUUID());
 
         bitcoinCryptoNetworkMonitoringAgent.configureBlockChain();
+
         bitcoinCryptoNetworkMonitoringAgent.configurePeers();
         bitcoinCryptoNetworkMonitoringAgent.start();
 
@@ -62,9 +64,8 @@ public class StartAgentTest {
         bitcoinCryptoNetworkMonitoringAgent.stop();
         bitcoinCryptoNetworkMonitoringAgent.start();
         bitcoinCryptoNetworkMonitoringAgent.stop();
-
+        Assert.assertFalse(bitcoinCryptoNetworkMonitoringAgent.isRunning());
     }
-
 
     /**
      * Class that mocks the pluginFileSystem, it will return a fake file for the block chain creation.

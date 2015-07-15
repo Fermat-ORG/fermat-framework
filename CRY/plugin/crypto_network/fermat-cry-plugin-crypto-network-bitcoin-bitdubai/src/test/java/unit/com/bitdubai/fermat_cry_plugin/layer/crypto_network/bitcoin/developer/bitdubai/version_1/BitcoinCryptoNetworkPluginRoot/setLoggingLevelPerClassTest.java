@@ -27,5 +27,14 @@ public class setLoggingLevelPerClassTest {
 
         assertEquals(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(CLASS), LOG_LEVEL);
 
+        data.clear();
+        LogLevel newLogLevel = LogLevel.AGGRESSIVE_LOGGING;
+        data.put(CLASS, newLogLevel);
+        root.setLoggingLevelPerClass(data);
+
+        assertEquals(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(CLASS), newLogLevel);
+
     }
+
+
 }
