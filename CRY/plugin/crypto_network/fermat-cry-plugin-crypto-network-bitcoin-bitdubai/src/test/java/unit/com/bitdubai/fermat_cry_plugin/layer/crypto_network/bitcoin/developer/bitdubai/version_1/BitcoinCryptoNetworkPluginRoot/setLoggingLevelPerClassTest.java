@@ -1,4 +1,4 @@
-package test.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
+package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
@@ -27,5 +27,14 @@ public class setLoggingLevelPerClassTest {
 
         assertEquals(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(CLASS), LOG_LEVEL);
 
+        data.clear();
+        LogLevel newLogLevel = LogLevel.AGGRESSIVE_LOGGING;
+        data.put(CLASS, newLogLevel);
+        root.setLoggingLevelPerClass(data);
+
+        assertEquals(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(CLASS), newLogLevel);
+
     }
+
+
 }
