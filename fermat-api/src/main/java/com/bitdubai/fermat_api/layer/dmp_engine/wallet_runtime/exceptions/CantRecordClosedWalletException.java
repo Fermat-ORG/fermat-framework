@@ -1,15 +1,16 @@
-package com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions;
 
 /**
  * Created by loui on 05/02/15.
  */
-public class CantRecordOpenedWalletException extends WalletRuntimeExceptions {
+public class CantRecordClosedWalletException extends WalletRuntimeExceptions {
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3116091246281644240L;
+	private static final long serialVersionUID = 6359965012408786034L;
 
-	public static final String DEFAULT_MESSAGE = "CAN'T RECORD OPENED WALLET";
+	public static final String DEFAULT_MESSAGE = "CAN'T RECORD CLOSE WALLET";
 
 	/**
 	 * This is the constructor that every inherited FermatException must implement
@@ -21,7 +22,7 @@ public class CantRecordOpenedWalletException extends WalletRuntimeExceptions {
 	 */
 
 
-	public CantRecordOpenedWalletException(final String message, final Exception cause, final String context, final String possibleReason) {
+	public CantRecordClosedWalletException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);
 	}
 

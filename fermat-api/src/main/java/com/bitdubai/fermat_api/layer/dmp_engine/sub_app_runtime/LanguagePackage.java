@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime;
+package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
