@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

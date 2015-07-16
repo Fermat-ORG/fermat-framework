@@ -1,13 +1,17 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
+
 public class EntryItem implements Item{
  
- public final String title;
- public final String subtitle;
+ //public final String title;
+ //public final String subtitle;
+ public final CryptoWalletTransaction cryptoWalletTransaction;
  
- public EntryItem(String title, String subtitle) {
-  this.title = title;
-  this.subtitle = subtitle;
+ public EntryItem(/*String title, String subtitle,*/CryptoWalletTransaction cryptoWalletTransaction) {
+  //this.title = title;
+  //this.subtitle = subtitle;
+  this.cryptoWalletTransaction=cryptoWalletTransaction;
  }
   
  @Override

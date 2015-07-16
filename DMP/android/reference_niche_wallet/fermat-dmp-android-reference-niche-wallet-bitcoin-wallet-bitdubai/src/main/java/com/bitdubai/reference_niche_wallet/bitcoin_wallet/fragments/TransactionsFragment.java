@@ -29,7 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -49,18 +49,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 
 /**
- * Created by natalia on 17/06/15.
+ * Created by Matias
  */
 public class TransactionsFragment extends Fragment{
 
@@ -85,7 +91,6 @@ public class TransactionsFragment extends Fragment{
 
     ListView listViewTransactions;
     SwipeRefreshLayout swipeRefreshLayout;
-    TransactionArrayAdapter transactionArrayAdapter;
 
     private int pointerOffset = 0;
     private int cantTransactions = 10;
@@ -97,7 +102,7 @@ public class TransactionsFragment extends Fragment{
 
     ArrayList<Item> items = new ArrayList<Item>();
 
-    TransactionArrayAdapterBasic transactionArrayAdapterBasic;
+    Map<Date,Set<CryptoWalletTransaction>> mapTransactionPerDate;
 
     public static TransactionsFragment newInstance(int position) {
         TransactionsFragment f = new TransactionsFragment();
@@ -125,6 +130,8 @@ public class TransactionsFragment extends Fragment{
             showMessage("CantGetCryptoWalletException- " + e.getMessage());
 
         }
+
+        mapTransactionPerDate= new HashMap<Date, Set<CryptoWalletTransaction>>();
     }
 
 
@@ -149,7 +156,7 @@ public class TransactionsFragment extends Fragment{
 
 
 
-        /*
+
 
         // Create the adapter to convert the array to views
 
@@ -177,9 +184,11 @@ public class TransactionsFragment extends Fragment{
                 refreshTransactionsContent();
             }
         });
-        */
+
 
         //TODO: Fin de lo tagueado
+
+
 
 
 
@@ -202,7 +211,7 @@ public class TransactionsFragment extends Fragment{
 
         //listViewTransactions=(ListView)findViewById(R.id.listView_main);
 
-        items.add(new SectionItem("My Friends"));
+        /*items.add(new SectionItem("My Friends"));
         items.add(new EntryItem("Abhi Tripathi", "Champpu"));
         items.add(new EntryItem("Sandeep Pal", "Sandy kaliya"));
         items.add(new EntryItem("Amit Verma", "Budhiya"));
@@ -218,6 +227,21 @@ public class TransactionsFragment extends Fragment{
         items.add(new EntryItem("Samsung", "Gallexy"));
         items.add(new EntryItem("Sony Ericson", "Xperia"));
         items.add(new EntryItem("Nokiya", "Lumia"));
+        */
+
+
+        //TODO:
+        loadTransactionMap();
+
+
+        for (Date date: mapTransactionPerDate.keySet()){
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            items.add(new SectionItem(sdf.format(date)));
+            for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
+                items.add(new EntryItem(cryptoWalletTransaction));
+            }
+        }
+
 
         EntryAdapter adapter = new EntryAdapter(getActivity(), items);
         listViewTransactions.setAdapter(adapter);
@@ -226,6 +250,19 @@ public class TransactionsFragment extends Fragment{
 
 
         return rootView;
+    }
+
+    private void loadTransactionMap(){
+        for(CryptoWalletTransaction transaction:lstTransactions){
+            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
+            if(!mapTransactionPerDate.containsKey(date)){
+                Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
+                cryptoWalletTransactionSet.add(transaction);
+                mapTransactionPerDate.put(date,cryptoWalletTransactionSet);
+            }else{
+                mapTransactionPerDate.get(date).add(transaction);
+            }
+        }
     }
 
 
@@ -298,113 +335,9 @@ public class TransactionsFragment extends Fragment{
 
         showTransactionListSelected(lstTransactions,Platform.TYPE_BALANCE_TYPE_SELECTED);
 
-        //transactionArrayAdapter.notifyDataSetChanged();
-        transactionArrayAdapterBasic.notifyDataSetChanged();
     }
 
 
-
-
-    public class TransactionArrayAdapter extends ArrayAdapter<CryptoWalletTransaction> {
-
-        public TransactionArrayAdapter(Context context, List<CryptoWalletTransaction> lstTrasactions) {
-            super(context, 0, lstTrasactions);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent){
-
-            //get inflater
-            LayoutInflater inflater = (LayoutInflater)getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-            View listItemView = convertView;
-
-            //if view exist
-            if (null == convertView) {
-                //Si no existe, entonces inflarlo con image_list_view.xml
-                listItemView = inflater.inflate(
-                        R.layout.wallets_bitcoin_fragment_transactions_list_items2,
-                        parent,
-                        false);
-            }
-
-            //Get TextViews
-            TextView txtView_contact_name = (TextView)listItemView.findViewById(R.id.textView_contact_name);
-            TextView txtView_amount = (TextView)listItemView.findViewById(R.id.textView_amount);
-            //TextView txtView_notes = (TextView)listItemView.findViewById(R.id.textView_notes);
-            TextView txtView_when = (TextView)listItemView.findViewById(R.id.textView_time);
-            //TextView txtView_type = (TextView)listItemView.findViewById(R.id.textView_status);
-
-            //Getting Transactions instance at the current position
-            CryptoWalletTransaction item = getItem(position);
-
-
-
-            txtView_contact_name.setText(item.getInvolvedActorName());
-            if(Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.AVAILABLE){
-                txtView_amount.setText(Platform.formatBalanceString(item.getBitcoinWalletTransaction().getRunningAvailableBalance()));
-            }else if (Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.BOOK)
-                txtView_amount.setText(Platform.formatBalanceString(item.getBitcoinWalletTransaction().getRunningBookBalance()));
-
-            /*if(item.getBitcoinWalletTransaction().getMemo()!=null){
-                txtView_notes.setText(item.getBitcoinWalletTransaction().getMemo());
-            }
-            */
-
-            txtView_when.setText((DateFormat.format("hh:mm:ss", item.getBitcoinWalletTransaction().getTimestamp())));
-            //txtView_type.setText(item.getBitcoinWalletTransaction().getTransactionType().toString());
-
-            TextView textView_type = (TextView) listItemView.findViewById(R.id.textView_type);
-            textView_type.setText("Received");
-
-            return listItemView;
-
-        }
-    }
-
-    public class TransactionArrayAdapterBasic extends ArrayAdapter<CryptoWalletTransaction> {
-
-        List<CryptoWalletTransaction> lstTrasactions = new ArrayList<CryptoWalletTransaction>();
-
-        public TransactionArrayAdapterBasic(Context context, List<CryptoWalletTransaction> lstTrasactions) {
-            super(context, 0, lstTrasactions);
-            this.lstTrasactions=lstTrasactions;
-
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent){
-
-            //get inflater
-            LayoutInflater inflater = (LayoutInflater)getContext()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-            View listItemView = convertView;
-
-            //if view exist
-            if (null == convertView) {
-                //Si no existe, entonces inflarlo con image_list_view.xml
-                listItemView = inflater.inflate(
-                        R.layout.wallets_bitcoin_fragment_transactions1,
-                        parent,
-                        false);
-            }
-
-            //Get TextViews
-            TextView txtViewDay = (TextView)listItemView.findViewById(R.id.txtViewDay);
-
-
-            //inflate ListView
-            ListView listView = (ListView) listItemView.findViewById(R.id.transactionlist);
-            transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTrasactions);
-
-            return listItemView;
-
-        }
-    }
 
 
     private void showMessage(String text){
@@ -440,10 +373,10 @@ public class TransactionsFragment extends Fragment{
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = convertView;
 
-            final Item i = items.get(position);
-            if (i != null) {
-                if(i.isSection()){
-                    SectionItem si = (SectionItem)i;
+            final Item item = items.get(position);
+            if (item != null) {
+                if(item.isSection()){
+                    SectionItem si = (SectionItem)item;
                     v = vi.inflate(R.layout.list_item_section, null);
 
                     v.setOnClickListener(null);
@@ -454,7 +387,7 @@ public class TransactionsFragment extends Fragment{
                     sectionView.setText(si.getTitle());
 
                 }else{
-                    EntryItem ei = (EntryItem)i;
+                    EntryItem entryItem = (EntryItem)item;
                     //v = vi.inflate(R.layout.list_item_enty, null);
                     //final TextView title = (TextView)v.findViewById(R.id.list_item_entry_title);
                     //final TextView subtitle = (TextView)v.findViewById(R.id.list_item_entry_summary);
@@ -467,9 +400,24 @@ public class TransactionsFragment extends Fragment{
 
 
                     if (textView_contact_name != null)
-                        textView_contact_name.setText(ei.title);
+                        textView_contact_name.setText(entryItem.cryptoWalletTransaction.getInvolvedActorName());
                     if(textView_amount != null)
-                        textView_amount.setText(ei.subtitle);
+                        if(Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.AVAILABLE){
+                            textView_amount.setText(Platform.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance()));
+                        }else if (Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.BOOK)
+                            textView_amount.setText(Platform.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance()));
+                    if(textView_time!=null){
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
+                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+                    }
+                    if(textView_type!=null){
+                        if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.CREDIT){
+                            textView_type.setText("Received");
+                        }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.DEBIT){
+                            textView_type.setText("Send");
+                        }
+                    }
+
                 }
             }
             return v;
