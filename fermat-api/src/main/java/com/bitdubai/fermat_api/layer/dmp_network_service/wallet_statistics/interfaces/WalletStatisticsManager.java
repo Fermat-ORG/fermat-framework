@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.exceptions.CantGetWalletStatisticsException;
+
 import java.util.UUID;
 
 /**
@@ -13,5 +15,12 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 public interface WalletStatisticsManager {
-    public long getNumberOfDownloads(UUID walletCatalogId);
+
+    /**
+     * This method gives us the wallet statistics associated to a particular wallet.
+     *
+     * @param walletCatalogId the id that identifies the wallet in the wallet catalogue
+     * @return the statistics associated to that wallet.
+     */
+    public WalletStatistics getWalletStatistics(UUID walletCatalogId) throws CantGetWalletStatisticsException;
 }

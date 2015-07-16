@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MainMenu;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TabStrip;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 
 import java.util.HashMap;
 import java.util.Map;

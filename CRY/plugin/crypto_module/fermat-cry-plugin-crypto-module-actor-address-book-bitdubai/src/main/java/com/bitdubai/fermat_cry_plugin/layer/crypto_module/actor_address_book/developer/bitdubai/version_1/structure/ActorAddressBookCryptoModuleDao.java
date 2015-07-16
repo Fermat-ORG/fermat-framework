@@ -89,7 +89,8 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
          * I will try to open the actor address book's database..
          */
         try {
-            this.database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            database.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -99,7 +100,8 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
              * I will create the database where I am going to store the information of this wallet.
              */
             try {
-                this.database = databaseFactory.createDatabase(this.pluginId, this.pluginId);
+                database = databaseFactory.createDatabase(this.pluginId, this.pluginId);
+                database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
             }
@@ -124,6 +126,12 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
          */
         long unixTime = System.currentTimeMillis() / 1000L;
 
+        try {
+            database.openDatabase();
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException  exception) {
+            throw new CantRegisterActorAddressBookException(CantRegisterActorAddressBookException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        }
+
         DatabaseTable addressBookTable = database.getTable(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
         DatabaseTableRecord addressBookRecord = addressBookTable.getEmptyRecord();
 
@@ -140,7 +148,9 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
 
         try {
             addressBookTable.insertRecord(addressBookRecord);
+            database.closeDatabase();
         } catch (CantInsertRecordException cantInsertRecord) {
+            database.closeDatabase();
             throw new CantRegisterActorAddressBookException(CantRegisterActorAddressBookException.DEFAULT_MESSAGE, cantInsertRecord, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
         }
     }
@@ -150,44 +160,41 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
         if (cryptoAddress == null)
             throw new CantGetActorAddressBookException(CantGetActorAddressBookException.DEFAULT_MESSAGE, null, "cryptoAddress: null", "The parameter cryptoAddress cannot be null");
 
-
-        DatabaseTable table;
+        try {
+            database.openDatabase();
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException  exception) {
+            throw new CantGetActorAddressBookException(CantGetActorAddressBookException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        }
 
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
          */
-        table = this.database.getTable(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
         table.setStringFilter(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
         table.setStringFilter(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
+
         try {
             table.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
             throw new CantGetActorAddressBookException(CantGetActorAddressBookException.DEFAULT_MESSAGE, cantLoadTableToMemory, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
-
 
         /**
          * Will go through the records getting each Actor address.
          */
-
         List<DatabaseTableRecord> records = table.getRecords();
-        DatabaseTableRecord record;
+        database.closeDatabase();
 
-        UUID deliveredByActorId;
-        Actors deliveredByActorType;
-        UUID deliveredToActorId;
-        Actors deliveredToActorType;
-
-        if (records.size() > 0) {
-            record = records.get(0);
-            deliveredByActorId = record.getUUIDValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_BY_ACTOR_ID);
-            deliveredByActorType = Actors.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_BY_ACTOR_TYPE));
-            deliveredToActorId = record.getUUIDValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_TO_ACTOR_ID);
-            deliveredToActorType = Actors.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_TO_ACTOR_TYPE));
-            return new ActorAddressBookCryptoModuleRecord(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, cryptoAddress);
-        } else {
+        if (records.isEmpty())
             throw new ActorAddressBookNotFoundException(ActorAddressBookNotFoundException.DEFAULT_MESSAGE, null, "", "The crypto_address is not registered.");
-        }
+
+        DatabaseTableRecord record = records.get(0);
+        UUID deliveredByActorId = record.getUUIDValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_BY_ACTOR_ID);
+        Actors deliveredByActorType = Actors.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_BY_ACTOR_TYPE));
+        UUID deliveredToActorId = record.getUUIDValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_TO_ACTOR_ID);
+        Actors deliveredToActorType = Actors.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_TO_ACTOR_TYPE));
+        return new ActorAddressBookCryptoModuleRecord(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, cryptoAddress);
     }
 
     /**

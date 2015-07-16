@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -211,8 +211,13 @@ public class CreateContactFragment extends Fragment {
 
         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
-        FT.replace(R.id.contacts_container, contactsFragment);
         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        //linearLayout.setVisibility(View.GONE);
+        //listViewContacs.setVisibility(View.GONE);
+        //textViewEmptyListView.setVisibility(View.GONE);
+        //createContactFragment.detach(createContactFragment);
+        //FT.attach(createContactFragment);
+        FT.replace(R.id.fragment_container2,contactsFragment);
         FT.commit();
     }
 

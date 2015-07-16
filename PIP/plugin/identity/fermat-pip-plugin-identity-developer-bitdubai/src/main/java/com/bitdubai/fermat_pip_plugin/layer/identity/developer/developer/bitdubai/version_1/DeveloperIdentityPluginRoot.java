@@ -1,20 +1,11 @@
 package com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -24,41 +15,41 @@ import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.Developer
 import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDatabaseConstants;
-import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDatabaseFactory;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DealsWithDeviceUser;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 /**
- * TODO: This plugin do .
+ * Manage Developer identities.
+ * Keeps the registry of the different identities and its relation with the Device User.
  * <p/>
- * TODO: DETAIL...............................................
+ * Allows to create new Developers and automatically link them with the Current logged Device User.
+ * Serves above layers listing the link between Device User and Developers.
  * <p/>
- *
+ * In a near future this plugins will sign messages (belongs private and public keys).
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, DealsWithErrors,DealsWithLogger,LogManagerForDevelopers, Service, Plugin {
-
-
+public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWithErrors, DeveloperIdentityManager, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
 
     /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
+     * DealsWithDeviceUser Interface member variables.
      */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    DeviceUserManager deviceUserManager;
 
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
+
 
     /**
      * DealsWithLogger interface member variable
@@ -66,9 +57,13 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
     LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * DeviceUser Interface member variables
+     * Plugin Interface member variables
      */
     private UUID pluginId;
 
@@ -77,11 +72,9 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
      */
     ServiceStatus serviceStatus;
 
-
     /**
      * Service Interface implementation.
      */
-
     @Override
     public void start() {
         this.serviceStatus = ServiceStatus.STARTED;
@@ -107,30 +100,54 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
         return this.serviceStatus;
     }
 
+    /**
+     * DeveloperIdentityManager Interface implementation.
+     */
 
+    /**
+     * no params.
+     *
+     * @return List<DeveloperIdentity> returns the list of developers linked to the current logged device user.
+     * @throws CantGetUserDeveloperIdentitiesException
+     */
     @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+    public List<DeveloperIdentity> getDevelopersFromCurrentDeviceUser() throws CantGetUserDeveloperIdentitiesException {
+        // TODO getLoggedInDeviceUser TO GET THE Developers LINKED TO A DeviceUser THROW DeveloperIdentityDao
+        return null;
     }
 
     /**
-     * DealWithErrors Interface implementation.
+     * throw an alias creates a new developer (check before if the alias already exists)
+     *
+     * @param alias the alias that the user choose as developer identity
+     * @return DeveloperIdentity with the public key of the new developer
+     * @throws CantCreateNewDeveloperException
+     */
+    @Override
+    public DeveloperIdentity createNewDeveloper(String alias) throws CantCreateNewDeveloperException {
+        // TODO CREATE ECCKeyPair AND getLoggedInDeviceUser TO CREATE THE Developer THROW DeveloperIdentityDao
+        return null;
+    }
+
+
+    /**
+     * DealsWithDeviceUser Interface implementation.
+     */
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        if (deviceUserManager == null)
+            throw new IllegalArgumentException();
+        this.deviceUserManager = deviceUserManager;
+    }
+
+    /**
+     * DealsWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         if (errorManager == null)
             throw new IllegalArgumentException();
         this.errorManager = errorManager;
-    }
-
-    @Override
-    public List<DeveloperIdentity> getDevelopersFromActualDeviceUser() throws CantGetUserDeveloperIdentitiesException {
-        return null;
-    }
-
-    @Override
-    public String createNewDeveloper(String alias) throws CantCreateNewDeveloperException {
-        return null;
     }
 
     /**
@@ -143,28 +160,34 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
     }
 
     /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
      * LogManagerForDevelopers Interface implementation.
      */
-
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDao");
         returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDatabaseConstants");
         returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDatabaseFactory");
-           /**
+        /**
          * I return the values.
          */
         return returnedClasses;
     }
-
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         /**
          * I will check the current values and update the LogLevel in those which is different
          */
-
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
@@ -176,6 +199,13 @@ public class DeveloperIdentityPluginRoot implements DeveloperIdentityManager, De
                 DeveloperIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+    }
 
+    /**
+     * Plugin Interface implementation.
+     */
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
     }
 }

@@ -8,9 +8,9 @@ The regression test network is a local network with zero difficulty and no miner
 
 [source, linux]
 ----
-sudo apt-add-repository ppa:bitcoin/bitcoin
-sudo apt-get update
-sudo apt-get install bitcoin-qt
+ sudo apt-add-repository ppa:bitcoin/bitcoin
+ sudo apt-get update
+ sudo apt-get install bitcoin-qt bitcoind
 ----
 
 * execute the client installed
