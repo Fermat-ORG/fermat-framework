@@ -55,8 +55,7 @@ repositorio, Guardar en un repositorio github
 Un desafío en el diseño de este plug-in es diseñar el formato del archivo WFP. Este podría ser la
 serialización de las clases de la estructura de navegación junto con los recursos.
 
-El wallet publisher toma la lista
-== Notas
+== Notas sobre Wallet Factory Project
 
 * Un WFT tiene como información asociada:
 ** Una reference wallet
@@ -75,3 +74,12 @@ seguir estadísticas de las wallets publicadas. +
 Al publicar un proyecto se guarda un snapshot del mismo y se lo despliega en el wallet factory como
 una versión con el número de versión seleccionado en el wallet publisher. Este snapshot no se puede editar
 pero el wallet factory project sí puede continuar con normalidad.
+
+Los recursos del WFP comprenden
+
+* Un conjunto de skins
+* Un conjunto de lenguajes
+* La estructura de navegación
+
+Cada skin y paquete de idiomas tiene un hash asociado que se usa para validar su autenticidad a la hora
+de descargar los recursos. +
