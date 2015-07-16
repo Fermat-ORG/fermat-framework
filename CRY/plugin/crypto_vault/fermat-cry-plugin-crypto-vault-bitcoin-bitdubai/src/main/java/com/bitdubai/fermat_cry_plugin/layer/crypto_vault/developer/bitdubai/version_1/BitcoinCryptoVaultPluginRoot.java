@@ -351,7 +351,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 vault.setErrorManager(errorManager);
                 vault.setPluginDatabaseSystem(pluginDatabaseSystem);
                 vault.setDatabase(this.database);
-                vault.setPluginFileSystem(pluginFileSystem);
+                vault.setPluginFileSystem(this.pluginFileSystem);
                 vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
                 vault.setPluginId(pluginId);
                 vault.setEventManager(eventManager);
@@ -367,6 +367,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                     vault.connectVault();
                 } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantConnectToBitcoinNetwork);
+                    throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantConnectToBitcoinNetwork, null, "I couldn't connect to the Bitcoin network.");
 
                 }
 
@@ -376,6 +377,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * If I couldnt create the Vault, I cant go on.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
+                throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantCreateCryptoWalletException, null, "Probably not enought space available to save the vault.");
             }
 
 

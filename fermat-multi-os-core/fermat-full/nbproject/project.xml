@@ -30,8 +30,8 @@
                 <package>com.bitdubai.fermat_api.layer.dmp_composite_wallet</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_engine</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_middleware</package>
-                <package>com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime</package>
-                <package>com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums</package>
+                <package>com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime</package>
+                <package>com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_middleware.bank_notes</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_middleware.money_request</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts</package>
@@ -40,8 +40,8 @@
                 <package>com.bitdubai.fermat_api.layer.dmp_module.wallet_manager</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher</package>
-                <package>com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime</package>
-                <package>com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions</package>
+                <package>com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime</package>
+                <package>com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_module.wallet_store</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_network_service</package>

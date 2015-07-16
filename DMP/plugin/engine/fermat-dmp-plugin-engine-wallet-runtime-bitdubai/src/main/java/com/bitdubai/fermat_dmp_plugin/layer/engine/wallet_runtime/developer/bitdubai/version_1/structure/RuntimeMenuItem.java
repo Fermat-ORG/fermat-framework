@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MenuItem;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MenuItem;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 
 import java.awt.Image;
 
