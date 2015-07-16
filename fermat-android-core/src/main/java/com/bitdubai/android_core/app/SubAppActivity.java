@@ -89,7 +89,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     private SubApp subApp;
     private Activity activity;
     private Map<Fragments, com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment> fragments;
-
     private ViewPager pager;
     private ViewPager pagertabs;
     private MyPagerAdapter adapter;
