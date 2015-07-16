@@ -190,7 +190,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     public void onNavigationDrawerItemSelected(int position) {
 
     }
-    // TODO: Ver porque se está haciendo este bucle
+    // TODO: Ver porque se está haciendo este bucle que no hace nada
 
     /*
     int mRequestCode;
