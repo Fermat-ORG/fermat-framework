@@ -13,20 +13,19 @@ import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSliding
 
 
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MainMenu;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TabStrip;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.bitdubai.fermat.R;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
 
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +45,7 @@ public class FragmentActivity  extends Activity {
     private PagerSlidingTabStrip tabStrip;
     private App app;
     private SubApp subApp;
-    private com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity activity;
+    private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
 
     private ViewPager pager;

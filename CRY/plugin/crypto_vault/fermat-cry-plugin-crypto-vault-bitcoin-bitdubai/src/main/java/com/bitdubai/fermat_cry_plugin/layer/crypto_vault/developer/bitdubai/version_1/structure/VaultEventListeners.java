@@ -50,7 +50,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 11/06/15.
  */
-class VaultEventListeners extends AbstractWalletEventListener implements DealsWithErrors, DealsWithEvents, DealsWithLogger {
+public class VaultEventListeners extends AbstractWalletEventListener implements DealsWithErrors, DealsWithEvents, DealsWithLogger {
 
     /**
      * VaultEventListeners member variables
@@ -106,7 +106,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
      * Constructor
      * @param database
      */
-    VaultEventListeners (Database database, ErrorManager errorManager, EventManager eventManager, LogManager logManager){
+    public VaultEventListeners(Database database, ErrorManager errorManager, EventManager eventManager, LogManager logManager){
         this.database = database;
         this.errorManager = errorManager;
         this.eventManager = eventManager;

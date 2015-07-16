@@ -34,19 +34,19 @@ import com.bitdubai.android_core.app.common.version_1.navigation_drawer.Navigati
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MainMenu;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Tab;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TabStrip;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -271,7 +271,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             Iterator<Map.Entry<Fragments, Fragment>> efragments = this.fragments.entrySet().iterator();
             boolean flag=false;
             while (efragments.hasNext()) {
-                Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment> fragmentEntry =  efragments.next();
+                Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment> fragmentEntry =  efragments.next();
 
                 RuntimeFragment fragment = (RuntimeFragment)fragmentEntry.getValue();
                 Fragments type = fragment.getType();

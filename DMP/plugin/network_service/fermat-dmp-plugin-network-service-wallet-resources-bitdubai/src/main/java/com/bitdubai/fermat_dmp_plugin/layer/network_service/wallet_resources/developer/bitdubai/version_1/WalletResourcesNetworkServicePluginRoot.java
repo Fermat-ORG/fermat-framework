@@ -11,8 +11,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.Wallet
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.enums.Repositories;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -26,7 +25,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
