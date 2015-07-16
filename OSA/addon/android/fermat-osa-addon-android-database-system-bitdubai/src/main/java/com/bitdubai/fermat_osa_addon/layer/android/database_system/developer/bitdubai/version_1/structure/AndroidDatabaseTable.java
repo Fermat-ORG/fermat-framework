@@ -105,8 +105,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      */
 
     @Override
-    public List<String> getColumns()
-    {
+    public List<String> getColumns(){
         List<String> columns = new ArrayList<String>();
         Cursor c = this.database.rawQuery("SELECT * FROM "+ tableName, null);
         String[] columnNames = c.getColumnNames();
@@ -409,13 +408,11 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
             }
 
-           // this.database.insert(tableName, null, initialValues);
-
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         }
         catch (Exception exception) {
             throw new CantInsertRecordException();
-          }
+        }
 
 
     }
@@ -439,15 +436,15 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         if (!this.offset.isEmpty())
             offsetSentence = " OFFSET " + this.offset;
 
-        Cursor cursor = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
+        Cursor cursor = null;
 
         /**
          * Get columns name to read values of files
          *
          */
-        List<String> columns = getColumns();
-
         try {
+            List<String> columns = getColumns();
+            cursor = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
                 List<DatabaseRecord> recordValues = new ArrayList<>();
