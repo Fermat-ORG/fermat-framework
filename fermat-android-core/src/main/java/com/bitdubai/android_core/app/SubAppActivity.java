@@ -77,7 +77,7 @@ import java.util.Vector;
 /**
  * Created by toshiba on 16/02/2015.
  */
-public class SubAppActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class SubAppActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,ScreenSwapper {
 
     private NavigationDrawerFragment NavigationDrawerFragment;
 
@@ -565,6 +565,11 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             Toast.makeText(getApplicationContext(), "Can't Clean Windows: " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
+
+    }
+
+    @Override
+    public void changeScreen(Object... objects) {
 
     }
 

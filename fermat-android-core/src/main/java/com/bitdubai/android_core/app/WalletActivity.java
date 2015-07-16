@@ -182,14 +182,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Method implemented for manage the navigation drawer
-     * @param position
-     */
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
 
-    }
     // TODO: Ver porque se está haciendo este bucle que no hace nada
 
     /*
@@ -278,6 +271,15 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             super.onBackPressed();
         }
 
+
+    }
+
+    /**
+     * Method implemented for manage the navigation drawer
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
 
     }
 

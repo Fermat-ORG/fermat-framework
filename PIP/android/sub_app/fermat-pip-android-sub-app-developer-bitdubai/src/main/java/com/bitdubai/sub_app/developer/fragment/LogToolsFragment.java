@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -302,6 +303,7 @@ public class LogToolsFragment extends Fragment {
                         FT.replace(R.id.logContainer, logToolsFragmentLevel2, "fragmento2");
                         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         FT.commit();
+
                     }
                 });
 
