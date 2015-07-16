@@ -111,7 +111,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         fab_add_person.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAddContact("Name");
+                showAddContact("");
             }
         });
         //imageView_add_contact.
