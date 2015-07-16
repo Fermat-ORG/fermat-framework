@@ -5,6 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:id="@+id/fragment_container"
+    android:background="#f3e4c4"
     >
 
 
@@ -19,7 +20,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:drawableLeft="@drawable/ic_search"
+            android:drawableLeft="@drawable/ic_action_search_grey"
             android:hint="@string/search_hint"
             android:singleLine="true" />
 

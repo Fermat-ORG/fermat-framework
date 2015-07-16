@@ -48,10 +48,6 @@ public class FragmentActivity  extends Activity {
     private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
 
-    private AppRuntimeManager appRuntimeMiddleware;
-    private static WalletRuntimeManager walletRuntimeMiddleware;
-
-    private CorePlatformContext platformContext;
     private ViewPager pager;
 
     private  TextView abTitle;
@@ -69,17 +65,14 @@ public class FragmentActivity  extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.runtime_app_activity_fragment);
         try{
-            // get instances of Runtime middleware object
 
-            this.appRuntimeMiddleware =  ApplicationSession.getAppRuntime(); //(AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
-            this.app = appRuntimeMiddleware.getLastApp();
-            this.subApp = appRuntimeMiddleware.getLastSubApp();
+            this.app = ApplicationSession.getAppRuntime().getLastApp();
+            this.subApp =  ApplicationSession.getAppRuntime().getLastSubApp();
 
-            walletRuntimeMiddleware = ApplicationSession.getwalletRuntime();
 
             //get actual activity to execute
-            this.activity = walletRuntimeMiddleware.getLasActivity();
+            this.activity = ApplicationSession.getwalletRuntime().getLasActivity();
 
 
             // Fragment fragment = appRuntimeMiddleware.getLastFragment();
