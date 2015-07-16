@@ -142,8 +142,8 @@ public class StartActivity extends FragmentActivity {
             platform = ApplicationSession.getFermatPlatform();
 
 
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
+            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            //StrictMode.setThreadPolicy(policy);
 
 
             //set Os Addons in platform
