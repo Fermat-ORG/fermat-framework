@@ -72,6 +72,10 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     private int currentColor = 0xFF666666;
 
 
+    /**
+     *  Method called when the activity is starting.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +96,200 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
     }
 
+    /**
+     * Initialize the contents of the Activity's standard options menu
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        try {
+            MenuInflater inflater = getMenuInflater();
+
+
+            switch ( ApplicationSession.getwalletRuntime().getLasActivity().getType()) {
+
+
+                case CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN:
+                    inflater.inflate(R.menu.app_activity_main_empty_menu, menu);
+
+                    break;
+                case CWP_WALLET_STORE_MAIN:
+                    break;
+
+
+            }
+
+        }
+        catch (Exception e) {
+
+            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+            Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+
+
+
+        return super.onCreateOptionsMenu(menu);
+
+
+
+    }
+
+
+    /**
+     * This hook is called whenever an item in your options menu is selected.
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        try {
+
+
+            int id = item.getItemId();
+
+            //noinspection SimplifiableIfStatement
+            if (id == R.id.action_settings) {
+                return true;
+            }
+
+
+
+            if (id == R.id.action_file) {
+                return true;
+            }
+
+
+
+
+
+
+        }
+        catch (Exception e) {
+            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+            Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Method implemented for manage the navigation drawer
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+
+    }
+    // TODO: Ver porque se está haciendo este bucle que no hace nada
+
+    /*
+    int mRequestCode;
+    int mResultCode;
+    Intent mData;
+    boolean returningWithResult = false;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        returningWithResult = true;
+        this.mData = data;
+        mRequestCode = requestCode;
+        mResultCode = resultCode;
+
+        //it returns to fragment call
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    @Override
+    protected void onPostResume() {
+
+
+        super.onPostResume();
+        if (returningWithResult)
+        {
+            //Get actual wallet to execute activity result method
+            Activity wallet = ApplicationSession.getwalletRuntime().getLasActivity();
+
+            if (wallet.getType() == Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN)
+            {
+                android.support.v4.app.Fragment currentFragment =  SendFragment.newInstance(0);
+                currentFragment.onActivityResult(mRequestCode, mResultCode, mData);
+            }
+
+        }
+
+
+        returningWithResult = false;
+    }
+
+    */
+
+    /**
+     *  Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle)
+     * @param outState
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentColor", currentColor);
+    }
+
+
+    /**
+     * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
+     * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        currentColor= savedInstanceState.getInt("currentColor");
+    }
+
+
+    /**
+     * Method call when back button is pressed
+     */
+    @Override
+    public void onBackPressed() {
+        // set Desktop current activity
+        ApplicationSession.setActivityId("DesktopActivity");
+        ((ApplicationSession) this.getApplication()).setWalletId(0);
+        //Activity activity =ApplicationSession.getwalletRuntime().getLasActivity();
+        if (ApplicationSession.getwalletRuntime().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+            //activity = ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+            cleanWindows();
+
+            Intent intent = new Intent(this, SubAppActivity.class);
+
+            startActivity(intent);
+        }else{
+            super.onBackPressed();
+        }
+
+
+    }
+
+
+    // TODO: Este metodo se debe dividir en metodos más pequeños donde:
+    // *Se obtengan los objetos a pintar
+    // *Se obtengan los objetos del runtime
+    // *Se le agregue lo necesario a cada uno
+
+    /**
+     * Method who load the screen from walletRuntime
+     */
     private void NavigateWallet() {
 
         try
@@ -205,6 +403,11 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         }
     }
 
+
+    /**
+     * Method to set status bar color in different version of android
+     * @param color
+     */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(String color){
         if(Build.VERSION.SDK_INT>20) {
@@ -287,99 +490,12 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
     }
 
-    /**
-     * Init activity navigation
-     */
-    //if the activity has more of a fragment and has no tabs I create a PagerAdapter
-    // to make the NavigationDrawerFragment verified whether the activity has a SideMenu
 
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        try {
-            MenuInflater inflater = getMenuInflater();
-
-
-            switch ( ApplicationSession.getwalletRuntime().getLasActivity().getType()) {
-
-
-                case CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN:
-                    inflater.inflate(R.menu.app_activity_main_empty_menu, menu);
-
-                    break;
-                case CWP_WALLET_STORE_MAIN:
-                    break;
-
-
-            }
-
-        }
-        catch (Exception e) {
-
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-            Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
-
-
-
-        return super.onCreateOptionsMenu(menu);
-
-
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        try {
-
-
-            int id = item.getItemId();
-
-            //noinspection SimplifiableIfStatement
-            if (id == R.id.action_settings) {
-                return true;
-            }
-
-
-
-            if (id == R.id.action_file) {
-                return true;
-            }
-
-
-
-
-
-
-        }
-        catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-            Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    //***
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-
-    }
+    // TODO: Lo comento porque no hace nada
 
     public void onItemSelectedClicked(View v) {
 
-        try
+        /*try
         {
               ApplicationSession.setContact("");
             String tagId = v.getTag().toString();
@@ -411,98 +527,15 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),Toast.LENGTH_SHORT).show();
              //       Toast.LENGTH_LONG).show();
-        }
+        }*/
 
 
     }
 
 
-    //cambio mati test
-    @Override
-    public void onResume(){
-        super.onResume();
-        //cleanWindows();
-        //NavigateWallet();
-    }
-
-    int mRequestCode;
-    int mResultCode;
-    Intent mData;
-    boolean returningWithResult = false;
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        returningWithResult = true;
-        this.mData = data;
-        mRequestCode = requestCode;
-        mResultCode = resultCode;
-
-        //it returns to fragment call
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
-
-    @Override
-    protected void onPostResume() {
-
-
-        super.onPostResume();
-        if (returningWithResult)
-        {
-             //Get actual wallet to execute activity result method
-            Activity wallet = ApplicationSession.getwalletRuntime().getLasActivity();
-
-            if (wallet.getType() == Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN)
-            {
-                android.support.v4.app.Fragment currentFragment =  SendFragment.newInstance(0);
-                currentFragment.onActivityResult(mRequestCode, mResultCode, mData);
-            }
-
-        }
-
-
-        returningWithResult = false;
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle("fermat");
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("currentColor", currentColor);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        // set Desktop current activity
-        ApplicationSession.setActivityId("DesktopActivity");
-        ((ApplicationSession) this.getApplication()).setWalletId(0);
-        //Activity activity =ApplicationSession.getwalletRuntime().getLasActivity();
-        if (ApplicationSession.getwalletRuntime().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
-            //activity = ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-            cleanWindows();
-
-            Intent intent = new Intent(this, SubAppActivity.class);
-
-            startActivity(intent);
-        }else{
-            super.onBackPressed();
-        }
-
-
-    }
+    /**
+     *  Method used to clean the screen
+     */
 
     private void cleanWindows()
     {
@@ -510,8 +543,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         {
             //clean page adapter
             ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-            // if(adapter != null) {
-            pagertabs.removeAllViews();
+            if(adapter != null) pagertabs.removeAllViews();
 
             ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
             viewpager.setVisibility(View.INVISIBLE);
@@ -542,10 +574,14 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
     }
 
-
+    /**
+     * Tabs adapter
+     */
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private String[] titles;
+
+
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -606,9 +642,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                     fragmentType = tab.getFragment();
                     break;
                 }
-
             }
-
             //execute current activity fragments
             try {
                 switch (fragmentType) {
@@ -624,7 +658,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         developerPlatform = new com.bitdubai.sub_app.developer.fragment.Platform();
                         developerPlatform.setErrorManager((ErrorManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
                         developerPlatform.setToolManager((ToolManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
-
                         currentFragment = DatabaseToolsFragment.newInstance(position);
                         break;
 

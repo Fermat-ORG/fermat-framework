@@ -16,11 +16,13 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerRegistry;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerReportAgent;
 
+import java.io.Serializable;
+
 /**
  * Created by ciencias on 05.02.15
  * Modified by Federico Rodriguez on 01.05.15
  */
-public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlatformDatabaseSystem, ErrorManager, Service {
+public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlatformDatabaseSystem, ErrorManager, Service,Serializable {
 
     /**
      * ErrorManagerRegistry variable
