@@ -7,11 +7,17 @@ import com.bitdubai.fermat_api.FermatException;
  * is thrown when i can't intialize the actor address book.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/06/15.
+ * Updated by Raul Pena   - (raul.pena@gmail.com)  on 16/07/15.
+ *
  * @version 1.0
  */
 public class CantInitializeDeveloperIdentityDatabaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE DEVELOPER IDENTITY DATABASE EXCEPTION";
+
+    public CantInitializeDeveloperIdentityDatabaseException(final String message, final String context, final String possibleReason) {
+        this (message, null, context, possibleReason);
+    }
 
     public CantInitializeDeveloperIdentityDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
