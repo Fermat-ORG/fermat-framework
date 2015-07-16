@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletResourcesException;
 
@@ -33,14 +34,6 @@ public interface  WalletResourcesManager {
     // DEPRECATED - NO USAR - SE DEBE LIMPIAR
     public void setwalletType(Wallets type);
 */
-
-    /*
-
-    getWalletResources (id , version, skin, language)
-
-
-
-     */
 
     /**
      * This method will give us the resources associated to the resourcesId
