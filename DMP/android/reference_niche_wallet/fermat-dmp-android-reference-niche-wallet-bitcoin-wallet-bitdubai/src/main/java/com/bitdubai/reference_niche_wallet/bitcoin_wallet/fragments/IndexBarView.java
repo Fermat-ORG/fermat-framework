@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -79,7 +80,12 @@ public class IndexBarView extends View {
         mIndexPaint.setTextSize(mContext.getResources().getDimension(R.dimen.index_bar_view_text_size));
     }
 
-    
+
+    private static int indWidth = 20;
+    private float scaledWidth;
+    private float sx;
+    private int indexSize;
+
     // draw view content on canvas using paint
     @Override
     protected void onDraw(Canvas canvas) {
@@ -90,10 +96,22 @@ public class IndexBarView extends View {
             for (int i = 0; i < mListSections.size(); i++) {
                 float paddingLeft = (getMeasuredWidth() - mIndexPaint.measureText(getSectionText(mListSections.get(i)))) / 2;
 
+
+                /*Paint p = new Paint();
+                p.setColor(Color.WHITE);
+                p.setAlpha(100);
+
+
+                canvas.drawRoundRect(6,6,6,6,paddingLeft,
+                        mIndexbarMargin + (sectionHeight * i) + paddingTop + mIndexPaint.descent(),p);
+
+                */
+
                 canvas.drawText(getSectionText(mListSections.get(i)),
                         paddingLeft,
                         mIndexbarMargin + (sectionHeight * i) + paddingTop + mIndexPaint.descent(),
                         mIndexPaint);
+
             }
         }
         super.onDraw(canvas);
