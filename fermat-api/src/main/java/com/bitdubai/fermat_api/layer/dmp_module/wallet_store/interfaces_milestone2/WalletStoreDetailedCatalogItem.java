@@ -1,31 +1,30 @@
-package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
+package com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces_milestone2;
 
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguagesException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.WalletInstallationStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by ciencias on 7/17/15.
+ * Created by eze on 2015.07.17..
  */
-public interface DetailedCatalogItem {
-
+public interface WalletStoreDetailedCatalogItem {
     /**
      * This method finds the languages supported in the said wallet.
      *
      * @return the list of languages supported
      */
-    public List<Language> getLanguages() throws CantGetLanguagesException;
+    public List<Language> getLanguages();
 
     /**
      * Given an Skin id this method returns the skin information
      *
      * @param skinId the id of the skin
      * @return The skin
-     * @throws CantGetSkinException
      */
-    public Skin getSkin(UUID skinId) throws CantGetSkinException;
+    public Skin getSkin(UUID skinId);
 
     /**
      * This method finds the lost of identifiers of the skins associated to the wallet
@@ -40,6 +39,13 @@ public interface DetailedCatalogItem {
      * @return a description represented as a String
      */
     public String getWalletDescription();
+
+    /**
+     * This method gives us the wallet installation status
+     *
+     * @return the wallet installation status
+     */
+    public WalletInstallationStatus getWalletInstallationStatus();
 
     /**
      * This method gives us the version of the wallet

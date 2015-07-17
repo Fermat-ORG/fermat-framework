@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.*;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 
@@ -28,27 +27,31 @@ import com.bitdubai.android_core.app.common.version_1.navigation_drawer.Navigati
 
 import com.bitdubai.android_core.app.common.PagerAdapter;
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.*;
+import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
+import com.bitdubai.sub_app.developer.common.Resource;
+import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseListFragment;
+import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableListFragment;
+import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableRecordListFragment;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
+import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 
 
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
-
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
-
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 
 import android.view.View;
 import android.view.Window;
@@ -61,11 +64,9 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
 
 
-import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.sub_app.wallet_store.fragment.AcceptedNearbyFragment;
 import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
 import com.bitdubai.sub_app.wallet_store.fragment.FreeFragment;
@@ -92,7 +93,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     private App app;
     private SubApp subApp;
     private Activity activity;
-    private Map<Fragments, com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment> fragments;
+    private Map<Fragments, Fragment> fragments;
     private ViewPager pager;
     private ViewPager pagertabs;
     private MyPagerAdapter adapter;
@@ -105,7 +106,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     private boolean firstexecute = true;
     private Bundle savedInstanceState;
     private ViewGroup collection;
-
+    private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragment;
     private String actionKey;
 
     private Object[] screenObjects;
@@ -137,12 +138,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
         try {
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment>> efragments = this.fragments.entrySet().iterator();
+            Iterator<Map.Entry<Fragments, Fragment>> efragments = this.fragments.entrySet().iterator();
             boolean flag = false;
             while (efragments.hasNext()) {
-                Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment> fragmentEntry = efragments.next();
+                Map.Entry<Fragments, Fragment> fragmentEntry = efragments.next();
 
-                RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
+                Fragment fragment = (Fragment) fragmentEntry.getValue();
                 Fragments type = fragment.getType();
 
                 switch (type) {
@@ -291,13 +292,122 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             }
         } catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            //TODO: Error manager is null in this point
+           // ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Error in NavigateActivity " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
 
+    /**
+     * This method replaces the current fragment by the next in navigation
+     * @param fragmentType Type Id of fragment to show
+     */
+        private void loadFragment(Fragments fragmentType)
+        {
+            FragmentTransaction transaction;
+            switch (fragmentType) {
+
+                //developer app fragments
+                case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
+                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+
+                      DatabaseToolsFragment frag= DatabaseToolsFragment.newInstance(0);
+                        //set data pass to fragment
+                        this.fragment.setContext(screenObjects);
+
+                         transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.databasecontainer, frag);
+                        // Commit the transaction
+                        transaction.commit();
+
+                    break;
+
+                case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
+                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
+
+
+                        DatabaseToolsDatabaseListFragment fragd= DatabaseToolsDatabaseListFragment.newInstance(0);
+                        fragd.setResource((Resource)screenObjects[0]);
+                        //set data pass to fragment
+                        this.fragment.setContext(screenObjects);
+
+                         transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.startContainer, fragd);
+                        // Commit the transaction
+                        transaction.commit();
+
+
+                    break;
+                case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES:
+
+                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
+
+                        DatabaseToolsDatabaseTableListFragment fragt= DatabaseToolsDatabaseTableListFragment.newInstance(0);
+
+                        //set data pass to fragment
+                        this.fragment.setContext(screenObjects);
+                        fragt.setResource((Resource) screenObjects[0]);
+                        fragt.setDeveloperDatabase((DeveloperDatabase) screenObjects[1]);
+
+                         transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.startContainer, fragt);
+                        // Commit the transaction
+                        transaction.commit();
+
+                    break;
+                case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS:
+
+                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
+
+                    DatabaseToolsDatabaseTableRecordListFragment fragr= DatabaseToolsDatabaseTableRecordListFragment.newInstance(0);
+
+
+                    //set data pass to fragment
+                    this.fragment.setContext(screenObjects);
+                    fragr.setResource((Resource) screenObjects[0]);
+                    fragr.setDeveloperDatabase((DeveloperDatabase) screenObjects[1]);
+                    fragr.setDeveloperDatabaseTable((DeveloperDatabaseTable) screenObjects[2]);
+
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.startContainer, fragr);
+                    // Commit the transaction
+                    transaction.commit();
+                    break;
+
+                case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
+                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+
+                        LogToolsFragment frag1= LogToolsFragment.newInstance(0);
+
+                        //set data pass to fragment
+                        this.fragment.setContext(screenObjects);
+
+                        FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+                        transaction1.replace(R.id.startContainer, frag1);
+                        // Commit the transaction
+                        transaction1.commit();
+                    break;
+
+                case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS:
+
+                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+
+                       LogToolsFragmentLevel2 fragl= LogToolsFragmentLevel2.newInstance(0);
+                        fragl.setLoggers((ArrayListLoggers) screenObjects[0]);
+                        //set data pass to fragment
+                        this.fragment.setContext(screenObjects);
+
+                        FragmentTransaction transactionl = getSupportFragmentManager().beginTransaction();
+                        transactionl.replace(R.id.startContainer, fragl);
+                        // Commit the transaction
+                        transactionl.commit();
+                    break;
+
+
+            }
+        }
 
     // TODO: Aca dependiendo del tipo de activity se esta inflando uno u otro menu. Esto esta lejos de ser como debe. Se supone que en el plugin WalletRuntime o AppRuntime están definidos los menues para cada actividad y es en base a eso que se debe crear los menues.
     // TODO: Si no es posible, como aparentemente no lo es inflar un menu de manera programatica sin basarse en un layout, lo que deberiamos tener es en todo caso un conjunto de layouts que sirvan de templates
@@ -437,18 +547,41 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
     }
 
+    /**
+     * This method catch de back bottom event and decide which screen load
+     */
     @Override
     public void onBackPressed() {
-        // set Desktop current activity
-        ApplicationSession.setActivityId("DesktopActivity");
-        ((ApplicationSession) this.getApplication()).setWalletId(0);
-        if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
-            activity = ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-            cleanWindows();
 
-            NavigateActivity();
-        } else {
-            super.onBackPressed();
+        // get actual fragment on execute
+
+        this.fragment = ApplicationSession.getAppRuntime().getLastFragment();
+
+        //get setting fragment to back
+        //if not fragment to back I back to desktop
+        Fragments frgBackType = this.fragment.getBack();
+
+        if(frgBackType != null){
+
+            com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragmentBack = ApplicationSession.getAppRuntime().getFragment(frgBackType); //set back fragment to actual fragment to run
+
+            //I get string context with params pass to fragment to return with this data
+            ApplicationSession.setParams(fragmentBack.getContext());
+
+            this.loadFragment(frgBackType);
+        }
+        else{
+            // set Desktop current activity
+            ApplicationSession.setActivityId("DesktopActivity");
+            ((ApplicationSession) this.getApplication()).setWalletId(0);
+            if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
+                activity = ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+                cleanWindows();
+
+                NavigateActivity();
+            } else {
+                super.onBackPressed();
+            }
         }
 
 
@@ -504,8 +637,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         try {
 
             Intent intent;
-            //Clean all object from the previous activity
-            cleanWindows();
 
             Activities activityType = Activities.getValueFromString(this.actionKey);
 
@@ -513,6 +644,9 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             if(activityType != null)
             {
+                //Clean all object from the previous activity
+                cleanWindows();
+
                 switch (activityType) {
 
                     case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
@@ -561,34 +695,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             }
             else
             {
+
                 Fragments fragmentType = Fragments.getValueFromString(actionKey);
 
                 if(fragmentType != null)
                 {
-                    switch (fragmentType) {
-
-
-                        //developer app fragments
-                        case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
-                            ApplicationSession.setParams(screenObjects);
-                            ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
-                            intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-
-                            startActivity(intent);
-                            break;
-
-
-
-
-                        case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS:
-                            ApplicationSession.setParams(screenObjects);
-                            ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
-                            intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-
-                            startActivity(intent);
-                            break;
-
-                    }
+                        this.loadFragment(fragmentType);
                 }
                 else
                 {
@@ -599,12 +711,11 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             }
 
 
-
-
         } catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            //TODO: error manager is null in this point
+           // ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             //Esto va a habr que cambiarlo porque no me toma el tag, Matias
-            //Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
     }

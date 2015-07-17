@@ -14,8 +14,6 @@ import android.widget.Toast;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
 
@@ -26,18 +24,12 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
+
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 
 
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
-import com.bitdubai.sub_app.developer.common.Resource;
-import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseListFragment;
-import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableListFragment;
-import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableRecordListFragment;
-import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 
 
 import java.util.Map;
@@ -95,7 +87,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
 
             //get activity settings
             this.tabs = activity.getTabStrip();
-            this.fragments =activity.getFragments();
+
             this.titleBar = activity.getTitleBar();
 
             this.mainMenumenu= activity.getMainMenu();
@@ -128,72 +120,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
             Fragments type = fragment.getType();
             switch (type){
 
-                case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
-                    //that is the first fragment  I go to subapp activity
-                    ApplicationSession.getAppRuntime().getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-                     intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
 
-                    startActivity(intent);
-                    break;
-                //developer sub app
-                case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
-
-                    if (this.savedInstanceState == null) {
-                        DatabaseToolsDatabaseListFragment frag= DatabaseToolsDatabaseListFragment.newInstance(0);
-                        frag.setResource((Resource)ApplicationSession.getParams()[0]);
-                        //set data pass to fragment
-                        this.fragment.setContext(ApplicationSession.getParams());
-                        getFragmentManager().beginTransaction().add(R.id.container,frag).commit();
-
-                    }
-
-                    break;
-                case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES:
-
-                    if (this.savedInstanceState == null) {
-                        DatabaseToolsDatabaseTableListFragment frag= DatabaseToolsDatabaseTableListFragment.newInstance(0);
-
-                         params = ApplicationSession.getParams();
-                        //set data pass to fragment
-                        this.fragment.setContext(ApplicationSession.getParams());
-                        frag.setResource((Resource) ApplicationSession.getParams()[0]);
-                       frag.setDeveloperDatabase((DeveloperDatabase) ApplicationSession.getParams()[1]);
-                        getFragmentManager().beginTransaction().add(R.id.container,frag).commit();
-
-                    }
-
-                    break;
-                case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS:
-
-                    DatabaseToolsDatabaseTableRecordListFragment frag= DatabaseToolsDatabaseTableRecordListFragment.newInstance(0);
-
-                     params = ApplicationSession.getParams();
-                    //set data pass to fragment
-                    this.fragment.setContext(ApplicationSession.getParams());
-                    frag.setResource((Resource) ApplicationSession.getParams()[0]);
-                    frag.setDeveloperDatabase((DeveloperDatabase) ApplicationSession.getParams()[1]);
-                    frag.setDeveloperDatabaseTable((DeveloperDatabaseTable) ApplicationSession.getParams()[2]);
-                    getFragmentManager().beginTransaction().add(R.id.container,frag).commit();
-                    break;
-
-                case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
-                    //that is the first fragment  I go to subapp activity
-                    ApplicationSession.getAppRuntime().getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-                     intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
-
-                    startActivity(intent);
-                    break;
-                case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS:
-
-                    LogToolsFragmentLevel2 fragl= LogToolsFragmentLevel2.newInstance(0);
-
-                     params = ApplicationSession.getParams();
-                    //set data pass to fragment
-                    this.fragment.setContext(ApplicationSession.getParams());
-                    fragl.setLoggers((ArrayListLoggers) ApplicationSession.getParams()[0]);
-
-                    getFragmentManager().beginTransaction().add(R.id.container,fragl).commit();
-                    break;
 
                 case CWP_SHELL_LOGIN:
                     break;
@@ -306,44 +233,24 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
             Intent intent;
 
 
-                Fragments fragmentType = Fragments.getValueFromString(actionKey);
+            Fragments fragmentType = Fragments.getValueFromString(actionKey);
 
-                if(fragmentType != null)
-                {
-                    switch (fragmentType) {
+            if(fragmentType != null)
+            {
+                switch (fragmentType) {
 
 
-                        //developer app fragments
-                        case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
-                            ApplicationSession.setParams(screenObjects);
-                            ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
-                            this.NavigateFragment();
-                            break;
-                        case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES:
-                            ApplicationSession.setParams(screenObjects);
-                            ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
-                            this.NavigateFragment();
-                            break;
+                    //developer app fragments
+                    case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
 
-                        case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS:
-                            ApplicationSession.setParams(screenObjects);
-                            ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
-                            this.NavigateFragment();
-                            break;
-
-                        case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS:
-                            ApplicationSession.setParams(screenObjects);
-                            ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
-                            this.NavigateFragment();
-                            break;
-
-                    }
+                        break;
                 }
-                else
-                {
-                    ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
+            }
+            else
+            {
+                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
 
-                }
+            }
 
 
 

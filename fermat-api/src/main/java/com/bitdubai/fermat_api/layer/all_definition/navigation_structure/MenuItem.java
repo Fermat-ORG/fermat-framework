@@ -1,14 +1,13 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MenuItem;
 
-import java.awt.*;
+import java.awt.Image;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by rodrigo on 2015.07.17..
  */
-public class RuntimeMenuItem implements MenuItem {
+public class MenuItem implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MenuItem {
 
     String label;
     Image icon;
@@ -37,7 +36,4 @@ public class RuntimeMenuItem implements MenuItem {
     public Activities getLinkToActivity() {
         return linkToActivity;
     }
-
-
-    
 }
