@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectVersionException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectVersionsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import java.util.List;
  */
 public interface WalletFactoryProject {
 
-    public String getProjectName();
+    String getName();
 
-    public List<String> getVersions() throws CantGetWalletFactoryProjectVersionsException;
+    List<String> getProposals() throws CantGetWalletFactoryProjectProposalsException;
 
-    public WalletFactoryProjectVersion getVersion(String version) throws CantGetWalletFactoryProjectVersionException;
+    WalletFactoryProjectProposal getProposal(String proposal) throws CantGetWalletFactoryProjectProposalException;
 
 }
