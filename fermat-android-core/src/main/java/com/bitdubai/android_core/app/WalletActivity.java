@@ -47,7 +47,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     private TabsPagerAdapter adapter;
 
     /**
-     *  Method called when the activity is starting.
+     *  Called when the activity is first created
      * @param savedInstanceState
      */
     @Override
@@ -259,8 +259,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
             else{
                 pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-                //pagerSlidingTabStrip.setTextColor(Color.GREEN);
-                //pagerSlidingTabStrip.setBackgroundColor(Color.GREEN);
 
             }
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -268,7 +266,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
 
 
-            String status_color=activity.getStatusBarColor();
             if(activity.getStatusBarColor()!=null){
                 setStatusBarColor(activity.getStatusBarColor());
 
@@ -276,7 +273,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             if (activity.getTabStrip().getTabsColor()!=null){
                 pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
                 //tabStrip.setDividerColor(Color.TRANSPARENT);
-
             }
             if(activity.getTabStrip().getTabsTextColor()!=null){
                 pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
