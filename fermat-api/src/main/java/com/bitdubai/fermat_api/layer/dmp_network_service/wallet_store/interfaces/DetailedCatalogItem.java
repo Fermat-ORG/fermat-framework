@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +24,7 @@ public interface DetailedCatalogItem {
      * @return The skin
      * @throws CantGetSkinException
      */
-    public SkinPreview getSkin(UUID skinId) throws CantGetSkinException;
+    public Skin getSkin(UUID skinId) throws CantGetSkinException;
 
     /**
      * This method finds the lost of identifiers of the skins associated to the wallet

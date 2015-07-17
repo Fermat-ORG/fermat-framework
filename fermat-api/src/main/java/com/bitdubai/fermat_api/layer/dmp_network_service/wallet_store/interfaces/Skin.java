@@ -10,15 +10,17 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.07.16..
  */
-public interface SkinPreview {
+public interface Skin {
 
     public UUID getSkinId();
 
     public String getSkinName();
-    public String getSkinDesigner();
+    public String getSkinDesignerName();
+    public String getSkinDesignerPublicKey();
+
     public byte[] getPresentationImage();
 
-    public List<String> getImageList();
+    public List<String> getPreviewImageList();
     public byte[] getImage(String imageName) throws CantGetWalletIconException;
 
     public boolean hasVideoPreview();
