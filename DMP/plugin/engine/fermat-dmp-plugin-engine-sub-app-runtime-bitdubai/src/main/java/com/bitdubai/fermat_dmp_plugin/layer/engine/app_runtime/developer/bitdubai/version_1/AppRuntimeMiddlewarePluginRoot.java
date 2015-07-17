@@ -520,10 +520,22 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS, runtimeFragment);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
             runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
             runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS,runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+            runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+            runtimeActivity.addFragment(runtimeFragment);
             listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS,runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS);
+            runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS,runtimeFragment);
 
             /**
              * End of Developer tabs.
