@@ -11,13 +11,15 @@ import android.widget.TextView;
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
 
+import java.util.List;
+
 
 public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     private final Context context;
-    private final String[] values;
+    private final List<String> values;
 
 
-    public NavigationDrawerArrayAdapter(Context context, String[] values) {
+    public NavigationDrawerArrayAdapter(Context context, List<String> values) {
         super(context, R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, values);
         try
         {
@@ -37,31 +39,35 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View rowView;
+        View rowView = convertView;
         try
         {
-            if (position == 0)
-            {
+            if (position == 0) {
 
 
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                switch (ApplicationSession.getActivityId())
+
+
+                //testing
+
+                rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
+                /*switch (ApplicationSession.getActivityId())
                 {
                     case "DesktopActivity":
                         rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
                         break;
                       default:
                         rowView = inflater.inflate(R.layout.wallet_manager_main_activity_navigation_drawer_first_row_empty, parent, false);
+                          break;
 
-                }
+                }*/
+                TextView txtView_description = (TextView) rowView.findViewById(R.id.txtView_description);
+                if(txtView_description != null){
 
-                if(rowView.findViewById(R.id.label) != null){
-                    TextView textView = (TextView) rowView.findViewById(R.id.label);
+                    txtView_description.setTypeface(ApplicationSession.getDefaultTypeface(), 1);
 
-                    textView.setTypeface(ApplicationSession.getDefaultTypeface(), 1);
-
-                    ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-                    textView.setText("Tessa Crankston");
+                    //ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+                    txtView_description.setText("Tessa Crankston");
                 }
 
 
@@ -81,7 +87,10 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
-                switch (ApplicationSession.getActivityId()) {
+
+                //test mati
+                rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
+                /*switch (ApplicationSession.getActivityId()) {
                     case "DesktopActivity":
                         rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
                         break;
@@ -90,17 +99,19 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         break;
 
                 }
+                */
                 ImageView imageView = null;
+                imageView = (ImageView) rowView.findViewById(R.id.icon);
                 if(rowView.findViewById(R.id.label) != null)
                 {
                     TextView textView = (TextView) rowView.findViewById(R.id.label);
                     textView.setTypeface(ApplicationSession.getDefaultTypeface(), 1);
-                    imageView = (ImageView) rowView.findViewById(R.id.icon);
-                    textView.setText(values[position]);
+
+                    textView.setText(values.get(position));
                 }
 
 
-                if (ApplicationSession.getActivityId() == "DesktopActivity") {
+                //if (ApplicationSession.getActivityId() == "DesktopActivity") {
 
                     switch (position) {
                         case 1:
@@ -122,16 +133,17 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         case 6:
                             imageView.setImageResource(R.drawable.ic_action_exit);
                             break;
+                        default:
+                            imageView.setImageResource(R.drawable.unknown_icon);
                     }
 
 
 
                 }
 
-            }
+            //}
         }
-        catch (Exception e)
-        {
+        catch (Exception e){
             throw e;
         }
 
