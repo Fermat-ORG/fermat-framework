@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.07.09..
  */
-public interface NewCatalogueItem {
+public interface CatalogueItem {
 
     public boolean hasImagePreview();
 

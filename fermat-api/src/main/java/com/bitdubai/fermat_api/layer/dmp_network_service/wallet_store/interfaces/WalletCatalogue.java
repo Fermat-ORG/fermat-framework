@@ -19,5 +19,7 @@ public interface WalletCatalogue {
      * @return A list of at most "top" catalogue items (wallets)
      * @throws CantGetWalletsCatalogueException
      */
-    public List<NewCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsCatalogueException;
+    public List<CatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsCatalogueException;
+
+    // TODO LUIS : getDetailedCataogItem
 }

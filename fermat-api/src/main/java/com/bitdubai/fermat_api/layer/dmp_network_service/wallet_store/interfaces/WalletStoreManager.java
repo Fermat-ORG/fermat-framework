@@ -10,7 +10,7 @@ import java.util.UUID;
  * Created by loui on 18/02/15.
  */
 public interface WalletStoreManager {
-    public void publishWallet(NewCatalogueItem newCatalogueItem) throws CantPublishWalletInCatalogueException;
+    public void publishWallet(CatalogueItem catalogueItem) throws CantPublishWalletInCatalogueException;
     public WalletCatalogue getWalletCatalogue() throws CantGetWalletsCatalogueException;
     public List<SkinPreview> getSkinsPreview(UUID walletCatalogueId);
 
