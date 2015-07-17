@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWalletDao;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -120,7 +120,7 @@ public class AddDebitTest {
         catchException(testWalletDao).addDebit(mockTransactionRecord, balanceType);
         assertThat(caughtException())
                 .isNotNull()
-                .isInstanceOf(CantRegisterDebitDebitException.class);
+                .isInstanceOf(CantRegisterDebitException.class);
     }
 
 }
