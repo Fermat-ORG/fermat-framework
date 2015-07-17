@@ -73,7 +73,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
 
-    private int loggerLevel=1;
+    private int loggerLevel=2;
 
     public static LogToolsFragmentLevel2 newInstance(int position) {
         LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
