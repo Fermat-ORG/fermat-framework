@@ -230,87 +230,13 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
             String color ="";
             mTitle = pTitle;
 
+
+            // actionBar
             Drawable bg = context.getDrawable(R.drawable.transparent);
             bg.setVisible(false, false);
-
             Drawable wallpaper = context.getDrawable(R.drawable.transparent);
-
+            //title
             s = new SpannableString(mTitle);
-
-            switch (getWalletId()) {
-
-                case 3:
-                    color = "#F0E173";
-                    actionBar.setIcon(context.getDrawable(R.drawable.wallet_1));
-                    wallpaper = context.getDrawable(R.drawable.background_tabs_diagonal_rotated);
-                    abTitle.setTextColor(Color.BLACK);
-                    walletStyle = "Young";
-                    break;
-
-                case 4:
-                    color = "#d07b62";
-                    actionBar.setIcon(context.getDrawable(R.drawable.fermat));
-                    wallpaper = context.getDrawable(R.drawable.background_tabs_diagonal_rotated);
-                    if (abTitle != null) {
-                        abTitle.setTextColor(Color.BLACK);
-                    }
-                    walletStyle = "Young";
-                    break;
-
-                case 5:
-
-                    color = "#F0C64A";
-                    actionBar.setIcon(context.getDrawable(R.drawable.wallet_3));
-                    wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
-                    abTitle.setTextColor(Color.BLACK);
-                    walletStyle = "Club";
-                    break;
-
-                case 6:
-
-                    color = "#9B80FF";
-                    actionBar.setIcon(context.getDrawable(R.drawable.wallet_3));
-                    wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
-                    abTitle.setTextColor(Color.BLACK);
-                    walletStyle = "Club";
-                    break;
-
-                case 7:
-                    color = "#E8E8E8";
-                    actionBar.setIcon(context.getDrawable(R.drawable.icono_retailer_1));
-                    wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
-                    abTitle.setTextColor(Color.BLUE);
-                    walletStyle = "Club";
-                    break;
-
-                case 8:
-                    color = "#AB0A80";
-                    actionBar.setIcon(context.getDrawable(R.drawable.icono_banco_1));
-                    wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
-                    abTitle.setTextColor(Color.YELLOW);
-                    walletStyle = "Club";
-                    break;
-
-                case 9:
-                    color = "#FF0004";
-                    actionBar.setIcon(context.getDrawable(R.drawable.icono_banco_2));
-                    wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
-                    abTitle.setTextColor(Color.WHITE);
-                    walletStyle = "Club";
-                    break;
-
-                case 10:
-                    color = "#3864F5";
-                    actionBar.setIcon(context.getDrawable(R.drawable.icono_club_1));
-                    wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
-                    abTitle.setTextColor(Color.YELLOW);
-                    bg = context.getDrawable(R.drawable.banner_club_1);
-                    bg.setVisible(true, false);
-                    walletStyle = "Club";
-                    break;
-
-
-            }
 
 
             s.setSpan(new MyTypefaceSpan(activity, "CaviarDreams.ttf"), 0, s.length(),
@@ -345,14 +271,16 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
      */
 
 
+
+    // acá se cambia el color del actionBar
     public static void changeColor(int newColor, Resources context) {
 
         try
         {
 
-            if(tabs != null)
+            /*if(tabs != null)
                 tabs.setIndicatorColor(newColor);
-
+            */
             // change ActionBar color just if an ActionBar is available
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
@@ -380,9 +308,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                     } else {
                         actionBar.setBackgroundDrawable(td);
                     }
-
                     td.startTransition(200);
-
                 }
 
                 oldBackground = ld;

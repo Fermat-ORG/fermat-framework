@@ -13,6 +13,11 @@ package com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdub
 public class DeveloperIdentityDatabaseConstants {
 
     /**
+     * Developer database definition.
+     */
+    static final String DEVELOPER_DB_NAME = "DevelopersDB";
+
+    /**
      * Developer database table definition.
      */
     static final String DEVELOPER_TABLE_NAME = "DevelopersTable";

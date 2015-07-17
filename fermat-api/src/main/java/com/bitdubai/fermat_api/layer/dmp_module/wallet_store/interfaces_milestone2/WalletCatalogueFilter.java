@@ -13,5 +13,5 @@ public interface WalletCatalogueFilter {
      * @param newCatalogueItem The catalogue item to analise
      * @return true if the newCatalogue item satisfies the predicate. False in the other case.
      */
-    boolean satisfyFilter(FinalCatalogueItem newCatalogueItem);
+    boolean satisfyFilter(WalletStoreCatalogueItem newCatalogueItem);
 }
