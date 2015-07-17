@@ -10,29 +10,32 @@ import java.util.UUID;
  */
 public interface NewCatalogueItem {
 
-    public String walletVersion();
+    public boolean hasImagePreview();
 
     public boolean hasVideoPreview();
 
-    public URL getPreviewVideoUrl();
-
-    public boolean hasImagePreview();
-
-    public byte[] getPreviewImage() throws CantGetNextSkinPreviewImageException;
-
-    public int navigationStructureSizeInBytes();
-
-    public String getWalletName();
-
-    public String getDeveloperPublicKey();
+    public int getDefaultSizeInBytes();
 
     public String getDeveloperName();
 
-    public String getWalletVersion();
+    public String getDeveloperPublicKey();
+
+    public byte[] getPreviewImage() throws CantGetNextSkinPreviewImageException;
+
+    public URL getPreviewVideoUrl();
+
+    /**
+     * This id will be used in the peer to peer version of this milestone
+     *
+     * @return a unique identifier for the resources
+     */
+    public UUID getResourcesId();
+
+    public UUID getWalletIdInCatalog();
 
     public String getWalletDescription();
 
-    public UUID getWalletCatalogId();
+    public String getWalletName();
 
-    public UUID getResourcesId();
+    public String getWalletVersion();
 }
