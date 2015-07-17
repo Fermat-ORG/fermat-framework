@@ -61,12 +61,11 @@ public class WalletActivity extends FragmentActivity{
             /*
             * Load wallet UI
             */
-            NavigateWallet();
+            loadUI();
 
         } catch (Exception e) {
             //System.err.println("CantStartPlatformException: " + e.getMessage());
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, FermatException.wrapException(e));
-            Log.e(getClass().getSimpleName(), "CantStartPlatformException: " + e.getMessage());
+            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error Load RuntimeApp - " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -193,12 +192,12 @@ public class WalletActivity extends FragmentActivity{
     /**
      * Method who load the screen from walletRuntime
      */
-    private void NavigateWallet() {
+    private void loadUI() {
 
         try
         {
             /**
-             * Get actual activity to execute
+             * Get current activity to execute
              */
             Activity activity =  ApplicationSession.getwalletRuntime().getLasActivity();
             /**
