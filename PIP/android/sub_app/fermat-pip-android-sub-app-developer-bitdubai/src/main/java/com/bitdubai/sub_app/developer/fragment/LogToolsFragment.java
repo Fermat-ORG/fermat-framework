@@ -158,12 +158,6 @@ public class LogToolsFragment extends Fragment {
 
 
                     Loggers log = new Loggers();
-                    /*log.level0=classes.getLevel0();
-                    log.level1=classes.getLevel1();
-                    log.level2=classes.getLevel2();
-                    log.level3=classes.getLevel3();
-                    log.fullPath=classes.getFullPath();
-                    */
 
                     log.type=Loggers.TYPE_PLUGIN;
                     log.classHierarchyLevels=classes;
