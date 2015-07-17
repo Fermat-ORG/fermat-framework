@@ -1,8 +1,6 @@
 package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -40,15 +38,11 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
-import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
-import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
@@ -289,7 +283,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
 
             TabStrip tabs = activity.getTabStrip();
-            Map<Fragments, Fragment> fragments =activity.getFragments();
+            Map<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
             TitleBar titleBar = activity.getTitleBar();
 
             MainMenu mainMenumenu= activity.getMainMenu();
@@ -427,12 +421,12 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         try
         {
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<Fragments, Fragment>> efragments = ApplicationSession.getwalletRuntime().getLasActivity().getFragments().entrySet().iterator();
+            Iterator<Map.Entry<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment>> efragments = ApplicationSession.getwalletRuntime().getLasActivity().getFragments().entrySet().iterator();
             boolean flag=false;
             while (efragments.hasNext()) {
-                Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment> fragmentEntry =  efragments.next();
+                Map.Entry<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragmentEntry =  efragments.next();
 
-                RuntimeFragment fragment = (RuntimeFragment)fragmentEntry.getValue();
+                Fragment fragment = (Fragment)fragmentEntry.getValue();
                 Fragments type = fragment.getType();
 
 

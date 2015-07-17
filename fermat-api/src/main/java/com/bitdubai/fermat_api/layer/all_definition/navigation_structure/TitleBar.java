@@ -1,15 +1,14 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SearchView;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 
 import java.awt.Color;
 import java.awt.Image;
 
 /**
- * Created by Matias
+ * Created by rodrigo on 2015.07.17..
  */
-public class RuntimeTitleBar implements TitleBar {
+public class TitleBar implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar {
 
     String label;
     Color color;
@@ -17,7 +16,7 @@ public class RuntimeTitleBar implements TitleBar {
 
 
 
-    SearchView runtimeSearchView;
+    com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SearchView runtimeSearchView;
 
     public Color getColor() {
         return color;
@@ -45,8 +44,8 @@ public class RuntimeTitleBar implements TitleBar {
         this.backgroundImage = backgroundImage;
     }
 
-    public void setRuntimeSearchView(SearchView runtimeSearchView){this.runtimeSearchView=runtimeSearchView;};
-    public SearchView getRuntimeSearchView() {
+    public void setRuntimeSearchView(com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SearchView runtimeSearchView){this.runtimeSearchView=runtimeSearchView;};
+    public com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SearchView getRuntimeSearchView() {
         if(runtimeSearchView!=null){
             return runtimeSearchView;
         }

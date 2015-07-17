@@ -63,7 +63,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
     private SubApp subApp;
     private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity activity;
     private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragment;
-    private Map<Fragments, Fragment> fragments;
+    private Map<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments;
 
     private ViewPager pager;
 
