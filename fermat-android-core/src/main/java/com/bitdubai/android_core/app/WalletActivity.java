@@ -224,108 +224,109 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         {
             //get actual activity to execute
             Activity activity =  ApplicationSession.getwalletRuntime().getLasActivity();
-
-            ApplicationSession.setActivityId(activity.getType().getKey());
-
-
+            //get tabs to paint
             TabStrip tabs = activity.getTabStrip();
+            //get activities fragment
             Map<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
+            //get actionBar to paint
             TitleBar titleBar = activity.getTitleBar();
-
+            //get mainMenu to paint
             MainMenu mainMenumenu= activity.getMainMenu();
-
+            //get NavigationDrawer to paint
             SideMenu sidemenu = activity.getSideMenu();
-
+            // get the title
+            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
             //if wallet do not set the navigator drawer I load a layout without him
-            if(sidemenu != null)
-            {
+            //paint the navigationDrawer
+            if(sidemenu != null){
                 setContentView(R.layout.runtime_app_wallet_runtime_navigator);
-                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                //TODO: Recordatorio mati: voy a tener que limpiar el navigationDrawer en un futuro
+                NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-                this.NavigationDrawerFragment.setMenuVisibility(true);
-                // Set up the drawer.
-                this.NavigationDrawerFragment.setUp(
+                NavigationDrawerFragment.setMenuVisibility(true);
+                // Set up the navigationDrawer
+                NavigationDrawerFragment.setUp(
                         R.id.navigation_drawer,
                         (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-
             }
-            else
-            {
+            //paint layout without navigationDrawer
+            else{
                 setContentView(R.layout.runtime_app_wallet_runtime);
             }
-
+            //paint tabs in layout
             PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
-            if(tabs == null)
-                pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
-            else{
-                pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-
-            }
-            int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-            TextView abTitle = (TextView) findViewById(titleId);
-
-
-
+            paintTabs(tabs,pagerSlidingTabStrip,activity);
+            // paint statusBarColor
             if(activity.getStatusBarColor()!=null){
                 setStatusBarColor(activity.getStatusBarColor());
-
             }
-            if (activity.getTabStrip().getTabsColor()!=null){
-                pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
-                //tabStrip.setDividerColor(Color.TRANSPARENT);
-            }
-            if(activity.getTabStrip().getTabsTextColor()!=null){
-                pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
-            }
-
-            if(activity.getTabStrip().getTabsIndicateColor()!=null){
-                pagerSlidingTabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
-            }
-            Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
-            if (pagerSlidingTabStrip != null){
-                pagerSlidingTabStrip.setTypeface(tf,1 );
-            }
-
-
             //TODO por ahora le estoy pasando un null al tabstrip porque ahí adentro lo está cargando mal, porque hace un clean de la pantalla y borra el color de los tabs
             // que yo puse acá
             ApplicationSession.setActivityProperties(this, getWindow(), getResources(), null, getActionBar(), titleBar, abTitle, "Titulo");
 
-
-
+            //por ahora no se encuenta pensado el tema si es un solo fragmento
             if(tabs == null && fragments.size() > 1){
                 //this.initialisePaging();
-                Toast.makeText(getApplicationContext(),"Error 1111",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Error unico fragmento",Toast.LENGTH_SHORT).show();
                 Log.e(getClass().getSimpleName(),"wallets con un fragmento no pensadas");
 
             }
             else{
+                //get pagerTabs
                 ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
                 pagertabs.setVisibility(View.VISIBLE);
+                //making the pagerTab adapter
                 adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext());
-
                 pagertabs.setAdapter(adapter);
-
                 final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                         .getDisplayMetrics());
                 pagertabs.setPageMargin(pageMargin);
-
+                // put tabs in pagerSlidingTabsStrp
                 pagerSlidingTabStrip.setViewPager(pagertabs);
-
+                //changing color of the activity
                 String color = activity.getColor();
                 if (color != null)
-                    ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
-
+                  ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
             }
         }
         catch (Exception e) {
             ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
             Toast.makeText(getApplicationContext(), "Error in NavigateWallet " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
     }
 
+
+    /**
+     *
+     */
+    private void paintTabs(TabStrip tabs,PagerSlidingTabStrip pagerSlidingTabStrip,Activity activity){
+        if(tabs == null)
+            pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
+        else{
+            pagerSlidingTabStrip.setVisibility(View.VISIBLE);
+
+        }
+
+        // paint tabs color
+        if (activity.getTabStrip().getTabsColor()!=null){
+            pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
+            //tabStrip.setDividerColor(Color.TRANSPARENT);
+        }
+        // paint tabs text color
+        if(activity.getTabStrip().getTabsTextColor()!=null){
+            pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
+        }
+        //paint tabs indicate color
+        if(activity.getTabStrip().getTabsIndicateColor()!=null){
+            pagerSlidingTabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
+        }
+        // put tabs font
+        Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
+        if (pagerSlidingTabStrip != null){
+            pagerSlidingTabStrip.setTypeface(tf, 1);
+        }
+    }
 
     /**
      * Method to set status bar color in different version of android
