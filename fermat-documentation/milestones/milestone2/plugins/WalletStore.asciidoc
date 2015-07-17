@@ -33,3 +33,13 @@ A medida que agregamos contactos a la wallet también podríamos hacer que los n
 Wallet Store intercambien información para obtener más wallets en sus carálogos. +
 
 A futuro debemos incorporar que se coloque un campo que hable de la lisencia de la wallet (precio de descarga y/o uso)
+
+== Avance
+
+Las entradas del catálogo tendrán un hash almacenado en el código de la plataforma, el cual se accede a
+través de una interfaz que implementa la niche wallet. Cuando el network service
+recibe información de una nueva wallet del catalogo primero identifica la wallet. Si la tiene en la
+versión de la plataforma que tiene instalada pasa a verificar que este hash sea igual al hash de la
+última versión de la wallet registrada en la interfaz de la misma y si esto coincide entonces calcula
+hash de la información para verificar la autenticidad del item del catálogo para pasar a registrarlo
+en su copia local del catálogo-
