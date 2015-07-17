@@ -423,6 +423,48 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
 
 
             runtimeTitleBar = new TitleBar();
+            //Navigation
+
+            runtimeSideMenu = new RuntimeSideMenu();
+
+
+            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem.setLabel("Personal Wallets");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem.setLabel("Shops");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem.setLabel("Commercial wallets");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem.setLabel("Factory Projects");
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem.setLabel("Published Wallets");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem.setLabel("Wallet Store");
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem.setLabel("Exit");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setSideMenu(runtimeSideMenu);
+
+            //fin navigation
+
+
+            runtimeTitleBar = new RuntimeTitleBar();
             runtimeTitleBar.setLabel("Developer");
             //runtimeTitleBar.setColor("#d07b62");
             runtimeActivity.setTitleBar(runtimeTitleBar);

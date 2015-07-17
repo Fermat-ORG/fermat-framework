@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 
@@ -21,14 +22,14 @@ public class WalletFactoryMiddlewareProjectResource implements WalletFactoryProj
 
     private ResourceType resourceType;
 
-    private WalletFactoryProjectSkin walletFactoryProjectSkin;
+    private WalletFactoryProjectProposal walletFactoryProjectProposal;
 
 
-    public WalletFactoryMiddlewareProjectResource(String name, byte[] resource, ResourceType resourceType, WalletFactoryProjectSkin walletFactoryProjectSkin) {
+    public WalletFactoryMiddlewareProjectResource(String name, byte[] resource, ResourceType resourceType, WalletFactoryProjectProposal walletFactoryProjectProposal) {
         this.name = name;
         this.resource = resource;
         this.resourceType = resourceType;
-        this.walletFactoryProjectSkin = walletFactoryProjectSkin;
+        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
     }
 
 
@@ -48,7 +49,7 @@ public class WalletFactoryMiddlewareProjectResource implements WalletFactoryProj
     }
 
     @Override
-    public WalletFactoryProjectSkin getWalletFactoryProjectSkin() {
-        return walletFactoryProjectSkin;
+    public WalletFactoryProjectProposal getWalletFactoryProjectProposal() {
+        return walletFactoryProjectProposal;
     }
 }
