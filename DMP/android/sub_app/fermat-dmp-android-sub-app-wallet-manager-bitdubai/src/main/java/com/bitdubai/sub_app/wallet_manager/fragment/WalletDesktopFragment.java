@@ -266,6 +266,18 @@ public class WalletDesktopFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.fermat);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
+
+                    linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((ScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
+                            ((ScreenSwapper) getActivity()).changeScreen();
+
+                        }
+                    });
+
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
