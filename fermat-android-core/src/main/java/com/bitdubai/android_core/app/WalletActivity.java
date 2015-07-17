@@ -1,14 +1,11 @@
 package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -22,37 +19,19 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import com.bitdubai.android_core.app.common.PagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
-import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
-import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
-import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -60,20 +39,15 @@ import com.bitdubai.fermat.R;
 
 /**
  * Created by natalia on 22/06/factory.
+ * Reformated by Matias
  */
 public class WalletActivity extends FragmentActivity implements com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private NavigationDrawerFragment NavigationDrawerFragment;
-    // TODO: Luis:  Dos pagerAdapter nuestros, hay que ver que hace cada uno
-    private com.bitdubai.android_core.app.common.PagerAdapter PagerAdapter;
-    private MyPagerAdapter adapter;
-
-    private PagerSlidingTabStrip tabStrip;
-    private int currentColor = 0xFF666666;
-
+    private TabsPagerAdapter adapter;
 
     /**
-     *  Method called when the activity is starting.
+     *  Called when the activity is first created
      * @param savedInstanceState
      */
     @Override
@@ -87,8 +61,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             NavigateWallet();
 
         } catch (Exception e) {
-            System.err.println("CantStartPlatformException: " + e.getMessage());
-
+            //System.err.println("CantStartPlatformException: " + e.getMessage());
+            Log.e(getClass().getSimpleName(),"CantStartPlatformException: " + e.getMessage());
             Toast.makeText(getApplicationContext(), "Error Load RuntimeApp - " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -183,38 +157,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     }
 
 
-    // TODO: Ver porque se está haciendo este bucle que no hace nada
-
-    /*
-    int mRequestCode;
-    int mResultCode;
-    Intent mData;
-    boolean returningWithResult = false;
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        returningWithResult = true;
-        this.mData = data;
-        mRequestCode = requestCode;
-        mResultCode = resultCode;
-        //it returns to fragment call
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        if (returningWithResult)
-        {
-            //Get actual wallet to execute activity result method
-            Activity wallet = ApplicationSession.getwalletRuntime().getLasActivity();
-            if (wallet.getType() == Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN)
-            {
-                android.support.v4.app.Fragment currentFragment =  SendFragment.newInstance(0);
-                currentFragment.onActivityResult(mRequestCode, mResultCode, mData);
-            }
-        }
-        returningWithResult = false;
-    }
-    */
 
     /**
      *  Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle)
@@ -223,7 +165,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("currentColor", currentColor);
     }
 
 
@@ -235,7 +176,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentColor= savedInstanceState.getInt("currentColor");
     }
 
 
@@ -284,113 +224,109 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         {
             //get actual activity to execute
             Activity activity =  ApplicationSession.getwalletRuntime().getLasActivity();
-
-            ApplicationSession.setActivityId(activity.getType().getKey());
-
-
+            //get tabs to paint
             TabStrip tabs = activity.getTabStrip();
-            Map<Fragments, Fragment> fragments =activity.getFragments();
+            //get activities fragment
+            Map<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
+            //get actionBar to paint
             TitleBar titleBar = activity.getTitleBar();
-
+            //get mainMenu to paint
             MainMenu mainMenumenu= activity.getMainMenu();
-
+            //get NavigationDrawer to paint
             SideMenu sidemenu = activity.getSideMenu();
-
+            // get the title
+            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
             //if wallet do not set the navigator drawer I load a layout without him
-            if(sidemenu != null)
-            {
+            //paint the navigationDrawer
+            if(sidemenu != null){
                 setContentView(R.layout.runtime_app_wallet_runtime_navigator);
-                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                //TODO: Recordatorio mati: voy a tener que limpiar el navigationDrawer en un futuro
+                NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-                this.NavigationDrawerFragment.setMenuVisibility(true);
-                // Set up the drawer.
-                this.NavigationDrawerFragment.setUp(
+                NavigationDrawerFragment.setMenuVisibility(true);
+                // Set up the navigationDrawer
+                NavigationDrawerFragment.setUp(
                         R.id.navigation_drawer,
                         (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-
             }
-            else
-            {
+            //paint layout without navigationDrawer
+            else{
                 setContentView(R.layout.runtime_app_wallet_runtime);
             }
-
-
-            if(tabs == null)
-                ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
-            else{
-                PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
-                pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-                //pagerSlidingTabStrip.setTextColor(Color.GREEN);
-                //pagerSlidingTabStrip.setBackgroundColor(Color.GREEN);
-                this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-
-            }
-            int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-            TextView abTitle = (TextView) findViewById(titleId);
-
-
-
-            String status_color=activity.getStatusBarColor();
+            //paint tabs in layout
+            PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+            paintTabs(tabs,pagerSlidingTabStrip,activity);
+            // paint statusBarColor
             if(activity.getStatusBarColor()!=null){
                 setStatusBarColor(activity.getStatusBarColor());
-
             }
-            if (activity.getTabStrip().getTabsColor()!=null){
-                tabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
-                //tabStrip.setDividerColor(Color.TRANSPARENT);
-
-            }
-            if(activity.getTabStrip().getTabsTextColor()!=null){
-                tabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
-            }
-
-            if(activity.getTabStrip().getTabsIndicateColor()!=null){
-                tabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
-            }
-            Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
-            if (tabStrip != null){
-                tabStrip.setTypeface(tf,1 );
-            }
-
-
             //TODO por ahora le estoy pasando un null al tabstrip porque ahí adentro lo está cargando mal, porque hace un clean de la pantalla y borra el color de los tabs
             // que yo puse acá
             ApplicationSession.setActivityProperties(this, getWindow(), getResources(), null, getActionBar(), titleBar, abTitle, "Titulo");
 
-
-
-
+            //por ahora no se encuenta pensado el tema si es un solo fragmento
             if(tabs == null && fragments.size() > 1){
-                this.initialisePaging();
+                //this.initialisePaging();
+                Toast.makeText(getApplicationContext(),"Error unico fragmento",Toast.LENGTH_SHORT).show();
+                Log.e(getClass().getSimpleName(),"wallets con un fragmento no pensadas");
 
             }
             else{
+                //get pagerTabs
                 ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
                 pagertabs.setVisibility(View.VISIBLE);
-                adapter = new MyPagerAdapter(getSupportFragmentManager());
-
+                //making the pagerTab adapter
+                adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext());
                 pagertabs.setAdapter(adapter);
-
                 final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                         .getDisplayMetrics());
                 pagertabs.setPageMargin(pageMargin);
-
-                tabStrip.setViewPager(pagertabs);
-
+                // put tabs in pagerSlidingTabsStrp
+                pagerSlidingTabStrip.setViewPager(pagertabs);
+                //changing color of the activity
                 String color = activity.getColor();
                 if (color != null)
-                    ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
-
+                  ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
             }
         }
         catch (Exception e) {
             ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
             Toast.makeText(getApplicationContext(), "Error in NavigateWallet " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
     }
 
+
+    /**
+     *
+     */
+    private void paintTabs(TabStrip tabs,PagerSlidingTabStrip pagerSlidingTabStrip,Activity activity){
+        if(tabs == null)
+            pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
+        else{
+            pagerSlidingTabStrip.setVisibility(View.VISIBLE);
+
+        }
+
+        // paint tabs color
+        if (activity.getTabStrip().getTabsColor()!=null){
+            pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
+            //tabStrip.setDividerColor(Color.TRANSPARENT);
+        }
+        // paint tabs text color
+        if(activity.getTabStrip().getTabsTextColor()!=null){
+            pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
+        }
+        //paint tabs indicate color
+        if(activity.getTabStrip().getTabsIndicateColor()!=null){
+            pagerSlidingTabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
+        }
+        // put tabs font
+        Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
+        if (pagerSlidingTabStrip != null){
+            pagerSlidingTabStrip.setTypeface(tf, 1);
+        }
+    }
 
     /**
      * Method to set status bar color in different version of android
@@ -420,100 +356,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     }
 
     /**
-     * Initialise the fragments to be paged
-     */
-    private void initialisePaging() {
-
-        try
-        {
-            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<Fragments, Fragment>> efragments = ApplicationSession.getwalletRuntime().getLasActivity().getFragments().entrySet().iterator();
-            boolean flag=false;
-            while (efragments.hasNext()) {
-                Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment> fragmentEntry =  efragments.next();
-
-                RuntimeFragment fragment = (RuntimeFragment)fragmentEntry.getValue();
-                Fragments type = fragment.getType();
-
-
-                switch (type) {
-                    case CWP_SHELL_LOGIN:
-                        break;
-                    case CWP_WALLET_MANAGER_SHOP:
-                        //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
-                        break;
-                    // case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
-                    //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
-                    //   break;
-
-                    case CWP_WALLET_STORE_MAIN:
-                        break;
-                    case CWP_WALLET_FACTORY_MAIN:
-                        break;
-
-                }
-
-            }
-            this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
-
-            ViewPager pager = (ViewPager)super.findViewById(R.id.viewpager);
-            pager.setVisibility(View.VISIBLE);
-
-            pager.setAdapter(this.PagerAdapter);
-
-            pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-
-            //set default page to show
-            pager.setCurrentItem(0);
-
-
-        }
-        catch (Exception e)
-        {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-            Toast.makeText(getApplicationContext(), "Can't Create Tabs: " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-
-    // TODO: Lo comento porque no hace nada
-    // TODO: de ser necesario recibir el evento de click en un boton implementar la interface de la pip-api ScreenSwapper
-
-    public void onItemSelectedClicked(View v) {
-
-        /*try
-        {
-              ApplicationSession.setContact("");
-            String tagId = v.getTag().toString();
-            String activityKey="";
-            String paramId="0";
-            if(tagId.contains("|")){
-                activityKey =  tagId.split("\\|")[0];
-                if(tagId.split("\\|").length > 2)
-                    paramId =  tagId.split("\\|")[1] + "|" + tagId.split("\\|")[2];
-                else
-                    paramId =  tagId.split("\\|")[1];
-            }
-            else
-                activityKey =  tagId;
-            Activities activityType = Activities.getValueFromString (activityKey);
-            Activity activity;
-            Intent intent;
-        }
-        catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-            Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),Toast.LENGTH_SHORT).show();
-             //       Toast.LENGTH_LONG).show();
-        }*/
-
-
-    }
-
-
-    /**
      *  Method used to clean the screen
      */
 
@@ -536,11 +378,9 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 NavigationDrawerFragment = null;
             }
 
-            this.PagerAdapter = null;
             this.adapter = null;
             //this.tabStrip=null;
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
 
         }
         catch (Exception e) {
@@ -550,142 +390,5 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
-
-
-    }
-
-    /**
-     * Tabs adapter
-     */
-    public class MyPagerAdapter extends FragmentPagerAdapter {
-
-        private String[] titles;
-
-
-
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-            if(ApplicationSession.getwalletRuntime().getLasActivity().getTabStrip() != null){
-                List<Tab> titleTabs = ApplicationSession.getwalletRuntime().getLasActivity().getTabStrip().getTabs();
-                titles = new String[titleTabs.size()];
-                for (int i = 0; i < titleTabs.size(); i++) {
-                    Tab tab = titleTabs.get(i);
-                    titles[i] = tab.getLabel();
-                }
-            }
-
-        }
-
-
-        public void destroyItem(android.view.ViewGroup container, int position, Object object) {
-
-            FragmentManager manager = ((android.support.v4.app.Fragment) object).getFragmentManager();
-            if(manager != null) {
-                FragmentTransaction trans = manager.beginTransaction();
-                trans.detach((android.support.v4.app.Fragment) object);
-                trans.remove((android.support.v4.app.Fragment) object);
-                trans.commit();
-
-
-            }
-
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-
-            return titles[position];
-        }
-
-        @Override
-        public int getCount() {
-
-            if (titles != null)
-                return titles.length;
-            else
-                return 0;
-        }
-
-        @Override
-        public android.support.v4.app.Fragment getItem(int position) {
-
-            com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform bitcoinPlatform = null;
-            com.bitdubai.sub_app.developer.fragment.Platform developerPlatform = null;
-
-            android.support.v4.app.Fragment currentFragment = null;
-            Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
-            List<Tab> titleTabs = ApplicationSession.getwalletRuntime().getLasActivity().getTabStrip().getTabs();
-            for (int j = 0; j < titleTabs.size(); j++) {
-                if (j == position)
-                {
-                    Tab tab = titleTabs.get(j);
-                    fragmentType = tab.getFragment();
-                    break;
-                }
-            }
-            //execute current activity fragments
-            try {
-                switch (fragmentType) {
-                    case CWP_SHELL_LOGIN:
-
-                        break;
-                    case CWP_WALLET_MANAGER_MAIN:
-                        currentFragment =  WalletDesktopFragment.newInstance(position);
-                        break;
-
-
-                    /**
-                     * Executing fragments for BITCOIN WALLET.
-                     */
-
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
-                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
-                        bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-                        bitcoinPlatform.setErrorManager((ErrorManager)ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
-                        currentFragment =  BalanceFragment.newInstance(0);
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
-                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
-                        bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-                        bitcoinPlatform.setErrorManager((ErrorManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
-                        currentFragment = ReceiveFragment.newInstance(0);
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
-                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
-                        bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-                        bitcoinPlatform.setErrorManager((ErrorManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
-                        currentFragment =  SendFragment.newInstance(0);
-                        break;
-
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
-                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
-                        bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-                        bitcoinPlatform.setErrorManager((ErrorManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
-                        currentFragment =  TransactionsFragment.newInstance(0);
-
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
-                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
-                        bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-                        bitcoinPlatform.setErrorManager((ErrorManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
-                        currentFragment =  ContactsFragment.newInstance(0);
-                        break;
-
-
-
-                }
-
-            }
-            catch(Exception ex)
-            {
-                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
-
-                Toast.makeText(getApplicationContext(), "Error in PagerAdapter GetItem " + ex.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-
-            return currentFragment;
-        }
-
     }
 }
