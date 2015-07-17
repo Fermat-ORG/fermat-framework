@@ -229,7 +229,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
 
             TabStrip tabs = activity.getTabStrip();
-            Map<Fragments, Fragment> fragments =activity.getFragments();
+            Map<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
             TitleBar titleBar = activity.getTitleBar();
 
             MainMenu mainMenumenu= activity.getMainMenu();

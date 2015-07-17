@@ -1,16 +1,15 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.LanguagePackage;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
 
 import java.util.Map;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by rodrigo on 2015.07.17..
  */
-public class RuntimeLanguagePackage implements LanguagePackage {
-    
+public class LanguagePackage implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.LanguagePackage {
+
     DeviceUser author;
     String name;
     Languages language;

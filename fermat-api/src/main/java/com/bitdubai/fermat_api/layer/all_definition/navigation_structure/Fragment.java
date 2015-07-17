@@ -1,17 +1,14 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by rodrigo on 2015.07.17..
  */
-public class RuntimeFragment implements Fragment {
+public class Fragment implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment {
 
     Fragments type;
-
     Fragments fragmentBack;
-
     Object[] context;
 
     public void setBack(Fragments fragmentBack)
@@ -24,7 +21,7 @@ public class RuntimeFragment implements Fragment {
     }
 
     /**
-     * RuntimeFragment interface implementation.
+     * Fragment interface implementation.
      */
     @Override
     public Fragments getType() {
@@ -32,7 +29,6 @@ public class RuntimeFragment implements Fragment {
     }
 
     public Fragments getBack(){
-
         return this.fragmentBack;
     }
 
@@ -47,6 +43,4 @@ public class RuntimeFragment implements Fragment {
         return this.context;
 
     }
-
-
 }

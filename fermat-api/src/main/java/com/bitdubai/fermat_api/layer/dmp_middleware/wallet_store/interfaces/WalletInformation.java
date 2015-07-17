@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.WalletIns
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetInstallationStatusException;
 
 /**
- * This class let us access to the wallet information
+ * This class let us access to additional internal wallet information
  */
 public interface WalletInformation {
 

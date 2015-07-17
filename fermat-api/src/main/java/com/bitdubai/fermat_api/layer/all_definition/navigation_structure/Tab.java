@@ -1,12 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab;
 
 /**
- * Created by natalia on 23/02/2015.
+ * Created by rodrigo on 2015.07.17..
  */
-public class RuntimeTab implements Tab {
+public class Tab implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab {
 
     String label;
     Fragments fragment;
@@ -26,6 +25,4 @@ public class RuntimeTab implements Tab {
     public Fragments getFragment(){
         return this.fragment;
     }
-
-
 }
