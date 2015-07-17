@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationInformation;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetNextSkinPreviewImageException;
 
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -9,7 +10,17 @@ import java.util.UUID;
  */
 public interface NewCatalogueItem {
 
-    // Pensar si agregar una imagen y el formato
+    public String walletVersion();
+
+    public boolean hasVideoPreview();
+
+    public URL getPreviewVideoUrl();
+
+    public boolean hasImagePreview();
+
+    public byte[] getPreviewImage() throws CantGetNextSkinPreviewImageException;
+
+    public int navigationStructureSizeInBytes();
 
     public String getWalletName();
 
@@ -24,7 +35,4 @@ public interface NewCatalogueItem {
     public UUID getWalletCatalogId();
 
     public UUID getResourcesId();
-
-    public UUID getNavigationStructureId();
-
 }

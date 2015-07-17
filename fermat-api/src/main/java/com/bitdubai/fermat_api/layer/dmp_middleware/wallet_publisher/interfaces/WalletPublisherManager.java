@@ -40,7 +40,7 @@ public interface WalletPublisherManager {
     /**
      * This method publishes the wallet factory project <code>walletFactoryProjectVersion</code> in
      * the wallet store and register relevant information of this process (publication timestamp).
-     *
+     *partirse
      * @param walletFactoryProjectVersion the wallet factory project to publish
      * @throws CantPublishWalletException
      */
