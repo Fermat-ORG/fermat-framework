@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 
 import java.util.UUID;
@@ -17,7 +18,10 @@ public interface CatalogueItem {
 
     public byte[] getWalletIcon() throws CantGetWalletIconException;
 
-    public UUID getWalletIdInCatalog();
+    public UUID getWalletCatalogId();
 
     public String getWalletName();
+
+    public DetailedCatalogItem getDetailedCatalogItem() throws CantGetWalletDetailsException;
+
 }
