@@ -47,3 +47,21 @@ una sesión del usuario logueado)
 Gran parte de este módulo consistirá en generar la información que se mostrará al usuario. Este
 plug-in tomará la información del catálogo del network service de la wallet store y aplicará los
 filtros necesarios. +
+
+
+== Expandiendo refinamientos
+
+* El network service sólo trae y/o transmite elementos del catálogo que puede verificar en su versión
+de la plataforma.
+* La información del catálogo debe dividirse.
+** Por un lado querríamos ver la lista con los nombres de las wallets, alguna imagen de presentación
+el developer y la cantidad de descargas más la puntuación. A esto deben agregarse datos como el id de
+la versión de la wallet (se usará para indexar los skins y lenguajes cuando se solicite más información
+de una wallet)
+** Por otro lado necesitamos que podamos pedir los skins y la lista de lenguajes.
+
+* Para pubulcar una versión nueva de una wallet, su código y recursos deben estar sometidos ya a bitdubai.
+Por tanto el procedimiento para realizar cualquier tipo de actualización es idéntico al de creación
+de una nueva wallet. +
+El problema entonces de la publicaación de versionaes está en administrar lo que figura en el catálogo
+que mostramos en el wallet store

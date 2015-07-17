@@ -540,8 +540,8 @@ public class Platform  {
          * Plugin Developer Identity
          * -----------------------------
          */
-        Plugin developerIdentity = ((IdentityLayer) mIdentityLayer).getMdeveloperIdentity();
-        setPluginReferencesAndStart(developerIdentity, Plugins.BITDUBAI_DEVELOPER_IDENTITY);
+      //  Plugin developerIdentity = ((IdentityLayer) mIdentityLayer).getMdeveloperIdentity();
+     //   setPluginReferencesAndStart(developerIdentity, Plugins.BITDUBAI_DEVELOPER_IDENTITY);
 
         /**
          * -----------------------------
@@ -589,7 +589,7 @@ public class Platform  {
          * -----------------------------
          */
         Plugin cloudServerCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudServerPlugin();
-        setPluginReferencesAndStart(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
+       // setPluginReferencesAndStart(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
 
         /**
          * -----------------------------
@@ -597,7 +597,7 @@ public class Platform  {
          * -----------------------------
          */
         Plugin cloudCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudPlugin();
-        setPluginReferencesAndStart(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
+        //setPluginReferencesAndStart(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
 
         /**
          * -----------------------------
@@ -718,7 +718,7 @@ public class Platform  {
          * ----------------------------------
          */
         Plugin bitcoinCryptoVault = ((CryptoVaultLayer) mCryptoVaultLayer).getmBitcoin();
-        setPluginReferencesAndStart(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+       // setPluginReferencesAndStart(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
 
         /**
          * ----------------------------------

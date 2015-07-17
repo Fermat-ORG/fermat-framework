@@ -19,7 +19,7 @@
             android:paddingBottom="14dp"
             android:orientation="vertical"
             android:clickable="true"
-            android:onClick="onItemSelectedClicked"
+
 
             >
             <ImageView
@@ -36,7 +36,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_column="2"
                 android:clickable="true"
-                android:onClick="onItemSelectedClicked"
+
                />
             <TextView android:text="App Name"
                 android:layout_width="fill_parent"
@@ -48,7 +48,8 @@
                 android:gravity="center"
                 android:textColor="@color/black_overlay"
                 android:textStyle="bold"
-                android:textSize="13sp"/>
+                android:textSize="13sp"
+                />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

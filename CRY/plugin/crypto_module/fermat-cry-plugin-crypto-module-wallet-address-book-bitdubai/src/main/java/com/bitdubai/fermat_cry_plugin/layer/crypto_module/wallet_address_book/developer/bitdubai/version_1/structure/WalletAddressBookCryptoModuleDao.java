@@ -88,7 +88,8 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
          * I will try to open the wallets' database..
          */
         try {
-            this.database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            database.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeWalletAddressBookCryptoModuleException(CantInitializeWalletAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -98,7 +99,8 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
              * I will create the database where I am going to store the information of this wallet.
              */
             try {
-                this.database = databaseFactory.createDatabase(this.pluginId);
+                database = databaseFactory.createDatabase(this.pluginId);
+                database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 throw new CantInitializeWalletAddressBookCryptoModuleException(CantInitializeWalletAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
             }
@@ -118,6 +120,12 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
          */
         long unixTime = System.currentTimeMillis() / 1000L;
 
+        try {
+            database.openDatabase();
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        }
+
         DatabaseTable walletAddressBookModuleTable = database.getTable(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
         DatabaseTableRecord walletAddressBookModuleRecord = walletAddressBookModuleTable.getEmptyRecord();
 
@@ -132,7 +140,9 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
 
         try {
             walletAddressBookModuleTable.insertRecord(walletAddressBookModuleRecord);
+            database.closeDatabase();
         } catch (CantInsertRecordException cantInsertRecord) {
+            database.closeDatabase();
             throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, cantInsertRecord, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
         }
     }
@@ -142,17 +152,22 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
         if (cryptoAddress == null)
             throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, null, "cryptoAddress: null", "cryptoAddress cannot be null");
 
-        DatabaseTable table;
+        try {
+            database.openDatabase();
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        }
 
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
          */
-        table = this.database.getTable(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+        DatabaseTable table = database.getTable(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
         table.setStringFilter(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
         table.setStringFilter(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
         try {
             table.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
             throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, cantLoadTableToMemory, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
 
@@ -161,19 +176,14 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
          */
 
         List<DatabaseTableRecord> records = table.getRecords();
-        DatabaseTableRecord record;
+        database.closeDatabase();
 
-        UUID walletId;
-        PlatformWalletType platformWalletType;
-
-        if (records.size() > 0) {
-            record = records.get(0);
-            walletId = record.getUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID);
-            platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
-        } else {
+        if(records.isEmpty())
             throw new WalletAddressBookNotFoundException(WalletAddressBookNotFoundException.DEFAULT_MESSAGE, null, "", "The crypto_address is not registered.");
-        }
 
+        DatabaseTableRecord record = records.get(0);
+        UUID walletId = record.getUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID);
+        PlatformWalletType platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
         return new WalletAddressBookCryptoModuleRecord(cryptoAddress, platformWalletType, walletId);
     }
 
@@ -182,18 +192,21 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
         if (walletId == null)
             throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, null, "walletId: null", "walletId cannot be null");
 
-        List<WalletAddressBookRecord> walletAddressBookRecords = new ArrayList<>();
-
-        DatabaseTable table;
+        try {
+            database.openDatabase();
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        }
 
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
          */
-        table = this.database.getTable(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+        DatabaseTable table = this.database.getTable(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
         table.setUUIDFilter(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, walletId, DatabaseFilterType.EQUAL);
         try {
             table.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
             throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, cantLoadTableToMemory, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
 
@@ -206,19 +219,20 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
         CryptoCurrency cryptoCurrency;
         CryptoAddress cryptoAddress;
 
-        List<DatabaseTableRecord> databaseTableRecordList = table.getRecords();
+        List<DatabaseTableRecord> records = table.getRecords();
 
-        if (databaseTableRecordList.size() > 0) {
-            for (DatabaseTableRecord record : databaseTableRecordList) {
-                platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
-                address = record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
-                cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
-                cryptoAddress = new CryptoAddress(address, cryptoCurrency);
-                WalletAddressBookRecord addressBook = new WalletAddressBookCryptoModuleRecord(cryptoAddress, platformWalletType, walletId);
-                walletAddressBookRecords.add(addressBook);
-            }
-        } else {
+        if (records.isEmpty())
             throw new WalletAddressBookNotFoundException(WalletAddressBookNotFoundException.DEFAULT_MESSAGE, null, "", "There is not a wallet address book registered with that wallet_id.");
+
+        List<WalletAddressBookRecord> walletAddressBookRecords = new ArrayList<>();
+
+        for (DatabaseTableRecord record : records) {
+            platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
+            address = record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
+            cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
+            cryptoAddress = new CryptoAddress(address, cryptoCurrency);
+            WalletAddressBookRecord addressBook = new WalletAddressBookCryptoModuleRecord(cryptoAddress, platformWalletType, walletId);
+            walletAddressBookRecords.add(addressBook);
         }
 
         return walletAddressBookRecords;

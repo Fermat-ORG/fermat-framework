@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -142,8 +142,8 @@ public class StartActivity extends FragmentActivity {
             platform = ApplicationSession.getFermatPlatform();
 
 
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
+            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            //StrictMode.setThreadPolicy(policy);
 
 
             //set Os Addons in platform
@@ -167,15 +167,11 @@ public class StartActivity extends FragmentActivity {
                 System.out.println("cant start logger exception: "+e.getMessage());
             }
 
-            Bundle bundle = getIntent().getExtras();
-
+        //execute start platform
             try {
-                if (bundle != null) {
-                    if (bundle.getString("executeStart").toString() == "0")
-                        platform.start();
-                } else {
+
                     platform.start();
-                }
+
             } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
                 System.err.println("CantStartPlatformException: " + e.getMessage());
 
@@ -198,7 +194,7 @@ public class StartActivity extends FragmentActivity {
             errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
             ApplicationSession.setErrorManager(errorManager);
 
-            /** Download wallet images **/
+
 
             return true;
         }

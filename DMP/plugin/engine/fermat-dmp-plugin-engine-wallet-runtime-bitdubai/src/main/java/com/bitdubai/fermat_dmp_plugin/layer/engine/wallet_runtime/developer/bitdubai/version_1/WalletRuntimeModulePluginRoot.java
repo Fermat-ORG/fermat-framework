@@ -4,15 +4,15 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Wallet;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions.CantRecordClosedWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions.CantRecordOpenedWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Wallet;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordClosedWalletException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -25,12 +25,9 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure.*;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletClosedEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeActivity;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -215,10 +212,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
 
-
-
-
-
+    @Override
     public Wallet getLastWallet() {
 
         Iterator<Map.Entry<Wallets, Wallet>> ewallet = this.listWallets.entrySet().iterator();
@@ -236,7 +230,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         return null;
     }
 
-
+    @Override
     public Activity getLasActivity() {
         Iterator<Map.Entry<Activities, Activity>> eactivity = this.listActivities.entrySet().iterator();
 
@@ -252,8 +246,20 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
 
+    @Override
     public Fragment getLastFragment() {
-        return listFragments.get(lastFragment);
+
+        Iterator<Map.Entry<Fragments, Fragment>> efragment = this.listFragments.entrySet().iterator();
+
+        while (efragment.hasNext()) {
+            Map.Entry<Fragments, Fragment> fragmentEntry = efragment.next();
+            RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
+            if(fragment.getType().name().equals(this.lastFragment.name())){
+                return fragment;
+            }
+        }
+
+        return null;
     }
 
 
@@ -486,66 +492,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
 
 
-            /**
-             * Definition of Developer Manager
-             */
 
-            runtimeWallet = new RuntimeWallet();
-            runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_DEVELOPER_APP_ALL_BITDUBAI);
-            listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_DEVELOPER_APP_ALL_BITDUBAI, runtimeWallet);
-
-            //acá estoy seteando los colores y toda la vaina esa
-            runtimeActivity= new RuntimeActivity();
-            runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-            runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#d07b62");
-            runtimeWallet.addActivity(runtimeActivity);
-            listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
-
-
-
-            runtimeTitleBar = new RuntimeTitleBar();
-            runtimeTitleBar.setLabel("Developer");
-            //runtimeTitleBar.setColor("#d07b62");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-
-
-            runtimeTabStrip = new RuntimeTabStrip();
-            runtimeTabStrip.setTabsColor("#d07b62");
-            runtimeTabStrip.setTabsTextColor("#FFFFFF");
-            runtimeTabStrip.setTabsIndicateColor("#b46a54");
-
-            runtimeTab = new RuntimeTab();
-            runtimeTab.setLabel("DataBase Tools");
-            runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
-
-            runtimeTabStrip.addTab(runtimeTab);
-
-
-            runtimeTab = new RuntimeTab();
-            runtimeTab.setLabel("Log Tools");
-            runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
-            runtimeTabStrip.addTab(runtimeTab);
-
-
-            runtimeActivity.setTabStrip(runtimeTabStrip);
-
-            runtimeFragment = new RuntimeFragment();
-            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
-            runtimeActivity.addFragment(runtimeFragment);
-            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS,runtimeFragment);
-
-
-
-            runtimeFragment = new RuntimeFragment();
-            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
-            runtimeActivity.addFragment(runtimeFragment);
-            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS,runtimeFragment);
-
-            /**
-             * End of Developer tabs.
-             */
 
 
             // Wallet adults

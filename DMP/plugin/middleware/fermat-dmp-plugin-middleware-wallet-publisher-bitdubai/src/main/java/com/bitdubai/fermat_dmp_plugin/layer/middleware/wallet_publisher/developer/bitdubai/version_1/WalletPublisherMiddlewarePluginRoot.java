@@ -5,6 +5,11 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectVersion;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedWalletsInformationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublishedInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -141,4 +146,18 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithErrors,Deal
 
     }
 
+    @Override
+    public Map<String, List<WalletPublishedInformation>> showPublishedWallets() throws CantGetPublishedWalletsInformationException {
+        return null;
+    }
+
+    @Override
+    public boolean canBePublished(WalletFactoryProjectVersion walletFactoryProjectVersion) throws CantCheckPublicationException {
+        return false;
+    }
+
+    @Override
+    public void publishWallet(WalletFactoryProjectVersion walletFactoryProjectVersion) throws CantPublishWalletException {
+
+    }
 }
