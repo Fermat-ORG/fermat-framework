@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -20,33 +19,19 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-
 import com.bitdubai.android_core.app.common.version_1.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
-import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -54,12 +39,12 @@ import com.bitdubai.fermat.R;
 
 /**
  * Created by natalia on 22/06/factory.
+ * Reformated by Matias
  */
 public class WalletActivity extends FragmentActivity implements com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private NavigationDrawerFragment NavigationDrawerFragment;
     private TabsPagerAdapter adapter;
-    private int currentColor = 0xFF666666;
 
     /**
      *  Method called when the activity is starting.
@@ -180,7 +165,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("currentColor", currentColor);
     }
 
 
@@ -192,7 +176,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentColor= savedInstanceState.getInt("currentColor");
     }
 
 
@@ -410,9 +393,5 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
-
-
     }
-
-
 }
