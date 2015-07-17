@@ -1,15 +1,14 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by rodrigo on 2015.07.17..
  */
-public class RuntimeTabStrip implements TabStrip {
+public class TabStrip implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip {
     int dividercolor;
     int indicatorcolor;
     int indicatorheight;
@@ -20,14 +19,14 @@ public class RuntimeTabStrip implements TabStrip {
     String tabsTextColor;
     String tabsIndicateColor;
 
-    List<Tab> tabs = new ArrayList<>();
-    
-    public void addTab (RuntimeTab tab) {
+    List<com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab> tabs = new ArrayList<>();
+
+    public void addTab (Tab tab) {
         tabs.add(tab);
     }
 
     @Override
-    public List<Tab> getTabs(){
+    public List<com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab> getTabs(){
         return this.tabs;
     }
     @Override
@@ -46,7 +45,7 @@ public class RuntimeTabStrip implements TabStrip {
 
     @Override
     public int getIndicatorColor(){
-            return this.indicatorcolor;
+        return this.indicatorcolor;
     }
     @Override
     public void setIndicatorHeight(int height){
@@ -59,11 +58,11 @@ public class RuntimeTabStrip implements TabStrip {
     }
     @Override
     public void setBackgroundColor(int color){
-            this.backgroundcolor = color;
+        this.backgroundcolor = color;
     }
     @Override
     public int getBackgroundColor(){
-            return this.backgroundcolor;
+        return this.backgroundcolor;
     }
     @Override
     public void setTextColor(int color){
@@ -90,12 +89,12 @@ public class RuntimeTabStrip implements TabStrip {
 
     @Override
     public String getTabsColor() {
-        return this.tabsColor;
+        return tabsColor;
     }
 
     @Override
     public void setTabsTextColor(String color) {
-        tabsTextColor=color;
+        this.tabsTextColor=color;
     }
 
     @Override
@@ -105,12 +104,11 @@ public class RuntimeTabStrip implements TabStrip {
 
     @Override
     public void setTabsIndicateColor(String color) {
-        this.tabsIndicateColor=color;
+        this.tabsIndicateColor= color;
     }
 
     @Override
     public String getTabsIndicateColor() {
         return tabsIndicateColor;
     }
-
 }

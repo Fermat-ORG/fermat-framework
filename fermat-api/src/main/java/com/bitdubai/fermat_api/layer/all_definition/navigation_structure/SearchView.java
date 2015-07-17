@@ -1,15 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure;
-
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SearchView;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import java.awt.Image;
-//import java.awt.TextField;
-
 
 /**
- * Created by MATIAS Furszyfer.
+ * Created by rodrigo on 2015.07.17..
  */
-public class RuntimeSearchView implements SearchView {
+public class SearchView implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SearchView {
 
     String label;
     Image searchIcon;
@@ -36,5 +32,4 @@ public class RuntimeSearchView implements SearchView {
     public void setLabel(String label) {
         this.label = label;
     }
-
 }

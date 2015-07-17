@@ -1,11 +1,5 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 
@@ -13,10 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by rodrigo on 2015.07.17..
  */
-public class RuntimeActivity implements Activity {
-
+public class Activity implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity{
+    /**
+     * Activity class member variables
+     */
     Activities type;
     Map<Fragments, Fragment> fragments = new HashMap<Fragments, Fragment>();
     TitleBar titleBar;
@@ -27,7 +23,7 @@ public class RuntimeActivity implements Activity {
     String statusBarColor;
 
     /**
-     * RuntimeActivity interface implementation.
+     * Activity class implementation.
      */
 
     public void setColor(String color) {
@@ -64,13 +60,9 @@ public class RuntimeActivity implements Activity {
 
     public void setStatusBarColor(String color){this.statusBarColor=color;}
 
-
-
-
     /**
-     * SubApp interface implementation.
+     * Activity  interface implementation.
      */
-
     @Override
     public Activities getType() {
         return type;
@@ -105,6 +97,4 @@ public class RuntimeActivity implements Activity {
     public String getStatusBarColor() {
         return statusBarColor;
     }
-
-
 }
