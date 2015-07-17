@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by eze on 2015.07.15..
  */
-public class CantGetWalletFactoryProjectVersionsException extends FermatException {
+public class CantGetWalletFactoryProjectProposalsException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantGetWalletFactoryProjectVersionsException extends FermatExceptio
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetWalletFactoryProjectVersionsException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetWalletFactoryProjectProposalsException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

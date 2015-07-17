@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.15..
+ * Created by eze on 2015.07.17..
  */
-public class CantAddWalletFactoryProjectResource extends FermatException {
+public class CantGetSkinException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantAddWalletFactoryProjectResource extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantAddWalletFactoryProjectResource(String message, Exception cause, String context, String possibleReason) {
+    public CantGetSkinException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
