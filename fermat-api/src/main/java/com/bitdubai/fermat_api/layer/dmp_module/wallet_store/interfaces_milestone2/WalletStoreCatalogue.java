@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by eze on 2015.07.14..
  */
-public interface RefinedCatalogue {
+public interface WalletStoreCatalogue {
 
     /**
      * This method give us a list of wallets in the catalogue
@@ -17,7 +17,7 @@ public interface RefinedCatalogue {
      * @return A list of at most "top" catalogue items (wallets)
      * @throws CantGetWalletsFromCatalogueException
      */
-    public List<FinalCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsFromCatalogueException;
+    public List<WalletStoreCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsFromCatalogueException;
 
     /**
      * This method let us set filters to the catalogue
