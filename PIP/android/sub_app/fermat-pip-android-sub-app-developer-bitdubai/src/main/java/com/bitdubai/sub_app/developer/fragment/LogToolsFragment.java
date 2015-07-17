@@ -289,7 +289,7 @@ public class LogToolsFragment extends Fragment {
                         Object[] params = new Object[1];
 
                         params[0] = lst;
-                        ((ScreenSwapper)getActivity()).setScreen("DeveloperLogLevel2Fragment");
+                        ((ScreenSwapper)getActivity()).setScreen("DeveloperLogLevel1Fragment");
                         ((ScreenSwapper)getActivity()).setParams(params);
                         ((ScreenSwapper)getActivity()).changeScreen();
 

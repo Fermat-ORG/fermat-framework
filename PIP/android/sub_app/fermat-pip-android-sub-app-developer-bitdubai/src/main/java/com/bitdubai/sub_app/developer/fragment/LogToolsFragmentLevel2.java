@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
@@ -239,26 +240,36 @@ public class LogToolsFragmentLevel2 extends Fragment {
                         Loggers item=(Loggers) gridView.getItemAtPosition(position);
 
                         // Reload current fragment
-                        LogToolsFragmentLevel2 frg = null;
-                        frg =(LogToolsFragmentLevel2) getFragmentManager().findFragmentByTag("fragmento2");
+                     //   LogToolsFragmentLevel2 frg = null;
+                     //   frg =(LogToolsFragmentLevel2) getFragmentManager().findFragmentByTag("fragmento2");
+
+                        ArrayListLoggers lst = null;
+                        int level = 0;
 
                         if(loggerLevel==ArrayListLoggers.LEVEL_1){
 
-                            ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_1);
-                            frg.setLoggers(lst);
-                            frg.setLoggerLevel(ArrayListLoggers.LEVEL_2);
+                             lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_1);
+                           // frg.setLoggers(lst);
+                           // frg.setLoggerLevel(ArrayListLoggers.LEVEL_2);
+                            level = ArrayListLoggers.LEVEL_2;
                         }else if(loggerLevel==ArrayListLoggers.LEVEL_2){
-                            ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2);
-                            frg.setLoggerLevel(ArrayListLoggers.LEVEL_3);
-                            frg.setLoggers(lst);
+                            lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2);
+                            //frg.setLoggerLevel(ArrayListLoggers.LEVEL_3);
+                            //frg.setLoggers(lst);
+                            level = ArrayListLoggers.LEVEL_3;
 
                         }
 
-                        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.detach(frg);
-                        ft.attach(frg);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        ft.commit();
+                        //set the next fragment and params
+                        Object[] params = new Object[2];
+
+                        params[0] = lst;
+                        params[1] = level;
+                        ((ScreenSwapper)getActivity()).setScreen("DeveloperLogLevel3Fragment");
+                        ((ScreenSwapper)getActivity()).setParams(params);
+                        ((ScreenSwapper)getActivity()).changeScreen();
+
+
                     }
                 });
                 holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
