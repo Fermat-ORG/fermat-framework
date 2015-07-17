@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetNextSkinPreviewImageException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions_milestone2.CantGetSkinVideoPreviewException;
 
 import java.net.URL;
@@ -10,20 +10,21 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.07.16..
  */
-public interface SkinPreview {
+public interface Skin {
 
     public UUID getSkinId();
 
     public String getSkinName();
-    public String getSkinDesigner();
+    public String getSkinDesignerName();
+    public String getSkinDesignerPublicKey();
+
     public byte[] getPresentationImage();
 
-    public void stepInFirstPreviewImage();
-    public boolean hasMorePreviewImages();
-    public byte[] getNextImageSnapshot() throws CantGetNextSkinPreviewImageException;
+    public List<String> getPreviewImageList();
+    public byte[] getImage(String imageName) throws CantGetWalletIconException;
 
     public boolean hasVideoPreview();
     public List<URL> getVideoPreviews() throws CantGetSkinVideoPreviewException;
 
-    public long getSizeInBytes();
+    public long getSkinSizeInBytes();
 }

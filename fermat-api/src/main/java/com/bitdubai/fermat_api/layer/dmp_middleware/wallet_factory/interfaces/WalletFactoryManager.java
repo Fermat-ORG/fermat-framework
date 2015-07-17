@@ -17,11 +17,11 @@ import java.util.UUID;
  */
 public interface WalletFactoryManager {
 
-    public void createEmptyWalletFactoryProject(String name) throws CantCreateWalletFactoryProjectException;
+    void createEmptyWalletFactoryProject(String name) throws CantCreateWalletFactoryProjectException;
 
-    public void importWalletFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException;
+    void importWalletFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException;
 
-    public void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException;
+    void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException;
 
-    public WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException;
+    WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException;
 }

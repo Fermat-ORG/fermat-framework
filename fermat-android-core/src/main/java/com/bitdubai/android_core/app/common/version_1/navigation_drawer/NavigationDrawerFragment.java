@@ -81,6 +81,8 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+    private List<String> menuOption;
+
     public NavigationDrawerFragment() {
     }
 
@@ -145,7 +147,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
-            String[] menuOption = new String[]{} ;
+            menuOption = new ArrayList<String>();
 
             mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
                     getActivity(),
@@ -178,7 +180,7 @@ public class NavigationDrawerFragment extends Fragment {
         //create menu option based activity submenu definition
         try {
 
-            List<String> menuOption = new ArrayList<String>();
+            menuOption = new ArrayList<String>();
             List<com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MenuItem> menuItem = new ArrayList<>();
 
             if (sideMenu != null) {
@@ -193,7 +195,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
                     getActivity(),
-                    menuOption.toArray(new String[menuItem.size()])));
+                    menuOption));
 
             mFragmentContainerView = getActivity().findViewById(fragmentId);
             mDrawerLayout = drawerLayout;

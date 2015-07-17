@@ -1,5 +1,6 @@
 package com.bitdubai.android_core.app;
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -121,7 +122,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         } catch (Exception e) {
             // TODO: el errorManager no estaria instanciado aca....
             //this.errorManage.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            //ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             Toast.makeText(getApplicationContext(), "Error Load RuntimeApp - " + e.getMessage(), Toast.LENGTH_LONG).show();
             //e.printStackTrace();
         }
@@ -212,6 +213,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
                 this.NavigationDrawerFragment.setMenuVisibility(true);
+
+
                 // Set up the drawer.
                 this.NavigationDrawerFragment.setUp(
                         R.id.navigation_drawer,
