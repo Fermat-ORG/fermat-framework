@@ -17,7 +17,10 @@ public interface CatalogueItem {
 
     public byte[] getWalletIcon() throws CantGetWalletIconException;
 
-    public UUID getWalletIdInCatalog();
+    public UUID getWalletCatalogId();
 
     public String getWalletName();
+
+    public DetailedCatalogItem getDetailedCatalogItem(UUID walletCatalogueId);
+
 }

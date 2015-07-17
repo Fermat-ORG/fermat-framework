@@ -19,14 +19,13 @@ public interface DetailedCatalogItem {
     /**
      * Given a wallet id this method find the languages supported in the said wallet.
      *
-     * @param walletCatalogueId the id of a wallet published in the catalogue
      * @return the list of languages supported
      */
-    public List<String> getLanguages(UUID walletCatalogueId);
+    public List<String> getLanguages();
 
     public SkinPreview getSkin(UUID skinId);
 
-    public List<UUID> getSkinsList(UUID walletCatalogueId);
+    public List<UUID> getSkinsList();
 
     public byte[] getWalletIcon() throws CantGetWalletIconException;
 

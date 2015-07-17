@@ -12,5 +12,4 @@ import java.util.UUID;
 public interface WalletStoreManager {
     public void publishWallet(CatalogueItem catalogueItem) throws CantPublishWalletInCatalogueException;
     public WalletCatalogue getWalletCatalogue() throws CantGetWalletsCatalogueException;
-    public DetailedCatalogItem getDetails(UUID walletCatalogueId);
 }
