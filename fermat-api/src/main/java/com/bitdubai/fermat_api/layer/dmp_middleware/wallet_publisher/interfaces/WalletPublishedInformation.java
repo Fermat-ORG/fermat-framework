@@ -17,11 +17,25 @@ public interface WalletPublishedInformation {
     public String getVersion();
 
     /**
+     * This method gives us the associated wallet factory project Id
+     *
+     * @return the associated wallet factory project id
+     */
+    public UUID getWalletFactoryProjectId();
+
+    /**
+     * This method gives us the associated wallet factory project name
+     *
+     * @return the associated wallet factory project name
+     */
+    public String getWalletFactoryProjectName();
+
+    /**
      * This method gives us the id of the wallet version published in the catalogue
      *
      * @return the identifier of the version of the wallet used in the wallet catalogue of the wallet store
      */
-    public UUID getId();
+    public UUID getWalletId();
 
     /**
      * This method gives us the timestamp of the publication of the first version of the wallet
@@ -35,5 +49,5 @@ public interface WalletPublishedInformation {
      *
      * @return the timestamp represented as the result of System.currentTimeMillis()
      */
-    public long getVersionTimestanp();
+    public long getVersionTimestamp();
 }

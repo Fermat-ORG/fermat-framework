@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interface
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogueException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * This interface represents the wallets catalogue
@@ -21,5 +22,4 @@ public interface WalletCatalogue {
      */
     public List<CatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsCatalogueException;
 
-    // TODO LUIS : getDetailedCataogItem
 }

@@ -3,9 +3,9 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exception
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.16..
+ * Created by eze on 2015.07.17..
  */
-public class CantGetNextSkinPreviewImageException extends FermatException {
+public class CantGetWalletDetailsException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantGetNextSkinPreviewImageException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetNextSkinPreviewImageException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetWalletDetailsException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
