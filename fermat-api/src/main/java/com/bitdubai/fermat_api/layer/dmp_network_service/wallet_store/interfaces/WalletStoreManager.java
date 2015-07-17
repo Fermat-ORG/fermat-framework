@@ -12,14 +12,5 @@ import java.util.UUID;
 public interface WalletStoreManager {
     public void publishWallet(CatalogueItem catalogueItem) throws CantPublishWalletInCatalogueException;
     public WalletCatalogue getWalletCatalogue() throws CantGetWalletsCatalogueException;
-    public List<SkinPreview> getSkinsPreview(UUID walletCatalogueId);
-
-    /**
-     * Given a wallet id this method find the languages supported in the said wallet.
-     *
-     * @param walletCatalogueId the id of a wallet published in the catalogue
-     * @return the list of languages supported
-     */
-    public List<String> getLanguages(UUID walletCatalogueId);
-
+    public DetailedCatalogItem getDetails(UUID walletCatalogueId);
 }
