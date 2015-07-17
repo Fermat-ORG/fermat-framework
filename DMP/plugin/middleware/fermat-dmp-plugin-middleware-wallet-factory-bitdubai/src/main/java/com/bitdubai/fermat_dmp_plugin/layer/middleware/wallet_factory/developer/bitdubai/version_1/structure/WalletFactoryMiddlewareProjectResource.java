@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
+
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource</code>
@@ -14,22 +17,25 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
  * @version 1.0
  * @since Java JDK 1.7
  */
+@XmlRootElement
 public class WalletFactoryMiddlewareProjectResource implements WalletFactoryProjectResource {
 
+    @XmlAttribute
     private String name;
 
     private byte[] resource;
 
+    @XmlElement
     private ResourceType resourceType;
 
-    private WalletFactoryProjectProposal walletFactoryProjectProposal;
+    private WalletFactoryProjectSkin walletFactoryProjectSkin;
 
 
-    public WalletFactoryMiddlewareProjectResource(String name, byte[] resource, ResourceType resourceType, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+    public WalletFactoryMiddlewareProjectResource(String name, byte[] resource, ResourceType resourceType, WalletFactoryProjectSkin walletFactoryProjectSkin) {
         this.name = name;
         this.resource = resource;
         this.resourceType = resourceType;
-        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+        this.walletFactoryProjectSkin = walletFactoryProjectSkin;
     }
 
 
@@ -49,7 +55,7 @@ public class WalletFactoryMiddlewareProjectResource implements WalletFactoryProj
     }
 
     @Override
-    public WalletFactoryProjectProposal getWalletFactoryProjectProposal() {
-        return walletFactoryProjectProposal;
+    public WalletFactoryProjectSkin getWalletFactoryProjectSkin() {
+        return walletFactoryProjectSkin;
     }
 }

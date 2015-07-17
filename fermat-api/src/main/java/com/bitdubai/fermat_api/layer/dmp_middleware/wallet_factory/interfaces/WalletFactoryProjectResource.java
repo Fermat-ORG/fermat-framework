@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletFactoryProjectResource</code>
  * indicates the methods of a WalletFactoryProjectResource
@@ -23,6 +25,6 @@ public interface WalletFactoryProjectResource {
     ResourceType getResourceType();
 
     // project skin to which it belongs
-    WalletFactoryProjectProposal getWalletFactoryProjectProposal();
+    WalletFactoryProjectSkin getWalletFactoryProjectSkin();
 
 }
