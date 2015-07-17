@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetNextSkinPreviewImageException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 
-import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -10,32 +9,15 @@ import java.util.UUID;
  */
 public interface CatalogueItem {
 
-    public boolean hasImagePreview();
-
-    public boolean hasVideoPreview();
-
     public int getDefaultSizeInBytes();
 
     public String getDeveloperName();
 
     public String getDeveloperPublicKey();
 
-    public byte[] getPreviewImage() throws CantGetNextSkinPreviewImageException;
-
-    public URL getPreviewVideoUrl();
-
-    /**
-     * This id will be used in the peer to peer version of this milestone
-     *
-     * @return a unique identifier for the resources
-     */
-    public UUID getResourcesId();
+    public byte[] getWalletIcon() throws CantGetWalletIconException;
 
     public UUID getWalletIdInCatalog();
 
-    public String getWalletDescription();
-
     public String getWalletName();
-
-    public String getWalletVersion();
 }
