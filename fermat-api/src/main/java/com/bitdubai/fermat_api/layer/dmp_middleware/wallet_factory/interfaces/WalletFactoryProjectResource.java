@@ -13,12 +13,16 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.Resourc
  */
 public interface WalletFactoryProjectResource {
 
+    // name of the resource
     String getName();
 
+    // resource file
     byte[] getResource();
 
+    // resource type
     ResourceType getResourceType();
 
+    // project skin to which it belongs
     WalletFactoryProjectSkin getWalletFactoryProjectSkin();
 
 }

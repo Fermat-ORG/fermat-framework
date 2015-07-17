@@ -97,6 +97,7 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
 
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 
             table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_FIRST_KEY_COLUMN);
@@ -109,7 +110,7 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_RESOURCE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_RESOURCE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_RESOURCE_RESOURCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_RESOURCE_PROJECT_SKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_RESOURCE_PROJECT_PROPOSAL_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 
             table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_RESOURCE_FIRST_KEY_COLUMN);
 

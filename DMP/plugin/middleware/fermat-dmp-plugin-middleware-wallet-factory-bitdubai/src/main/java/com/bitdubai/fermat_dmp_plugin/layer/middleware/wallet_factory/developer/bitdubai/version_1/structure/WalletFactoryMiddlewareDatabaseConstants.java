@@ -41,6 +41,7 @@ public class WalletFactoryMiddlewareDatabaseConstants {
 
     static final String PROJECT_SKIN_ID_COLUMN_NAME = "id";
     static final String PROJECT_SKIN_NAME_COLUMN_NAME = "name";
+    static final String PROJECT_SKIN_HASH_COLUMN_NAME = "hash";
     static final String PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME = "project_proposal_id";
 
     static final String PROJECT_SKIN_FIRST_KEY_COLUMN = "id";
@@ -53,7 +54,7 @@ public class WalletFactoryMiddlewareDatabaseConstants {
     static final String PROJECT_RESOURCE_ID_COLUMN_NAME = "id";
     static final String PROJECT_RESOURCE_NAME_COLUMN_NAME = "name";
     static final String PROJECT_RESOURCE_RESOURCE_TYPE_COLUMN_NAME = "resource_type";
-    static final String PROJECT_RESOURCE_PROJECT_SKIN_ID_COLUMN_NAME = "project_skin_id";
+    static final String PROJECT_RESOURCE_PROJECT_PROPOSAL_ID_COLUMN_NAME = "project_resource_id";
 
     static final String PROJECT_RESOURCE_FIRST_KEY_COLUMN = "id";
 

@@ -10,6 +10,9 @@ import java.util.List;
  */
 public interface WalletFactoryProject {
 
+    // TODO DEVELOPER?
+
+
     String getName();
 
     List<String> getProposals() throws CantGetWalletFactoryProjectProposalsException;
