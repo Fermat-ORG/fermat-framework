@@ -10,21 +10,42 @@ public class RuntimeFragment implements Fragment {
 
     Fragments type;
 
-    /**
-     * RuntimeFragment interface implementation.
-     */
+    Fragments fragmentBack;
+
+    Object[] context;
+
+    public void setBack(Fragments fragmentBack)
+    {
+        this.fragmentBack = fragmentBack;
+    }
+
     public void setType(Fragments type) {
         this.type = type;
     }
 
-
     /**
-     * SubApp interface implementation.
+     * RuntimeFragment interface implementation.
      */
-
     @Override
     public Fragments getType() {
         return type;
+    }
+
+    public Fragments getBack(){
+
+        return this.fragmentBack;
+    }
+
+
+
+    public void setContext(Object[] context){
+        this.context = context;
+    }
+
+
+    public Object[] getContext(){
+        return this.context;
+
     }
 
 

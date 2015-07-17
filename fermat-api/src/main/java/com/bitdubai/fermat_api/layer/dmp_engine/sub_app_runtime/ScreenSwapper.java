@@ -5,6 +5,10 @@ package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
  */
 public interface ScreenSwapper {
 
-    public void changeScreen(Object... objects);
+    public void changeScreen();
+
+    public void setScreen(String screen);
+
+    public void setParams(Object[] objects);
 
 }

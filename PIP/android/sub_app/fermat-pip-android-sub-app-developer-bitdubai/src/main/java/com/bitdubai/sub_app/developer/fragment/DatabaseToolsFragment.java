@@ -137,7 +137,7 @@ public class DatabaseToolsFragment extends Fragment{
                 gridView.setNumColumns(3);
             }
             //@SuppressWarnings("unchecked")
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
@@ -185,13 +185,10 @@ public class DatabaseToolsFragment extends Fragment{
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
 
 
                 holder = new ViewHolder();
-
-
-
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
@@ -200,17 +197,16 @@ public class DatabaseToolsFragment extends Fragment{
                     public void onClick(View view) {
 
                         Resource item=(Resource) gridView.getItemAtPosition(position);
-                        DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
-                        databaseToolsDatabaseListFragment.setResource(item);
+                        //set the next fragment and params
+                        Object[] params = new Object[1];
 
-                        FragmentTransaction FT = getFragmentManager().beginTransaction();
+                        params[0] = item;
 
+                        ((ScreenSwapper)getActivity()).setScreen("DeveloperDatabaseFragment");
+                        ((ScreenSwapper)getActivity()).setParams(params);
+                        ((ScreenSwapper)getActivity()).changeScreen();
 
-                        //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                        FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        FT.commit();
                     }
                 });
 
