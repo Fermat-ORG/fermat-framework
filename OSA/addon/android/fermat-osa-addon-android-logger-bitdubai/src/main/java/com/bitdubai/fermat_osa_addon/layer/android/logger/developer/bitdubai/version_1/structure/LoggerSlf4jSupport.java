@@ -34,7 +34,7 @@ public class LoggerSlf4jSupport implements ILogger {
 
     // Private instance fields declarations.
     // Logger object.
-    private final Logger logger;
+    private Logger logger;
 
 
     // Public constructor declarations.
@@ -50,7 +50,8 @@ public class LoggerSlf4jSupport implements ILogger {
         super ();
 
         // Set internal values.
-        this.logger = LoggerFactory.getLogger (_class);
+        //TODO: Esto está comentado porque hace crash, ver porqué
+        //this.logger = LoggerFactory.getLogger (_class);
     }
 
 
