@@ -16,18 +16,22 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.*;
-import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.*;
-import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.*;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.*;
-import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.structure.LoggerSlf4jSupport;
-import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.exceptions.CantInitializeDeveloperIdentityDatabaseException;
-import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.*;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DealsWithDeviceUser;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DeviceUserManager;
+import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.structure.LoggerManager;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDao;
+import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDatabaseFactory;
 
 
 /**
@@ -69,12 +73,16 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
     // ServiceStatus Interface member variables
     private ServiceStatus serviceStatus = null;
 
+    // Dao object.
+    private DeveloperIdentityDao dao = null;
+
 
     // Private class fields declarations.
     // Logger object.
-    private static final ILogger logger = new LoggerSlf4jSupport (DeveloperIdentityPluginRoot.class);
+    private static final LogManager logger = new LoggerManager();
 
-    private static final String EMPTY = "";
+    // Default string value.
+    private static final String _DEFAUL_STRING = "";
 
 
     // Public constructor declarations.
@@ -99,10 +107,12 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
      *  @param pluginDatabaseSystem DealsWithPluginDatabaseSystem Interface member variables.
      *  @param pluginId Plugin Interface member variables.
      *  @param serviceStatus ServiceStatus Interface member variables
+     *  @param dao
      *
      * */
     public DeveloperIdentityPluginRoot (DeviceUserManager deviceUserManager, ErrorManager errorManager, LogManager logManager,
-                                        PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ServiceStatus serviceStatus) {
+                                        PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ServiceStatus serviceStatus,
+                                        DeveloperIdentityDao dao) {
 
         // Call to super class.
         super ();
@@ -115,6 +125,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.serviceStatus = serviceStatus;
+        this.dao = dao;
     }
 
 
@@ -130,6 +141,13 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
         // Set the value.
         this.serviceStatus = serviceStatus;
     }
+
+    public void setDao (DeveloperIdentityDao dao) {
+
+        // Set the value.
+        this.dao = dao;
+    }
+
 
     /**
      * DealsWithDeviceUser Interface implementation.
@@ -175,7 +193,35 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
      */
     @Override
     public void start() {
+
+
+        logger.log(LogLevel.MINIMAL_LOGGING, "Starting plugin...", _DEFAUL_STRING, _DEFAUL_STRING);
         this.serviceStatus = ServiceStatus.STARTED;
+
+        // Initializing the dao object.
+        try {
+
+            if (this.dao == null) {
+
+                logger.log (LogLevel.MINIMAL_LOGGING, "Creating and initializing dao object...", _DEFAUL_STRING, _DEFAUL_STRING);
+                this.dao = new DeveloperIdentityDao (this.pluginDatabaseSystem, new DeveloperIdentityDatabaseFactory(this.pluginDatabaseSystem), this.pluginId);
+                this.dao.initializeDatabase (this.pluginId, this.getClass ().getName ());
+
+            } else {
+
+                logger.log (LogLevel.MINIMAL_LOGGING, "Initializing dao object...", _DEFAUL_STRING, _DEFAUL_STRING);
+                this.dao.initializeDatabase (this.pluginId, this.getClass ().getName ());
+            }
+
+        } catch (Exception e) {
+        /*
+         * Catch the failure.
+         * */
+            throw new RuntimeException (e);
+
+        } finally {
+            logger.log(LogLevel.MINIMAL_LOGGING, "Plugin started...", _DEFAUL_STRING, _DEFAUL_STRING);
+        }
     }
 
     @Override
@@ -204,35 +250,40 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
      * DeveloperIdentityManager Interface implementation.
      */
 
-    /**
+    /*
      * no params.
      *
      * @return List<DeveloperIdentity> returns the list of developers linked to the current logged device user.
      * @throws CantGetUserDeveloperIdentitiesException
      */
     @Override
-    public List<DeveloperIdentity> getDevelopersFromCurrentDeviceUser() throws CantGetUserDeveloperIdentitiesException {
+    public List<DeveloperIdentity> getDevelopersFromCurrentDeviceUser () throws CantGetUserDeveloperIdentitiesException {
 
 
+        // Get developers from current device user.
         try {
 
+            // Check values.
+            if (this.dao == null) {
+
+                logger.log (LogLevel.MINIMAL_LOGGING, "Cant get developers from current device user, Dao object is null.", _DEFAUL_STRING, _DEFAUL_STRING);
+                throw new com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException ("Cant get developers from current device user, Dao object is null.", "Plugin Identity", "Cant get developers from current device user, Dao object is null.");
+            }
+
             // Get developer list.
-            logger.info (EMPTY, "Creating new developer for : " + deviceUserManager.getLoggedInDeviceUser ());
+            logger.log (LogLevel.MINIMAL_LOGGING, "Getting developers from current device user for : " + deviceUserManager.getLoggedInDeviceUser(), _DEFAUL_STRING, _DEFAUL_STRING);
+            return this.dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser ());
 
-
-            DeveloperIdentityDao dao = new DeveloperIdentityDao (this.pluginDatabaseSystem, this.pluginId, new DeveloperIdentityDatabaseFactory (this.pluginDatabaseSystem));
-            return dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser ());
-
-        } catch (CantGetLoggedInDeviceUserException ce) {
+        } catch (CantGetUserDeveloperIdentitiesException ce) {
 
             // Failure CantGetLoggedInDeviceUserException.
-            logger.error (EMPTY, "Cant get developers from current device user, Cant get logged in device user failure.", ce);
+            logger.log (LogLevel.MINIMAL_LOGGING, "Cant get developers from current device user, Cant get logged in device user failure.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantGetUserDeveloperIdentitiesException (ce.getMessage(), ce, "Plugin Identity", "Cant get developers from current device user, Cant get logged in device user failure..");
 
         } catch (Exception e) {
 
             // Failure unknown.
-            logger.error (EMPTY, "Cant get developers from current device user, unknown failure.", e);
+            logger.log(LogLevel.MINIMAL_LOGGING, "Cant get developers from current device user, unknown failure.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantGetUserDeveloperIdentitiesException (e.getMessage(), e, "Plugin Identity", "Cant get developers from current device user, unknown failure.");
         }
     }
@@ -249,23 +300,28 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
 
 
         // Create a new developer.
-        logger.info (EMPTY, "Creating new developer for : " + alias);
-        DeveloperIdentityDao dao = new DeveloperIdentityDao (this.pluginDatabaseSystem, this.pluginId, new DeveloperIdentityDatabaseFactory (this.pluginDatabaseSystem));
-
         try {
 
-            return dao.createNewDeveloper (alias, new ECCKeyPair (), deviceUserManager.getLoggedInDeviceUser ());
+            // Check values.
+            if (this.dao == null) {
 
-        } catch (CantGetLoggedInDeviceUserException ce) {
+                logger.log (LogLevel.MINIMAL_LOGGING, "Cant create new developer, Dao object is null.", _DEFAUL_STRING, _DEFAUL_STRING);
+                throw new CantGetUserDeveloperIdentitiesException ("Cant create new developer, Dao object is null.", "Plugin Identity", "Cant create new developer, Dao object is null.");
+            }
+
+            logger.log (LogLevel.MINIMAL_LOGGING, "Creating new developer for : " + alias, _DEFAUL_STRING, _DEFAUL_STRING);
+            return this.dao.createNewDeveloper (alias, new ECCKeyPair (), deviceUserManager.getLoggedInDeviceUser ());
+
+        } catch (CantGetUserDeveloperIdentitiesException ce) {
 
             // Failure CantGetLoggedInDeviceUserException.
-            logger.error (EMPTY, "Cant create new developer, Cant get logged in device user failure.", ce);
+            logger.log(LogLevel.MINIMAL_LOGGING, "Cant create new developer, Cant get logged in device user failure.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantCreateNewDeveloperException (ce.getMessage(), ce, "Plugin Identity", "create new developer, Cant get logged in device user failure..");
 
         } catch (Exception e) {
 
             // Failure unknown.
-            logger.error (EMPTY, "Cant create new developer, unknown failure.", e);
+            logger.log(LogLevel.MINIMAL_LOGGING, "Cant create new developer, unknown failure.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantCreateNewDeveloperException (e.getMessage(), e, "Plugin Identity", "Cant create new developer, unknown failure.");
         }
     }
