@@ -1,27 +1,36 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResource;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
+
+import java.util.List;
 
 /**
  * Created by ciencias on 7/15/15.
  */
 public interface WalletFactoryProjectSkin {
 
+    // name of skin, first skin is default
+    String getName();
 
+    // hash of the skin, calculated each time you do a change in a resource
+    String getHash();
 
-    public byte[] getImageResource(String imageName) throws CantGetFactoryProjectResourceException;
+    // project proposal to which it belongs
+    WalletFactoryProjectProposal getWalletFactoryProjectProposal();
 
-    public byte[] getVideoResource(String videoName) throws CantGetFactoryProjectResourceException;
+    // get all resources from a skin
+    List<WalletFactoryProjectResource> getAllResources() throws CantGetWalletFactoryProjectResourcesException;
 
-    public byte[] getSoundResource(String soundName) throws CantGetFactoryProjectResourceException;
+    // get all resources of a skin by type
+    List<WalletFactoryProjectResource> getAllResourcesByResourceType(ResourceType resourceType) throws CantGetWalletFactoryProjectResourcesException;
 
-    public String getLayoutResource(String layoutName) throws CantGetFactoryProjectResourceException;
+    // get a specific resource
+    WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException;
 
-    // TODO: add , update , delete
-    public void addImageResource(String imageName, byte[] image) throws CantAddWalletFactoryProjectResource;
-    public void addVideoResource(String videoName, byte[] image) throws CantAddWalletFactoryProjectResource;
-    public void addSoundResource(String soundName, byte[] image) throws CantAddWalletFactoryProjectResource;
-    public void addFontStyleResource(String fontStyleName, String ttfFileContent) throws CantAddWalletFactoryProjectResource;
+    // update a resource of the skin
+    void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException;
 
 }
