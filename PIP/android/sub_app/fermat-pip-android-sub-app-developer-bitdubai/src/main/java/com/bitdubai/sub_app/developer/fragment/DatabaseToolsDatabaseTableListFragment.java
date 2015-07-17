@@ -1,25 +1,24 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -65,7 +64,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
 
     private Resource databases;
 
-
+    private String[] params;
     private GridView gridView;
 
     private static Platform platform = new Platform();
@@ -151,7 +150,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             }
             //@SuppressWarnings("unchecked")
             //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstTables);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, lstTables);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
@@ -199,7 +198,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
 
 
                 holder = new ViewHolder();
@@ -220,12 +219,17 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabaseTable(developerDatabaseTableList.get(position));
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
 
-                        FragmentTransaction FT = getFragmentManager().beginTransaction();
+                        //set the next fragment and params
+                        Object[] params = new Object[3];
+
+                        params[0] = databases;
+                        params[1] = developerDatabase;
+                        params[2] = developerDatabaseTableList.get(position);
 
 
-                        FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment);
-                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        FT.commit();
+                        ((ScreenSwapper)getActivity()).setScreen("DeveloperRecordsFragment");
+                        ((ScreenSwapper)getActivity()).setParams(params);
+                        ((ScreenSwapper)getActivity()).changeScreen();
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
@@ -250,15 +254,15 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             switch (item.picture) {
                 case "plugin":
                     holder.imageView.setImageResource(R.drawable.table);
-                    holder.imageView.setTag("CPWWRWAKAV1M|1");
+                    holder.imageView.setTag("DeveloperRecordsFragment");
                     break;
                 case "addon":
                     holder.imageView.setImageResource(R.drawable.table);
-                    holder.imageView.setTag("CPWWRWAKAV1M|2");
+                    holder.imageView.setTag("DeveloperRecordsFragment" );
                     break;
                 default:
                     holder.imageView.setImageResource(R.drawable.table);
-                    holder.imageView.setTag("CPWWRWAKAV1M|3");
+                    holder.imageView.setTag("DeveloperRecordsFragment");
                     break;
             }
 

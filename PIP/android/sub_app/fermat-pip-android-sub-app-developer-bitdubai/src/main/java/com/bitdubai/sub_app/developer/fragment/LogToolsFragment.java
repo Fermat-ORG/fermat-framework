@@ -289,20 +289,16 @@ public class LogToolsFragment extends Fragment {
                         Loggers item = (Loggers) gridView.getItemAtPosition(position);
 
 
-                        LogToolsFragmentLevel2 logToolsFragmentLevel2 = new LogToolsFragmentLevel2();
                         ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_0);
-                        logToolsFragmentLevel2.setLoggers(lst);
-                        //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
-                        //databaseToolsDatabaseListFragment.setResource(item);
+                        //set the next fragment and params
+                        Object[] params = new Object[1];
 
-                        FragmentTransaction FT = getFragmentManager().beginTransaction();
+                        params[0] = lst;
+                        ((ScreenSwapper)getActivity()).setScreen("DeveloperLogLevel2Fragment");
+                        ((ScreenSwapper)getActivity()).setParams(params);
+                        ((ScreenSwapper)getActivity()).changeScreen();
 
-
-                        //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                        FT.replace(R.id.logContainer, logToolsFragmentLevel2, "fragmento2");
-                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        FT.commit();
 
                     }
                 });

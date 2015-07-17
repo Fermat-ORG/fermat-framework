@@ -167,15 +167,11 @@ public class StartActivity extends FragmentActivity {
                 System.out.println("cant start logger exception: "+e.getMessage());
             }
 
-            Bundle bundle = getIntent().getExtras();
-
+        //execute start platform
             try {
-                if (bundle != null) {
-                    if (bundle.getString("executeStart").toString() == "0")
-                        platform.start();
-                } else {
+
                     platform.start();
-                }
+
             } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
                 System.err.println("CantStartPlatformException: " + e.getMessage());
 
@@ -198,7 +194,7 @@ public class StartActivity extends FragmentActivity {
             errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
             ApplicationSession.setErrorManager(errorManager);
 
-            /** Download wallet images **/
+
 
             return true;
         }
