@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguagesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface DetailedCatalogItem {
      *
      * @return the list of languages supported
      */
-    public List<String> getLanguages();
+    public List<Language> getLanguages() throws CantGetLanguagesException;
 
     /**
      * Given an Skin id this method returns the skin information

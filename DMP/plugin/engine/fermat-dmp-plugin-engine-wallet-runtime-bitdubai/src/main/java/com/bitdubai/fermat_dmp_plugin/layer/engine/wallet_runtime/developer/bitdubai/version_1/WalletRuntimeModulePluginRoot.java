@@ -409,11 +409,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+            runtimeActivity.setColor("#8bba9e");
             runtimeWallet.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN, runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
+
             runtimeActivity.setTitleBar(runtimeTitleBar);
             runtimeActivity.setColor("#72af9c");
             //runtimeActivity.setColor("#d07b62");
