@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.WalletInstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetInstallationStatusException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -103,6 +104,11 @@ public class WalletStoreMiddlewarePluginRoot implements DealsWithErrors,DealsWit
     @Override
     public WalletInformation getWalletInformation(UUID walletCatalogId) {
         return null;
+    }
+
+    @Override
+    public void setStatusToInstalling(UUID walletCatalogId) throws CantSetInstallationStatusException {
+
     }
 
     /**
