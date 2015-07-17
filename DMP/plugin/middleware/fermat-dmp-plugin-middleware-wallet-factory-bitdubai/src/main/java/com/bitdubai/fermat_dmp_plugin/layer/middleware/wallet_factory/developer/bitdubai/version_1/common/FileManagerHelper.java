@@ -38,9 +38,9 @@ public class FileManagerHelper implements DealsWithPluginFileSystem, DealsWithPl
      */
     UUID pluginId;
 
-    public void addResourceFile(WalletFactoryProjectResource walletFactoryProjectResource) {
+    public void addResourceFile(WalletFactoryProjectResource walletFactoryProjectResource, WalletFactoryProjectSkin projectSkin) {
         try {
-            PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, createResourcePath(walletFactoryProjectResource), walletFactoryProjectResource.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, createResourcePath(walletFactoryProjectResource, projectSkin), walletFactoryProjectResource.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
             newFile.setContent(walletFactoryProjectResource.getResource());
             newFile.persistToMedia();
@@ -49,9 +49,9 @@ public class FileManagerHelper implements DealsWithPluginFileSystem, DealsWithPl
         }
     }
 
-    public void updateResourceFile(WalletFactoryProjectResource walletFactoryProjectResource) {
+    public void updateResourceFile(WalletFactoryProjectResource walletFactoryProjectResource, WalletFactoryProjectSkin projectSkin) {
         try {
-            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, createResourcePath(walletFactoryProjectResource), walletFactoryProjectResource.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, createResourcePath(walletFactoryProjectResource, projectSkin), walletFactoryProjectResource.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
             newFile.setContent(walletFactoryProjectResource.getResource());
             newFile.persistToMedia();
@@ -60,9 +60,9 @@ public class FileManagerHelper implements DealsWithPluginFileSystem, DealsWithPl
         }
     }
 
-    public void deleteResourceFile(WalletFactoryProjectResource walletFactoryProjectResource) {
+    public void deleteResourceFile(WalletFactoryProjectResource walletFactoryProjectResource, WalletFactoryProjectSkin projectSkin) {
         try {
-            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, createResourcePath(walletFactoryProjectResource), walletFactoryProjectResource.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, createResourcePath(walletFactoryProjectResource, projectSkin), walletFactoryProjectResource.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             //newFile.deleteFile();
             // TODO DELETE FILE IN PLUGINFILESYSTEM
         } catch (FileNotFoundException|CantCreateFileException e) {
@@ -70,9 +70,9 @@ public class FileManagerHelper implements DealsWithPluginFileSystem, DealsWithPl
         }
     }
 
-    public byte[] getResourceFile(WalletFactoryProjectResource walletFactoryProjectResource) {
+    public byte[] getResourceFile(WalletFactoryProjectResource walletFactoryProjectResource, WalletFactoryProjectSkin projectSkin) {
         try {
-            PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, createResourcePath(walletFactoryProjectResource), walletFactoryProjectResource.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, createResourcePath(walletFactoryProjectResource, projectSkin), walletFactoryProjectResource.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
             return newFile.getContent();
         } catch (CantCreateFileException|CantLoadFileException e) {
@@ -81,10 +81,9 @@ public class FileManagerHelper implements DealsWithPluginFileSystem, DealsWithPl
         return null;
     }
 
-    private String createResourcePath(WalletFactoryProjectResource walletFactoryProjectResource) {
+    private String createResourcePath(WalletFactoryProjectResource walletFactoryProjectResource, WalletFactoryProjectSkin projectSkin) {
         String initialPath = "/wallet_factory_projects";
         String resourcePath = "";
-        WalletFactoryProjectSkin projectSkin = walletFactoryProjectResource.getWalletFactoryProjectSkin();
         WalletFactoryProjectProposal projectProposal = projectSkin.getWalletFactoryProjectProposal();
         WalletFactoryProject project = projectProposal.getProject();
         switch(walletFactoryProjectResource.getResourceType()) {
