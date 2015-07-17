@@ -12,26 +12,16 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-
-import android.support.v7.internal.view.menu.MenuBuilder;
-import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +49,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel2 extends Fragment {
+public class LogToolsFragmentLevel1 extends Fragment {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
 
@@ -73,10 +63,10 @@ public class LogToolsFragmentLevel2 extends Fragment {
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
 
-    private int loggerLevel=2;
+    private int loggerLevel=1;
 
-    public static LogToolsFragmentLevel2 newInstance(int position) {
-        LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
+    public static LogToolsFragmentLevel1 newInstance(int position) {
+        LogToolsFragmentLevel1 f = new LogToolsFragmentLevel1();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -237,8 +227,8 @@ public class LogToolsFragmentLevel2 extends Fragment {
                         Loggers item=(Loggers) gridView.getItemAtPosition(position);
 
                         // Reload current fragment
-                        LogToolsFragmentLevel2 frg = null;
-                        frg =(LogToolsFragmentLevel2) getFragmentManager().findFragmentByTag("fragmento2");
+                        LogToolsFragmentLevel1 frg = null;
+                        frg =(LogToolsFragmentLevel1) getFragmentManager().findFragmentByTag("fragmento2");
 
                         if(loggerLevel==ArrayListLoggers.LEVEL_1){
 
@@ -416,7 +406,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
     }
 
     public class CustomDialogClass extends Dialog implements
-            android.view.View.OnClickListener {
+            View.OnClickListener {
 
 
         private Loggers logger;
