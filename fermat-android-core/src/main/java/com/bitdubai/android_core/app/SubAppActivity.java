@@ -1,5 +1,6 @@
 package com.bitdubai.android_core.app;
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
