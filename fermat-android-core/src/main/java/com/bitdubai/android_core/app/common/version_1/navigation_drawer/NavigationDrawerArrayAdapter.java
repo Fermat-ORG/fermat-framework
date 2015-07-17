@@ -124,13 +124,6 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                             break;
                     }
 
-                }else if (ApplicationSession.getActivityId() == "PublisherActivity"){
-                    switch (position)
-                    {
-                        case 1:
-                            imageView.setImageResource(R.drawable.ic_action_store);
-                            break;
-                    }
 
 
                 }

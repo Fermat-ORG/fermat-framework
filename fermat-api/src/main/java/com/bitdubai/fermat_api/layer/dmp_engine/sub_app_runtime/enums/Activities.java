@@ -16,10 +16,8 @@ public enum Activities {
     CWP_WALLET_RUNTIME_BITCOIN_ALL_AVAILABLE_BALANCE("BitcoinBalanceActivity"),
     CWP_WALLET_RUNTIME_BITCOIN_ALL_TRANSACTIONS ("BitcoinTransctionsActivity"),
     CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS ("BitcoinContactsActivity"),
-    CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_SEND( "BitcoinSendToContactActivity"),
-    CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_NEW_SEND( "BitcoinSendToNewContactActivity"),
-    CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_RECEIVE( "BitcoinReceiveFromContactActivity"),
-    CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_NEW_RECEIVE( "BitcoinReceiveFromNewContactActivity"),
+
+
     CWP_WALLET_RUNTIME_STORE_MAIN ( "StoreFrontActivity"),
     CWP_WALLET_RUNTIME_WALLET_AGE_ADULTS_ALL_BITDUBAI_VERSION_1_MAIN ("CPWRWAABV1_Main"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN ("AdultsRuntimeActivity"),
@@ -75,6 +73,7 @@ public enum Activities {
             }
         }
         // throw an IllegalArgumentException or return null
-        throw new IllegalArgumentException("the given number doesn't match any Status.");
+        //throw new IllegalArgumentException("the given number doesn't match any Status.");
+        return null;
     }
 }

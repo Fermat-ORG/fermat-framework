@@ -5,11 +5,9 @@ import android.content.Context;
 import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableFactory;
 
@@ -22,8 +20,6 @@ import org.robolectric.annotation.Config;
 
 import java.util.UUID;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -33,10 +29,7 @@ import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class deleteRecordTest {
-
-
-    private Activity mockActivity;
+public class SetFilterTest {private Activity mockActivity;
     private Context mockContext;
 
     private AndroidDatabase testDatabase;
@@ -48,8 +41,6 @@ public class deleteRecordTest {
 
     private DatabaseTableFactory testTableFactory;
 
-    private DatabaseTableRecord testTableRecord;
-
     @Before
     public  void setUpDatabase() throws Exception {
         mockActivity = Robolectric.setupActivity(Activity.class);
@@ -58,10 +49,6 @@ public class deleteRecordTest {
         testDatabase = new AndroidDatabase(mockContext, testOwnerId, testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);
         testDatabaseTable = testDatabase.getTable(testTableName);
-        testDatabaseTable.loadToMemory();
-        testTableRecord = testDatabaseTable.getEmptyRecord();
-        testTableRecord.setIntegerValue("testColumn1", 1);
-        testTableRecord.setStringValue("testColumn2", "prueba");
 
     }
 
@@ -70,31 +57,21 @@ public class deleteRecordTest {
         testTableFactory = new AndroidDatabaseTableFactory(testTableName);
         testTableFactory.addColumn("testColumn1", DatabaseDataType.INTEGER, 0, false);
         testTableFactory.addColumn("testColumn2", DatabaseDataType.STRING, 10, false);
+        testTableFactory.addColumn("testColumn3", DatabaseDataType.REAL, 10, false);
     }
 
 
     @Test
-    public void DeleteRecord_Succefuly_TrowsCantDeleteRecordException() throws Exception{
-
-        testTableRecord = testDatabaseTable.getRecords().get(0);
-        testTableRecord.setIntegerValue("testColumn1", 1);
-
-
-        catchException(testDatabaseTable).deleteRecord(testTableRecord);
-        assertThat(caughtException()).isInstanceOf(CantDeleteRecordException.class);
-
+    public void setFilterString_Succefuly() throws Exception{
+        testDatabaseTable.setStringFilter("testColumn2", "nn", DatabaseFilterType.EQUAL);
 
     }
 
     @Test
-    public void InsertRecord_NotSuccefuly_TrowsCantDeleteRecordException() throws Exception{
+    public void setFilterUUID_Succefuly() throws Exception{
+        testDatabaseTable.setUUIDFilter("testColumn2", UUID.randomUUID(), DatabaseFilterType.EQUAL);
 
-        testTableRecord = testDatabaseTable.getEmptyRecord();
-        testTableRecord.setIntegerValue("testColumn1", 2);
-
-        catchException(testDatabaseTable).deleteRecord(testTableRecord);
-        assertThat(caughtException()).isInstanceOf(CantDeleteRecordException.class);
     }
+
+
 }
-
-

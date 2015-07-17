@@ -9,7 +9,9 @@ public interface Fragment {
 
     public Fragments getType();
 
+    public Fragments getBack();
 
+    public void setContext(Object... objects);
 
-
+    public Object[] getContext();
 }

@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -248,7 +249,18 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
 
     @Override
     public Fragment getLastFragment() {
-        return listFragments.get(lastFragment);
+
+        Iterator<Map.Entry<Fragments, Fragment>> efragment = this.listFragments.entrySet().iterator();
+
+        while (efragment.hasNext()) {
+            Map.Entry<Fragments, Fragment> fragmentEntry = efragment.next();
+            RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
+            if(fragment.getType().name().equals(this.lastFragment.name())){
+                return fragment;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -269,6 +281,22 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
     }
 
 
+    @Override
+    public Fragment getFragment(Fragments frag) {
+        Iterator<Map.Entry<Fragments, Fragment>> efragment = this.listFragments.entrySet().iterator();
+
+        while (efragment.hasNext()) {
+            Map.Entry<Fragments, Fragment> fragmentEntry = efragment.next();
+            RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
+            if(fragment.getType().name().equals(frag.name())){
+                lastFragment = fragment.getType();
+                return fragment;
+            }
+
+
+        }
+        return null;
+    }
 
 
     /**
@@ -364,6 +392,89 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_SHELL_LOGIN, runtimeFragment);
 
+
+            /**
+             * Definition of Developer Manager App
+             */
+
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CWP_DEVELOPER_APP);
+            listSubApp.put(SubApps.CWP_DEVELOPER_APP, runtimeSubApp);
+
+            //acá estoy seteando los colores y toda la vaina esa
+            runtimeActivity= new RuntimeActivity();
+            runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+            runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setStatusBarColor("#d07b62");
+            runtimeSubApp.addActivity(runtimeActivity);
+            listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
+
+
+
+            runtimeTitleBar = new RuntimeTitleBar();
+            runtimeTitleBar.setLabel("Developer");
+            //runtimeTitleBar.setColor("#d07b62");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+
+
+            runtimeTabStrip = new RuntimeTabStrip();
+            runtimeTabStrip.setTabsColor("#d07b62");
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+            runtimeTabStrip.setTabsIndicateColor("#b46a54");
+
+            runtimeTab = new RuntimeTab();
+            runtimeTab.setLabel("DataBase Tools");
+            runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+
+            runtimeTabStrip.addTab(runtimeTab);
+
+
+            runtimeTab = new RuntimeTab();
+            runtimeTab.setLabel("Log Tools");
+            runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+            runtimeTabStrip.addTab(runtimeTab);
+
+
+            runtimeActivity.setTabStrip(runtimeTabStrip);
+
+            runtimeFragment = new RuntimeFragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS, runtimeFragment);
+
+            runtimeFragment = new RuntimeFragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
+            runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES, runtimeFragment);
+
+            runtimeFragment = new RuntimeFragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
+            runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES, runtimeFragment);
+
+            runtimeFragment = new RuntimeFragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
+            runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS, runtimeFragment);
+
+            runtimeFragment = new RuntimeFragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS, runtimeFragment);
+
+            runtimeFragment = new RuntimeFragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+            runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS,runtimeFragment);
+
+            /**
+             * End of Developer tabs.
+             */
 
         //wallet factory app
         runtimeSubApp = new RuntimeSubApp();

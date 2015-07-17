@@ -182,14 +182,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Method implemented for manage the navigation drawer
-     * @param position
-     */
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
 
-    }
     // TODO: Ver porque se está haciendo este bucle que no hace nada
 
     /*
@@ -197,42 +190,30 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     int mResultCode;
     Intent mData;
     boolean returningWithResult = false;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         returningWithResult = true;
         this.mData = data;
         mRequestCode = requestCode;
         mResultCode = resultCode;
-
         //it returns to fragment call
         super.onActivityResult(requestCode, resultCode, data);
-
     }
-
     @Override
     protected void onPostResume() {
-
-
         super.onPostResume();
         if (returningWithResult)
         {
             //Get actual wallet to execute activity result method
             Activity wallet = ApplicationSession.getwalletRuntime().getLasActivity();
-
             if (wallet.getType() == Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN)
             {
                 android.support.v4.app.Fragment currentFragment =  SendFragment.newInstance(0);
                 currentFragment.onActivityResult(mRequestCode, mResultCode, mData);
             }
-
         }
-
-
         returningWithResult = false;
     }
-
     */
 
     /**
@@ -263,12 +244,10 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
      */
     @Override
     public void onBackPressed() {
-        // set Desktop current activity
-        ApplicationSession.setActivityId("DesktopActivity");
-        ((ApplicationSession) this.getApplication()).setWalletId(0);
-        //Activity activity =ApplicationSession.getwalletRuntime().getLasActivity();
+
+
         if (ApplicationSession.getwalletRuntime().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
-            //activity = ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+
             cleanWindows();
 
             Intent intent = new Intent(this, SubAppActivity.class);
@@ -278,6 +257,15 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             super.onBackPressed();
         }
 
+
+    }
+
+    /**
+     * Method implemented for manage the navigation drawer
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
 
     }
 
@@ -451,12 +439,12 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 switch (type) {
                     case CWP_SHELL_LOGIN:
                         break;
-                   case CWP_WALLET_MANAGER_SHOP:
-                     //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
+                    case CWP_WALLET_MANAGER_SHOP:
+                        //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
-                   // case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
-                     //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
-                     //   break;
+                    // case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
+                    //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
+                    //   break;
 
                     case CWP_WALLET_STORE_MAIN:
                         break;
@@ -492,6 +480,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
 
     // TODO: Lo comento porque no hace nada
+    // TODO: de ser necesario recibir el evento de click en un boton implementar la interface de la pip-api ScreenSwapper
 
     public void onItemSelectedClicked(View v) {
 
@@ -501,10 +490,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             String tagId = v.getTag().toString();
             String activityKey="";
             String paramId="0";
-
             if(tagId.contains("|")){
                 activityKey =  tagId.split("\\|")[0];
-
                 if(tagId.split("\\|").length > 2)
                     paramId =  tagId.split("\\|")[1] + "|" + tagId.split("\\|")[2];
                 else
@@ -512,19 +499,12 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             }
             else
                 activityKey =  tagId;
-
-
             Activities activityType = Activities.getValueFromString (activityKey);
             Activity activity;
             Intent intent;
-
-
-
         }
         catch (Exception e) {
             ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-
             Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),Toast.LENGTH_SHORT).show();
              //       Toast.LENGTH_LONG).show();
         }*/
@@ -651,21 +631,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
                         currentFragment =  WalletDesktopFragment.newInstance(position);
-                        break;
-
-
-                    case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
-                        developerPlatform = new com.bitdubai.sub_app.developer.fragment.Platform();
-                        developerPlatform.setErrorManager((ErrorManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
-                        developerPlatform.setToolManager((ToolManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
-                        currentFragment = DatabaseToolsFragment.newInstance(position);
-                        break;
-
-                    case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
-                        developerPlatform = new com.bitdubai.sub_app.developer.fragment.Platform();
-                         developerPlatform.setErrorManager((ErrorManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
-                        developerPlatform.setToolManager((ToolManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
-                        currentFragment = LogToolsFragment.newInstance(0);
                         break;
 
 

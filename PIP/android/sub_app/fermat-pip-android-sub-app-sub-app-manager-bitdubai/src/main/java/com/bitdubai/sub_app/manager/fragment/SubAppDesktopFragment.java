@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
 import com.bitdubai.sub_app.manager.R;
 
 
@@ -185,23 +186,59 @@ public class SubAppDesktopFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.developer_sub_app);
                   holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((ScreenSwapper) getActivity()).setScreen("DevelopersActivity");
+                            ((ScreenSwapper) getActivity()).changeScreen();
+
+                        }
+                    });
                     break;
                 case "wallet_factory":
                     holder.imageView.setImageResource(R.drawable.factory);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //set the next fragment and params
+                          ((ScreenSwapper) getActivity()).setScreen("FactoryActivity");
+                            ((ScreenSwapper) getActivity()).changeScreen();
+                        }
+                    });
                     break;
 
                 case "wallet_publisher":
                     holder.imageView.setImageResource(R.drawable.publisher);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((ScreenSwapper) getActivity()).setScreen("PublisherActivity");
+                            ((ScreenSwapper) getActivity()).changeScreen();
+                        }
+                    });
                     break;
 
                 case "wallet_store":
                     holder.imageView.setImageResource(R.drawable.store);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+          //set the next fragment and params
+                            ((ScreenSwapper) getActivity()).setScreen("StoreFrontActivity");
+                            ((ScreenSwapper) getActivity()).changeScreen();
+                        }
+                    });
                     break;
 
             }

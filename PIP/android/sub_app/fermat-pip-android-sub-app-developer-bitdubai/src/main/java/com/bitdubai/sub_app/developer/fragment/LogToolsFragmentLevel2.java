@@ -3,6 +3,8 @@ package com.bitdubai.sub_app.developer.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,8 +12,8 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+
+
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -71,7 +73,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
 
-    private int loggerLevel=1;
+    private int loggerLevel=2;
 
     public static LogToolsFragmentLevel2 newInstance(int position) {
         LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
