@@ -14,12 +14,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragmen
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MenuItem;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
@@ -425,37 +425,37 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             runtimeTitleBar = new TitleBar();
             //Navigation
 
-            runtimeSideMenu = new RuntimeSideMenu();
+            runtimeSideMenu = new SideMenu();
 
 
-            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Personal Wallets");
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Shops");
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Commercial wallets");
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Factory Projects");
             runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Published Wallets");
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Wallet Store");
             runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
-            runtimeMenuItem = new RuntimeMenuItem();
+            runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Exit");
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -464,7 +464,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             //fin navigation
 
 
-            runtimeTitleBar = new RuntimeTitleBar();
+            runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Developer");
             //runtimeTitleBar.setColor("#d07b62");
             runtimeActivity.setTitleBar(runtimeTitleBar);
