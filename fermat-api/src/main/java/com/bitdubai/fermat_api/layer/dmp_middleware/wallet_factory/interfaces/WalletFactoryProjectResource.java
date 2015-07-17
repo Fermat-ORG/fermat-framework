@@ -23,6 +23,6 @@ public interface WalletFactoryProjectResource {
     ResourceType getResourceType();
 
     // project skin to which it belongs
-    WalletFactoryProjectSkin getWalletFactoryProjectSkin();
+    WalletFactoryProjectProposal getWalletFactoryProjectProposal();
 
 }
