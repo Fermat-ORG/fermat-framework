@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_actor.developer;
+package com.bitdubai.fermat_pip_api.layer.pip_actor.developer;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 

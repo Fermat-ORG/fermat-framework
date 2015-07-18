@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_api.layer.pip_actor.exception;
+package com.bitdubai.fermat_pip_api.layer.pip_actor.exception;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetLogTool</code>
+ * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool</code>
  * is thrown when an error occurs trying to get de list of plugins and addon DataBases
  * <p/>
  * Created by Natalia on 02/07/15.

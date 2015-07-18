@@ -3,8 +3,8 @@ package com.bitdubai.fermat_core.layer.pip_identity;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer.pip_identity.IdentitySubsystem;
-import com.bitdubai.fermat_api.layer.pip_identity.CantStartSubsystemException;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.IdentitySubsystem;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.CantStartSubsystemException;
 import com.bitdubai.fermat_core.layer.pip_identity.developer.DeveloperIdentitySubsystem;
 
 /**

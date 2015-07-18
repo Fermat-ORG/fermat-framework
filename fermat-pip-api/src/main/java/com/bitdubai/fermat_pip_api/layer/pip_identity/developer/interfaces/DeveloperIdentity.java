@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces;
+package com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces;
 
 /**
  * This interface let you access to the Developer public Information

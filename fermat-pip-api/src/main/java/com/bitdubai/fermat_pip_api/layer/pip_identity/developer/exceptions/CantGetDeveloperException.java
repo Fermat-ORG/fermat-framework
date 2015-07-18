@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions;
+package com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

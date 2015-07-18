@@ -1,16 +1,12 @@
-package com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces;
+package com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantGetDeveloperException;
-import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_api.layer.pip_identity.developer.exceptions.DeveloperLoginFailedException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager</code>
+ * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager</code>
  * indicates the functionality of a DeveloperIdentityManager
  * <p/>
  *

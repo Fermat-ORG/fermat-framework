@@ -1,15 +1,13 @@
-package com.bitdubai.fermat_api.layer.pip_actor.developer;
+package com.bitdubai.fermat_pip_api.layer.pip_actor.developer;
 
-import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetClasessHierarchyAddons;
-import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetClasessHierarchyPlugins;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetClasessHierarchyAddons;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetClasessHierarchyPlugins;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ciencias on 6/25/15.

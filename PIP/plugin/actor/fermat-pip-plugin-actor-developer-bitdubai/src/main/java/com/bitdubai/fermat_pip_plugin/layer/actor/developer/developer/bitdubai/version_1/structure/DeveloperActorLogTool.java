@@ -6,11 +6,11 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
-import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetClasessHierarchyAddons;
-import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetClasessHierarchyPlugins;
-import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetClasessHierarchyAddons;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetClasessHierarchyPlugins;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;

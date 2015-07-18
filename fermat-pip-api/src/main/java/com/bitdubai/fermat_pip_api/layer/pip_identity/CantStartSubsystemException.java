@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_identity;
+package com.bitdubai.fermat_pip_api.layer.pip_identity;
 
 /**
  * Created by ciencias on 22.01.15.
