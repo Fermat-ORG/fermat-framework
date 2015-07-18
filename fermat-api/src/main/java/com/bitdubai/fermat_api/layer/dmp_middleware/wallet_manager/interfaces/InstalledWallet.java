@@ -8,8 +8,16 @@ import java.util.UUID;
  * Created by eze on 2015.07.10..
  */
 public interface InstalledWallet {
+
+    /**
+     * This me
+     * @return
+     */
+    UUID getDefaultLanguageId();
+    UUID getDefaultSkinId();
+    UUID getWalletCatalogueId();
+    String getWalletIcon();
     UUID getWalletIdInThisDevice();
     String getWalletName();
     PlatformWalletType getWalletType();
-    String getIcon();
 }

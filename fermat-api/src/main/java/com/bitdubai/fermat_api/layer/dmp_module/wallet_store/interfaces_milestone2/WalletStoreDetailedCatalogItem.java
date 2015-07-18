@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces_milestone2;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.WalletInstallationStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 
@@ -45,7 +45,7 @@ public interface WalletStoreDetailedCatalogItem {
      *
      * @return the wallet installation status
      */
-    public WalletInstallationStatus getWalletInstallationStatus();
+    public InstallationStatus getWalletInstallationStatus();
 
     /**
      * This method gives us the version of the wallet
