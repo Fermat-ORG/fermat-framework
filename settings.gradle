@@ -4,6 +4,7 @@ include ':fermat-android-core'
 
 include ':fermat-core'
 include ':fermat-api'
+include ':fermat-pip-api'
 include ':fermat-p2p-api'
 include ':fermat-cry-api'
 
@@ -352,3 +353,5 @@ project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File(
 
 include ':fermat-pip-plugin-module-developer-bitdubai'
 project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai')
+
+
