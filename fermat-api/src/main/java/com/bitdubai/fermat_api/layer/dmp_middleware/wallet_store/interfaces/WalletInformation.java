@@ -18,7 +18,7 @@ public interface WalletInformation {
      */
     public InstallationStatus getWalletInstallationStatus() throws CantGetInstallationStatusException;
 
-    public List<UUID>
+    public InstallationStatus getLanguageInstallationStatus(UUID languageId);
 
-    public List<UUID> getSkinsInstalled();
+    public InstallationStatus getSkinInstallationStatus(UUID skinId);
 }

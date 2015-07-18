@@ -24,7 +24,7 @@ public interface WalletStoreDetailedCatalogItem {
      * @param skinId the id of the skin
      * @return The skin
      */
-    public Skin getSkin(UUID skinId);
+    public WalletStoreSkin getSkin(UUID skinId);
 
     /**
      * This method finds the lost of identifiers of the skins associated to the wallet
