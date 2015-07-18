@@ -1,8 +1,7 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
-
-import org.junit.Test;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.net.URL;
@@ -20,7 +19,7 @@ public class getClassesFullPathTest {
     final String CLASS_SUFFIX = ".class";
     final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
 
-    @Test
+    @Ignore
     public void generateClassesTree() throws ClassNotFoundException {
 
         String scannedPackage = ExtraUserUserAddonRoot.class.getPackage().getName();

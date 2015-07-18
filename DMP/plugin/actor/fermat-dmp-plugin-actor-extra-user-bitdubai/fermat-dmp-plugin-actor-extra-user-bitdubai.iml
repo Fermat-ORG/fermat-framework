@@ -53,6 +53,6 @@
     <orderEntry type="library" exported="" scope="TEST" name="asm-tree-5.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="ant-launcher-1.8.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="objenesis-1.0" level="project" />
-    <orderEntry type="library" name="scala-library-2.11.1" level="project" />
+    <orderEntry type="module" module-name="fermat-pip-plugin-actor-developer-bitdubai" scope="TEST" />
   </component>
 </module>

@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 /**
  * Created by Natalia on 31/03/2015.
  */
-class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatabaseSystem {
+public class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatabaseSystem {
 
     /**
      * DealsWithErrors Interface member variables.

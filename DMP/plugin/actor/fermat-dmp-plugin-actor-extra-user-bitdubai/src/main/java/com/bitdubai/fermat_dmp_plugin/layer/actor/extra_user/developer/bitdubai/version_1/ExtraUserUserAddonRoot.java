@@ -266,6 +266,7 @@ public class ExtraUserUserAddonRoot implements Addon, DatabaseManagerForDevelope
         try
         {
             user = this.extraUserRegistry.getUser(id);
+
         }
         catch (CantGetExtraUserRegistry cantGetExtraUserRegistry){
             errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, cantGetExtraUserRegistry);
