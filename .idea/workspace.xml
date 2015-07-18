@@ -17,36 +17,24 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: com.bitdubai.fermat" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ba5a87a3-42ea-4caf-9d7e-1a856a8fd118" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-pip-api/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-pip-api/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-pip-api/fermat-pip-api.iml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_hardware/CantStartSubsystemException.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_hardware/CantStartSubsystemException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_hardware/Hardware.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_hardware/Hardware.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_hardware/HardwareSubsystem.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_hardware/HardwareSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_hardware/local_device/LocalDeviceHardwareManager.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_hardware/local_device/LocalDeviceHardwareManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_hardware/remote_device/RemoteDeviceHardwareManager.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_hardware/remote_device/RemoteDeviceHardwareManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/HardwareLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/HardwareLayer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/hardware/local_device/developer/bitdubai/version_1/LocalDeviceHardwareAddonRoot.java" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/hardware/local_device/developer/bitdubai/version_1/LocalDeviceHardwareAddonRoot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/local_device/LocalDeviceHardwareSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/local_device/LocalDeviceHardwareSubsystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/hardware/remote_device/remote_device/developer/bitdubai/version_1/RemoteDeviceHardwareAddonRoot.java" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/hardware/remote_device/remote_device/developer/bitdubai/version_1/RemoteDeviceHardwareAddonRoot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/remote_device/RemoteDeviceHardwareSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/remote_device/RemoteDeviceHardwareSubsystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/build.gradle" afterPath="$PROJECT_DIR$/fermat-api/build.gradle" />
+    <list default="true" id="ba5a87a3-42ea-4caf-9d7e-1a856a8fd118" name="Default" comment="TODOs added on WalletActivity | Compiling &amp; Running">
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_module/CantStartSubsystemException.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_module/CantStartSubsystemException.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_module/ModuleSubsystem.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_module/ModuleSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_module/developer/interfaces/DealsWithDeveloperModule.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_module/developer/interfaces/DealsWithDeveloperModule.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_module/developer/interfaces/DeveloperModuleManager.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_module/developer/interfaces/DeveloperModuleManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/module/developer/developer/bitdubai/version_1/DeveloperModulePluginRoot.java" afterPath="$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/module/developer/developer/bitdubai/version_1/DeveloperModulePluginRoot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_module/developer/DeveloperModuleSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_module/developer/DeveloperModuleSubsystem.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_module/ModuleLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_module/ModuleLayer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/build.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" afterPath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/fermat-api.iml" afterPath="$PROJECT_DIR$/fermat-api/fermat-api.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai/fermat-osa-addon-android-file-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai/fermat-osa-addon-android-file-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-sub-app-manager-bitdubai/fermat-pip-android-sub-app-sub-app-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-sub-app-manager-bitdubai/fermat-pip-android-sub-app-sub-app-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-multi-os-core/fermat-full/nbproject/project.xml" afterPath="$PROJECT_DIR$/fermat-multi-os-core/fermat-full/nbproject/project.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/fermat-pip-plugin-module-developer-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/fermat-pip-plugin-module-developer-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="fermat.iws" />
@@ -294,103 +282,46 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AppRuntimeMiddlewarePluginRoot.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/engine/app_runtime/developer/bitdubai/version_1/AppRuntimeMiddlewarePluginRoot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="522" column="45" selection-start-line="522" selection-start-column="45" selection-end-line="522" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-pip-api/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-16.5">
-              <caret line="33" column="34" selection-start-line="33" selection-start-column="34" selection-end-line="33" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.0">
-              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.29850745">
-              <caret line="12" column="38" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-pip-api/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-p2p-api/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-api/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.0">
-              <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/settings.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.0">
-              <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="WalletActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/WalletActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="279" column="16" selection-start-line="279" selection-start-column="16" selection-end-line="279" selection-end-column="16" />
+              <caret line="309" column="0" selection-start-line="309" selection-start-column="0" selection-end-line="309" selection-end-column="0" />
               <folding>
-                <element signature="e#14655#14688#0" expanded="true" />
+                <element signature="e#4942#4943#0" expanded="true" />
+                <element signature="e#4993#4994#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="13" column="33" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ApplicationSession.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="1.3778706">
+              <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SubAppActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/SubAppActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="85" column="13" selection-start-line="85" selection-start-column="13" selection-end-line="85" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -17413,7 +17344,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="114972387586698" />
+        <entry key="$PROJECT_DIR$" value="114972473872792" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -25456,8 +25387,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai.iml" />
-        <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" />
         <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" />
         <option value="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml" />
         <option value="$PROJECT_DIR$/fermat-android-core/src/main/AndroidManifest.xml" />
@@ -25500,13 +25429,15 @@
         <option value="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_factory/interfaces/WalletFactorySkin.java" />
         <option value="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_factory/interfaces/WalletFactoryProjectVersion.java" />
         <option value="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_network_service/wallet_resources/WalletResourcesManager.java" />
-        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/WalletActivity.java" />
         <option value="$PROJECT_DIR$/DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/engine/app_runtime/developer/bitdubai/version_1/AppRuntimeMiddlewarePluginRoot.java" />
         <option value="$PROJECT_DIR$/settings.gradle" />
         <option value="$PROJECT_DIR$/fermat-api/build.gradle" />
         <option value="$PROJECT_DIR$/fermat-pip-api/build.gradle" />
         <option value="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/build.gradle" />
         <option value="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/build.gradle" />
+        <option value="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_module/actor_address_book/developer/bitdubai/DeveloperBitDubai.java" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/WalletActivity.java" />
+        <option value="$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/build.gradle" />
       </list>
     </option>
   </component>
@@ -25584,22 +25515,16 @@
               <option name="myItemId" value="PIP" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
+              <option name="myItemId" value="plugin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="PIP" />
+              <option name="myItemId" value="module" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
+              <option name="myItemId" value="fermat-pip-plugin-module-developer-bitdubai" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -25617,15 +25542,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="hardware" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-pip-addon-hardware-remote-device-bitdubai" />
+              <option name="myItemId" value="plugin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -25640,18 +25557,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="PIP" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="hardware" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-pip-addon-hardware-local-device-bitdubai" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -25666,6 +25571,48 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="fermat-pip-api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-pip-api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat_pip_api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -25725,20 +25672,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="fermat-api" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -25841,6 +25774,186 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-android-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-android-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-android-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android_core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-android-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android_core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-android-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android_core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-android-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -25893,6 +26006,8 @@
           <option name="mySupportsDeletion" value="false" />
           <option name="myCanBeAbsent" value="false" />
           <option name="myId" value="UPDATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/engine/app_runtime/developer/bitdubai/version_1/AppRuntimeMiddlewarePluginRoot.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/DMP/plugin/engine/fermat-dmp-plugin-engine-wallet-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/engine/wallet_runtime/developer/bitdubai/version_1/WalletRuntimeModulePluginRoot.java</PATH>
           <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/SubAppActivity.java</PATH>
         </FILE-GROUP>
         <FILE-GROUP>
@@ -26328,7 +26443,7 @@
       <workItem from="1436436966594" duration="16635000" />
       <workItem from="1436618619505" duration="236000" />
       <workItem from="1436772659049" duration="21407000" />
-      <workItem from="1437151032457" duration="7512000" />
+      <workItem from="1437151032457" duration="13650000" />
     </task>
     <task id="LOCAL-00001" summary="remove pip folder | Compiling &amp; Running">
       <created>1435399454789</created>
@@ -26444,11 +26559,23 @@
       <option name="project" value="LOCAL" />
       <updated>1437154041208</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Fermat PIP API born | Compiling &amp; Running">
+      <created>1437212630721</created>
+      <option name="number" value="00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1437212630721</updated>
+    </task>
+    <task id="LOCAL-00021" summary="TODOs added on WalletActivity | Compiling &amp; Running">
+      <created>1437218438481</created>
+      <option name="number" value="00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1437218438481</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="146026000" />
+    <option name="totallyTimeSpent" value="152164000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -26476,15 +26603,15 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.209375" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3681592" sideWeight="0.50621116" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20833333" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.340625" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.421875" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.46979168" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946378" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31122166" sideWeight="0.4937888" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23935877" sideWeight="0.4937888" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17916666" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
@@ -26529,7 +26656,9 @@
     <MESSAGE value="Fix #432 - Change Wakket Runtime to another layer | Compiling &amp; Running" />
     <MESSAGE value="Wallet Factory Interfaces Changes | Compiling" />
     <MESSAGE value="Fixed Deform IMLs | Compiling &amp; Running" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Deform IMLs | Compiling &amp; Running" />
+    <MESSAGE value="Fermat PIP API born | Compiling &amp; Running" />
+    <MESSAGE value="TODOs added on WalletActivity | Compiling &amp; Running" />
+    <option name="LAST_COMMIT_MESSAGE" value="TODOs added on WalletActivity | Compiling &amp; Running" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -26540,51 +26669,10 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/AndroidOsFileSystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1494024">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/WalletStoreNetworkServicePluginRoot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.4678899">
-          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-documentation/book.asciidoc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-      <provider editor-type-id="AsciiDocPreviewEditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-documentation/milestones/milestone2/plugins/WalletStore.asciidoc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-      <provider editor-type-id="AsciiDocPreviewEditor">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="378" column="31" selection-start-line="378" selection-start-column="31" selection-end-line="378" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/SubAppActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="49" selection-start-line="61" selection-start-column="49" selection-end-line="61" selection-end-column="49" />
         </state>
       </provider>
     </entry>
@@ -26854,60 +26942,10 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/WalletActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="279" column="16" selection-start-line="279" selection-start-column="16" selection-end-line="279" selection-end-column="16" />
-          <folding>
-            <element signature="e#14655#14688#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/engine/app_runtime/developer/bitdubai/version_1/AppRuntimeMiddlewarePluginRoot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="522" column="45" selection-start-line="522" selection-start-column="45" selection-end-line="522" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.0">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-api/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.0">
-          <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fermat-pip-api/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-p2p-api/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-pip-api/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.5">
-          <caret line="33" column="34" selection-start-line="33" selection-start-column="34" selection-end-line="33" selection-end-column="34" />
           <folding />
         </state>
       </provider>
@@ -26930,8 +26968,116 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29850745">
+        <state vertical-scroll-proportion="0.24691358">
           <caret line="12" column="38" selection-start-line="12" selection-start-column="38" selection-end-line="12" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-pip-api/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.67901236">
+          <caret line="33" column="34" selection-start-line="33" selection-start-column="34" selection-end-line="33" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/engine/app_runtime/developer/bitdubai/version_1/AppRuntimeMiddlewarePluginRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.88340193">
+          <caret line="524" column="45" selection-start-line="524" selection-start-column="45" selection-end-line="524" selection-end-column="45" />
+          <folding>
+            <element signature="e#3891#3902#0" expanded="false" />
+            <element signature="e#3955#3972#0" expanded="false" />
+            <element signature="e#4034#4056#0" expanded="false" />
+            <element signature="e#4116#4137#0" expanded="false" />
+            <element signature="e#7197#7198#0" expanded="false" />
+            <element signature="e#7238#7239#0" expanded="false" />
+            <element signature="e#10561#10562#0" expanded="false" />
+            <element signature="e#10617#10618#0" expanded="false" />
+            <element signature="e#10759#10760#0" expanded="false" />
+            <element signature="e#10807#10808#0" expanded="false" />
+            <element signature="e#11126#11127#0" expanded="false" />
+            <element signature="e#11166#11167#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-p2p-api/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4526749">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-api/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.24691358">
+          <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.16460906">
+          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_module/actor_address_book/developer/bitdubai/DeveloperBitDubai.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4526749">
+          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/SubAppActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="85" column="13" selection-start-line="85" selection-start-column="13" selection-end-line="85" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="13" column="33" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/WalletActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="309" column="0" selection-start-line="309" selection-start-column="0" selection-end-line="309" selection-end-column="0" />
+          <folding>
+            <element signature="e#4942#4943#0" expanded="true" />
+            <element signature="e#4993#4994#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.3778706">
+          <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
           <folding />
         </state>
       </provider>

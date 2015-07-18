@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_module;
+package com.bitdubai.fermat_pip_api.layer.pip_module;
 
 import com.bitdubai.fermat_api.Plugin;
 

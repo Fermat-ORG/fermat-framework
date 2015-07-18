@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_api.layer.pip_module.developer.interfaces;
+package com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule</code>
+ * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule</code>
  * indicates that the plugin needs the functionality of a DeveloperIdentityManager
  * <p/>
  *

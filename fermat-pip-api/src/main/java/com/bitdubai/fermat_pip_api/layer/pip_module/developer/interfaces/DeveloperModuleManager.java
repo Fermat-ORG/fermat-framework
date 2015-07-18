@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_api.layer.pip_module.developer.interfaces;
+package com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.pip_module.developer.interfaces.DeveloperModuleManager</code>
+ * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DeveloperModuleManager</code>
  * indicates the functionality of a DeveloperModuleManager
  * <p/>
  *
