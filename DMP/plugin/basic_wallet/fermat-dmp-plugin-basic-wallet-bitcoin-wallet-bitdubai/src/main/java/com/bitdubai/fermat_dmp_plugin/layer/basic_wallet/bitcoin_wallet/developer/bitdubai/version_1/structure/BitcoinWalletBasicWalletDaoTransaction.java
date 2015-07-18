@@ -18,13 +18,6 @@ public class BitcoinWalletBasicWalletDaoTransaction {
      */
     private Database database;
 
-    private DatabaseTable transactionTable;
-    private DatabaseTableRecord transactionRecord;
-
-    private DatabaseTable updateTable;
-    private DatabaseTableRecord updateRecord;
-
-
     /**
      * Constructor
      */

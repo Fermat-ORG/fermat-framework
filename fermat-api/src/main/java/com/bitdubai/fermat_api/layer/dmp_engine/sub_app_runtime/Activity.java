@@ -31,6 +31,6 @@ public interface Activity {
 
     public TabStrip getTabStrip() ;
 
-    public String getStatusBarColor();
+    public StatusBar getStatusBar();
 
 }

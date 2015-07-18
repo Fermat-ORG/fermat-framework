@@ -6,7 +6,7 @@ apply plugin: 'pmd'
 apply plugin: 'eclipse'
 
 
-group = "com.bitdubai.fermat.pip"
+group = "com.bitdubai.fermat.api"
 sourceCompatibility = 1.7
 version = '2.0.1'
 
@@ -16,7 +16,7 @@ configurations {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'fermat-pip-api',
+        attributes 'Implementation-Title': 'fermat-api',
                    'Implementation-Version': '2.0.1'
     }
 }

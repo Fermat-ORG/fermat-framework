@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -34,18 +35,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+
 /**
  * Created by eze on 2015.06.23..
  */
 public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithErrors, DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem {
+
+    private static final String WALLET_IDS_FILE_NAME = "walletsIds";
 
     /**
      * BitcoinWalletBasicWallet member variables.
      */
     private Database database;
     //private UUID internalWalletId;
-
-    private final String WALLET_IDS_FILE_NAME = "walletsIds";
 
     private Map<UUID, UUID> walletIds =  new HashMap<>();
 
@@ -101,6 +104,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             throw new CantInitializeBitcoinWalletBasicException("Database does not exists",databaseNotFoundException,"WalletId: " + walletId.toString(),"");
         } catch (Exception exception){
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(exception));
             throw new CantInitializeBitcoinWalletBasicException(CantInitializeBitcoinWalletBasicException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
@@ -179,12 +183,12 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
 
     @Override
     public BitcoinWalletBalance getAvailableBalance() {
-        return new BitcoinWalletBasicWalletAvailableBalance(this.errorManager,this.pluginDatabaseSystem, this.database);
+        return new BitcoinWalletBasicWalletAvailableBalance(database);
     }
 
     @Override
     public BitcoinWalletBalance getBookBalance() {
-        return new BitcoinWalletBasicWalletBookBalance(this.errorManager, this.pluginDatabaseSystem, this.database);
+        return new BitcoinWalletBasicWalletBookBalance(database);
     }
 
     /**

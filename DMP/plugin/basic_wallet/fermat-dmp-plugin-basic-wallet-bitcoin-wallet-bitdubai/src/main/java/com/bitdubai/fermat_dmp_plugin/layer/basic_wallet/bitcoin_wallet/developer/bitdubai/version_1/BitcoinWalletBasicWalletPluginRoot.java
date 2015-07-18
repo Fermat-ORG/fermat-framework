@@ -51,7 +51,7 @@ import java.util.UUID;
  */
 public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,DatabaseManagerForDevelopers,DealsWithErrors,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Service, Plugin {
 
-    private final String WALLET_IDS_FILE_NAME = "walletsIds";
+    private static final String WALLET_IDS_FILE_NAME = "walletsIds";
     private Map<UUID, UUID> walletIds =  new HashMap<>();
 
 

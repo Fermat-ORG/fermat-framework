@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_hardware;
+package com.bitdubai.fermat_pip_api.layer.pip_hardware;
 
 import com.bitdubai.fermat_api.Addon;
 
