@@ -20,4 +20,3 @@ public interface WalletManager {
     
     public void enableWallet() throws CantEnableWalletException;
 }
-
