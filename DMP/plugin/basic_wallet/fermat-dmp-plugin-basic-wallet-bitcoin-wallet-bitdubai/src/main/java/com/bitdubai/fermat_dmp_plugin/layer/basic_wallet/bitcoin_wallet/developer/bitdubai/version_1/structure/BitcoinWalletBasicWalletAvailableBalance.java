@@ -26,23 +26,13 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
     private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
 
     /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
 
     /**
      * Constructor.
      */
-    public BitcoinWalletBasicWalletAvailableBalance(ErrorManager errorManager,PluginDatabaseSystem pluginDatabaseSystem,Database database){
-
-        this.errorManager = errorManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    public BitcoinWalletBasicWalletAvailableBalance(final Database database){
         this.database = database;
     }
     @Override

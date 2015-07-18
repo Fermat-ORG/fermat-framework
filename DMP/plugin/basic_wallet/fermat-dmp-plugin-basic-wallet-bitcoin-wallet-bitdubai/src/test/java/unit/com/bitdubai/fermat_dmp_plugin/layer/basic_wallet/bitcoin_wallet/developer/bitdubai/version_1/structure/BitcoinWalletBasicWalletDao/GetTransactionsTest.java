@@ -33,7 +33,7 @@ import static com.googlecode.catchexception.CatchException.*;
  * Created by jorgegonzalez on 2015.07.14..
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetTransactions {
+public class GetTransactionsTest {
 
     @Mock
     private Database mockDatabase;
@@ -82,6 +82,15 @@ public class GetTransactions {
     @Test
     public void GetTransactions_LoadTableCantLoadTableToMemoryException_ThrowsCantGetTransactionsException() throws Exception{
         doThrow(new CantLoadTableToMemoryException("MOCK", null, null, null)).when(mockTable).loadToMemory();
+        catchException(testWalletDao).getTransactions(1, 0);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantGetTransactionsException.class);
+    }
+
+    @Test
+    public void GetTransactions_GeneralException_ThrowsCantGetTransactionsException() throws Exception{
+        when(mockDatabase.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME)).thenReturn(null);
         catchException(testWalletDao).getTransactions(1, 0);
         assertThat(caughtException())
                 .isNotNull()

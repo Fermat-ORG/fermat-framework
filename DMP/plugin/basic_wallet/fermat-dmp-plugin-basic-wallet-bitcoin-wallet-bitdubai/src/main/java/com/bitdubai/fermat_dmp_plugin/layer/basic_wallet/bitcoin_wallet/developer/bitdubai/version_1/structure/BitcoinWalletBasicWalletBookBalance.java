@@ -26,22 +26,9 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
     private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
 
     /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
      * Constructor.
      */
-    public BitcoinWalletBasicWalletBookBalance(ErrorManager errorManager,PluginDatabaseSystem pluginDatabaseSystem,Database database){
-
-        this.errorManager = errorManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    public BitcoinWalletBasicWalletBookBalance(final Database database){
         this.database = database;
     }
 

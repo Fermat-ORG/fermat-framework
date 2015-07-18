@@ -86,4 +86,13 @@ public class GetBookBalanceTest {
                 .isInstanceOf(CantCalculateBalanceException.class);
     }
 
+    @Test
+    public void GetBookBalance_GeneralException_ThrowsCantCalculateBalanceException() throws Exception{
+        when(mockDatabase.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME)).thenReturn(null);
+        catchException(testWalletDao).getBookBalance();
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCalculateBalanceException.class);
+    }
+
 }

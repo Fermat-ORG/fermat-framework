@@ -40,10 +40,6 @@ import static org.mockito.Mockito.when;
 public class CreditTest {
 
     @Mock
-    private ErrorManager mockErrorManager;
-    @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
-    @Mock
     private Database mockDatabase;
     @Mock
     private DatabaseTable mockWalletTable;
@@ -82,7 +78,7 @@ public class CreditTest {
 
     @Before
     public void setUpAvailableBalance(){
-        testBalance = new BitcoinWalletBasicWalletBookBalance(mockErrorManager, mockPluginDatabaseSystem, mockDatabase);
+        testBalance = new BitcoinWalletBasicWalletBookBalance(mockDatabase);
     }
 
     @Test
@@ -114,6 +110,16 @@ public class CreditTest {
     @Test
     public void Credit_DaoCantCalculateBalanceException_ReturnsAvailableBalance() throws Exception{
         doThrow(new CantLoadTableToMemoryException("MOCK", null, null, null)).when(mockWalletTable).loadToMemory();
+
+        catchException(testBalance).credit(mockTransactionRecord);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantRegisterCreditException.class);
+    }
+
+    @Test
+    public void Credit_GeneralException_ReturnsAvailableBalance() throws Exception{
+        when(mockBalanceTable.getRecords()).thenReturn(null);
 
         catchException(testBalance).credit(mockTransactionRecord);
         assertThat(caughtException())

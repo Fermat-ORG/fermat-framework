@@ -158,4 +158,17 @@ public class CreateDatabaseTest {
                 .isNotNull()
                 .isInstanceOf(CantCreateDatabaseException.class);
     }
+
+    @Test
+    public void CreateDatabase_GeneralExceptionThrown_ThrowsCantCreateDatabaseException() throws Exception{
+        when(mockDatabase.getDatabaseFactory()).thenReturn(null);
+        testDatabaseFactory = new BitcoinWalletDatabaseFactory();
+        testDatabaseFactory.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+
+        catchException(testDatabaseFactory).createDatabase(testOwnerId, testWalletId);
+
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCreateDatabaseException.class);
+    }
 }

@@ -40,13 +40,7 @@ import static org.mockito.Mockito.when;
 public class DebitTest {
 
     @Mock
-    private ErrorManager mockErrorManager;
-    @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
-    @Mock
     private Database mockDatabase;
-
-
     @Mock
     private DatabaseTable mockWalletTable;
     @Mock
@@ -84,7 +78,7 @@ public class DebitTest {
 
     @Before
     public void setUpAvailableBalance(){
-        testBalance = new BitcoinWalletBasicWalletAvailableBalance(mockErrorManager, mockPluginDatabaseSystem, mockDatabase);
+        testBalance = new BitcoinWalletBasicWalletAvailableBalance(mockDatabase);
     }
 
     @Test
@@ -122,5 +116,16 @@ public class DebitTest {
                 .isNotNull()
                 .isInstanceOf(CantRegisterDebitException.class);
     }
+
+    @Test
+    public void Debit_GeneralException_ReturnsAvailableBalance() throws Exception{
+        when(mockBalanceTable.getRecords()).thenReturn(null);
+
+        catchException(testBalance).debit(mockTransactionRecord);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantRegisterDebitException.class);
+    }
+
 
 }
