@@ -420,7 +420,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeActivity.setColor("#72af9c");
             //runtimeActivity.setColor("#d07b62");
 
-            runtimeActivity.setStatusBarColor("#72af9c");
+
+
+            //runtimeActivity.set("#72af9c");
 
 
             runtimeTabStrip = new TabStrip();

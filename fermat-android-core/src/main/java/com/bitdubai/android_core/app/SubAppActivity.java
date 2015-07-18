@@ -236,9 +236,9 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             this.abTitle = (TextView) findViewById(titleId);
 
 
-            String status_color = activity.getStatusBarColor();
-            if (activity.getStatusBarColor() != null) {
-                setStatusBarColor(this.activity.getStatusBarColor());
+            String status_color = activity.getStatusBar().getColor();
+            if (status_color != null) {
+                setStatusBarColor(status_color);
 
             }
 

@@ -416,7 +416,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
             runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#d07b62");
+            //runtimeActivity.setStatusBarColor("#d07b62");
             runtimeSubApp.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
 
@@ -550,7 +550,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
             runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#b46a54");
+            //runtimeActivity.setStatusBarColor("#b46a54");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Factory");
@@ -589,7 +589,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_PUBLISHER_MAIN);
             runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#b46a54");
+            //runtimeActivity.setStatusBarColor("#b46a54");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Publisher");
@@ -761,7 +761,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
 
             runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#b46a54");
+            //runtimeActivity.setStatusBarColor("#b46a54");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Store");
