@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
@@ -381,6 +382,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         MainMenu runtimeMainMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
+        StatusBar statusBar;
 
         Tab runtimeTab;
         runtimeApp = new RuntimeApp();
@@ -761,7 +763,10 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
 
             runtimeActivity.setColor("#b46a54");
-            //runtimeActivity.setStatusBarColor("#b46a54");
+
+            statusBar=new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+
+            statusBar.setColor("#b46a54");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Store");

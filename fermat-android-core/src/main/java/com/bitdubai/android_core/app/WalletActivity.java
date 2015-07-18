@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
@@ -64,7 +65,6 @@ public class WalletActivity extends FragmentActivity{
             loadUI();
 
         } catch (Exception e) {
-            //System.err.println("CantStartPlatformException: " + e.getMessage());
             ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error Load RuntimeApp - " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -239,7 +239,7 @@ public class WalletActivity extends FragmentActivity{
             /**
              * Paint statusBar
              */
-            setStatusBarColor(activity.getStatusBar().getColor());
+            setStatusBarColor(activity.getStatusBar());
 
             /**
              * Set activities properties
@@ -364,28 +364,29 @@ public class WalletActivity extends FragmentActivity{
 
     /**
      * Method to set status bar color in different version of android
-     * @param color
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(String color){
-        if(color!=null) {
-            if (Build.VERSION.SDK_INT > 20) {
-                try {
+    private void setStatusBarColor(StatusBar statusBar){
+        if(statusBar!=null) {
+            if (statusBar.getColor() != null) {
+                if (Build.VERSION.SDK_INT > 20) {
+                    try {
 
-                    Window window = this.getWindow();
+                        Window window = this.getWindow();
 
-                    // clear FLAG_TRANSLUCENT_STATUS flag:
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        // clear FLAG_TRANSLUCENT_STATUS flag:
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-                    // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-                    // finally change the color
-                    Color color_status = new Color();
-                    window.setStatusBarColor(color_status.parseColor(color));
-                } catch (Exception e) {
-                    ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
-                    Log.d("WalletActivity", "Sdk version not compatible with status bar color");
+                        // finally change the color
+                        Color color_status = new Color();
+                        window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
+                    } catch (Exception e) {
+                        ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                        Log.d("WalletActivity", "Sdk version not compatible with status bar color");
+                    }
                 }
             }
         }

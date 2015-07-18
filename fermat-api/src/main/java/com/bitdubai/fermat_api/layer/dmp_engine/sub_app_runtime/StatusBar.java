@@ -7,7 +7,7 @@ public interface StatusBar {
 
     public String getColor();
 
-    public boolean getVisible() ;
+    public boolean isVisible() ;
 
     public void setColor(String color);
 
