@@ -25,7 +25,6 @@ import com.bitdubai.android_core.app.common.version_1.navigation_drawer.Navigati
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
@@ -66,7 +65,7 @@ public class WalletActivity extends FragmentActivity{
 
         } catch (Exception e) {
             ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Error Load RuntimeApp - " + e.getMessage(),
+            Toast.makeText(getApplicationContext(), "Error loading the UI - " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -82,19 +81,9 @@ public class WalletActivity extends FragmentActivity{
         try {
             MenuInflater inflater = getMenuInflater();
 
-
-            switch ( ApplicationSession.getwalletRuntime().getLasActivity().getType()) {
-
-
-                case CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN:
-                    inflater.inflate(R.menu.app_activity_main_empty_menu, menu);
-
-                    break;
-                case CWP_WALLET_STORE_MAIN:
-                    break;
-
-
-            }
+            /**
+             *  Our future code goes here...
+             */
 
         }
         catch (Exception e) {
@@ -123,15 +112,9 @@ public class WalletActivity extends FragmentActivity{
 
             int id = item.getItemId();
 
-            //noinspection SimplifiableIfStatement
-            if (id == R.id.action_settings) {
-                return true;
-            }
-
-
-            if (id == R.id.action_file) {
-                return true;
-            }
+            /**
+             *  Our future code goes here...
+             */
 
 
         }
@@ -176,9 +159,9 @@ public class WalletActivity extends FragmentActivity{
 
         if (ApplicationSession.getwalletRuntime().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
-            cleanWindows();
+            resetThisActivity();
 
-            Intent intent = new Intent(this, SubAppActivity.class);
+            Intent intent = new Intent(this, SubAppActivity.class); // TODO : (LUIS) no puede irse a una sub app
 
             startActivity(intent);
         }else{
@@ -190,14 +173,14 @@ public class WalletActivity extends FragmentActivity{
 
 
     /**
-     * Method who load the screen from walletRuntime
+     * Method that loads the UI
      */
     private void loadUI() {
 
         try
         {
             /**
-             * Get current activity to execute
+             * Get current activity to paint
              */
             Activity activity =  ApplicationSession.getwalletRuntime().getLasActivity();
             /**
@@ -215,20 +198,20 @@ public class WalletActivity extends FragmentActivity{
             /**
              * Get mainMenu to paint
              */
-            MainMenu mainMenumenu= activity.getMainMenu();
+            MainMenu mainMenu= activity.getMainMenu();
             /**
              * Get NavigationDrawer to paint
              */
-            SideMenu sidemenu = activity.getSideMenu();
+            SideMenu sideMenu = activity.getSideMenu();
             /**
              * Get the title
              */
-            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android")); // TODO (Luis) esto debe ir dentro del TitleBar
 
             /**
              * Pick the layout
              */
-            setView(sidemenu);
+            setMainLayout(sideMenu);
 
             /**
              * Paint tabs in layout
@@ -239,18 +222,18 @@ public class WalletActivity extends FragmentActivity{
             /**
              * Paint statusBar
              */
-            setStatusBarColor(activity.getStatusBar());
+            paintStatusBar(activity.getStatusBar());
 
             /**
              * Set activities properties
              */
-            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), null, getActionBar(), titleBar, abTitle, "Titulo");
+            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), null, getActionBar(), titleBar, abTitle, "Titulo"); // TODO dividirlo en los paints que tenemos, si algo no encaja ver si hace falta otro paint.
 
             /**
              * Paint a simgle fragment
              */
             if(tabs == null && fragments.size() > 1){
-                Toast.makeText(getApplicationContext(),"Error unico fragmento",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Error unico fragmento",Toast.LENGTH_SHORT).show(); // TODO Arreglar esta vaina.
                 Log.e(getClass().getSimpleName(),"wallets con un fragmento no pensadas");
 
             }else{
@@ -302,7 +285,7 @@ public class WalletActivity extends FragmentActivity{
      *
      * @param sidemenu
      */
-    private void setView(SideMenu sidemenu){
+    private void setMainLayout(SideMenu sidemenu){
         if(sidemenu != null){
             setContentView(R.layout.runtime_app_wallet_runtime_navigator);
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -366,7 +349,7 @@ public class WalletActivity extends FragmentActivity{
      * Method to set status bar color in different version of android
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(StatusBar statusBar){
+    private void paintStatusBar(StatusBar statusBar){
         if(statusBar!=null) {
             if (statusBar.getColor() != null) {
                 if (Build.VERSION.SDK_INT > 20) {
@@ -396,7 +379,7 @@ public class WalletActivity extends FragmentActivity{
      *  Method used to clean the screen
      */
 
-    private void cleanWindows()
+    private void resetThisActivity()
     {
         try
         {
