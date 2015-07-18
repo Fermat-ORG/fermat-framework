@@ -418,7 +418,12 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
             runtimeActivity.setColor("#b46a54");
-            //runtimeActivity.setStatusBarColor("#d07b62");
+            //runtimeActivity.setStatusBarColor();
+
+            statusBar= new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#d07b62");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeSubApp.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
 
@@ -552,7 +557,10 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
             runtimeActivity.setColor("#b46a54");
-            //runtimeActivity.setStatusBarColor("#b46a54");
+            //runtimeActivity.setStatusBarColor("");
+
+            statusBar= new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#b46a54");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Factory");
