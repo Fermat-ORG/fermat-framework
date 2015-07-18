@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
@@ -297,6 +298,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             MainMenu runtimeMainMenu;
             MenuItem runtimeMenuItem;
             TabStrip runtimeTabStrip;
+            StatusBar runtimeStatusBar;
 
             Tab runtimeTab;
 
@@ -409,16 +411,20 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+            runtimeActivity.setColor("#8bba9e");
             runtimeWallet.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN, runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
+
             runtimeActivity.setTitleBar(runtimeTitleBar);
             runtimeActivity.setColor("#72af9c");
             //runtimeActivity.setColor("#d07b62");
 
-            runtimeActivity.setStatusBarColor("#72af9c");
+
+            runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            runtimeStatusBar.setColor("#72af9c");
 
 
             runtimeTabStrip = new TabStrip();
