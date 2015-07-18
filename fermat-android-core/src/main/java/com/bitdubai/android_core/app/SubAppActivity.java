@@ -236,11 +236,11 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             this.abTitle = (TextView) findViewById(titleId);
 
 
-            String status_color = activity.getStatusBar().getColor();
-            if (status_color != null) {
-                setStatusBarColor(status_color);
+            //String status_color = activity.getStatusBar().getColor();
+            //if (status_color != null) {
+            //    setStatusBarColor(status_color);
 
-            }
+//            }
 
             if (activity.getTabStrip() != null)
             {
@@ -296,6 +296,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
            // ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Error in NavigateActivity " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
