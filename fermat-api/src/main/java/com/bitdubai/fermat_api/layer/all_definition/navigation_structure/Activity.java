@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 
@@ -20,7 +21,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.dmp_engine.sub_ap
     MainMenu mainMenu;
     TabStrip tabStrip;
     String color;
-    String statusBarColor;
+    StatusBar statusBar;
 
     /**
      * Activity class implementation.
@@ -57,9 +58,9 @@ public class Activity implements com.bitdubai.fermat_api.layer.dmp_engine.sub_ap
     public void setTabStrip(TabStrip tabStrip) {
         this.tabStrip = tabStrip;
     }
-
-    public void setStatusBarColor(String color){this.statusBarColor=color;}
-
+    public void setStatusBar(StatusBar statusBar){
+        this.statusBar=statusBar;
+    }
     /**
      * Activity  interface implementation.
      */
@@ -92,9 +93,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.dmp_engine.sub_ap
     public TabStrip getTabStrip() {
         return tabStrip;
     }
-
     @Override
-    public String getStatusBarColor() {
-        return statusBarColor;
+    public StatusBar getStatusBar() {
+        return statusBar;
     }
 }

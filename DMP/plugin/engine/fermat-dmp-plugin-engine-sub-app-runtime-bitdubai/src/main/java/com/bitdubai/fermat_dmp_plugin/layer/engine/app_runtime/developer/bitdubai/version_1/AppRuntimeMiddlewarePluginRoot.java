@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
@@ -381,6 +382,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         MainMenu runtimeMainMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
+        StatusBar statusBar;
 
         Tab runtimeTab;
         runtimeApp = new RuntimeApp();
@@ -416,7 +418,12 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
             runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#d07b62");
+            //runtimeActivity.setStatusBarColor();
+
+            statusBar= new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#d07b62");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeSubApp.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
 
@@ -520,10 +527,22 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS, runtimeFragment);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
             runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
             runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS,runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+            runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+            runtimeActivity.addFragment(runtimeFragment);
             listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS,runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS);
+            runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+            runtimeActivity.addFragment(runtimeFragment);
+            listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS,runtimeFragment);
 
             /**
              * End of Developer tabs.
@@ -538,7 +557,10 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
             runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#b46a54");
+            //runtimeActivity.setStatusBarColor("");
+
+            statusBar= new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#b46a54");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Factory");
@@ -577,7 +599,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_PUBLISHER_MAIN);
             runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#b46a54");
+            //runtimeActivity.setStatusBarColor("#b46a54");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Publisher");
@@ -749,7 +771,10 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
 
             runtimeActivity.setColor("#b46a54");
-            runtimeActivity.setStatusBarColor("#b46a54");
+
+            statusBar=new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+
+            statusBar.setColor("#b46a54");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Store");
