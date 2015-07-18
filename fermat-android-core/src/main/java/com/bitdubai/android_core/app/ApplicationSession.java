@@ -143,122 +143,13 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
         super();
 
         fermatPlatform = new Platform();
+        //Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
+        //setDefaultTypeface(tf);
 
 
     }
 
 
-
-
-// TODO: De nuevo este método pretende modificar las propiedades de la Actividad que esta corriendo. Lo que hay que hacer es crear el objeto AndroidActivity con estas propiedades y luego poder setear una a una de acuerdo a lo que haya configurado en el plugin walletruntime y appruntime.
-
-
-    public static void setActivityProperties(Activity activity, Window window,Resources context,PagerSlidingTabStrip tabStrip,ActionBar actionBar,TitleBar titleBar,TextView abTitle, CharSequence Title)
-    {
-        try
-        {
-
-            Typeface tf = Typeface.createFromAsset(activity.getAssets(), "fonts/CaviarDreams.ttf");
-            setDefaultTypeface(tf);
-
-            if(titleBar !=null){
-
-                Title = titleBar.getLabel();
-
-                if(abTitle !=null) {
-                    abTitle.setTextColor(Color.WHITE);
-                    abTitle.setTypeface(ApplicationSession.getDefaultTypeface());
-                }
-                actionBar.setTitle(Title);
-                actionBar.show();
-                setActionBarProperties(activity,window,tabStrip, actionBar,context,abTitle, Title.toString());
-                if (tabStrip != null){
-
-                    tabStrip.setTypeface(tf,1 );
-                    //MATI
-                    //TODO ACÁ SE LE ESTÁ SETEANDO EL WALPAPER ESE A TODOS LADOS CUANDO NO DEBERIA, DEBERIA SEGUIR LO QUE VIENE DEL MIDDLEWARE.
-                    // AHORA LO CAMBIÉ TODO PARA QUE SIGA EL MIDDLEWARE.
-                    //tabStrip.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-                    tabStrip.setDividerColor(Color.TRANSPARENT);
-
-                }
-
-
-            /*if (walletId == 2 || walletId == 1){
-                getActionBar().setDisplayHomeAsUpEnabled(false);
-                DrawerLayout draw = (DrawerLayout) findViewById(R.id.drawer_layout);
-                draw.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            }else
-            {
-                actionBar.setDisplayShowTitleEnabled(true);
-            }*/
-            }
-            else
-            {
-                actionBar.hide();
-            }
-
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-
-
-
-    }
-
-
-
-    // TODO: Mover esto a una clase AndroidActionBar a la cual se le pueda setear las propiedades tomadas directamente del AppRuntime o Wallet Runtime.
-
-    /**
-     * This method is used to change the properties of the action bar.
-     *
-     * -- Luis.
-     */
-
-
-    public static void setActionBarProperties(Activity activity, Window window,  PagerSlidingTabStrip pTabs, ActionBar pActionBar, Resources context,  TextView abTitle, String pTitle) {
-
-        try {
-            actionBar = pActionBar;
-            tabs = pTabs;
-            // Change the title of the action bar and the typeface
-            SpannableString s = new SpannableString("");
-            //String color = "#F0E173";
-            String color ="";
-            mTitle = pTitle;
-
-
-            // actionBar
-            Drawable bg = context.getDrawable(R.drawable.transparent);
-            bg.setVisible(false, false);
-            Drawable wallpaper = context.getDrawable(R.drawable.transparent);
-            //title
-            s = new SpannableString(mTitle);
-
-
-            s.setSpan(new MyTypefaceSpan(activity, "CaviarDreams.ttf"), 0, s.length(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            // Update the action bar title with the TypefaceSpan instance
-            actionBar.setTitle(s);
-
-            // TODO: Comentado porque hay que sacar este switch de acá,
-            // TODO: Toda está funcion deberia hacerse sin setear nada, si no solo leer de lo que me trae el middleware
-            //if(pTabs!=null) changeColor(Color.parseColor(color), context);
-
-            window.getDecorView().setBackground(wallpaper);
-            if (bg.isVisible() == true) {actionBar.setBackgroundDrawable(bg);}
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-
-
-    }
 
 
     // TODO: Mover este metodo a un lugar mas apropiado. No debería estar en esta clase que representa la Sesión de toda la APP
@@ -273,30 +164,26 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
 
 
     // acá se cambia el color del actionBar
-    public static void changeColor(int newColor, Resources context) {
+    public static void changeColor(int newColor, Resources context,ActionBar actionBar) {
 
         try
         {
-
-            /*if(tabs != null)
-                tabs.setIndicatorColor(newColor);
-            */
             // change ActionBar color just if an ActionBar is available
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
                 Drawable colorDrawable = new ColorDrawable(newColor);
                 Drawable bottomDrawable = context.getDrawable(R.drawable.actionbar_bottom);
-                LayerDrawable ld = new LayerDrawable(new Drawable[] { colorDrawable, bottomDrawable });
+                LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
 
-                if (oldBackground == null) {
+                //if (oldBackground == null) {
 
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        ld.setCallback(drawableCallback);
-                    } else {
-                        actionBar.setBackgroundDrawable(ld);
-                    }
-
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    ld.setCallback(drawableCallback);
                 } else {
+                    actionBar.setBackgroundDrawable(ld);
+                }
+
+                /*} else {
 
                     TransitionDrawable td = new TransitionDrawable(new Drawable[] { oldBackground, ld });
 
@@ -309,23 +196,24 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                         actionBar.setBackgroundDrawable(td);
                     }
                     td.startTransition(200);
-                }
+                }*/
 
-                oldBackground = ld;
+                //oldBackground = ld;
 
                 // http://stackoverflow.com/questions/11002691/actionbar-setbackgrounddrawable-nulling-background-from-thread-handler
-                actionBar.setDisplayShowTitleEnabled(false);
-                actionBar.setDisplayShowTitleEnabled(true);
+                //actionBar.setDisplayShowTitleEnabled(false);
+                //actionBar.setDisplayShowTitleEnabled(true);
 
-            }
+                //}
+            //}
 
-            currentColor = newColor;
+            //currentColor = newColor;
         }
         catch (Exception e)
         {
             // TODO: Si ocurre un error intentando setear el color se debe reportar en el error manager pero no propagar la excepcion porque no es critico. Las actividades debieran tener un colorpor defecto para que si falla la asignacion quede el color por defecto.
 
-            throw e;
+             e.printStackTrace();
         }
 
 

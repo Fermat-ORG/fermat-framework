@@ -261,7 +261,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 tabStrip.setTypeface(tf,1 );
             }
 
-            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
+            //ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
 
 
@@ -286,7 +286,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                 String color = activity.getColor();
                 if (color != null)
-                    ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
+                    ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources(),getActionBar());
 
             }
         } catch (Exception e) {

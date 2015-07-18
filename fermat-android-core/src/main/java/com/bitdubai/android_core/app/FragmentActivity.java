@@ -154,7 +154,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
         this.abTitle = (TextView) findViewById(titleId);
 
-        ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
+        //ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
     }
 
