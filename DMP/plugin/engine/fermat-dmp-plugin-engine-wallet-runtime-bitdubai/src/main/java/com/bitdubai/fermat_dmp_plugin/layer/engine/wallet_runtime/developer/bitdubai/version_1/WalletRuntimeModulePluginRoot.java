@@ -426,6 +426,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
             runtimeStatusBar.setColor("#72af9c");
 
+            runtimeActivity.setStatusBar(runtimeStatusBar);
+
 
             runtimeTabStrip = new TabStrip();
 
