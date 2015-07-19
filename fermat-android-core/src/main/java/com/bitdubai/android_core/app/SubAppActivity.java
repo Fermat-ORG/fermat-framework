@@ -694,7 +694,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
 
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
-
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
                         break;
@@ -704,6 +704,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         //ApplicationSession.setWalletId(4);
                         ApplicationSession.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         break;
                     //wallet factory
@@ -712,6 +713,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
 
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
                         break;
@@ -721,6 +723,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                         ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
                         break;
@@ -728,6 +731,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     case CWP_WALLET_RUNTIME_STORE_MAIN:
                         ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 
                         break;
