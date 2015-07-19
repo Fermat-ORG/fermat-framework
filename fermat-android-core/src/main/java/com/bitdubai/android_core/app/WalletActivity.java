@@ -70,7 +70,7 @@ public class WalletActivity extends FragmentActivity{
             loadUI();
 
         } catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error loading the UI - " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -93,7 +93,7 @@ public class WalletActivity extends FragmentActivity{
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error in create optionMenu " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -125,7 +125,7 @@ public class WalletActivity extends FragmentActivity{
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
 
             Toast.makeText(getApplicationContext(), "Error in OptionsItemSelected " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -163,7 +163,7 @@ public class WalletActivity extends FragmentActivity{
     public void onBackPressed() {
 
 
-        if (ApplicationSession.getwalletRuntime().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        if (ApplicationSession.walletRuntimeMiddleware.getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 
@@ -188,7 +188,7 @@ public class WalletActivity extends FragmentActivity{
             /**
              * Get current activity to paint
              */
-            Activity activity =  ApplicationSession.getwalletRuntime().getLasActivity();
+            Activity activity =  ApplicationSession.walletRuntimeMiddleware.getLasActivity();
             /**
              * Get tabs to paint
              */
@@ -245,7 +245,7 @@ public class WalletActivity extends FragmentActivity{
             }
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error in loadUI " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -299,7 +299,7 @@ public class WalletActivity extends FragmentActivity{
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-            Drawable colorDrawable = new ColorDrawable(Color.parseColor(ApplicationSession.getwalletRuntime().getLasActivity().getColor()));
+            Drawable colorDrawable = new ColorDrawable(Color.parseColor(ApplicationSession.walletRuntimeMiddleware.getLasActivity().getColor()));
             Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
             LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
 
@@ -414,9 +414,8 @@ public class WalletActivity extends FragmentActivity{
         }
 
         // put tabs font
-        Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
         if (pagerSlidingTabStrip != null){
-            pagerSlidingTabStrip.setTypeface(tf, 1);
+            pagerSlidingTabStrip.setTypeface(ApplicationSession.mDefaultTypeface, 1);
         }
     }
 
@@ -442,7 +441,7 @@ public class WalletActivity extends FragmentActivity{
                         Color color_status = new Color();
                         window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
                     } catch (Exception e) {
-                        ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                        ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");
                     }
                 }
@@ -480,7 +479,7 @@ public class WalletActivity extends FragmentActivity{
         }
         catch (Exception e) {
 
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
 
             Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
                     Toast.LENGTH_LONG).show();

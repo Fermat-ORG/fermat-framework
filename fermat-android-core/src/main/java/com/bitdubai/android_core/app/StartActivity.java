@@ -3,6 +3,7 @@ package com.bitdubai.android_core.app;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -33,7 +34,7 @@ import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.ver
 
 
 /**
- * Created by toshiba on 16/02/2015.
+ * Created by Mati
  */
 
 /**
@@ -188,13 +189,14 @@ public class StartActivity extends FragmentActivity {
             walletRuntimeMiddleware = (WalletRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
             //save object on global class
-            ApplicationSession.setAppRuntime(appRuntimeMiddleware);
-            ApplicationSession.setWalletRuntime(walletRuntimeMiddleware);
+            ApplicationSession.appRuntimeMiddleware=appRuntimeMiddleware;
+            ApplicationSession.walletRuntimeMiddleware=walletRuntimeMiddleware;
 
             errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
-            ApplicationSession.setErrorManager(errorManager);
+            ApplicationSession.errorManager=errorManager;
 
-
+            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
+            ApplicationSession.mDefaultTypeface=tf;
 
             return true;
         }
