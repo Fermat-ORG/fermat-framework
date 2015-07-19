@@ -21,14 +21,14 @@ public interface WalletFactoryProjectSkin {
     // hash of the skin, calculated each time you do a change in a resource
     String getHash();
 
+    // get all resources from a skin
+    List<WalletFactoryProjectResource> getResources() throws CantGetWalletFactoryProjectResourcesException;
+
     // project proposal to which it belongs
     WalletFactoryProjectProposal getWalletFactoryProjectProposal();
 
-    // get all resources from a skin
-    List<WalletFactoryProjectResource> getAllResources() throws CantGetWalletFactoryProjectResourcesException;
-
     // get all resources of a skin by type
-    List<WalletFactoryProjectResource> getAllResourcesByResourceType(ResourceType resourceType) throws CantGetWalletFactoryProjectResourcesException;
+    List<WalletFactoryProjectResource> getAllResourcesByResourceType(ResourceType resourceType);
 
     // get a specific resource
     WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException;
@@ -41,5 +41,7 @@ public interface WalletFactoryProjectSkin {
 
     // delete a resource of the skin
     void deleteResource(String name, byte[] resource, ResourceType resourceType) throws CantDeleteWalletFactoryProjectResourceException;
+
+    String getResourceTypePath(ResourceType resourceType);
 
 }

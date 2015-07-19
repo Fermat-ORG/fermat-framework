@@ -1,14 +1,17 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource;
 
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin;
+
 import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.List;
+
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 public class GetDatabaseListTest extends TestCase {
@@ -19,24 +22,24 @@ public class GetDatabaseListTest extends TestCase {
     }
 
     @Test
-    public void testGetDatabaseListTest_NotNull() throws Exception {
+    public void testGetDatabaseListTest_NotNull3() throws Exception {
         try {
 
-            File file = new File("/home/lnacosta/Desktop/question.xml");
-            JAXBContext jaxbContext = JAXBContext.newInstance(Question.class);
+            File file = new File("/home/lnacosta/Desktop/skins.xml");
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectSkin.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            Question que= (Question) jaxbUnmarshaller.unmarshal(file);
 
-            System.out.println(que.getId()+" "+que.getQuestionname());
-            System.out.println("Answers:");
-            List<WalletFactoryMiddlewareProjectResource> list=que.getResources();
-            for(WalletFactoryMiddlewareProjectResource ans:list)
-                System.out.println(ans.getName()+"  "+ans.getResourceType());
+            WalletFactoryMiddlewareProjectSkin que = (WalletFactoryMiddlewareProjectSkin) jaxbUnmarshaller.unmarshal(file);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            jaxbMarshaller.marshal(que, System.out);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
