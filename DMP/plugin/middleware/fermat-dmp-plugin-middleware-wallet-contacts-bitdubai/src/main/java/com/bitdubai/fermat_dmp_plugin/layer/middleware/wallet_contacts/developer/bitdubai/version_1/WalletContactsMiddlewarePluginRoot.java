@@ -164,9 +164,7 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
@@ -182,6 +180,15 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
+    }
+
+    /**
+     * Plugin interface implementation
+     * @param uuid
+     */
+    @Override
+    public void setId(UUID uuid) {
+        this.pluginId = uuid;
     }
 
     /**
@@ -203,9 +210,6 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDeveloperDatabaseFactory");
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao");
 
-        /**
-         * I return the values.
-         */
         return returnedClasses;
     }
 
@@ -233,19 +237,13 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
      * @param className
      * @return
      */
+
     public static LogLevel getLogLevelByClass(String className){
         try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return WalletContactsMiddlewarePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
+            return LogLevel.MODERATE_LOGGING;
         }
     }
 
@@ -263,13 +261,5 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * Plugin methods implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 }
