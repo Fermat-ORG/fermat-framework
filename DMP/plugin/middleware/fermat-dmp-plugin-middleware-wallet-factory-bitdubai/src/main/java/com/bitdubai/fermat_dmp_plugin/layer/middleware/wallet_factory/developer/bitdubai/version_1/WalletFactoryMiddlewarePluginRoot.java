@@ -119,7 +119,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsW
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryMiddlewarePluginRoot");
-            /**
+        /**
          * I return the values.
          */
         return returnedClasses;

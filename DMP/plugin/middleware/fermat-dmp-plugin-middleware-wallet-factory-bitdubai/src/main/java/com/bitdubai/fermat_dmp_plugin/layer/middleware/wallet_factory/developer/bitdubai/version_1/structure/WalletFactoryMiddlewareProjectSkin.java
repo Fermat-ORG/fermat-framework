@@ -80,7 +80,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     }
 
     @XmlElements({
-        @XmlElement(name="resource", type=WalletFactoryMiddlewareProjectResource.class),
+            @XmlElement(name="resource", type=WalletFactoryMiddlewareProjectResource.class),
     })
     @XmlElementWrapper
     public List<WalletFactoryProjectResource> getResources() {
@@ -178,10 +178,10 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         }
 
         return initialPath + "/" +
-               project.getName() + "/" +
-               projectProposal.getAlias() + "/" +
-               getName() + "/" +
-               resourcePath;
+                project.getName() + "/" +
+                projectProposal.getAlias() + "/" +
+                getName() + "/" +
+                resourcePath;
     }
 
 
