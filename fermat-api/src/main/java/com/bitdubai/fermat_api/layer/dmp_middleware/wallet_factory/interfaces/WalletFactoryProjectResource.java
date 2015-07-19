@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletFactoryProjectResource</code>
@@ -17,12 +18,12 @@ public interface WalletFactoryProjectResource {
     String getName();
 
     // resource file
-    byte[] getResource();
+    byte[] getResource() throws CantGetWalletFactoryProjectResourceException;
 
     // resource type
     ResourceType getResourceType();
 
-    // project skin to which it belongs
-    WalletFactoryProjectProposal getWalletFactoryProjectProposal();
+    // skin to which belongs
+    WalletFactoryProjectSkin getWalletFactoryProjectSkin();
 
 }
