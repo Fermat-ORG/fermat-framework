@@ -1,6 +1,7 @@
 
 
 include ':fermat-android-core'
+include ':fermat-android-api'
 
 include ':fermat-core'
 include ':fermat-api'
