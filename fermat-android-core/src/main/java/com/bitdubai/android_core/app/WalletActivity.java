@@ -4,10 +4,15 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import com.bitdubai.android_core.app.common.version_1.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.fermat_api.FermatException;
@@ -64,7 +70,7 @@ public class WalletActivity extends FragmentActivity{
             loadUI();
 
         } catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error loading the UI - " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -87,7 +93,7 @@ public class WalletActivity extends FragmentActivity{
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error in create optionMenu " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -119,7 +125,7 @@ public class WalletActivity extends FragmentActivity{
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
 
             Toast.makeText(getApplicationContext(), "Error in OptionsItemSelected " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -157,7 +163,7 @@ public class WalletActivity extends FragmentActivity{
     public void onBackPressed() {
 
 
-        if (ApplicationSession.getwalletRuntime().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        if (ApplicationSession.walletRuntimeMiddleware.getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 
@@ -182,7 +188,7 @@ public class WalletActivity extends FragmentActivity{
             /**
              * Get current activity to paint
              */
-            Activity activity =  ApplicationSession.getwalletRuntime().getLasActivity();
+            Activity activity =  ApplicationSession.walletRuntimeMiddleware.getLasActivity();
             /**
              * Get tabs to paint
              */
@@ -203,10 +209,6 @@ public class WalletActivity extends FragmentActivity{
              * Get NavigationDrawer to paint
              */
             SideMenu sideMenu = activity.getSideMenu();
-            /**
-             * Get the title
-             */
-            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android")); // TODO (Luis) esto debe ir dentro del TitleBar
 
             /**
              * Pick the layout
@@ -217,17 +219,16 @@ public class WalletActivity extends FragmentActivity{
              * Paint tabs in layout
              */
             PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
-            paintTabs(tabs,pagerSlidingTabStrip,activity);
+            paintTabs(tabs, pagerSlidingTabStrip, activity);
 
             /**
              * Paint statusBar
              */
             paintStatusBar(activity.getStatusBar());
-
             /**
-             * Set activities properties
+             *
              */
-            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), null, getActionBar(), titleBar, abTitle, "Titulo"); // TODO dividirlo en los paints que tenemos, si algo no encaja ver si hace falta otro paint.
+            paintTitleBar(titleBar);
 
             /**
              * Paint a simgle fragment
@@ -241,21 +242,93 @@ public class WalletActivity extends FragmentActivity{
                  * Paint tabs
                  */
                 setPagerTabs(pagerSlidingTabStrip);
-                /**
-                 * Paint color of the activity
-                 */
-                String color = activity.getColor();
-                if (color != null) ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
             }
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error in loadUI " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
     }
 
+    /**
+     *
+     * @param titleBar
+     */
+    private void paintTitleBar(TitleBar titleBar){
+        try {
+            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+            if (titleBar != null) {
 
+                String title = titleBar.getLabel();
+
+                if (abTitle != null) {
+                    abTitle.setTextColor(Color.WHITE);
+                    abTitle.setTypeface(ApplicationSession.getDefaultTypeface());
+                }
+                getActionBar().setTitle(title);
+                getActionBar().show();
+                setActionBarProperties(abTitle,title);
+            } else {
+                getActionBar().hide();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param abTitle
+     * @param title
+     */
+    private void setActionBarProperties(TextView abTitle, String title){
+        SpannableString s = new SpannableString(title);
+
+
+        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "CaviarDreams.ttf"), 0, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Update the action bar title with the TypefaceSpan instance
+        getActionBar().setTitle(s);
+
+        // actionBar
+        Drawable bg = getResources().getDrawable(R.drawable.transparent);
+        bg.setVisible(false, false);
+        Drawable wallpaper = getResources().getDrawable(R.drawable.transparent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+            Drawable colorDrawable = new ColorDrawable(Color.parseColor(ApplicationSession.walletRuntimeMiddleware.getLasActivity().getColor()));
+            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
+            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                //ld.setCallback(drawableCallback);
+            } else {
+                getActionBar().setBackgroundDrawable(ld);
+            }
+        }
+    }
+
+    /*private static Drawable.Callback drawableCallback = new Drawable.Callback() {
+        @Override
+        public void invalidateDrawable(Drawable who) {
+            actionBar.setBackgroundDrawable(who);
+
+        }
+
+        @Override
+        public void scheduleDrawable(Drawable who, Runnable what, long when) {
+            handler.postAtTime(what, when);
+        }
+
+        @Override
+        public void unscheduleDrawable(Drawable who, Runnable what) {
+            handler.removeCallbacks(what);
+        }
+    };
+    }*/
     /**
      *
      * @param pagerSlidingTabStrip
@@ -319,7 +392,9 @@ public class WalletActivity extends FragmentActivity{
             pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
         else{
             pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-
+            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
+            pagerSlidingTabStrip.setTypeface(tf,1 );
+            pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
         }
 
         // paint tabs color
@@ -339,9 +414,8 @@ public class WalletActivity extends FragmentActivity{
         }
 
         // put tabs font
-        Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
         if (pagerSlidingTabStrip != null){
-            pagerSlidingTabStrip.setTypeface(tf, 1);
+            pagerSlidingTabStrip.setTypeface(ApplicationSession.mDefaultTypeface, 1);
         }
     }
 
@@ -367,7 +441,7 @@ public class WalletActivity extends FragmentActivity{
                         Color color_status = new Color();
                         window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
                     } catch (Exception e) {
-                        ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                        ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");
                     }
                 }
@@ -405,7 +479,7 @@ public class WalletActivity extends FragmentActivity{
         }
         catch (Exception e) {
 
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
 
             Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
                     Toast.LENGTH_LONG).show();

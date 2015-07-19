@@ -38,8 +38,8 @@ import java.util.List;
         public TabsPagerAdapter(FragmentManager fm,Context context) {
             super(fm);
             this.context=context;
-            if(ApplicationSession.getwalletRuntime().getLasActivity().getTabStrip() != null){
-                List<Tab> titleTabs = ApplicationSession.getwalletRuntime().getLasActivity().getTabStrip().getTabs();
+            if(ApplicationSession.walletRuntimeMiddleware.getLasActivity().getTabStrip() != null){
+                List<Tab> titleTabs = ApplicationSession.walletRuntimeMiddleware.getLasActivity().getTabStrip().getTabs();
                 titles = new String[titleTabs.size()];
                 for (int i = 0; i < titleTabs.size(); i++) {
                     Tab tab = titleTabs.get(i);
@@ -87,7 +87,7 @@ import java.util.List;
 
             android.support.v4.app.Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
-            List<Tab> titleTabs = ApplicationSession.getwalletRuntime().getLasActivity().getTabStrip().getTabs();
+            List<Tab> titleTabs = ApplicationSession.walletRuntimeMiddleware.getLasActivity().getTabStrip().getTabs();
             for (int j = 0; j < titleTabs.size(); j++) {
                 if (j == position)
                 {
@@ -151,7 +151,7 @@ import java.util.List;
             }
             catch(Exception ex)
             {
-                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+                ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
                 Toast.makeText(context, "Error in PagerAdapter GetItem " + ex.getMessage(),
                         Toast.LENGTH_LONG).show();

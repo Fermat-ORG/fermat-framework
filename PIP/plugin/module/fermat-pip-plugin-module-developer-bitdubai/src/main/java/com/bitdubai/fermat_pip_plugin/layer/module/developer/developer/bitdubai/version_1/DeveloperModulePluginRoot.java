@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * TODO: This plugin do .
@@ -46,12 +47,12 @@ public class DeveloperModulePluginRoot implements DeveloperModuleManager, DealsW
     /**
      * DeviceUser Interface member variables
      */
-    private UUID pluginId;
+    UUID pluginId;
 
     /**
      * ServiceStatus Interface member variables
      */
-    ServiceStatus serviceStatus;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * Service Interface implementation.
@@ -81,7 +82,6 @@ public class DeveloperModulePluginRoot implements DeveloperModuleManager, DealsW
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
-
 
     @Override
     public void setId(UUID pluginId) {
@@ -143,4 +143,13 @@ public class DeveloperModulePluginRoot implements DeveloperModuleManager, DealsW
 
     }
 
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return DeveloperModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
+            return LogLevel.MODERATE_LOGGING;
+        }
+    }
 }
