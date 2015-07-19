@@ -123,7 +123,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     public BitcoinCryptoNetworkMonitoringAgent(Wallet wallet, UUID UserId){
         this.wallet = wallet;
         this.userId = UserId;
-        this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration(null);
+        this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
         peers = null;
     }
 

@@ -63,7 +63,9 @@ public enum Fragments {
     CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS("DeveloperRecordsFragment"),
     CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS("DeveloperDatabaseToolsFragment"),
     CWP_SUB_APP_DEVELOPER_LOG_TOOLS("DeveloperLogFragment"),
+    CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS("DeveloperLogLevel1Fragment"),
     CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS("DeveloperLogLevel2Fragment"),
+    CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS("DeveloperLogLevel3Fragment"),
 
     CWP_WALLET_STORE_MAIN ("StoreFragment"),
     CWP_WALLET_FACTORY_MAIN ("FactoryFragment"),

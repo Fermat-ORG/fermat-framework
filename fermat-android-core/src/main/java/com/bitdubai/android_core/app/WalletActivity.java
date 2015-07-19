@@ -4,10 +4,15 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -20,14 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.FragmentActivity;
 import com.bitdubai.android_core.app.common.version_1.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
@@ -61,13 +67,11 @@ public class WalletActivity extends FragmentActivity{
             /*
             * Load wallet UI
             */
-            NavigateWallet();
+            loadUI();
 
         } catch (Exception e) {
-            //System.err.println("CantStartPlatformException: " + e.getMessage());
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, FermatException.wrapException(e));
-            Log.e(getClass().getSimpleName(), "CantStartPlatformException: " + e.getMessage());
-            Toast.makeText(getApplicationContext(), "Error Load RuntimeApp - " + e.getMessage(),
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Error loading the UI - " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -83,23 +87,13 @@ public class WalletActivity extends FragmentActivity{
         try {
             MenuInflater inflater = getMenuInflater();
 
-
-            switch ( ApplicationSession.getwalletRuntime().getLasActivity().getType()) {
-
-
-                case CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN:
-                    inflater.inflate(R.menu.app_activity_main_empty_menu, menu);
-
-                    break;
-                case CWP_WALLET_STORE_MAIN:
-                    break;
-
-
-            }
+            /**
+             *  Our future code goes here...
+             */
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error in create optionMenu " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -124,20 +118,14 @@ public class WalletActivity extends FragmentActivity{
 
             int id = item.getItemId();
 
-            //noinspection SimplifiableIfStatement
-            if (id == R.id.action_settings) {
-                return true;
-            }
-
-
-            if (id == R.id.action_file) {
-                return true;
-            }
+            /**
+             *  Our future code goes here...
+             */
 
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
 
             Toast.makeText(getApplicationContext(), "Error in OptionsItemSelected " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -175,11 +163,11 @@ public class WalletActivity extends FragmentActivity{
     public void onBackPressed() {
 
 
-        if (ApplicationSession.getwalletRuntime().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        if (ApplicationSession.walletRuntimeMiddleware.getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
-            cleanWindows();
+            resetThisActivity();
 
-            Intent intent = new Intent(this, SubAppActivity.class);
+            Intent intent = new Intent(this, SubAppActivity.class); // TODO : (LUIS) no puede irse a una sub app
 
             startActivity(intent);
         }else{
@@ -191,16 +179,16 @@ public class WalletActivity extends FragmentActivity{
 
 
     /**
-     * Method who load the screen from walletRuntime
+     * Method that loads the UI
      */
-    private void NavigateWallet() {
+    private void loadUI() {
 
         try
         {
             /**
-             * Get actual activity to execute
+             * Get current activity to paint
              */
-            Activity activity =  ApplicationSession.getwalletRuntime().getLasActivity();
+            Activity activity =  ApplicationSession.walletRuntimeMiddleware.getLasActivity();
             /**
              * Get tabs to paint
              */
@@ -216,110 +204,197 @@ public class WalletActivity extends FragmentActivity{
             /**
              * Get mainMenu to paint
              */
-            MainMenu mainMenumenu= activity.getMainMenu();
+            MainMenu mainMenu= activity.getMainMenu();
             /**
              * Get NavigationDrawer to paint
              */
-            SideMenu sidemenu = activity.getSideMenu();
-            /**
-             * Get the title
-             */
-            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+            SideMenu sideMenu = activity.getSideMenu();
 
             /**
-             * if wallet do not set the navigator drawer I load a layout without him
-             * Paint the navigationDrawer
+             * Pick the layout
              */
-            if(sidemenu != null){
-                setContentView(R.layout.runtime_app_wallet_runtime_navigator);
-                //TODO: Recordatorio mati: voy a tener que limpiar el navigationDrawer en un futuro
-                NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-                NavigationDrawerFragment.setMenuVisibility(true);
-                /**
-                 * Set up the navigationDrawer
-                 */
-                NavigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-            }
-
-            /**
-             * Paint layout without navigationDrawer
-             */
-            else{
-                setContentView(R.layout.runtime_app_wallet_runtime);
-            }
+            setMainLayout(sideMenu);
 
             /**
              * Paint tabs in layout
              */
             PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
-            paintTabs(tabs,pagerSlidingTabStrip,activity);
-            /**
-             * Paint statusBarColor
-             */
-            if(activity.getStatusBarColor()!=null){
-                setStatusBarColor(activity.getStatusBarColor());
-            }
-            //TODO por ahora le estoy pasando un null al tabstrip porque ahí adentro lo está cargando mal, porque hace un clean de la pantalla y borra el color de los tabs
-            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), null, getActionBar(), titleBar, abTitle, "Titulo");
+            paintTabs(tabs, pagerSlidingTabStrip, activity);
 
             /**
-             * por ahora no se encuenta pensado el tema si es un solo fragmento
+             * Paint statusBar
+             */
+            paintStatusBar(activity.getStatusBar());
+            /**
+             *
+             */
+            paintTitleBar(titleBar);
+
+            /**
+             * Paint a simgle fragment
              */
             if(tabs == null && fragments.size() > 1){
-                //this.initialisePaging();
-                Toast.makeText(getApplicationContext(),"Error unico fragmento",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Error unico fragmento",Toast.LENGTH_SHORT).show(); // TODO Arreglar esta vaina.
                 Log.e(getClass().getSimpleName(),"wallets con un fragmento no pensadas");
 
-            }
-            else{
+            }else{
                 /**
-                 * Get pagerTabs
+                 * Paint tabs
                  */
-                ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-                pagertabs.setVisibility(View.VISIBLE);
-
-                /**
-                 * Making the pagerTab adapter
-                 */
-                adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext());
-                pagertabs.setAdapter(adapter);
-                final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                        .getDisplayMetrics());
-                pagertabs.setPageMargin(pageMargin);
-
-                /**
-                 * Put tabs in pagerSlidingTabsStrp
-                 */
-                pagerSlidingTabStrip.setViewPager(pagertabs);
-
-                /**
-                 * Changing color of the activity
-                 */
-                String color = activity.getColor();
-                if (color != null)
-                  ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
+                setPagerTabs(pagerSlidingTabStrip);
             }
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Error in NavigateWallet " + e.getMessage(),
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Error in loadUI " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     *
+     * @param titleBar
+     */
+    private void paintTitleBar(TitleBar titleBar){
+        try {
+            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+            if (titleBar != null) {
+
+                String title = titleBar.getLabel();
+
+                if (abTitle != null) {
+                    abTitle.setTextColor(Color.WHITE);
+                    abTitle.setTypeface(ApplicationSession.getDefaultTypeface());
+                }
+                getActionBar().setTitle(title);
+                getActionBar().show();
+                setActionBarProperties(abTitle,title);
+            } else {
+                getActionBar().hide();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param abTitle
+     * @param title
+     */
+    private void setActionBarProperties(TextView abTitle, String title){
+        SpannableString s = new SpannableString(title);
+
+
+        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "CaviarDreams.ttf"), 0, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Update the action bar title with the TypefaceSpan instance
+        getActionBar().setTitle(s);
+
+        // actionBar
+        Drawable bg = getResources().getDrawable(R.drawable.transparent);
+        bg.setVisible(false, false);
+        Drawable wallpaper = getResources().getDrawable(R.drawable.transparent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+            Drawable colorDrawable = new ColorDrawable(Color.parseColor(ApplicationSession.walletRuntimeMiddleware.getLasActivity().getColor()));
+            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
+            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                //ld.setCallback(drawableCallback);
+            } else {
+                getActionBar().setBackgroundDrawable(ld);
+            }
+        }
+    }
+
+    /*private static Drawable.Callback drawableCallback = new Drawable.Callback() {
+        @Override
+        public void invalidateDrawable(Drawable who) {
+            actionBar.setBackgroundDrawable(who);
+
+        }
+
+        @Override
+        public void scheduleDrawable(Drawable who, Runnable what, long when) {
+            handler.postAtTime(what, when);
+        }
+
+        @Override
+        public void unscheduleDrawable(Drawable who, Runnable what) {
+            handler.removeCallbacks(what);
+        }
+    };
+    }*/
+    /**
+     *
+     * @param pagerSlidingTabStrip
+     */
+    private void setPagerTabs(PagerSlidingTabStrip pagerSlidingTabStrip){
+        /**
+         * Get pagerTabs
+         */
+        ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
+        pagertabs.setVisibility(View.VISIBLE);
+
+        /**
+         * Making the pagerTab adapter
+         */
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext());
+        pagertabs.setAdapter(adapter);
+        final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                .getDisplayMetrics());
+        pagertabs.setPageMargin(pageMargin);
+        /**
+         * Put tabs in pagerSlidingTabsStrp
+         */
+        pagerSlidingTabStrip.setViewPager(pagertabs);
+    }
+
+    /**
+     *
+     * @param sidemenu
+     */
+    private void setMainLayout(SideMenu sidemenu){
+        if(sidemenu != null){
+            setContentView(R.layout.runtime_app_wallet_runtime_navigator);
+            NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+            NavigationDrawerFragment.setMenuVisibility(true);
+            /**
+             * Set up the navigationDrawer
+             */
+            NavigationDrawerFragment.setUp(
+                    R.id.navigation_drawer,
+                    (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+        }
+
+        /**
+         * Paint layout without navigationDrawer
+         */
+        else{
+            setContentView(R.layout.runtime_app_wallet_runtime);
         }
     }
 
 
     /**
      *
+     * @param tabs
+     * @param pagerSlidingTabStrip
+     * @param activity
      */
     private void paintTabs(TabStrip tabs,PagerSlidingTabStrip pagerSlidingTabStrip,Activity activity){
         if(tabs == null)
             pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
         else{
             pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-
+            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
+            pagerSlidingTabStrip.setTypeface(tf,1 );
+            pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
         }
 
         // paint tabs color
@@ -339,35 +414,37 @@ public class WalletActivity extends FragmentActivity{
         }
 
         // put tabs font
-        Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
         if (pagerSlidingTabStrip != null){
-            pagerSlidingTabStrip.setTypeface(tf, 1);
+            pagerSlidingTabStrip.setTypeface(ApplicationSession.mDefaultTypeface, 1);
         }
     }
 
     /**
      * Method to set status bar color in different version of android
-     * @param color
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(String color){
-        if(Build.VERSION.SDK_INT>20) {
-            try {
+    private void paintStatusBar(StatusBar statusBar){
+        if(statusBar!=null) {
+            if (statusBar.getColor() != null) {
+                if (Build.VERSION.SDK_INT > 20) {
+                    try {
 
-                Window window = this.getWindow();
+                        Window window = this.getWindow();
 
-                // clear FLAG_TRANSLUCENT_STATUS flag:
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        // clear FLAG_TRANSLUCENT_STATUS flag:
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-                // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-                // finally change the color
-                // window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
-                Color color_status = new Color();
-                window.setStatusBarColor(color_status.parseColor(color));
-            } catch (Exception e) {
-                Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
+                        // finally change the color
+                        Color color_status = new Color();
+                        window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
+                    } catch (Exception e) {
+                        ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                        Log.d("WalletActivity", "Sdk version not compatible with status bar color");
+                    }
+                }
             }
         }
     }
@@ -376,7 +453,7 @@ public class WalletActivity extends FragmentActivity{
      *  Method used to clean the screen
      */
 
-    private void cleanWindows()
+    private void resetThisActivity()
     {
         try
         {
@@ -402,7 +479,7 @@ public class WalletActivity extends FragmentActivity{
         }
         catch (Exception e) {
 
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
 
             Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
                     Toast.LENGTH_LONG).show();

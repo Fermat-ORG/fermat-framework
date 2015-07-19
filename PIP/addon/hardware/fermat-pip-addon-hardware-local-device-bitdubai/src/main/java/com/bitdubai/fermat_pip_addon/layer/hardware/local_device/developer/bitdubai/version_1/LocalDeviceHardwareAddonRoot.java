@@ -10,8 +10,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventLis
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer.pip_hardware.Hardware;
-import com.bitdubai.fermat_api.layer.pip_hardware.local_device.LocalDeviceHardwareManager;
+import com.bitdubai.fermat_pip_api.layer.pip_hardware.Hardware;
+import com.bitdubai.fermat_pip_api.layer.pip_hardware.local_device.LocalDeviceHardwareManager;
 
 import java.util.ArrayList;
 import java.util.List;

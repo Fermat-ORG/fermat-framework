@@ -86,6 +86,7 @@
             <option value="$PROJECT_DIR$/fermat-core" />
             <option value="$PROJECT_DIR$/fermat-cry-api" />
             <option value="$PROJECT_DIR$/fermat-p2p-api" />
+            <option value="$PROJECT_DIR$/fermat-pip-api" />
           </set>
         </option>
       </GradleProjectSettings>

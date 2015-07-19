@@ -1,6 +1,5 @@
 package com.bitdubai.android_core.app;
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -27,6 +26,7 @@ import com.bitdubai.android_core.app.common.version_1.navigation_drawer.Navigati
 
 import com.bitdubai.android_core.app.common.PagerAdapter;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -34,7 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
@@ -46,7 +46,9 @@ import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableListFra
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableRecordListFragment;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
+import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
+import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 
 
@@ -179,7 +181,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
 
         } catch (Exception ex) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
             Toast.makeText(getApplicationContext(), "Can't Load tabs: " + ex.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
@@ -191,11 +193,11 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     // to make the NavigationDrawerFragment verified whether the activity has a SideMenu
     private void NavigateActivity() {
         try {
-            this.app =ApplicationSession.getAppRuntime().getLastApp();
-            this.subApp = ApplicationSession.getAppRuntime().getLastSubApp();
-            this.activity = ApplicationSession.getAppRuntime().getLasActivity();
+            this.app =ApplicationSession.appRuntimeMiddleware.getLastApp();
+            this.subApp = ApplicationSession.appRuntimeMiddleware.getLastSubApp();
+            this.activity = ApplicationSession.appRuntimeMiddleware.getLasActivity();
 
-            ApplicationSession.setActivityId(activity.getType().getKey());
+            //ApplicationSession.setActivityId(activity.getType().getKey());
 
             this.tabs = activity.getTabStrip();
             this.fragments = activity.getFragments();
@@ -235,12 +237,10 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
 
-
-            String status_color = activity.getStatusBarColor();
-            if (activity.getStatusBarColor() != null) {
-                setStatusBarColor(this.activity.getStatusBarColor());
-
-            }
+            /**
+             * Paint statusBar
+             */
+            setStatusBarColor(activity.getStatusBar());
 
             if (activity.getTabStrip() != null)
             {
@@ -263,7 +263,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 tabStrip.setTypeface(tf,1 );
             }
 
-            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
+            //ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
 
 
@@ -287,8 +287,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
 
                 String color = activity.getColor();
-                if (color != null)
-                    ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
+                //if (color != null)
+                    //((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources(),getActionBar());
 
             }
         } catch (Exception e) {
@@ -296,6 +296,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
            // ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Error in NavigateActivity " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
@@ -311,7 +312,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                 //developer app fragments
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
-                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
 
                       DatabaseToolsFragment frag= DatabaseToolsFragment.newInstance(0);
                         //set data pass to fragment
@@ -325,7 +326,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
 
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
-                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
+                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
 
 
                         DatabaseToolsDatabaseListFragment fragd= DatabaseToolsDatabaseListFragment.newInstance(0);
@@ -342,7 +343,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES:
 
-                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
+                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
 
                         DatabaseToolsDatabaseTableListFragment fragt= DatabaseToolsDatabaseTableListFragment.newInstance(0);
 
@@ -359,7 +360,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS:
 
-                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
+                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
 
                     DatabaseToolsDatabaseTableRecordListFragment fragr= DatabaseToolsDatabaseTableRecordListFragment.newInstance(0);
 
@@ -377,7 +378,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
 
                 case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
-                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
 
                         LogToolsFragment frag1= LogToolsFragment.newInstance(0);
 
@@ -385,24 +386,57 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         this.fragment.setContext(screenObjects);
 
                         FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
-                        transaction1.replace(R.id.startContainer, frag1);
+                        transaction1.replace(R.id.logContainer, frag1);
                         // Commit the transaction
                         transaction1.commit();
                     break;
 
+                case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS:
+
+                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+
+                    LogToolsFragmentLevel1 fragl= LogToolsFragmentLevel1.newInstance(0);
+                    fragl.setLoggers((ArrayListLoggers) screenObjects[0]);
+                    //set data pass to fragment
+                    this.fragment.setContext(screenObjects);
+
+                     transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.logContainer, fragl);
+                    // Commit the transaction
+                    transaction.commit();
+                    break;
+
                 case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS:
 
-                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
 
-                       LogToolsFragmentLevel2 fragl= LogToolsFragmentLevel2.newInstance(0);
-                        fragl.setLoggers((ArrayListLoggers) screenObjects[0]);
+                       LogToolsFragmentLevel2 fragl2= LogToolsFragmentLevel2.newInstance(0);
+                    fragl2.setLoggers((ArrayListLoggers) screenObjects[0]);
+                    fragl2.setLoggerLevel((int)screenObjects[1]);
+
                         //set data pass to fragment
                         this.fragment.setContext(screenObjects);
 
-                        FragmentTransaction transactionl = getSupportFragmentManager().beginTransaction();
-                        transactionl.replace(R.id.startContainer, fragl);
+                       transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.logContainer, fragl2);
                         // Commit the transaction
-                        transactionl.commit();
+                        transaction.commit();
+                    break;
+
+                case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS:
+
+                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+
+                    LogToolsFragmentLevel3 fragl3= LogToolsFragmentLevel3.newInstance(0);
+                    fragl3.setLoggers((ArrayListLoggers) screenObjects[0]);
+                    fragl3.setLoggerLevel((int) screenObjects[1]);
+                    //set data pass to fragment
+                    this.fragment.setContext(screenObjects);
+
+                  transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.logContainer, fragl3);
+                    // Commit the transaction
+                    transaction.commit();
                     break;
 
 
@@ -419,12 +453,11 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        try {
             this.menu = menu;
             MenuInflater inflater = getMenuInflater();
 
 
-            switch (this.activity.getType()) {
+            /*switch (this.activity.getType()) {
 
                 case CWP_SHELL_LOGIN:
                     break;
@@ -437,15 +470,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
 
 
-            }
+            }*/
 
-        } catch (Exception e) {
-
-            // TODO:  Error manager null
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-            Toast.makeText(getApplicationContext(), "Can't CreateoptionMenu: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -466,8 +492,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             }
 
             if (id == R.id.action_wallet_store) {
-                ((ApplicationSession) this.getApplication()).setWalletId(0);
-                ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+                //((ApplicationSession) this.getApplication()).setWalletId(0);
+                ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
                 NavigateActivity();
 
                 return true;
@@ -483,7 +509,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
 
         } catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             //Matias
             //por ahora lo saco porque no me toma el tag del parametro, vamos a ver como implementarlo
             //Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -496,26 +522,32 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     public void onNavigationDrawerItemSelected(int position) {
 
     }
-
+    /**
+     * Method to set status bar color in different version of android
+     */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(String color){
-        if(Build.VERSION.SDK_INT>20) {
-            try {
+    private void setStatusBarColor(StatusBar statusBar){
+        if(statusBar!=null) {
+            if (statusBar.getColor() != null) {
+                if (Build.VERSION.SDK_INT > 20) {
+                    try {
 
-                Window window = this.getWindow();
+                        Window window = this.getWindow();
 
-                // clear FLAG_TRANSLUCENT_STATUS flag:
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        // clear FLAG_TRANSLUCENT_STATUS flag:
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-                // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-                // finally change the color
-                // window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
-                Color color_status = new Color();
-                window.setStatusBarColor(color_status.parseColor(color));
-            } catch (Exception e) {
-                Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
+                        // finally change the color
+                        Color color_status = new Color();
+                        window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
+                    } catch (Exception e) {
+                        ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                        Log.d("WalletActivity", "Sdk version not compatible with status bar color");
+                    }
+                }
             }
         }
     }
@@ -554,29 +586,37 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     public void onBackPressed() {
 
         // get actual fragment on execute
+        Fragments frgBackType = null;
+        try {
+            AppRuntimeManager appRuntimeManager = ApplicationSession.appRuntimeMiddleware;
+            this.fragment = appRuntimeManager.getLastFragment();
+            //get setting fragment to back
+            //if not fragment to back I back to desktop
+             frgBackType = this.fragment.getBack();
 
-        this.fragment = ApplicationSession.getAppRuntime().getLastFragment();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        //get setting fragment to back
-        //if not fragment to back I back to desktop
-        Fragments frgBackType = this.fragment.getBack();
+
 
         if(frgBackType != null){
 
-            com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragmentBack = ApplicationSession.getAppRuntime().getFragment(frgBackType); //set back fragment to actual fragment to run
+            com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragmentBack = ApplicationSession.appRuntimeMiddleware.getFragment(frgBackType); //set back fragment to actual fragment to run
 
             //I get string context with params pass to fragment to return with this data
-            ApplicationSession.setParams(fragmentBack.getContext());
+            ApplicationSession.mParams=fragmentBack.getContext();
 
             this.loadFragment(frgBackType);
         }
         else{
             // set Desktop current activity
-            ApplicationSession.setActivityId("DesktopActivity");
-            ((ApplicationSession) this.getApplication()).setWalletId(0);
+            //ApplicationSession.setActivityId("DesktopActivity");
+            //((ApplicationSession) this.getApplication()).setWalletId(0);
             if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
-                activity = ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
                 cleanWindows();
+                activity = ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+                //cleanWindows();
 
                 NavigateActivity();
             } else {
@@ -613,7 +653,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             this.PagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
         } catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Can't Clean Windows: " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -651,24 +691,25 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                     case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
 
-                        ApplicationSession.getAppRuntime().getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+                        ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
 
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+
                         startActivity(intent);
 
                         break;
 
                     case CWP_WALLET_BASIC_ALL_MAIN: //basic Wallet
                         //go to wallet basic definition
-                        ApplicationSession.setWalletId(4);
-                        ApplicationSession.getwalletRuntime().getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+                        //ApplicationSession.setWalletId(4);
+                        ApplicationSession.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
                         startActivity(intent);
                         break;
                     //wallet factory
                     case CWP_WALLET_FACTORY_MAIN:
 
-                        ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+                        ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
 
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         startActivity(intent);
@@ -678,14 +719,14 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     //wallet publisher
                     case CWP_WALLET_PUBLISHER_MAIN:
 
-                        ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
+                        ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         startActivity(intent);
 
                         break;
 
                     case CWP_WALLET_RUNTIME_STORE_MAIN:
-                        ApplicationSession.getAppRuntime().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+                        ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         startActivity(intent);
 
@@ -704,7 +745,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 }
                 else
                 {
-                    ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
+                    ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
 
                 }
 
@@ -731,6 +772,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
      */
     @Override
     public void setParams(Object[] objects){
+        this.screenObjects = null;
         this.screenObjects = objects;
     }
 
@@ -847,14 +889,14 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     }
 
                 } catch (Exception ex) {
-                    ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+                    ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
                     Toast.makeText(getApplicationContext(), "Error in PagerAdapter GetItem " + ex.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
                 return currentFragment;
             } catch (Exception e) {
-                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+                ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
                 Toast.makeText(getApplicationContext(), "Can't getItem PageAdpater: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 return null;

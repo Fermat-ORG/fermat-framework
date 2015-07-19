@@ -15,33 +15,25 @@ import android.os.Bundle;
 
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.internal.view.menu.MenuBuilder;
-import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
@@ -239,26 +231,36 @@ public class LogToolsFragmentLevel2 extends Fragment {
                         Loggers item=(Loggers) gridView.getItemAtPosition(position);
 
                         // Reload current fragment
-                        LogToolsFragmentLevel2 frg = null;
-                        frg =(LogToolsFragmentLevel2) getFragmentManager().findFragmentByTag("fragmento2");
+                     //   LogToolsFragmentLevel2 frg = null;
+                     //   frg =(LogToolsFragmentLevel2) getFragmentManager().findFragmentByTag("fragmento2");
+
+                        ArrayListLoggers lst = null;
+                        int level = 0;
 
                         if(loggerLevel==ArrayListLoggers.LEVEL_1){
 
-                            ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_1);
-                            frg.setLoggers(lst);
-                            frg.setLoggerLevel(ArrayListLoggers.LEVEL_2);
+                             lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_1);
+                           // frg.setLoggers(lst);
+                           // frg.setLoggerLevel(ArrayListLoggers.LEVEL_2);
+                            level = ArrayListLoggers.LEVEL_2;
                         }else if(loggerLevel==ArrayListLoggers.LEVEL_2){
-                            ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2);
-                            frg.setLoggerLevel(ArrayListLoggers.LEVEL_3);
-                            frg.setLoggers(lst);
+                            lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2);
+                            //frg.setLoggerLevel(ArrayListLoggers.LEVEL_3);
+                            //frg.setLoggers(lst);
+                            level = ArrayListLoggers.LEVEL_3;
 
                         }
 
-                        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.detach(frg);
-                        ft.attach(frg);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        ft.commit();
+                        //set the next fragment and params
+                        Object[] params = new Object[2];
+
+                        params[0] = lst;
+                        params[1] = level;
+                        ((ScreenSwapper)getActivity()).setScreen("DeveloperLogLevel3Fragment");
+                        ((ScreenSwapper)getActivity()).setParams(params);
+                        ((ScreenSwapper)getActivity()).changeScreen();
+
+
                     }
                 });
                 holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
