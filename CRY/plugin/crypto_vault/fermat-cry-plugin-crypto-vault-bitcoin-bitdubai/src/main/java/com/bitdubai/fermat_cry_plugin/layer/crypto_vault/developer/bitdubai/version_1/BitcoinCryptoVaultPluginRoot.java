@@ -288,9 +288,9 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void start() throws CantStartPluginException {
-        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault Starting...", null, null);
+        //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault Starting...", null, null);
         // TODO COMMENTED PRINTLN
-        //System.out.println("CryptoVault starting...");
+        System.out.println("CryptoVault starting...");
 
         /**
          * I get the userId from the deviceUserManager

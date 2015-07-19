@@ -67,7 +67,6 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
     private String walletStyle = "";
     private TabStrip tabs;
     private TitleBar titleBar; // Comment
-    private String tagParam  = ApplicationSession.getChildId(); //get param with data for fragment
     private Bundle savedInstanceState;
 
     @Override
@@ -79,11 +78,11 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
         try{
 
 
-            this.app = ApplicationSession.getAppRuntime().getLastApp();
-            this.subApp =  ApplicationSession.getAppRuntime().getLastSubApp();
-            this.activity = ApplicationSession.getAppRuntime().getLasActivity();
+            this.app = ApplicationSession.appRuntimeMiddleware.getLastApp();
+            this.subApp =  ApplicationSession.appRuntimeMiddleware.getLastSubApp();
+            this.activity = ApplicationSession.appRuntimeMiddleware.getLasActivity();
             // Fragment fragment = appRuntimeMiddleware.getLastFragment();
-            ApplicationSession.setActivityId(activity.getType().getKey());
+            //ApplicationSession.setActivityId(activity.getType().getKey());
 
             //get activity settings
             this.tabs = activity.getTabStrip();
@@ -113,7 +112,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
         Object params;
         Intent intent;
         //get actual activity Fragment to execute
-        this.fragment = ApplicationSession.getAppRuntime().getLastFragment();
+        this.fragment = ApplicationSession.appRuntimeMiddleware.getLastFragment();
 
         if(fragment != null){
 
@@ -197,7 +196,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
     public void onBackPressed() {
         // get actual fragment on execute
 
-        this.fragment = ApplicationSession.getAppRuntime().getLastFragment();
+        this.fragment = ApplicationSession.appRuntimeMiddleware.getLastFragment();
 
         //get setting fragment to back
         Fragments frgBackType = this.fragment.getBack();
@@ -205,10 +204,10 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
         if(frgBackType != null){
 
 
-            Fragment fragmentBack = ApplicationSession.getAppRuntime().getFragment(frgBackType); //set back fragment to actual fragment to run
+            Fragment fragmentBack = ApplicationSession.appRuntimeMiddleware.getFragment(frgBackType); //set back fragment to actual fragment to run
 
             //I get string context with params pass to fragment to return with this data
-            ApplicationSession.setParams(fragmentBack.getContext());
+            ApplicationSession.mParams=fragmentBack.getContext();
         }
 
 
@@ -248,11 +247,9 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
             }
             else
             {
-                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
+                ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
 
             }
-
-
 
 
         } catch (Exception e) {
