@@ -77,13 +77,22 @@ public class WalletFactoryMiddlewareProjectProposal implements WalletFactoryProj
     }
 
     @Override
-    public void createEmptySkin(WalletFactoryProjectSkin name) throws CantAddWalletFactoryProjectSkinException {
+    public void addSkin(WalletFactoryProjectSkin name) throws CantAddWalletFactoryProjectSkinException {
 
     }
 
-
     @Override
     public void deleteSkin(WalletFactoryProjectSkin name) throws CantDeleteWalletFactoryProjectSkinException {
+
+    }
+
+    @Override
+    public void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException {
+
+    }
+
+    @Override
+    public void deleteResource(String name, byte[] resource, ResourceType resourceType) throws CantDeleteWalletFactoryProjectResourceException {
 
     }
 

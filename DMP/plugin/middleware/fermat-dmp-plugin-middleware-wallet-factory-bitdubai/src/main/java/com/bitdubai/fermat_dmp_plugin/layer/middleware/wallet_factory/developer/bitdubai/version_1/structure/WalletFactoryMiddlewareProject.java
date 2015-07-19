@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal</code>
@@ -30,21 +29,11 @@ public class WalletFactoryMiddlewareProject implements WalletFactoryProject {
     List<String> proposals;
 
     @Override
-    public String getDeveloperPublicKey() {
-        return null;
-    }
-
-    @Override
-    public UUID getId() {
-        return null;
-    }
-
-    @Override
     public String getName() {
         return name;
     }
 
-
+    @Override
     public List<String> getProposals() throws CantGetWalletFactoryProjectProposalsException {
         return proposals;
     }
