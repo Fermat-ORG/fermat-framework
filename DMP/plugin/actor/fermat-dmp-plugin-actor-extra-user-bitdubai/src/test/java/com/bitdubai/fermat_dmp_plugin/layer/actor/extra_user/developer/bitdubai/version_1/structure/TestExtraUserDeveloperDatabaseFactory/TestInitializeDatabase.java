@@ -1,33 +1,50 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.TestExtraUserDeveloperDatabaseFactory;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantInitializeExtraUserRegistryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserDeveloperDatabaseFactory;
-import org.fest.assertions.api.Assertions;
+import com.googlecode.catchexception.CatchException;
+import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.mockito.Mock;
+
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by francisco on 08/07/15.
  */
 public class TestInitializeDatabase {
 
-    ExtraUserDeveloperDatabaseFactory extraUserDeveloperDatabaseFactory;
-    CantCreateDatabaseException cantCreateDatabaseException;
+    @Mock
+    private ExtraUserDeveloperDatabaseFactory mockExtraUserDeveloperFactory = mock(ExtraUserDeveloperDatabaseFactory.class);
+    @Mock
+    private ErrorManager errorManager=mock(ErrorManager.class);
+    @Mock
+    private PlatformDatabaseSystem platformDatabaseSystem=mock(PlatformDatabaseSystem.class);
+    @Mock
+    private DatabaseFactory mockDatabaseFactory = mock(DatabaseFactory.class);
+    @Mock
+    private ExtraUserDatabaseFactory mockExtraUserDatabaseFactory = mock(ExtraUserDatabaseFactory.class);
+    @Mock
+    private Database database;
+    @Before
+    public void SetUp() throws Exception{
 
-    CantInitializeExtraUserRegistryException cantInitializeExtraUserRegistryException;
+        mockExtraUserDeveloperFactory= new ExtraUserDeveloperDatabaseFactory(errorManager,platformDatabaseSystem);
+    }
     @Ignore
-    @Test
-    public void testInitializeDatabase_InitializeExtraUserRegistry() throws Exception {
-        cantCreateDatabaseException=null;
-        try {
-            extraUserDeveloperDatabaseFactory.initializeDatabase();
-        } catch (CantInitializeExtraUserRegistryException e) {
-            e.printStackTrace();
-            cantInitializeExtraUserRegistryException=e;
-        }
-        Assertions.assertThat(cantInitializeExtraUserRegistryException).isNull();
+    public void testInitializeDatabase_successful() throws Exception {
 
+        when(platformDatabaseSystem.createDatabase("Extra User")).thenReturn(database);
+        when(mockExtraUserDatabaseFactory.createDatabase()).thenReturn(database);
+
+        CatchException.catchException(mockExtraUserDeveloperFactory).initializeDatabase();
+        assertThat(CatchException.caughtException()).isNull();
     }
 
 }

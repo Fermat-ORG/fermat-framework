@@ -2,34 +2,55 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserDeveloperDatabaseFactory;
+import junit.framework.TestCase;
 import org.fest.assertions.api.Assertions;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mock;
 
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by francisco on 08/07/15.
  */
-public class TestGetDatabaseList {
+public class TestGetDatabaseList extends TestCase {
+    @Mock
+    private  ExtraUserDeveloperDatabaseFactory mockExtraUserDeveloperDatabaseFactory=mock(ExtraUserDeveloperDatabaseFactory.class);
+    @Mock
+    private ErrorManager mockErrorManager;
+    @Mock
+    private PlatformDatabaseSystem mockPlatformDatabaseSystem=mock(PlatformDatabaseSystem.class);
+    @Mock
+    private DeveloperObjectFactory mockDeveloperObjectFactory=mock(DeveloperObjectFactory.class);
+    @Mock
+    private DeveloperDatabase mockDeveloperDatabase=mock(DeveloperDatabase.class);
+    @Mock
+    private List<DeveloperDatabase> mockListDatabases;
 
-    ExtraUserDeveloperDatabaseFactory extraUserDeveloperDatabaseFactory;
-    DeveloperObjectFactory developerObjectFactory;
-    @Ignore
-    @Test
-    public void testGetDatabaseList() throws Exception {
-        List<DeveloperDatabase> databases;
-        databases = extraUserDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
 
-        Assertions.assertThat(databases).isNotEmpty();
-    }
-    @Ignore
+    ListData testListData = new ListData();
     @Test
-    public  void testGetDatabaseList_zero_size() throws Exception{
-        List<DeveloperDatabase> databases;
-        databases = extraUserDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
-        int i = databases.size();
-        Assertions.assertThat(i).isEqualTo(0);
+    public void testGetDatabaseList_successful() throws Exception {
+
+     when(this.mockDeveloperObjectFactory.
+      getNewDeveloperDatabase(Matchers.anyString(), Matchers.anyString())
+      ).thenReturn(testListData.getDatabase());
+
+
+        when(mockExtraUserDeveloperDatabaseFactory.
+                        getDatabaseList(Matchers.<DeveloperObjectFactory>any())
+        ).thenReturn(testListData.getDatabaseList());
+
+        mockListDatabases=mockExtraUserDeveloperDatabaseFactory.getDatabaseList(this.mockDeveloperObjectFactory);
+
+        Assertions.assertThat(mockListDatabases).isNotNull();
     }
+
+
 }

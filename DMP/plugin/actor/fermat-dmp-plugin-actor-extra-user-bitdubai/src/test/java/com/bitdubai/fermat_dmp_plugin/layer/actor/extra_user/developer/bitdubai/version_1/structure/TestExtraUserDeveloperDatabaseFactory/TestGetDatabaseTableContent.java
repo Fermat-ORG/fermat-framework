@@ -3,55 +3,43 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserDeveloperDatabaseFactory;
 import org.fest.assertions.api.Assertions;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mock;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by francisco on 08/07/15.
  */
 public class TestGetDatabaseTableContent {
 
-    ExtraUserDeveloperDatabaseFactory extraUserDeveloperDatabaseFactory;
-    DeveloperObjectFactory developerObjectFactory;
-    DeveloperDatabaseTable developerDatabaseTable;
-/**
- * If returnRecord returns a list not empty
- * **/
-    @Ignore
-    @Test
-    public void testGetDatabaseTableContent() throws Exception {
-        List<DeveloperDatabaseTableRecord> returnedRecords;
-        returnedRecords=extraUserDeveloperDatabaseFactory.
-                getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        Assertions.assertThat(returnedRecords.isEmpty()).isEqualTo(false);
-    }
-    /**
-     * If returnRecord fails, it should return an empty list
-     * **/
-    @Ignore
-    @Test
-    public  void testGetDatabaseTableContent_isEmpty() throws Exception{
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-        returnedRecords=extraUserDeveloperDatabaseFactory.
-                getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    @Mock
+    private ExtraUserDeveloperDatabaseFactory mockExtraUserDeveloperDatabaseFactory=mock(ExtraUserDeveloperDatabaseFactory.class);
+    @Mock
+    private List<DeveloperDatabaseTableRecord> testReturnedRecords;
+    @Mock
+    private DatabaseTable selectedTable;
+    private DeveloperObjectFactory mockDeveloperObjectFactory= mock(DeveloperObjectFactory.class);
+    private DeveloperDatabaseTable mockDeveloperDatabaseTable=mock(DeveloperDatabaseTable.class);
 
-        Assertions.assertThat(returnedRecords.isEmpty()).isEqualTo(true);
-    }
-    @Ignore
+   ListData testListData = new ListData();
     @Test
-    public  void testGetDatabaseTableContent_Exception() throws Exception{
-        Exception exception=null;
-        try {
-            extraUserDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory,developerDatabaseTable);
-        } catch (Exception e) {
-            e.printStackTrace();
-            exception=e;
-        }
-        Assertions.assertThat(exception).isNull();
+    public void testGetDatabaseTableConent() throws Exception{
+
+        when(this.mockDeveloperObjectFactory.getNewDeveloperDatabase(
+        Matchers.anyString(), Matchers.anyString())
+        ).thenReturn (testListData.getDatabase());
+
+        testReturnedRecords=mockExtraUserDeveloperDatabaseFactory.
+        getDatabaseTableContent(mockDeveloperObjectFactory,mockDeveloperDatabaseTable);
+
+        Assertions.assertThat(testReturnedRecords).isNotNull();
     }
 }
