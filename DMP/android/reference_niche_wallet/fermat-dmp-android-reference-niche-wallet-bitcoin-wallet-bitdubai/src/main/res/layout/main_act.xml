@@ -30,7 +30,8 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        >
 
         <include
             layout="@layout/loading_empty_view"
@@ -40,7 +41,9 @@
             android:id="@+id/list_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:scrollingCache="false" />
+            android:scrollingCache="false"
+
+            />
 
         <com.melnykov.fab.FloatingActionButton
             android:id="@+id/fab_add_person"
