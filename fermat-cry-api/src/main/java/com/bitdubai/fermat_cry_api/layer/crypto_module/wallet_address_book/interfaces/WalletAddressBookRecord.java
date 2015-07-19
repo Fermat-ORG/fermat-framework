@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import java.util.UUID;
@@ -16,7 +16,7 @@ public interface WalletAddressBookRecord {
 
     UUID getWalletId();
 
-    PlatformWalletType getWalletType();
+    ReferenceWallet getWalletType();
 
     CryptoAddress getCryptoAddress();
 }

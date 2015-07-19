@@ -2,20 +2,17 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_walle
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -97,7 +94,7 @@ public class CreateWalletContactTest extends TestCase {
     String actressName;
     Actors actorType;
     CryptoAddress deliveredCryptoAddress;
-    PlatformWalletType platformWalletType;
+    ReferenceWallet referenceWallet;
     UUID walletId;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
@@ -107,7 +104,7 @@ public class CreateWalletContactTest extends TestCase {
         actressName = "Penelope Cruz";
         actorType = Actors.EXTRA_USER;
         deliveredCryptoAddress = new CryptoAddress("asdasd ", CryptoCurrency.BITCOIN);
-        platformWalletType = PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET;
+        referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
         walletId = UUID.randomUUID();
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
@@ -127,7 +124,7 @@ public class CreateWalletContactTest extends TestCase {
 
     @Test
     public void testCreateWalletContact_NotNull() throws Exception {
-        WalletContactRecord walletContactRecord = nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, platformWalletType, walletId);
+        WalletContactRecord walletContactRecord = nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
         assertNotNull(walletContactRecord);
     }
 
@@ -137,7 +134,7 @@ public class CreateWalletContactTest extends TestCase {
     public void testCreateWalletContact_ContactAlreadyExists() throws Exception {
         doReturn(walletContactRecord).when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));
 
-        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, platformWalletType, walletId);
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
     }
 
     // TYPE OF ACTOR NOT RECOGNIZED BY THE PLUGIN
@@ -145,7 +142,7 @@ public class CreateWalletContactTest extends TestCase {
     public void testCreateWalletContact_ActorTypeNotRecognized() throws Exception {
         actorType = Actors.INTRA_USER;
 
-        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, platformWalletType, walletId);
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
     }
 
     /**
@@ -159,7 +156,7 @@ public class CreateWalletContactTest extends TestCase {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException("gasdil", null, null, null))
                 .when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), any(UUID.class));
 
-        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, platformWalletType, walletId);
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
     }
 
     // CANT GET WALLET CONTACT TO KNOW IF ALREADY EXISTS TEST
@@ -168,6 +165,6 @@ public class CreateWalletContactTest extends TestCase {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException("gasdil", null, null, null))
             .when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));
 
-        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, platformWalletType, walletId);
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
     }
 }

@@ -35,13 +35,6 @@ public interface WalletManagerManager {
     public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException;
 
     /**
-     * This method gives us the progress of the current installation
-     *
-     * @return an integer that reflects the said progress
-     */
-    public int getInstallationProgress();
-
-    /**
      * This method returns the list of installed wallets in the device
      *
      * @return A list with the installed wallets information
@@ -69,7 +62,7 @@ public interface WalletManagerManager {
      *
      * @param walletInstallationInformation the information needed for the installation
      */
-    public void installWallet(WalletInstallationInformation walletInstallationInformation) throws CantInstallWalletException;
+    public WalletInstallationProcess installWallet();
 
     /**
      * This method starts the process of uninstalling a new language for an specific wallet
