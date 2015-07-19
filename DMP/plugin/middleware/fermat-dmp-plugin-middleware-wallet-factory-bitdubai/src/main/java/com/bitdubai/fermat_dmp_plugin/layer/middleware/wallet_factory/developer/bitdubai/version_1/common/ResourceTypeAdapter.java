@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import ae.javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  * Created by lnacosta on 2015.07.17..

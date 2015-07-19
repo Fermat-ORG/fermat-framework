@@ -20,21 +20,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
-import org.hamcrest.core.IsEqual;
-
-import static org.hamcrest.Matchers.*;
-
-import static ch.lambdaj.Lambda.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlElementWrapper;
+import ae.javax.xml.bind.annotation.XmlElements;
+import ae.javax.xml.bind.annotation.XmlRootElement;
+import ae.javax.xml.bind.annotation.XmlTransient;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin</code>
@@ -100,17 +94,26 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
 
     @Override
     public List<WalletFactoryProjectResource> getAllResourcesByResourceType(ResourceType resourceType) {
-        return select(resources, having(on(WalletFactoryProjectResource.class).getResourceType(), IsEqual.equalTo(resourceType)));
+        if (resources == null) {
+            return new ArrayList<>();
+        } else {
+            List<WalletFactoryProjectResource> collected = new ArrayList<>();
+            for(WalletFactoryProjectResource res : resources) {
+                if (res.getResourceType().equals(resourceType)) collected.add(res);
+            }
+            return collected;
+        }
     }
 
     @Override
     public WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException {
-        List<WalletFactoryProjectResource> walletFactoryProjectResourceList = getAllResourcesByResourceType(resourceType);
-        walletFactoryProjectResourceList = select(walletFactoryProjectResourceList, having(on(WalletFactoryMiddlewareProjectResource.class).getName(), equalTo(name)));
-
-        if(!walletFactoryProjectResourceList.isEmpty()) {
-            return walletFactoryProjectResourceList.get(0);
+        if (resources == null) {
+            throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, null, "No resources available.", "");
         } else {
+            for(WalletFactoryProjectResource res : resources) {
+                if (res.getName().equals(name) && res.getResourceType().equals(resourceType))
+                    return res;
+            }
             throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, null, "Resource not found.", "");
         }
     }

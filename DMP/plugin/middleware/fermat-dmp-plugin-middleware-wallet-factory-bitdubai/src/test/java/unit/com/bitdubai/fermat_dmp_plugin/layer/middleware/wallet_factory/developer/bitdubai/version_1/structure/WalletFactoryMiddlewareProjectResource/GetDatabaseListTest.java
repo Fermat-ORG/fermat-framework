@@ -10,9 +10,11 @@ import org.junit.Test;
 import java.io.File;
 
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
+import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
+import ae.javax.xml.bind.JAXBContext;
+import ae.javax.xml.bind.Marshaller;
+import ae.javax.xml.bind.Unmarshaller;
 
 public class GetDatabaseListTest extends TestCase {
 
@@ -24,8 +26,8 @@ public class GetDatabaseListTest extends TestCase {
     @Test
     public void testGetDatabaseListTest_NotNull3() throws Exception {
         try {
-
             File file = new File("/home/lnacosta/Desktop/skins.xml");
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectSkin.class.getPackage(), new XmlSchemaMine(""));
             JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectSkin.class);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();

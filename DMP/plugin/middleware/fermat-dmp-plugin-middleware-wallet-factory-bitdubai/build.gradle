@@ -13,8 +13,8 @@ dependencies {
 
     compile project(':fermat-api')
 
-    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.4'
-    compile 'com.googlecode.lambdaj:lambdaj:2.3.3'
+    compile 'com.sun.istack:istack-commons-runtime:2.22'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile 'org.mockito:mockito-all:2.0.2-beta'

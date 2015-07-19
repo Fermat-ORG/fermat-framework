@@ -17,12 +17,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 
 import java.util.UUID;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import ae.javax.xml.bind.Unmarshaller;
+import ae.javax.xml.bind.annotation.XmlAttribute;
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlRootElement;
+import ae.javax.xml.bind.annotation.XmlTransient;
+import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource</code>
