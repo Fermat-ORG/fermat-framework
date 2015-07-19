@@ -457,7 +457,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             MenuInflater inflater = getMenuInflater();
 
 
-            switch (this.activity.getType()) {
+            /*switch (this.activity.getType()) {
 
                 case CWP_SHELL_LOGIN:
                     break;
@@ -470,7 +470,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
 
 
-            }
+            }*/
 
         return super.onCreateOptionsMenu(menu);
     }
