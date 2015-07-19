@@ -27,6 +27,7 @@ import com.bitdubai.android_core.app.common.version_1.navigation_drawer.Navigati
 
 import com.bitdubai.android_core.app.common.PagerAdapter;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -235,12 +236,10 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
 
-
-            String status_color = activity.getStatusBarColor();
-            if (activity.getStatusBarColor() != null) {
-                setStatusBarColor(this.activity.getStatusBarColor());
-
-            }
+            /**
+             * Paint statusBar
+             */
+            setStatusBarColor(activity.getStatusBar());
 
             if (activity.getTabStrip() != null)
             {
@@ -296,6 +295,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
            // ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Error in NavigateActivity " + e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
@@ -419,7 +419,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        try {
             this.menu = menu;
             MenuInflater inflater = getMenuInflater();
 
@@ -439,13 +438,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             }
 
-        } catch (Exception e) {
-
-            // TODO:  Error manager null
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-            Toast.makeText(getApplicationContext(), "Can't CreateoptionMenu: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -496,26 +488,32 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     public void onNavigationDrawerItemSelected(int position) {
 
     }
-
+    /**
+     * Method to set status bar color in different version of android
+     */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(String color){
-        if(Build.VERSION.SDK_INT>20) {
-            try {
+    private void setStatusBarColor(StatusBar statusBar){
+        if(statusBar!=null) {
+            if (statusBar.getColor() != null) {
+                if (Build.VERSION.SDK_INT > 20) {
+                    try {
 
-                Window window = this.getWindow();
+                        Window window = this.getWindow();
 
-                // clear FLAG_TRANSLUCENT_STATUS flag:
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        // clear FLAG_TRANSLUCENT_STATUS flag:
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-                // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-                // finally change the color
-                // window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
-                Color color_status = new Color();
-                window.setStatusBarColor(color_status.parseColor(color));
-            } catch (Exception e) {
-                Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
+                        // finally change the color
+                        Color color_status = new Color();
+                        window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
+                    } catch (Exception e) {
+                        ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                        Log.d("WalletActivity", "Sdk version not compatible with status bar color");
+                    }
+                }
             }
         }
     }
@@ -554,8 +552,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     public void onBackPressed() {
 
         // get actual fragment on execute
-
-        this.fragment = ApplicationSession.getAppRuntime().getLastFragment();
+        try {
+            AppRuntimeManager appRuntimeManager = ApplicationSession.getAppRuntime();
+            this.fragment = appRuntimeManager.getLastFragment();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         //get setting fragment to back
         //if not fragment to back I back to desktop
@@ -654,6 +656,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         ApplicationSession.getAppRuntime().getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
 
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+
                         startActivity(intent);
 
                         break;
