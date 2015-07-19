@@ -103,6 +103,16 @@ public class WalletManagerMiddlewarePluginRoot implements DealsWithErrors,DealsW
         return null;
     }
 
+    @Override
+    public void installLanguage(UUID walletIdInThisDevice, UUID languageId) {
+
+    }
+
+    @Override
+    public void installSkin(UUID walletIdInThisDevice, UUID skinId) {
+
+    }
+
 
     @Override
     public void uninstallWallet(UUID walletIdInThisDevice) {
@@ -111,6 +121,16 @@ public class WalletManagerMiddlewarePluginRoot implements DealsWithErrors,DealsW
 
     @Override
     public void installWallet(WalletInstallationInformation walletInstallationInformation) {
+
+    }
+
+    @Override
+    public void uninstallLanguage(UUID walletIdInThisDevice, UUID languageId) {
+
+    }
+
+    @Override
+    public void uninstallSkin(UUID walletIdInThisDevice, UUID skinId) {
 
     }
 
