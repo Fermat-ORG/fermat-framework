@@ -5,14 +5,14 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by eze on 2015.07.13..
  */
-public enum WalletInstallationStatus {
+public enum InstallationStatus {
     INSTALLED ("INSED"),
     NOT_INSTALLED ("NOINS"),
     INSTALLING ("INSING");
 
     private String code;
 
-    WalletInstallationStatus(final String code){
+    InstallationStatus(final String code){
         this.code = code;
     }
 
@@ -20,11 +20,11 @@ public enum WalletInstallationStatus {
         return this.code;
     }
 
-    public static WalletInstallationStatus getByCode(String code) throws InvalidParameterException{
+    public static InstallationStatus getByCode(String code) throws InvalidParameterException{
         switch (code){
-            case "INSED": return WalletInstallationStatus.INSTALLED;
-            case "NOINS": return WalletInstallationStatus.NOT_INSTALLED;
-            case "INSING": return WalletInstallationStatus.INSTALLING;
+            case "INSED": return InstallationStatus.INSTALLED;
+            case "NOINS": return InstallationStatus.NOT_INSTALLED;
+            case "INSING": return InstallationStatus.INSTALLING;
             default:
                 throw new InvalidParameterException(code);
         }

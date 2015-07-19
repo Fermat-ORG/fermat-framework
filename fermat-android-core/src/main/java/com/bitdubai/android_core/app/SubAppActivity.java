@@ -46,7 +46,9 @@ import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableListFra
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsDatabaseTableRecordListFragment;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
+import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
+import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 
 
@@ -384,24 +386,57 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         this.fragment.setContext(screenObjects);
 
                         FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
-                        transaction1.replace(R.id.startContainer, frag1);
+                        transaction1.replace(R.id.logContainer, frag1);
                         // Commit the transaction
                         transaction1.commit();
+                    break;
+
+                case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS:
+
+                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+
+                    LogToolsFragmentLevel1 fragl= LogToolsFragmentLevel1.newInstance(0);
+                    fragl.setLoggers((ArrayListLoggers) screenObjects[0]);
+                    //set data pass to fragment
+                    this.fragment.setContext(screenObjects);
+
+                     transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.logContainer, fragl);
+                    // Commit the transaction
+                    transaction.commit();
                     break;
 
                 case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS:
 
                     this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
 
-                       LogToolsFragmentLevel2 fragl= LogToolsFragmentLevel2.newInstance(0);
-                        fragl.setLoggers((ArrayListLoggers) screenObjects[0]);
+                       LogToolsFragmentLevel2 fragl2= LogToolsFragmentLevel2.newInstance(0);
+                    fragl2.setLoggers((ArrayListLoggers) screenObjects[0]);
+                    fragl2.setLoggerLevel((int)screenObjects[1]);
+
                         //set data pass to fragment
                         this.fragment.setContext(screenObjects);
 
-                        FragmentTransaction transactionl = getSupportFragmentManager().beginTransaction();
-                        transactionl.replace(R.id.startContainer, fragl);
+                       transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.logContainer, fragl2);
                         // Commit the transaction
-                        transactionl.commit();
+                        transaction.commit();
+                    break;
+
+                case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS:
+
+                    this.fragment = ApplicationSession.getAppRuntime().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+
+                    LogToolsFragmentLevel3 fragl3= LogToolsFragmentLevel3.newInstance(0);
+                    fragl3.setLoggers((ArrayListLoggers) screenObjects[0]);
+                    fragl3.setLoggerLevel((int) screenObjects[1]);
+                    //set data pass to fragment
+                    this.fragment.setContext(screenObjects);
+
+                  transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.logContainer, fragl3);
+                    // Commit the transaction
+                    transaction.commit();
                     break;
 
 
@@ -551,16 +586,19 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     public void onBackPressed() {
 
         // get actual fragment on execute
+        Fragments frgBackType = null;
         try {
             AppRuntimeManager appRuntimeManager = ApplicationSession.getAppRuntime();
             this.fragment = appRuntimeManager.getLastFragment();
+            //get setting fragment to back
+            //if not fragment to back I back to desktop
+             frgBackType = this.fragment.getBack();
+
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        //get setting fragment to back
-        //if not fragment to back I back to desktop
-        Fragments frgBackType = this.fragment.getBack();
+
 
         if(frgBackType != null){
 
@@ -733,6 +771,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
      */
     @Override
     public void setParams(Object[] objects){
+        this.screenObjects = null;
         this.screenObjects = objects;
     }
 
