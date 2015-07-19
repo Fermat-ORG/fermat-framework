@@ -11,7 +11,8 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.d
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -107,12 +108,12 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
         }
     }
 
-    public void registerWalletAddressBookModule(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) throws CantRegisterWalletAddressBookException {
+    public void registerWalletAddressBookModule(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, UUID walletId) throws CantRegisterWalletAddressBookException {
 
         if (cryptoAddress == null)
             throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, null, "cryptoAddress: null", "cryptoAddress cannot be null");
-        if (platformWalletType == null)
-            throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, null, "platformWalletType: null", "platformWalletType cannot be null");
+        if (referenceWallet == null)
+            throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, null, "referenceWallet: null", "referenceWallet cannot be null");
         if (walletId == null)
             throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, null, "walletId: null", "walletId cannot be null");
         /**
@@ -133,7 +134,7 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
 
         walletAddressBookModuleRecord.setUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID, recordId);
         walletAddressBookModuleRecord.setUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, walletId);
-        walletAddressBookModuleRecord.setStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, platformWalletType.getCode());
+        walletAddressBookModuleRecord.setStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, referenceWallet.getCode());
         walletAddressBookModuleRecord.setStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress());
         walletAddressBookModuleRecord.setStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, cryptoAddress.getCryptoCurrency().getCode());
         walletAddressBookModuleRecord.setLongValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_TIME_STAMP, unixTime);
@@ -181,10 +182,14 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
         if(records.isEmpty())
             throw new WalletAddressBookNotFoundException(WalletAddressBookNotFoundException.DEFAULT_MESSAGE, null, "", "The crypto_address is not registered.");
 
-        DatabaseTableRecord record = records.get(0);
-        UUID walletId = record.getUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID);
-        PlatformWalletType platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
-        return new WalletAddressBookCryptoModuleRecord(cryptoAddress, platformWalletType, walletId);
+        try {
+            DatabaseTableRecord record = records.get(0);
+            UUID walletId = record.getUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID);
+            ReferenceWallet referenceWallet = ReferenceWallet.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
+            return new WalletAddressBookCryptoModuleRecord(cryptoAddress, referenceWallet, walletId);
+        } catch (InvalidParameterException e) {
+            throw new WalletAddressBookNotFoundException(WalletAddressBookNotFoundException.DEFAULT_MESSAGE, e,"", "Unknown Reference Wallet. Someone probably added a wallet type and didn't completed the getByCode method");
+        }
     }
 
     public List<WalletAddressBookRecord> getAllWalletAddressBookModuleByWalletId(UUID walletId) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
@@ -214,7 +219,7 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
          * Will go through the records getting each Wallet address.
          */
 
-        PlatformWalletType platformWalletType;
+        ReferenceWallet referenceWallet;
         String address;
         CryptoCurrency cryptoCurrency;
         CryptoAddress cryptoAddress;
@@ -227,11 +232,15 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
         List<WalletAddressBookRecord> walletAddressBookRecords = new ArrayList<>();
 
         for (DatabaseTableRecord record : records) {
-            platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
+            try{
+            referenceWallet = ReferenceWallet.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
+            } catch (InvalidParameterException e) {
+                throw new WalletAddressBookNotFoundException(WalletAddressBookNotFoundException.DEFAULT_MESSAGE, e,"", "Unknown Reference Wallet. Someone probably added a wallet type and didn't completed the getByCode method");
+            }
             address = record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
             cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
             cryptoAddress = new CryptoAddress(address, cryptoCurrency);
-            WalletAddressBookRecord addressBook = new WalletAddressBookCryptoModuleRecord(cryptoAddress, platformWalletType, walletId);
+            WalletAddressBookRecord addressBook = new WalletAddressBookCryptoModuleRecord(cryptoAddress, referenceWallet, walletId);
             walletAddressBookRecords.add(addressBook);
         }
 

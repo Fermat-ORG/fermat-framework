@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.TransactionExecutorFactory;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
@@ -41,7 +41,7 @@ public class NewTransactionExecutorTest {
         when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWallet);
 
         testExecutorFactory = new TransactionExecutorFactory(mockBitcoinWalletManager, mockActorAddressBookManager);
-        testExecutor = testExecutorFactory.newTransactionExecutor(PlatformWalletType.COMPOSITE_WALLET_MULTI_ACCOUNT, UUID.randomUUID());
+        testExecutor = testExecutorFactory.newTransactionExecutor(ReferenceWallet.COMPOSITE_WALLET_MULTI_ACCOUNT, UUID.randomUUID());
         assertThat(testExecutor).isNull();
     }
 
@@ -50,7 +50,7 @@ public class NewTransactionExecutorTest {
         when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWallet);
 
         testExecutorFactory = new TransactionExecutorFactory(mockBitcoinWalletManager, mockActorAddressBookManager);
-        testExecutor = testExecutorFactory.newTransactionExecutor(PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, UUID.randomUUID());
+        testExecutor = testExecutorFactory.newTransactionExecutor(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, UUID.randomUUID());
         assertThat(testExecutor)
                 .isNotNull()
                 .isInstanceOf(BitcoinBasicWalletTransactionExecutor.class);
@@ -61,7 +61,7 @@ public class NewTransactionExecutorTest {
         when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenThrow(new CantLoadWalletException("MOCK", null, null, null));
 
         testExecutorFactory = new TransactionExecutorFactory(mockBitcoinWalletManager, mockActorAddressBookManager);
-        catchException(testExecutorFactory).newTransactionExecutor(PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, UUID.randomUUID());
+        catchException(testExecutorFactory).newTransactionExecutor(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, UUID.randomUUID());
 
         assertThat(caughtException())
                 .isNotNull()
