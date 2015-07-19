@@ -22,9 +22,9 @@ public interface WalletInstallationProcess {
      * This method starts the wallet installation process
      *
      * @param walletCategory The category of the wallet to install
-     * @param nicheWallet The identification of the wallets
-     * @param skinId
-     * @param languageId
+     * @param nicheWallet The identification of the wallet
+     * @param skinId the identifier of the skin to install
+     * @param languageId the indentifier of the language to install
      * @param walletCatalogueId An identifier of the wallet to install
      * @param version the version of the wallet to install
      * @throws CantInstallWalletException

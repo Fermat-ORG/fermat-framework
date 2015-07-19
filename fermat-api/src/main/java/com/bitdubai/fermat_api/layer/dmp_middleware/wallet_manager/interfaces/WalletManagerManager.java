@@ -58,9 +58,9 @@ public interface WalletManagerManager {
     public void installSkin(UUID walletIdInThisDevice, UUID skinId) throws CantInstallSkinException;
 
     /**
-     *  This method starts the process of installing a new wallet
+     * This method returns the interface responsible of the installation process of a wallet
      *
-     * @param walletInstallationInformation the information needed for the installation
+     * @return an interface to manage the installation of a new wallet
      */
     public WalletInstallationProcess installWallet();
 
