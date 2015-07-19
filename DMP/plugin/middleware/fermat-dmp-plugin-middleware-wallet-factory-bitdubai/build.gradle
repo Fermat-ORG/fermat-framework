@@ -13,9 +13,5 @@ dependencies {
 
     compile project(':fermat-api')
 
-    compile 'com.sun.istack:istack-commons-runtime:2.22'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile 'org.mockito:mockito-all:2.0.2-beta'
 }
