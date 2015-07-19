@@ -55,8 +55,6 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
         return mDefaultTypeface;
     }
 
-
-
     private static Platform fermatPlatform;
 
 
@@ -70,24 +68,4 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
     }
 
 
-
-
-
-    /*private static Drawable.Callback drawableCallback = new Drawable.Callback() {
-        @Override
-        public void invalidateDrawable(Drawable who) {
-            actionBar.setBackgroundDrawable(who);
-        }
-
-        @Override
-        public void scheduleDrawable(Drawable who, Runnable what, long when) {
-            handler.postAtTime(what, when);
-        }
-
-        @Override
-        public void unscheduleDrawable(Drawable who, Runnable what) {
-            handler.removeCallbacks(what);
-        }
-    };
-    */
 }
