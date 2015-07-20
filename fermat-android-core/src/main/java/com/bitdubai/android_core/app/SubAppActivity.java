@@ -3,6 +3,9 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.*;
@@ -13,13 +16,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-//import android.support.v7.widget.SearchView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
@@ -35,8 +40,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
@@ -60,7 +66,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.ViewGroup;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
@@ -89,25 +94,9 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     private NavigationDrawerFragment NavigationDrawerFragment;
 
     private PagerAdapter PagerAdapter;
-    public CharSequence Title; // NATALIA TODO:porque esto es publico? LUIS lo usa la funcion Restore Action bar
-    private Menu menu;
-    private PagerSlidingTabStrip tabStrip;
-    private App app;
-    private SubApp subApp;
-    private Activity activity;
-    private Map<Fragments, Fragment> fragments;
-    private ViewPager pager;
     private ViewPager pagertabs;
     private MyPagerAdapter adapter;
-    private TextView abTitle;
-    private int currentColor = 0xFF666666;
-    private MainMenu mainMenumenu;
-    private SideMenu sidemenu;
-    private TabStrip tabs;
-    private TitleBar titleBar; // Comment
-    private boolean firstexecute = true;
-    private Bundle savedInstanceState;
-    private ViewGroup collection;
+
     private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragment;
     private String actionKey;
 
@@ -119,15 +108,14 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         try {
 
 
-            this.savedInstanceState = savedInstanceState;
-
             NavigateActivity();
         } catch (Exception e) {
             // TODO: el errorManager no estaria instanciado aca....
+            ApplicationSession.errorManager.reportUnexpectedSubAppException(ApplicationSession.appRuntimeMiddleware.getLastSubApp().getType(), UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
+
             //this.errorManage.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             //ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
             Toast.makeText(getApplicationContext(), "Error Load RuntimeApp - " + e.getMessage(), Toast.LENGTH_LONG).show();
-            //e.printStackTrace();
         }
 
 
@@ -140,7 +128,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
         try {
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<Fragments, Fragment>> efragments = this.fragments.entrySet().iterator();
+            Iterator<Map.Entry<Fragments, Fragment>> efragments = ApplicationSession.appRuntimeMiddleware.getLasActivity().getFragments().entrySet().iterator();
             boolean flag = false;
             while (efragments.hasNext()) {
                 Map.Entry<Fragments, Fragment> fragmentEntry = efragments.next();
@@ -193,80 +181,47 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     // to make the NavigationDrawerFragment verified whether the activity has a SideMenu
     private void NavigateActivity() {
         try {
-            this.app =ApplicationSession.appRuntimeMiddleware.getLastApp();
-            this.subApp = ApplicationSession.appRuntimeMiddleware.getLastSubApp();
-            this.activity = ApplicationSession.appRuntimeMiddleware.getLasActivity();
-
-            //ApplicationSession.setActivityId(activity.getType().getKey());
-
-            this.tabs = activity.getTabStrip();
-            this.fragments = activity.getFragments();
-            this.titleBar = activity.getTitleBar();
-
-            this.mainMenumenu = activity.getMainMenu();
-            this.sidemenu = activity.getSideMenu();
-
-
-            //if wallet do not set the navigator drawer I load a layout without him
-            if (sidemenu != null) {
-
-                setContentView(R.layout.runtime_app_activity_runtime_navigator);
-
-
-                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-                this.NavigationDrawerFragment.setMenuVisibility(true);
-
-
-                // Set up the drawer.
-                this.NavigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-            } else {
-                setContentView(R.layout.runtime_app_activity_runtime);
-
-            }
-
-            if (tabs == null)
-                (findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
-            else {
-                (findViewById(R.id.tabs)).setVisibility(View.VISIBLE);
-                this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-
-            }
-            int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-            this.abTitle = (TextView) findViewById(titleId);
+            Activity activity = ApplicationSession.appRuntimeMiddleware.getLasActivity();
 
             /**
-             * Paint statusBar
+             * Get tabs to paint
              */
+            TabStrip tabs = activity.getTabStrip();
+            /**
+             * Get activities fragment
+             */
+            Map<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
+            /**
+             * get actionBar to paint
+             */
+            TitleBar titleBar = activity.getTitleBar();
+            /**
+             * Get mainMenu to paint
+             */
+            MainMenu mainMenu= activity.getMainMenu();
+            /**
+             * Get NavigationDrawer to paint
+             */
+            SideMenu sideMenu = activity.getSideMenu();
+
+
+            /**
+             * Pick the layout
+             */
+            setMainLayout(sideMenu);
+
+
+            /**
+             * Paint tabs in layout
+             */
+            PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+            paintTabs(tabs, pagerSlidingTabStrip, activity);
+
+
             setStatusBarColor(activity.getStatusBar());
 
-            if (activity.getTabStrip() != null)
-            {
-                if (activity.getTabStrip().getTabsColor()!=null){
-                    tabStrip.setBackgroundColor(Color.parseColor(this.activity.getTabStrip().getTabsColor()));
-                    //tabStrip.setDividerColor(Color.TRANSPARENT);
 
-                }
-                if(activity.getTabStrip().getTabsTextColor()!=null){
-                    tabStrip.setTextColor(Color.parseColor(this.activity.getTabStrip().getTabsTextColor()));
-                }
-
-                if(this.activity.getTabStrip().getTabsIndicateColor()!=null){
-                    tabStrip.setIndicatorColor(Color.parseColor(this.activity.getTabStrip().getTabsIndicateColor()));
-                }
-            }
-
-            Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
-            if (tabStrip != null){
-                tabStrip.setTypeface(tf,1 );
-            }
-
-            //ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
-
-
-
+            paintTitleBar(titleBar);
 
             if (tabs == null && fragments.size() > 1) {
                 this.initialisePaging();
@@ -281,7 +236,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                         .getDisplayMetrics());
                 pagertabs.setPageMargin(pageMargin);
-
+                PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
                 tabStrip.setViewPager(pagertabs);
 
 
@@ -297,6 +252,132 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             Toast.makeText(getApplicationContext(), "Error in NavigateActivity " + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param titleBar
+     */
+    private void paintTitleBar(TitleBar titleBar){
+        try {
+            TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
+            if (titleBar != null) {
+
+                String title = titleBar.getLabel();
+
+                if (abTitle != null) {
+                    abTitle.setTextColor(Color.WHITE);
+                    abTitle.setTypeface(ApplicationSession.getDefaultTypeface());
+                }
+                getActionBar().setTitle(title);
+                getActionBar().show();
+                setActionBarProperties(abTitle,title);
+            } else {
+                getActionBar().hide();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param abTitle
+     * @param title
+     */
+    private void setActionBarProperties(TextView abTitle, String title){
+        SpannableString s = new SpannableString(title);
+
+
+        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "CaviarDreams.ttf"), 0, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Update the action bar title with the TypefaceSpan instance
+        getActionBar().setTitle(s);
+
+        // actionBar
+        Drawable bg = getResources().getDrawable(R.drawable.transparent);
+        bg.setVisible(false, false);
+        Drawable wallpaper = getResources().getDrawable(R.drawable.transparent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+            Drawable colorDrawable = new ColorDrawable(Color.parseColor(ApplicationSession.appRuntimeMiddleware.getLasActivity().getColor()));
+            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
+            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                //ld.setCallback(drawableCallback);
+            } else {
+                getActionBar().setBackgroundDrawable(ld);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param tabs
+     * @param pagerSlidingTabStrip
+     * @param activity
+     */
+    private void paintTabs(TabStrip tabs,PagerSlidingTabStrip pagerSlidingTabStrip,Activity activity){
+        if(tabs == null)
+            pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
+        else{
+            pagerSlidingTabStrip.setVisibility(View.VISIBLE);
+            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
+            pagerSlidingTabStrip.setTypeface(tf,1 );
+            pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
+
+            // paint tabs color
+            if (tabs.getTabsColor()!=null){
+                pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
+                //tabStrip.setDividerColor(Color.TRANSPARENT);
+            }
+
+            // paint tabs text color
+            if(tabs.getTabsTextColor()!=null){
+                pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
+            }
+
+            //paint tabs indicate color
+            if(tabs.getTabsIndicateColor()!=null){
+                pagerSlidingTabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
+            }
+        }
+
+
+
+        // put tabs font
+        if (pagerSlidingTabStrip != null){
+            pagerSlidingTabStrip.setTypeface(ApplicationSession.mDefaultTypeface, 1);
+        }
+    }
+
+    /**
+     *
+     * @param sidemenu
+     */
+    private void setMainLayout(SideMenu sidemenu){
+        if(sidemenu != null){
+            setContentView(R.layout.runtime_app_activity_runtime_navigator);
+            NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+            NavigationDrawerFragment.setMenuVisibility(true);
+            /**
+             * Set up the navigationDrawer
+             */
+            NavigationDrawerFragment.setUp(
+                    R.id.navigation_drawer,
+                    (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+        }
+
+        /**
+         * Paint layout without navigationDrawer
+         */
+        else{
+            setContentView(R.layout.runtime_app_activity_runtime);
         }
     }
 
@@ -453,7 +534,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-            this.menu = menu;
             MenuInflater inflater = getMenuInflater();
 
 
@@ -494,7 +574,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             if (id == R.id.action_wallet_store) {
                 //((ApplicationSession) this.getApplication()).setWalletId(0);
                 ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
-                NavigateActivity();
+                //NavigateActivity();
 
                 return true;
             }
@@ -570,7 +650,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("currentColor", currentColor);
     }
 
     @Override
@@ -613,6 +692,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             // set Desktop current activity
             //ApplicationSession.setActivityId("DesktopActivity");
             //((ApplicationSession) this.getApplication()).setWalletId(0);
+            Activity activity=ApplicationSession.appRuntimeMiddleware.getLasActivity();
             if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
                 cleanWindows();
                 activity = ApplicationSession.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
@@ -631,9 +711,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         try {
             //clean page adapter
             pagertabs = (ViewPager) findViewById(R.id.pager);
-            this.collection = pagertabs;
-            // if(adapter != null) {
-            collection.removeAllViews();
+            pagertabs.removeAllViews();
 
             ViewPager viewpager = (ViewPager) super.findViewById(R.id.viewpager);
             viewpager.setVisibility(View.INVISIBLE);
@@ -643,11 +721,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 this.NavigationDrawerFragment.setMenuVisibility(false);
             NavigationDrawerFragment = null;
             this.PagerAdapter = null;
-            this.abTitle = null;
             this.adapter = null;
-            this.pager = null;
             this.pagertabs = null;
-            this.Title = "";
 
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
 
@@ -688,6 +763,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 cleanWindows();
 
                 switch (activityType) {
+
 
                     case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
 
@@ -786,6 +862,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
+            TabStrip tabs= ApplicationSession.appRuntimeMiddleware.getLasActivity().getTabStrip();
             if (tabs != null) {
                 List<Tab> titleTabs = tabs.getTabs();
                 titles = new String[titleTabs.size()];
@@ -830,7 +907,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             try {
                 android.support.v4.app.Fragment currentFragment = null;
                 Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
-                List<Tab> titleTabs = tabs.getTabs();
+                List<Tab> titleTabs = ApplicationSession.appRuntimeMiddleware.getLasActivity().getTabStrip().getTabs();
                 for (int j = 0; j < titleTabs.size(); j++) {
                     if (j == position) {
                         Tab tab = titleTabs.get(j);
