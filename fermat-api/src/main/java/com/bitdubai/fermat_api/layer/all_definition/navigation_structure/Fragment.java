@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 
 /**
  * Created by rodrigo on 2015.07.17..
  */
-public class Fragment implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment {
+public class Fragment implements FermatFragment {
 
     Fragments type;
     Fragments fragmentBack;
