@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_user;
+package com.bitdubai.fermat_pip_api.layer.pip_user;
 
 /**
  * Created by ciencias on 3/18/15.

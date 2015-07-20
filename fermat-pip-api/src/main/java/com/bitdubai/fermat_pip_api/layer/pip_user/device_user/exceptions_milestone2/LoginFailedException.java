@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2;
+package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2;
 
 import com.bitdubai.fermat_api.FermatException;
 

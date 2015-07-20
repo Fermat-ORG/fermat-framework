@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_api.layer.dmp_actor.extra_user;
 
-import com.bitdubai.fermat_api.layer.pip_user.User;
+
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateExtraUserRegistry;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserRegistry;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 
 import java.util.UUID;
 
@@ -14,9 +15,9 @@ import java.util.UUID;
  */
 public interface UserRegistry {
 
-    public User createUser(String userName) throws CantCreateExtraUserRegistry;
+    public Actor createUser(String userName) throws CantCreateExtraUserRegistry;
 
-    public User getUser(UUID userId) throws CantGetExtraUserRegistry;
+    public Actor getUser(UUID userId) throws CantGetExtraUserRegistry;
 
 
 }
