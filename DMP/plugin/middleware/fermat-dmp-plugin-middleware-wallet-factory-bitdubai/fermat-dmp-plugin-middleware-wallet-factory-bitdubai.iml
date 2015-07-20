@@ -27,6 +27,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fermat-api" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-api" exported="" />
     <orderEntry type="library" exported="" name="istack-commons-runtime-2.22" level="project" />
     <orderEntry type="library" exported="" name="ae-jaxb-2.2.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.11" level="project" />

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
+
 
 import java.util.Map;
 
@@ -10,8 +10,10 @@ import java.util.Map;
  */
 public interface LanguagePackage {
 
+    /*
+    Esto está mal, el autor no puede ser un device user. Luis.
     public DeviceUser getAuthor();
-
+*/
     public String getName();
 
     public Languages getLanguage();

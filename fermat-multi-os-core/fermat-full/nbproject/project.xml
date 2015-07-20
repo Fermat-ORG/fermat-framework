@@ -88,12 +88,12 @@
                 <package>com.bitdubai.fermat_api.layer.all_definition.license</package>
                 <package>com.bitdubai.fermat_api.layer.all_definition.license.plugin</package>
                 <package>com.bitdubai.fermat_api.layer.all_definition.license.wallet</package>
-                <package>com.bitdubai.fermat_api.layer.pip_platform_service</package>
-                <package>com.bitdubai.fermat_api.layer.pip_platform_service.error_manager</package>
-                <package>com.bitdubai.fermat_api.layer.pip_platform_service.event_manager</package>
-                <package>com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events</package>
-                <package>com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.listeners</package>
-                <package>com.bitdubai.fermat_api.layer.pip_platform_service.location_subsystem</package>
+                <package>com.bitdubai.fermat_pip_api.layer.pip_platform_service</package>
+                <package>com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager</package>
+                <package>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager</package>
+                <package>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events</package>
+                <package>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners</package>
+                <package>com.bitdubai.fermat_pip_api.layer.pip_platform_service.location_subsystem</package>
                 <package>com.bitdubai.fermat_api.layer.pip_user</package>
                 <package>com.bitdubai.fermat_api.layer.pip_user.device_user</package>
                 <package>com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions</package>

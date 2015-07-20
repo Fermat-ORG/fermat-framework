@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -23,8 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
@@ -156,9 +155,9 @@ public class StartActivity extends FragmentActivity {
             databaseSystemOs.setContext(context);
             platform.setDataBaseSystemOs(databaseSystemOs);
 
-            locationSystemOs = new AndroidOsLocationSystem();
-            locationSystemOs.setContext(context);
-            platform.setLocationSystemOs(locationSystemOs);
+        //    locationSystemOs = new AndroidOsLocationSystem();
+        //    locationSystemOs.setContext(context);
+        //    platform.setLocationSystemOs(locationSystemOs);
 
             loggerSystemOs = new LoggerAddonRoot();
             try {
