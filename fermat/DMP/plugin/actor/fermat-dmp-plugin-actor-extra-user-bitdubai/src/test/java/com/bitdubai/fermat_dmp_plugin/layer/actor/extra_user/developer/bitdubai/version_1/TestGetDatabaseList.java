@@ -48,7 +48,7 @@ public class TestGetDatabaseList {
     public void testGetDataBaseList_interface_dataBaseImplementationTest(){
 
         /**
-         * Creating a fake DeveloperDatabase, mocking some interfaces, we can test the DatabaseList return         
+         * Creating a fake DeveloperDatabase, mocking some interfaces, we can test the DatabaseList return         *
          */
         List<String> testFieldNames= Arrays.asList("F0","F1");
         List<String> testColumnNames= Arrays.asList("C0","C1");
@@ -67,7 +67,6 @@ public class TestGetDatabaseList {
     @Test
     public void testGetDatabaseList_Throws_Exception() throws Exception{
 
-	//With null argument this method throws an exception
         extraUserUserAddonRoot.getDatabaseList(null);
 
     }
