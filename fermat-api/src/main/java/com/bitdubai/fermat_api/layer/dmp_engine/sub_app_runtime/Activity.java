@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 
@@ -30,6 +31,6 @@ public interface Activity {
 
     public TabStrip getTabStrip() ;
 
-    public String getStatusBarColor();
+    public StatusBar getStatusBar();
 
 }

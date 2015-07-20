@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 
 
@@ -260,7 +261,39 @@ public class WalletDesktopFragment extends Fragment {
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);
             switch (item.picture)
             {
-                case "wallet_store_cover_photo_girl":
+
+                case "wallet_store_cover_fermat":
+                    holder.imageView.setImageResource(R.drawable.fermat);
+                    holder.imageView.setTag("WalletBitcoinActivity|4");
+                    linearLayout.setTag("WalletBitcoinActivity|4");
+
+                    linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((ScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
+                            ((ScreenSwapper) getActivity()).changeScreen();
+
+                        }
+                    });
+
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((ScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
+                            ((ScreenSwapper) getActivity()).changeScreen();
+
+                        }
+                    });
+
+                    break;
+
+                //Prototype
+                /*
+                 case "wallet_store_cover_photo_girl":
                     holder.imageView.setImageResource(R.drawable.icono_piggy_pink);
 
                     holder.imageView.setTag("CPWWRWAKAV1M|1");
@@ -277,18 +310,11 @@ public class WalletDesktopFragment extends Fragment {
                     holder.imageView.setTag("AdultsActivity|3");
                     linearLayout.setTag("AdultsActivity|3");
                     break;
-                /*case "wallet_store_cover_photo_young":
+                case "wallet_store_cover_photo_young":
                     holder.imageView.setImageResource(R.drawable.wallet_2);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     break;
-                */
-                case "wallet_store_cover_fermat":
-                    holder.imageView.setImageResource(R.drawable.fermat);
-                    holder.imageView.setTag("WalletBitcoinActivity|4");
-                    linearLayout.setTag("WalletBitcoinActivity|4");
-
-                    break;
-                case "wallet_store_cover_photo_boca_juniors":
+                    case "wallet_store_cover_photo_boca_juniors":
                     holder.imageView.setImageResource(R.drawable.icono_club_1);
                     holder.imageView.setTag("AdultsActivity|10");
                     break;
@@ -339,6 +365,9 @@ public class WalletDesktopFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_starbucks);
                     holder.imageView.setTag("AdultsActivity|17");
                     break;
+                */
+
+
             }
 
 

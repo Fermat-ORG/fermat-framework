@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 
@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * The Class <code>com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.LogToolsFragment</code>
@@ -157,12 +156,6 @@ public class LogToolsFragment extends Fragment {
 
 
                     Loggers log = new Loggers();
-                    /*log.level0=classes.getLevel0();
-                    log.level1=classes.getLevel1();
-                    log.level2=classes.getLevel2();
-                    log.level3=classes.getLevel3();
-                    log.fullPath=classes.getFullPath();
-                    */
 
                     log.type=Loggers.TYPE_PLUGIN;
                     log.classHierarchyLevels=classes;
@@ -288,20 +281,17 @@ public class LogToolsFragment extends Fragment {
                         Loggers item = (Loggers) gridView.getItemAtPosition(position);
 
 
-                        LogToolsFragmentLevel2 logToolsFragmentLevel2 = new LogToolsFragmentLevel2();
                         ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_0);
-                        logToolsFragmentLevel2.setLoggers(lst);
-                        //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
-                        //databaseToolsDatabaseListFragment.setResource(item);
+                        //set the next fragment and params
+                        Object[] params = new Object[1];
 
-                        FragmentTransaction FT = getFragmentManager().beginTransaction();
+                        params[0] = lst;
+                        ((ScreenSwapper)getActivity()).setScreen("DeveloperLogLevel1Fragment");
+                        ((ScreenSwapper)getActivity()).setParams(params);
+                        ((ScreenSwapper)getActivity()).changeScreen();
 
 
-                        //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                        FT.replace(R.id.logContainer, logToolsFragmentLevel2, "fragmento2");
-                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        FT.commit();
                     }
                 });
 

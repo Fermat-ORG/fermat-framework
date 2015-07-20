@@ -28,6 +28,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fermat-api" exported="" />
     <orderEntry type="module" module-name="fermat-cry-api" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-api" exported="" />
     <orderEntry type="library" exported="" name="bitcoinj-core-0.12.3" level="project" />
     <orderEntry type="library" exported="" name="core-1.51.0.0" level="project" />
     <orderEntry type="library" exported="" name="protobuf-java-2.5.0" level="project" />

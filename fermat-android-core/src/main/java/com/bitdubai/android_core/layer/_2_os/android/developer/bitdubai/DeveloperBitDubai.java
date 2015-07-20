@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
 
 /**
- * Created by ciencias on 03.01.15.
+ * Created by ciencias on 03.01.factory.
  */
 
 /**

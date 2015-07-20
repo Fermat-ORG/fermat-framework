@@ -26,7 +26,7 @@
         >
 
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/txtView_description"
         android:text="@+id/label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

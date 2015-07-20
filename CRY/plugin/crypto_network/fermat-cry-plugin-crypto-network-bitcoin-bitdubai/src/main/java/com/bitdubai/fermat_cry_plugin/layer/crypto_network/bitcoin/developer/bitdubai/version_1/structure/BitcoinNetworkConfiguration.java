@@ -18,10 +18,8 @@ public class BitcoinNetworkConfiguration  implements BitcoinManager{
      * Static method.
      * @return the nerwork parameters for the network specified in BitcoinManager's interface
      */
-    public static NetworkParameters getNetworkConfiguration(@Nullable BitcoinNetworkUsed bitcoinNetworkUsed){
-        if (bitcoinNetworkUsed == null)
-            bitcoinNetworkUsed = BitcoinManager.NETWORK_CONNECTION;
-        switch (bitcoinNetworkUsed){
+    public static NetworkParameters getNetworkConfiguration(){
+        switch (BitcoinManager.NETWORK_CONNECTION){
             case Test3_NET:{
                 return TestNet3Params.get();
             }

@@ -1,33 +1,30 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.AlertDialog;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
+
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DatabaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
@@ -53,7 +50,6 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     private DatabaseTool databaseTools;
 
     private Resource resource;
-
 
     List<DeveloperDatabase> developerDatabaseList;
 
@@ -101,7 +97,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
         gridView =(GridView) rootView.findViewById(R.id.gridView);
         try {
-            if (Resource.TYPE_ADDON==resource.type) {
+            if (Resource.TYPE_ADDON == resource.type) {
                 Addons addon = Addons.getByKey(resource.resource);
                 this.developerDatabaseList = databaseTools.getDatabaseListFromAddon(addon);
                 database_type=Databases.TYPE_PLUGIN;
@@ -138,7 +134,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
             }
             //@SuppressWarnings("unchecked")
             //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstDatabases);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, lstDatabases);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
@@ -180,12 +176,14 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
+
+
             final Databases item = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
 
 
                 holder = new ViewHolder();
@@ -195,26 +193,23 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
-                holder.imageView.setOnClickListener(new View.OnClickListener() {
+               holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
                         //Toast.makeText(getActivity(),item.databases,Toast.LENGTH_SHORT).show();
-                        DatabaseToolsDatabaseTableListFragment dabaDatabaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableListFragment();
 
-                        dabaDatabaseToolsDatabaseTableListFragment.setResource(resource);
-                        dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabaseList.get(position));
+                        //set the next fragment and params
+                        Object[] params = new Object[2];
 
-                        FragmentTransaction FT = getFragmentManager().beginTransaction();
+                        params[0] = resource;
+                        params[1] = developerDatabaseList.get(position);
+                        ((ScreenSwapper)getActivity()).setScreen("DeveloperTablesFragment");
+                        ((ScreenSwapper)getActivity()).setParams(params);
+                        ((ScreenSwapper)getActivity()).changeScreen();
 
 
 
-
-                        //FT.add(dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_FRAGMENT);
-                        FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment);
-                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        FT.commit();
-                        //FT.show(dabaDatabaseToolsDatabaseTableListFragment);
                     }
                 });
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
@@ -244,6 +239,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.db);
                     holder.imageView.setTag("CPWWRWAKAV1M|3");
                     break;
+
             }
 
 

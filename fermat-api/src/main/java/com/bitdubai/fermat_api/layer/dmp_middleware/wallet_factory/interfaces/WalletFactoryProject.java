@@ -1,19 +1,24 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectVersionException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectVersionsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by eze on 2015.07.14..
  */
 public interface WalletFactoryProject {
 
-    public String getProjectName();
+    String getDeveloperPublicKey();
 
-    public List<String> getVersions() throws CantGetWalletFactoryProjectVersionsException;
+    UUID getId();
 
-    public WalletFactoryProjectVersion getVersion(String version) throws CantGetWalletFactoryProjectVersionException;
+    String getName();
+
+    List<String> getProposals() throws CantGetWalletFactoryProjectProposalsException;
+
+    WalletFactoryProjectProposal getProposal(String proposal) throws CantGetWalletFactoryProjectProposalException;
 
 }

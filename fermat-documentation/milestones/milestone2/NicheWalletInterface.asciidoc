@@ -6,5 +6,19 @@ Dentro de esta información se encuentra:
 
 * Hash de los recursos
 * Hash de la estructura de navegación
-* Version Numer
+* Version Number
 * Tipo (para que el wallet manager sepa a qué wallet manager acudir para )
+
+
+== NOTA
+
+Uso de criptografía asimétrica: Que en la interfaz vaya simplemente el public key del developer y
+que aquellas cosas que él suba salgan firmadas (item del wallet store, recursos, etc.).
+
+Podría autorizar nuevos skins/lenguajes sin autorización de bitdubai? creo que no porque requeriría
+colocar la versión de la wallet en la interfaz.
+
+Esta interfaz se reduce a:
+
+Public key del developer
+version de la wallet (tal vez)

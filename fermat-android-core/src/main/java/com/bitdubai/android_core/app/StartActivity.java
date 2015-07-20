@@ -3,9 +3,9 @@ package com.bitdubai.android_core.app;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -22,8 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
@@ -33,7 +33,7 @@ import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.ver
 
 
 /**
- * Created by toshiba on 16/02/2015.
+ * Created by Mati
  */
 
 /**
@@ -155,9 +155,9 @@ public class StartActivity extends FragmentActivity {
             databaseSystemOs.setContext(context);
             platform.setDataBaseSystemOs(databaseSystemOs);
 
-            locationSystemOs = new AndroidOsLocationSystem();
-            locationSystemOs.setContext(context);
-            platform.setLocationSystemOs(locationSystemOs);
+        //    locationSystemOs = new AndroidOsLocationSystem();
+        //    locationSystemOs.setContext(context);
+        //    platform.setLocationSystemOs(locationSystemOs);
 
             loggerSystemOs = new LoggerAddonRoot();
             try {
@@ -167,15 +167,11 @@ public class StartActivity extends FragmentActivity {
                 System.out.println("cant start logger exception: "+e.getMessage());
             }
 
-            Bundle bundle = getIntent().getExtras();
-
+        //execute start platform
             try {
-                if (bundle != null) {
-                    if (bundle.getString("executeStart").toString() == "0")
-                        platform.start();
-                } else {
+
                     platform.start();
-                }
+
             } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
                 System.err.println("CantStartPlatformException: " + e.getMessage());
 
@@ -192,13 +188,14 @@ public class StartActivity extends FragmentActivity {
             walletRuntimeMiddleware = (WalletRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
             //save object on global class
-            ApplicationSession.setAppRuntime(appRuntimeMiddleware);
-            ApplicationSession.setWalletRuntime(walletRuntimeMiddleware);
+            ApplicationSession.appRuntimeMiddleware=appRuntimeMiddleware;
+            ApplicationSession.walletRuntimeMiddleware=walletRuntimeMiddleware;
 
             errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
-            ApplicationSession.setErrorManager(errorManager);
+            ApplicationSession.errorManager=errorManager;
 
-            /** Download wallet images **/
+            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
+            ApplicationSession.mDefaultTypeface=tf;
 
             return true;
         }

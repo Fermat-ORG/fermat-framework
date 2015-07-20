@@ -5,14 +5,23 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRemoveWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRenameWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantUninstallLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantUninstallSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantUninstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationInformation;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,26 +107,6 @@ public class WalletManagerMiddlewarePluginRoot implements DealsWithErrors,DealsW
     }
 
 
-    @Override
-    public List<InstalledWallet> getInstalledWallets() {
-        return null;
-    }
-
-
-    @Override
-    public void uninstallWallet(UUID walletIdInThisDevice) {
-
-    }
-
-    @Override
-    public void installWallet(WalletInstallationInformation walletInstallationInformation) {
-
-    }
-
-    @Override
-    public int getInstallationProgress() {
-        return 0;
-    }
 
 
     /**
@@ -161,6 +150,60 @@ public class WalletManagerMiddlewarePluginRoot implements DealsWithErrors,DealsW
                 WalletManagerMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+
+    }
+
+    /*
+     * WalletManagerManager interface methods implementation
+     */
+    @Override
+    public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException {
+
+    }
+
+    @Override
+    public List<InstalledWallet> getInstalledWallets() throws CantListWalletsException {
+        return null;
+    }
+
+    @Override
+    public void installLanguage(UUID walletIdInThisDevice, UUID languageId) throws CantInstallLanguageException {
+
+    }
+
+    @Override
+    public void installSkin(UUID walletIdInThisDevice, UUID skinId) throws CantInstallSkinException {
+
+    }
+
+    @Override
+    public WalletInstallationProcess installWallet() {
+        return null;
+    }
+
+
+    @Override
+    public void uninstallLanguage(UUID walletIdInThisDevice, UUID languageId) throws CantUninstallLanguageException {
+
+    }
+
+    @Override
+    public void uninstallSkin(UUID walletIdInThisDevice, UUID skinId) throws CantUninstallSkinException {
+
+    }
+
+    @Override
+    public void uninstallWallet(UUID walletIdInThisDevice) throws CantUninstallWalletException {
+
+    }
+
+    @Override
+    public void removeWallet(UUID walletIdInTheDevice) throws CantRemoveWalletException {
+
+    }
+
+    @Override
+    public void renameWallet(UUID walletIdInTheDevice, String newName) throws CantRenameWalletException {
 
     }
 }
