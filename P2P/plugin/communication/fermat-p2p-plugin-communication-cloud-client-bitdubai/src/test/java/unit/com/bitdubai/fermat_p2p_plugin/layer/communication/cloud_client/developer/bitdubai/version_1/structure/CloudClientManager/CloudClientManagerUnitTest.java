@@ -17,8 +17,8 @@ public class CloudClientManagerUnitTest {
 	protected String serverPrivateKey = "a06a1274b8bd327c0ddeebc75597101a1e09c3551915e25ad2d8949e0507c142";
 	protected String serverPublicKey = "047F9F57BDE5771B4A9DA604B1CA138AA3B593B7EFBC3C890E384CF8B3EB3080E70DDA5130A26768DDEF30379AA6F9B924339407B0D429964503372CB71D3328D0";
 
-	protected String testHost = "localhost";
-	protected Integer testBasePort = 9000;
+	protected String testHost = "192.168.1.6";
+	protected Integer testBasePort = 9090;
 	protected CommunicationChannelAddress testAddress;
 	protected ExecutorService testExecutor = Executors.newFixedThreadPool(30);
 	
