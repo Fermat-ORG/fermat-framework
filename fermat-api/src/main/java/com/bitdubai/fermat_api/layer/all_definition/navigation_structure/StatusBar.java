@@ -5,7 +5,7 @@ import java.awt.Image;
 /**
  * Created by Matias
  */
-public class StatusBar implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar {
+public class StatusBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStatusBar {
 
     String color;
     boolean isVisible;
