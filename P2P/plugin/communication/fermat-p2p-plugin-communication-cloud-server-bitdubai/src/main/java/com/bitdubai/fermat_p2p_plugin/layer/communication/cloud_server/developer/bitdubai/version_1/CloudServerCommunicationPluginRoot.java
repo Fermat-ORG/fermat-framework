@@ -121,7 +121,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
         try {
 
-            if (false) //skip Start the server
+            if (true) //skip Start the server
                 return;
 
             System.out.println("Starting plugin CloudServerCommunicationPluginRoot");
