@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletAddressBookException;
@@ -22,6 +22,6 @@ public interface WalletAddressBookRegistry {
 
     List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException;
 
-    void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, PlatformWalletType walletType, UUID walletId) throws CantRegisterWalletAddressBookException;
+    void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, ReferenceWallet walletType, UUID walletId) throws CantRegisterWalletAddressBookException;
 
 }

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRecord;
 
@@ -17,13 +17,13 @@ public class WalletAddressBookCryptoModuleRecord implements WalletAddressBookRec
 
     CryptoAddress cryptoAddress;
 
-    PlatformWalletType platformWalletType;
+    ReferenceWallet referenceWallet;
 
     UUID walletId;
 
-    public WalletAddressBookCryptoModuleRecord(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) {
+    public WalletAddressBookCryptoModuleRecord(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, UUID walletId) {
         this.cryptoAddress = cryptoAddress;
-        this.platformWalletType = platformWalletType;
+        this.referenceWallet = referenceWallet;
         this.walletId = walletId;
     }
 
@@ -31,8 +31,8 @@ public class WalletAddressBookCryptoModuleRecord implements WalletAddressBookRec
         return walletId;
     }
 
-    public PlatformWalletType getWalletType() {
-        return platformWalletType;
+    public ReferenceWallet getWalletType() {
+        return referenceWallet;
     }
 
     public CryptoAddress getCryptoAddress() {

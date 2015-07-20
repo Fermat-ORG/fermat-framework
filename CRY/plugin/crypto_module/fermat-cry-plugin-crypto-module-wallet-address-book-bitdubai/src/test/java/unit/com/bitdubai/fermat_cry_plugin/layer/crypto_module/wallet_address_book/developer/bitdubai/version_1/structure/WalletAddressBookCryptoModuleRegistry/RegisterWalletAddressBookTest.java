@@ -1,14 +1,14 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleRegistry;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletAddressBookException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleRegistry;
 
@@ -48,7 +48,7 @@ public class RegisterWalletAddressBookTest extends TestCase {
 
     UUID walletId;
 
-    PlatformWalletType platformWalletType;
+    ReferenceWallet referenceWallet;
 
     CryptoAddress cryptoAddress;
 
@@ -60,7 +60,7 @@ public class RegisterWalletAddressBookTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         walletId = UUID.randomUUID();
-        platformWalletType = PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET;
+        referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
         cryptoAddress = new CryptoAddress("asdadas", CryptoCurrency.BITCOIN);
         pluginId = UUID.randomUUID();
         registry = new WalletAddressBookCryptoModuleRegistry();
@@ -76,7 +76,7 @@ public class RegisterWalletAddressBookTest extends TestCase {
     public void testRegister_NotNull() throws Exception {
         when(database.getTable(anyString())).thenReturn(databaseTable);
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
-        registry.registerWalletCryptoAddressBook(cryptoAddress, platformWalletType, walletId);
+        registry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletId);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
@@ -85,12 +85,12 @@ public class RegisterWalletAddressBookTest extends TestCase {
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
         doThrow(new CantInsertRecordException()).when(databaseTable).insertRecord(any(DatabaseTableRecord.class));
 
-        registry.registerWalletCryptoAddressBook(cryptoAddress, platformWalletType, walletId);
+        registry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletId);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
     public void testRegister_walletIdNull_CantRegisterWalletAddressBookException() throws Exception {
-        registry.registerWalletCryptoAddressBook(cryptoAddress, platformWalletType, null);
+        registry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, null);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
@@ -100,6 +100,6 @@ public class RegisterWalletAddressBookTest extends TestCase {
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
     public void testRegister_cryptoAddressNull_CantRegisterWalletAddressBookException() throws Exception {
-        registry.registerWalletCryptoAddressBook(null, platformWalletType, walletId);
+        registry.registerWalletCryptoAddressBook(null, referenceWallet, walletId);
     }
 }

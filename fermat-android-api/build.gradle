@@ -33,5 +33,6 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.google.zxing:core:3.2.0'
     compile 'com.google.zxing:android-integration:3.2.0'
+    compile project(':fermat-api')
 
 }
