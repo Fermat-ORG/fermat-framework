@@ -3,6 +3,7 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.devel
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
@@ -11,8 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.*;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.*;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerRegistry;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerReportAgent;
 
@@ -81,6 +82,12 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     public void reportUnexpectedAddonsException(Addons exceptionSource, UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
+
+    @Override
+    public void reportUnexpectedSubAppException(SubApps exceptionSource, UnexpectedSubAppExceptionSeverity unexpectedSubAppExceptionSeverity, Exception exception) {
+        processException(exceptionSource.toString(), unexpectedSubAppExceptionSeverity.toString(), exception);
+    }
+
     /**
      * Service Interface implementation.
      */
