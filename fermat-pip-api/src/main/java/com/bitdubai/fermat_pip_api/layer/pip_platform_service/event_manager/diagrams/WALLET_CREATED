@@ -1,0 +1,10 @@
+https://www.websequencediagrams.com
+
+title WALLET_CREATED Event
+
+Wallet Manager Plugin/Wallet-> Event Manager:Raise WALLET_CREATED Event.
+
+Event Manager ->Middleware/WalletPluginRoot:Listen To WALLET_CREATED Event.
+
+note right of Wallet Manager Plugin/Wallet:when a wallet is installed.
+note right of Middleware/WalletPluginRoot:create it's own wallet
