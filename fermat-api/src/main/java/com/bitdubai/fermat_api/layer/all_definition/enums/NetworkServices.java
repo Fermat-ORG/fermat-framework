@@ -4,7 +4,8 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
  * Created by ciencias on 2/22/15.
  */
 public enum NetworkServices {
-    
+
+    UNDEFINED,
     BANK_NOTES,
     CRYPTO_ADDRESSES,
     INTRA_USER,
@@ -12,5 +13,5 @@ public enum NetworkServices {
     WALLET_COMMUNITY,
     WALLET_RESOURCES,
     WALLET_STORE;
-    
+
 }
