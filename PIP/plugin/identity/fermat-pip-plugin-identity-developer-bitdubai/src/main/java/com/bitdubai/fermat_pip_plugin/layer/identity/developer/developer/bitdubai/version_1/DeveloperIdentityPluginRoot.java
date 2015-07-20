@@ -25,8 +25,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.Devel
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DealsWithDeviceUser;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2.DeviceUserManager;
 import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.structure.LoggerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
