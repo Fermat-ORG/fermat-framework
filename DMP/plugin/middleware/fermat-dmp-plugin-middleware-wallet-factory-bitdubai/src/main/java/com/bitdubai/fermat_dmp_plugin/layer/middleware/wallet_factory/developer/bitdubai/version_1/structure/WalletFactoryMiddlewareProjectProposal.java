@@ -18,13 +18,21 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.common.FactoryProjectStateAdapter;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.common.ResourceTypeAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import ae.javax.xml.bind.Unmarshaller;
+import ae.javax.xml.bind.annotation.XmlAttribute;
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlElementWrapper;
+import ae.javax.xml.bind.annotation.XmlElements;
 import ae.javax.xml.bind.annotation.XmlRootElement;
 import ae.javax.xml.bind.annotation.XmlTransient;
+import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal</code>
@@ -53,18 +61,25 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
 
     String alias;
 
-    WalletFactoryProject walletFactoryProject;
-
     FactoryProjectState state;
+
+    List<WalletFactoryProjectSkin> skins = new ArrayList<>();
+
+    List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
+
+    WalletFactoryProject walletFactoryProject;
 
     public WalletFactoryMiddlewareProjectProposal() {
     }
 
-    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state) {
+    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
         this.alias = alias;
         this.state = state;
+        this.skins = skins;
+        this.languages = languages;
     }
 
+    @XmlElement
     @Override
     public String getAlias() {
         return alias;
@@ -75,6 +90,8 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         return walletFactoryProject;
     }
 
+    @XmlJavaTypeAdapter( FactoryProjectStateAdapter.class )
+    @XmlAttribute( name = "state" )
     @Override
     public FactoryProjectState getState() {
         return state;
@@ -85,14 +102,22 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         return null;
     }
 
+    @XmlElements({
+        @XmlElement(name="skin", type=WalletFactoryMiddlewareProjectSkin.class),
+    })
+    @XmlElementWrapper
     @Override
-    public List<WalletFactoryProjectSkin> getSkinList() {
-        return null;
+    public List<WalletFactoryProjectSkin> getSkins() {
+        return skins;
     }
 
+    @XmlElements({
+        @XmlElement(name="language", type=WalletFactoryMiddlewareProjectLanguage.class),
+    })
+    @XmlElementWrapper
     @Override
-    public List<String> getLanguages() {
-        return null;
+    public List<WalletFactoryProjectLanguage> getLanguages() {
+        return languages;
     }
 
     @Override
@@ -117,13 +142,25 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     }
 
     @Override
-    public void addLanguage(WalletFactoryProjectLanguage language) throws CantAddWalletFactoryProjectLanguageException {
-
+    public WalletFactoryProjectLanguage addLanguage(byte[] file, String name) throws CantAddWalletFactoryProjectLanguageException {
+        return null;
     }
 
     @Override
     public void deleteLanguage(WalletFactoryProjectLanguage language) throws CantDeleteWalletFactoryProjectLanguageException {
 
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public void setState(FactoryProjectState state) {
+        this.state = state;
+    }
+
+    public void setSkins(List<WalletFactoryProjectSkin> skins) {
+        this.skins = skins;
     }
 
     /**

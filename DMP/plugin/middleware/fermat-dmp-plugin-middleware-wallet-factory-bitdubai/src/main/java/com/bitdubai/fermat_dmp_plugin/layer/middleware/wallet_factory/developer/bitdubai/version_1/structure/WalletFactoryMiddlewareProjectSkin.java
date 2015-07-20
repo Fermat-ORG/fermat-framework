@@ -84,7 +84,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
             @XmlElement(name="resource", type=WalletFactoryMiddlewareProjectResource.class),
     })
     @XmlElementWrapper
-    public List<WalletFactoryProjectResource> getResources() {
+        public List<WalletFactoryProjectResource> getResources() {
         return resources;
     }
 
@@ -102,6 +102,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
             for(WalletFactoryProjectResource res : resources) {
                 if (res.getResourceType().equals(resourceType)) collected.add(res);
             }
+
             return collected;
         }
     }
@@ -156,6 +157,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
 
     public String getResourceTypePath(ResourceType resourceType) {
         String initialPath = "wallet_factory_projects";
+        String skinPath = "skins";
 
         WalletFactoryProjectProposal projectProposal = getWalletFactoryProjectProposal();
         WalletFactoryProject project = projectProposal.getProject();
@@ -163,6 +165,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         return initialPath + "/" +
                 project.getName() + "/" +
                 projectProposal.getAlias() + "/" +
+                skinPath + "/" +
                 getName() + "/" +
                 resourceType.value();
     }
@@ -181,10 +184,12 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     }
 
     public void afterUnmarshal(Unmarshaller u, Object parent) {
-        WalletFactoryMiddlewareProjectProposal walletFactoryMiddlewareProjectProposal = (WalletFactoryMiddlewareProjectProposal) parent;
-        walletFactoryProjectProposal = walletFactoryMiddlewareProjectProposal;
-        setPluginFileSystem(walletFactoryMiddlewareProjectProposal.getPluginFileSystem());
-        setPluginId(walletFactoryMiddlewareProjectProposal.getPluginId());
+        if (parent != null) {
+            WalletFactoryMiddlewareProjectProposal walletFactoryMiddlewareProjectProposal = (WalletFactoryMiddlewareProjectProposal) parent;
+            walletFactoryProjectProposal = walletFactoryMiddlewareProjectProposal;
+            setPluginFileSystem(walletFactoryMiddlewareProjectProposal.getPluginFileSystem());
+            setPluginId(walletFactoryMiddlewareProjectProposal.getPluginId());
+        }
     }
 
     /**

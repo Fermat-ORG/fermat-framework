@@ -14,14 +14,22 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum ResourceType {
     VIDEO("video"),
     SOUND("sound"),
-    IMAGE("images"),
+    IMAGE("image"),
     FONT_STYLE("font_style"),
     LAYOUT("layout");
 
     public static ResourceType fromValue(String key) throws InvalidParameterException {
-        for (ResourceType type : ResourceType.values()) {
-            if (type.value().equals(key))
-                return type;
+        switch(key){
+            case "video":
+                return ResourceType.VIDEO ;
+            case "sound":
+                return ResourceType.SOUND ;
+            case "image":
+                return ResourceType.IMAGE ;
+            case "font_style":
+                return ResourceType.FONT_STYLE;
+            case "layout":
+                return ResourceType.LAYOUT;
         }
         throw new InvalidParameterException(key);
     }
