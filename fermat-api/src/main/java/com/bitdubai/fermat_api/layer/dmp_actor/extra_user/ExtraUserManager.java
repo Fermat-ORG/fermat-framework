@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_api.layer.dmp_actor.extra_user;
 
-import com.bitdubai.fermat_api.layer.pip_user.User;
+
+
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+
 import java.util.UUID;
 
 /**
@@ -13,7 +16,7 @@ public interface ExtraUserManager {
 
     // TODO ADD EXCEPTIONS?
 
-    public User getUser(UUID id);
+    public Actor getActor(UUID id);
 
-    public User createUser(String userName);
+    public Actor createActor(String userName);
 }

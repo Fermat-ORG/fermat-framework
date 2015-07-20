@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -17,9 +18,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
-import com.bitdubai.fermat_api.layer.pip_user.User;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.UserCratedEventHandler;
@@ -120,12 +120,12 @@ public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, Deal
      */
 
     @Override
-    public void crateUser(UUID userId) throws CantCreateIntraUserException {
+    public void crateActor(UUID userId) throws CantCreateIntraUserException {
 
     }
 
     @Override
-    public User getUser(UUID id){
+    public Actor getActor(UUID id){
         return null;
     }
 

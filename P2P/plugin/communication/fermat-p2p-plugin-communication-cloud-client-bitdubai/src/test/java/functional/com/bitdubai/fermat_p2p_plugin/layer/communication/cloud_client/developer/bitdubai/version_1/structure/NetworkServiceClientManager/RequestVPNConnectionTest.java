@@ -12,7 +12,7 @@ public class RequestVPNConnectionTest extends NetworkServiceClientManagerIntegra
 	@Test
 	public void RequestVPN_PeersAreRegistered_ReceivePendingVPNRequest() throws Exception{
 		setUp(TCP_PORT_PADDING + 1);
-		testClient.requestVPNConnection(testClient.getPublicKey());
+		testClient.requestVPNConnection(testClient.getIdentityPublicKey());
 		Thread.sleep(getThreadSleepMillis());
 		assertThat(testClient.getPendingVPNRequests()).isNotNull();
 	}

@@ -56,7 +56,7 @@ public class ConnectionRequestTest extends CloudNetworkServiceManagerIntegration
 	@Test
 	public void ConnectionRequest_SendRequestForDifferentNetworkService_ResponseTypeConnectionDeny() throws Exception{
 		setUpConnections(8);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.MONEY, testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionNetworkServicePacket(NetworkServices.MONEY, testManager.getIdentityPublicKey());
 		testClient.sendMessage(request);		
 		FMPPacket response = getResponse();		
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
@@ -74,7 +74,7 @@ public class ConnectionRequestTest extends CloudNetworkServiceManagerIntegration
 	@Test
 	public void ConnectionRequest_RequestMessageIsNotNetworkService_ResponseTypeConnectionDeny() throws Exception{
 		setUpConnections(12);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getIdentityPublicKey());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
