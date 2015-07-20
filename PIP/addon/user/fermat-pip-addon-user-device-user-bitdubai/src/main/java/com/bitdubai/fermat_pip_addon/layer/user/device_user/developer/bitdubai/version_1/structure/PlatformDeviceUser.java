@@ -18,13 +18,13 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUser;
 
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserStatus;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantCreateDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantLoadDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantPersistDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.LoginFailedException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUserStatus;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantCreateDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantLoadDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantPersistDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFailedException;
 
 import java.util.UUID;
 
