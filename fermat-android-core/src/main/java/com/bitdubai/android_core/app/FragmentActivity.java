@@ -18,7 +18,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 /**
  * Created by Natalia on 24/02/2015.
  */
-public class FragmentActivity  extends Activity implements ScreenSwapper {
+public class FragmentActivity  extends FermatActivity implements ScreenSwapper {
 
     private String actionKey;
 
@@ -37,7 +37,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
         setContentView(R.layout.runtime_app_activity_fragment);
         try{
 
-            this.activity = ApplicationSession.appRuntimeMiddleware.getLasActivity();
+            this.activity = ApplicationSession.getAppRuntimeMiddleware().getLasActivity();
 
             NavigateFragment();
 
@@ -60,7 +60,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
         Object params;
         Intent intent;
         //get actual activity Fragment to execute
-        this.fragment = ApplicationSession.appRuntimeMiddleware.getLastFragment();
+        this.fragment = ApplicationSession.getAppRuntimeMiddleware().getLastFragment();
 
         if(fragment != null){
 
@@ -139,7 +139,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
     public void onBackPressed() {
         // get actual fragment on execute
 
-        this.fragment = ApplicationSession.appRuntimeMiddleware.getLastFragment();
+        this.fragment = ApplicationSession.getAppRuntimeMiddleware().getLastFragment();
 
         //get setting fragment to back
         Fragments frgBackType = this.fragment.getBack();
@@ -147,7 +147,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
         if(frgBackType != null){
 
 
-            Fragment fragmentBack = ApplicationSession.appRuntimeMiddleware.getFragment(frgBackType); //set back fragment to actual fragment to run
+            Fragment fragmentBack = ApplicationSession.getAppRuntimeMiddleware().getFragment(frgBackType); //set back fragment to actual fragment to run
 
             //I get string context with params pass to fragment to return with this data
             ApplicationSession.mParams=fragmentBack.getContext();
@@ -190,7 +190,7 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
             }
             else
             {
-                ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
+                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
 
             }
 
