@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectLanguageException;
@@ -15,8 +16,15 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 import java.util.List;
+import java.util.UUID;
+
+import ae.javax.xml.bind.Unmarshaller;
+import ae.javax.xml.bind.annotation.XmlRootElement;
+import ae.javax.xml.bind.annotation.XmlTransient;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal</code>
@@ -27,7 +35,21 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletFactoryMiddlewareProjectProposal implements WalletFactoryProjectProposal {
+@XmlRootElement( name = "proposal" )
+public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectProposal {
+
+    /**
+     * DealsWithPluginFileSystem interface variables.
+     */
+    @XmlTransient
+    private PluginFileSystem pluginFileSystem;
+
+    /**
+     * DealsWithPluginFileSystem interface variables.
+     */
+    @XmlTransient
+    private UUID pluginId;
+
 
     String alias;
 
@@ -35,6 +57,13 @@ public class WalletFactoryMiddlewareProjectProposal implements WalletFactoryProj
 
     FactoryProjectState state;
 
+    public WalletFactoryMiddlewareProjectProposal() {
+    }
+
+    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state) {
+        this.alias = alias;
+        this.state = state;
+    }
 
     @Override
     public String getAlias() {
@@ -95,5 +124,31 @@ public class WalletFactoryMiddlewareProjectProposal implements WalletFactoryProj
     @Override
     public void deleteLanguage(WalletFactoryProjectLanguage language) throws CantDeleteWalletFactoryProjectLanguageException {
 
+    }
+
+    /**
+     * DealsWithPluginFileSystem interface implementation.
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    @XmlTransient
+    public PluginFileSystem getPluginFileSystem() {
+        return pluginFileSystem;
+    }
+
+    /**
+     * DealsWithPluginIdentity interface implementation.
+     */
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    @XmlTransient
+    public UUID getPluginId() {
+        return pluginId;
     }
 }
