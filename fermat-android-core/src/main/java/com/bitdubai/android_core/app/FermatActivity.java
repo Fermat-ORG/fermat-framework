@@ -24,14 +24,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bitdubai.android_core.app.common.version_1.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.adapters.PagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
@@ -43,19 +44,39 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 /**
- * Created by natalia on 22/06/factory.
- * Reformated by Matias
+ * Created by Matias Furszyfer
  */
+
 public class FermatActivity extends FragmentActivity{
 
+    public static final int ACTIVITY_TYPE_SUB_APP=1;
+    public static final int ACTIVITY_TYPE_WALLET=2;
+
+
+    /**
+     * Navigation menu
+     */
     private NavigationDrawerFragment NavigationDrawerFragment;
+
+    /**
+     * Screen adapters
+     */
     private TabsPagerAdapter adapter;
+    private PagerAdapter PagerAdapter;
+
+    /**
+     * Activity type
+     */
+    private int activityType;
 
     /**
      *  Called when the activity is first created
@@ -138,34 +159,11 @@ public class FermatActivity extends FragmentActivity{
     }
 
 
-
-    /**
-     *  Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle)
-     * @param outState
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-
-    /**
-     * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
-     * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
-     * @param savedInstanceState
-     */
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-
     /**
      * Method call when back button is pressed
      */
     @Override
     public void onBackPressed() {
-
 
         if (ApplicationSession.walletRuntimeMiddleware.getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
@@ -185,14 +183,14 @@ public class FermatActivity extends FragmentActivity{
     /**
      * Method that loads the UI
      */
-    private void loadUI() {
+    protected void loadUI() {
 
         try
         {
             /**
              * Get current activity to paint
              */
-            Activity activity =  ApplicationSession.walletRuntimeMiddleware.getLasActivity();
+            Activity activity = getActivityUsedType();
             /**
              * Get tabs to paint
              */
@@ -230,7 +228,7 @@ public class FermatActivity extends FragmentActivity{
              */
             paintStatusBar(activity.getStatusBar());
             /**
-             *
+             * Paint titleBar
              */
             paintTitleBar(titleBar);
 
@@ -238,9 +236,7 @@ public class FermatActivity extends FragmentActivity{
              * Paint a simgle fragment
              */
             if(tabs == null && fragments.size() > 1){
-                Toast.makeText(getApplicationContext(),"Error unico fragmento",Toast.LENGTH_SHORT).show(); // TODO Arreglar esta vaina.
-                Log.e(getClass().getSimpleName(),"wallets con un fragmento no pensadas");
-
+                initialisePaging();
             }else{
                 /**
                  * Paint tabs
@@ -253,6 +249,16 @@ public class FermatActivity extends FragmentActivity{
             Toast.makeText(getApplicationContext(), "Error in loadUI " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    public Activity getActivityUsedType(){
+        Activity activity=null;
+        if(ACTIVITY_TYPE_SUB_APP==activityType){
+            activity = ApplicationSession.appRuntimeMiddleware.getLasActivity();
+        }else if(ACTIVITY_TYPE_WALLET==activityType){
+            activity = ApplicationSession.walletRuntimeMiddleware.getLasActivity();
+        }
+        return activity;
     }
 
     /**
@@ -303,36 +309,19 @@ public class FermatActivity extends FragmentActivity{
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-            Drawable colorDrawable = new ColorDrawable(Color.parseColor(ApplicationSession.walletRuntimeMiddleware.getLasActivity().getColor()));
+            Drawable colorDrawable = new ColorDrawable(Color.parseColor(getActivityUsedType().getColor()));
             Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
             LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 //ld.setCallback(drawableCallback);
+                Log.d(getClass().getSimpleName(),"Version incompatible con status bar");
             } else {
                 getActionBar().setBackgroundDrawable(ld);
             }
         }
     }
 
-    /*private static Drawable.Callback drawableCallback = new Drawable.Callback() {
-        @Override
-        public void invalidateDrawable(Drawable who) {
-            actionBar.setBackgroundDrawable(who);
-
-        }
-
-        @Override
-        public void scheduleDrawable(Drawable who, Runnable what, long when) {
-            handler.postAtTime(what, when);
-        }
-
-        @Override
-        public void unscheduleDrawable(Drawable who, Runnable what) {
-            handler.removeCallbacks(what);
-        }
-    };
-    }*/
     /**
      *
      * @param pagerSlidingTabStrip
@@ -347,7 +336,7 @@ public class FermatActivity extends FragmentActivity{
         /**
          * Making the pagerTab adapter
          */
-        adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext());
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),activityType);
         pagertabs.setAdapter(adapter);
         final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
@@ -364,7 +353,12 @@ public class FermatActivity extends FragmentActivity{
      */
     private void setMainLayout(SideMenu sidemenu){
         if(sidemenu != null){
-            setContentView(R.layout.runtime_app_wallet_runtime_navigator);
+            if(ACTIVITY_TYPE_SUB_APP==activityType){
+                setContentView(R.layout.runtime_app_activity_runtime_navigator);
+            }else if(ACTIVITY_TYPE_WALLET==activityType){
+                setContentView(R.layout.runtime_app_wallet_runtime_navigator);
+            }
+
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
             NavigationDrawerFragment.setMenuVisibility(true);
@@ -380,7 +374,12 @@ public class FermatActivity extends FragmentActivity{
          * Paint layout without navigationDrawer
          */
         else{
-            setContentView(R.layout.runtime_app_wallet_runtime);
+            if(ACTIVITY_TYPE_SUB_APP==activityType){
+                setContentView(R.layout.runtime_app_activity_runtime);
+            }else if(ACTIVITY_TYPE_WALLET==activityType){
+                setContentView(R.layout.runtime_app_wallet_runtime);
+            }
+
         }
     }
 
@@ -399,23 +398,25 @@ public class FermatActivity extends FragmentActivity{
             Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
             pagerSlidingTabStrip.setTypeface(tf,1 );
             pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
+
+            // paint tabs color
+            if (tabs.getTabsColor()!=null){
+                pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
+                //tabStrip.setDividerColor(Color.TRANSPARENT);
+            }
+
+            // paint tabs text color
+            if(tabs.getTabsTextColor()!=null){
+                pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
+            }
+
+            //paint tabs indicate color
+            if(tabs.getTabsIndicateColor()!=null){
+                pagerSlidingTabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
+            }
         }
 
-        // paint tabs color
-        if (activity.getTabStrip().getTabsColor()!=null){
-            pagerSlidingTabStrip.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
-            //tabStrip.setDividerColor(Color.TRANSPARENT);
-        }
 
-        // paint tabs text color
-        if(activity.getTabStrip().getTabsTextColor()!=null){
-            pagerSlidingTabStrip.setTextColor(Color.parseColor(activity.getTabStrip().getTabsTextColor()));
-        }
-
-        //paint tabs indicate color
-        if(activity.getTabStrip().getTabsIndicateColor()!=null){
-            pagerSlidingTabStrip.setIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
-        }
 
         // put tabs font
         if (pagerSlidingTabStrip != null){
@@ -453,11 +454,18 @@ public class FermatActivity extends FragmentActivity{
         }
     }
 
+    public void setActivityType(int activityType) {
+        this.activityType = activityType;
+    }
+    public int getActivityType(){
+        return activityType;
+    }
+
     /**
      *  Method used to clean the screen
      */
 
-    private void resetThisActivity()
+    protected void resetThisActivity()
     {
         try
         {
@@ -476,9 +484,15 @@ public class FermatActivity extends FragmentActivity{
                 NavigationDrawerFragment = null;
             }
 
+
+
             this.adapter = null;
+
             //this.tabStrip=null;
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+
+
+            this.PagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
 
         }
         catch (Exception e) {
@@ -487,6 +501,59 @@ public class FermatActivity extends FragmentActivity{
 
             Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Initialise the fragments to be paged
+     */
+    private void initialisePaging() {
+
+        try {
+            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+            Iterator<Map.Entry<Fragments, Fragment>> efragments = ApplicationSession.appRuntimeMiddleware.getLasActivity().getFragments().entrySet().iterator();
+            boolean flag = false;
+            while (efragments.hasNext()) {
+                Map.Entry<Fragments, Fragment> fragmentEntry = efragments.next();
+
+                Fragment fragment = (Fragment) fragmentEntry.getValue();
+                Fragments type = fragment.getType();
+
+                switch (type) {
+                    case CWP_SHELL_LOGIN:
+                        break;
+                    case CWP_WALLET_MANAGER_MAIN:
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+                        break;
+                    case CWP_WALLET_MANAGER_SHOP:
+                        break;
+                    case CWP_SUB_APP_DEVELOPER:
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment.class.getName()));
+                        break;
+
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
+                        break;
+
+                }
+
+            }
+            this.PagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
+
+            ViewPager pager = (ViewPager) super.findViewById(R.id.viewpager);
+            pager.setVisibility(View.VISIBLE);
+
+            //set default page to show
+            pager.setCurrentItem(0);
+
+            pager.setAdapter(this.PagerAdapter);
+
+            pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+
+
+        } catch (Exception ex) {
+            ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+            Toast.makeText(getApplicationContext(), "Can't Load tabs: " + ex.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

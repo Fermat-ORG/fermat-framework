@@ -9,31 +9,26 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
-
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
+import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.LoggerAddonRoot;
-
-//import android.support.v7.widget.SearchView;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 
 /**
- * Created by Mati
+ * Created by Matias Furszyfer
  */
 
 /**
@@ -60,7 +55,6 @@ public class StartActivity extends FragmentActivity {
     private AndroidOsLocationSystem locationSystemOs;
     private LoggerSystemOs loggerSystemOs;
 
-    private Bundle savedInstanceState;
     private Platform platform;
 
 
@@ -69,9 +63,6 @@ public class StartActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        try {
 
             // Indicate if the app was loaded, for not load again the start activity.
             if (WAS_START_ACTIVITY_LOADED) {
@@ -86,21 +77,7 @@ public class StartActivity extends FragmentActivity {
                 // System.err.println("Can't set content view as runtime_app_activity_runtime: " + e.getMessage());
             }
 
-            this.savedInstanceState = savedInstanceState;
             new GetTask(this).execute();
-
-
-            //NavigateActivity();
-        } catch (Exception e) {
-
-            //TODO : MATIAS estas seguro que el error Manager existe en este punto?? LUIS
-
-            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-
-            Toast.makeText(getApplicationContext(), "Error Load RuntimeApp - " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
 
 
     }

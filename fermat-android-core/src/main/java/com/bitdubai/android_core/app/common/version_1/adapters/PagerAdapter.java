@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common;
+package com.bitdubai.android_core.app.common.version_1.adapters;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
