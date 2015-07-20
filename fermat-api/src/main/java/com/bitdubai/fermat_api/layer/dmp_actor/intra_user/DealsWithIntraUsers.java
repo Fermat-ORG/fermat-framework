@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_user.intra_user;
+package com.bitdubai.fermat_api.layer.dmp_actor.intra_user;
 
 /**
  * Created by ciencias on 3/30/15.

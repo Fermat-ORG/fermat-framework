@@ -1,7 +1,6 @@
-package com.bitdubai.fermat_api.layer.pip_user.intra_user.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.PIPException;
 
 /**
  * Created by loui on 22/02/15.

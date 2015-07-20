@@ -97,10 +97,10 @@
                 <package>com.bitdubai.fermat_api.layer.pip_user</package>
                 <package>com.bitdubai.fermat_api.layer.pip_user.device_user</package>
                 <package>com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions</package>
-                <package>com.bitdubai.fermat_api.layer.pip_user.extra_user</package>
-                <package>com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions</package>
-                <package>com.bitdubai.fermat_api.layer.pip_user.intra_user</package>
-                <package>com.bitdubai.fermat_api.layer.pip_user.intra_user.exceptions</package>
+                <package>com.bitdubai.fermat_api.layer.dmp_actor.extra_user</package>
+                <package>com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions</package>
+                <package>com.bitdubai.fermat_api.layer.dmp_actor.intra_user</package>
+                <package>com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions</package>
                 <package>com.bitdubai.fermat_core</package>
                 <package>com.bitdubai.fermat_core.layer.all_definition</package>
                 <package>com.bitdubai.fermat_core.layer.cry_crypto_module</package>

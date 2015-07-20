@@ -1,7 +1,6 @@
-package com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.PIPException;
 
 /**
  * Created by toshiba on 29/04/2015.

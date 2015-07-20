@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_api.layer.pip_user.intra_user;
+package com.bitdubai.fermat_api.layer.dmp_actor.intra_user;
 
 
 import com.bitdubai.fermat_api.layer.pip_user.User;
-import com.bitdubai.fermat_api.layer.pip_user.intra_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_user.extra_user;
+package com.bitdubai.fermat_api.layer.dmp_actor.extra_user;
 
 import com.bitdubai.fermat_api.layer.pip_user.User;
 import java.util.UUID;

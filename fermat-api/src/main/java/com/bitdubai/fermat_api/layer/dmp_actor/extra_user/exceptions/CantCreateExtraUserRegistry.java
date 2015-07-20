@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
