@@ -389,15 +389,17 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         private void loadFragment(Fragments fragmentType)
         {
             FragmentTransaction transaction;
+            com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragment=null;
             switch (fragmentType) {
+
 
                 //developer app fragments
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
-                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+                    fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
 
                       DatabaseToolsFragment frag= DatabaseToolsFragment.newInstance(0);
                         //set data pass to fragment
-                        this.fragment.setContext(screenObjects);
+                        fragment.setContext(screenObjects);
 
                          transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.databasecontainer, frag);
@@ -407,13 +409,13 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
 
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
-                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
+                    fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
 
 
                         DatabaseToolsDatabaseListFragment fragd= DatabaseToolsDatabaseListFragment.newInstance(0);
                         fragd.setResource((Resource)screenObjects[0]);
                         //set data pass to fragment
-                        this.fragment.setContext(screenObjects);
+                        fragment.setContext(screenObjects);
 
                          transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.startContainer, fragd);
@@ -424,12 +426,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES:
 
-                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
+                    fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
 
                         DatabaseToolsDatabaseTableListFragment fragt= DatabaseToolsDatabaseTableListFragment.newInstance(0);
 
                         //set data pass to fragment
-                        this.fragment.setContext(screenObjects);
+                        fragment.setContext(screenObjects);
                         fragt.setResource((Resource) screenObjects[0]);
                         fragt.setDeveloperDatabase((DeveloperDatabase) screenObjects[1]);
 
@@ -441,13 +443,13 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS:
 
-                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
+                    fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
 
                     DatabaseToolsDatabaseTableRecordListFragment fragr= DatabaseToolsDatabaseTableRecordListFragment.newInstance(0);
 
 
                     //set data pass to fragment
-                    this.fragment.setContext(screenObjects);
+                    fragment.setContext(screenObjects);
                     fragr.setResource((Resource) screenObjects[0]);
                     fragr.setDeveloperDatabase((DeveloperDatabase) screenObjects[1]);
                     fragr.setDeveloperDatabaseTable((DeveloperDatabaseTable) screenObjects[2]);
@@ -459,12 +461,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     break;
 
                 case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
-                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+                    fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
 
                         LogToolsFragment frag1= LogToolsFragment.newInstance(0);
 
                         //set data pass to fragment
-                        this.fragment.setContext(screenObjects);
+                        fragment.setContext(screenObjects);
 
                         FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
                         transaction1.replace(R.id.logContainer, frag1);
@@ -474,12 +476,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                 case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS:
 
-                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+                    fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
 
                     LogToolsFragmentLevel1 fragl= LogToolsFragmentLevel1.newInstance(0);
                     fragl.setLoggers((ArrayListLoggers) screenObjects[0]);
                     //set data pass to fragment
-                    this.fragment.setContext(screenObjects);
+                    fragment.setContext(screenObjects);
 
                      transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.logContainer, fragl);
@@ -489,14 +491,14 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                 case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS:
 
-                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+                    fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
 
-                       LogToolsFragmentLevel2 fragl2= LogToolsFragmentLevel2.newInstance(0);
+                    LogToolsFragmentLevel2 fragl2= LogToolsFragmentLevel2.newInstance(0);
                     fragl2.setLoggers((ArrayListLoggers) screenObjects[0]);
                     fragl2.setLoggerLevel((int)screenObjects[1]);
 
                         //set data pass to fragment
-                        this.fragment.setContext(screenObjects);
+                        fragment.setContext(screenObjects);
 
                        transaction = getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.logContainer, fragl2);
@@ -506,13 +508,13 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                 case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS:
 
-                    this.fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+                    fragment = ApplicationSession.appRuntimeMiddleware.getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
 
                     LogToolsFragmentLevel3 fragl3= LogToolsFragmentLevel3.newInstance(0);
                     fragl3.setLoggers((ArrayListLoggers) screenObjects[0]);
                     fragl3.setLoggerLevel((int) screenObjects[1]);
                     //set data pass to fragment
-                    this.fragment.setContext(screenObjects);
+                    fragment.setContext(screenObjects);
 
                   transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.logContainer, fragl3);
