@@ -53,9 +53,9 @@ import java.util.List;
             this.context=context;
 
             if(activityType== FermatActivity.ACTIVITY_TYPE_SUB_APP){
-                activity= ApplicationSession.appRuntimeMiddleware.getLasActivity();
+                activity= ApplicationSession.getAppRuntimeMiddleware().getLasActivity();
             }else if(activityType== FermatActivity.ACTIVITY_TYPE_WALLET){
-                activity= ApplicationSession.walletRuntimeMiddleware.getLasActivity();
+                activity= ApplicationSession.getWalletRuntimeManager().getLasActivity();
             }
             if(activity.getTabStrip() != null){
                 List<Tab> titleTabs = activity.getTabStrip().getTabs();
@@ -207,7 +207,7 @@ import java.util.List;
             }
             catch(Exception ex)
             {
-                ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
                 Toast.makeText(context, "Error in PagerAdapter GetItem " + ex.getMessage(),
                         Toast.LENGTH_LONG).show();
