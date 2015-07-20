@@ -51,6 +51,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
      */
     Database database;
 
+
     /*
      * DealsWithErrors Interface methods implementation
      */

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2;
+package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2;
 
 /**
  * DealsWith interface for DeviceUser

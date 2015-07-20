@@ -1,6 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2;
-
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.CantGetPersonalImageException;
+package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2;
 
 /**
  * DeviceUser interface that represents the device user information.
@@ -21,7 +19,7 @@ public interface DeviceUser {
      *
      * @return the device user image
      */
-    public byte[] getPersonalImage() throws CantGetPersonalImageException;
+    public byte[] getPersonalImage() throws com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantGetPersonalImageException;
 
     /**
      * This method returns the public key of the user

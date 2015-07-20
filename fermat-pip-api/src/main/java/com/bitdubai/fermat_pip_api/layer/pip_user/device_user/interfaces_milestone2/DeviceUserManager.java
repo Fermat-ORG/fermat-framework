@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_api.layer.pip_user.device_user.interfaces_milestone2;
+package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2;
 
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.CabtGetDeviceUserListException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.CantCreateNewDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.CantGetDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.CantLogOutException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.CantSetImageException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.LoginFailedException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions_milestone2.IncorrectUserOrPasswordException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CabtGetDeviceUserListException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantCreateNewDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantGetDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantLogOutException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantSetImageException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.LoginFailedException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.IncorrectUserOrPasswordException;
 
 import java.util.List;
 

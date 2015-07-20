@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.pip_user.User;
-import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 
 import java.util.UUID;
 
 /**
  * Created by ciencias on 3/18/15.
  */
-public class ExtraUser implements User{
+public class ExtraUser implements Actor {
 
     /**
      * ExtraUser Interface member variables.
@@ -16,7 +16,7 @@ public class ExtraUser implements User{
 
     private String name;
     private UUID id;
-    private UserTypes type;
+    private Actors type;
 
 
     /**
@@ -45,7 +45,7 @@ public class ExtraUser implements User{
     }
 
     @Override
-    public UserTypes getType(){
+    public Actors getType(){
         return this.type;
     }
 

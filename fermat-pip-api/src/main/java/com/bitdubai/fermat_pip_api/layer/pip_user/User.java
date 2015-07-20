@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.pip_user;
+package com.bitdubai.fermat_pip_api.layer.pip_user;
 
 import java.util.UUID;
 
@@ -10,14 +10,14 @@ import java.util.UUID;
  *
  */
 public interface User {
-    
+
     public void setName(String name);
 
     public void setId(UUID id);
-    
+
     public String getName();
-    
+
     public UUID getId();
-    
+
     public UserTypes getType();
 }
