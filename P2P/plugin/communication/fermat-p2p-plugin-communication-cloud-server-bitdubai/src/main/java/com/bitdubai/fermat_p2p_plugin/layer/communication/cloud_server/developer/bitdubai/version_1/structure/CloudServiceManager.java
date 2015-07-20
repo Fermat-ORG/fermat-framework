@@ -286,14 +286,14 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
             messageRespond.add("host", new JsonPrimitive(networkServicesRegistry.get(networkService).getCommunicationChannelAddress().getHost()));
             messageRespond.add("port", new JsonPrimitive(networkServicesRegistry.get(networkService).getCommunicationChannelAddress().getPort()));
             messageRespond.add("identityCloudNetworkServiceManager", new JsonPrimitive(networkServicesRegistry.get(networkService).getIdentityPublicKey()));
-            messageRespond.add("identityRemoteNetworkService", new JsonPrimitive(messageReceived.get("identity").toString()));
+            messageRespond.add("identityNetworkServiceRegistered", new JsonPrimitive(messageReceived.get("identityNetworkServicePublicKey").toString()));
 
             /*
              * Construct a connection accept forward packet respond
              */
             responsePacket = FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(identity.getPublicKey(),      //sender
                                                                                         fMPPacketReceive.getSender(), //destination
-                                                                                        messageRespond.toString(),  // message
+                                                                                        messageRespond.getAsString(),  // message
                                                                                         FMPPacketType.CONNECTION_ACCEPT_FORWARD,
                                                                                         networkService,
                                                                                         identity.getPrivateKey());
