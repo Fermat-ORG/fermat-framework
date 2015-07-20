@@ -1,14 +1,15 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleNotRunningException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.WalletCreatedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletCreatedEvent;
 
 import java.util.UUID;
 

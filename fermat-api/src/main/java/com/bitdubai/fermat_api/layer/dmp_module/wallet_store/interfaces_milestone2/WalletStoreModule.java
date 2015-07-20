@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces_milestone2;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions_milestone2.CantGetRefinedCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions_milestone2.CantStartInstallationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions_milestone2.CantStartLanguageInstallationException;
@@ -47,10 +49,20 @@ public interface WalletStoreModule {
      * This method initialize the installation presses of the wallet by giving the control to the
      * wallet manager.
      *
-     * @param walletCatalogueId the wallet id in the catalogue
+     * @param walletCategory the category of the wallet to install
+     * @param nicheWallet the type of the wallet to install
+     * @param skinId the skin to install with the wallet
+     * @param languageId the language to install in the wallet
+     * @param walletCatalogueId the wallet identifier in the catalogue
+     * @param version the version of the wallet to install
      * @throws CantStartInstallationException
      */
-    public void installWallet(UUID walletCatalogueId) throws CantStartInstallationException;
+    public void installWallet(WalletCategory walletCategory,
+                              NicheWallet nicheWallet,
+                              UUID skinId,
+                              UUID languageId,
+                              UUID walletCatalogueId,
+                              String version) throws CantStartInstallationException;
 
     /**
      * This method initialize the uninstall presses of a skin by giving the control to the

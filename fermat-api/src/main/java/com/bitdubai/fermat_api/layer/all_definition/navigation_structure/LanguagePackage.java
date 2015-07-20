@@ -36,12 +36,13 @@ public class LanguagePackage implements com.bitdubai.fermat_api.layer.dmp_engine
     /**
      * LanguagePackage Interface implementation.
      */
-
+/*
+Esto está mal, el autor no puede ser un device user. Luis.
     @Override
     public DeviceUser getAuthor() {
         return author;
     }
-
+*/
     @Override
     public String getName() {
         return name;

@@ -1,12 +1,11 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
@@ -72,11 +71,11 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
         WalletAddressBookRegistry walletAddressBookRegistry = this.walletAddressBookManager.getWalletAddressBookRegistry();
         try{
             WalletAddressBookRecord walletAddressBookRecord = walletAddressBookRegistry.getWalletCryptoAddressBookByCryptoAddress(transaction.getInformation().getAddressTo());
-            PlatformWalletType platformWalletType = walletAddressBookRecord.getWalletType();
+            ReferenceWallet referenceWallet = walletAddressBookRecord.getWalletType();
             UUID walletID = walletAddressBookRecord.getWalletId();
 
             TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager,actorAddressBookManager);
-            TransactionExecutor executor = executorFactory.newTransactionExecutor(platformWalletType, walletID);
+            TransactionExecutor executor = executorFactory.newTransactionExecutor(referenceWallet, walletID);
 
             executor.executeTransaction(transaction);
         } catch(WalletAddressBookNotFoundException exception){
