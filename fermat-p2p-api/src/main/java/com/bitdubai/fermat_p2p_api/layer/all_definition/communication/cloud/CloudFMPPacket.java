@@ -7,12 +7,9 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.MalformedFMPPacketException;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -53,9 +50,9 @@ public class CloudFMPPacket implements FMPPacket {
 	private String signature;
 
     /**
-     * Represent the networkServicesType
+     * Represent the networkServices
      */
-    private NetworkServices networkServicesType;
+    private NetworkServices networkServices;
 
     /**
      * Constructor
@@ -66,7 +63,7 @@ public class CloudFMPPacket implements FMPPacket {
         this.type = null;
         this.message = null;
         this.signature = null;
-        this.networkServicesType = null;
+        this.networkServices = null;
     }
 
     /**
@@ -85,7 +82,7 @@ public class CloudFMPPacket implements FMPPacket {
         this.type = type;
         this.message = message;
         this.signature = signature;
-        this.networkServicesType = networkServicesType;
+        this.networkServices = networkServicesType;
     }
 
     /**
@@ -162,20 +159,20 @@ public class CloudFMPPacket implements FMPPacket {
 
     /**
      * (non-Javadoc)
-     * @see FMPPacket#getNetworkServicesType()
+     * @see FMPPacket#getNetworkServices()
      */
     @Override
-    public NetworkServices getNetworkServicesType() {
-        return networkServicesType;
+    public NetworkServices getNetworkServices() {
+        return networkServices;
     }
 
     /**
      * (non-Javadoc)
-     * @see FMPPacket#setNetworkServicesType(NetworkServices)
+     * @see FMPPacket#setNetworkServices(NetworkServices)
      */
     @Override
-    public void setNetworkServicesType(NetworkServices networkServicesType) {
-        this.networkServicesType = networkServicesType;
+    public void setNetworkServices(NetworkServices networkServices) {
+        this.networkServices = networkServices;
     }
 
     /**
@@ -233,7 +230,7 @@ public class CloudFMPPacket implements FMPPacket {
                 Objects.equals(getType(), that.getType()) &&
                 Objects.equals(getMessage(), that.getMessage()) &&
                 Objects.equals(getSignature(), that.getSignature()) &&
-                Objects.equals(getNetworkServicesType(), that.getNetworkServicesType());
+                Objects.equals(getNetworkServices(), that.getNetworkServices());
     }
 
     /**
@@ -242,7 +239,7 @@ public class CloudFMPPacket implements FMPPacket {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getSender(), getDestination(), getType(), getMessage(), getSignature(), getNetworkServicesType());
+        return Objects.hash(getSender(), getDestination(), getType(), getMessage(), getSignature(), getNetworkServices());
     }
 
     /**
@@ -257,7 +254,7 @@ public class CloudFMPPacket implements FMPPacket {
                 ", type=" + type +
                 ", message='" + message + '\'' +
                 ", signature='" + signature + '\'' +
-                ", networkServicesType=" + networkServicesType +
+                ", networkServices=" + networkServices +
                 '}';
     }
 }

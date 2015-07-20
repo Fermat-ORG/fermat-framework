@@ -19,6 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPack
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacketHandler;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -29,8 +30,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
-import java.util.Collections;
+import java.nio.channels.WritableByteChannel;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager</code> is
@@ -53,9 +54,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class CloudFMPConnectionManager implements CloudConnectionManager, FMPPacketHandler, Runnable {
 
     /*
-     * Represent the sleep time (3000 milliseconds)
+     * Represent the sleep time (1000 milliseconds)
      */
-    private static final long SLEEP_TIME = 3000;
+    private static final long SLEEP_TIME = 1000;
 
     /**
      * Represent the SELECTOR_SELECT_TIMEOUT value 30
@@ -107,6 +108,11 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      */
     protected final Queue<FMPPacket> pendingIncomingMessages;
 
+    /**
+     * Represent the queue of outgoing messages for destination
+     */
+    protected final Map<String, Queue<FMPPacket>> pendingOutgoingPacketCache;
+
     //Start Java NIO attributes
 
     /**
@@ -155,6 +161,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
         this.unregisteredConnections     = new ConcurrentHashMap<>();
         this.registeredConnections       = new ConcurrentHashMap<>();
         this.pendingIncomingMessages     = new ConcurrentLinkedQueue<>();
+        this.pendingOutgoingPacketCache = new ConcurrentHashMap<>();
 
         this.unregisteredConnections.clear();
         this.registeredConnections.clear();
@@ -327,6 +334,8 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	@Override
 	public synchronized void readFromConnection(final SelectionKey connection) throws CloudCommunicationException {
 
+        System.out.println("--- readFromConnection = "+connection);
+
         /*
          * Extract the socket chanel from the connection
          */
@@ -360,35 +369,56 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                  */
                 readBuffer.flip();
 
+                /*
+                 * while the buffer has remaining data
+                 */
                 while(readBuffer.hasRemaining()){
+
+                    /*
+                     * Get byte by byte and append to the string buffer
+                     */
                     stringBuffer.append(Character.toString((char) readBuffer.get()));
                 }
 
-                readBuffer.clear(); //make buffer ready for writing
+                /*
+                 * Make buffer ready for writing
+                 */
+                readBuffer.clear();
+
+                /*
+                 * Read more data from the channel
+                 */
                 bytesRead = channel.read(readBuffer);
             }
 
             System.out.println("--- Received encryptedJson = "+stringBuffer);
-            System.out.println("---  encryptedJson.length() = "+stringBuffer.length());
+            System.out.println("---  encryptedJson.length() = " + stringBuffer.length());
+
 
             /*
-             * Decrypt the data packet json object string
+             * If string buffer have data
              */
-            String decryptedJson = AsymmectricCryptography.decryptMessagePrivateKey(stringBuffer.toString(), identity.getPrivateKey());
+            if(stringBuffer.length() > 0){
+
+                /*
+                 * Decrypt the data packet json object string
+                 */
+                String decryptedJson = AsymmectricCryptography.decryptMessagePrivateKey(stringBuffer.toString(), identity.getPrivateKey());
 
 
-            System.out.println("--- Received json = " + decryptedJson);
+                System.out.println("--- Received json = " + decryptedJson);
 
-            /*
-             * Create a new FMPPacket whit the decrypted string of data
-             */
-			FMPPacket incomingPacket = FMPPacketFactory.constructCloudFMPPacket(decryptedJson);
+                /*
+                 * Create a new FMPPacket whit the decrypted string of data
+                 */
+                FMPPacket incomingPacket = FMPPacketFactory.constructCloudFMPPacket(decryptedJson);
 
-            /**
-             * Process the new incoming packet
-             */
-			processIncomingPacket(incomingPacket, connection);
+                /**
+                 * Process the new incoming packet
+                 */
+                processIncomingPacket(incomingPacket, connection);
 
+            }
 
 		} catch(UnsupportedEncodingException ex){
 			System.out.println("THIS IS NEVER GOING TO HAPPEN");
@@ -407,63 +437,112 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	@Override
 	public synchronized void writeToConnection(final SelectionKey connection) throws CloudCommunicationException {
 
-		if(connection.attachment() == null || !(connection.attachment() instanceof FMPPacket)) {
-            throw new CloudCommunicationException(CloudCommunicationException.DEFAULT_MESSAGE, null, "", "The Connection has no FMPPacket attached for the write operation");
-        }
+        System.out.println("--- writeToConnection = "+connection);
 
 		try{
 
 			/*
              * Extract the socket chanel from the connection
              */
-            SocketChannel channel = (SocketChannel) connection.channel();
+            WritableByteChannel writableByteChannel = (SocketChannel) connection.channel();
 
             /*
-             * Get the attachment packet
+             * Get the destination of the next packet
              */
-			FMPPacket dataPacket = (FMPPacket) connection.attachment();
+            String destination = (String) connection.attachment();
 
             /*
-             * Prepare the write buffer
+             * If the connection have a destination
              */
-            ByteBuffer writeBuffer = ByteBuffer.allocate(FMPPacket.PACKET_MAX_BYTE_SIZE);
-            writeBuffer.clear();
+            if (destination != null){
 
-            System.out.println("--- Sending jsom = "+dataPacket.toJson());
+               /*
+                * Get the next packet
+                */
+                FMPPacket dataPacketToSend = getNextPendingOutgoingPacketCacheForDestination(destination);
 
-            /*
-             * Encrypt the data packet json object string
-             */
-            String encryptedJson = AsymmectricCryptography.encryptMessagePublicKey(dataPacket.toJson(), dataPacket.getDestination());
+                /*
+                 * If any pending package
+                 */
+                if (dataPacketToSend != null){
 
-            System.out.println("--- Sending encryptedJson = "+encryptedJson);
-            System.out.println("---  encryptedJson.length() = "+encryptedJson.length());
+                    /*
+                     * Prepare the write buffer
+                     */
+                    ByteBuffer writeBuffer = ByteBuffer.allocate(FMPPacket.PACKET_MAX_BYTE_SIZE);
+                    writeBuffer.clear();
 
-            /*
-             * Get json format and convert to bytes
-             */
-            InputStream inputStream = new ByteArrayInputStream(encryptedJson.getBytes(CHARSET_NAME));
+                    System.out.println("--- Sending jsom = " + dataPacketToSend.toJson());
 
+                    /*
+                     * Encrypt the data packet json object string
+                     */
+                    String encryptedJson = AsymmectricCryptography.encryptMessagePublicKey(dataPacketToSend.toJson(), dataPacketToSend.getDestination());
 
-            byte[] data = new byte[FMPPacket.PACKET_MAX_BYTE_SIZE];
+                    System.out.println("--- Sending encryptedJson = "+encryptedJson);
+                    System.out.println("---  encryptedJson.length() = "+encryptedJson.length());
 
-            ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+                    /*
+                     * Get json format and convert to bytes
+                     */
+                    InputStream inputStream = new ByteArrayInputStream(encryptedJson.getBytes(CHARSET_NAME));
 
+                    /*
+                     * Create a readable channel to put the data to send
+                     */
+                    ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
 
-            while(inputChannel.read(writeBuffer) != -1){
+                    /*
+                     * Read the first chunk of byte to send
+                     */
+                    int bytesToWrite = inputChannel.read(writeBuffer);
 
-                //System.out.println("--- data = "+ Arrays.toString(data));
-                //System.out.println("--- data.length = "+data.length);
+                    /*
+                     * While has data to write
+                     */
+                    while(bytesToWrite != -1 || writeBuffer.position() > 0){
 
-                writeBuffer.flip();
-                channel.write(writeBuffer);
-                writeBuffer.compact();
+                        System.out.println("--- bytesToWrite= "+bytesToWrite);
+
+                        /*
+                         * Flips this buffer.
+                         */
+                        writeBuffer.flip();
+
+                        /*
+                         * Write into the channel the chunk
+                         */
+                        writableByteChannel.write(writeBuffer);
+
+                        /*
+                         * Compact the buffer
+                         */
+                        writeBuffer.compact();
+
+                        /*
+                         * Read another chunk
+                         */
+                        bytesToWrite = inputChannel.read(writeBuffer);
+
+                    }
+
+                    /*
+                     * Mark the connection with new activity read
+                     */
+                    connection.interestOps(SelectionKey.OP_READ);
+
+                    /*
+                     * If the package was sent successfully, it is removed from the cache
+                     */
+                    removeIntoPendingOutgoingPacketCache(destination, dataPacketToSend);
+
+                    /*
+                     * Remove the destination from the connection
+                     */
+                    connection.attach(null);
+                }
+
             }
-
-            /*
-             * Mark the connection with new activity read
-             */
-            connection.interestOps(SelectionKey.OP_READ);
 
 		}catch(IOException ex){
 			throw wrapNIOSocketIOException(ex);
@@ -534,7 +613,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
         /*
          * Mark to no running
          */
-		running.set(false);
+        running.set(false);
 
         /*
          * Shutdown executor service
@@ -819,6 +898,126 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		*/
 		return new CloudCommunicationException(message, cause, context, possibleReason);
 	}
+
+    /**
+     * Put new packet into the pending outgoing packet cache and then
+     * they are sent to the writing process of the connections for
+     * every destination
+     *
+     * @param destination
+     * @param fmpPacket
+     */
+    protected void putIntoPendingOutgoingPacketCache(String destination, FMPPacket fmpPacket){
+
+        /*
+         * Validate if exist a queue of message for this destination
+         */
+        if(pendingOutgoingPacketCache.containsKey(destination)){
+
+            /*
+             * If exist the queue get it, and add the new message into the queue
+             */
+            ((Queue) pendingOutgoingPacketCache.get(destination)).add(fmpPacket);
+
+        }else{
+
+            /*
+             * If no exist create a new the queue
+             */
+            Queue queue = new ConcurrentLinkedQueue<>();
+
+            /*
+             * Add the new message into the queue
+             */
+            queue.add(fmpPacket);
+
+            /*
+             * Put the new queue in the pendingOutgoingPacketCache cache
+             */
+            pendingOutgoingPacketCache.put(destination, queue);
+        }
+
+
+    }
+
+    /**
+     * Compress the data string
+     *
+     * @param str
+     * @return String
+     * @throws IOException
+     */
+    public static String compress(String str) throws IOException {
+
+        if (str == null || str.length() == 0) {
+            return str;
+        }
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPOutputStream gzip = new GZIPOutputStream(out);
+        gzip.write(str.getBytes());
+        gzip.close();
+
+        return out.toString("UTF-8");
+    }
+
+    /**
+     * Remove a packet from the pending outgoing packet cache after he was sent
+     * to the writing process of the connection to your destination
+     *
+     * @param destination
+     * @param fmpPacket
+     */
+    protected void removeIntoPendingOutgoingPacketCache(String destination, FMPPacket fmpPacket){
+
+        /*
+         * Validate if exist a queue of message for this destination
+         */
+        if(pendingOutgoingPacketCache.containsKey(destination)){
+
+            /*
+             * If exist the queue get it, and remove the packet from the queue
+             */
+            ((Queue) pendingOutgoingPacketCache.get(destination)).remove(fmpPacket);
+
+        }
+
+    }
+
+
+    /**
+     * Remove a packet from the pending outgoing packet cache after he was sent
+     * to the writing process of the connection to your destination
+     *
+     * @param destination
+     * @return FMPPacket
+     */
+    protected FMPPacket getNextPendingOutgoingPacketCacheForDestination(String destination){
+
+        /*
+         * Validate if exist a queue of message for this destination
+         */
+        if(pendingOutgoingPacketCache.containsKey(destination)){
+
+
+            /*
+             * If the queue is no empty
+             */
+            if (!((Queue) pendingOutgoingPacketCache.get(destination)).isEmpty()){
+
+                 /*
+                 * Get the next packet to send
+                 */
+                  return (FMPPacket) ((Queue) pendingOutgoingPacketCache.get(destination)).iterator().next();
+
+            }
+
+        }
+
+        return null;
+
+    }
+
 
     /**
      * (non-Javadoc)

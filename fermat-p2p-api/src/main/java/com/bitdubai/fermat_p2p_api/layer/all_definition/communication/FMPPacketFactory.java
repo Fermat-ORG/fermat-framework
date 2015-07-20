@@ -27,7 +27,6 @@ import com.google.gson.Gson;
  */
 public class FMPPacketFactory {
 
-
     /**
      * Construct a FMPPacket encrypted with the destination identity public key and signed
      * whit the private key passed as an argument
@@ -46,7 +45,7 @@ public class FMPPacketFactory {
         String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
         String signature = AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
 
-        return new CloudFMPPacket(destination, sender, fmpPacketType, message, signature, networkServicesType);
+        return new CloudFMPPacket(destination, sender, fmpPacketType, messageHash, signature, networkServicesType);
     }
 
 
@@ -77,8 +76,6 @@ public class FMPPacketFactory {
             return temp.fromJson(jsonPacketData);
 
         }catch (Exception exception){
-
-            exception.printStackTrace();
 
             throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, exception, null, "The packet data is not properly assembled");
         }

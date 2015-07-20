@@ -84,7 +84,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     /**
      * DealsWithLogger interface member variable
      */
-    LogManager logManager;
+    private LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
@@ -102,19 +102,29 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
      */
     private ExecutorService executorService;
 
+    /**
+     * Constructor
+     */
+    public CloudServerCommunicationPluginRoot(){
+        super();
+        this.cloudServiceManagersCache = new HashMap<>();
+    }
 
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see Service#start()
+     */
     @Override
     public void start() {
 
         try {
 
-            if (true) //skip Start the server
+            if (false) //skip Start the server
                 return;
 
             System.out.println("Starting plugin CloudServerCommunicationPluginRoot");
-
-            cloudServiceManagersCache = new HashMap<>();
 
             /*
              * Create the pool of thread
@@ -199,16 +209,31 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see Service#pause()
+     */
     @Override
     public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see Service#resume()
+     */
     @Override
     public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see Service#stop()
+     */
     @Override
     public void stop() {
 
@@ -225,6 +250,11 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see Service#getStatus()
+     */
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
@@ -232,17 +262,20 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
 
     /**
-     * Communication channels interface implementation.
-     */
-
-    /**
-     * DealsWithLogger interface implmentations
+     * (non-Javadoc)
+     *
+     * @see DealsWithLogger#setLogManager(LogManager)
      */
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see LogManagerForDevelopers#getClassesFullPath()
+     */
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
@@ -257,6 +290,11 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
         return returnedClasses;
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see LogManagerForDevelopers#setLoggingLevelPerClass(Map<String, LogLevel>)
+     */
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         /**
@@ -298,35 +336,42 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     }
 
     /**
-     * UsesFileSystem Interface implementation.
+     * (non-Javadoc)
+     *
+     * @see DealsWithPluginFileSystem#setPluginFileSystem(PluginFileSystem)
      */
-
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
     	//this.pluginFileSystem = pluginFileSystem;
     }
 
     /**
-     * DealWithEvents Interface implementation.
+     * (non-Javadoc)
+     *
+     * @see DealsWithEvents#setEventManager(EventManager)
      */
-
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
     /**
-     *DealWithErrors Interface implementation.
+     * (non-Javadoc)
+     *
+     * @see DealsWithErrors#setErrorManager(ErrorManager)
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
     }
 
     /**
-     * DealsWithPluginIdentity methods implementation.
+     * (non-Javadoc)
+     *
+     * @see Plugin#setId(UUID)
      */
     @Override
     public void setId(UUID pluginId) {
        this.pluginId = pluginId;
     }
+
 }

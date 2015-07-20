@@ -65,14 +65,14 @@ public interface FMPPacket {
      *
      * @return NetworkServices
      */
-	public NetworkServices getNetworkServicesType();
+	public NetworkServices getNetworkServices();
 
     /**
      * Set the network service type of the packet
      *
      * @param networkServicesType
      */
-	public void setNetworkServicesType(NetworkServices networkServicesType);
+	public void setNetworkServices(NetworkServices networkServicesType);
 
     /**
      * Convert this object to json string
