@@ -11,7 +11,7 @@ public class ResourceTypeAdapter extends XmlAdapter<String, ResourceType> {
 
     @Override
     public ResourceType unmarshal(String v) throws Exception {
-        return ResourceType.fromValue(v.toString());
+        return ResourceType.fromValue(v);
     }
 
     @Override

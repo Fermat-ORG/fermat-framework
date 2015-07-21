@@ -56,8 +56,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
@@ -709,6 +709,15 @@ public class Platform  {
          */
         Plugin walletStoreMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletStorePlugin();
         setPluginReferencesAndStart(walletStoreMiddleware, Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE);
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Settings Middleware
+         * ----------------------------------
+         */
+        Plugin walletSettingsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletStorePlugin();
+        setPluginReferencesAndStart(walletSettingsMiddleware, Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
+
 
         /**
          * ----------------------------------

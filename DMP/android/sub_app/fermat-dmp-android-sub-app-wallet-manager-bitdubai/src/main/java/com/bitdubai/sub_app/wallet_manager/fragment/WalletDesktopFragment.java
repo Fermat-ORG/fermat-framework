@@ -22,8 +22,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+
 import com.bitdubai.fermat_dmp.wallet_manager.R;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 
 
 import java.io.Serializable;
@@ -272,8 +273,8 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((ScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
-                            ((ScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
+                            ((FermatScreenSwapper) getActivity()).changeScreen();
 
                         }
                     });
@@ -283,8 +284,8 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((ScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
-                            ((ScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
+                            ((FermatScreenSwapper) getActivity()).changeScreen();
 
                         }
                     });

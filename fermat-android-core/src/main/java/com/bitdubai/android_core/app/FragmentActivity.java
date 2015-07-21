@@ -2,93 +2,43 @@ package com.bitdubai.android_core.app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
-
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
-
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
-
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
-
-
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-
-
-import java.util.Map;
 
 
 
 /**
  * Created by Natalia on 24/02/2015.
  */
-public class FragmentActivity  extends Activity implements ScreenSwapper {
+public class FragmentActivity  extends android.app.Activity implements FermatScreenSwapper {
 
     private String actionKey;
 
     private Object[] screenObjects;
 
-    // TODO: Raul: Esto no se de donde salio y para que se usa. Posiblemente tenga que volar .. Luis.
-    //TODO: esta activity se usa para cargar los fragmentos cuando se empieza a navegar dentro de la sub app (Natalia)
 
-    public CharSequence Title;
-    private Menu menu;
-    private PagerSlidingTabStrip tabStrip;
-    private App app;
-    private SubApp subApp;
-    private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity activity;
-    private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragment;
-    private Map<Fragments, Fragment> fragments;
+    private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity;
+    private Fragment fragment;
 
-    private ViewPager pager;
 
-    private  TextView abTitle;
-    private Drawable oldBackground = null;
-    private int currentColor = 0xFF666666;
-    private MainMenu mainMenumenu;
-    private SideMenu sidemenu;
-    private String walletStyle = "";
-    private TabStrip tabs;
-    private TitleBar titleBar; // Comment
-    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.savedInstanceState = savedInstanceState;
 
         setContentView(R.layout.runtime_app_activity_fragment);
         try{
 
-
-            this.app = ApplicationSession.appRuntimeMiddleware.getLastApp();
-            this.subApp =  ApplicationSession.appRuntimeMiddleware.getLastSubApp();
             this.activity = ApplicationSession.appRuntimeMiddleware.getLasActivity();
-            // Fragment fragment = appRuntimeMiddleware.getLastFragment();
-            //ApplicationSession.setActivityId(activity.getType().getKey());
-
-            //get activity settings
-            this.tabs = activity.getTabStrip();
-
-            this.titleBar = activity.getTitleBar();
-
-            this.mainMenumenu= activity.getMainMenu();
 
             NavigateFragment();
 
@@ -148,11 +98,6 @@ public class FragmentActivity  extends Activity implements ScreenSwapper {
 
         }
 
-
-        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-        this.abTitle = (TextView) findViewById(titleId);
-
-        //ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
     }
 

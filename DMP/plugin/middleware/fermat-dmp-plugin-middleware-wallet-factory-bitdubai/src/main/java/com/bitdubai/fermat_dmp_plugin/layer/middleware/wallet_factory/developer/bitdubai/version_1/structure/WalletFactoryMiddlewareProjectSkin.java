@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ae.javax.xml.bind.Unmarshaller;
 import ae.javax.xml.bind.annotation.XmlElement;
 import ae.javax.xml.bind.annotation.XmlElementWrapper;
 import ae.javax.xml.bind.annotation.XmlElements;
@@ -83,7 +84,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
             @XmlElement(name="resource", type=WalletFactoryMiddlewareProjectResource.class),
     })
     @XmlElementWrapper
-    public List<WalletFactoryProjectResource> getResources() {
+        public List<WalletFactoryProjectResource> getResources() {
         return resources;
     }
 
@@ -101,6 +102,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
             for(WalletFactoryProjectResource res : resources) {
                 if (res.getResourceType().equals(resourceType)) collected.add(res);
             }
+
             return collected;
         }
     }
@@ -155,33 +157,17 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
 
     public String getResourceTypePath(ResourceType resourceType) {
         String initialPath = "wallet_factory_projects";
-        String resourcePath = "";
+        String skinPath = "skins";
+
         WalletFactoryProjectProposal projectProposal = getWalletFactoryProjectProposal();
         WalletFactoryProject project = projectProposal.getProject();
-
-        switch(resourceType) {
-            case VIDEO:
-                resourcePath = "videos";
-                break;
-            case SOUND:
-                resourcePath = "sounds";
-                break;
-            case FONT_STYLE:
-                resourcePath = "font_styles";
-                break;
-            case IMAGE:
-                resourcePath = "images";
-                break;
-            case LAYOUT:
-                resourcePath = "layouts";
-                break;
-        }
 
         return initialPath + "/" +
                 project.getName() + "/" +
                 projectProposal.getAlias() + "/" +
+                skinPath + "/" +
                 getName() + "/" +
-                resourcePath;
+                resourceType.value();
     }
 
 
@@ -197,6 +183,14 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         this.resources = resources;
     }
 
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent != null) {
+            WalletFactoryMiddlewareProjectProposal walletFactoryMiddlewareProjectProposal = (WalletFactoryMiddlewareProjectProposal) parent;
+            walletFactoryProjectProposal = walletFactoryMiddlewareProjectProposal;
+            setPluginFileSystem(walletFactoryMiddlewareProjectProposal.getPluginFileSystem());
+            setPluginId(walletFactoryMiddlewareProjectProposal.getPluginId());
+        }
+    }
 
     /**
      * DealsWithPluginFileSystem interface implementation.

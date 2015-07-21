@@ -47,6 +47,8 @@ public class AsymmectricCryptography {
 		try{
 			return cipher.decryptWithPrivateKey(encryptedMessage, privateKey);
 		} catch(Exception ex){
+
+            System.out.println("ex = "+ex);
 			throw new IllegalArgumentException(ex.getMessage());
 		}
 	}
