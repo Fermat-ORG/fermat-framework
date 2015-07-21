@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +7,7 @@ import java.util.List;
 /**
  * Created by rodrigo on 2015.07.17..
  */
-public class TabStrip implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip {
+public class TabStrip implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTabStrip {
     int dividercolor;
     int indicatorcolor;
     int indicatorheight;
@@ -19,14 +18,14 @@ public class TabStrip implements com.bitdubai.fermat_api.layer.dmp_engine.sub_ap
     String tabsTextColor;
     String tabsIndicateColor;
 
-    List<com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab> tabs = new ArrayList<>();
+    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab> tabs = new ArrayList<>();
 
     public void addTab (Tab tab) {
         tabs.add(tab);
     }
 
     @Override
-    public List<com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Tab> getTabs(){
+    public List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab> getTabs(){
         return this.tabs;
     }
     @Override

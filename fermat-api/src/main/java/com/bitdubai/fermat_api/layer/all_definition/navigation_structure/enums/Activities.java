@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by rodrigo on 2015.07.20..
  */
 public enum Activities {
 

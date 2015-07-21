@@ -29,10 +29,10 @@ public interface WalletFactoryProjectProposal {
     String getWalletNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException;
 
     // get list of the skins
-    List<WalletFactoryProjectSkin> getSkinList();
+    List<WalletFactoryProjectSkin> getSkins();
 
     // get list of languages
-    List<String> getLanguages();
+    List<WalletFactoryProjectLanguage> getLanguages();
 
     // get a specific skin
     WalletFactoryProjectSkin getSkin(String skinName) throws CentGetWalletFactoryProjectSkinFileException;
@@ -47,7 +47,7 @@ public interface WalletFactoryProjectProposal {
     void deleteSkin(WalletFactoryProjectSkin name) throws CantDeleteWalletFactoryProjectSkinException;
 
     // create a new skin
-    void addLanguage(WalletFactoryProjectLanguage language) throws CantAddWalletFactoryProjectLanguageException;
+    WalletFactoryProjectLanguage addLanguage(byte[] file, String name) throws CantAddWalletFactoryProjectLanguageException;
 
     // delete an existent skin
     void deleteLanguage(WalletFactoryProjectLanguage language) throws CantDeleteWalletFactoryProjectLanguageException;

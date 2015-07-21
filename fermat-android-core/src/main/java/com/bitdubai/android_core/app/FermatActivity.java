@@ -32,16 +32,17 @@ import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSliding
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.MainMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TabStrip;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.TitleBar;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;

@@ -18,7 +18,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -204,9 +204,9 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
                         params[0] = resource;
                         params[1] = developerDatabaseList.get(position);
-                        ((ScreenSwapper)getActivity()).setScreen("DeveloperTablesFragment");
-                        ((ScreenSwapper)getActivity()).setParams(params);
-                        ((ScreenSwapper)getActivity()).changeScreen();
+                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperTablesFragment");
+                        ((FermatScreenSwapper)getActivity()).setParams(params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen();
 
 
 
