@@ -22,4 +22,5 @@ aquellos firmados por una clave pública nuestra)
 Esta interfaz se reduce a:
 
 Public key del developer
+Dirección del repositorio donde están alocados los recursos
 version de la wallet (tal vez)
