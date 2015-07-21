@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWit
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantGetTransactionManagerException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantSendFundsException;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
@@ -31,7 +32,6 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
@@ -192,8 +192,8 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     private UUID createActor(String actorName, Actors actorType) throws CantCreateOrRegisterActorException {
         switch (actorType){
             case EXTRA_USER:
-                User user = extraUserManager.createUser(actorName);
-                return user.getId();
+                Actor actor = extraUserManager.createActor(actorName);
+                return actor.getId();
             default:
                 throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, null, "", "ActorType is not Compatible.");
         }
@@ -360,8 +360,8 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     private String getActorNameByActorIdAndType(UUID actorId, Actors actorType) {
         switch (actorType) {
             case EXTRA_USER:
-                User user = extraUserManager.getUser(actorId);
-                return user.getName();
+                Actor actor = extraUserManager.getActor(actorId);
+                return actor.getName();
             default:
                 return null;
         }

@@ -15,6 +15,8 @@ import java.util.UUID;
  */
 public interface WalletFactoryProjectSkin {
 
+    // TODO DESIGNER?
+
     // name of skin, first skin is default
     String getName();
 
