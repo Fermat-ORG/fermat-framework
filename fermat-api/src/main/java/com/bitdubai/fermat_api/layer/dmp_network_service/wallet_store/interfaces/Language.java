@@ -26,6 +26,13 @@ public interface Language {
     public Languages getLanguageName();
 
     /**
+     * This method gives us a label given for the language
+     *
+     * @return a label for the language
+     */
+    public String getLanguageLabel();
+
+    /**
      * This method gives us the size of the language package
      *
      * @return an int representing the language package size
