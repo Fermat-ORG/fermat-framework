@@ -164,12 +164,7 @@ public class StartActivity extends FragmentActivity {
             appRuntimeMiddleware = (AppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
             walletRuntimeMiddleware = (WalletRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
-            //save object on global class
-            ApplicationSession.appRuntimeMiddleware=appRuntimeMiddleware;
-            ApplicationSession.walletRuntimeMiddleware=walletRuntimeMiddleware;
 
-            errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
-            ApplicationSession.errorManager=errorManager;
 
             Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
             ApplicationSession.mDefaultTypeface=tf;
