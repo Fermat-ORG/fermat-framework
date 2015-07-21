@@ -107,6 +107,14 @@ public class AddCreditTest {
         addCreditAndCatchException(BalanceType.AVAILABLE);
     }
 
+    @Test
+    public void AddCredit_GeneralException_ThrowsCantRegisterCreditException() throws Exception{
+        when(mockBalanceTable.getRecords()).thenReturn(null);
+
+        addCreditAndCatchException(BalanceType.BOOK);
+        addCreditAndCatchException(BalanceType.AVAILABLE);
+    }
+
     private void addCreditNoExceptions(final BalanceType balanceType) throws Exception{
         catchException(testWalletDao).addCredit(mockTransactionRecord, balanceType);
         assertThat(caughtException()).isNull();

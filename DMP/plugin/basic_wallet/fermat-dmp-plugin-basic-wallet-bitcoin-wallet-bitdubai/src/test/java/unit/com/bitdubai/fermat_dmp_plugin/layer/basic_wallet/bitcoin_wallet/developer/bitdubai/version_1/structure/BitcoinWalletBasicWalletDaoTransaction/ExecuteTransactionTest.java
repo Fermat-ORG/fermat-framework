@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWalletDaoTransaction;
 
 import org.junit.Before;
@@ -52,5 +53,17 @@ public class ExecuteTransactionTest {
     public void ExecuteTransaction_DatabaseTransactionFailedException_ThrowsCantExecuteBitconTransactionException() throws Exception{
         doThrow(new DatabaseTransactionFailedException("MOCK", null,null,null)).when(mockDatabase).executeTransaction(mockTransaction);
         catchException(testDaoTransaction).executeTransaction(mockTable, mockInsertRecord, mockTable, mockUpdateRecord);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantExecuteBitconTransactionException.class);
+    }
+
+    @Test
+    public void ExecuteTransaction_GeneralException_ThrowsCantExecuteBitconTransactionException() throws Exception{
+        when(mockDatabase.newTransaction()).thenReturn(null);
+        catchException(testDaoTransaction).executeTransaction(mockTable, mockInsertRecord, mockTable, mockUpdateRecord);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantExecuteBitconTransactionException.class);
     }
 }

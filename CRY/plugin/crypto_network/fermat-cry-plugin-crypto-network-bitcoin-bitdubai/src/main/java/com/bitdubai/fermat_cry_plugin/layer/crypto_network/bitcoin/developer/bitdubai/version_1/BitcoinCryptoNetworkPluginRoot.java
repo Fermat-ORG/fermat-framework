@@ -149,17 +149,12 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
-
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override

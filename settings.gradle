@@ -356,4 +356,6 @@ project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File(
 include ':fermat-pip-plugin-module-developer-bitdubai'
 project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai')
 
-
+// FUNCTIONAL TEST PROJECT
+include ':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
+project(':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')

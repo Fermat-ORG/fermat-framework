@@ -5,6 +5,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelA
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationManager;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.Executors;
@@ -20,7 +21,8 @@ public class CloudClientManagerExternalConnectionTest {
 	protected static CommunicationChannelAddress testAddress;
 	protected static CloudClientCommunicationManager testClient;
 
-   // @Test
+    @Ignore
+	@Test
     public void CloudClientCommunicationManagerConnection() throws Exception{
 
 		testAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testBasePort);

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import functional.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
@@ -28,26 +29,30 @@ public class DataTransmitTest extends CloudNetworkServiceVPNIntegrationTest{
 		testParticipants = new HashSet<String>();
 		testParticipants.add(MockFMPPacketsFactory.MOCK_PUBLIC_KEY);
 	}
-	
+
+	@Ignore
 	@Test
 	public void DataTransmit_RecipientGetsMessage_ClientGetsResponse() throws Exception{
 		FMPPacket response = transmitDataThroughVPN(0);
 		assertThat(response).isNotNull();
 	}
-	
+
+	@Ignore
 	@Test
 	public void DataTransmit_RecipientGetsMessage_ResponseTypeIsDataTransmit() throws Exception{
 		FMPPacket response = transmitDataThroughVPN(2);
 		assertThat(response.getType()).isEqualTo(FMPPacketType.DATA_TRANSMIT);
 	}
-	
+
+	@Ignore
 	@Test
 	public void DataTransmit_RecipientGetsMessage_ResponseMessageIsTestMessage() throws Exception{
 		FMPPacket response = transmitDataThroughVPN(4);
 		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(response.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY);
 		assertThat(decryptedMessage).isEqualTo(testMessage);
 	}
-	
+
+	@Ignore
 	@Test
 	public void DataTransmit_RecipientGetsMessage_SignatureIsValid() throws Exception{
 		FMPPacket response = transmitDataThroughVPN(6);
