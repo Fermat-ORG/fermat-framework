@@ -4,12 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
@@ -83,7 +83,7 @@ public class CreateWalletContactTest extends TestCase {
     WalletContactsRegistry walletContactsRegistry;
 
     @Mock
-    User user;
+    Actor user;
 
     @Mock
     CryptoAddress cryptoAddress;
@@ -116,7 +116,7 @@ public class CreateWalletContactTest extends TestCase {
         doReturn(actorAddressBookRegistry).when(actorAddressBookManager).getActorAddressBookRegistry();
         doReturn(walletAddressBookRegistry).when(walletAddressBookManager).getWalletAddressBookRegistry();
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
-        doReturn(user).when(extraUserManager).createUser(anyString());
+        doReturn(user).when(extraUserManager).createActor(anyString());
         doReturn(cryptoAddress).when(cryptoVaultManager).getAddress();
         doReturn(walletContactRecord).when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), any(UUID.class));
         nicheWalletTypeCryptoWallet.initialize();

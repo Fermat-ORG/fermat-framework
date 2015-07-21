@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -19,7 +18,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 /**
  * Created by Natalia on 24/02/2015.
  */
-public class FragmentActivity  extends android.app.Activity implements FermatScreenSwapper {
+public class FragmentActivity  extends FermatActivity implements FermatScreenSwapper {
 
     private String actionKey;
 
@@ -27,7 +26,7 @@ public class FragmentActivity  extends android.app.Activity implements FermatScr
 
 
     private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity;
-    private Fragment fragment;
+    private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment;
 
 
 
@@ -38,7 +37,7 @@ public class FragmentActivity  extends android.app.Activity implements FermatScr
         setContentView(R.layout.runtime_app_activity_fragment);
         try{
 
-            this.activity = ApplicationSession.appRuntimeMiddleware.getLasActivity();
+            this.activity = ApplicationSession.getAppRuntimeMiddleware().getLasActivity();
 
             NavigateFragment();
 
@@ -61,7 +60,7 @@ public class FragmentActivity  extends android.app.Activity implements FermatScr
         Object params;
         Intent intent;
         //get actual activity Fragment to execute
-        this.fragment = ApplicationSession.appRuntimeMiddleware.getLastFragment();
+        this.fragment = ApplicationSession.getAppRuntimeMiddleware().getLastFragment();
 
         if(fragment != null){
 
@@ -140,7 +139,7 @@ public class FragmentActivity  extends android.app.Activity implements FermatScr
     public void onBackPressed() {
         // get actual fragment on execute
 
-        this.fragment = ApplicationSession.appRuntimeMiddleware.getLastFragment();
+        this.fragment = ApplicationSession.getAppRuntimeMiddleware().getLastFragment();
 
         //get setting fragment to back
         Fragments frgBackType = this.fragment.getBack();
@@ -148,7 +147,7 @@ public class FragmentActivity  extends android.app.Activity implements FermatScr
         if(frgBackType != null){
 
 
-            Fragment fragmentBack = ApplicationSession.appRuntimeMiddleware.getFragment(frgBackType); //set back fragment to actual fragment to run
+            Fragment fragmentBack = ApplicationSession.getAppRuntimeMiddleware().getFragment(frgBackType); //set back fragment to actual fragment to run
 
             //I get string context with params pass to fragment to return with this data
             ApplicationSession.mParams=fragmentBack.getContext();
@@ -191,7 +190,7 @@ public class FragmentActivity  extends android.app.Activity implements FermatScr
             }
             else
             {
-                ApplicationSession.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
+                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, new IllegalArgumentException("the given number doesn't match any Status."));
 
             }
 

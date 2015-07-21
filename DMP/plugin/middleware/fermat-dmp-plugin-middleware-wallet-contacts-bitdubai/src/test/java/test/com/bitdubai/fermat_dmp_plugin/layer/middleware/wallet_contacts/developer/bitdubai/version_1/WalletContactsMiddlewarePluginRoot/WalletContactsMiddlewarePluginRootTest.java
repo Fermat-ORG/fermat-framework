@@ -8,15 +8,18 @@ package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.dev
 
 
 // Packages and classes to import of jdk 1.7
+
 import java.util.List;
 import java.util.UUID;
 
 // Packages and classes to import of JUnit core.
 import org.junit.*;
+
 import static org.junit.Assert.assertNotNull;
 
 // Packages and classes to import of mockito API.
 import org.mockito.Matchers;
+
 import static org.mockito.Mockito.*;
 
 // Packages and classes to import of fermat suite.
@@ -41,7 +44,7 @@ public class WalletContactsMiddlewarePluginRootTest {
 
     // Private instance fields declarations.
     // Database system.
-    private PluginDatabaseSystem    pluginDatabaseSystem = null;
+    private PluginDatabaseSystem pluginDatabaseSystem = null;
 
     // Developer object factory.
     private DeveloperObjectFactory developerObjectFactory = null;
@@ -75,9 +78,9 @@ public class WalletContactsMiddlewarePluginRootTest {
         // Create a plugin mock.
 
         // Plugin DatabaseSystem.
-        this.pluginDatabaseSystem   = mock (PluginDatabaseSystem.class);
-        this.developerObjectFactory = mock (DeveloperObjectFactory.class);
-        this.dbFactory              = mock (WalletContactsMiddlewareDeveloperDatabaseFactory.class);
+        this.pluginDatabaseSystem = mock(PluginDatabaseSystem.class);
+        this.developerObjectFactory = mock(DeveloperObjectFactory.class);
+        this.dbFactory = mock(WalletContactsMiddlewareDeveloperDatabaseFactory.class);
     }
 
     /**
@@ -89,9 +92,9 @@ public class WalletContactsMiddlewarePluginRootTest {
     public void tearDown() {
 
         // Release the resources.
-        this.pluginDatabaseSystem   = null;
+        this.pluginDatabaseSystem = null;
         this.developerObjectFactory = null;
-        this.dbFactory              = null;
+        this.dbFactory = null;
     }
 
 
@@ -102,12 +105,10 @@ public class WalletContactsMiddlewarePluginRootTest {
      *
      *  @return DeveloperDatabaseTableRecord list.
      * */
-    private List<DeveloperDatabaseTableRecord> getDeveloperDatabaseTableRecord () {
+    private List<DeveloperDatabaseTableRecord> getDeveloperDatabaseTableRecord() {
 
         // Method setup.
-        List<DeveloperDatabaseTableRecord> list = new java.util.ArrayList<DeveloperDatabaseTableRecord> ();
-
-
+        List<DeveloperDatabaseTableRecord> list = new java.util.ArrayList<DeveloperDatabaseTableRecord>();
 
 
         // Return the values.
@@ -120,57 +121,57 @@ public class WalletContactsMiddlewarePluginRootTest {
      *
      *  @return Database list.
      * */
-    private List<DeveloperDatabase> getDatabaseList () {
+    private List<DeveloperDatabase> getDatabaseList() {
 
         // Method setup.
-        List<DeveloperDatabase> list = new java.util.ArrayList<DeveloperDatabase> ();
-
-
-            // Add new DeveloperDatabase.
-            list.add (new DeveloperDatabase () {
-
-
-                @Override
-                public String getName() {
-                    return null;
-                }
-
-                @Override
-                public String getId() {
-                    return null;
-                }
-                }
-            );
-
-        // Return the values.
-        return list;
-    }
-
-    /*
-     *
-     *  <p>Method that return the database list.
-     *
-     *  @return Database list.
-     * */
-    private List<DeveloperDatabaseTable> getDatabaseTableList () {
-
-        // Method setup.
-        List<DeveloperDatabaseTable> list = new java.util.ArrayList<DeveloperDatabaseTable> ();
+        List<DeveloperDatabase> list = new java.util.ArrayList<DeveloperDatabase>();
 
 
         // Add new DeveloperDatabase.
-        list.add (new DeveloperDatabaseTable () {
+        list.add(new DeveloperDatabase() {
 
-             @Override
-             public String getName() {
-                 return null;
-             }
 
-             @Override
-             public List<String> getFieldNames() {
-                     return null;
-             }
-                  }
+                     @Override
+                     public String getName() {
+                         return null;
+                     }
+
+                     @Override
+                     public String getId() {
+                         return null;
+                     }
+                 }
+        );
+
+        // Return the values.
+        return list;
+    }
+
+    /*
+     *
+     *  <p>Method that return the database list.
+     *
+     *  @return Database list.
+     * */
+    private List<DeveloperDatabaseTable> getDatabaseTableList() {
+
+        // Method setup.
+        List<DeveloperDatabaseTable> list = new java.util.ArrayList<DeveloperDatabaseTable>();
+
+
+        // Add new DeveloperDatabase.
+        list.add(new DeveloperDatabaseTable() {
+
+                     @Override
+                     public String getName() {
+                         return null;
+                     }
+
+                     @Override
+                     public List<String> getFieldNames() {
+                         return null;
+                     }
+                 }
         );
 
         // Return the values.
@@ -183,27 +184,28 @@ public class WalletContactsMiddlewarePluginRootTest {
      *
      *  @return Database.
      * */
-    private DeveloperDatabase getDatabase () {
+    private DeveloperDatabase getDatabase() {
 
         // Method setup.
         // Add new DeveloperDatabase.
-        return new DeveloperDatabase () {
+        return new DeveloperDatabase() {
 
 
-                      @Override
-                      public String getName() {
-                          return null;
-                      }
+            @Override
+            public String getName() {
+                return null;
+            }
 
-                      @Override
-                      public String getId() {
-                          return null;
-                      }
-                  };
+            @Override
+            public String getId() {
+                return null;
+            }
+        };
     }
 
 
     // Public instance methods declarations.
+
     /**
      * <p>Method that test the database list.
      *
@@ -211,47 +213,46 @@ public class WalletContactsMiddlewarePluginRootTest {
      * @see {@link java.lang.Exception}
      */
     @Test
-    public void shouldGetDatabaseList () throws Exception {
-
-        // Setup method.
-        this.dbFactory.setPluginId (UUID.randomUUID ());
-        this.dbFactory.setPluginDatabaseSystem (this.pluginDatabaseSystem);
-
-        // Setup services component.
-        when(this.developerObjectFactory.getNewDeveloperDatabase(Matchers.anyString(), Matchers.anyString())).thenReturn (this.getDatabase());
-        when (dbFactory.getDatabaseList (Matchers.<DeveloperObjectFactory>any ())).thenReturn(this.getDatabaseList ());
-
-
-        // Execute mock services.
-        dbFactory.initializeDatabase();
-        List<DeveloperDatabase> result = dbFactory.getDatabaseList (this.developerObjectFactory);
-
-
-        // Verify the business execution.
-        verify (dbFactory).getDatabaseList(Matchers.<DeveloperObjectFactory>any ());
-
-
-        // Check the test.
-        assertNotNull (result);
-    }
-
-    /**
-     *
-     * <p>Method that test the database table list.
-     *
-     * @see {@link org.junit.Test}
-     * @see {@link java.lang.Exception}
-     */
-    @Test
-    public void shouldGetDatabaseTableList () throws Exception {
+    public void shouldGetDatabaseList() throws Exception {
 
         // Setup method.
         this.dbFactory.setPluginId(UUID.randomUUID());
         this.dbFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
         // Setup services component.
-        when(this.developerObjectFactory.getNewDeveloperDatabase(Matchers.anyString(), Matchers.anyString())).thenReturn (this.getDatabase());
-        when (dbFactory.getDatabaseTableList(Matchers.<DeveloperObjectFactory>any())).thenReturn(this.getDatabaseTableList());
+        when(this.developerObjectFactory.getNewDeveloperDatabase(Matchers.anyString(), Matchers.anyString())).thenReturn(this.getDatabase());
+        when(dbFactory.getDatabaseList(Matchers.<DeveloperObjectFactory>any())).thenReturn(this.getDatabaseList());
+
+
+        // Execute mock services.
+        dbFactory.initializeDatabase();
+        List<DeveloperDatabase> result = dbFactory.getDatabaseList(this.developerObjectFactory);
+
+
+        // Verify the business execution.
+        verify(dbFactory).getDatabaseList(Matchers.<DeveloperObjectFactory>any());
+
+
+        // Check the test.
+        assertNotNull(result);
+    }
+
+    /**
+     * <p>Method that test the database table list.
+     *
+     * @see {@link org.junit.Test}
+     * @see {@link java.lang.Exception}
+     */
+    @Test
+    public void shouldGetDatabaseTableList() throws Exception {
+
+        // Setup method.
+        this.dbFactory.setPluginId(UUID.randomUUID());
+        this.dbFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+
+        // Setup services component.
+        when(this.developerObjectFactory.getNewDeveloperDatabase(Matchers.anyString(), Matchers.anyString())).thenReturn(this.getDatabase());
+        when(dbFactory.getDatabaseTableList(Matchers.<DeveloperObjectFactory>any())).thenReturn(this.getDatabaseTableList());
 
 
         // Execute mock services.
@@ -260,42 +261,41 @@ public class WalletContactsMiddlewarePluginRootTest {
 
 
         // Verify the business execution.
-        verify (dbFactory).getDatabaseTableList(Matchers.<DeveloperObjectFactory>any());
+        verify(dbFactory).getDatabaseTableList(Matchers.<DeveloperObjectFactory>any());
 
 
         // Check the test.
-        assertNotNull (result);
+        assertNotNull(result);
     }
 
     /**
-     *
      * <p>Method that test the database table list.
      *
      * @see {@link org.junit.Test}
      * @see {@link java.lang.Exception}
      */
     @Test
-    public void shouldGetDatabaseTableContent () throws Exception {
+    public void shouldGetDatabaseTableContent() throws Exception {
 
         // Setup method.
         this.dbFactory.setPluginId(UUID.randomUUID());
         this.dbFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
         // Setup services component.
-        when(this.developerObjectFactory.getNewDeveloperDatabase(Matchers.anyString(), Matchers.anyString())).thenReturn (this.getDatabase());
-        when (dbFactory.getDatabaseTableContent (Matchers.<DeveloperObjectFactory>any(), Matchers.<DeveloperDatabaseTable>any())).thenReturn (this.getDeveloperDatabaseTableRecord ());
+        when(this.developerObjectFactory.getNewDeveloperDatabase(Matchers.anyString(), Matchers.anyString())).thenReturn(this.getDatabase());
+        when(dbFactory.getDatabaseTableContent(Matchers.<DeveloperObjectFactory>any(), Matchers.<DeveloperDatabaseTable>any())).thenReturn(this.getDeveloperDatabaseTableRecord());
 
 
         // Execute mock services.
         dbFactory.initializeDatabase();
-        List<DeveloperDatabaseTableRecord> result = dbFactory.getDatabaseTableContent(this.developerObjectFactory, this.getDatabaseTableList ().get (0));
+        List<DeveloperDatabaseTableRecord> result = dbFactory.getDatabaseTableContent(this.developerObjectFactory, this.getDatabaseTableList().get(0));
 
 
         // Verify the business execution.
-        verify (dbFactory).getDatabaseTableContent(Matchers.<DeveloperObjectFactory>any(), Matchers.<DeveloperDatabaseTable>any());
+        verify(dbFactory).getDatabaseTableContent(Matchers.<DeveloperObjectFactory>any(), Matchers.<DeveloperDatabaseTable>any());
 
 
         // Check the test.
-        assertNotNull (result);
+        assertNotNull(result);
     }
 }

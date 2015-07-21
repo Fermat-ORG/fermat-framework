@@ -55,6 +55,7 @@ public class GetWalletAddressBookRegistryTest extends TestCase {
 
     @Test
     public void testGetWalletAddressBookRegistryTest_NotNull() throws Exception {
+        when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(database);
         WalletAddressBookRegistry walletAddressBookRegistry = walletAddressBookCryptoModulePluginRoot.getWalletAddressBookRegistry();
         assertNotNull(walletAddressBookRegistry);
     }

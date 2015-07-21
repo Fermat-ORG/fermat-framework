@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by Natalia on 31/03/2015.
  */
-class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPluginDatabaseSystem {
+public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithErrors Interface member variables.

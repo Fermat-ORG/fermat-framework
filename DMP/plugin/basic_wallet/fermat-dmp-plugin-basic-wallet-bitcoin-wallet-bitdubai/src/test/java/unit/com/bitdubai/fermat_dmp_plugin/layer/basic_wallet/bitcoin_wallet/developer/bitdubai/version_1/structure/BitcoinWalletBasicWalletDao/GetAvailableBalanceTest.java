@@ -89,4 +89,12 @@ public class GetAvailableBalanceTest {
                 .isInstanceOf(CantCalculateBalanceException.class);
     }
 
+    @Test
+    public void GetAvailableBalance_GeneralException_ThrowsCantCalculateBalanceException() throws Exception{
+        when(mockTable.getRecords()).thenReturn(null);
+        catchException(testWalletDao).getAvailableBalance();
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCalculateBalanceException.class);
+    }
 }
