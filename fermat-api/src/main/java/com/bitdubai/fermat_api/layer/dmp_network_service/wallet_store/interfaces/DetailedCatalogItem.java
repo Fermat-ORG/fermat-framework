@@ -2,16 +2,18 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interface
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguagesException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinsException;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by ciencias on 7/17/15.
  */
 public interface DetailedCatalogItem {
+
+    public Version getVersion();
 
     /**
      * This method tells us the category of the wallet
@@ -27,21 +29,9 @@ public interface DetailedCatalogItem {
      */
     public List<Language> getLanguages() throws CantGetLanguagesException;
 
-    /**
-     * Given an Skin id this method returns the skin information
-     *
-     * @param skinId the id of the skin
-     * @return The skin
-     * @throws CantGetSkinException
-     */
-    public Skin getSkin(UUID skinId) throws CantGetSkinException;
 
-    /**
-     * This method finds the lost of identifiers of the skins associated to the wallet
-     *
-     * @return the list of identifiers
-     */
-    public List<UUID> getSkinsList();
+    public List<Skin> getSkins() throws CantGetSkinsException;
+
 
     /**
      * This method gives us the niche wallet type

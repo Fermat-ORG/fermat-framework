@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import java.util.UUID;
 
@@ -10,6 +11,8 @@ import java.util.UUID;
  * @author Ezequiel Postan - (ezequiel.postan@gmail.com)
  */
 public interface Language {
+
+    public Version getVersion();
 
     /**
      * This method gives us the identifier of the language package

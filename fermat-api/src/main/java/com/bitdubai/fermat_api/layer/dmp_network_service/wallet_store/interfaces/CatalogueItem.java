@@ -10,17 +10,19 @@ import java.util.UUID;
  */
 public interface CatalogueItem {
 
-    public int getDefaultSizeInBytes();
+    public UUID getItemCatalogId();
+
+    public String getWalletName();
 
     public String getDeveloperName();
+
+    public int getDefaultSizeInBytes();
 
     public String getDeveloperPublicKey();
 
     public byte[] getWalletIcon() throws CantGetWalletIconException;
 
-    public UUID getWalletCatalogId();
-
-    public String getWalletName();
+    public String getWalletDescription();
 
     public DetailedCatalogItem getDetailedCatalogItem() throws CantGetWalletDetailsException;
 
