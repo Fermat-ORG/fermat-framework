@@ -16,7 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.manager.R;
 
 
@@ -191,8 +192,8 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((ScreenSwapper) getActivity()).setScreen("DevelopersActivity");
-                            ((ScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).setScreen("DevelopersActivity");
+                            ((FermatScreenSwapper) getActivity()).changeScreen();
 
                         }
                     });
@@ -205,8 +206,8 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                          ((ScreenSwapper) getActivity()).setScreen("FactoryActivity");
-                            ((ScreenSwapper) getActivity()).changeScreen();
+                          ((FermatScreenSwapper) getActivity()).setScreen("FactoryActivity");
+                            ((FermatScreenSwapper) getActivity()).changeScreen();
                         }
                     });
                     break;
@@ -220,8 +221,8 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((ScreenSwapper) getActivity()).setScreen("PublisherActivity");
-                            ((ScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).setScreen("PublisherActivity");
+                            ((FermatScreenSwapper) getActivity()).changeScreen();
                         }
                     });
                     break;
@@ -235,8 +236,8 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
           //set the next fragment and params
-                            ((ScreenSwapper) getActivity()).setScreen("StoreFrontActivity");
-                            ((ScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).setScreen("StoreFrontActivity");
+                            ((FermatScreenSwapper) getActivity()).changeScreen();
                         }
                     });
                     break;

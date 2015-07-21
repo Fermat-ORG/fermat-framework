@@ -1,12 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
 import java.awt.Image;
 
 /**
- * Created by MATIAS FURSZYFER.
+ * Created by rodrigo on 2015.07.20..
  */
-public interface SearchView {
-
+public interface FermatSearchView {
     public String getText();
 
     public Image getIcon() ;
@@ -16,6 +15,4 @@ public interface SearchView {
     public void setLabel(String label);
 
     public String getLabel();
-
-    
 }

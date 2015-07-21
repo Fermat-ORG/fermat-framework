@@ -1,10 +1,9 @@
-package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
 /**
- * Created by MATIAS FURSZYFER.
+ * Created by rodrigo on 2015.07.20..
  */
-public interface StatusBar {
-
+public interface FermatStatusBar {
     public String getColor();
 
     public boolean isVisible() ;
@@ -12,6 +11,4 @@ public interface StatusBar {
     public void setColor(String color);
 
     public void setVisible(boolean visible);
-
-    
 }

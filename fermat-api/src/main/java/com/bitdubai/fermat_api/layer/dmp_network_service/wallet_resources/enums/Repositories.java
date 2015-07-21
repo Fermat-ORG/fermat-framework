@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.enums;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 
 /**
  * Created by toshiba on 05/03/2015.

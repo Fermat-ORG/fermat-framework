@@ -1,10 +1,9 @@
-package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by rodrigo on 2015.07.20..
  */
 public enum Fragments {
-
     CWP_SHELL_LOGIN ("LoginFragment"),
     CWP_WALLET_MANAGER_MAIN ("DesktopFragment"),
     CWP_SUB_APP_DEVELOPER ("SubAppDesktopFragment"),
@@ -93,8 +92,7 @@ public enum Fragments {
             }
         }
         // throw an IllegalArgumentException or return null
-       // throw new IllegalArgumentException("the given number doesn't match any Status.");
+        // throw new IllegalArgumentException("the given number doesn't match any Status.");
         return null;
     }
-
 }
