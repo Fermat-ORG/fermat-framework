@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by rodrigo on 2015.07.17..
  */
-public class LanguagePackage implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.LanguagePackage {
+public class LanguagePackage implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatLanguagePackage {
 
    // DeviceUser author;
     String name;

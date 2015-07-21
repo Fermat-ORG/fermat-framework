@@ -1,8 +1,8 @@
 package com.bitdubai.android_core.app.common.version_1.Sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 
 import java.util.HashSet;
 import java.util.Set;

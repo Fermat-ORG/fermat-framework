@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
 
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 
 import java.util.Set;
 

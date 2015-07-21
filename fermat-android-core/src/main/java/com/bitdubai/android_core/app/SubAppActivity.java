@@ -10,6 +10,10 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -25,8 +29,7 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
 import android.widget.Toast;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
+
 import com.bitdubai.fermat.R;
 
 
@@ -36,7 +39,7 @@ import com.bitdubai.fermat.R;
  */
 
 
-public class SubAppActivity extends FermatActivity implements ScreenSwapper {
+public class SubAppActivity extends FermatActivity implements FermatScreenSwapper {
 
     /**
      * Members used by back button
@@ -70,7 +73,7 @@ public class SubAppActivity extends FermatActivity implements ScreenSwapper {
         private void loadFragment(Fragments fragmentType)
         {
             FragmentTransaction transaction;
-            com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragment=null;
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment=null;
             switch (fragmentType) {
 
 
@@ -276,7 +279,7 @@ public class SubAppActivity extends FermatActivity implements ScreenSwapper {
         Fragments frgBackType = null;
         try {
             AppRuntimeManager appRuntimeManager = ApplicationSession.getAppRuntimeMiddleware();
-            com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragment = appRuntimeManager.getLastFragment();
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = appRuntimeManager.getLastFragment();
             //get setting fragment to back
             //if not fragment to back I back to desktop
              frgBackType = fragment.getBack();
@@ -290,7 +293,7 @@ public class SubAppActivity extends FermatActivity implements ScreenSwapper {
 
         if(frgBackType != null){
 
-            com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragmentBack = ApplicationSession.getAppRuntimeMiddleware().getFragment(frgBackType); //set back fragment to actual fragment to run
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = ApplicationSession.getAppRuntimeMiddleware().getFragment(frgBackType); //set back fragment to actual fragment to run
 
             //I get string context with params pass to fragment to return with this data
             ApplicationSession.mParams=fragmentBack.getContext();

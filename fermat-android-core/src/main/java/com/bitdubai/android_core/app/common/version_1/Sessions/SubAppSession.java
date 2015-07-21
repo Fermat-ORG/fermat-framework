@@ -2,7 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.Sessions;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
+
 
 import java.util.HashMap;
 import java.util.Map;

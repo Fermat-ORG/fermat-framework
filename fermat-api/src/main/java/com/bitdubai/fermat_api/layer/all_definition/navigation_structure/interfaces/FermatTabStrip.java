@@ -1,11 +1,13 @@
-package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 
 import java.util.List;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by rodrigo on 2015.07.20..
  */
-public interface TabStrip {
+public interface FermatTabStrip {
 
     public List<Tab> getTabs();
 

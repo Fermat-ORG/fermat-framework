@@ -8,9 +8,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 
 
@@ -18,15 +18,15 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 /**
  * Created by Natalia on 24/02/2015.
  */
-public class FragmentActivity  extends FermatActivity implements ScreenSwapper {
+public class FragmentActivity  extends FermatActivity implements FermatScreenSwapper {
 
     private String actionKey;
 
     private Object[] screenObjects;
 
 
-    private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity activity;
-    private com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment fragment;
+    private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity;
+    private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment;
 
 
 
