@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -16,13 +17,6 @@ public class BitcoinWalletBasicWalletDaoTransaction {
      * CryptoAddressBook Interface member variables.
      */
     private Database database;
-
-    private DatabaseTable transactionTable;
-    private DatabaseTableRecord transactionRecord;
-
-    private DatabaseTable updateTable;
-    private DatabaseTableRecord updateRecord;
-
 
     /**
      * Constructor
@@ -42,8 +36,10 @@ public class BitcoinWalletBasicWalletDaoTransaction {
             dbTransaction.addRecordToUpdate(updateTable, updateRecord);
 
             database.executeTransaction(dbTransaction);
-        }catch(DatabaseSystemException e){
-            throw new CantExecuteBitconTransactionException("Error to insert and update transaction records",e, null, "Error execute database transaction" );
+        }catch(DatabaseSystemException exception){
+            throw new CantExecuteBitconTransactionException("Error to insert and update transaction records",exception, null, "Error execute database transaction" );
+        }catch(Exception exception){
+            throw new CantExecuteBitconTransactionException(CantExecuteBitconTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 

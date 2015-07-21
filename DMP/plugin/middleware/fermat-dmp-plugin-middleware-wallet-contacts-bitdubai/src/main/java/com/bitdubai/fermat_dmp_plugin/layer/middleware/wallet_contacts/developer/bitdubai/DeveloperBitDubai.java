@@ -43,7 +43,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     @Override
     public String getAddress() {
-        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
     }
 
     @Override

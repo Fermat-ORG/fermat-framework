@@ -3,6 +3,7 @@ package functional.com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_clie
 import static org.fest.assertions.api.Assertions.*;
 import static com.googlecode.catchexception.CatchException.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
@@ -13,6 +14,7 @@ public class RequestConnectionTest extends CloudClientManagerIntegrationTest {
 	private static final int TCP_PORT_PADDING = 100;
 	
 	//TODO improve this test, it's flaky
+	@Ignore
 	@Test
 	public void RequestConnection_ReceivesAcceptPacket_RegistersConnectionToServer() throws Exception{
 		setUp(TCP_PORT_PADDING + 1);
@@ -20,7 +22,8 @@ public class RequestConnectionTest extends CloudClientManagerIntegrationTest {
 		Thread.sleep(getThreadSleepMillis());
 		assertThat(testClient.isRegistered()).isTrue();
 	}
-	
+
+	@Ignore
 	@Test
 	public void RequestConnection_ConnectionIsAlreadyRequested_ThrowsCloudConnectionException() throws Exception{
 		setUp(TCP_PORT_PADDING + 3);
@@ -30,6 +33,7 @@ public class RequestConnectionTest extends CloudClientManagerIntegrationTest {
 	}
 	
 	//TODO improve this test, it's flaky
+	@Ignore
 	@Test
 	public void RequestConnection_ConnectionIsAlreadyRegistered_ThrowsCloudConnectionException() throws Exception{
 		setUp(TCP_PORT_PADDING + 5);

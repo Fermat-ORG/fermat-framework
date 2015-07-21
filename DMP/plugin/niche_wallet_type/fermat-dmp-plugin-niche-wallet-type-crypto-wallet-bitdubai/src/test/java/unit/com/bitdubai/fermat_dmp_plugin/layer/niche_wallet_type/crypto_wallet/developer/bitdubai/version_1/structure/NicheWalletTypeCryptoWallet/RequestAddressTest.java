@@ -3,10 +3,10 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_walle
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
@@ -79,7 +79,7 @@ public class RequestAddressTest extends TestCase {
     WalletAddressBookRegistry walletAddressBookRegistry;
 
     @Mock
-    User user;
+    Actor user;
 
 
     @Mock
@@ -109,7 +109,7 @@ public class RequestAddressTest extends TestCase {
         nicheWalletTypeCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
         doReturn(actorAddressBookRegistry).when(actorAddressBookManager).getActorAddressBookRegistry();
         doReturn(walletAddressBookRegistry).when(walletAddressBookManager).getWalletAddressBookRegistry();
-        doReturn(user).when(extraUserManager).createUser(anyString());
+        doReturn(user).when(extraUserManager).createActor(anyString());
         doReturn(cryptoAddress).when(cryptoVaultManager).getAddress();
         nicheWalletTypeCryptoWallet.initialize();
     }
