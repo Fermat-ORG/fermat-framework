@@ -7,6 +7,7 @@ import java.util.HashSet;
 import functional.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
@@ -29,28 +30,32 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 		testParticipants = new HashSet<String>();
 		testParticipants.add(MockFMPPacketsFactory.MOCK_PUBLIC_KEY);
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRequest_SendValidRequest_ClientGetsResponse() throws Exception{
 		setUpConnections(0);
 		FMPPacket response = requestConnection();
 		assertThat(response).isNotNull();
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseTypeConnectionAccept() throws Exception{
 		setUpConnections(2);
 		FMPPacket response = requestConnection();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT);
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseDestinationEqualsRequestSender() throws Exception{
 		setUpConnections(4);
 		FMPPacket response = requestConnection();
 		assertThat(response.getDestination()).isEqualTo(MockFMPPacketsFactory.MOCK_PUBLIC_KEY);
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseSignatureVerified() throws Exception{
 		setUpConnections(6);
@@ -58,7 +63,8 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 		boolean signatureVerification = AsymmectricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
 		assertThat(signatureVerification).isTrue();	
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRequest_SendRequestForDifferentNetworkService_ResponseConnectionDeny() throws Exception{
 		setUpConnections(8);
@@ -67,7 +73,8 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 		FMPPacket response = getResponse();		
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRequest_SenderIsNotParticipant_ResponseConnectionDeny() throws Exception{
 		setUpConnections(10);
@@ -76,7 +83,8 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRequest_RequestDestinationInvalid_ResponseTypeConnectionDeny() throws Exception{
 		setUpConnections(12);
@@ -85,7 +93,8 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 		FMPPacket response = getResponse();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRequest_RequestDoesNotIDentifyNetworkService_ResponseTypeConnectionDeny() throws Exception{
 		setUpConnections(14);
