@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions_milestone2.CantGetSkinVideoPreviewException;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
  */
 public interface Skin {
 
+    public Version getVersion();
     public UUID getSkinId();
 
     public String getSkinName();
