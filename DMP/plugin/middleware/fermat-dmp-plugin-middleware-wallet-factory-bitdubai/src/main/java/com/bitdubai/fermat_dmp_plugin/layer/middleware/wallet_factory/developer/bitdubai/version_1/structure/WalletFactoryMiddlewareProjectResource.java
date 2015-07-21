@@ -36,18 +36,6 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement( name = "resource" )
 public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectResource {
 
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    @XmlTransient
-    private PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    @XmlTransient
-    private UUID pluginId;
-
     private String name;
 
     private byte[] resource;
@@ -76,12 +64,16 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
     }
 
     public byte[] getResource() throws CantGetWalletFactoryProjectResourceException {
-        try {
-            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, walletFactoryProjectSkin.getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            newFile.loadFromMedia();
-            return newFile.getContent();
-        } catch (CantCreateFileException|FileNotFoundException|CantLoadFileException e) {
-            throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, e, "Can't get file.", "");
+        if (resource != null) {
+            return resource;
+        } else {
+            try {
+                PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, walletFactoryProjectSkin.getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.loadFromMedia();
+                return newFile.getContent();
+            } catch (CantCreateFileException | FileNotFoundException | CantLoadFileException e) {
+                throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, e, "Can't get file.", "");
+            }
         }
     }
 
@@ -110,6 +102,18 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
         setPluginFileSystem(walletFactoryMiddlewareProjectSkin.getPluginFileSystem());
         setPluginId(walletFactoryMiddlewareProjectSkin.getPluginId());
     }
+
+    /**
+     * DealsWithPluginFileSystem interface variables.
+     */
+    @XmlTransient
+    private PluginFileSystem pluginFileSystem;
+
+    /**
+     * DealsWithPluginFileSystem interface variables.
+     */
+    @XmlTransient
+    private UUID pluginId;
 
     /**
      * DealsWithPluginFileSystem interface implementation.
