@@ -40,7 +40,7 @@ public class UserCratedEventHandler implements EventHandler {
 
             try
             {
-                this.intraUserManager.crateUser(userId);
+                this.intraUserManager.crateActor(userId);
             }
             catch (CantCreateIntraUserException cantCreateIntraUserException)
             {

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 
 import java.util.Map;
 
@@ -10,15 +10,15 @@ import java.util.Map;
  */
 public class LanguagePackage implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.LanguagePackage {
 
-    DeviceUser author;
+   // DeviceUser author;
     String name;
     Languages language;
     Map<String,String> translation;
 
 
-    public void setAuthor(DeviceUser author) {
-        this.author = author;
-    }
+    //public void setAuthor(DeviceUser author) {
+       // this.author = author;
+   // }
 
     public void setName(String name) {
         this.name = name;

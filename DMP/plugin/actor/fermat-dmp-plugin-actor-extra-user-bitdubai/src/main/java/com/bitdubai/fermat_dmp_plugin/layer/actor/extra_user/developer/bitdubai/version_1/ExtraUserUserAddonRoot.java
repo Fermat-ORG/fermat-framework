@@ -16,11 +16,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateExtraUserRegistry;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserRegistry;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantInitializeExtraUserRegistryException;
@@ -221,14 +221,14 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
      *   @param UUID user id.
      * */
     @Override
-    public User getUser(UUID id) {
-        User user = null;
+    public Actor getActor(UUID id) {
+        Actor actor = null;
         try {
-            user = this.extraUserRegistry.getUser(id);
+            actor = this.extraUserRegistry.getUser(id);
         } catch (CantGetExtraUserRegistry cantGetExtraUserRegistry) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetExtraUserRegistry);
         }
-        return user;
+        return actor;
     }
 
     /**
@@ -238,8 +238,8 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
      * @return Object user
      */
     @Override
-    public User createUser(String userName) {
-        User user = null;
+    public Actor createActor(String userName) {
+        Actor user = null;
         try {
             user = this.extraUserRegistry.createUser(userName);
         } catch (CantCreateExtraUserRegistry cantCreateExtraUserRegistry) {
