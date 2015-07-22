@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectLanguageException;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ce
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -46,37 +48,45 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement( name = "proposal" )
 public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectProposal {
 
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    @XmlTransient
-    private PluginFileSystem pluginFileSystem;
+    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
 
     /**
-     * DealsWithPluginFileSystem interface variables.
+     * Private class Attributes
      */
-    @XmlTransient
-    private UUID pluginId;
+    private UUID id;
+
+    private String alias;
+
+    private FactoryProjectState state;
+
+    private List<WalletFactoryProjectSkin> skins = new ArrayList<>();
+
+    private List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
+
+    private WalletFactoryProject walletFactoryProject;
 
 
-    String alias;
-
-    FactoryProjectState state;
-
-    List<WalletFactoryProjectSkin> skins = new ArrayList<>();
-
-    List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
-
-    WalletFactoryProject walletFactoryProject;
-
+    /**
+     * Class Constructors
+     */
     public WalletFactoryMiddlewareProjectProposal() {
     }
 
     public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
+        this.id = UUID.randomUUID();
         this.alias = alias;
         this.state = state;
         this.skins = skins;
         this.languages = languages;
+    }
+
+    /**
+     * private Class getters
+     */
+    @XmlAttribute
+    @Override
+    public UUID getId() {
+        return id;
     }
 
     @XmlElement
@@ -99,6 +109,7 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
 
     @Override
     public String getWalletNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException {
+        // TODO NAVIGATION STRUCTURE
         return null;
     }
 
@@ -122,33 +133,99 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
 
     @Override
     public WalletFactoryProjectSkin getSkin(String skinName) throws CentGetWalletFactoryProjectSkinFileException {
-        return null;
+        // TODO ADD EXCEPTION SKINNOTFOUNDED
+        if (skins == null) {
+            return null;
+        } else {
+            for(WalletFactoryProjectSkin skin : skins) {
+                if (skin.getName().equals(skinName)) return skin;
+            }
+            return null;
+        }
     }
 
     @Override
-    public WalletFactoryProjectLanguage getLanguageFile(String fileName) throws CentGetWalletFactoryProjectLanguageFileException {
-        return null;
+    public WalletFactoryProjectLanguage getLanguageFileByName(String name) throws CentGetWalletFactoryProjectLanguageFileException {
+        // TODO ADD EXCEPTION LANGUAGENOTFOUNDED
+        if (languages == null) {
+            return null;
+        } else {
+            for(WalletFactoryProjectLanguage lan : languages) {
+                if (lan.getName().equals(name)) return lan;
+            }
+            return null;
+        }
     }
 
     @Override
-    public void createEmptySkin(WalletFactoryProjectSkin name) throws CantAddWalletFactoryProjectSkinException {
+    public List<WalletFactoryProjectLanguage> getLanguageFilesByType(Languages type) throws CentGetWalletFactoryProjectLanguageFileException {
+        if (languages == null) {
+            return null;
+        } else {
+            List<WalletFactoryProjectLanguage> collected = new ArrayList<>();
+            for(WalletFactoryProjectLanguage lan : languages) {
+                if (lan.getType().equals(type)) collected.add(lan);
+            }
+            return collected;
+        }
+    }
 
+    @Override
+    public WalletFactoryProjectSkin createEmptySkin(String name) throws CantAddWalletFactoryProjectSkinException {
+        // TODO VER SI HAY QUE SOBREESCRIBIR EL ARCHIVO UNA VEZ CREADO EL SKIN
+        WalletFactoryProjectSkin walletFactoryProjectSkin = new WalletFactoryMiddlewareProjectSkin(name, "", new ArrayList<WalletFactoryProjectResource>());
+        skins.add(walletFactoryProjectSkin);
+        return walletFactoryProjectSkin;
     }
 
 
     @Override
-    public void deleteSkin(WalletFactoryProjectSkin name) throws CantDeleteWalletFactoryProjectSkinException {
+    public void deleteSkin(UUID id) throws CantDeleteWalletFactoryProjectSkinException {
+        // TODO VER SI HAY QUE SOBREESCRIBIR EL ARCHIVO UNA VEZ BORRADO EL SKIN
 
+        if (skins == null) {
+            throw new CantDeleteWalletFactoryProjectSkinException(CantDeleteWalletFactoryProjectSkinException.DEFAULT_MESSAGE, null, "There's not skins in the proposal", "");
+        } else {
+            for(WalletFactoryProjectSkin skin : skins) {
+                if (skin.getId().equals(id)) {
+                    skins.remove(skin);
+                    return;
+                }
+            }
+            // TODO ADD EXCEPTION SKINNOTFOUNDED
+        }
     }
 
     @Override
-    public WalletFactoryProjectLanguage addLanguage(byte[] file, String name) throws CantAddWalletFactoryProjectLanguageException {
-        return null;
+    public WalletFactoryProjectLanguage addLanguage(byte[] file, String name, Languages type) throws CantAddWalletFactoryProjectLanguageException {
+        // TODO VER SI HAY QUE SOBREESCRIBIR EL ARCHIVO UNA VEZ CREADO EL SKIN
+        WalletFactoryProjectLanguage walletFactoryProjectLanguage = new WalletFactoryMiddlewareProjectLanguage(file, name, type);
+        languages.add(walletFactoryProjectLanguage);
+        return walletFactoryProjectLanguage;
     }
 
     @Override
-    public void deleteLanguage(WalletFactoryProjectLanguage language) throws CantDeleteWalletFactoryProjectLanguageException {
+    public void deleteLanguage(UUID id) throws CantDeleteWalletFactoryProjectLanguageException {
+        // TODO VER SI HAY QUE SOBREESCRIBIR EL ARCHIVO UNA VEZ BORRADO EL language
 
+        if (languages == null) {
+            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, null, "There's not languages in the proposal", "");
+        } else {
+            for(WalletFactoryProjectLanguage lan : languages) {
+                if (lan.getId().equals(id)) {
+                    languages.remove(lan);
+                    return;
+                }
+            }
+            // TODO ADD EXCEPTION LANGUAGENOTFOUNDED
+        }
+    }
+
+    /**
+     * private Class setters
+     */
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public void setAlias(String alias) {
@@ -162,6 +239,19 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     public void setSkins(List<WalletFactoryProjectSkin> skins) {
         this.skins = skins;
     }
+
+
+    /**
+     * DealsWithPluginFileSystem interface variables.
+     */
+    @XmlTransient
+    private PluginFileSystem pluginFileSystem;
+
+    /**
+     * DealsWithPluginFileSystem interface variables.
+     */
+    @XmlTransient
+    private UUID pluginId;
 
     /**
      * DealsWithPluginFileSystem interface implementation.
