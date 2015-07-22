@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
+
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProposalNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,8 +19,10 @@ public interface WalletFactoryProject {
 
     String getName();
 
-    List<String> getProposals() throws CantGetWalletFactoryProjectProposalsException;
+    List<WalletFactoryProjectProposal> getProposals() throws CantGetWalletFactoryProjectProposalsException;
 
-    WalletFactoryProjectProposal getProposal(String proposal) throws CantGetWalletFactoryProjectProposalException;
+    WalletFactoryProjectProposal getProposalByName(String proposal) throws CantGetWalletFactoryProjectProposalException, ProposalNotFoundException;
+
+    WalletFactoryProjectProposal getProposalById(UUID id) throws CantGetWalletFactoryProjectProposalException, ProposalNotFoundException;
 
 }
