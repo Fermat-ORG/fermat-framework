@@ -18,13 +18,18 @@ import java.util.List;
  * Created by rodrigo on 7/22/15.
  */
 public class DeveloperDatabaseFactory {
+    String databaseId;
+
+    public DeveloperDatabaseFactory(String databaseId) {
+        this.databaseId = databaseId;
+    }
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE, null));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE, databaseId));
         return databases;
     }
 

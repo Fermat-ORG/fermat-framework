@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/22/15.
  */
-class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem{
+public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem{
 
     /**
      * DealsWithErrors interface member variables
@@ -82,7 +82,7 @@ class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors, Deals
      * @return
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
