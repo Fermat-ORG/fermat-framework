@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
@@ -17,9 +19,18 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.UUID;
 
+import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
+import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
+import ae.javax.xml.bind.JAXBContext;
+import ae.javax.xml.bind.JAXBException;
+import ae.javax.xml.bind.Marshaller;
+import ae.javax.xml.bind.Unmarshaller;
 import ae.javax.xml.bind.annotation.XmlAttribute;
 import ae.javax.xml.bind.annotation.XmlElement;
 import ae.javax.xml.bind.annotation.XmlElementWrapper;
@@ -82,7 +93,7 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
     }
 
     @XmlElements({
-            @XmlElement(name="proposal", type=WalletFactoryMiddlewareProjectProposal.class),
+        @XmlElement(name="proposal", type=WalletFactoryMiddlewareProjectProposal.class),
     })
     @XmlElementWrapper
     @Override
@@ -111,6 +122,42 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
                 if (prop.getId().equals(id)) return prop;
             }
             throw new ProposalNotFoundException(ProposalNotFoundException.DEFAULT_MESSAGE, null, "Proposal not found.", "");
+        }
+    }
+
+    @Override
+    public String getProjectXml(WalletFactoryProject walletFactoryProject) throws CantGetObjectStructureXmlException {
+        try {
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProject.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProject.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Writer outputStream = new StringWriter();
+            jaxbMarshaller.marshal(walletFactoryProject, outputStream);
+
+            return outputStream.toString();
+        } catch (JAXBException e) {
+            throw new CantGetObjectStructureXmlException(CantGetObjectStructureXmlException.DEFAULT_MESSAGE, e, "Can't get Project XML.", "");
+        }
+    }
+
+    @Override
+    public WalletFactoryProject getProjectFromXml(String stringXml) throws CantGetObjectStructureFromXmlException {
+        try {
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProject.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProject.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+            StringReader reader = new StringReader(stringXml);
+            return (WalletFactoryMiddlewareProject) jaxbUnmarshaller.unmarshal(reader);
+        } catch (JAXBException e) {
+            throw new CantGetObjectStructureFromXmlException(CantGetObjectStructureFromXmlException.DEFAULT_MESSAGE, e, "Can't get Project from XML.", "");
         }
     }
 
