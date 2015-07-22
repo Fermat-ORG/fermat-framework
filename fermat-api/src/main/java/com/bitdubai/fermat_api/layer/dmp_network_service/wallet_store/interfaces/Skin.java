@@ -13,20 +13,39 @@ import java.util.UUID;
  */
 public interface Skin {
 
-    public Version getVersion();
+
+    /**
+     * Skin identified information
+     */
     public UUID getSkinId();
-
     public String getSkinName();
-    public String getSkinDesignerName();
-    public String getSkinDesignerPublicKey();
+    public UUID getWalletId();
 
-    public byte[] getPresentationImage();
 
-    public List<String> getPreviewImageList();
-    public byte[] getImage(String imageName) throws CantGetWalletIconException;
+    /**
+     * Version information, current, Inicial and Final versions accepted.
+     */
+    public Version getVersion();
+    public Version getInitialWalletVersion();
+    public Version getFinalWalletVersion();
 
+    /**
+     * Skin presentation information
+     */
+    public byte[] getPresentationImage() throws CantGetWalletIconException;
+    public List<Byte[]> getPreviewImageList() throws CantGetWalletIconException;
     public boolean hasVideoPreview();
     public List<URL> getVideoPreviews() throws CantGetSkinVideoPreviewException;
 
+    /**
+     * Skin resource information
+     */
+    public String getSkinURL();
     public long getSkinSizeInBytes();
+
+    /**
+     * Skin designer information
+     */
+    public String getSkinDesignerName();
+    public String getSkinDesignerPublicKey();
 }
