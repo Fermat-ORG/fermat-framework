@@ -17,6 +17,8 @@ public interface WalletFactoryProjectSkin {
 
     // TODO DESIGNER?
 
+    UUID getId();
+
     // name of skin, first skin is default
     String getName();
 
@@ -46,4 +48,10 @@ public interface WalletFactoryProjectSkin {
 
     String getResourceTypePath(ResourceType resourceType);
 
+
+    // TODO ADD EXCEPTION CANNOT GET SKIN XML
+    String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin);
+
+    // TODO ADD EXCEPTION CANNOT GET SKIN FROM XML
+    WalletFactoryProjectSkin getSkinFromXml(String stringXml);
 }

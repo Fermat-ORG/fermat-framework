@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectSkinException;
@@ -10,11 +11,14 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ce
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CentGetWalletFactoryProjectSkinFileException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by eze on 2015.07.15..
  */
 public interface WalletFactoryProjectProposal {
+
+    UUID getId();
 
     // alias of the proposal of version
     String getAlias();
@@ -34,22 +38,29 @@ public interface WalletFactoryProjectProposal {
     // get list of languages
     List<WalletFactoryProjectLanguage> getLanguages();
 
-    // get a specific skin
+    // get an specific skin
     WalletFactoryProjectSkin getSkin(String skinName) throws CentGetWalletFactoryProjectSkinFileException;
 
-    // get a specific language
-    WalletFactoryProjectLanguage getLanguageFile(String fileName) throws CentGetWalletFactoryProjectLanguageFileException;
+    // get an specific language
+    WalletFactoryProjectLanguage getLanguageFileByName(String fileName) throws CentGetWalletFactoryProjectLanguageFileException;
 
+
+    // TODO ADD EXCEPTION CANT GET WALLETPROJECTLANGUAGE FILESSSSSS<----
+    // get all language files of an specific language
+    List<WalletFactoryProjectLanguage> getLanguageFilesByType(Languages type) throws CentGetWalletFactoryProjectLanguageFileException;
+
+
+    // TODO CORROBORAR EXCEPTION CHANGE NAME IN CASE
     // create a new empty skin
-    void createEmptySkin(WalletFactoryProjectSkin name) throws CantAddWalletFactoryProjectSkinException;
+    WalletFactoryProjectSkin createEmptySkin(String name) throws CantAddWalletFactoryProjectSkinException;
 
     // delete an existent skin
-    void deleteSkin(WalletFactoryProjectSkin name) throws CantDeleteWalletFactoryProjectSkinException;
+    void deleteSkin(UUID id) throws CantDeleteWalletFactoryProjectSkinException;
 
     // create a new skin
-    WalletFactoryProjectLanguage addLanguage(byte[] file, String name) throws CantAddWalletFactoryProjectLanguageException;
+    WalletFactoryProjectLanguage addLanguage(byte[] file, String name, Languages type) throws CantAddWalletFactoryProjectLanguageException;
 
     // delete an existent skin
-    void deleteLanguage(WalletFactoryProjectLanguage language) throws CantDeleteWalletFactoryProjectLanguageException;
+    void deleteLanguage(UUID id) throws CantDeleteWalletFactoryProjectLanguageException;
 
 }
