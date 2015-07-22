@@ -84,7 +84,7 @@ public class ProbandoTest extends TestCase {
             skins.add(que);
             skins.add(que);
 
-            WalletFactoryMiddlewareProjectProposal proposal = new WalletFactoryMiddlewareProjectProposal("soyunapropuesta", FactoryProjectState.DISMISSED, skins, null);
+            WalletFactoryMiddlewareProjectProposal proposal = new WalletFactoryMiddlewareProjectProposal("soyunapropuesta", FactoryProjectState.DISMISSED, null, skins, null);
 
             RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
             jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
@@ -120,7 +120,7 @@ public class ProbandoTest extends TestCase {
             languages.add(new WalletFactoryMiddlewareProjectLanguage("hungaro.xml", Languages.AMERICAN_ENGLISH));
             languages.add(new WalletFactoryMiddlewareProjectLanguage("alfredo.xml", Languages.AMERICAN_ENGLISH));
 
-            WalletFactoryMiddlewareProjectProposal proposal = new WalletFactoryMiddlewareProjectProposal("soyunapropuesta", FactoryProjectState.DISMISSED, skins, languages);
+            WalletFactoryMiddlewareProjectProposal proposal = new WalletFactoryMiddlewareProjectProposal("soyunapropuesta", FactoryProjectState.DISMISSED, null, skins, languages);
 
             RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
             jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
@@ -278,7 +278,7 @@ public class ProbandoTest extends TestCase {
         languages.add(new WalletFactoryMiddlewareProjectLanguage("hungaro.xml", Languages.AMERICAN_ENGLISH));
         languages.add(new WalletFactoryMiddlewareProjectLanguage("alfredo.xml", Languages.AMERICAN_ENGLISH));
 
-        return new WalletFactoryMiddlewareProjectProposal(alias, FactoryProjectState.DRAFT, skins, languages);
+        return new WalletFactoryMiddlewareProjectProposal(alias, FactoryProjectState.DRAFT, null, skins, languages);
     }
 
     @Test
