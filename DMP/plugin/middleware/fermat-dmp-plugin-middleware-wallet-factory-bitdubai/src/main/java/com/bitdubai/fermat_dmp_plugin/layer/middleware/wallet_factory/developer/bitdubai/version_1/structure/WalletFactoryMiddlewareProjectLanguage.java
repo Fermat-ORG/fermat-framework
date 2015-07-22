@@ -42,8 +42,6 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement( name = "language" )
 public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectLanguage {
 
-    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
-
     /**
      * Private class Attributes
      */
@@ -79,13 +77,13 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
     /**
      * private Class getters
      */
-    @XmlAttribute
+    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement
+    @XmlElement( required=true )
     @Override
     public String getName() {
         return name;
@@ -93,7 +91,7 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
 
 
     @XmlJavaTypeAdapter( LanguagesAdapter.class )
-    @XmlAttribute
+    @XmlAttribute( required=true )
     @Override
     public Languages getType() {
         return type;
@@ -107,7 +105,8 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
             try {
                 PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getLanguagePath(), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 newFile.loadFromMedia();
-                return newFile.getContent();
+                file = newFile.getContent();
+                return file;
             } catch (CantCreateFileException | FileNotFoundException | CantLoadFileException e) {
                 throw new CantGetWalletFactoryProjectLanguageException(CantGetWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "Can't get file.", "");
             }

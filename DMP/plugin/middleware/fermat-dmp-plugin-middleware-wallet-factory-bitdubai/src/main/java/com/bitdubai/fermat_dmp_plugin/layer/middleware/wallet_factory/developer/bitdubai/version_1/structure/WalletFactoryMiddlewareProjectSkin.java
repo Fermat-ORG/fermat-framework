@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -52,8 +54,6 @@ import ae.javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement( name = "skin" )
 public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectSkin {
 
-    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
-
     /**
      * Private class Attributes
      */
@@ -84,18 +84,18 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     /**
      * private Class getters
      */
-    @XmlAttribute
+    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement
+    @XmlElement( required=true )
     public String getName() {
         return name;
     }
 
-    @XmlElement
+    @XmlElement( required=true )
     public String getHash() {
         return hash;
     }
@@ -166,6 +166,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
      */
     @Override
     public void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException {
+        // TODO NAME EXISTS
         try {
             PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
@@ -187,6 +188,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     @Override
     public void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException {
         // TODO CHANGE ID BEHAVIOR
+        // TODO NAME EXISTS
         try {
             PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
@@ -237,7 +239,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     }
 
     @Override
-    public String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin) {
+    public String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantGetObjectStructureXmlException {
         try {
             RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectSkin.class.getPackage(), new XmlSchemaMine(""));
 
@@ -252,13 +254,12 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
 
             return outputStream.toString();
         } catch (JAXBException e) {
-            return null;
-            // TODO MANAGE EXCEPTIONS
+            throw new CantGetObjectStructureXmlException(CantGetObjectStructureXmlException.DEFAULT_MESSAGE, e, "Can't get Skin XML.", "");
         }
     }
 
     @Override
-    public WalletFactoryProjectSkin getSkinFromXml(String stringXml) {
+    public WalletFactoryProjectSkin getSkinFromXml(String stringXml) throws CantGetObjectStructureFromXmlException {
         try {
             RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectSkin.class.getPackage(), new XmlSchemaMine(""));
 
@@ -269,8 +270,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
             StringReader reader = new StringReader(stringXml);
             return (WalletFactoryMiddlewareProjectSkin) jaxbUnmarshaller.unmarshal(reader);
         } catch (JAXBException e) {
-            return null;
-            // TODO MANAGE EXCEPTIONS
+            throw new CantGetObjectStructureFromXmlException(CantGetObjectStructureFromXmlException.DEFAULT_MESSAGE, e, "Can't get Skin from XML.", "");
         }
     }
 
