@@ -38,8 +38,7 @@ public class WalletActivity extends FermatActivity{
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Error loading the UI - " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -61,8 +60,7 @@ public class WalletActivity extends FermatActivity{
         }
         catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Error in create optionMenu " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -91,8 +89,7 @@ public class WalletActivity extends FermatActivity{
         }
         catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Error in OptionsItemSelected " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
