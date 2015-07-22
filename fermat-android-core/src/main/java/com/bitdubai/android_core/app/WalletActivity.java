@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -27,7 +28,7 @@ public class WalletActivity extends FermatActivity{
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setActivityType(FermatActivity.ACTIVITY_TYPE_WALLET);
+        setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
         try {
 
             /*
@@ -36,7 +37,7 @@ public class WalletActivity extends FermatActivity{
             super.onCreate(savedInstanceState);;
 
         } catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
+            getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error loading the UI - " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -59,7 +60,7 @@ public class WalletActivity extends FermatActivity{
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
+            getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error in create optionMenu " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -89,7 +90,7 @@ public class WalletActivity extends FermatActivity{
              */
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
+            getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Error in OptionsItemSelected " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
         }
@@ -126,7 +127,7 @@ public class WalletActivity extends FermatActivity{
     public void onBackPressed() {
 
 
-        if (ApplicationSession.getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        if (getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 

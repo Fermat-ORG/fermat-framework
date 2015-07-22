@@ -30,21 +30,24 @@ import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
-
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
@@ -58,10 +61,6 @@ import java.util.Vector;
  */
 
 public class FermatActivity extends FragmentActivity{
-
-    public static final int ACTIVITY_TYPE_SUB_APP=1;
-    public static final int ACTIVITY_TYPE_WALLET=2;
-
 
 
     /**
@@ -78,7 +77,7 @@ public class FermatActivity extends FragmentActivity{
     /**
      * Activity type
      */
-    private int activityType;
+    private ActivityType activityType;
 
     /**
      *  Called when the activity is first created
@@ -97,8 +96,8 @@ public class FermatActivity extends FragmentActivity{
             loadUI();
 
         } catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Error loading the UI - " + e.getMessage(),
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -120,8 +119,8 @@ public class FermatActivity extends FragmentActivity{
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Error in create optionMenu " + e.getMessage(),
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
 
@@ -152,9 +151,8 @@ public class FermatActivity extends FragmentActivity{
 
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
-
-            Toast.makeText(getApplicationContext(), "Error in OptionsItemSelected " + e.getMessage(),
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(),"Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
@@ -167,7 +165,7 @@ public class FermatActivity extends FragmentActivity{
     @Override
     public void onBackPressed() {
 
-        if (ApplicationSession.getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        if (getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 
@@ -247,18 +245,18 @@ public class FermatActivity extends FragmentActivity{
             }
         }
         catch (Exception e) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Error in loadUI " + e.getMessage(),
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
     }
 
     public Activity getActivityUsedType(){
         Activity activity=null;
-        if(ACTIVITY_TYPE_SUB_APP==activityType){
-            activity = ApplicationSession.getAppRuntimeMiddleware().getLasActivity();
-        }else if(ACTIVITY_TYPE_WALLET==activityType){
-            activity = ApplicationSession.getWalletRuntimeManager().getLasActivity();
+        if(ActivityType.ACTIVITY_TYPE_SUB_APP==activityType){
+            activity = getAppRuntimeMiddleware().getLasActivity();
+        }else if(ActivityType.ACTIVITY_TYPE_WALLET==activityType){
+            activity = getWalletRuntimeManager().getLasActivity();
         }
         return activity;
     }
@@ -276,7 +274,7 @@ public class FermatActivity extends FragmentActivity{
 
                 if (abTitle != null) {
                     abTitle.setTextColor(Color.WHITE);
-                    abTitle.setTypeface(ApplicationSession.getDefaultTypeface());
+                    abTitle.setTypeface(((ApplicationSession) getApplication()).getDefaultTypeface());
                 }
                 getActionBar().setTitle(title);
                 getActionBar().show();
@@ -338,7 +336,11 @@ public class FermatActivity extends FragmentActivity{
         /**
          * Making the pagerTab adapter
          */
-        adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),activityType);
+        if(activityType== ActivityType.ACTIVITY_TYPE_SUB_APP){
+            adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),getAppRuntimeMiddleware().getLasActivity(),(ApplicationSession)getApplication(),getErrorManager());
+        }else if(activityType== ActivityType.ACTIVITY_TYPE_WALLET){
+            adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),getWalletRuntimeManager().getLasActivity(),(ApplicationSession)getApplication(),getErrorManager());
+        }
         pagertabs.setAdapter(adapter);
         final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
@@ -355,9 +357,9 @@ public class FermatActivity extends FragmentActivity{
      */
     private void setMainLayout(SideMenu sidemenu){
         if(sidemenu != null){
-            if(ACTIVITY_TYPE_SUB_APP==activityType){
+            if(ActivityType.ACTIVITY_TYPE_SUB_APP==activityType){
                 setContentView(R.layout.runtime_app_activity_runtime_navigator);
-            }else if(ACTIVITY_TYPE_WALLET==activityType){
+            }else if(ActivityType.ACTIVITY_TYPE_WALLET==activityType){
                 setContentView(R.layout.runtime_app_wallet_runtime_navigator);
             }
 
@@ -376,9 +378,9 @@ public class FermatActivity extends FragmentActivity{
          * Paint layout without navigationDrawer
          */
         else{
-            if(ACTIVITY_TYPE_SUB_APP==activityType){
+            if(ActivityType.ACTIVITY_TYPE_SUB_APP==activityType){
                 setContentView(R.layout.runtime_app_activity_runtime);
-            }else if(ACTIVITY_TYPE_WALLET==activityType){
+            }else if(ActivityType.ACTIVITY_TYPE_WALLET==activityType){
                 setContentView(R.layout.runtime_app_wallet_runtime);
             }
 
@@ -448,7 +450,7 @@ public class FermatActivity extends FragmentActivity{
                         Color color_status = new Color();
                         window.setStatusBarColor(color_status.parseColor(statusBar.getColor()));
                     } catch (Exception e) {
-                        ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+                        getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");
                     }
                 }
@@ -456,10 +458,10 @@ public class FermatActivity extends FragmentActivity{
         }
     }
 
-    public void setActivityType(int activityType) {
+    public void setActivityType(ActivityType activityType) {
         this.activityType = activityType;
     }
-    public int getActivityType(){
+    public ActivityType getActivityType(){
         return activityType;
     }
 
@@ -499,9 +501,9 @@ public class FermatActivity extends FragmentActivity{
         }
         catch (Exception e) {
 
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, FermatException.wrapException(e));
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
 
-            Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -513,7 +515,7 @@ public class FermatActivity extends FragmentActivity{
 
         try {
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<Fragments, Fragment>> efragments = ApplicationSession.getAppRuntimeMiddleware().getLasActivity().getFragments().entrySet().iterator();
+            Iterator<Map.Entry<Fragments, Fragment>> efragments =getAppRuntimeMiddleware().getLasActivity().getFragments().entrySet().iterator();
             boolean flag = false;
             while (efragments.hasNext()) {
                 Map.Entry<Fragments, Fragment> fragmentEntry = efragments.next();
@@ -554,9 +556,19 @@ public class FermatActivity extends FragmentActivity{
 
 
         } catch (Exception ex) {
-            ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
-            Toast.makeText(getApplicationContext(), "Can't Load tabs: " + ex.getMessage(), Toast.LENGTH_LONG).show();
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public AppRuntimeManager getAppRuntimeMiddleware(){
+        return (AppRuntimeManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+    }
+    public WalletRuntimeManager getWalletRuntimeManager(){
+        return (WalletRuntimeManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
+    }
+    public ErrorManager getErrorManager(){
+        return (ErrorManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
     }
 
 }
