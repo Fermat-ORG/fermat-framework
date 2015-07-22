@@ -112,6 +112,13 @@ public class Version {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        int result;
+        result = (int) (Math.pow(this.getMajor(),1) + Math.pow(this.getMinor(), 2) + Math.pow(this.getPatch(), 4));
+        return result;
+    }
+
     /**
      * Calculates if the version is between two versions.
      * @param version1 lower version to compare to.
