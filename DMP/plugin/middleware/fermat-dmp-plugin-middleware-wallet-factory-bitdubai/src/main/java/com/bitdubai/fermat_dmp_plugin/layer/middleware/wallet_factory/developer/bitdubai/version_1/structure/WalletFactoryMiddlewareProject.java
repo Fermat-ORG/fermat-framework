@@ -35,6 +35,7 @@ import ae.javax.xml.bind.annotation.XmlAttribute;
 import ae.javax.xml.bind.annotation.XmlElement;
 import ae.javax.xml.bind.annotation.XmlElementWrapper;
 import ae.javax.xml.bind.annotation.XmlElements;
+import ae.javax.xml.bind.annotation.XmlRootElement;
 import ae.javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -46,6 +47,7 @@ import ae.javax.xml.bind.annotation.XmlTransient;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@XmlRootElement( name = "project" )
 public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProject {
 
     /**
@@ -58,11 +60,6 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
     private String developerPublicKey;
 
     private List<WalletFactoryProjectProposal> proposals;
-
-    @Override
-    public String getDeveloperPublicKey() {
-        return developerPublicKey;
-    }
 
     /**
      * Class Constructors
@@ -91,6 +88,13 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
     public String getName() {
         return name;
     }
+
+    @XmlElement( required=true )
+    @Override
+    public String getDeveloperPublicKey() {
+        return developerPublicKey;
+    }
+
 
     @XmlElements({
         @XmlElement(name="proposal", type=WalletFactoryMiddlewareProjectProposal.class),
@@ -141,6 +145,7 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
 
             return outputStream.toString();
         } catch (JAXBException e) {
+            e.printStackTrace();
             throw new CantGetObjectStructureXmlException(CantGetObjectStructureXmlException.DEFAULT_MESSAGE, e, "Can't get Project XML.", "");
         }
     }
@@ -159,6 +164,25 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
         } catch (JAXBException e) {
             throw new CantGetObjectStructureFromXmlException(CantGetObjectStructureFromXmlException.DEFAULT_MESSAGE, e, "Can't get Project from XML.", "");
         }
+    }
+
+    /**
+     * private Class setters
+     */
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDeveloperPublicKey(String developerPublicKey) {
+        this.developerPublicKey = developerPublicKey;
+    }
+
+    public void setProposals(List<WalletFactoryProjectProposal> proposals) {
+        this.proposals = proposals;
     }
 
     /**

@@ -3,10 +3,12 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.deve
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguage;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource;
@@ -234,6 +236,38 @@ public class ProbandoTest extends TestCase {
         return null;
     }
 
+    private WalletFactoryMiddlewareProject getProject(String name) {
+        List<WalletFactoryProjectProposal> proposals = new ArrayList<>();
+        proposals.add(getProposal("mati rosa"));
+        proposals.add(getProposal("mati verde"));
+        proposals.add(getProposal("mati azul"));
+        proposals.add(getProposal("mati amarillo"));
+
+        return new WalletFactoryMiddlewareProject(name, "soy una developer public key", proposals);
+    }
+
+    private String getProjectXml() {
+        try {
+            WalletFactoryMiddlewareProjectProposal proposal = getProposal("proposal1");
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProject.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProject.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Writer outputStream = new StringWriter();
+            jaxbMarshaller.marshal(proposal, outputStream);
+
+            return outputStream.toString();
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     private WalletFactoryMiddlewareProjectProposal getProposal(String alias) {
         List<WalletFactoryProjectSkin> skins = new ArrayList<>();
         skins.add(getSkin("mati rosa"));
@@ -313,5 +347,11 @@ public class ProbandoTest extends TestCase {
     public void testGetProposalFromXML() throws Exception {
         WalletFactoryProjectProposal walletFactoryMiddlewareProjectProposal = new WalletFactoryMiddlewareProjectProposal();
         System.out.println(walletFactoryMiddlewareProjectProposal.getProposalFromXml(getProposalXml()));
+    }
+
+    @Test
+    public void testGetProjectXML() throws Exception {
+        WalletFactoryProject walletFactoryProject = new WalletFactoryMiddlewareProject();
+        System.out.println(walletFactoryProject.getProjectXml(getProject("WALTERFIERRO")));
     }
 }
