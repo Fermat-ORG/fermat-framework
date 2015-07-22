@@ -36,6 +36,11 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement( name = "resource" )
 public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectResource {
 
+    /**
+     * Private class Attributes
+     */
+    private UUID id;
+
     private String name;
 
     private byte[] resource;
@@ -44,21 +49,35 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
 
     private WalletFactoryProjectSkin walletFactoryProjectSkin;
 
+    /**
+     * Class Constructors
+     */
     public WalletFactoryMiddlewareProjectResource() {
     }
 
     public WalletFactoryMiddlewareProjectResource(String name, ResourceType resourceType) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.resourceType = resourceType;
     }
 
     public WalletFactoryMiddlewareProjectResource(String name, byte[] resource, ResourceType resourceType) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.resource = resource;
         this.resourceType = resourceType;
     }
 
-    @XmlElement
+    /**
+     * private Class getters
+     */
+    @XmlAttribute( required=true )
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @XmlElement( required=true )
     public String getName() {
         return name;
     }
@@ -78,7 +97,7 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
     }
 
     @XmlJavaTypeAdapter( ResourceTypeAdapter.class )
-    @XmlAttribute( name = "type" )
+    @XmlAttribute( name = "type", required=true )
     public ResourceType getResourceType() {
         return resourceType;
     }
@@ -86,6 +105,13 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
     @Override
     public WalletFactoryProjectSkin getWalletFactoryProjectSkin() {
         return walletFactoryProjectSkin;
+    }
+
+    /**
+     * private Class setters
+     */
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -96,6 +122,9 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
         this.resourceType = resourceType;
     }
 
+    /**
+     * set parent after unmarshal (xml conversion)
+     */
     public void afterUnmarshal(Unmarshaller u, Object parent) {
         WalletFactoryMiddlewareProjectSkin walletFactoryMiddlewareProjectSkin = (WalletFactoryMiddlewareProjectSkin) parent;
         walletFactoryProjectSkin = walletFactoryMiddlewareProjectSkin;

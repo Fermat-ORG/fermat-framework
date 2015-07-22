@@ -88,6 +88,7 @@ public class FermatActivity extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         try {
 
             /*

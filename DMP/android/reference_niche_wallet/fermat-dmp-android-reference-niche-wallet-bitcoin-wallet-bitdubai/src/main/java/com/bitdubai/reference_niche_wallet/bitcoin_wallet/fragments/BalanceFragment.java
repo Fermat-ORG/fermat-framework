@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -23,7 +24,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+
 
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -53,36 +54,46 @@ public class BalanceFragment extends Fragment {
 
     Typeface tf ;
 
+
+    /**
+     * Wallet Session
+     */
+    WalletSession walletSession;
+    
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
     private static CryptoWalletManager cryptoWalletManager;
-    private static Platform platform = new Platform();
     CryptoWallet cryptoWallet;
+    
     private ErrorManager errorManager;
 
     private TextView txtViewTypeBalance;
     private TextView txtViewBalance;
 
-    public static BalanceFragment newInstance(int position) {
-        BalanceFragment f = new BalanceFragment();
+    public static BalanceFragment newInstance(int position,WalletSession walletSession) {
+        BalanceFragment balanceFragment = new BalanceFragment();
+        balanceFragment.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+        balanceFragment.setArguments(b);
+        return balanceFragment;
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
+
+
         tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
-        errorManager = platform.getErrorManager();
+
         try {
+            errorManager = walletSession.getErrorManager();
             balanceAvailable = 0;
             bookBalance=0;
-            cryptoWalletManager = platform.getCryptoWalletManager();
+            cryptoWalletManager = walletSession.getCryptoWalletManager();
 
             try {
                 cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -112,6 +123,7 @@ public class BalanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
+
 
 
 
@@ -263,6 +275,10 @@ public class BalanceFragment extends Fragment {
         });
         // alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+
+    public void setWalletSession(WalletSession walletSession) {
+        this.walletSession = walletSession;
     }
 }
 
