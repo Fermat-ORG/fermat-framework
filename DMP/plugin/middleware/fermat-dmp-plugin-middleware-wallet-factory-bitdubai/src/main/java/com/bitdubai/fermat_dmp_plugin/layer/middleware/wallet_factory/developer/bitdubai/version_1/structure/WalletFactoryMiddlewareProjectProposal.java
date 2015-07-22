@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectLanguageException;
@@ -71,6 +72,8 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
 
     private List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
 
+    private Wallet navigationStructure;
+
     private WalletFactoryProject walletFactoryProject;
 
 
@@ -80,10 +83,11 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     public WalletFactoryMiddlewareProjectProposal() {
     }
 
-    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
+    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, Wallet navigationStructure, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
         this.id = UUID.randomUUID();
         this.alias = alias;
         this.state = state;
+        this.navigationStructure = navigationStructure;
         this.skins = skins;
         this.languages = languages;
     }
@@ -115,10 +119,10 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         return state;
     }
 
+    @XmlElement( required=true )
     @Override
-    public String getWalletNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException {
-        // TODO NAVIGATION STRUCTURE
-        return null;
+    public Wallet getNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException {
+        return navigationStructure;
     }
 
     @XmlElements({
@@ -266,6 +270,10 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
 
     public void setState(FactoryProjectState state) {
         this.state = state;
+    }
+
+    public void setNavigationStructure(Wallet navigationStructure) {
+        this.navigationStructure = navigationStructure;
     }
 
     public void setSkins(List<WalletFactoryProjectSkin> skins) {

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectSkinException;
@@ -34,7 +35,7 @@ public interface WalletFactoryProjectProposal {
     FactoryProjectState getState();
 
     // brings the navigation structure of the project proposal
-    String getWalletNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException;
+    Wallet getNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException;
 
     // get list of the skins
     List<WalletFactoryProjectSkin> getSkins();
