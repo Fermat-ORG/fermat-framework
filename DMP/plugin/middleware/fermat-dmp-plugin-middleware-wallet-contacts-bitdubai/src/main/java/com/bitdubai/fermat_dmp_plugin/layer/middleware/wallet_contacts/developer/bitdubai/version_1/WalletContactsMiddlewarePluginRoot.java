@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -56,8 +57,8 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         try {
             dbFactory.initializeDatabase();
             developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database list for plugin Wallet Contacts");
+        } catch (CantInitializeWalletContactsDatabaseException we) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
         }
         return developerDatabaseList;
     }
@@ -76,8 +77,8 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         try {
             dbFactory.initializeDatabase();
             developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+        } catch (CantInitializeWalletContactsDatabaseException we) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
         }
         return developerDatabaseTableList;
     }
@@ -97,8 +98,8 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         try {
             dbFactory.initializeDatabase();
             developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+        } catch (CantInitializeWalletContactsDatabaseException we) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
         }
         return developerDatabaseTableRecordList;
     }
