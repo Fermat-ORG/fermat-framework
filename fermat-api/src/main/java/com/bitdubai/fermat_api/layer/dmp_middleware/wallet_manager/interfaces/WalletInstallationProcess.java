@@ -26,13 +26,15 @@ public interface WalletInstallationProcess {
      * @param skinId the identifier of the skin to install
      * @param languageId the indentifier of the language to install
      * @param walletCatalogueId An identifier of the wallet to install
-     * @param version the version of the wallet to install
+     * @param walletVersion the version of the wallet to install
      * @throws CantInstallWalletException
      */
     public void startInstallation(WalletCategory walletCategory,
                                   NicheWallet nicheWallet,
                                   UUID skinId,
+                                  String skinVersion,
                                   UUID languageId,
+                                  String languageVersion,
                                   UUID walletCatalogueId,
-                                  String version) throws CantInstallWalletException;
+                                  String walletVersion) throws CantInstallWalletException;
 }

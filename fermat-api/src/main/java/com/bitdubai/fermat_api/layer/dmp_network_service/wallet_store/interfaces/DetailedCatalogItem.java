@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguagesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
 
@@ -12,13 +11,6 @@ import java.util.UUID;
  * Created by ciencias on 7/17/15.
  */
 public interface DetailedCatalogItem {
-
-    /**
-     * This method tells us the category of the wallet
-     *
-     * @return the wallet category
-     */
-    public WalletCategory getCategory();
 
     /**
      * This method finds the languages supported in the said wallet.

@@ -44,6 +44,8 @@ public class FermatException extends Exception {
 	}
 
 	public static FermatException wrapException(final Exception exception){
+		if(exception instanceof FermatException)
+			return (FermatException) exception;
 		FermatException fermatException = new FermatException(exception.getClass().toString(), exception.getMessage(), null, "", "");
 		fermatException.setStackTrace(exception.getStackTrace());
 		return fermatException;
