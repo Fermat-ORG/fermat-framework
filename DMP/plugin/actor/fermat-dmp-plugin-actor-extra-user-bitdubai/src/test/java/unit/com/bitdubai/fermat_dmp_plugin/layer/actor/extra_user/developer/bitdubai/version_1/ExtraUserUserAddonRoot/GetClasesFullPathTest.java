@@ -36,6 +36,7 @@ public class GetClasesFullPathTest {
         Assertions.assertThat(returnedClasses).isEmpty();
     }
 
+
     @Test
     public void getClassesFullPath_callingMethod_getNull() throws Exception {
         List<String> returnedClasses;
