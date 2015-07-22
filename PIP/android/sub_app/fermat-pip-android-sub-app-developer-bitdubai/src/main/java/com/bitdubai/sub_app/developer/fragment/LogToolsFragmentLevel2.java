@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
@@ -63,15 +64,20 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
     private LogTool logTool;
 
-    private static Platform platform = new Platform();
 
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
 
     private int loggerLevel=2;
 
-    public static LogToolsFragmentLevel2 newInstance(int position) {
+    /**
+     * SubApp Session
+     */
+    private SubAppsSession subAppSession;
+
+    public static LogToolsFragmentLevel2 newInstance(int position,SubAppsSession subAppSession) {
         LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
+        f.setSubAppSession(subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -84,7 +90,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
         setRetainInstance(true);
 
         try {
-            ToolManager toolManager = platform.getToolManager();
+            ToolManager toolManager = subAppSession.getToolManager();
             try {
                 logTool = toolManager.getLogTool();
             } catch (Exception e) {
@@ -597,5 +603,8 @@ public class LogToolsFragmentLevel2 extends Fragment {
             }
         }
 
+    }
+    public void setSubAppSession(SubAppsSession subAppSession) {
+        this.subAppSession = subAppSession;
     }
 }

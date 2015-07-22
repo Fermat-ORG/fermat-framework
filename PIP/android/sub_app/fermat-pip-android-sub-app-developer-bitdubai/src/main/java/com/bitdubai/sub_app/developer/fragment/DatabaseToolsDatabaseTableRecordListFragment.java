@@ -18,6 +18,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -54,7 +55,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList;
 
-    private static Platform platform = new Platform();
 
 
 
@@ -64,8 +64,14 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     LinearLayout base;
     TableLayout tableLayout;
 
-    public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position) {
+    /**
+     * SubApp session
+     */
+    SubAppsSession subAppsSession;
+
+    public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position,SubAppsSession subAppsSession) {
         DatabaseToolsDatabaseTableRecordListFragment f = new DatabaseToolsDatabaseTableRecordListFragment();
+        f.setSubAppsSession(subAppsSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -77,7 +83,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         try {
-            ToolManager toolManager = platform.getToolManager();
+            ToolManager toolManager = subAppsSession.getToolManager();
             try {
                 databaseTools = toolManager.getDatabaseTool();
             } catch (Exception e) {
@@ -92,7 +98,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.database_table_record, container, false);
         List<String> columnNames = null;
         List<List<String>> values=null;
@@ -223,5 +229,9 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     }
     public void setResource(Resource resource) {
         this.resource = resource;
+    }
+
+    public void setSubAppsSession(SubAppsSession subAppsSession) {
+        this.subAppsSession = subAppsSession;
     }
 }

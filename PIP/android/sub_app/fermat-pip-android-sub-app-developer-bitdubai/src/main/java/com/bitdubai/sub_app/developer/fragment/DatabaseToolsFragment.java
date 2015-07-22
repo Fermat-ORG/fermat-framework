@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -33,7 +34,7 @@ import java.util.List;
  * haves all methods for the database tools activity of a developer
  * <p/>
  * <p/>
- * Created by Mati
+ * Created by Matias Furszyfer
  *
  * @version 1.0
  */
@@ -42,20 +43,26 @@ public class DatabaseToolsFragment extends Fragment{
 
     public static final String TAG_DATABASE_TOOLS_FRAGMENT= "DatabaseToolsFragment";
 
+    /**
+     * SubApp session
+     */
+
+    SubAppsSession subAppSession;
+
     private static final String ARG_POSITION = "position";
     private static final int TAG_FRAGMENT_DATABASE = 1;
     View rootView;
 
     private DatabaseTool databaseTools;
 
-    private static Platform platform = new Platform();
 
     private ArrayList<Resource> mlist;
 
     private GridView gridView;
 
-    public static DatabaseToolsFragment newInstance(int position) {
+    public static DatabaseToolsFragment newInstance(int position,SubAppsSession subAppSession) {
         DatabaseToolsFragment f = new DatabaseToolsFragment();
+        f.setSubAppSession(subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -68,7 +75,7 @@ public class DatabaseToolsFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         try {
-            ToolManager toolManager = platform.getToolManager();
+            ToolManager toolManager = subAppSession.getToolManager();
             try {
                 databaseTools = toolManager.getDatabaseTool();
             } catch (Exception e) {
@@ -156,7 +163,9 @@ public class DatabaseToolsFragment extends Fragment{
         alertDialog.show();
     }
 
-
+    public void setSubAppSession(SubAppsSession subAppSession) {
+        this.subAppSession = subAppSession;
+    }
 
 
     public class AppListAdapter extends ArrayAdapter<Resource> {

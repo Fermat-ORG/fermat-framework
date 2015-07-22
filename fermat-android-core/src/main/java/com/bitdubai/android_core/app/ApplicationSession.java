@@ -68,5 +68,11 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
     public static ErrorManager getErrorManager(){
         return (ErrorManager) fermatPlatform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
     }
+    public static SubAppSessionManager getSubAppSessionManager(){
+        return subAppSessionManager;
+    }
+    public static WalletSessionManager getWalletSessionManager(){
+        return walletSessionManager;
+    }
 
 }

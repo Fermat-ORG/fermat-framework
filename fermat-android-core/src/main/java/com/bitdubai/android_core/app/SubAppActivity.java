@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
@@ -80,8 +81,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 //developer app fragments
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
                     fragment = ApplicationSession.getAppRuntimeMiddleware().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
-
-                      DatabaseToolsFragment frag= DatabaseToolsFragment.newInstance(0);
+                        DatabaseToolsFragment frag= DatabaseToolsFragment.newInstance(0,ApplicationSession.getSubAppSessionManager().listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
                         //set data pass to fragment
                         fragment.setContext(screenObjects);
 
@@ -95,8 +95,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
                     fragment = ApplicationSession.getAppRuntimeMiddleware().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
 
-
-                        DatabaseToolsDatabaseListFragment fragd= DatabaseToolsDatabaseListFragment.newInstance(0);
+                        DatabaseToolsDatabaseListFragment fragd= DatabaseToolsDatabaseListFragment.newInstance(0,ApplicationSession.getSubAppSessionManager().listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
                         fragd.setResource((Resource)screenObjects[0]);
                         //set data pass to fragment
                         fragment.setContext(screenObjects);
@@ -112,7 +111,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     fragment = ApplicationSession.getAppRuntimeMiddleware().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
 
-                        DatabaseToolsDatabaseTableListFragment fragt= DatabaseToolsDatabaseTableListFragment.newInstance(0);
+                        DatabaseToolsDatabaseTableListFragment fragt= DatabaseToolsDatabaseTableListFragment.newInstance(0,ApplicationSession.getSubAppSessionManager().listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
 
                         //set data pass to fragment
                         fragment.setContext(screenObjects);
@@ -129,7 +128,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     fragment = ApplicationSession.getAppRuntimeMiddleware().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
 
-                    DatabaseToolsDatabaseTableRecordListFragment fragr= DatabaseToolsDatabaseTableRecordListFragment.newInstance(0);
+                    DatabaseToolsDatabaseTableRecordListFragment fragr= DatabaseToolsDatabaseTableRecordListFragment.newInstance(0,ApplicationSession.getSubAppSessionManager().listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
 
 
                     //set data pass to fragment
@@ -147,7 +146,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
                     fragment = ApplicationSession.getAppRuntimeMiddleware().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
 
-                        LogToolsFragment frag1= LogToolsFragment.newInstance(0);
+                        LogToolsFragment frag1= LogToolsFragment.newInstance(0,ApplicationSession.getSubAppSessionManager().listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
 
                         //set data pass to fragment
                         fragment.setContext(screenObjects);
@@ -162,7 +161,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     fragment = ApplicationSession.getAppRuntimeMiddleware().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
 
-                    LogToolsFragmentLevel1 fragl= LogToolsFragmentLevel1.newInstance(0);
+                    LogToolsFragmentLevel1 fragl= LogToolsFragmentLevel1.newInstance(0,ApplicationSession.getSubAppSessionManager().listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
                     fragl.setLoggers((ArrayListLoggers) screenObjects[0]);
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
@@ -177,7 +176,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     fragment = ApplicationSession.getAppRuntimeMiddleware().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
 
-                    LogToolsFragmentLevel2 fragl2= LogToolsFragmentLevel2.newInstance(0);
+                    LogToolsFragmentLevel2 fragl2= LogToolsFragmentLevel2.newInstance(0,ApplicationSession.getSubAppSessionManager().listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
                     fragl2.setLoggers((ArrayListLoggers) screenObjects[0]);
                     fragl2.setLoggerLevel((int)screenObjects[1]);
 
@@ -194,7 +193,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     fragment = ApplicationSession.getAppRuntimeMiddleware().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
 
-                    LogToolsFragmentLevel3 fragl3= LogToolsFragmentLevel3.newInstance(0);
+                    LogToolsFragmentLevel3 fragl3= LogToolsFragmentLevel3.newInstance(0,ApplicationSession.getSubAppSessionManager().listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
                     fragl3.setLoggers((ArrayListLoggers) screenObjects[0]);
                     fragl3.setLoggerLevel((int) screenObjects[1]);
                     //set data pass to fragment

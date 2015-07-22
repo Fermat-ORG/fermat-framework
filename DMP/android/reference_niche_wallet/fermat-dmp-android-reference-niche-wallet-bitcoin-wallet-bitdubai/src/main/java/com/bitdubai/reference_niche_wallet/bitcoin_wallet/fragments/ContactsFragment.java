@@ -31,7 +31,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.FermatListViewFragment;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -66,11 +66,15 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
     private CryptoWalletManager cryptoWalletManager;
-    private Platform platform;
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
 
 
+    /**
+     * Wallet session
+     */
+    WalletSession walletSession;
+    
     //  add person floating button
     private FloatingActionButton fab_add_person;
 
@@ -117,24 +121,16 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         //imageView_add_contact.
     }
 
-
-    public static ContactsFragment newInstance(int position) {
-        ContactsFragment f = new ContactsFragment();
+    
+    public static ContactsFragment newInstance(int position,WalletSession walletSession) {
+        ContactsFragment balanceFragment = new ContactsFragment();
+        balanceFragment.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
-        b.putSerializable(ARG_PLATFORM, new Platform());
-        f.setArguments(b);
-        return f;
+        balanceFragment.setArguments(b);
+        return balanceFragment;
     }
 
-    public static ContactsFragment newInstance(final int position, final Platform platform) {
-        ContactsFragment f = new ContactsFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        b.putSerializable(ARG_PLATFORM, platform);
-        f.setArguments(b);
-        return f;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,10 +141,9 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
         tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
-        platform = new Platform();
-        errorManager = platform.getErrorManager();
+        errorManager = walletSession.getErrorManager();
 
-        cryptoWalletManager = platform.getCryptoWalletManager();
+        cryptoWalletManager = walletSession.getCryptoWalletManager();
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -281,6 +276,10 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
     public ListFilter instanceOfListFilter(){
         return new ListFilter();
+    }
+
+    public void setWalletSession(WalletSession walletSession) {
+        this.walletSession = walletSession;
     }
 
     public class ListFilter extends Filter {
