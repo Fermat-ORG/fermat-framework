@@ -36,8 +36,6 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement( name = "resource" )
 public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectResource {
 
-    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
-
     /**
      * Private class Attributes
      */
@@ -73,13 +71,13 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
     /**
      * private Class getters
      */
-    @XmlAttribute
+    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement
+    @XmlElement( required=true )
     public String getName() {
         return name;
     }
@@ -99,7 +97,7 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
     }
 
     @XmlJavaTypeAdapter( ResourceTypeAdapter.class )
-    @XmlAttribute( name = "type" )
+    @XmlAttribute( name = "type", required=true )
     public ResourceType getResourceType() {
         return resourceType;
     }

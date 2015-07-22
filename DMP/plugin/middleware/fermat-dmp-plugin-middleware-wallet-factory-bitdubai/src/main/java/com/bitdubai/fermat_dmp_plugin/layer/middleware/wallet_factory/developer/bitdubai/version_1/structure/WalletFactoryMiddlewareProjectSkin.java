@@ -52,8 +52,6 @@ import ae.javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement( name = "skin" )
 public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectSkin {
 
-    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
-
     /**
      * Private class Attributes
      */
@@ -84,18 +82,18 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     /**
      * private Class getters
      */
-    @XmlAttribute
+    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement
+    @XmlElement( required=true )
     public String getName() {
         return name;
     }
 
-    @XmlElement
+    @XmlElement( required=true )
     public String getHash() {
         return hash;
     }
@@ -166,6 +164,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
      */
     @Override
     public void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException {
+        // TODO NAME EXISTS
         try {
             PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
@@ -187,6 +186,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     @Override
     public void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException {
         // TODO CHANGE ID BEHAVIOR
+        // TODO NAME EXISTS
         try {
             PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
