@@ -91,8 +91,8 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="jcip-annotations-1.0" level="project" />
     <orderEntry type="library" exported="" name="scala-library-2.11.1" level="project" />
-    <orderEntry type="library" exported="" name="bitcoinj-core-0.12.3" level="project" />
     <orderEntry type="library" exported="" name="log4j-1.2.17" level="project" />
+    <orderEntry type="library" exported="" name="bitcoinj-core-0.12.3" level="project" />
     <orderEntry type="library" exported="" name="support-v13-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="guava-16.0.1" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
@@ -151,7 +151,6 @@
     <orderEntry type="module" module-name="fermat-osa-addon-android-logger-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-api" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />

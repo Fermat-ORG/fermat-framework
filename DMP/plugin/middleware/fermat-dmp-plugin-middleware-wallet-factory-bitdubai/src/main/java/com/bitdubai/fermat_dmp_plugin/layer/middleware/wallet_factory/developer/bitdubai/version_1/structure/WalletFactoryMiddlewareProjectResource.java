@@ -36,6 +36,13 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement( name = "resource" )
 public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectResource {
 
+    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
+
+    /**
+     * Private class Attributes
+     */
+    private UUID id;
+
     private String name;
 
     private byte[] resource;
@@ -44,18 +51,32 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
 
     private WalletFactoryProjectSkin walletFactoryProjectSkin;
 
+    /**
+     * Class Constructors
+     */
     public WalletFactoryMiddlewareProjectResource() {
     }
 
     public WalletFactoryMiddlewareProjectResource(String name, ResourceType resourceType) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.resourceType = resourceType;
     }
 
     public WalletFactoryMiddlewareProjectResource(String name, byte[] resource, ResourceType resourceType) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.resource = resource;
         this.resourceType = resourceType;
+    }
+
+    /**
+     * private Class getters
+     */
+    @XmlAttribute
+    @Override
+    public UUID getId() {
+        return id;
     }
 
     @XmlElement
@@ -88,6 +109,13 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
         return walletFactoryProjectSkin;
     }
 
+    /**
+     * private Class setters
+     */
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -96,6 +124,9 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
         this.resourceType = resourceType;
     }
 
+    /**
+     * set parent after unmarshal (xml conversion)
+     */
     public void afterUnmarshal(Unmarshaller u, Object parent) {
         WalletFactoryMiddlewareProjectSkin walletFactoryMiddlewareProjectSkin = (WalletFactoryMiddlewareProjectSkin) parent;
         walletFactoryProjectSkin = walletFactoryMiddlewareProjectSkin;

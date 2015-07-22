@@ -42,17 +42,55 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement( name = "language" )
 public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectLanguage {
 
-    String name;
+    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
 
-    Languages type;
+    /**
+     * Private class Attributes
+     */
+    private UUID id;
+
+    private byte[] file;
+
+    private String name;
+
+    private Languages type;
 
     private WalletFactoryProjectProposal walletFactoryProjectProposal;
+
+    /**
+     * Class Constructors
+     */
+    public WalletFactoryMiddlewareProjectLanguage() {
+    }
+
+    public WalletFactoryMiddlewareProjectLanguage(String name, Languages type) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.type = type;
+    }
+
+    public WalletFactoryMiddlewareProjectLanguage(byte[] file, String name, Languages type) {
+        this.id = UUID.randomUUID();
+        this.file = file;
+        this.name = name;
+        this.type = type;
+    }
+
+    /**
+     * private Class getters
+     */
+    @XmlAttribute
+    @Override
+    public UUID getId() {
+        return id;
+    }
 
     @XmlElement
     @Override
     public String getName() {
         return name;
     }
+
 
     @XmlJavaTypeAdapter( LanguagesAdapter.class )
     @XmlAttribute
@@ -61,25 +99,26 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
         return type;
     }
 
-
     @Override
-    public byte[] getFile() throws CantGetWalletFactoryProjectLanguageException{
-        try {
-            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getLanguagePath(), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            newFile.loadFromMedia();
-            return newFile.getContent();
-        } catch (CantCreateFileException |FileNotFoundException |CantLoadFileException e) {
-            throw new CantGetWalletFactoryProjectLanguageException(CantGetWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "Can't get file.", "");
+    public byte[] getFile() throws CantGetWalletFactoryProjectLanguageException {
+        if (file != null) {
+            return file;
+        } else {
+            try {
+                PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getLanguagePath(), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.loadFromMedia();
+                return newFile.getContent();
+            } catch (CantCreateFileException | FileNotFoundException | CantLoadFileException e) {
+                throw new CantGetWalletFactoryProjectLanguageException(CantGetWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "Can't get file.", "");
+            }
         }
     }
 
-    public WalletFactoryMiddlewareProjectLanguage() {
-    }
-
-    public WalletFactoryMiddlewareProjectLanguage(String name) {
-        this.name = name;
-    }
-
+    /**
+     * construct the path of the project languages
+     *
+     * @return project language path
+     */
     public String getLanguagePath() {
         String initialPath = "wallet_factory_projects";
         String languagePath = "languages";
@@ -92,13 +131,11 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
                 languagePath;
     }
 
-    public void afterUnmarshal(Unmarshaller u, Object parent) {
-        if (parent != null) {
-            WalletFactoryMiddlewareProjectProposal walletFactoryMiddlewareProjectProposal = (WalletFactoryMiddlewareProjectProposal) parent;
-            walletFactoryProjectProposal = walletFactoryMiddlewareProjectProposal;
-            setPluginFileSystem(walletFactoryMiddlewareProjectProposal.getPluginFileSystem());
-            setPluginId(walletFactoryMiddlewareProjectProposal.getPluginId());
-        }
+    /**
+     * private Class setters
+     */
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -109,6 +146,17 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
         this.type = type;
     }
 
+    /**
+     * set parent after unmarshal (xml conversion)
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent != null) {
+            WalletFactoryMiddlewareProjectProposal walletFactoryMiddlewareProjectProposal = (WalletFactoryMiddlewareProjectProposal) parent;
+            walletFactoryProjectProposal = walletFactoryMiddlewareProjectProposal;
+            setPluginFileSystem(walletFactoryMiddlewareProjectProposal.getPluginFileSystem());
+            setPluginId(walletFactoryMiddlewareProjectProposal.getPluginId());
+        }
+    }
 
     @Override
     public WalletFactoryProjectProposal getWalletFactoryProjectProposal() {

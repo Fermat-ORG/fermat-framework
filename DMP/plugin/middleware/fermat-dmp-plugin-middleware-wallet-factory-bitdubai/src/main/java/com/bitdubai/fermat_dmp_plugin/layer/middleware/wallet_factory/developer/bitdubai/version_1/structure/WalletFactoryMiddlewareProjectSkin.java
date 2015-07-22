@@ -20,11 +20,20 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
+import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
+import ae.javax.xml.bind.JAXBContext;
+import ae.javax.xml.bind.JAXBException;
+import ae.javax.xml.bind.Marshaller;
 import ae.javax.xml.bind.Unmarshaller;
+import ae.javax.xml.bind.annotation.XmlAttribute;
 import ae.javax.xml.bind.annotation.XmlElement;
 import ae.javax.xml.bind.annotation.XmlElementWrapper;
 import ae.javax.xml.bind.annotation.XmlElements;
@@ -43,15 +52,12 @@ import ae.javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement( name = "skin" )
 public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectSkin {
 
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    private PluginFileSystem pluginFileSystem;
+    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
 
     /**
-     * DealsWithPluginFileSystem interface variables.
+     * Private class Attributes
      */
-    private UUID pluginId;
+    private UUID id;
 
     private String name;
 
@@ -61,13 +67,27 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
 
     private WalletFactoryProjectProposal walletFactoryProjectProposal;
 
+
+    /**
+     * Class Constructors
+     */
     public WalletFactoryMiddlewareProjectSkin() {
     }
 
     public WalletFactoryMiddlewareProjectSkin(String name, String hash, List<WalletFactoryProjectResource> resources) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.hash = hash;
         this.resources = resources;
+    }
+
+    /**
+     * private Class getters
+     */
+    @XmlAttribute
+    @Override
+    public UUID getId() {
+        return id;
     }
 
     @XmlElement
@@ -93,6 +113,11 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         return walletFactoryProjectProposal;
     }
 
+    /**
+     * custom getter
+     * @param resourceType
+     * @return al the resources of an specific type, if there isn't returns an empty arraylist
+     */
     @Override
     public List<WalletFactoryProjectResource> getAllResourcesByResourceType(ResourceType resourceType) {
         if (resources == null) {
@@ -107,8 +132,16 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         }
     }
 
+    /**
+     * get an specific resource
+     * @param name
+     * @param resourceType
+     * @return an instance of the specific resource
+     * @throws CantGetWalletFactoryProjectResourceException if cant get the resource
+     */
     @Override
     public WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException {
+        // TODO resource not found exception?
         if (resources == null) {
             throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, null, "No resources available.", "");
         } else {
@@ -120,6 +153,17 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         }
     }
 
+    /**
+     * WalletFactoryProjectSkin implementation methods
+     */
+
+    /**
+     * add a resource to the current skin
+     * @param name
+     * @param resource
+     * @param resourceType
+     * @throws CantAddWalletFactoryProjectResourceException
+     */
     @Override
     public void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException {
         try {
@@ -127,13 +171,22 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
             newFile.loadFromMedia();
             newFile.setContent(resource);
             newFile.persistToMedia();
+            // TODO ADD TO RESOURCES LIST THE NEW RESOURCE
         } catch (CantPersistFileException |CantCreateFileException |CantLoadFileException e) {
             throw new CantAddWalletFactoryProjectResourceException(CantAddWalletFactoryProjectResourceException.DEFAULT_MESSAGE, e, "Can't add resource.", "");
         }
     }
 
+    /**
+     * UPDATE a resource from the current skin
+     * @param name
+     * @param resource
+     * @param resourceType
+     * @throws CantUpdateWalletFactoryProjectResourceException
+     */
     @Override
     public void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException {
+        // TODO CHANGE ID BEHAVIOR
         try {
             PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
@@ -144,17 +197,30 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         }
     }
 
+    /**
+     * delete a resource from the current skin
+     * @param name
+     * @param resource
+     * @param resourceType
+     * @throws CantDeleteWalletFactoryProjectResourceException
+     */
     @Override
     public void deleteResource(String name, byte[] resource, ResourceType resourceType) throws CantDeleteWalletFactoryProjectResourceException {
         try {
             PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             //newFile.deleteFile();
             // TODO DELETE FILE IN PLUGINFILESYSTEM
+            // TODO DELETE FROM THE CURRENT RESOURCES LIST
         } catch (FileNotFoundException|CantCreateFileException e) {
             throw new CantDeleteWalletFactoryProjectResourceException(CantDeleteWalletFactoryProjectResourceException.DEFAULT_MESSAGE, e, "Can't delete resource.", "");
         }
     }
 
+    /**
+     * construct the path of the project skins
+     * @param resourceType
+     * @return project skins path
+     */
     public String getResourceTypePath(ResourceType resourceType) {
         String initialPath = "wallet_factory_projects";
         String skinPath = "skins";
@@ -170,7 +236,47 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
                 resourceType.value();
     }
 
+    @Override
+    public String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin) {
+        try {
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectSkin.class.getPackage(), new XmlSchemaMine(""));
 
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectSkin.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Writer outputStream = new StringWriter();
+            jaxbMarshaller.marshal(walletFactoryProjectSkin, outputStream);
+
+            return outputStream.toString();
+        } catch (JAXBException e) {
+            return null;
+            // TODO MANAGE EXCEPTIONS
+        }
+    }
+
+    @Override
+    public WalletFactoryProjectSkin getSkinFromXml(String stringXml) {
+        try {
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectSkin.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectSkin.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+            StringReader reader = new StringReader(stringXml);
+            return (WalletFactoryMiddlewareProjectSkin) jaxbUnmarshaller.unmarshal(reader);
+        } catch (JAXBException e) {
+            return null;
+            // TODO MANAGE EXCEPTIONS
+        }
+    }
+
+    /**
+     * private Class setters
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -183,6 +289,9 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         this.resources = resources;
     }
 
+    /**
+     * set parent after unmarshal (xml conversion)
+     */
     public void afterUnmarshal(Unmarshaller u, Object parent) {
         if (parent != null) {
             WalletFactoryMiddlewareProjectProposal walletFactoryMiddlewareProjectProposal = (WalletFactoryMiddlewareProjectProposal) parent;
@@ -191,6 +300,17 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
             setPluginId(walletFactoryMiddlewareProjectProposal.getPluginId());
         }
     }
+
+
+    /**
+     * DealsWithPluginFileSystem interface variables.
+     */
+    private PluginFileSystem pluginFileSystem;
+
+    /**
+     * DealsWithPluginFileSystem interface variables.
+     */
+    private UUID pluginId;
 
     /**
      * DealsWithPluginFileSystem interface implementation.
