@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_store;
 
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantGetWalletsException;
 
 import java.util.List;
 
@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface Catalog {
 
-    List<Wallet> getWallets() throws CantGetWalletsException;
+    List<Wallet> getWallets() throws DEPRECATED_CantGetWalletsException;
 }

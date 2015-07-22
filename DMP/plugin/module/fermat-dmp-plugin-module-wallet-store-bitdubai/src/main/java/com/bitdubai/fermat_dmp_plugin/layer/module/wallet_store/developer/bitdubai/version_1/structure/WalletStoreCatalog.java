@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.Wallet;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantGetWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -205,7 +205,7 @@ public class WalletStoreCatalog implements DealsWithErrors, DealsWithEvents, Dea
      */
     //COMENTADO PORQUE EL NETWORK SERVICE NO ESTA COMPLETO
     @Override
-    public List<Wallet> getWallets() throws CantGetWalletsException {
+    public List<Wallet> getWallets() throws DEPRECATED_CantGetWalletsException {
         /**
          * Initialize the WalletStoreNetworkService
 
