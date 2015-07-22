@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ae.javax.xml.bind.Unmarshaller;
 import ae.javax.xml.bind.annotation.XmlAttribute;
 import ae.javax.xml.bind.annotation.XmlElement;
 import ae.javax.xml.bind.annotation.XmlElementWrapper;
@@ -260,6 +261,17 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         this.skins = skins;
     }
 
+    /**
+     * set parent after unmarshal (xml conversion)
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        if (parent != null) {
+            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = (WalletFactoryMiddlewareProject) parent;
+            walletFactoryProject = walletFactoryMiddlewareProject;
+            setPluginFileSystem(walletFactoryMiddlewareProject.getPluginFileSystem());
+            setPluginId(walletFactoryMiddlewareProject.getPluginId());
+        }
+    }
 
     /**
      * DealsWithPluginFileSystem interface variables.
