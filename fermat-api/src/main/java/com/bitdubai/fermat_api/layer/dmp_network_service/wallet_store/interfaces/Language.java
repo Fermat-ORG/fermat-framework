@@ -12,47 +12,31 @@ import java.util.UUID;
  */
 public interface Language {
 
-    public Version getVersion();
 
     /**
-     * This method gives us the identifier of the language package
-     *
-     * @return the language id
+     * Language identifiers
      */
     public UUID getLanguageId();
-
-    /**
-     * This method gives us the name of the language
-     *
-     * @return an enum representing the language
-     */
+    public UUID getWalletId();
     public Languages getLanguageName();
-
-    /**
-     * This method gives us a label given for the language
-     *
-     * @return a label for the language
-     */
     public String getLanguageLabel();
 
     /**
-     * This method gives us the size of the language package
-     *
-     * @return an int representing the language package size
+     * Language file information
      */
     public int getLanguagePackageSizeInBytes();
+    public String getFileURL();
 
     /**
-     * This method gives us the name of the author of this translation
-     *
-     * @return the alias of the translator
+     * Version information, current, Initial and Final.
+     */
+    public Version getVersion();
+    public Version getInitialWalletVersion();
+    public Version getFinalWalletVersion();
+
+    /**
+     * Translator information
      */
     public String getTranslatorName();
-
-    /**
-     * This method gives us the public key of the author of this translation
-     *
-     * @return the public key of the translator
-     */
     public String getTranslatorPublicKey();
 }
