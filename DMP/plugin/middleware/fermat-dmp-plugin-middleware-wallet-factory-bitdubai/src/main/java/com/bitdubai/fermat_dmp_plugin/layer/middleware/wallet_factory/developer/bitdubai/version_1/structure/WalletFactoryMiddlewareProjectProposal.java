@@ -3,10 +3,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CentGetWalletFactoryProjectLanguageFileException;
@@ -22,10 +25,18 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.common.FactoryProjectStateAdapter;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
+import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
+import ae.javax.xml.bind.JAXBContext;
+import ae.javax.xml.bind.JAXBException;
+import ae.javax.xml.bind.Marshaller;
 import ae.javax.xml.bind.Unmarshaller;
 import ae.javax.xml.bind.annotation.XmlAttribute;
 import ae.javax.xml.bind.annotation.XmlElement;
@@ -270,6 +281,58 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
             walletFactoryProject = walletFactoryMiddlewareProject;
             setPluginFileSystem(walletFactoryMiddlewareProject.getPluginFileSystem());
             setPluginId(walletFactoryMiddlewareProject.getPluginId());
+        }
+    }
+
+    /**
+     * WalletFactoryProject Proposal implementation methods
+     */
+
+    /**
+     * construct the path of the project proposal
+     * @return project proposal path
+     */
+    public String getProposalPath() {
+        String initialPath = "wallet_factory_projects";
+
+        return initialPath + "/" +
+               walletFactoryProject.getName() + "/" +
+               alias;
+    }
+
+    @Override
+    public String getProposalXml(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantGetObjectStructureXmlException {
+        try {
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Writer outputStream = new StringWriter();
+            jaxbMarshaller.marshal(walletFactoryProjectProposal, outputStream);
+
+            return outputStream.toString();
+        } catch (JAXBException e) {
+            throw new CantGetObjectStructureXmlException(CantGetObjectStructureXmlException.DEFAULT_MESSAGE, e, "Can't get Proposal XML.", "");
+        }
+    }
+
+    @Override
+    public WalletFactoryProjectProposal getProposalFromXml(String stringXml) throws CantGetObjectStructureFromXmlException {
+        try {
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+            StringReader reader = new StringReader(stringXml);
+            return (WalletFactoryMiddlewareProjectProposal) jaxbUnmarshaller.unmarshal(reader);
+        } catch (JAXBException e) {
+            throw new CantGetObjectStructureFromXmlException(CantGetObjectStructureFromXmlException.DEFAULT_MESSAGE, e, "Can't get Proposal from XML.", "");
         }
     }
 

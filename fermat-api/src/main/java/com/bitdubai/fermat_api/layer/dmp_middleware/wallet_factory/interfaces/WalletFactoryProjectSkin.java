@@ -3,6 +3,8 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
@@ -48,10 +50,7 @@ public interface WalletFactoryProjectSkin {
 
     String getResourceTypePath(ResourceType resourceType);
 
+    String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantGetObjectStructureXmlException;
 
-    // TODO ADD EXCEPTION CANNOT GET SKIN XML
-    String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin);
-
-    // TODO ADD EXCEPTION CANNOT GET SKIN FROM XML
-    WalletFactoryProjectSkin getSkinFromXml(String stringXml);
+    WalletFactoryProjectSkin getSkinFromXml(String stringXml) throws CantGetObjectStructureFromXmlException;
 }

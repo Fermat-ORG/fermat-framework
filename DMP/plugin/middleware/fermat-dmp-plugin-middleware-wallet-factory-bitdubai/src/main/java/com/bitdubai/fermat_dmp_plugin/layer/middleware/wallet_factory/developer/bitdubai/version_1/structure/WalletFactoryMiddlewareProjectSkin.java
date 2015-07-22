@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -237,7 +239,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     }
 
     @Override
-    public String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin) {
+    public String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantGetObjectStructureXmlException {
         try {
             RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectSkin.class.getPackage(), new XmlSchemaMine(""));
 
@@ -252,13 +254,12 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
 
             return outputStream.toString();
         } catch (JAXBException e) {
-            return null;
-            // TODO MANAGE EXCEPTIONS
+            throw new CantGetObjectStructureXmlException(CantGetObjectStructureXmlException.DEFAULT_MESSAGE, e, "Can't get Skin XML.", "");
         }
     }
 
     @Override
-    public WalletFactoryProjectSkin getSkinFromXml(String stringXml) {
+    public WalletFactoryProjectSkin getSkinFromXml(String stringXml) throws CantGetObjectStructureFromXmlException {
         try {
             RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectSkin.class.getPackage(), new XmlSchemaMine(""));
 
@@ -269,8 +270,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
             StringReader reader = new StringReader(stringXml);
             return (WalletFactoryMiddlewareProjectSkin) jaxbUnmarshaller.unmarshal(reader);
         } catch (JAXBException e) {
-            return null;
-            // TODO MANAGE EXCEPTIONS
+            throw new CantGetObjectStructureFromXmlException(CantGetObjectStructureFromXmlException.DEFAULT_MESSAGE, e, "Can't get Skin from XML.", "");
         }
     }
 

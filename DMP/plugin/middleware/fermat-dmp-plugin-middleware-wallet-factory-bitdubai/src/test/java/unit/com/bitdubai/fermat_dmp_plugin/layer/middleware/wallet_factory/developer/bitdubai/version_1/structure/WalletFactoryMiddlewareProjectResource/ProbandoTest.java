@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguage;
@@ -181,11 +182,11 @@ public class ProbandoTest extends TestCase {
     private WalletFactoryMiddlewareProjectSkin getSkin(String name) {
         List<WalletFactoryProjectResource> resources = new ArrayList<>();
 
-        WalletFactoryProjectResource res = new WalletFactoryMiddlewareProjectResource("imagen1.png", ResourceType.IMAGE);
+        WalletFactoryProjectResource res = new WalletFactoryMiddlewareProjectResource(name+"imagen1.png", ResourceType.IMAGE);
         resources.add(res);
-        res = new WalletFactoryMiddlewareProjectResource("fuente1.BLABLA", ResourceType.FONT_STYLE);
+        res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", ResourceType.FONT_STYLE);
         resources.add(res);
-        res = new WalletFactoryMiddlewareProjectResource("layout1.xml", ResourceType.LAYOUT);
+        res = new WalletFactoryMiddlewareProjectResource(name+"layout1.xml", ResourceType.LAYOUT);
         resources.add(res);
 
         return new WalletFactoryMiddlewareProjectSkin(name, "as5a5s4da6s4das", resources);
@@ -210,6 +211,40 @@ public class ProbandoTest extends TestCase {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String getProposalXml() {
+        try {
+            WalletFactoryMiddlewareProjectProposal proposal = getProposal("proposal1");
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Writer outputStream = new StringWriter();
+            jaxbMarshaller.marshal(proposal, outputStream);
+
+            return outputStream.toString();
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private WalletFactoryMiddlewareProjectProposal getProposal(String alias) {
+        List<WalletFactoryProjectSkin> skins = new ArrayList<>();
+        skins.add(getSkin("mati rosa"));
+        skins.add(getSkin("mati azul"));
+        skins.add(getSkin("mati verde"));
+
+        List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
+        languages.add(new WalletFactoryMiddlewareProjectLanguage("hungaro.xml", Languages.AMERICAN_ENGLISH));
+        languages.add(new WalletFactoryMiddlewareProjectLanguage("alfredo.xml", Languages.AMERICAN_ENGLISH));
+
+        return new WalletFactoryMiddlewareProjectProposal(alias, FactoryProjectState.DRAFT, skins, languages);
     }
 
     @Test
@@ -266,5 +301,17 @@ public class ProbandoTest extends TestCase {
     public void testSkinGetSkinFromXml() throws Exception {
         WalletFactoryMiddlewareProjectSkin walletFactoryMiddlewareProjectSkin = new WalletFactoryMiddlewareProjectSkin();
         System.out.println(walletFactoryMiddlewareProjectSkin.getSkinFromXml(getSkinXml()));
+    }
+
+    @Test
+    public void testGetProposalXml() throws Exception {
+        WalletFactoryProjectProposal walletFactoryMiddlewareProjectProposal = new WalletFactoryMiddlewareProjectProposal();
+        System.out.println(walletFactoryMiddlewareProjectProposal.getProposalXml(getProposal("WALTERFIERRO")));
+    }
+
+    @Test
+    public void testGetProposalFromXML() throws Exception {
+        WalletFactoryProjectProposal walletFactoryMiddlewareProjectProposal = new WalletFactoryMiddlewareProjectProposal();
+        System.out.println(walletFactoryMiddlewareProjectProposal.getProposalFromXml(getProposalXml()));
     }
 }
