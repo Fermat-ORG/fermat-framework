@@ -50,7 +50,7 @@ import java.util.UUID;
 
 
 /**
- * Created by Matias
+ * Created by Matias Furszyfer
  */
 public class TransactionsFragment extends Fragment{
 
