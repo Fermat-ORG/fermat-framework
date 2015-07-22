@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdu
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleNotRunningException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordInstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantRecordInstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
@@ -33,15 +33,15 @@ public class BegunWalletInstallationEventHandler implements EventHandler {
             {
                 this.walletStoreManager.recordInstalledWallet(walletId);
             }
-            catch (CantRecordInstalledWalletException cantRecordInstalledWalletException)
+            catch (DEPRECATED_CantRecordInstalledWalletException DEPRECATEDCantRecordInstalledWalletException)
             {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
-                System.err.println("CantRecordInstalledWalletException: " + cantRecordInstalledWalletException.getMessage());
-                cantRecordInstalledWalletException.printStackTrace();
+                System.err.println("DEPRECATED_CantRecordInstalledWalletException: " + DEPRECATEDCantRecordInstalledWalletException.getMessage());
+                DEPRECATEDCantRecordInstalledWalletException.printStackTrace();
 
-                throw cantRecordInstalledWalletException;
+                throw DEPRECATEDCantRecordInstalledWalletException;
                 
             }
             
