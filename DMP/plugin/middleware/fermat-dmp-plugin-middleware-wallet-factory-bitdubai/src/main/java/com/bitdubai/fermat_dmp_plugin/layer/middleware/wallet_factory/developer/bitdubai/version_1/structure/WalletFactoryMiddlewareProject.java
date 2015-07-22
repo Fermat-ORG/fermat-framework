@@ -25,9 +25,13 @@ import java.util.UUID;
  */
 public class WalletFactoryMiddlewareProject implements WalletFactoryProject {
 
-    String name;
+    // TODO COMPROBAR ATRIBUTOS REQUERIDOS
 
-    List<String> proposals;
+    private UUID id;
+
+    private String name;
+
+    private List<String> proposals;
 
     @Override
     public String getDeveloperPublicKey() {
@@ -36,7 +40,7 @@ public class WalletFactoryMiddlewareProject implements WalletFactoryProject {
 
     @Override
     public UUID getId() {
-        return null;
+        return id;
     }
 
     @Override
