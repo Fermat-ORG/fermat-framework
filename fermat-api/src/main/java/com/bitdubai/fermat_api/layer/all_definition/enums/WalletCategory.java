@@ -25,7 +25,7 @@ public enum WalletCategory {
             case "BRDW": return WalletCategory.BRANDED_WALLET;
             case "REFW": return WalletCategory.REFERENCE_WALLET;
             case "NCHW": return WalletCategory.NICHE_WALLET;
-            default: throw new InvalidParameterException();
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the WalletCategory enum");
         }
     }
 }
