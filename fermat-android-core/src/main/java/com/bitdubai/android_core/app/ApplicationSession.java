@@ -29,7 +29,12 @@ import com.bitdubai.fermat_core.Platform;
 public class ApplicationSession extends android.support.multidex.MultiDexApplication {
 
     public static Typeface mDefaultTypeface;
-    public static Object[] mParams;
+    public static Object[] mParams; //TODO : LUIS : Creale el caso a Natalia para que arregle lo del back button.
+
+
+// TODO: LUIS: Eliminar los statics de todos lados, salvo donde esté explicitament justificado.
+
+
 
     /**
      * Fermat platform
@@ -44,7 +49,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
      */
     private static WalletSessionManager walletSessionManager;
 
-
+//TODO : LUIS: Se ve muy bien. Solo faltan los javadocs.
 
     public ApplicationSession() {
         super();
@@ -59,6 +64,9 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
     public static Platform getFermatPlatform() {
         return fermatPlatform;
     }
+
+    //TODO: LUIS : Esto debe ir a la FermatACtivity
+
     public static AppRuntimeManager getAppRuntimeMiddleware(){
         return (AppRuntimeManager) fermatPlatform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
     }
