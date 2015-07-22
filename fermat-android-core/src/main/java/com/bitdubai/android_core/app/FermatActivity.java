@@ -24,6 +24,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.adapters.PagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
@@ -31,10 +33,12 @@ import com.bitdubai.android_core.app.common.version_1.navigation_drawer.Navigati
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -51,6 +55,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -198,7 +203,7 @@ public class FermatActivity extends FragmentActivity{
             /**
              * Get activities fragment
              */
-            Map<Fragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
+            Map<WalletFragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
             /**
              * get actionBar to paint
              */
@@ -337,6 +342,7 @@ public class FermatActivity extends FragmentActivity{
          * Making the pagerTab adapter
          */
         if(activityType== ActivityType.ACTIVITY_TYPE_SUB_APP){
+
             adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),getAppRuntimeMiddleware().getLasActivity(),(ApplicationSession)getApplication(),getErrorManager());
         }else if(activityType== ActivityType.ACTIVITY_TYPE_WALLET){
             adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),getWalletRuntimeManager().getLasActivity(),(ApplicationSession)getApplication(),getErrorManager());
@@ -349,6 +355,13 @@ public class FermatActivity extends FragmentActivity{
          * Put tabs in pagerSlidingTabsStrp
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
+    }
+
+    private List<android.support.v4.app.Fragment> getWalletFragments(String walletType){
+        List<android.support.v4.app.Fragment> lstWalletFragment= new ArrayList<android.support.v4.app.Fragment>();
+        //tengo que traer el FragmentFactory dependiendo del tipo de wallet que es un enum ejemplo basic_wallet
+        //WalletFragmentFactory.getFragmentFactoryByWalletType(getWalletRuntimeManager().getActivity(.))
+        return null;
     }
 
     /**
@@ -515,10 +528,10 @@ public class FermatActivity extends FragmentActivity{
 
         try {
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<Fragments, Fragment>> efragments =getAppRuntimeMiddleware().getLasActivity().getFragments().entrySet().iterator();
+            Iterator<Map.Entry<WalletFragments, Fragment>> efragments =getAppRuntimeMiddleware().getLasActivity().getFragments().entrySet().iterator();
             boolean flag = false;
             while (efragments.hasNext()) {
-                Map.Entry<Fragments, Fragment> fragmentEntry = efragments.next();
+                Map.Entry<WalletFragments, Fragment> fragmentEntry = efragments.next();
 
                 Fragment fragment = (Fragment) fragmentEntry.getValue();
                 Fragments type = fragment.getType();
