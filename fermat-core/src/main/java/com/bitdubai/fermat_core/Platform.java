@@ -49,17 +49,17 @@ import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.Deals
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
-import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
-import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.DealsWithExtraUsers;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_core.layer.dmp_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer.dmp_transaction.TransactionLayer;
@@ -587,7 +587,7 @@ public class Platform  {
          * -----------------------------
          */
         Plugin cloudServerCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudServerPlugin();
-       // setPluginReferencesAndStart(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
+        setPluginReferencesAndStart(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
 
         /**
          * -----------------------------
@@ -595,7 +595,7 @@ public class Platform  {
          * -----------------------------
          */
         Plugin cloudCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudPlugin();
-        //setPluginReferencesAndStart(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
+        setPluginReferencesAndStart(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
 
         /**
          * -----------------------------
@@ -709,6 +709,15 @@ public class Platform  {
          */
         Plugin walletStoreMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletStorePlugin();
         setPluginReferencesAndStart(walletStoreMiddleware, Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE);
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Settings Middleware
+         * ----------------------------------
+         */
+        Plugin walletSettingsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletStorePlugin();
+        setPluginReferencesAndStart(walletSettingsMiddleware, Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
+
 
         /**
          * ----------------------------------

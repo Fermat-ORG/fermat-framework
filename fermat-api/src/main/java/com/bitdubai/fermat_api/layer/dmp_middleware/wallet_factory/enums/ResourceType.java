@@ -12,23 +12,23 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @since Java JDK 1.7
  */
 public enum ResourceType {
-    VIDEO("VID"),
-    SOUND("SND"),
-    IMAGE("IMG"),
-    FONT_STYLE("FNT"),
-    LAYOUT("LAY");
+    VIDEO("video"),
+    SOUND("sound"),
+    IMAGE("image"),
+    FONT_STYLE("font_style"),
+    LAYOUT("layout");
 
     public static ResourceType fromValue(String key) throws InvalidParameterException {
         switch(key){
-            case "VID":
+            case "video":
                 return ResourceType.VIDEO ;
-            case "SND":
+            case "sound":
                 return ResourceType.SOUND ;
-            case "IMG":
+            case "image":
                 return ResourceType.IMAGE ;
-            case "FNT":
+            case "font_style":
                 return ResourceType.FONT_STYLE;
-            case "LAY":
+            case "layout":
                 return ResourceType.LAYOUT;
         }
         throw new InvalidParameterException(key);

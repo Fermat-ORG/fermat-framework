@@ -1,27 +1,45 @@
+
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Fragments;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import ae.javax.xml.bind.annotation.XmlAttribute;
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlRootElement;
+import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 /**
  * Created by rodrigo on 2015.07.17..
  */
-public class Activity implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity{
+@XmlRootElement(name = "activity")
+public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity{
     /**
      * Activity class member variables
      */
     Activities type;
-    Map<Fragments, Fragment> fragments = new HashMap<Fragments, Fragment>();
+
+    Map<WalletFragments, Fragment> fragments = new HashMap<WalletFragments, Fragment>();
+
     TitleBar titleBar;
+
     SideMenu sideMenu;
+
     MainMenu mainMenu;
+
     TabStrip tabStrip;
+
     String color;
+
     StatusBar statusBar;
+
+    public Activity() {
+    }
 
     /**
      * Activity class implementation.
@@ -29,10 +47,6 @@ public class Activity implements com.bitdubai.fermat_api.layer.dmp_engine.sub_ap
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public String getColor()  {
-        return this.color;
     }
 
     public void setType(Activities type) {
@@ -58,43 +72,60 @@ public class Activity implements com.bitdubai.fermat_api.layer.dmp_engine.sub_ap
     public void setTabStrip(TabStrip tabStrip) {
         this.tabStrip = tabStrip;
     }
+
     public void setStatusBar(StatusBar statusBar){
         this.statusBar=statusBar;
     }
+
     /**
      * Activity  interface implementation.
      */
+    @XmlElement
+    public String getColor()  {
+        return this.color;
+    }
+
+    @XmlJavaTypeAdapter(ActivitiesAdapter.class)
+    @XmlAttribute(name = "type", required = true)
     @Override
     public Activities getType() {
         return type;
     }
 
-    @Override
-    public Map<Fragments, Fragment> getFragments() {
-        return fragments;
-    }
-
+    @XmlElement
     @Override
     public TitleBar getTitleBar() {
         return titleBar;
     }
 
+    @XmlElement
     @Override
     public SideMenu getSideMenu() {
         return sideMenu;
     }
 
+    @XmlElement
     @Override
     public MainMenu getMainMenu() {
         return mainMenu;
     }
 
+    @XmlElement
     @Override
     public TabStrip getTabStrip() {
         return tabStrip;
     }
+
+    @XmlElement
     @Override
     public StatusBar getStatusBar() {
         return statusBar;
     }
+
+    // TODO VER COMO HACER ESTO
+    @Override
+    public Map<WalletFragments, Fragment> getFragments() {
+        return fragments;
+    }
 }
+

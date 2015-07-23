@@ -11,6 +11,7 @@ repositories {
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-cry-api')
+    compile project(':fermat-pip-api')
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.mockito:mockito-all:2.0.2-beta'

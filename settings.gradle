@@ -46,9 +46,6 @@ project(':fermat-osa-addon-android-file-system-bitdubai').projectDir = new File(
 include ':fermat-osa-addon-android-device-connectivity-bitdubai'
 project(':fermat-osa-addon-android-device-connectivity-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai')
 
-include ':fermat-osa-addon-android-device-location-bitdubai'
-project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')
-
 include ':fermat-osa-addon-android-device-power-bitdubai'
 project(':fermat-osa-addon-android-device-power-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai')
 
@@ -64,6 +61,10 @@ project(':fermat-osa-addon-multi-os-database-system-bitdubai').projectDir = new 
 
 include ':fermat-osa-addon-multi-os-file-system-bitdubai'
 project(':fermat-osa-addon-multi-os-file-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai')
+
+include ':fermat-osa-addon-android-device-location-bitdubai'
+project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')
+
 */
 
 // PIP Projects (Addons)
@@ -356,5 +357,5 @@ include ':fermat-pip-plugin-module-developer-bitdubai'
 project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai')
 
 // FUNCTIONAL TEST PROJECT
-include ':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
-project(':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')
+//include ':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
+//project(':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')

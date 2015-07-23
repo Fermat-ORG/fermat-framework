@@ -26,8 +26,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
@@ -60,15 +62,20 @@ public class LogToolsFragmentLevel1 extends Fragment {
 
     private LogTool logTool;
 
-    private static Platform platform = new Platform();
 
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
 
     private int loggerLevel=1;
 
-    public static LogToolsFragmentLevel1 newInstance(int position) {
+    /**
+     * SubApp Session
+     */
+    private SubAppsSession subAppSession;
+
+    public static LogToolsFragmentLevel1 newInstance(int position,SubAppsSession subAppSession) {
         LogToolsFragmentLevel1 f = new LogToolsFragmentLevel1();
+        f.setSubAppSession(subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -81,7 +88,7 @@ public class LogToolsFragmentLevel1 extends Fragment {
         setRetainInstance(true);
 
         try {
-            ToolManager toolManager = platform.getToolManager();
+            ToolManager toolManager = subAppSession.getToolManager();
             try {
                 logTool = toolManager.getLogTool();
             } catch (Exception e) {
@@ -197,6 +204,10 @@ public class LogToolsFragmentLevel1 extends Fragment {
         this.lstLoggers=lstLoggers;
     }
 
+    public void setSubAppSession(SubAppsSession subAppSession) {
+        this.subAppSession = subAppSession;
+    }
+
     public class AppListAdapter extends ArrayAdapter<Loggers> {
 
 
@@ -253,9 +264,9 @@ public class LogToolsFragmentLevel1 extends Fragment {
 
                         params[0] = lst;
                         params[1] = level;
-                        ((ScreenSwapper)getActivity()).setScreen("DeveloperLogLevel2Fragment");
-                        ((ScreenSwapper)getActivity()).setParams(params);
-                        ((ScreenSwapper)getActivity()).changeScreen();
+                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperLogLevel2Fragment");
+                        ((FermatScreenSwapper)getActivity()).setParams(params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen();
 
 
                     }

@@ -19,7 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -68,10 +69,15 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     private String[] params;
     private GridView gridView;
 
-    private static Platform platform = new Platform();
 
-    public static DatabaseToolsDatabaseTableListFragment newInstance(int position) {
+    /**
+     * SubApp session
+     */
+    SubAppsSession subAppsSession;
+
+    public static DatabaseToolsDatabaseTableListFragment newInstance(int position,SubAppsSession subAppSession) {
         DatabaseToolsDatabaseTableListFragment f = new DatabaseToolsDatabaseTableListFragment();
+        f.setSubAppsSession(subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -83,7 +89,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         try {
-            ToolManager toolManager = platform.getToolManager();
+            ToolManager toolManager = subAppsSession.getToolManager();
             try {
                 databaseTools = toolManager.getDatabaseTool();
             } catch (Exception e) {
@@ -180,6 +186,10 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         this.developerDatabase = developerDatabase;
     }
 
+    public void setSubAppsSession(SubAppsSession subAppsSession) {
+        this.subAppsSession = subAppsSession;
+    }
+
 
     public class AppListAdapter extends ArrayAdapter<DatabasesTable> {
 
@@ -228,9 +238,9 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                         params[2] = developerDatabaseTableList.get(position);
 
 
-                        ((ScreenSwapper)getActivity()).setScreen("DeveloperRecordsFragment");
-                        ((ScreenSwapper)getActivity()).setParams(params);
-                        ((ScreenSwapper)getActivity()).changeScreen();
+                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperRecordsFragment");
+                        ((FermatScreenSwapper)getActivity()).setParams(params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen();
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);

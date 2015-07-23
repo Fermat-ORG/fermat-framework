@@ -3,9 +3,13 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ResourceAlreadyExistsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +18,10 @@ import java.util.UUID;
  * Created by ciencias on 7/15/15.
  */
 public interface WalletFactoryProjectSkin {
+
+    // TODO DESIGNER?
+
+    UUID getId();
 
     // name of skin, first skin is default
     String getName();
@@ -31,10 +39,10 @@ public interface WalletFactoryProjectSkin {
     List<WalletFactoryProjectResource> getAllResourcesByResourceType(ResourceType resourceType);
 
     // get a specific resource
-    WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException;
+    WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException, ResourceNotFoundException;
 
     // add a resource of the skin
-    void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException;
+    void addResource(String name, String fileName, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException, ResourceAlreadyExistsException;
 
     // update a resource of the skin
     void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException;
@@ -44,4 +52,7 @@ public interface WalletFactoryProjectSkin {
 
     String getResourceTypePath(ResourceType resourceType);
 
+    String getSkinXml(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantGetObjectStructureXmlException;
+
+    WalletFactoryProjectSkin getSkinFromXml(String stringXml) throws CantGetObjectStructureFromXmlException;
 }

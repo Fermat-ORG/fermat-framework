@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.common.ResourceTypeAdapter;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.adapters.ResourceTypeAdapter;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -37,6 +37,113 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectResource {
 
     /**
+     * Private class Attributes
+     */
+    private UUID id;
+
+    private String name;
+
+    private String fileName;
+
+    private byte[] resource;
+
+    private ResourceType resourceType;
+
+    private WalletFactoryProjectSkin walletFactoryProjectSkin;
+
+    /**
+     * Class Constructors
+     */
+    public WalletFactoryMiddlewareProjectResource() {
+    }
+
+    public WalletFactoryMiddlewareProjectResource(String name, String fileName, ResourceType resourceType) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.fileName = fileName;
+        this.resourceType = resourceType;
+    }
+
+    public WalletFactoryMiddlewareProjectResource(String name, String fileName, byte[] resource, ResourceType resourceType) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.fileName = fileName;
+        this.resource = resource;
+        this.resourceType = resourceType;
+    }
+
+    /**
+     * private Class getters
+     */
+    @XmlAttribute( required=true )
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    @XmlElement( required=true )
+    public String getName() {
+        return name;
+    }
+
+    @XmlElement( required=true )
+    public String getFileName() {
+        return fileName;
+    }
+
+    public byte[] getResource() throws CantGetWalletFactoryProjectResourceException {
+        if (resource != null) {
+            return resource;
+        } else {
+            try {
+                PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, walletFactoryProjectSkin.getResourceTypePath(resourceType), fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.loadFromMedia();
+                return newFile.getContent();
+            } catch (CantCreateFileException | FileNotFoundException | CantLoadFileException e) {
+                throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, e, "Can't get file.", "");
+            }
+        }
+    }
+
+    @XmlJavaTypeAdapter( ResourceTypeAdapter.class )
+    @XmlAttribute( name = "type", required=true )
+    public ResourceType getResourceType() {
+        return resourceType;
+    }
+
+    @Override
+    public WalletFactoryProjectSkin getWalletFactoryProjectSkin() {
+        return walletFactoryProjectSkin;
+    }
+
+    /**
+     * private Class setters
+     */
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setFileName(String fileName) { this.fileName = fileName; }
+
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
+    }
+
+    /**
+     * set parent after unmarshal (xml conversion)
+     */
+    public void afterUnmarshal(Unmarshaller u, Object parent) {
+        WalletFactoryMiddlewareProjectSkin walletFactoryMiddlewareProjectSkin = (WalletFactoryMiddlewareProjectSkin) parent;
+        walletFactoryProjectSkin = walletFactoryMiddlewareProjectSkin;
+        setPluginFileSystem(walletFactoryMiddlewareProjectSkin.getPluginFileSystem());
+        setPluginId(walletFactoryMiddlewareProjectSkin.getPluginId());
+    }
+
+    /**
      * DealsWithPluginFileSystem interface variables.
      */
     @XmlTransient
@@ -47,69 +154,6 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
      */
     @XmlTransient
     private UUID pluginId;
-
-    private String name;
-
-    private byte[] resource;
-
-    private ResourceType resourceType;
-
-    private WalletFactoryProjectSkin walletFactoryProjectSkin;
-
-    public WalletFactoryMiddlewareProjectResource() {
-    }
-
-    public WalletFactoryMiddlewareProjectResource(String name, ResourceType resourceType) {
-        this.name = name;
-        this.resourceType = resourceType;
-    }
-
-    public WalletFactoryMiddlewareProjectResource(String name, byte[] resource, ResourceType resourceType) {
-        this.name = name;
-        this.resource = resource;
-        this.resourceType = resourceType;
-    }
-
-    @XmlElement
-    public String getName() {
-        return name;
-    }
-
-    public byte[] getResource() throws CantGetWalletFactoryProjectResourceException {
-        try {
-            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, walletFactoryProjectSkin.getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            newFile.loadFromMedia();
-            return newFile.getContent();
-        } catch (CantCreateFileException|FileNotFoundException|CantLoadFileException e) {
-            throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, e, "Can't get file.", "");
-        }
-    }
-
-    @XmlJavaTypeAdapter( ResourceTypeAdapter.class )
-    @XmlAttribute( name = "type" )
-    public ResourceType getResourceType() {
-        return resourceType;
-    }
-
-    @Override
-    public WalletFactoryProjectSkin getWalletFactoryProjectSkin() {
-        return walletFactoryProjectSkin;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setResourceType(ResourceType resourceType) {
-        this.resourceType = resourceType;
-    }
-
-    public void afterUnmarshal(Unmarshaller u, Object parent) {
-        WalletFactoryMiddlewareProjectSkin walletFactoryMiddlewareProjectSkin = (WalletFactoryMiddlewareProjectSkin) parent;
-        walletFactoryProjectSkin = walletFactoryMiddlewareProjectSkin;
-        setPluginFileSystem(walletFactoryMiddlewareProjectSkin.getPluginFileSystem());
-        setPluginId(walletFactoryMiddlewareProjectSkin.getPluginId());
-    }
 
     /**
      * DealsWithPluginFileSystem interface implementation.

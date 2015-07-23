@@ -36,6 +36,7 @@ repositories {
 dependencies {
 	compile project(':fermat-api')
 	compile project(':fermat-p2p-api')
+	compile project(':fermat-pip-api')
 	
 	testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
@@ -90,5 +91,33 @@ tasks.withType(FindBugs) {
 task jenkins(dependsOn: ['clean', 'check', 'jacocoTestReport']) << {
 	println 'Estos son los chequeos que se tienen que pasar antes de hacer push al servidor Jenkins'
 }
+
+
+task fatJar(type: Jar
+//        , dependsOn: test
+) {
+    baseName = project.name + '-with-dependencies'
+
+    manifest {
+        attributes 'Implementation-Title': 'Standalone Jar Prototype',
+                'Implementation-Version': version,
+                'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.CloudServerMainRunner'
+    }
+
+    doFirst {
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+    with jar
+}
+
+
 check.mustRunAfter clean
 jacocoTestReport.mustRunAfter check

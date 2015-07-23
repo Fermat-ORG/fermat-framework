@@ -35,13 +35,6 @@ public interface WalletManagerManager {
     public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException;
 
     /**
-     * This method gives us the progress of the current installation
-     *
-     * @return an integer that reflects the said progress
-     */
-    public int getInstallationProgress();
-
-    /**
      * This method returns the list of installed wallets in the device
      *
      * @return A list with the installed wallets information
@@ -51,41 +44,41 @@ public interface WalletManagerManager {
     /**
      * This method starts the process of installing a new language for an specific wallet
      *
-     * @param walletIdInThisDevice the identifier of the wallet where we want to install the language
+     * @param walletCatalogueId the identifier of the wallet we want to install the language to
      * @param languageId the identifier of the language to install
      */
-    public void installLanguage(UUID walletIdInThisDevice, UUID languageId) throws CantInstallLanguageException;
+    public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantInstallLanguageException;
 
     /**
      * This method starts the process of installing a new skin for an specific wallet
      *
-     * @param walletIdInThisDevice the identifier of the wallet where we want to install the language
+     * @param walletCatalogueId the identifier of the wallet we want to install the skin to
      * @param skinId the identifier of the skin
      */
-    public void installSkin(UUID walletIdInThisDevice, UUID skinId) throws CantInstallSkinException;
+    public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantInstallSkinException;
 
     /**
-     *  This method starts the process of installing a new wallet
+     * This method returns the interface responsible of the installation process of a wallet
      *
-     * @param walletInstallationInformation the information needed for the installation
+     * @return an interface to manage the installation of a new wallet
      */
-    public void installWallet(WalletInstallationInformation walletInstallationInformation) throws CantInstallWalletException;
+    public WalletInstallationProcess installWallet();
 
     /**
      * This method starts the process of uninstalling a new language for an specific wallet
      *
-     * @param walletIdInThisDevice the identifier of the wallet where we want to uninstall the language
+     * @param walletCatalogueId the identifier of the wallet where we want to uninstall the language
      * @param languageId the identifier of the language to uninstall
      */
-    public void uninstallLanguage(UUID walletIdInThisDevice, UUID languageId) throws CantUninstallLanguageException;
+    public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantUninstallLanguageException;
 
     /**
      * This method starts the process of uninstalling a new skin for an specific wallet
      *
-     * @param walletIdInThisDevice the identifier of the wallet where we want to uninstall the language
+     * @param walletCatalogueId the identifier of the wallet in which we want to uninstall the language
      * @param skinId the identifier of the skin
      */
-    public void uninstallSkin(UUID walletIdInThisDevice, UUID skinId) throws CantUninstallSkinException;
+    public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantUninstallSkinException;
 
     /**
      * This method starts the uninstalling process of a walled

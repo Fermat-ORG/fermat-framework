@@ -3,10 +3,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdu
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.Wallet;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordInstalledWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordUninstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantGetWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantRecordInstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantRecordUninstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -19,12 +20,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.*;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.event_handlers.BegunWalletInstallationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.event_handlers.WalletUninstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.exceptions.CantInitializeWalletException;
@@ -247,10 +248,10 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     /**
      * Record the installed wallet in the database
      * @param walletId
-     * @throws CantRecordInstalledWalletException
+     * @throws DEPRECATED_CantRecordInstalledWalletException
      */
     @Override
-    public void recordInstalledWallet(UUID walletId) throws CantRecordInstalledWalletException {
+    public void recordInstalledWallet(UUID walletId) throws DEPRECATED_CantRecordInstalledWalletException {
 
         catalog.setWalletId(walletId);
         catalog.setEventManager(this.eventManager);
@@ -261,10 +262,10 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     /**
      * Record the uninstalled wallet in the database
      * @param walletId
-     * @throws CantRecordUninstalledWalletException
+     * @throws DEPRECATED_CantRecordUninstalledWalletException
      */
     @Override
-    public void recordUninstalledwallet(UUID walletId) throws CantRecordUninstalledWalletException {
+    public void recordUninstalledwallet(UUID walletId) throws DEPRECATED_CantRecordUninstalledWalletException {
 
         catalog.setWalletId(walletId);
         catalog.setEventManager(this.eventManager);
@@ -317,7 +318,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     }
 
 
-    public List<Wallet> getWallets() throws CantGetWalletsException {
+    public List<Wallet> getWallets() throws DEPRECATED_CantGetWalletsException {
        return catalog.getWallets();
     }
 

@@ -25,17 +25,17 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentIntegrator;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 
 import java.util.UUID;
 
@@ -44,6 +44,11 @@ import java.util.UUID;
  */
 public class CreateContactFragment extends Fragment {
 
+    /**
+     * Wallet session
+     */
+    WalletSession walletSession;
+    
     private static final String ARG_POSITION = "position";
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
@@ -59,35 +64,27 @@ public class CreateContactFragment extends Fragment {
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
     private CryptoWalletManager cryptoWalletManager;
-    private Platform platform;
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
 
-    public static CreateContactFragment newInstance(int position) {
+    public static CreateContactFragment newInstance(int position,WalletSession walletSession) {
         CreateContactFragment f = new CreateContactFragment();
+        f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
         return f;
     }
-
-    public static CreateContactFragment newInstance(final int position, final Platform platform) {
-        CreateContactFragment f = new CreateContactFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
-    }
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
-        platform = new Platform();
-        errorManager = platform.getErrorManager();
+        errorManager = walletSession.getErrorManager();
 
-        cryptoWalletManager = platform.getCryptoWalletManager();
+        cryptoWalletManager = walletSession.getCryptoWalletManager();
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -171,7 +168,7 @@ public class CreateContactFragment extends Fragment {
         if (validAddress != null) {
             try {
                 // first i add the contact
-                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
 
                 Toast.makeText(getActivity().getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
 
@@ -254,5 +251,9 @@ public class CreateContactFragment extends Fragment {
         });
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+
+    public void setWalletSession(WalletSession walletSession) {
+        this.walletSession = walletSession;
     }
 }

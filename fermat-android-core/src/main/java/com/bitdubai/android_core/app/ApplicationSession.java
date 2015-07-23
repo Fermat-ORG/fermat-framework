@@ -3,9 +3,14 @@ package com.bitdubai.android_core.app;
 
 import android.graphics.Typeface;
 import android.os.Handler;
+
+import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
+import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_core.Platform;
 
 
@@ -23,31 +28,64 @@ import com.bitdubai.fermat_core.Platform;
 
 public class ApplicationSession extends android.support.multidex.MultiDexApplication {
 
-    private final static Handler handler = new Handler();
     public static Typeface mDefaultTypeface;
-    public static Object[] mParams;
-
-    public static AppRuntimeManager appRuntimeMiddleware;
-    public static WalletRuntimeManager walletRuntimeMiddleware;
-
-    public static ErrorManager errorManager;
+    public static Object[] mParams; //TODO : LUIS : Creale el caso a Natalia para que arregle lo del back button.
 
 
-    public static Typeface getDefaultTypeface() {
-        return mDefaultTypeface;
-    }
+    /**
+     * Fermat platform
+     */
+    private Platform fermatPlatform;
+    /**
+     * Sub App session Manager
+     */
+    private SubAppSessionManager subAppSessionManager;
+    /**
+     * Wallet session manager
+     */
+    private WalletSessionManager walletSessionManager;
 
-    private static Platform fermatPlatform;
 
-
-    public static Platform getFermatPlatform() {
-        return fermatPlatform;
-    }
-
+    /**
+     *  Application session constructor
+     */
     public ApplicationSession() {
         super();
         fermatPlatform = new Platform();
+        subAppSessionManager=new SubAppSessionManager();
+        walletSessionManager = new WalletSessionManager();
     }
 
+    /**
+     *  Return the default typeface
+     * @return Typeface
+     */
+    public Typeface getDefaultTypeface() {
+        return mDefaultTypeface;
+    }
+
+    /**
+     *  Method to get the fermat platform
+     * @return Platform
+     */
+    public Platform getFermatPlatform() {
+        return fermatPlatform;
+    }
+
+    /**
+     * Method to get subAppSessionManager which can manipulate the active session of subApps
+     * @return SubAppSessionManager
+     */
+    public SubAppSessionManager getSubAppSessionManager(){
+        return subAppSessionManager;
+    }
+
+    /**
+     * Method to get subWalletSessionManager which can manipulate the active session of wallets
+     * @return WalletSessionManager
+     */
+    public WalletSessionManager getWalletSessionManager(){
+        return walletSessionManager;
+    }
 
 }

@@ -107,7 +107,7 @@ public class MockNIOClient implements Runnable {
 		StringBuffer stringBuffer = new StringBuffer(new String(data,"UTF-8"));
         if(!stringBuffer.toString().trim().isEmpty())
             try{
-                responsePacket = FMPPacketFactory.constructCloudPacket(stringBuffer.toString().trim());
+                responsePacket = FMPPacketFactory.constructCloudFMPPacket(stringBuffer.toString().trim());
             } catch(FMPException ex){
                 ex.printStackTrace();
             }
