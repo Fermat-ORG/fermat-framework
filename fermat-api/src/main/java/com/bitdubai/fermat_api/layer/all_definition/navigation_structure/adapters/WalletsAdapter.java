@@ -12,11 +12,11 @@ public class WalletsAdapter extends XmlAdapter<String, Wallets> {
 
     @Override
     public Wallets unmarshal(String v) throws Exception {
-        return Wallets.getValueFromString(v.toString());
+        return Wallets.getByCode(v.toString());
     }
 
     @Override
     public String marshal(Wallets v) throws Exception {
-        return v.getKey();
+        return v.getCode();
     }
 }
