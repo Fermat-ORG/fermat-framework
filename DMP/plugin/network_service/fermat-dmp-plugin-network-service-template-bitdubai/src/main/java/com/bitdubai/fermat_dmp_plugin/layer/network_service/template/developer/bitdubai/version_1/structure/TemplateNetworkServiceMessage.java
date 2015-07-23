@@ -1,16 +1,17 @@
 /*
- * @#IntraUserNetworkServiceMessage.java - 2015
+ * @#TemplateNetworkServiceMessage.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure;
 
 
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -20,15 +21,14 @@ import java.util.UUID;
 import sun.misc.resources.Messages;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceMessage</code>
  * is the implementation of the message<p/>
- *
  * Created by Roberto Requena - (rart3001@gmail.com) on 09/06/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserNetworkServiceMessage implements Message, Serializable {
+public class TemplateNetworkServiceMessage implements Message, Serializable {
 
     /**
      * Represent the serialVersionUID
@@ -85,7 +85,7 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     /**
      * Constructor
      */
-    public IntraUserNetworkServiceMessage(){
+    public TemplateNetworkServiceMessage(){
         super();
         this.deliveryTimestamp = null;
         this.id           = null;
@@ -100,7 +100,7 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     /**
      * Constructor whit parameters
      */
-    public IntraUserNetworkServiceMessage(Timestamp deliveryTimestamp, Long id, UUID receiver, UUID sender, Timestamp shippingTimestamp, MessagesStatus status, String textContent, MessagesTypes messageType) {
+    public TemplateNetworkServiceMessage(Timestamp deliveryTimestamp, Long id, UUID receiver, UUID sender, Timestamp shippingTimestamp, MessagesStatus status, String textContent, MessagesTypes messageType) {
         super();
         this.deliveryTimestamp = deliveryTimestamp;
         this.id           = id;
@@ -213,16 +213,6 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     }
 
     /**
-     * Set the status
-     *
-     * @param status the status
-     */
-    public void setStatus(MessagesStatus status) {
-        this.status = status;
-    }
-
-
-    /**
      * (non-Javadoc)
      * @see Message#toJson()
      */
@@ -238,11 +228,20 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
      * @see Message#fromJson(String)
      */
     @Override
-    public IntraUserNetworkServiceMessage fromJson(String json){
+    public TemplateNetworkServiceMessage fromJson(String json){
 
         Gson gson = new Gson();
-        return gson.fromJson(json, IntraUserNetworkServiceMessage.class);
+        return gson.fromJson(json, TemplateNetworkServiceMessage.class);
 
+    }
+
+    /**
+     * Set the status
+     *
+     * @param status the status
+     */
+    public void setStatus(MessagesStatus status) {
+        this.status = status;
     }
 
     /**

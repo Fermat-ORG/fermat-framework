@@ -1,10 +1,10 @@
 /*
- * @#IntraUserNetworkServicePluginRoot.java - 2015
+ * @#TemplateNetworkServicePluginRoot.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -15,25 +15,25 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateEstablishedRequestedNetworkServiceConnectionHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateIncomingNetworkServiceConnectionRequestHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInitializeNetworkTemplateDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserEstablishedRequestedNetworkServiceConnectionHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
@@ -44,19 +44,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot</code> is
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot</code> is
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
  * Created by loui on 12/02/15.
- * Update by Roberto Requena - (rrequena) on 20/05/15.
+ * Update by Roberto Requena - (rrequena) on 21/07/15.
  *
  * @version 1.0
  */
-public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, Plugin {
+public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, Plugin {
+
+   public static Logger LOG = Logger.getGlobal();
 
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
@@ -99,9 +102,9 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     private List<EventListener> listenersAdded;
 
     /**
-     * Holds the intraUserNetworkServiceManagersCache
+     * Holds the templateNetworkServiceManagersCache
      */
-    private Map<UUID, IntraUserNetworkServiceManager>  intraUserNetworkServiceManagersCache;
+    private Map<UUID, TemplateNetworkServiceManager> templateNetworkServiceManagersCache;
 
     /**
      * Represent the dataBase
@@ -116,22 +119,22 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     /**
      * Constructor
      */
-    public IntraUserNetworkServicePluginRoot() {
+    public TemplateNetworkServicePluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
-        this.intraUserNetworkServiceManagersCache = new HashMap<>();
+        this.templateNetworkServiceManagersCache = new HashMap<>();
     }
 
     /**
      * Initialize the event listener and configure
      */
-    private void initializeListener(IntraUserNetworkServiceManager intraUserNetworkServiceManager){
+    private void initializeListener(TemplateNetworkServiceManager templateNetworkServiceManager){
 
         /*
          * Listen and handle incoming network service connection request event
          */
         EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
-        eventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
+        eventListener.setEventHandler(new TemplateIncomingNetworkServiceConnectionRequestHandler(this));
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
@@ -139,7 +142,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
          * Listen and handle established network service connection event
          */
         eventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
-        eventListener.setEventHandler(new IntraUserEstablishedRequestedNetworkServiceConnectionHandler(this));
+        eventListener.setEventHandler(new TemplateEstablishedRequestedNetworkServiceConnectionHandler(this));
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
     }
@@ -147,22 +150,22 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     /**
      * This method initialize the database
      *
-     * @throws CantInitializeNetworkIntraUserDataBaseException
+     * @throws CantInitializeNetworkTemplateDataBaseException
      */
-    private void initializeDb() throws CantInitializeNetworkIntraUserDataBaseException {
+    private void initializeDb() throws CantInitializeNetworkTemplateDataBaseException {
         try {
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COINAPULT_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeNetworkTemplateDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -170,22 +173,22 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            IntraUserNetworkServiceDatabaseFactory intraUserNetworkServiceDatabaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            TemplateNetworkServiceDatabaseFactory templateNetworkServiceDatabaseFactory = new TemplateNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBase = intraUserNetworkServiceDatabaseFactory.createDatabase(pluginId);
+                this.dataBase = templateNetworkServiceDatabaseFactory.createDatabase(pluginId);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                throw new CantInitializeNetworkTemplateDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
         }
@@ -197,6 +200,9 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      */
     @Override
     public void start() throws CantStartPluginException {
+
+        LOG.info("TemplateNetworkServicePluginRoot - starting  ");
+
         /*
          * If all resources are inject
          */
@@ -217,7 +223,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 /*
                  * Register this network service whit the communicationLayerManager
                  */
-                communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER, eccKeyPair.getPublicKey());
+                communicationLayerManager.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
 
 
                 /*
@@ -227,30 +233,21 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
 
             } catch (CommunicationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
                 throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
 
-            } catch (CantInitializeNetworkIntraUserDataBaseException exception) {
-                /*
-                 * We are going to throw a CantStartPluginException which is inherited from FermatException
-                 * We need to setup a context and a possible cause of execution for this exception so that the errorManager can build a good log
-                 */
+            } catch (CantInitializeNetworkTemplateDataBaseException exception) {
 
-                /*
-                 * The StringBuffer is a thread safe builder for Strings, we use it to capture the values that could have triggered the exception
-                 * We use the constant CONTEXT_CONTENT_SEPARATORx to separate the different values in the context.
-                 * These values get split in the toString() method of the exception used in the ErrorManager to generate the log of the exception
-                 */
                 StringBuffer contextBuffer = new StringBuffer();
                 contextBuffer.append("Plugin ID: " + pluginId);
                 contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                 String context = contextBuffer.toString();
                 String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
                 CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                 throw pluginStartException;
             }
 
@@ -271,7 +268,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
 
@@ -289,8 +286,8 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         /*
          * pause all the managers
          */
-        for (UUID key : intraUserNetworkServiceManagersCache.keySet()){
-            intraUserNetworkServiceManagersCache.get(key).pause();
+        for (UUID key : templateNetworkServiceManagersCache.keySet()){
+            templateNetworkServiceManagersCache.get(key).pause();
         }
 
         /*
@@ -310,8 +307,8 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         /*
          * resume all the managers
          */
-        for (UUID key : intraUserNetworkServiceManagersCache.keySet()){
-            intraUserNetworkServiceManagersCache.get(key).resume();
+        for (UUID key : templateNetworkServiceManagersCache.keySet()){
+            templateNetworkServiceManagersCache.get(key).resume();
         }
 
         /*
@@ -334,12 +331,12 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         /*
          * Stop all connection on the managers
          */
-        for (UUID key : intraUserNetworkServiceManagersCache.keySet()){
-            intraUserNetworkServiceManagersCache.get(key).closeAllConnection();
+        for (UUID key : templateNetworkServiceManagersCache.keySet()){
+            templateNetworkServiceManagersCache.get(key).closeAllConnection();
         }
 
         //Clear all references
-        intraUserNetworkServiceManagersCache.clear();
+        templateNetworkServiceManagersCache.clear();
 
          /*
          * Unregister whit the communicationLayerManager
@@ -357,7 +354,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
             String possibleCause = "Communication Layer Manager error";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
         }
 
@@ -435,14 +432,14 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      * This is a factory method for create new instances of the intra user network service manager
      *
      * @param pluginClientId the plugin client id
-     * @return IntraUserNetworkServiceManager the intra user network service manager
+     * @return TemplateNetworkServiceManager the intra user network service manager
      */
-    public IntraUserNetworkServiceManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
+    public TemplateNetworkServiceManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
 
         /*
          * Create a new instance
          */
-        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
+        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
@@ -452,7 +449,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         /**
          * Cache the instance
          */
-        intraUserNetworkServiceManagersCache.put(pluginClientId, manager);
+        templateNetworkServiceManagersCache.put(pluginClientId, manager);
 
         /*
          * return the instance
@@ -465,11 +462,11 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      * Return a previously created instances of the intra user network service manager
      *
      * @param pluginClientId
-     * @return IntraUserNetworkServiceManager
+     * @return TemplateNetworkServiceManager
      */
-    public IntraUserNetworkServiceManager getIntraUserNetworkServiceManager(UUID pluginClientId){
+    public TemplateNetworkServiceManager getIntraUserNetworkServiceManager(UUID pluginClientId){
 
-        return  intraUserNetworkServiceManagersCache.get(pluginClientId);
+        return  templateNetworkServiceManagersCache.get(pluginClientId);
     }
 
 

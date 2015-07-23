@@ -43,6 +43,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFi
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DealsWithToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DealsWithDeveloperIdentity;
@@ -587,7 +589,7 @@ public class Platform  {
          * -----------------------------
          */
         Plugin cloudServerCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudServerPlugin();
-       // setPluginReferencesAndStart(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
+        setPluginReferencesAndStart(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
 
         /**
          * -----------------------------
@@ -595,7 +597,7 @@ public class Platform  {
          * -----------------------------
          */
         Plugin cloudCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudPlugin();
-        //setPluginReferencesAndStart(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
+        setPluginReferencesAndStart(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
 
         /**
          * -----------------------------
@@ -626,7 +628,6 @@ public class Platform  {
          * Plugin Wallet Store Network Service
          * -----------------------------
          */
-
         Plugin walletStoreNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletStore();
         setPluginReferencesAndStart(walletStoreNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
 
@@ -867,6 +868,18 @@ public class Platform  {
         Plugin walletRuntime =  ((ModuleLayer) mModuleLayer).getWalletRuntime();
         setPluginReferencesAndStart(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
+
+        /**
+         * -----------------------------
+         * Plugin Template Network Service
+         * -----------------------------
+         */
+        Plugin templateNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getTemplate();
+        setPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
+
+
+
+
         for(Addons registeredDescriptor : corePlatformContext.getRegisteredAddonsDescriptors())
             checkAddonForDeveloperInterfaces(registeredDescriptor);
         for(Plugins registeredDescriptor : corePlatformContext.getRegisteredPluginsDescriptors())
@@ -959,6 +972,9 @@ public class Platform  {
 
             if (plugin instanceof DealsWithIncomingCrypto)
                 ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION));
+
+            if (plugin instanceof DealsWithCommunicationLayerManager)
+                ((DealsWithCommunicationLayerManager) plugin).setCommunicationLayerManager((CommunicationLayerManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CLOUD_CHANNEL));
 
             corePlatformContext.addPlugin(plugin, descriptor);
         } catch (Exception e){

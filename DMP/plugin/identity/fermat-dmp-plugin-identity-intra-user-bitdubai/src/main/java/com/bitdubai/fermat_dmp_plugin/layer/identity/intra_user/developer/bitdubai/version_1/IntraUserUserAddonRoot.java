@@ -116,7 +116,7 @@ public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, Deal
 
 
     /**
-     * IntraUserManager Interface implementation.
+     * TemplateManager Interface implementation.
      */
 
     @Override

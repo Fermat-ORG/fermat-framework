@@ -4,14 +4,14 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user;
+package com.bitdubai.fermat_api.layer.dmp_network_service.template;
 
 import java.util.UUID;
 
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.network_service.intra_user.Template</code>
- * expose the basic method of a Network Intra User
+ * The interface <code>com.bitdubai.fermat_api.layer.dmp_network_service.template.Template</code>
+ * expose the basic method of a template
  * <p/>
  *
  * Created by ciencias on 2/13/15.
@@ -20,7 +20,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface IntraUser {
+public interface Template {
 
     /**
      * Return the address
@@ -34,49 +34,49 @@ public interface IntraUser {
      *
      * @return UUID
      */
-    public UUID getUserId ();
+    public UUID getUserId();
 
     /**
      * Return the userName
      *
      * @return String
      */
-    public String getUserName ();
+    public String getUserName();
 
     /**
      * Return the lastLocation
      *
      * @return String
      */
-    public String getLastLocation ();
+    public String getLastLocation();
 
     /**
      * Return the status
      *
      * @return TemplateStatus
      */
-    public IntraUserStatus getStatus ();
+    public TemplateStatus getStatus();
 
     /**
      * Return the SmallProfilePicture
      *
      * @return String
      */
-    public String getSmallProfilePicture ();
+    public String getSmallProfilePicture();
 
     /**
      * Return the MediumProfilePicture
      *
      * @return String
      */
-    public String getMediumProfilePicture ();
+    public String getMediumProfilePicture();
 
     /**
      * Return the BigProfilePicture
      *
      * @return String
      */
-    public String getBigProfilePicture ();
+    public String getBigProfilePicture();
 
     /**
      * Return the createdTime
