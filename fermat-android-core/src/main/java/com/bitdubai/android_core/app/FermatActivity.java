@@ -170,7 +170,7 @@ public class FermatActivity extends FragmentActivity{
     @Override
     public void onBackPressed() {
 
-        if (getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        if (getWalletRuntimeManager().getLasActivity() != null && getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 
