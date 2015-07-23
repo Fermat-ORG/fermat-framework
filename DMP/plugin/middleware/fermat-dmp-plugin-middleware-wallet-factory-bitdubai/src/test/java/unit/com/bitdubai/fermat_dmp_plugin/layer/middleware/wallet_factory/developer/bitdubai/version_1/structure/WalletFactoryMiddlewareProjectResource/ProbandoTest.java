@@ -1,6 +1,19 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -27,7 +40,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
@@ -84,7 +99,7 @@ public class ProbandoTest extends TestCase {
             skins.add(que);
             skins.add(que);
 
-            WalletFactoryMiddlewareProjectProposal proposal = new WalletFactoryMiddlewareProjectProposal("soyunapropuesta", FactoryProjectState.DISMISSED, skins, null);
+            WalletFactoryMiddlewareProjectProposal proposal = new WalletFactoryMiddlewareProjectProposal("soyunapropuesta", FactoryProjectState.DISMISSED, null, skins, null);
 
             RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
             jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
@@ -120,7 +135,7 @@ public class ProbandoTest extends TestCase {
             languages.add(new WalletFactoryMiddlewareProjectLanguage("hungaro.xml", Languages.AMERICAN_ENGLISH));
             languages.add(new WalletFactoryMiddlewareProjectLanguage("alfredo.xml", Languages.AMERICAN_ENGLISH));
 
-            WalletFactoryMiddlewareProjectProposal proposal = new WalletFactoryMiddlewareProjectProposal("soyunapropuesta", FactoryProjectState.DISMISSED, skins, languages);
+            WalletFactoryMiddlewareProjectProposal proposal = new WalletFactoryMiddlewareProjectProposal("soyunapropuesta", FactoryProjectState.DISMISSED, null, skins, languages);
 
             RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
             jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
@@ -278,7 +293,7 @@ public class ProbandoTest extends TestCase {
         languages.add(new WalletFactoryMiddlewareProjectLanguage("hungaro.xml", Languages.AMERICAN_ENGLISH));
         languages.add(new WalletFactoryMiddlewareProjectLanguage("alfredo.xml", Languages.AMERICAN_ENGLISH));
 
-        return new WalletFactoryMiddlewareProjectProposal(alias, FactoryProjectState.DRAFT, skins, languages);
+        return new WalletFactoryMiddlewareProjectProposal(alias, FactoryProjectState.DRAFT, null, skins, languages);
     }
 
     @Test
@@ -353,5 +368,120 @@ public class ProbandoTest extends TestCase {
     public void testGetProjectXML() throws Exception {
         WalletFactoryProject walletFactoryProject = new WalletFactoryMiddlewareProject();
         System.out.println(walletFactoryProject.getProjectXml(getProject("WALTERFIERRO")));
+    }
+
+    private TitleBar getTittleBar(String nombre) {
+        SearchView searchView = new SearchView("hola", "tal.png", "que");
+        return new TitleBar(nombre, "#FFFFFF", nombre+"SOYUNAIMAGEN.png", searchView);
+    }
+
+    private SideMenu getSideMenu() {
+        List<MenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new MenuItem("rober", "icon1.png", Activities.CWP_SHELL_LOGIN));
+        menuItems.add(new MenuItem("logout", "logout.png", Activities.CWP_SHELL_LOGIN));
+        return new SideMenu(menuItems);
+    }
+
+    private MainMenu getMainMenu() {
+        List<MenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new MenuItem("asdar223", "icon1.png", Activities.CWP_WALLET_ADULTS_ALL_REQUEST_SEND));
+        menuItems.add(new MenuItem("324qwsaf", "asdasg4rwww.png", Activities.CWP_WALLET_ADULTS_ALL_REFFILS));
+        return new MainMenu(menuItems);
+    }
+
+    private TabStrip getTabStrip() {
+        List<Tab> tabs = new ArrayList<>();
+        tabs.add(new Tab("holaquetal", Fragments.CWP_SHELL_LOGIN));
+        tabs.add(new Tab("bienyvos", Fragments.CWP_SHOP_MANAGER_MAIN));
+        return new TabStrip(1, 2, 3, 4, 5, 6, "#456878", "#456878", "#456878",tabs);
+    }
+
+    private StatusBar getStatusBar() {
+        return new StatusBar("#456878", false);
+    }
+
+    private Wallet getNavigationStructure() {
+        Map<Activities, Activity> activitiesActivityMap = new HashMap<>();
+
+        Activity activity = new Activity();
+        activity.setType(Activities.CWP_SHELL_LOGIN);
+        activity.setTitleBar(getTittleBar("titlebar1"));
+        activity.setSideMenu(getSideMenu());
+        activity.setMainMenu(getMainMenu());
+        activity.setTabStrip(getTabStrip());
+        activity.setStatusBar(getStatusBar());
+        activitiesActivityMap.put(Activities.CWP_SHELL_LOGIN, activity);
+
+        Activity activity2 = new Activity();
+        activity2.setType(Activities.CWP_SHOP_MANAGER_MAIN);
+        activity2.setTitleBar(getTittleBar("titlebar2"));
+        activity2.setColor("#AA2222");
+        activitiesActivityMap.put(Activities.CWP_SHOP_MANAGER_MAIN, activity2);
+
+        return new Wallet(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI, activitiesActivityMap);
+    }
+
+    private String getNavigationStructureXml() {
+        try {
+            Wallet wallet = getNavigationStructure();
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Writer outputStream = new StringWriter();
+            jaxbMarshaller.marshal(wallet, outputStream);
+
+            return outputStream.toString();
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Test
+    public void testGetNavigationStructure() {
+        try {
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Wallet navigationStructure = getNavigationStructure();
+            jaxbMarshaller.marshal(navigationStructure, System.out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetNavigationStructure2() {
+        try {
+            String strinxml = getNavigationStructureXml();
+
+            StringReader reader = new StringReader(strinxml);
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+            Wallet que = (Wallet) jaxbUnmarshaller.unmarshal(reader);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            jaxbMarshaller.marshal(que, System.out);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
