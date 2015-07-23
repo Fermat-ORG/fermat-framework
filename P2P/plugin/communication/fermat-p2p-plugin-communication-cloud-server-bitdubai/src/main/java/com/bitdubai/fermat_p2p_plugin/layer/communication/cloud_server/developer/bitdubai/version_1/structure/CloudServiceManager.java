@@ -53,7 +53,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	 */
 	public CloudServiceManager(final CommunicationChannelAddress address, final ExecutorService executor, final com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair keyPair) throws IllegalArgumentException{
 		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
-		networkServicesRegistry = new ConcurrentHashMap<NetworkServices, CloudNetworkServiceManager>();
+		networkServicesRegistry = new ConcurrentHashMap<>();
 		networkServicesRegistry.clear();
 	}
 

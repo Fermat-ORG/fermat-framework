@@ -237,15 +237,35 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     @Override
     public void stop() {
 
-        /**
-         * I will remove all the event listeners registered with the event manager.
+        /*
+         * Remove all the event listeners registered with the event manager.
          */
-
         for (EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }
 
+        /*
+         * Clear the list
+         */
         listenersAdded.clear();
+
+        /*
+         * Stop all managers
+         */
+         for (String key : cloudServiceManagersCache.keySet())  {
+
+             try {
+
+                 cloudServiceManagersCache.get(key).stop();
+
+             } catch (CloudCommunicationException e) {
+                 e.printStackTrace();
+             }
+         }
+
+        /*
+         * Change the estatus
+         */
         this.serviceStatus = ServiceStatus.STOPPED;
 
     }
