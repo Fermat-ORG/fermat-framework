@@ -15,18 +15,18 @@ public class DeveloperIdentityDatabaseConstants {
     /**
      * Developer database definition.
      */
-    static final String DEVELOPER_DB_NAME = "DevelopersDB";
+    public static final String DEVELOPER_DB_NAME = "DevelopersDB";
 
     /**
      * Developer database table definition.
      */
-    static final String DEVELOPER_TABLE_NAME = "DevelopersTable";
+    public static final String DEVELOPER_TABLE_NAME = "DevelopersTable";
 
-    static final String DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME = "developer_public_key";
-    static final String DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME = "developer_private_key";
-    static final String DEVELOPER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
-    static final String DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME = "developer_alias";
+    public static final String DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME = "developer_public_key";
+    public static final String DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME = "developer_private_key";
+    public static final String DEVELOPER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
+    public static final String DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME = "developer_alias";
 
-    static final String DEVELOPER_FIRST_KEY_COLUMN = "developer_public_key";
+    public static final String DEVELOPER_FIRST_KEY_COLUMN = "developer_public_key";
 
 }
