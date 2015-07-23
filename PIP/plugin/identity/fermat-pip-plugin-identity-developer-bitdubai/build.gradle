@@ -16,8 +16,5 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
 
 
-    compile project(':fermat-osa-addon-android-logger-bitdubai')
-
-
     compile 'org.apache.commons:commons-lang3:3.3'
 }
