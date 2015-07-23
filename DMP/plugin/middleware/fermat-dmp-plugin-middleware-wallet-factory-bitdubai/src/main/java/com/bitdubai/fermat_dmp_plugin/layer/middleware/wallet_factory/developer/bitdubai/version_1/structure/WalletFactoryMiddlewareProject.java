@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
@@ -48,7 +50,7 @@ import ae.javax.xml.bind.annotation.XmlTransient;
  * @since Java JDK 1.7
  */
 @XmlRootElement( name = "project" )
-public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProject {
+public class WalletFactoryMiddlewareProject implements DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProject {
 
     /**
      * Private class Attributes
@@ -198,6 +200,11 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
     }
 
     /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
      * DealsWithPluginFileSystem interface variables.
      */
     @XmlTransient
@@ -208,6 +215,14 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
      */
     @XmlTransient
     private UUID pluginId;
+
+    /**
+     * DealWithPluginDatabaseSystem Interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
 
     /**
      * DealsWithPluginFileSystem interface implementation.

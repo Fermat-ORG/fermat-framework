@@ -74,10 +74,22 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
             table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME);
 
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 5, Boolean.TRUE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FIRST_KEY_COLUMN);
+
+            /**
+             * Create Project Proposal table.
+             */
+            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_TABLE_NAME);
+
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+
+            table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -103,3 +115,4 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }
+

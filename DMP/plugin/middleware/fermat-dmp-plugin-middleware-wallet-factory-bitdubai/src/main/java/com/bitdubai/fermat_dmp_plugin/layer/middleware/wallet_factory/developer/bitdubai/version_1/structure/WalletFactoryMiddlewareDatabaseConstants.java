@@ -23,4 +23,16 @@ public class WalletFactoryMiddlewareDatabaseConstants {
 
     static final String PROJECT_FIRST_KEY_COLUMN = "id";
 
+    /**
+     * Project Proposal database table definition.
+     */
+    static final String PROJECT_PROPOSAL_TABLE_NAME = "project_proposal";
+
+    static final String PROJECT_PROPOSAL_ID_COLUMN_NAME = "id";
+    static final String PROJECT_PROPOSAL_ALIAS_COLUMN_NAME = "alias";
+    static final String PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME = "factory_project_state";
+    static final String PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME = "project_id";
+
+    static final String PROJECT_PROPOSAL_FIRST_KEY_COLUMN = "id";
+
 }
