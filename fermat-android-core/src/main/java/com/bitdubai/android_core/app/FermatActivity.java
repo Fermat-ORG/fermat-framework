@@ -549,6 +549,8 @@ public class FermatActivity extends FragmentActivity{
     protected void initialisePaging() {
 
         try {
+
+
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
             Iterator<Map.Entry<WalletFragments, Fragment>> efragments =getAppRuntimeMiddleware().getLasActivity().getFragments().entrySet().iterator();
             boolean flag = false;
