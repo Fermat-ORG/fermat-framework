@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
@@ -12,11 +13,13 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.23..
  */
-public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet {
+public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet{
 
-    String WUI;
+    String walletPlatformIdentifier;
 
     Wallets type;
+
+    WalletCategory walletCategory;
 
     Map<Activities, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity> activities = new HashMap<Activities, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity>();
 
