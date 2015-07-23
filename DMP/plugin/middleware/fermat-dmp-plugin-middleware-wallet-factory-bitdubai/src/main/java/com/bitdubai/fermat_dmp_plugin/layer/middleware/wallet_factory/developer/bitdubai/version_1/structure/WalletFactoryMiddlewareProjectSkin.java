@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ResourceAlreadyExistsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ResourceNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
@@ -140,8 +142,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
      * @throws CantGetWalletFactoryProjectResourceException if cant get the resource
      */
     @Override
-    public WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException {
-        // TODO resource not found exception?
+    public WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException, ResourceNotFoundException {
         if (resources == null) {
             throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, null, "No resources available.", "");
         } else {
@@ -149,7 +150,7 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
                 if (res.getName().equals(name) && res.getResourceType().equals(resourceType))
                     return res;
             }
-            throw new CantGetWalletFactoryProjectResourceException(CantGetWalletFactoryProjectResourceException.DEFAULT_MESSAGE, null, "Resource not found.", "");
+            throw new ResourceNotFoundException(ResourceNotFoundException.DEFAULT_MESSAGE, null, "Resource not found.", "");
         }
     }
 
@@ -165,8 +166,13 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
      * @throws CantAddWalletFactoryProjectResourceException
      */
     @Override
-    public void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException {
-        // TODO NAME EXISTS
+    public void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException, ResourceAlreadyExistsException {
+        try {
+            getResource(name, resourceType);
+            throw new ResourceAlreadyExistsException(ResourceAlreadyExistsException.DEFAULT_MESSAGE, null, "Can't add resource.", "Resource Already exists.");
+        } catch (CantGetWalletFactoryProjectResourceException|ResourceNotFoundException e) {
+            // nothing to do
+        }
         try {
             PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
@@ -188,7 +194,6 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     @Override
     public void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException {
         // TODO CHANGE ID BEHAVIOR
-        // TODO NAME EXISTS
         try {
             PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();

@@ -1,6 +1,10 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -27,7 +31,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
@@ -353,5 +359,83 @@ public class ProbandoTest extends TestCase {
     public void testGetProjectXML() throws Exception {
         WalletFactoryProject walletFactoryProject = new WalletFactoryMiddlewareProject();
         System.out.println(walletFactoryProject.getProjectXml(getProject("WALTERFIERRO")));
+    }
+
+    private Wallet getNavigationStructure() {
+        Map<Activities, Activity> activitiesActivityMap = new HashMap<>();
+
+        Activity activity = new Activity();
+        activity.setType(Activities.CWP_SHELL_LOGIN);
+        activitiesActivityMap.put(Activities.CWP_SHELL_LOGIN, activity);
+
+        Activity activity2 = new Activity();
+        activity2.setType(Activities.CWP_SHOP_MANAGER_MAIN);
+        activitiesActivityMap.put(Activities.CWP_SHOP_MANAGER_MAIN, activity2);
+
+        return new Wallet(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI, activitiesActivityMap);
+    }
+
+    private String getNavigationStructureXml() {
+        try {
+            Wallet wallet = getNavigationStructure();
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Writer outputStream = new StringWriter();
+            jaxbMarshaller.marshal(wallet, outputStream);
+
+            return outputStream.toString();
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Test
+    public void testGetNavigationStructure() {
+        try {
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            Wallet navigationStructure = getNavigationStructure();
+            jaxbMarshaller.marshal(navigationStructure, System.out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetNavigationStructure2() {
+        try {
+            String strinxml = getNavigationStructureXml();
+
+            StringReader reader = new StringReader(strinxml);
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+
+            JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+            Wallet que = (Wallet) jaxbUnmarshaller.unmarshal(reader);
+
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            jaxbMarshaller.marshal(que, System.out);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

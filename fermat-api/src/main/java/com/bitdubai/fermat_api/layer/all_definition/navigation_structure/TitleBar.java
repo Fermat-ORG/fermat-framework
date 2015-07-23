@@ -8,45 +8,48 @@ import java.awt.Image;
  */
 public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTitleBar {
 
-    String label;
-    Color color;
-    Image backgroundImage;
+    private String label;
 
+    private Color color;
 
+    private Image backgroundImage;
 
-    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView runtimeSearchView;
+    private SearchView runtimeSearchView;
+
 
     public Color getColor() {
         return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public String getLabel() {
         return label;
     }
 
+    public Image getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public SearchView getRuntimeSearchView() {
+        if (runtimeSearchView != null) {
+            return runtimeSearchView;
+        }
+        return null;
+    }
+
+
     public void setLabel(String label) {
         this.label = label;
     }
 
-
-
-    public Image getBackgroundImage() {
-        return backgroundImage;
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public void setBackgroundImage(Image backgroundImage) {
         this.backgroundImage = backgroundImage;
     }
 
-    public void setRuntimeSearchView(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView runtimeSearchView){this.runtimeSearchView=runtimeSearchView;};
-    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView getRuntimeSearchView() {
-        if(runtimeSearchView!=null){
-            return runtimeSearchView;
-        }
-        return null;
+    public void setRuntimeSearchView(SearchView runtimeSearchView) {
+        this.runtimeSearchView = runtimeSearchView;
     }
 }

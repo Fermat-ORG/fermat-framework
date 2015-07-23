@@ -1,26 +1,43 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.WalletsAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import ae.javax.xml.bind.annotation.XmlAttribute;
+import ae.javax.xml.bind.annotation.XmlRootElement;
+import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 /**
  * Created by rodrigo on 2015.07.17..
  */
+@XmlRootElement(name = "activity")
 public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity{
     /**
      * Activity class member variables
      */
     Activities type;
+
     Map<Fragments, Fragment> fragments = new HashMap<Fragments, Fragment>();
+
     TitleBar titleBar;
+
     SideMenu sideMenu;
+
     MainMenu mainMenu;
+
     TabStrip tabStrip;
+
     String color;
+
     StatusBar statusBar;
+
+    public Activity() {
+    }
 
     /**
      * Activity class implementation.
@@ -28,10 +45,6 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public String getColor()  {
-        return this.color;
     }
 
     public void setType(Activities type) {
@@ -63,6 +76,13 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     /**
      * Activity  interface implementation.
      */
+
+    public String getColor()  {
+        return this.color;
+    }
+
+    @XmlJavaTypeAdapter(ActivitiesAdapter.class)
+    @XmlAttribute(name = "type", required = true)
     @Override
     public Activities getType() {
         return type;
