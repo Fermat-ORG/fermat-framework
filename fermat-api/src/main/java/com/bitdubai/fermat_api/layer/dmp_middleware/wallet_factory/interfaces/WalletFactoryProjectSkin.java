@@ -42,7 +42,7 @@ public interface WalletFactoryProjectSkin {
     WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException, ResourceNotFoundException;
 
     // add a resource of the skin
-    void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException, ResourceAlreadyExistsException;
+    void addResource(String name, String fileName, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException, ResourceAlreadyExistsException;
 
     // update a resource of the skin
     void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException;
