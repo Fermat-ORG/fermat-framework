@@ -16,7 +16,7 @@ public enum FactoryProjectState {
     VERSIONED("versioned"),
     DISMISSED("dismissed");
 
-    public static FactoryProjectState fromValue(String key) throws InvalidParameterException {
+    public static FactoryProjectState fromValue(String key) {
         switch(key) {
             case"draft":
                 return DRAFT;
@@ -25,7 +25,8 @@ public enum FactoryProjectState {
             case"dismissed":
                 return DISMISSED;
         }
-        throw new InvalidParameterException(key);
+        //throw new InvalidParameterException(key);
+        return null;
     }
 
     private final String key;
