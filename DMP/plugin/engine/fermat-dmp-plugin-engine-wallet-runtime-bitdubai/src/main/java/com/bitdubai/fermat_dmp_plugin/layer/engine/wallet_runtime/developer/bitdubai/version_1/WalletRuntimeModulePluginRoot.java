@@ -220,51 +220,50 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
     @Override
     public Wallet getLastWallet() {
+        if(lastWallet != null){
+            Iterator<Map.Entry<Wallets, Wallet>> ewallet = this.listWallets.entrySet().iterator();
 
-        Iterator<Map.Entry<Wallets, Wallet>> ewallet = this.listWallets.entrySet().iterator();
-
-        while (ewallet.hasNext()) {
-            Map.Entry<Wallets, Wallet> walletEntry = ewallet.next();
-            Wallet wallet = (Wallet) walletEntry.getValue();
-            if(wallet.getType().name().equals(this.lastWallet.name())){
-                return wallet;
+            while (ewallet.hasNext()) {
+                Map.Entry<Wallets, Wallet> walletEntry = ewallet.next();
+                Wallet wallet = (Wallet) walletEntry.getValue();
+                if(wallet.getType().name().equals(this.lastWallet.name())){
+                    return wallet;
+                }
             }
-
-
         }
-
         return null;
     }
 
     @Override
     public Activity getLasActivity() {
-        Iterator<Map.Entry<Activities, Activity>> eactivity = this.listActivities.entrySet().iterator();
+        if(lastActivity != null){
+            Iterator<Map.Entry<Activities, Activity>> eactivity = this.listActivities.entrySet().iterator();
 
-        while (eactivity.hasNext()) {
-            Map.Entry<Activities, Activity> activityEntry = eactivity.next();
-            Activity activity = (Activity) activityEntry.getValue();
-            if(activity.getType().name().equals(this.lastActivity.name())){
-                return activity;
+            while (eactivity.hasNext()) {
+                Map.Entry<Activities, Activity> activityEntry = eactivity.next();
+                Activity activity = (Activity) activityEntry.getValue();
+                if(activity.getType().name().equals(this.lastActivity.name())){
+                    return activity;
+                }
             }
         }
-
         return null;
     }
 
 
     @Override
     public Fragment getLastFragment() {
+        if(lastFragment != null){
+            Iterator<Map.Entry<Fragments, Fragment>> efragment = this.listFragments.entrySet().iterator();
 
-        Iterator<Map.Entry<Fragments, Fragment>> efragment = this.listFragments.entrySet().iterator();
-
-        while (efragment.hasNext()) {
-            Map.Entry<Fragments, Fragment> fragmentEntry = efragment.next();
-            Fragment fragment = (Fragment) fragmentEntry.getValue();
-            if(fragment.getType().name().equals(this.lastFragment.name())){
-                return fragment;
+            while (efragment.hasNext()) {
+                Map.Entry<Fragments, Fragment> fragmentEntry = efragment.next();
+                Fragment fragment = (Fragment) fragmentEntry.getValue();
+                if(fragment.getType().name().equals(this.lastFragment.name())){
+                    return fragment;
+                }
             }
         }
-
         return null;
     }
 
