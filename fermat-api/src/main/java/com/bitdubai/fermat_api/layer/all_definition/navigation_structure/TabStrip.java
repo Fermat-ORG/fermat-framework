@@ -1,113 +1,179 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTabStrip;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlElementWrapper;
+import ae.javax.xml.bind.annotation.XmlElements;
+import ae.javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by rodrigo on 2015.07.17..
  */
-public class TabStrip implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTabStrip {
-    int dividercolor;
-    int indicatorcolor;
-    int indicatorheight;
-    int backgroundcolor;
-    int textcolor;
-    int backgroundresource;
+@XmlRootElement(name = "tabStrip")
+public class TabStrip implements FermatTabStrip {
+
+    /**
+     * TabStrip class member variables
+     */
+    int dividerColor;
+
+    int indicatorColor;
+
+    int indicatorHeight;
+
+    int backgroundColor;
+
+    int textColor;
+
+    int backgroundResource;
+
     String tabsColor;
+
     String tabsTextColor;
+
     String tabsIndicateColor;
 
-    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab> tabs = new ArrayList<>();
+    List<Tab> tabs = new ArrayList<>();
 
-    public void addTab (Tab tab) {
-        tabs.add(tab);
+    /**
+     * TabStrip class Constructors
+     */
+    public TabStrip() {
     }
 
-    @Override
-    public List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab> getTabs(){
-        return this.tabs;
-    }
-    @Override
-    public void setDividerColor(int color) {
-        this.dividercolor = color;
+    public TabStrip(int dividerColor, int indicatorColor, int indicatorHeight, int backgroundColor, int textColor, int backgroundResource, String tabsColor, String tabsTextColor, String tabsIndicateColor, List<Tab> tabs) {
+        this.dividerColor = dividerColor;
+        this.indicatorColor = indicatorColor;
+        this.indicatorHeight = indicatorHeight;
+        this.backgroundColor = backgroundColor;
+        this.textColor = textColor;
+        this.backgroundResource = backgroundResource;
+        this.tabsColor = tabsColor;
+        this.tabsTextColor = tabsTextColor;
+        this.tabsIndicateColor = tabsIndicateColor;
+        this.tabs = tabs;
     }
 
+    /**
+     * TabStrip class getters
+     */
+    @XmlElement
     @Override
     public int getDividerColor() {
-        return this.dividercolor;
-    }
-    @Override
-    public void setIndicatorColor(int color){
-        this.indicatorcolor = color;
+        return dividerColor;
     }
 
+    @XmlElement
     @Override
-    public int getIndicatorColor(){
-        return this.indicatorcolor;
-    }
-    @Override
-    public void setIndicatorHeight(int height){
-        this.indicatorheight = height;
-    }
-    @Override
-    public int getIndicatorHeight(){
-        return this.indicatorheight;
-
-    }
-    @Override
-    public void setBackgroundColor(int color){
-        this.backgroundcolor = color;
-    }
-    @Override
-    public int getBackgroundColor(){
-        return this.backgroundcolor;
-    }
-    @Override
-    public void setTextColor(int color){
-        this.textcolor = color;
-    }
-    @Override
-    public int getTextColor(){
-        return this.textcolor;
-    }
-    @Override
-    public void setBackgroundResource(int id){
-        this.backgroundresource = id;
+    public int getIndicatorColor() {
+        return indicatorColor;
     }
 
+    @XmlElement
     @Override
-    public int getBackgroundResource(){
-        return this.backgroundresource;
+    public int getIndicatorHeight() {
+        return indicatorHeight;
     }
 
+    @XmlElement
     @Override
-    public void setTabsColor(String color) {
-        this.tabsColor=color;
+    public int getBackgroundColor() {
+        return backgroundColor;
     }
 
+    @XmlElement
+    @Override
+    public int getTextColor() {
+        return textColor;
+    }
+
+    @XmlElement
+    @Override
+    public int getBackgroundResource() {
+        return backgroundResource;
+    }
+
+    @XmlElement
     @Override
     public String getTabsColor() {
         return tabsColor;
     }
 
-    @Override
-    public void setTabsTextColor(String color) {
-        this.tabsTextColor=color;
-    }
-
+    @XmlElement
     @Override
     public String getTabsTextColor() {
         return tabsTextColor;
     }
 
-    @Override
-    public void setTabsIndicateColor(String color) {
-        this.tabsIndicateColor= color;
-    }
-
+    @XmlElement
     @Override
     public String getTabsIndicateColor() {
         return tabsIndicateColor;
+    }
+
+    @XmlElements({
+        @XmlElement(name="tab", type=Tab.class),
+    })
+    @XmlElementWrapper
+    @Override
+    public List<Tab> getTabs() {
+        return tabs;
+    }
+
+    /**
+     * TabStrip class setters
+     */
+    @Override
+    public void setDividerColor(int dividerColor) {
+        this.dividerColor = dividerColor;
+    }
+
+    @Override
+    public void setIndicatorColor(int indicatorColor) {
+        this.indicatorColor = indicatorColor;
+    }
+
+    @Override
+    public void setIndicatorHeight(int indicatorHeight) {
+        this.indicatorHeight = indicatorHeight;
+    }
+
+    @Override
+    public void setBackgroundColor(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    @Override
+    public void setTextColor(int textColor) {
+        this.textColor = textColor;
+    }
+
+    @Override
+    public void setBackgroundResource(int backgroundResource) {
+        this.backgroundResource = backgroundResource;
+    }
+
+    @Override
+    public void setTabsColor(String tabsColor) {
+        this.tabsColor = tabsColor;
+    }
+
+    @Override
+    public void setTabsTextColor(String tabsTextColor) {
+        this.tabsTextColor = tabsTextColor;
+    }
+
+    @Override
+    public void setTabsIndicateColor(String tabsIndicateColor) {
+        this.tabsIndicateColor = tabsIndicateColor;
+    }
+
+    public void setTabs(List<Tab> tabs) {
+        this.tabs = tabs;
     }
 }

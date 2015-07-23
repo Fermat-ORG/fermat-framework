@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ae.javax.xml.bind.annotation.XmlAttribute;
+import ae.javax.xml.bind.annotation.XmlElement;
 import ae.javax.xml.bind.annotation.XmlRootElement;
 import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -71,13 +72,15 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     public void setTabStrip(TabStrip tabStrip) {
         this.tabStrip = tabStrip;
     }
+
     public void setStatusBar(StatusBar statusBar){
         this.statusBar=statusBar;
     }
+
     /**
      * Activity  interface implementation.
      */
-
+    @XmlElement
     public String getColor()  {
         return this.color;
     }
@@ -89,33 +92,40 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         return type;
     }
 
-    @Override
-    public Map<WalletFragments, Fragment> getFragments() {
-        return fragments;
-    }
-
+    @XmlElement
     @Override
     public TitleBar getTitleBar() {
         return titleBar;
     }
 
+    @XmlElement
     @Override
     public SideMenu getSideMenu() {
         return sideMenu;
     }
 
+    @XmlElement
     @Override
     public MainMenu getMainMenu() {
         return mainMenu;
     }
 
+    @XmlElement
     @Override
     public TabStrip getTabStrip() {
         return tabStrip;
     }
+
+    @XmlElement
     @Override
     public StatusBar getStatusBar() {
         return statusBar;
+    }
+
+    // TODO VER COMO HACER ESTO
+    @Override
+    public Map<WalletFragments, Fragment> getFragments() {
+        return fragments;
     }
 }
 

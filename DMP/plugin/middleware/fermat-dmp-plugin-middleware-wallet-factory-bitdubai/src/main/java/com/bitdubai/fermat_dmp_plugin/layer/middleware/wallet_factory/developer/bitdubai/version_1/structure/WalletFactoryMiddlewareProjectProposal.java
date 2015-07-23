@@ -124,6 +124,29 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         return navigationStructure;
     }
 
+    @Override
+    public String getNavigationStructureXml() throws CantGetWalletFactoryProjectNavigationStructureException {
+        if (navigationStructure != null) {
+            try {
+                RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+
+                JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+
+                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+                Writer outputStream = new StringWriter();
+                jaxbMarshaller.marshal(navigationStructure, outputStream);
+
+                return outputStream.toString();
+            } catch (JAXBException e) {
+                throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't get navigation structure XML.", "");
+            }
+        }
+        throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, null, "Navigation Structure is null", "");
+    }
+
     @XmlElements({
         @XmlElement(name="skin", type=WalletFactoryMiddlewareProjectSkin.class),
     })
