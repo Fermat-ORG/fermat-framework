@@ -74,11 +74,17 @@ public interface WalletManagerManager {
     public void installSkin(UUID walletCatalogueId, UUID skinId, String alias, String Preview, Version version) throws CantInstallSkinException;
 
     /**
+     *
      * This method returns the interface responsible of the installation process of a niche wallet
      *
+     * @param walletCategory The category of the wallet to install
+     * @param walletPlatformIdentifier an string that encodes the wallet identifier in the platform
+     *                                 We are usign the term platform to identify the software installed
+     *                                 in the device and not the network.
      * @return an interface to manage the installation of a new wallet
+     * @throws CantFindProcessException
      */
-    public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletIdentifier) throws CantFindProcessException;
+    public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException;
 
 
     /**
