@@ -4,8 +4,12 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -167,28 +171,27 @@ public class WalletManagerMiddlewarePluginRoot implements DealsWithErrors,DealsW
     }
 
     @Override
-    public void installLanguage(UUID walletIdInThisDevice, UUID languageId) throws CantInstallLanguageException {
+    public void installLanguage(UUID walletCatalogueId, UUID languageId, Languages language, String label, Version version) throws CantInstallLanguageException {
 
     }
 
     @Override
-    public void installSkin(UUID walletIdInThisDevice, UUID skinId) throws CantInstallSkinException {
+    public void installSkin(UUID walletCatalogueId, UUID skinId, String alias, String Preview, Version version) throws CantInstallSkinException {
 
     }
 
     @Override
-    public WalletInstallationProcess installWallet() {
+    public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletIdentifier) throws CantFindProcessException {
         return null;
     }
 
-
     @Override
-    public void uninstallLanguage(UUID walletIdInThisDevice, UUID languageId) throws CantUninstallLanguageException {
+    public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantUninstallLanguageException {
 
     }
 
     @Override
-    public void uninstallSkin(UUID walletIdInThisDevice, UUID skinId) throws CantUninstallSkinException {
+    public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantUninstallSkinException {
 
     }
 
