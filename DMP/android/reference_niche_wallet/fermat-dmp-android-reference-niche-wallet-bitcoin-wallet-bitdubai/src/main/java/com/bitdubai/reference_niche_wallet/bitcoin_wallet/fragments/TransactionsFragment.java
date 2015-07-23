@@ -27,7 +27,8 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.EntryItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.Item;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.SectionItem;
@@ -49,7 +50,7 @@ import java.util.UUID;
 
 
 /**
- * Created by Matias
+ * Created by Matias Furszyfer
  */
 public class TransactionsFragment extends Fragment{
 
@@ -57,13 +58,12 @@ public class TransactionsFragment extends Fragment{
     View rootView;
     public static Typeface mDefaultTypeface;
 
-    //List TRANSACTIONS = new ArrayList<Transactions>();
+
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
     private static CryptoWalletManager cryptoWalletManager;
-    private static Platform platform = new Platform();
     CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
 
@@ -86,9 +86,15 @@ public class TransactionsFragment extends Fragment{
     ArrayList<Item> items = new ArrayList<Item>();
 
     Map<Date,Set<CryptoWalletTransaction>> mapTransactionPerDate;
+    /**
+     * Wallet session
+     */
+    private WalletSession walletSession;
 
-    public static TransactionsFragment newInstance(int position) {
+
+    public static TransactionsFragment newInstance(int position,WalletSession walletSession) {
         TransactionsFragment f = new TransactionsFragment();
+        f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -103,8 +109,8 @@ public class TransactionsFragment extends Fragment{
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
-        cryptoWalletManager = platform.getCryptoWalletManager();
-        errorManager = platform.getErrorManager();
+        cryptoWalletManager = walletSession.getCryptoWalletManager();
+        errorManager = walletSession.getErrorManager();
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -150,7 +156,7 @@ public class TransactionsFragment extends Fragment{
             e.printStackTrace();
         }
 
-        BalanceType balanceType = Platform.TYPE_BALANCE_TYPE_SELECTED;
+        BalanceType balanceType = walletSession.getBalanceTypeSelected();
         lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
 
         //transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(),lstTransactions); //showTransactionListSelected(lstTransactions, Platform.TYPE_BALANCE_TYPE_SELECTED));
@@ -316,7 +322,7 @@ public class TransactionsFragment extends Fragment{
         }
         pointerOffset=lstTransactions.size();
 
-        showTransactionListSelected(lstTransactions,Platform.TYPE_BALANCE_TYPE_SELECTED);
+        showTransactionListSelected(lstTransactions,walletSession.getBalanceTypeSelected());
 
     }
 
@@ -385,10 +391,10 @@ public class TransactionsFragment extends Fragment{
                     if (textView_contact_name != null)
                         textView_contact_name.setText(entryItem.cryptoWalletTransaction.getInvolvedActorName());
                     if(textView_amount != null)
-                        if(Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.AVAILABLE){
-                            textView_amount.setText(Platform.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance()));
-                        }else if (Platform.TYPE_BALANCE_TYPE_SELECTED==BalanceType.BOOK)
-                            textView_amount.setText(Platform.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance()));
+                        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE){
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance()));
+                        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK)
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance()));
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
@@ -406,6 +412,9 @@ public class TransactionsFragment extends Fragment{
             return v;
         }
 
+    }
+    public void setWalletSession(WalletSession walletSession) {
+        this.walletSession = walletSession;
     }
 
 }

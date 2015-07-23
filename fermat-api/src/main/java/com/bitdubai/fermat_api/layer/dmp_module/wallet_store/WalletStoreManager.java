@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_store;
 
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordInstalledWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordUninstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantRecordInstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantRecordUninstalledWalletException;
 
 import java.util.UUID;
 
@@ -10,9 +10,9 @@ import java.util.UUID;
  */
 public interface WalletStoreManager extends Catalog{
     
-    public void recordInstalledWallet (UUID walletId) throws CantRecordInstalledWalletException;
+    public void recordInstalledWallet (UUID walletId) throws DEPRECATED_CantRecordInstalledWalletException;
     
-    public void recordUninstalledwallet (UUID walletId) throws CantRecordUninstalledWalletException;
+    public void recordUninstalledwallet (UUID walletId) throws DEPRECATED_CantRecordUninstalledWalletException;
     
     
 }

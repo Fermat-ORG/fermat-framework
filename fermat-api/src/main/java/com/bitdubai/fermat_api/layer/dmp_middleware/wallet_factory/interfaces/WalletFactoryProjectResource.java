@@ -3,6 +3,8 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
 
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletFactoryProjectResource</code>
  * indicates the methods of a WalletFactoryProjectResource
@@ -14,8 +16,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
  */
 public interface WalletFactoryProjectResource {
 
+    UUID getId();
+
     // name of the resource
     String getName();
+
+    // fileName of the resource
+    String getFileName();
 
     // resource file
     byte[] getResource() throws CantGetWalletFactoryProjectResourceException;

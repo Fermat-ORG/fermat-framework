@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
         View rowView = convertView;
         try
         {
@@ -64,7 +65,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 TextView txtView_description = (TextView) rowView.findViewById(R.id.txtView_description);
                 if(txtView_description != null){
 
-                    txtView_description.setTypeface(ApplicationSession.getDefaultTypeface(), 1);
+                    txtView_description.setTypeface(tf, 1);
 
                     //ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
                     txtView_description.setText("Tessa Crankston");
@@ -105,7 +106,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 if(rowView.findViewById(R.id.label) != null)
                 {
                     TextView textView = (TextView) rowView.findViewById(R.id.label);
-                    textView.setTypeface(ApplicationSession.getDefaultTypeface(), 1);
+                    textView.setTypeface(tf, 1);
 
                     textView.setText(values.get(position));
                 }
