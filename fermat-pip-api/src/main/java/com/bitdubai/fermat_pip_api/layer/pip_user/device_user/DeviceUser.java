@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.pip_user.device_user;
 
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantCreateDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.DEPRECATED_CantCreateDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFailedException;
 
 import java.util.UUID;
@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public interface DeviceUser {
 
-    public void createUser()  throws CantCreateDeviceUserException;
+    public void createUser()  throws DEPRECATED_CantCreateDeviceUserException;
 
     public void loadUser (UUID id) throws com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantLoadDeviceUserException;
 
