@@ -40,6 +40,10 @@ public class TabStrip implements FermatTabStrip {
 
     List<Tab> tabs = new ArrayList<>();
 
+    public void addTab(Tab tab) {
+        tabs.add(tab);
+    }
+
     /**
      * TabStrip class Constructors
      */
