@@ -67,6 +67,18 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginFileSystem
     public WalletFactoryMiddlewareProject() {
     }
 
+    public WalletFactoryMiddlewareProject(UUID id, String name, String developerPublicKey) {
+        this.id = id;
+        this.name = name;
+        this.developerPublicKey = developerPublicKey;
+    }
+
+    public WalletFactoryMiddlewareProject(String name, String developerPublicKey) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.developerPublicKey = developerPublicKey;
+    }
+
     public WalletFactoryMiddlewareProject(String name, String developerPublicKey, List<WalletFactoryProjectProposal> proposals) {
         this.id = UUID.randomUUID();
         this.name = name;
