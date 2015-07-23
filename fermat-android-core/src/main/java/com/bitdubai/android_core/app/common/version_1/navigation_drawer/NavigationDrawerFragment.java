@@ -23,6 +23,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.android_core.app.SubAppActivity;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -144,7 +145,7 @@ public class NavigationDrawerFragment extends Fragment {
             });
 
             //create menu option based activity submenu definition
-            Platform platform = ApplicationSession.getFermatPlatform();
+            Platform platform = ((ApplicationSession)(getActivity().getApplication())).getFermatPlatform();
 
             this.platformContext = platform.getCorePlatformContext();
 
@@ -288,7 +289,7 @@ public class NavigationDrawerFragment extends Fragment {
                 mCallbacks.onNavigationDrawerItemSelected(position);
             }
             //test mati
-            if (ApplicationSession.getAppRuntimeMiddleware().getLasActivity().getType().getKey() == "DesktopActivity") {
+            if (((FermatActivity)(getActivity())).getAppRuntimeMiddleware().getLasActivity().getType().getKey() == "DesktopActivity") {
 
 
                 //wallet store

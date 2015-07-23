@@ -427,7 +427,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
     private void showAddContact(String name) {
         CreateContactFragment createContactFragment = new CreateContactFragment();
-
+        createContactFragment.walletSession=walletSession;
         createContactFragment.setContactName(name);
 
         FragmentTransaction FT = getFragmentManager().beginTransaction();

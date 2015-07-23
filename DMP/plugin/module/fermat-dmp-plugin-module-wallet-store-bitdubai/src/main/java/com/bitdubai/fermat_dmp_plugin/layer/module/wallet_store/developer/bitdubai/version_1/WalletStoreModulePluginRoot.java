@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.Wallet;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordInstalledWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordUninstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantGetWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantRecordInstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DEPRECATED_CantRecordUninstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -248,10 +248,10 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     /**
      * Record the installed wallet in the database
      * @param walletId
-     * @throws CantRecordInstalledWalletException
+     * @throws DEPRECATED_CantRecordInstalledWalletException
      */
     @Override
-    public void recordInstalledWallet(UUID walletId) throws CantRecordInstalledWalletException {
+    public void recordInstalledWallet(UUID walletId) throws DEPRECATED_CantRecordInstalledWalletException {
 
         catalog.setWalletId(walletId);
         catalog.setEventManager(this.eventManager);
@@ -262,10 +262,10 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     /**
      * Record the uninstalled wallet in the database
      * @param walletId
-     * @throws CantRecordUninstalledWalletException
+     * @throws DEPRECATED_CantRecordUninstalledWalletException
      */
     @Override
-    public void recordUninstalledwallet(UUID walletId) throws CantRecordUninstalledWalletException {
+    public void recordUninstalledwallet(UUID walletId) throws DEPRECATED_CantRecordUninstalledWalletException {
 
         catalog.setWalletId(walletId);
         catalog.setEventManager(this.eventManager);
@@ -318,7 +318,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     }
 
 
-    public List<Wallet> getWallets() throws CantGetWalletsException {
+    public List<Wallet> getWallets() throws DEPRECATED_CantGetWalletsException {
        return catalog.getWallets();
     }
 

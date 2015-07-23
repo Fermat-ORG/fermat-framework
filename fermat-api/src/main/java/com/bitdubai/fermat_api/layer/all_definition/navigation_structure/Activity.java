@@ -1,9 +1,10 @@
+
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
+
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.WalletsAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      */
     Activities type;
 
-    Map<Fragments, Fragment> fragments = new HashMap<Fragments, Fragment>();
+    Map<WalletFragments, Fragment> fragments = new HashMap<WalletFragments, Fragment>();
 
     TitleBar titleBar;
 
@@ -89,7 +90,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public Map<Fragments, Fragment> getFragments() {
+    public Map<WalletFragments, Fragment> getFragments() {
         return fragments;
     }
 
@@ -117,3 +118,4 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         return statusBar;
     }
 }
+

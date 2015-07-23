@@ -32,25 +32,23 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
     public static Object[] mParams; //TODO : LUIS : Creale el caso a Natalia para que arregle lo del back button.
 
 
-// TODO: LUIS: Eliminar los statics de todos lados, salvo donde esté explicitament justificado.
-
-
-
     /**
      * Fermat platform
      */
-    private static Platform fermatPlatform;
+    private Platform fermatPlatform;
     /**
      * Sub App session Manager
      */
-    private static SubAppSessionManager subAppSessionManager;
+    private SubAppSessionManager subAppSessionManager;
     /**
      * Wallet session manager
      */
-    private static WalletSessionManager walletSessionManager;
+    private WalletSessionManager walletSessionManager;
 
-//TODO : LUIS: Se ve muy bien. Solo faltan los javadocs.
 
+    /**
+     *  Application session constructor
+     */
     public ApplicationSession() {
         super();
         fermatPlatform = new Platform();
@@ -58,28 +56,35 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
         walletSessionManager = new WalletSessionManager();
     }
 
-    public static Typeface getDefaultTypeface() {
+    /**
+     *  Return the default typeface
+     * @return Typeface
+     */
+    public Typeface getDefaultTypeface() {
         return mDefaultTypeface;
     }
-    public static Platform getFermatPlatform() {
+
+    /**
+     *  Method to get the fermat platform
+     * @return Platform
+     */
+    public Platform getFermatPlatform() {
         return fermatPlatform;
     }
 
-    //TODO: LUIS : Esto debe ir a la FermatACtivity
-
-    public static AppRuntimeManager getAppRuntimeMiddleware(){
-        return (AppRuntimeManager) fermatPlatform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-    }
-    public static WalletRuntimeManager getWalletRuntimeManager(){
-        return (WalletRuntimeManager) fermatPlatform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
-    }
-    public static ErrorManager getErrorManager(){
-        return (ErrorManager) fermatPlatform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
-    }
-    public static SubAppSessionManager getSubAppSessionManager(){
+    /**
+     * Method to get subAppSessionManager which can manipulate the active session of subApps
+     * @return SubAppSessionManager
+     */
+    public SubAppSessionManager getSubAppSessionManager(){
         return subAppSessionManager;
     }
-    public static WalletSessionManager getWalletSessionManager(){
+
+    /**
+     * Method to get subWalletSessionManager which can manipulate the active session of wallets
+     * @return WalletSessionManager
+     */
+    public WalletSessionManager getWalletSessionManager(){
         return walletSessionManager;
     }
 

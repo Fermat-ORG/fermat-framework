@@ -1,37 +1,37 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
 /**
- * Created by rodrigo on 2015.07.20..
+ * Created by Matias Furszyfer on 2015.07.22..
  */
 public enum Wallets {
-    CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI("CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI"),
-    CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI("CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI"),
-    CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI("CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI"),
-    CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI("CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI"),
-    CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI");
+    CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI("kids"),
+    CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI("teens"),
+    CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI("adults"),
+    CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI("young"),
+    CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("basic");
 
-    private String key;
+    private final String code;
 
-    Wallets(String key) {
-        this.key = key;
+    Wallets(String Code) {
+        this.code = Code;
     }
 
-    public String getKey()   { return this.key; }
+    public String getCode()   { return this.code ; }
 
+    public static Wallets getByCode(String code) {
 
-
-    public String toString(){
-        return key;
-    }
-
-    public static Wallets getValueFromString(String name) {
-        for (Wallets wallet : Wallets.values()) {
-            if (wallet.key.equals(name)) {
-                return wallet;
-            }
+        switch (code) {
+            case "basic": return Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI;
+            case "young": return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_YOUNG_ALL_BITDUBAI;
+            case "adults": return Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI;
+            case "teens": return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_TEEN_ALL_BITDUBAI;
+            case "kids": return Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI;
         }
-        // throw an IllegalArgumentException or return null
-        //throw new IllegalArgumentException("the given number doesn't match any Status.");
+
+        /**
+         * Return by default.
+         */
         return null;
     }
 }
+

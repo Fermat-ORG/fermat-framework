@@ -17,5 +17,5 @@ public interface FragmentFactory {
      * @param reference the reference used to identify the fragment
      * @return the fragment referenced
      */
-    public Fragment getFragment(String reference) throws FragmentNotFoundException;
+    public Fragment getFragment(String reference,WalletSession walletSession) throws FragmentNotFoundException;
 }
