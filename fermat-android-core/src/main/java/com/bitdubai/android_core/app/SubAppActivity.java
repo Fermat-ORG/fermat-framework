@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_api.FermatException;
@@ -14,12 +15,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -37,6 +41,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat.R;
 
+import java.util.Map;
 
 
 /**
@@ -55,12 +60,13 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setActivityType(ActivityType.ACTIVITY_TYPE_SUB_APP);
 
 
         try {
 
-            super.onCreate(savedInstanceState);
+            loadUI();
 
         } catch (Exception e) {
 
@@ -364,7 +370,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     case CWP_WALLET_BASIC_ALL_MAIN: //basic Wallet
                         //go to wallet basic definition
-                        getWalletRuntimeManager().getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+                        //getWalletRuntimeManager().getActivity(Activities.getValueFromString("CWRWBWBV1M"));
+                        //get the Wallet type
+                        getWalletRuntimeManager().getWallet(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI);
                         intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -440,6 +448,78 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     public void setParams(Object[] objects){
         this.screenObjects = null;
         this.screenObjects = objects;
+    }
+    /**
+     * Method that loads the UI
+     */
+    protected void loadUI() {
+
+        try
+        {
+            /**
+             * Get current activity to paint
+             */
+            Activity activity = getActivityUsedType();
+            /**
+             * Get tabs to paint
+             */
+            TabStrip tabs = activity.getTabStrip();
+            /**
+             * Get activities fragment
+             */
+            Map<WalletFragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
+            /**
+             * get actionBar to paint
+             */
+            TitleBar titleBar = activity.getTitleBar();
+            /**
+             * Get mainMenu to paint
+             */
+            MainMenu mainMenu= activity.getMainMenu();
+            /**
+             * Get NavigationDrawer to paint
+             */
+            SideMenu sideMenu = activity.getSideMenu();
+
+            /**
+             * Pick the layout
+             */
+            setMainLayout(sideMenu);
+
+            /**
+             * Paint tabs in layout
+             */
+            PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+            paintTabs(tabs, pagerSlidingTabStrip, activity);
+
+            /**
+             * Paint statusBar
+             */
+            paintStatusBar(activity.getStatusBar());
+            /**
+             * Paint titleBar
+             */
+            paintTitleBar(titleBar,activity);
+
+            /**
+             * Paint a simgle fragment
+             */
+            if(tabs == null && fragments.size() > 1){
+                initialisePaging();
+            }else{
+                /**
+                 * Paint tabs
+                 */
+
+                // el runtime SubApp es para tener la base de como debe ir el metodo, falta poder obtenerlo desde el AppRuntime
+                setPagerTabs(pagerSlidingTabStrip,new RuntimeSubApp(),tabs);
+            }
+        }
+        catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
 }

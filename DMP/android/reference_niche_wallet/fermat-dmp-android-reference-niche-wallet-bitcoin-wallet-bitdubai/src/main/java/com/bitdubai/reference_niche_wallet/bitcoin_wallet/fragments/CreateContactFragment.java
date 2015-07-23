@@ -205,15 +205,11 @@ public class CreateContactFragment extends Fragment {
 
     private void returnToContacts() {
         ContactsFragment contactsFragment = new ContactsFragment();
+        contactsFragment.setWalletSession(walletSession);
 
         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        //linearLayout.setVisibility(View.GONE);
-        //listViewContacs.setVisibility(View.GONE);
-        //textViewEmptyListView.setVisibility(View.GONE);
-        //createContactFragment.detach(createContactFragment);
-        //FT.attach(createContactFragment);
         FT.replace(R.id.fragment_container2,contactsFragment);
         FT.commit();
     }

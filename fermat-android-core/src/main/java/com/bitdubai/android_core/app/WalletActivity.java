@@ -8,11 +8,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
+import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
+import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+
+import java.util.Map;
 
 /**
  * Created by Matias
@@ -28,13 +45,19 @@ public class WalletActivity extends FermatActivity{
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
+
+        WalletRuntimeManager walletRuntimeManager=getWalletRuntimeManager();
+        Wallet wallet= walletRuntimeManager.getLastWallet();
         try {
 
             /*
             * Load wallet UI
             */
-            super.onCreate(savedInstanceState);;
+            //super.onCreate(savedInstanceState);
+
+            loadUI();
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
@@ -124,7 +147,7 @@ public class WalletActivity extends FermatActivity{
     public void onBackPressed() {
 
 
-        if (getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        if (getWalletRuntimeManager().getLastWallet().getLastActivity()!= Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 
@@ -134,7 +157,86 @@ public class WalletActivity extends FermatActivity{
         }else{
             super.onBackPressed();
         }
+    }
+
+    /**
+     * Method that loads the UI
+    */
+    protected void loadUI() {
+
+        try
+        {
+
+            Wallet wallet= getWalletRuntimeManager().getLastWallet();
 
 
+            // Testimg purpose
+            //FragmentFactory fragmentFactory= WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getType().getCode());
+            //fragmentFactory.getFragment(wallet.getStartActivity())
+            //fragmentFactory.getFragment(wallet.)
+            /**
+             * Get current activity to paint
+             */
+            Activity activity=wallet.getStartActivity();
+
+            /**
+             * Get tabs to paint
+             */
+            TabStrip tabs = activity.getTabStrip();
+            /**
+             * Get activities fragment
+             */
+            Map<WalletFragments, Fragment> fragments =activity.getFragments();
+            /**
+             * get actionBar to paint
+             */
+            TitleBar titleBar = activity.getTitleBar();
+            /**
+             * Get mainMenu to paint
+             */
+            MainMenu mainMenu= activity.getMainMenu();
+            /**
+             * Get NavigationDrawer to paint
+             */
+            SideMenu sideMenu = activity.getSideMenu();
+
+            /**
+             * Pick the layout
+             */
+            setMainLayout(sideMenu);
+
+            /**
+             * Paint tabs in layout
+             */
+            PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+            paintTabs(tabs, pagerSlidingTabStrip, activity);
+
+            /**
+             * Paint statusBar
+             */
+            paintStatusBar(activity.getStatusBar());
+            /**
+             * Paint titleBar
+             */
+            paintTitleBar(titleBar,activity);
+
+            /**
+             * Paint a simgle fragment
+             */
+            if(tabs == null && fragments.size() > 1){
+                initialisePaging();
+            }else{
+                /**
+                 * Paint tabs
+                 */
+                Map<WalletFragments,Fragment> fragmentsFragmentMap= activity.getFragments();
+                setPagerTabs(pagerSlidingTabStrip,wallet,tabs);
+            }
+        }
+        catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }

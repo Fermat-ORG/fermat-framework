@@ -46,9 +46,11 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMen
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -98,7 +100,7 @@ public class FermatActivity extends FragmentActivity{
             /*
             * Load wallet UI
             */
-            loadUI();
+            //loadUI();
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -170,16 +172,16 @@ public class FermatActivity extends FragmentActivity{
     @Override
     public void onBackPressed() {
 
-        if (getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        //if (getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 
             Intent intent = new Intent(this, SubAppActivity.class); // TODO : (LUIS) no puede irse a una sub app
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-        }else{
-            super.onBackPressed();
-        }
+        //}else{
+        //    super.onBackPressed();
+        //}
 
 
     }
@@ -235,7 +237,7 @@ public class FermatActivity extends FragmentActivity{
             /**
              * Paint titleBar
              */
-            paintTitleBar(titleBar);
+            paintTitleBar(titleBar,activity);
 
             /**
              * Paint a simgle fragment
@@ -246,7 +248,7 @@ public class FermatActivity extends FragmentActivity{
                 /**
                  * Paint tabs
                  */
-                setPagerTabs(pagerSlidingTabStrip);
+                //setPagerTabs(pagerSlidingTabStrip,null,tabs);
             }
         }
         catch (Exception e) {
@@ -261,7 +263,7 @@ public class FermatActivity extends FragmentActivity{
         if(ActivityType.ACTIVITY_TYPE_SUB_APP==activityType){
             activity = getAppRuntimeMiddleware().getLasActivity();
         }else if(ActivityType.ACTIVITY_TYPE_WALLET==activityType){
-            activity = getWalletRuntimeManager().getLasActivity();
+            //activity = getWalletRuntimeManager().getLasActivity();
         }
         return activity;
     }
@@ -270,7 +272,7 @@ public class FermatActivity extends FragmentActivity{
      *
      * @param titleBar
      */
-    private void paintTitleBar(TitleBar titleBar){
+    protected void paintTitleBar(TitleBar titleBar,Activity activity){
         try {
             TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
             if (titleBar != null) {
@@ -283,7 +285,7 @@ public class FermatActivity extends FragmentActivity{
                 }
                 getActionBar().setTitle(title);
                 getActionBar().show();
-                setActionBarProperties(abTitle,title);
+                setActionBarProperties(title,activity);
             } else {
                 getActionBar().hide();
             }
@@ -294,10 +296,9 @@ public class FermatActivity extends FragmentActivity{
 
     /**
      *
-     * @param abTitle
      * @param title
      */
-    private void setActionBarProperties(TextView abTitle, String title){
+    protected void setActionBarProperties(String title,Activity activity){
         SpannableString s = new SpannableString(title);
 
 
@@ -314,7 +315,7 @@ public class FermatActivity extends FragmentActivity{
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-            Drawable colorDrawable = new ColorDrawable(Color.parseColor(getActivityUsedType().getColor()));
+            Drawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
             Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
             LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
 
@@ -331,7 +332,7 @@ public class FermatActivity extends FragmentActivity{
      *
      * @param pagerSlidingTabStrip
      */
-    private void setPagerTabs(PagerSlidingTabStrip pagerSlidingTabStrip){
+    protected void setPagerTabs(PagerSlidingTabStrip pagerSlidingTabStrip,Wallet wallet,TabStrip tabStrip){
         /**
          * Get pagerTabs
          */
@@ -341,12 +342,33 @@ public class FermatActivity extends FragmentActivity{
         /**
          * Making the pagerTab adapter
          */
-        if(activityType== ActivityType.ACTIVITY_TYPE_SUB_APP){
 
-            adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),getAppRuntimeMiddleware().getLasActivity(),(ApplicationSession)getApplication(),getErrorManager());
-        }else if(activityType== ActivityType.ACTIVITY_TYPE_WALLET){
-            adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),getWalletRuntimeManager().getLasActivity(),(ApplicationSession)getApplication(),getErrorManager());
-        }
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getType().getCode()),tabStrip,(ApplicationSession)getApplication(),getErrorManager());
+        pagertabs.setAdapter(adapter);
+        final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                .getDisplayMetrics());
+        pagertabs.setPageMargin(pageMargin);
+        /**
+         * Put tabs in pagerSlidingTabsStrp
+         */
+        pagerSlidingTabStrip.setViewPager(pagertabs);
+    }
+    /**
+     *
+     * @param pagerSlidingTabStrip
+     */
+    protected void setPagerTabs(PagerSlidingTabStrip pagerSlidingTabStrip,SubApp subApp,TabStrip tabStrip){
+        /**
+         * Get pagerTabs
+         */
+        ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
+        pagertabs.setVisibility(View.VISIBLE);
+
+        /**
+         * Making the pagerTab adapter
+         */
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(), getApplicationContext(), getAppRuntimeMiddleware().getLasActivity(), (ApplicationSession) getApplication(), getErrorManager());
+
         pagertabs.setAdapter(adapter);
         final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
@@ -368,7 +390,7 @@ public class FermatActivity extends FragmentActivity{
      *
      * @param sidemenu
      */
-    private void setMainLayout(SideMenu sidemenu){
+    protected void setMainLayout(SideMenu sidemenu){
         if(sidemenu != null){
             if(ActivityType.ACTIVITY_TYPE_SUB_APP==activityType){
                 setContentView(R.layout.runtime_app_activity_runtime_navigator);
@@ -407,7 +429,7 @@ public class FermatActivity extends FragmentActivity{
      * @param pagerSlidingTabStrip
      * @param activity
      */
-    private void paintTabs(TabStrip tabs,PagerSlidingTabStrip pagerSlidingTabStrip,Activity activity){
+    protected void paintTabs(TabStrip tabs,PagerSlidingTabStrip pagerSlidingTabStrip,Activity activity){
         if(tabs == null)
             pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
         else{
@@ -445,7 +467,7 @@ public class FermatActivity extends FragmentActivity{
      * Method to set status bar color in different version of android
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void paintStatusBar(StatusBar statusBar){
+    protected void paintStatusBar(StatusBar statusBar){
         if(statusBar!=null) {
             if (statusBar.getColor() != null) {
                 if (Build.VERSION.SDK_INT > 20) {
@@ -524,7 +546,7 @@ public class FermatActivity extends FragmentActivity{
     /**
      * Initialise the fragments to be paged
      */
-    private void initialisePaging() {
+    protected void initialisePaging() {
 
         try {
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
