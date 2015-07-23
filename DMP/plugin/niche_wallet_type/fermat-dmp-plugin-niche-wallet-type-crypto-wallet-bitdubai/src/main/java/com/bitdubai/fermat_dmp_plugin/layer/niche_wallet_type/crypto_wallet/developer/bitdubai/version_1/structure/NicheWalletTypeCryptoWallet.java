@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.*;
@@ -66,45 +67,45 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     /**
      * DealsWithActorAddressBook Interface member variable
      */
-    ActorAddressBookManager actorAddressBookManager;
-    ActorAddressBookRegistry actorAddressBookRegistry;
+    private ActorAddressBookManager actorAddressBookManager;
+    private ActorAddressBookRegistry actorAddressBookRegistry;
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
      */
-    BitcoinWalletManager bitcoinWalletManager;
+    private BitcoinWalletManager bitcoinWalletManager;
 
     /**
      * DealsWithCryptoVault Interface member variables.
      */
-    CryptoVaultManager cryptoVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
 
     /**
      * DealsWithErrors Interface member variables.
      */
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
     /**
      * DealsWithExtraUsers Interface member variables.
      */
-    ExtraUserManager extraUserManager;
+    private ExtraUserManager extraUserManager;
 
     /**
      * DealsWithOutgoingExtraUser Interface member variables.
      */
-    OutgoingExtraUserManager outgoingExtraUserManager;
+    private OutgoingExtraUserManager outgoingExtraUserManager;
 
     /**
      * DealsWithWalletContacts Interface member variable
      */
-    WalletContactsManager walletContactsManager;
-    WalletContactsRegistry walletContactsRegistry;
+    private WalletContactsManager walletContactsManager;
+    private WalletContactsRegistry walletContactsRegistry;
 
     /**
      * DealsWithWalletAddressBook Interface member variable
      */
-    WalletAddressBookManager walletAddressBookManager;
-    WalletAddressBookRegistry walletAddressBookRegistry;
+    private WalletAddressBookManager walletAddressBookManager;
+    private WalletAddressBookRegistry walletAddressBookRegistry;
 
 
     public void initialize() throws CantInitializeCryptoWalletManagerException {
@@ -113,8 +114,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
             walletAddressBookRegistry = walletAddressBookManager.getWalletAddressBookRegistry();
             walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
         } catch (CantGetActorAddressBookRegistryException|CantGetWalletContactRegistryException|CantGetWalletAddressBookRegistryException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, e);
+        }  catch (Exception e){
+            throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -123,10 +125,10 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             return walletContactsRegistry.listWalletContacts(walletId);
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
+        }  catch (Exception e) {
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
-
     }
 
     @Override
@@ -134,49 +136,37 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             return walletContactsRegistry.listWalletContactsScrolling(walletId, max, offset);
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
+        } catch (Exception e) {
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
     @Override
     public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, UUID walletId) throws CantCreateWalletContactException {
-        WalletContactRecord walletContactRecord;
-        try {
+        try{
+            WalletContactRecord walletContactRecord;
             walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletId(actorName, walletId);
-        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
-        }
+            UUID actorId = createActor(actorName, actorType);
 
-        if (walletContactRecord == null) {
-
-            UUID actorId;
-            try {
-                actorId = createActor(actorName, actorType);
-            } catch (CantCreateOrRegisterActorException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
-            }
-
-            try {
+            if (walletContactRecord == null)
                 return walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
-            } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
-            }
-        } else {
-            if (!(receivedCryptoAddress.getAddress().equals(walletContactRecord.getReceivedCryptoAddress().getAddress()))) {
-                try {
-                    this.updateWalletContact(walletContactRecord.getContactId(), walletContactRecord.getReceivedCryptoAddress(), walletContactRecord.getActorName());
-                } catch (CantUpdateWalletContactException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+            else if(!(receivedCryptoAddress.getAddress().equals(walletContactRecord.getReceivedCryptoAddress().getAddress())))
+                this.updateWalletContact(walletContactRecord.getContactId(), walletContactRecord.getReceivedCryptoAddress(), walletContactRecord.getActorName());
 
-                }
-            }
+            return  walletContactRecord;
+        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (CantCreateOrRegisterActorException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        }  catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (CantUpdateWalletContactException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (Exception e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
-       return  walletContactRecord;
+
     }
 
     private UUID createAndRegisterActor(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, CryptoAddress cryptoAddress) throws CantCreateOrRegisterActorException {
@@ -266,6 +256,8 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e);
+        }  catch (Exception e) {
+            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -276,6 +268,8 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (Exception e) {
+            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -293,15 +287,13 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     public long getAvailableBalance(UUID walletId) throws CantGetBalanceException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
-            try {
-                return bitcoinWalletWallet.getAvailableBalance().getBalance();
-            } catch (CantCalculateBalanceException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
-            }
+            return bitcoinWalletWallet.getAvailableBalance().getBalance();
         } catch (CantLoadWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        }  catch (CantCalculateBalanceException e) {
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        } catch(Exception e){
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -309,15 +301,13 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     public long getBookBalance(UUID walletId) throws CantGetBalanceException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
-            try {
-                return bitcoinWalletWallet.getBookBalance().getBalance();
-            } catch (CantCalculateBalanceException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
-            }
+            return bitcoinWalletWallet.getBookBalance().getBalance();
         } catch (CantLoadWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        } catch (CantCalculateBalanceException e) {
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        } catch (Exception e){
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -336,6 +326,8 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         } catch (CantLoadWalletException|com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e);
+        } catch(Exception e){
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -381,6 +373,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         } catch (CantGetTransactionManagerException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, e);
+        }  catch (Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
