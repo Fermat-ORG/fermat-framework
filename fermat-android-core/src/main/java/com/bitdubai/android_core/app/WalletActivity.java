@@ -7,21 +7,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
-import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
-import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -29,10 +18,10 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeMana
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
-import java.util.Map;
+
 
 /**
- * Created by Matias
+ * Created by Matias Furszyfer
  */
 
 
@@ -43,6 +32,7 @@ public class WalletActivity extends FermatActivity{
      *  Called when the activity is first created
      * @param savedInstanceState
      */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +60,7 @@ public class WalletActivity extends FermatActivity{
      * @param menu
      * @return true if all is okey
      */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -96,6 +87,7 @@ public class WalletActivity extends FermatActivity{
      * @param item
      * @return true if button is clicked
      */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -123,6 +115,7 @@ public class WalletActivity extends FermatActivity{
      *  Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle)
      * @param outState
      */
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -134,6 +127,7 @@ public class WalletActivity extends FermatActivity{
      * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
      * @param savedInstanceState
      */
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -143,6 +137,7 @@ public class WalletActivity extends FermatActivity{
     /**
      * Method call when back button is pressed
      */
+
     @Override
     public void onBackPressed() {
 
@@ -180,7 +175,7 @@ public class WalletActivity extends FermatActivity{
             /**
              * Load screen basics returning PagerSlidingTabStrip to load fragments
              */
-            PagerSlidingTabStrip pagerSlidingTabStrip=loadBasicUI(activity);
+            loadBasicUI(activity);
 
             /**
              * Paint a simgle fragment
@@ -191,7 +186,7 @@ public class WalletActivity extends FermatActivity{
                 /**
                  * Paint tabs
                  */
-                setPagerTabs(pagerSlidingTabStrip,wallet,activity.getTabStrip());
+                setPagerTabs(wallet,activity.getTabStrip());
             }
         }
         catch (Exception e) {

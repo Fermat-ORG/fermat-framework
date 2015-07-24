@@ -1,7 +1,6 @@
 package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -26,14 +25,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
-import com.bitdubai.android_core.app.common.version_1.adapters.PagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSession;
+import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -47,11 +46,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
@@ -79,7 +79,7 @@ public class FermatActivity extends FragmentActivity{
      * Screen adapters
      */
     private TabsPagerAdapter adapter;
-    private PagerAdapter PagerAdapter;
+    private ScreenPagerAdapter screenPagerAdapter;
 
     /**
      * Activity type
@@ -90,6 +90,7 @@ public class FermatActivity extends FragmentActivity{
      *  Called when the activity is first created
      * @param savedInstanceState
      */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,9 +99,8 @@ public class FermatActivity extends FragmentActivity{
         try {
 
             /*
-            * Load wallet UI
+            *  Our Future code goes here ...
             */
-            //loadUI();
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -114,6 +114,7 @@ public class FermatActivity extends FragmentActivity{
      * @param menu
      * @return true if all is okey
      */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -141,6 +142,7 @@ public class FermatActivity extends FragmentActivity{
      * @param item
      * @return true if button is clicked
      */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -165,37 +167,10 @@ public class FermatActivity extends FragmentActivity{
         return super.onOptionsItemSelected(item);
     }
 
-
-    /**
-     * Method call when back button is pressed
-     */
-    @Override
-    public void onBackPressed() {
-
-        //if (getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
-
-            resetThisActivity();
-
-            Intent intent = new Intent(this, SubAppActivity.class); // TODO : (LUIS) no puede irse a una sub app
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        //}else{
-        //    super.onBackPressed();
-        //}
-
-
-    }
-
-
     /**
      * Method that loads the UI
      */
-    protected PagerSlidingTabStrip loadBasicUI(Activity activity) {
-
-        /**
-         *  Tab member
-         */
-        PagerSlidingTabStrip pagerSlidingTabStrip = null;
+    protected void loadBasicUI(Activity activity) {
 
         try
         {
@@ -228,8 +203,7 @@ public class FermatActivity extends FragmentActivity{
             /**
              * Paint tabs in layout
              */
-            pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
-            paintTabs(tabs, pagerSlidingTabStrip, activity);
+            paintTabs(tabs, activity);
 
             /**
              * Paint statusBar
@@ -240,25 +214,12 @@ public class FermatActivity extends FragmentActivity{
              */
             paintTitleBar(titleBar,activity);
 
-            /**
-             * Paint a simgle fragment
-             */
-            /*if(tabs == null && fragments.size() > 1){
-                initialisePaging();
-            }else{
-                /**
-                 * Paint tabs
-                 */
-                //setPagerTabs(pagerSlidingTabStrip,null,tabs);
-            //}
-
         }
         catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
-        return pagerSlidingTabStrip;
     }
 
     public Activity getActivityUsedType(){
@@ -284,7 +245,7 @@ public class FermatActivity extends FragmentActivity{
 
                 if (abTitle != null) {
                     abTitle.setTextColor(Color.WHITE);
-                    abTitle.setTypeface(((ApplicationSession) getApplication()).getDefaultTypeface());
+                    abTitle.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf"));
                 }
                 getActionBar().setTitle(title);
                 getActionBar().show();
@@ -332,10 +293,13 @@ public class FermatActivity extends FragmentActivity{
     }
 
     /**
-     *
-     * @param pagerSlidingTabStrip
-     */
-    protected void setPagerTabs(PagerSlidingTabStrip pagerSlidingTabStrip,Wallet wallet,TabStrip tabStrip){
+    * Method used from a Wallet to paint tabs
+    */
+    protected void setPagerTabs(Wallet wallet,TabStrip tabStrip){
+        /**
+         * Get pager from xml
+         */
+        PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
         /**
          * Get pagerTabs
          */
@@ -356,11 +320,15 @@ public class FermatActivity extends FragmentActivity{
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
     }
+
     /**
-     *
-     * @param pagerSlidingTabStrip
+     * Method used from a subApp to paint tabs
      */
-    protected void setPagerTabs(PagerSlidingTabStrip pagerSlidingTabStrip,SubApp subApp,TabStrip tabStrip){
+    protected void setPagerTabs(SubApp subApp,TabStrip tabStrip){
+        /**
+         * Get pager from xml
+         */
+        PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
         /**
          * Get pagerTabs
          */
@@ -390,7 +358,7 @@ public class FermatActivity extends FragmentActivity{
     }
 
     /**
-     *
+     *  Select the xml based on the activity type
      * @param sidemenu
      */
     protected void setMainLayout(SideMenu sidemenu){
@@ -429,10 +397,14 @@ public class FermatActivity extends FragmentActivity{
     /**
      *
      * @param tabs
-     * @param pagerSlidingTabStrip
      * @param activity
      */
-    protected void paintTabs(TabStrip tabs,PagerSlidingTabStrip pagerSlidingTabStrip,Activity activity){
+    protected void paintTabs(TabStrip tabs,Activity activity){
+        /**
+         * Get Pager from xml
+         */
+        PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+
         if(tabs == null)
             pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
         else{
@@ -458,11 +430,9 @@ public class FermatActivity extends FragmentActivity{
             }
         }
 
-
-
         // put tabs font
         if (pagerSlidingTabStrip != null){
-            pagerSlidingTabStrip.setTypeface(ApplicationSession.mDefaultTypeface, 1);
+            pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf"), 1);
         }
     }
 
@@ -496,9 +466,20 @@ public class FermatActivity extends FragmentActivity{
         }
     }
 
+    /**
+     *  Set the activity type
+     * @param activityType Enum value
+     */
+
     public void setActivityType(ActivityType activityType) {
         this.activityType = activityType;
     }
+
+    /**
+     *  Get the activity type
+     * @return ActivityType enum value
+     */
+
     public ActivityType getActivityType(){
         return activityType;
     }
@@ -527,14 +508,12 @@ public class FermatActivity extends FragmentActivity{
             }
 
 
-
             this.adapter = null;
 
-            //this.tabStrip=null;
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
 
 
-            this.PagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
+            this.screenPagerAdapter = new ScreenPagerAdapter(getSupportFragmentManager(), fragments);
 
         }
         catch (Exception e) {
@@ -563,11 +542,20 @@ public class FermatActivity extends FragmentActivity{
                 Fragment fragment = (Fragment) fragmentEntry.getValue();
                 Fragments type = fragment.getType();
 
+                /**
+                 *  Pages values
+                 */
+
                 switch (type) {
                     case CWP_SHELL_LOGIN:
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+                        //SubAppSession subAppSession = new SubAppSession();
+                        //Excepcion que no puede ser casteado  a WalletManagerManager
+                        //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0,getWalletManagerManager());
+                        WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0);
+                        fragments.add(walletDesktopFragment);
+                        //fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
                         break;
                     case CWP_WALLET_MANAGER_SHOP:
                         break;
@@ -580,9 +568,11 @@ public class FermatActivity extends FragmentActivity{
                         break;
 
                 }
-
             }
-            this.PagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
+            /**
+             * this pagerAdapter is the screenPagerAdapter with no tabs
+             */
+            screenPagerAdapter = new ScreenPagerAdapter(getSupportFragmentManager(), fragments);
 
             ViewPager pager = (ViewPager) super.findViewById(R.id.viewpager);
             pager.setVisibility(View.VISIBLE);
@@ -590,7 +580,7 @@ public class FermatActivity extends FragmentActivity{
             //set default page to show
             pager.setCurrentItem(0);
 
-            pager.setAdapter(this.PagerAdapter);
+            pager.setAdapter(this.screenPagerAdapter);
 
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
 
@@ -601,14 +591,41 @@ public class FermatActivity extends FragmentActivity{
         }
     }
 
+    /**
+     *  Get AppRuntimeManager from the fermat platform
+     * @return  reference of AppRuntimeManager
+     */
+
     public AppRuntimeManager getAppRuntimeMiddleware(){
         return (AppRuntimeManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
     }
+
+    /**
+     * Get WalletRuntimeManager from the fermat platform
+     * @return reference of WalletRuntimeManager
+     */
+
     public WalletRuntimeManager getWalletRuntimeManager(){
         return (WalletRuntimeManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
     }
+
+    /**
+     * Get WalletManagerManager from the fermat platform
+     * @return  reference of WalletManagerManager
+     */
+
+    public WalletManagerManager getWalletManagerManager(){
+        return (WalletManagerManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
+    }
+
+    /**
+     * Get ErrorManager from the fermat platform
+     * @return reference of ErrorManager
+     */
+
     public ErrorManager getErrorManager(){
         return (ErrorManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
     }
+
 
 }

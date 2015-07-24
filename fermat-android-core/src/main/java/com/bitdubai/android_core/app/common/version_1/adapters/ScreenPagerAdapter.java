@@ -5,31 +5,36 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 /**
- * Created by Natalia on 12/01/2015.
+ * Created by Matias on 23/07/2015.
  */
-public class PagerAdapter extends FragmentPagerAdapter {
 
-    // TODO Raul: Fijarse en que se usa esto y donde deberia quedar si es que se usa
+/**
+ * ScreenPagerAdapter to add new subApp
+ */
+public class ScreenPagerAdapter extends FragmentPagerAdapter {
+
 
     private List<Fragment> fragments;
+
     /**
      * @param fm
      * @param fragments
      */
-    public PagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+
+    public ScreenPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
         this.fragments = fragments;
     }
-    /* (non-Javadoc)
-     * @see android.support.v4.app.FragmentPagerAdapter#getItem(int)
+    /*
+     * Return the Fragment associated with a specified position.
      */
     @Override
     public Fragment getItem(int position) {
         return this.fragments.get(position);
     }
 
-    /* (non-Javadoc)
-     * @see android.support.v4.view.PagerAdapter#getCount()
+    /*
+     * Return the number of views available.
      */
     @Override
     public int getCount() {

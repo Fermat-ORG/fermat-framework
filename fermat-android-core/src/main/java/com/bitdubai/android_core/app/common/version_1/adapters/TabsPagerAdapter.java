@@ -76,6 +76,7 @@ import java.util.List;
             this.platform=applicationSession.getFermatPlatform();
             this.errorManager=errorManager;
             this.activity=activity;
+            tabStrip=activity.getTabStrip();
 
 
             if(activity.getTabStrip() != null){
@@ -186,7 +187,9 @@ import java.util.List;
 
 
             try {
-                currentFragment=fragmentFactory.getFragment(fragmentType.getKey(), walletSession);
+                if(fragmentFactory!=null){
+                    currentFragment=fragmentFactory.getFragment(fragmentType.getKey(), walletSession);
+                }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
             }
@@ -201,9 +204,9 @@ import java.util.List;
                     case CWP_SHELL_LOGIN:
 
                         break;
-                    case CWP_WALLET_MANAGER_MAIN:
-                        currentFragment =  WalletDesktopFragment.newInstance(position);
-                        break;
+                    //case CWP_WALLET_MANAGER_MAIN:
+                    //    currentFragment =  WalletDesktopFragment.newInstance(position);
+                    //    break;
                     //developr aap
                     case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
                         currentFragment = DatabaseToolsFragment.newInstance(position,subAppSession);
@@ -245,7 +248,7 @@ import java.util.List;
             {
                 errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
-                Toast.makeText(context, "Error in PagerAdapter GetItem " + ex.getMessage(),
+                Toast.makeText(context, "Error in ScreenPagerAdapter GetItem " + ex.getMessage(),
                         Toast.LENGTH_LONG).show();
             }
 
