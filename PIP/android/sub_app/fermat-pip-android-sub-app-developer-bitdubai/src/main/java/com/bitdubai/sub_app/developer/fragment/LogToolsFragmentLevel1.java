@@ -264,9 +264,8 @@ public class LogToolsFragmentLevel1 extends Fragment {
 
                         params[0] = lst;
                         params[1] = level;
-                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperLogLevel2Fragment");
-                        ((FermatScreenSwapper)getActivity()).setParams(params);
-                        ((FermatScreenSwapper)getActivity()).changeScreen();
+
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperLogLevel2Fragment",params);
 
 
                     }
