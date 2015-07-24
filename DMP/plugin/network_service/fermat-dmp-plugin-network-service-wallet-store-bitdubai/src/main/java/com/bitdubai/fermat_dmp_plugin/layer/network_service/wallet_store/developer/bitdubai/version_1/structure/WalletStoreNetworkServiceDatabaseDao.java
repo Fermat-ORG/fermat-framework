@@ -577,6 +577,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         } catch (InvalidResultReturnedByDatabaseException e) {
             closeDatabase();
             throw new CantExecuteDatabaseOperationException(e, null,null);
+        } catch (Exception exception){
+            throw new CantExecuteDatabaseOperationException(exception, null,null);
         }
 
         return catalogItem;
@@ -597,7 +599,10 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         } catch (InvalidResultReturnedByDatabaseException e) {
             closeDatabase();
             throw new CantExecuteDatabaseOperationException(e, null,null);
+        } catch (Exception exception){
+            throw new CantExecuteDatabaseOperationException(exception, null,null);
         }
+
         return detailedCatalogItem;
     }
 
@@ -764,6 +769,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
             closeDatabase();
             throw new CantExecuteDatabaseOperationException(databaseTransactionFailedException, catalogItem.toString(), null);
+        } catch (Exception exception){
+            throw new CantExecuteDatabaseOperationException(exception, catalogItem.toString(), null);
         }
     }
 

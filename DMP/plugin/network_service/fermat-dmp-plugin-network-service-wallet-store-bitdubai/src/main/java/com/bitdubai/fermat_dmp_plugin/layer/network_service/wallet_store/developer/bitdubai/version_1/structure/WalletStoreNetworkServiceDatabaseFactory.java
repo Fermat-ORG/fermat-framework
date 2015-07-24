@@ -90,11 +90,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
         }
 
         /**
@@ -107,6 +104,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -120,6 +119,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -134,6 +135,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -147,6 +150,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -160,6 +165,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -173,6 +180,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 

@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -139,7 +141,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      */
 
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
         /**
          * I will try to open the database first, if it doesn't exists, then I create it
          */
@@ -148,16 +150,13 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            /**
-             * The database could not be opened, let try to create it instead.
-             */
             try {
                 createWalletStoreNetworkServiceDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                /**
-                 * something went wrong creating the db, I can't handle this.
-                 */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantStartPluginException();
+            } catch (Exception exception){
+                throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
             }
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             /**
@@ -167,7 +166,10 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                 createWalletStoreNetworkServiceDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantStartPluginException();
             }
+        } catch (Exception exception){
+            throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
         }
 
         /**
