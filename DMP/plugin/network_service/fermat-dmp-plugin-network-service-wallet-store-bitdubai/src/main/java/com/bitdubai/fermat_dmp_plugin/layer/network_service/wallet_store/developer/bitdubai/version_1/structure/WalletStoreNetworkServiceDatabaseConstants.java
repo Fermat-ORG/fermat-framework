@@ -13,16 +13,18 @@ public class WalletStoreNetworkServiceDatabaseConstants {
     /**
      * WalletSkin database table definition.
      */
-    public static final String WALLETSKIN_TABLE_NAME = "walletskin";
+    public static final String WALLETSKIN_TABLE_NAME = "walletSkin";
 
     public static final String WALLETSKIN_ID_COLUMN_NAME = "id";
     public static final String WALLETSKIN_NAME_COLUMN_NAME = "name";
     public static final String WALLETSKIN_VERSION_COLUMN_NAME = "version";
-    public static final String WALLETSKIN_WALLETID_COLUMN_NAME = "walletid";
-    public static final String WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME = "walletinitialversion";
-    public static final String WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME = "walletfinalversion";
+    public static final String WALLETSKIN_WALLETID_COLUMN_NAME = "walletId";
+    public static final String WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME = "walletInitialVersion";
+    public static final String WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME = "walletFinalVersion";
     public static final String WALLETSKIN_URL_COLUMN_NAME = "url";
-    public static final String WALLETSKIN_DESIGNERID_COLUMN_NAME = "designerid";
+    public static final String WALLETSKIN_SIZE_COLUMN_NAME = "size";
+    public static final String WALLETSKIN_DESIGNERID_COLUMN_NAME = "designerId";
+    public static final String WALLETSKIN_ISDEFAULT_COLUMN_NAME = "isDefault";
 
     static final String WALLETSKIN_FIRST_KEY_COLUMN = "id";
 
@@ -34,25 +36,26 @@ public class WalletStoreNetworkServiceDatabaseConstants {
 
     public static final String DESIGNER_ID_COLUMN_NAME = "id";
     public static final String DESIGNER_NAME_COLUMN_NAME = "name";
-    public static final String DESIGNER_PUBLICKEY_COLUMN_NAME = "publickey";
+    public static final String DESIGNER_PUBLICKEY_COLUMN_NAME = "publicKey";
 
     static final String DESIGNER_FIRST_KEY_COLUMN = "id";
 
     /**
      * WalletLanguage database table definition.
      */
-    public static final String WALLETLANGUAGE_TABLE_NAME = "walletlanguage";
+    public static final String WALLETLANGUAGE_TABLE_NAME = "walletLanguage";
 
     public static final String WALLETLANGUAGE_ID_COLUMN_NAME = "id";
     public static final String WALLETLANGUAGE_NAME_COLUMN_NAME = "name";
     public static final String WALLETLANGUAGE_LABEL_COLUMN_NAME = "label";
     public static final String WALLETLANGUAGE_VERSION_COLUMN_NAME = "version";
     public static final String WALLETLANGUAGE_WALLETID_COLUMN_NAME = "walletid";
-    public static final String WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME = "walletinitialversion";
-    public static final String WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME = "walletfinalversion";
+    public static final String WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME = "walletInitialVersion";
+    public static final String WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME = "walletFinalVersion";
     public static final String WALLETLANGUAGE_URL_COLUMN_NAME = "url";
     public static final String WALLETLANGUAGE_FILESIZE_COLUMN_NAME = "filesize";
-    public static final String WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME = "translatorid";
+    public static final String WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME = "translatorId";
+    public static final String WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME = "isDefault";
 
     static final String WALLETLANGUAGE_FIRST_KEY_COLUMN = "id";
 
@@ -78,8 +81,9 @@ public class WalletStoreNetworkServiceDatabaseConstants {
     public static final String ITEM_DESCRIPTION_COLUMN_NAME = "description";
     public static final String ITEM_SIZE_COLUMN_NAME = "size";
     public static final String ITEM_VERSION_COLUMN_NAME = "version";
-    public static final String ITEM_PLATFORMINITIALVERSION_COLUMN_NAME = "platforminitialversion";
-    public static final String ITEM_PLATFORMFINALVERSION_COLUMN_NAME = "platformfinalversion";
+    public static final String ITEM_PLATFORMINITIALVERSION_COLUMN_NAME = "platformInitialVersion";
+    public static final String ITEM_PLATFORMFINALVERSION_COLUMN_NAME = "platformFinalVersion";
+    public static final String ITEM_DEVELOPER_ID_COLUMN_NAME = "developerId";
 
     static final String ITEM_FIRST_KEY_COLUMN = "id";
 
@@ -90,7 +94,7 @@ public class WalletStoreNetworkServiceDatabaseConstants {
 
     public static final String DEVELOPER_ID_COLUMN_NAME = "id";
     public static final String DEVELOPER_NAME_COLUMN_NAME = "name";
-    public static final String DEVELOPER_PUBLICKEY_COLUMN_NAME = "publickey";
+    public static final String DEVELOPER_PUBLICKEY_COLUMN_NAME = "publicKey";
 
     static final String DEVELOPER_FIRST_KEY_COLUMN = "id";
 
