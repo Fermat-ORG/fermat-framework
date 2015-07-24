@@ -13,27 +13,11 @@ public class SetId {
 
     ExtraUserUserAddonRoot testExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
 
-    //@Ignore
     @Test
-    public void setPluginId_setInvalidPluginId_throwsExceptions(){
+    public void setPluginId_setValidRandomPluginId_throwsNoExceptions(){
 
-        UUID pluginId=INVALIDPLUGIN
-        testExtraUserUserAddonRoot.setPluginId(pluginId);
-
-    }
-
-    @Test
-    public void setPluginId_setValidPluginId_throwsNoExceptions(){
-
-        UUID pluginId=VALIDPLUGIN
-        testExtraUserUserAddonRoot.setPluginId(pluginId);
-
-    }
-    @Ignore
-    //@Test
-    public void setPluginId_setNullPluginId_throwsExceptions(){
-
-        testExtraUserUserAddonRoot.setPluginId(null);
+        UUID pluginId=UUID.randomUUID();
+        testExtraUserUserAddonRoot.setId(pluginId);
 
     }
 

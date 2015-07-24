@@ -5,15 +5,24 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
+import com.googlecode.catchexception.CatchException;
 
 import java.util.Arrays;
 import java.util.List;
 import org.fest.assertions.api.Assertions;
-import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.contains;
+import static org.mockito.Matchers.startsWith;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -31,6 +40,8 @@ public class GetDabaseListTest {
     DeveloperDatabaseTable testDeveloperDataBaseTable;
     @Mock
     DeveloperDatabaseTableRecord testDeveloperDatabaseTableRecord;
+    @Mock
+    ExtraUserUserAddonRoot testExtraUserUserAddonRoot;
     String testId="ExtraUser";
     String testName="Extra User";
 
@@ -52,33 +63,14 @@ public class GetDabaseListTest {
         Assertions.assertThat(resultList).contains(testDeveloperDatabase);
 
     }
-//@Ignore
-    @Test
+
+    @Test(expected = Exception.class)
     public void getDatabaseList_NullDeveloperObjectFactory_ThrowsGenericException() throws Exception{
 
             extraUserUserAddonRoot.getDatabaseList(null);
 
     }
 
-    //For future use
-    @Ignore
-    //@Test
-    public void getDatabaseList_NullDeveloperObjectFactory_ThrowsException() throws Exception{
-
-        Exception exception=null;
-        try{
-            extraUserUserAddonRoot.getDatabaseList(null);
-        }catch(Exception e){
-
-            e.printStackTrace();
-            exception=e;
-
-        }
-        Assertions.assertThat(exception).isNotNull();
-
-    }
-
-    //@Ignore
      @Test
      public void getDatabaseList_OpenDeveloperObjectFactoryCanGetDatabaseList_DatabaseListNotNull() throws Exception {
         List<DeveloperDatabase> developerDatabaseList = null;
