@@ -7,13 +7,12 @@ import org.fest.assertions.api.Assertions;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-
 import static org.mockito.Mockito.when;
 
 /**
- * Created by Manuel Perez on 21/07/15.
+ * Created by Manuel Perez on 23/07/15.
  */
-public class ResumeTest {
+public class PauseTest {
 
     final ExtraUserUserAddonRoot extraUserUserAddonRoot= Mockito.spy(new ExtraUserUserAddonRoot());
     ExtraUserUserAddonRoot testExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
@@ -34,24 +33,25 @@ public class ResumeTest {
     }
 
     @Test
-    public void resumeTest_callingMethod_getServiceNonStartedStatus() throws Exception{
+    public void pauseTest_callingMethod_getServiceNonPausedStatus() throws Exception{
 
         int randomServiceStatusIndex;
         ServiceStatus[] serviceStatusArray=ServiceStatus.values();
-        int pausedIndex=Arrays.binarySearch(serviceStatusArray, ServiceStatus.STARTED);
+        int pausedIndex=Arrays.binarySearch(serviceStatusArray,ServiceStatus.PAUSED);
         randomServiceStatusIndex=getAnyInteger(serviceStatusArray.length, pausedIndex);
-        when(extraUserUserAddonRoot.getStatus()).thenReturn(ServiceStatus.values()[randomServiceStatusIndex]);
+        extraUserUserAddonRoot.pause();
+        when(extraUserUserAddonRoot.getStatus()).thenReturn(serviceStatusArray[randomServiceStatusIndex]);
         ServiceStatus serviceStatus=extraUserUserAddonRoot.getStatus();
-        Assertions.assertThat(serviceStatus).isNotEqualTo(ServiceStatus.STARTED);
+        Assertions.assertThat(serviceStatus).isNotEqualTo(ServiceStatus.PAUSED);
 
     }
 
     @Test
-    public void resumeTest_callingMethod_getServiceStatusStarted()throws Exception{
+    public void pauseTest_callingMethod_getServiceStatusPaused()throws Exception{
 
-        testExtraUserUserAddonRoot.resume();
+        testExtraUserUserAddonRoot.pause();
         ServiceStatus serviceStatus=testExtraUserUserAddonRoot.getStatus();
-        Assertions.assertThat(serviceStatus).isEqualTo(ServiceStatus.STARTED);
+        Assertions.assertThat(serviceStatus).isEqualTo(ServiceStatus.PAUSED);
 
     }
 

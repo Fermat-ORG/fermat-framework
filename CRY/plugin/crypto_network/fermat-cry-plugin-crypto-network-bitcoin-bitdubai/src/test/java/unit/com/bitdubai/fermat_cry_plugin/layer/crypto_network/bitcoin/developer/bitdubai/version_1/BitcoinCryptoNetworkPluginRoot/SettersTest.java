@@ -19,8 +19,6 @@ public class SettersTest {
         BitcoinCryptoNetworkPluginRoot root  = new BitcoinCryptoNetworkPluginRoot();
         ErrorManager errorManager = mock(ErrorManager.class);
         root.setErrorManager(errorManager);
-
-
     }
 
     @Test
@@ -28,8 +26,5 @@ public class SettersTest {
         BitcoinCryptoNetworkPluginRoot root  = new BitcoinCryptoNetworkPluginRoot();
         LogManager logManager= mock(LogManager.class);
         root.setLogManager(logManager);
-
     }
-
-
 }
