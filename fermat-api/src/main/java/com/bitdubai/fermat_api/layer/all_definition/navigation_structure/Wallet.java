@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
+
+
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesMapAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.WalletsAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -14,14 +18,29 @@ import ae.javax.xml.bind.annotation.XmlRootElement;
 import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
- * Created by rodrigo on 2015.07.17..
+ * Created by Matias Furszyfer on 2015.07.23..
  */
+
 @XmlRootElement(name = "navigationStructure")
-public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet {
+public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet{
 
-    Wallets type;
+    private String walletPlatformIdentifier;
 
-    Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
+    private Wallets type;
+
+    private Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
+
+    private WalletCategory walletCategory;
+
+    /**
+     * Main screen of the wallet
+     */
+    private Activities startActivity;
+    /**
+     * Last screen used
+     */
+    private Activities lastActivity;
+
 
     public Wallet() {
     }
@@ -31,9 +50,7 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
         this.activities = activities;
     }
 
-    /**
-     * RuntimeWallet interface implementation.
-     */
+
 
     public void setType(Wallets type) {
         this.type = type;
@@ -51,6 +68,33 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
     @Override
     public Wallets getType() {
         return type;
+    }
+
+
+    /**
+     * RuntimeWallet interface implementation.
+     */
+    @Override
+    public Activity getActivity(Activities activities) {
+        return this.activities.get(activities);
+    }
+
+    @Override
+    public Activity getStartActivity() {
+        return activities.get(startActivity);
+    }
+
+    @Override
+    public void setStartActivity(Activities activity) {
+        this.startActivity=activity;
+    }
+
+    @Override
+    public Activity getLastActivity() {
+        if (lastActivity == null) {
+            return activities.get(startActivity);
+        }
+        return activities.get(lastActivity);
     }
 
     @XmlJavaTypeAdapter(ActivitiesMapAdapter.class)
