@@ -38,14 +38,11 @@ public class WalletActivity extends FermatActivity{
         super.onCreate(savedInstanceState);
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
 
-        WalletRuntimeManager walletRuntimeManager=getWalletRuntimeManager();
-        Wallet wallet= walletRuntimeManager.getLastWallet();
         try {
 
             /*
             * Load wallet UI
             */
-            //super.onCreate(savedInstanceState);
 
             loadUI();
 
