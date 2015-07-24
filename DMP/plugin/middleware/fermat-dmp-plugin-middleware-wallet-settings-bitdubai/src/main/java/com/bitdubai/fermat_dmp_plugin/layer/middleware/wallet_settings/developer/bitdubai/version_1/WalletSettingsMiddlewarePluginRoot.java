@@ -15,11 +15,24 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.structure.WalletSettingsSettings;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,12 +51,20 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,DatabaseManagerForDevelopers,DealsWithLogger,LogManagerForDevelopers, Plugin, Service {
+public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,DatabaseManagerForDevelopers,DealsWithLogger,DealsWithPluginFileSystem,LogManagerForDevelopers, Plugin, Service,WalletSettingsManager {
+
+
 
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
+
+    /**
+     * DealsWithPluginFileSystem Interface member variables.
+     */
+
+    PluginFileSystem pluginFileSystem;
 
     /**
      * Plugin Interface member variables.
@@ -68,6 +89,8 @@ public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,Datab
 
     @Override
     public void start() throws CantStartPluginException {
+
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
     @Override
@@ -97,6 +120,16 @@ public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,Datab
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
+    }
+
+
+
+    /**
+     * DealsWithPluginFileSystem Interface implementation.
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem){
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**
@@ -172,4 +205,13 @@ public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,Datab
 
     }
 
+
+    /**
+     * WalletSettingsManager Interface implementation.
+     */
+
+    @Override
+    public WalletSettings getSettings(UUID walletIdInTheDevice) {
+        return new WalletSettingsSettings(walletIdInTheDevice,this.pluginFileSystem,this.pluginId,this.errorManager);
+    }
 }

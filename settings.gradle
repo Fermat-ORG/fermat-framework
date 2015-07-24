@@ -1,6 +1,6 @@
 
 
-include ':fermat-android-core'
+include ':fermat-android-core', ':fermat-dmp-plugin-middleware-wallet-settings-bitdubai'
 include ':fermat-android-api'
 
 include ':fermat-core'
@@ -339,6 +339,8 @@ project(':fermat-dmp-plugin-middleware-wallet-publisher-bitdubai').projectDir = 
 include ':fermat-dmp-plugin-middleware-wallet-manager-bitdubai'
 project(':fermat-dmp-plugin-middleware-wallet-manager-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-manager-bitdubai')
 
+include ':fermat-dmp-plugin-middleware-wallet-settings-bitdubai'
+project(':fermat-dmp-plugin-middleware-wallet-settings-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-settings-bitdubai')
 // Milestone 2 project network service:
 
 include ':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai'
