@@ -223,6 +223,7 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
+        table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.ITEM_FIRST_KEY_COLUMN);
 
