@@ -1,28 +1,11 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.adapters.LanguagesAdapter;
 
 import java.util.UUID;
-
-import ae.javax.xml.bind.Unmarshaller;
-import ae.javax.xml.bind.annotation.XmlAttribute;
-import ae.javax.xml.bind.annotation.XmlElement;
-import ae.javax.xml.bind.annotation.XmlRootElement;
-import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguage</code>
@@ -33,19 +16,20 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@XmlRootElement( name = "language" )
-public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectLanguage {
+public class WalletFactoryMiddlewareProjectLanguage implements WalletFactoryProjectLanguage {
 
     /**
      * Private class Attributes
      */
     private UUID id;
 
-    private byte[] file;
-
     private String name;
 
     private Languages type;
+
+    private Version version;
+
+    private String translatorPublicKey;
 
     private WalletFactoryProjectProposal walletFactoryProjectProposal;
 
@@ -55,130 +39,53 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
     public WalletFactoryMiddlewareProjectLanguage() {
     }
 
-    public WalletFactoryMiddlewareProjectLanguage(String name, Languages type) {
+    public WalletFactoryMiddlewareProjectLanguage(String name, Languages type, Version version, String translatorPublicKey, WalletFactoryProjectProposal walletFactoryProjectProposal) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.type = type;
+        this.version = version;
+        this.translatorPublicKey = translatorPublicKey;
+        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
     }
 
-    public WalletFactoryMiddlewareProjectLanguage(byte[] file, String name, Languages type) {
-        this.id = UUID.randomUUID();
-        this.file = file;
+    public WalletFactoryMiddlewareProjectLanguage(UUID id, String name, Languages type, Version version, String translatorPublicKey, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+        this.id = id;
         this.name = name;
         this.type = type;
+        this.version = version;
+        this.translatorPublicKey = translatorPublicKey;
+        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
     }
 
     /**
      * private Class getters
      */
-    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement( required=true )
     @Override
     public String getName() {
         return name;
     }
 
-
-    @XmlJavaTypeAdapter( LanguagesAdapter.class )
-    @XmlAttribute( required=true )
     @Override
     public Languages getType() {
         return type;
     }
 
+    public Version getVersion() {
+        return version;
+    }
+
     @Override
-    public byte[] getFile() throws CantGetWalletFactoryProjectLanguageException {
-        if (file != null) {
-            return file;
-        } else {
-            try {
-                PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getLanguagePath(), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                newFile.loadFromMedia();
-                file = newFile.getContent();
-                return file;
-            } catch (CantCreateFileException | FileNotFoundException | CantLoadFileException e) {
-                throw new CantGetWalletFactoryProjectLanguageException(CantGetWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "Can't get file.", "");
-            }
-        }
-    }
-
-    /**
-     * construct the path of the project languages
-     *
-     * @return project language path
-     */
-    public String getLanguagePath() {
-        String initialPath = "wallet_factory_projects";
-        String languagePath = "languages";
-
-        WalletFactoryProject project = walletFactoryProjectProposal.getProject();
-
-        return initialPath + "/" +
-                project.getName() + "/" +
-                walletFactoryProjectProposal.getAlias() + "/" +
-                languagePath;
-    }
-
-    /**
-     * private Class setters
-     */
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setType(Languages type) {
-        this.type = type;
-    }
-
-    /**
-     * set parent after unmarshal (xml conversion)
-     */
-    public void afterUnmarshal(Unmarshaller u, Object parent) {
-        if (parent != null) {
-            WalletFactoryMiddlewareProjectProposal walletFactoryMiddlewareProjectProposal = (WalletFactoryMiddlewareProjectProposal) parent;
-            walletFactoryProjectProposal = walletFactoryMiddlewareProjectProposal;
-            setPluginFileSystem(walletFactoryMiddlewareProjectProposal.getPluginFileSystem());
-            setPluginId(walletFactoryMiddlewareProjectProposal.getPluginId());
-        }
+    public String getTranslatorPublicKey() {
+        return translatorPublicKey;
     }
 
     @Override
     public WalletFactoryProjectProposal getWalletFactoryProjectProposal() {
         return walletFactoryProjectProposal;
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    private PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    private UUID pluginId;
-
-    /**
-     * DealsWithPluginFileSystem interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealsWithPluginIdentity interface implementation.
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 }
