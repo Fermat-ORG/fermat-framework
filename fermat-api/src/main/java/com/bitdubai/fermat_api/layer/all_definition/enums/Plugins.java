@@ -61,6 +61,7 @@ public enum Plugins {
     BITDUBAI_WALLET_STORE_MIDDLEWARE("Wallet Store Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("Wallet Statistics Network Service", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_IDENTITY("Developer Identity", Developers.BITDUBAI),
+    BITDUBAI_IDENTITY_MANAGER("Identity Managers", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_MODULE("Developer Module", Developers.BITDUBAI);
 
 
@@ -166,6 +167,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_LOCATION_WORLD;
             case "Actor Developer":
                 return Plugins.BITDUBAI_ACTOR_DEVELOPER;
+            case "Identity Managers":
+                return Plugins.BITDUBAI_IDENTITY_MANAGER;
         }
 
         throw new InvalidParameterException(key);
