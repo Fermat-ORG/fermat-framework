@@ -260,7 +260,7 @@ public class ReceiveFragment extends Fragment {
             // get qr image
 
 
-            Bitmap bitmapQR = generateBitmap(user_address_wallet,imageQR.getWidth(), imageQR.getHeight(), MARGIN_AUTOMATIC, colorQR, colorBackQR);
+            Bitmap bitmapQR = generateBitmap(user_address_wallet,width, height, MARGIN_AUTOMATIC, colorQR, colorBackQR);
 
             imageQR.setImageBitmap(bitmapQR);
             // show qr image
