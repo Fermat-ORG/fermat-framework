@@ -56,7 +56,7 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @since Java JDK 1.7
  */
 @XmlRootElement( name = "proposal" )
-public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectProposal {
+public class WalletFactoryMiddlewareProjectProposal implements WalletFactoryProjectProposal {
 
     /**
      * Private class Attributes
@@ -66,8 +66,6 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     private String alias;
 
     private FactoryProjectState state;
-
-    private List<WalletFactoryProjectSkin> skins = new ArrayList<>();
 
     private List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
 
@@ -94,24 +92,21 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         this.walletFactoryProject = walletFactoryProject;
     }
 
-    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
+    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, List<WalletFactoryProjectLanguage> languages) {
         this.id = UUID.randomUUID();
         this.alias = alias;
         this.state = state;
-        this.skins = skins;
         this.languages = languages;
     }
 
     /**
      * private Class getters
      */
-    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement( required=true )
     @Override
     public String getAlias() {
         return alias;
@@ -122,17 +117,11 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         return walletFactoryProject;
     }
 
-    @XmlJavaTypeAdapter( FactoryProjectStateAdapter.class )
-    @XmlAttribute( name = "state", required=true )
     @Override
     public FactoryProjectState getState() {
         return state;
     }
 
-    @XmlElements({
-        @XmlElement(name="language", type=WalletFactoryMiddlewareProjectLanguage.class),
-    })
-    @XmlElementWrapper
     @Override
     public List<WalletFactoryProjectLanguage> getLanguages() {
         return languages;
@@ -190,32 +179,6 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     }
 
     @Override
-    public WalletFactoryProjectSkin createEmptySkin(String name) throws CantCreateEmptyWalletFactoryProjectSkinException {
-        // TODO VER SI HAY QUE SOBREESCRIBIR EL ARCHIVO UNA VEZ CREADO EL SKIN
-        WalletFactoryProjectSkin walletFactoryProjectSkin = new WalletFactoryMiddlewareProjectSkin(name, "", new ArrayList<WalletFactoryProjectResource>());
-        skins.add(walletFactoryProjectSkin);
-        return walletFactoryProjectSkin;
-    }
-
-
-    @Override
-    public void deleteSkin(UUID id) throws CantDeleteWalletFactoryProjectSkinException, SkinNotFoundException {
-        // TODO VER SI HAY QUE SOBREESCRIBIR EL ARCHIVO UNA VEZ BORRADO EL SKIN
-
-        if (skins == null) {
-            throw new CantDeleteWalletFactoryProjectSkinException(CantDeleteWalletFactoryProjectSkinException.DEFAULT_MESSAGE, null, "There's not skins in the proposal", "");
-        } else {
-            for(int i = 0 ; i < skins.size() ; i++) {
-                if (skins.get(i).getId().equals(id)) {
-                    skins.remove(i);
-                    return;
-                }
-            }
-            throw new SkinNotFoundException(SkinNotFoundException.DEFAULT_MESSAGE, null, "Skin not found.", "");
-        }
-    }
-
-    @Override
     public WalletFactoryProjectLanguage addLanguage(byte[] file, String name, Languages type) throws CantAddWalletFactoryProjectLanguageException {
         // TODO VER SI HAY QUE SOBREESCRIBIR EL ARCHIVO UNA VEZ CREADO EL SKIN
         WalletFactoryProjectLanguage walletFactoryProjectLanguage = new WalletFactoryMiddlewareProjectLanguage(file, name, type);
@@ -241,33 +204,6 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     }
 
     /**
-     * private Class setters
-     */
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    public void setState(FactoryProjectState state) {
-        this.state = state;
-    }
-
-    /**
-     * set parent after unmarshal (xml conversion)
-     */
-    public void afterUnmarshal(Unmarshaller u, Object parent) {
-        if (parent != null) {
-            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = (WalletFactoryMiddlewareProject) parent;
-            walletFactoryProject = walletFactoryMiddlewareProject;
-            setPluginFileSystem(walletFactoryMiddlewareProject.getPluginFileSystem());
-            setPluginId(walletFactoryMiddlewareProject.getPluginId());
-        }
-    }
-
-    /**
      * WalletFactoryProject Proposal implementation methods
      */
 
@@ -281,79 +217,5 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         return initialPath + "/" +
                walletFactoryProject.getName() + "/" +
                alias;
-    }
-
-    @Override
-    public String getProposalXml(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantGetObjectStructureXmlException {
-        try {
-            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
-
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
-
-            Writer outputStream = new StringWriter();
-            jaxbMarshaller.marshal(walletFactoryProjectProposal, outputStream);
-
-            return outputStream.toString();
-        } catch (JAXBException e) {
-            throw new CantGetObjectStructureXmlException(CantGetObjectStructureXmlException.DEFAULT_MESSAGE, e, "Can't get Proposal XML.", "");
-        }
-    }
-
-    @Override
-    public WalletFactoryProjectProposal getProposalFromXml(String stringXml) throws CantGetObjectStructureFromXmlException {
-        try {
-            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProjectProposal.class.getPackage(), new XmlSchemaMine(""));
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProjectProposal.class);
-
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
-            StringReader reader = new StringReader(stringXml);
-            return (WalletFactoryMiddlewareProjectProposal) jaxbUnmarshaller.unmarshal(reader);
-        } catch (JAXBException e) {
-            throw new CantGetObjectStructureFromXmlException(CantGetObjectStructureFromXmlException.DEFAULT_MESSAGE, e, "Can't get Proposal from XML.", "");
-        }
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    @XmlTransient
-    private PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    @XmlTransient
-    private UUID pluginId;
-
-    /**
-     * DealsWithPluginFileSystem interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    @XmlTransient
-    public PluginFileSystem getPluginFileSystem() {
-        return pluginFileSystem;
-    }
-
-    /**
-     * DealsWithPluginIdentity interface implementation.
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    @XmlTransient
-    public UUID getPluginId() {
-        return pluginId;
     }
 }

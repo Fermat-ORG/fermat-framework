@@ -45,6 +45,12 @@ public class Skin implements FermatSkin {
     public Skin() {
     }
 
+    public Skin(String name, Version version) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.version = version;
+    }
+
     public Skin(UUID id, String name, List<FermatResource> resources, Version version) {
         this.id = id;
         this.name = name;

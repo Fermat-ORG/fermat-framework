@@ -13,7 +13,7 @@ public enum Languages {
     LATIN_AMERICAN_SPANISH("LATIN_AMERICAN_SPANISH");
 
 
-    public static Languages fromValue(String key) throws InvalidParameterException {
+    public static Languages fromValue(String key) {
         switch(key){
             case "ENGLISH":
                 return ENGLISH ;
@@ -26,7 +26,7 @@ public enum Languages {
             case "LATIN_AMERICAN_SPANISH":
                 return LATIN_AMERICAN_SPANISH;
         }
-        throw new InvalidParameterException(key);
+        return null;
     }
 
     private final String key;

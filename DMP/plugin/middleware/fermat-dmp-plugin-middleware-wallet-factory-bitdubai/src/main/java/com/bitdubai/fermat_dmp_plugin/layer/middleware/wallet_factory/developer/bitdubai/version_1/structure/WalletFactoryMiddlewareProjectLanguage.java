@@ -35,15 +35,12 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@XmlRootElement( name = "language" )
-public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectLanguage {
+public class WalletFactoryMiddlewareProjectLanguage implements WalletFactoryProjectLanguage {
 
     /**
      * Private class Attributes
      */
     private UUID id;
-
-    private byte[] file;
 
     private String name;
 
@@ -51,7 +48,7 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
 
     private Version version;
 
-    private Map<String, String> strings;
+    private String translatorPublicKey;
 
     private WalletFactoryProjectProposal walletFactoryProjectProposal;
 
@@ -61,141 +58,51 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
     public WalletFactoryMiddlewareProjectLanguage() {
     }
 
-    public WalletFactoryMiddlewareProjectLanguage(String name, Languages type) {
+    public WalletFactoryMiddlewareProjectLanguage(String name, Languages type, Version version, String translatorPublicKey, WalletFactoryProjectProposal walletFactoryProjectProposal) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.type = type;
+        this.version = version;
+        this.translatorPublicKey = translatorPublicKey;
     }
 
-    public WalletFactoryMiddlewareProjectLanguage(byte[] file, String name, Languages type) {
-        this.id = UUID.randomUUID();
-        this.file = file;
+    public WalletFactoryMiddlewareProjectLanguage(UUID id, String name, Languages type, Version version, String translatorPublicKey, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+        this.id = id;
         this.name = name;
         this.type = type;
+        this.version = version;
+        this.translatorPublicKey = translatorPublicKey;
     }
 
     /**
      * private Class getters
      */
-    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement( required=true )
     @Override
     public String getName() {
         return name;
     }
 
-
-    @XmlJavaTypeAdapter( LanguagesAdapter.class )
-    @XmlAttribute( required=true )
     @Override
     public Languages getType() {
         return type;
-    }
-
-    @Override
-    public byte[] getFile() throws CantGetWalletFactoryProjectLanguageException {
-        if (file != null) {
-            return file;
-        } else {
-            try {
-                PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, getLanguagePath(), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                newFile.loadFromMedia();
-                file = newFile.getContent();
-                return file;
-            } catch (CantCreateFileException | FileNotFoundException | CantLoadFileException e) {
-                throw new CantGetWalletFactoryProjectLanguageException(CantGetWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "Can't get file.", "");
-            }
-        }
     }
 
     public Version getVersion() {
         return version;
     }
 
-    public Map<String, String> getStrings() { return strings; }
-
-    /**
-     * construct the path of the project languages
-     *
-     * @return project language path
-     */
-    public String getLanguagePath() {
-        String initialPath = "wallet_factory_projects";
-        String languagePath = "languages";
-
-        WalletFactoryProject project = walletFactoryProjectProposal.getProject();
-
-        return initialPath + "/" +
-                project.getName() + "/" +
-                walletFactoryProjectProposal.getAlias() + "/" +
-                languagePath;
-    }
-
-    /**
-     * private Class setters
-     */
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setType(Languages type) {
-        this.type = type;
-    }
-
-    public void setVersion(Version version) { this.version = version; }
-
-    public void setStrings(Map<String, String> strings) { this.strings = strings; }
-
-
-    /**
-     * set parent after unmarshal (xml conversion)
-     */
-    public void afterUnmarshal(Unmarshaller u, Object parent) {
-        if (parent != null) {
-            WalletFactoryMiddlewareProjectProposal walletFactoryMiddlewareProjectProposal = (WalletFactoryMiddlewareProjectProposal) parent;
-            walletFactoryProjectProposal = walletFactoryMiddlewareProjectProposal;
-            setPluginFileSystem(walletFactoryMiddlewareProjectProposal.getPluginFileSystem());
-            setPluginId(walletFactoryMiddlewareProjectProposal.getPluginId());
-        }
+    @Override
+    public String getTranslatorPublicKey() {
+        return translatorPublicKey;
     }
 
     @Override
     public WalletFactoryProjectProposal getWalletFactoryProjectProposal() {
         return walletFactoryProjectProposal;
-    }
-
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    private PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealsWithPluginFileSystem interface variables.
-     */
-    private UUID pluginId;
-
-    /**
-     * DealsWithPluginFileSystem interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealsWithPluginIdentity interface implementation.
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 }

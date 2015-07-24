@@ -12,11 +12,7 @@ import java.util.UUID;
  */
 public interface WalletFactoryProjectLanguage {
 
-    // TODO TRANSLATOR?
-
     UUID getId();
-
-    byte[] getFile() throws CantGetWalletFactoryProjectLanguageException;
 
     String getName();
 
@@ -24,7 +20,7 @@ public interface WalletFactoryProjectLanguage {
 
     Version getVersion();
 
-    Map<String, String> getStrings();
+    String getTranslatorPublicKey();
 
     WalletFactoryProjectProposal getWalletFactoryProjectProposal();
 

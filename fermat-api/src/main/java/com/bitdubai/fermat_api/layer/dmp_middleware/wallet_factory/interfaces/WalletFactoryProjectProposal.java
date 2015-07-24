@@ -46,20 +46,10 @@ public interface WalletFactoryProjectProposal {
     // get all language files of an specific language
     List<WalletFactoryProjectLanguage> getLanguageFilesByType(Languages type) throws CentGetWalletFactoryProjectLanguageFileException;
 
-    // create a new empty skin
-    WalletFactoryProjectSkin createEmptySkin(String name) throws CantCreateEmptyWalletFactoryProjectSkinException;
-
-    // delete an existent skin
-    void deleteSkin(UUID id) throws CantDeleteWalletFactoryProjectSkinException, SkinNotFoundException;
-
     // create a new skin
     WalletFactoryProjectLanguage addLanguage(byte[] file, String name, Languages type) throws CantAddWalletFactoryProjectLanguageException;
 
     // delete an existent skin
     void deleteLanguage(UUID id) throws CantDeleteWalletFactoryProjectLanguageException, LanguageNotFoundException;
-
-    String getProposalXml(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantGetObjectStructureXmlException;
-
-    WalletFactoryProjectProposal getProposalFromXml(String stringXml) throws CantGetObjectStructureFromXmlException;
 
 }
