@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
@@ -14,8 +15,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.adapters.LanguagesAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.adapters.LanguagesAdapter;
 
+import java.util.Map;
 import java.util.UUID;
 
 import ae.javax.xml.bind.Unmarshaller;
@@ -46,6 +48,10 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
     private String name;
 
     private Languages type;
+
+    private Version version;
+
+    private Map<String, String> strings;
 
     private WalletFactoryProjectProposal walletFactoryProjectProposal;
 
@@ -107,6 +113,12 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
         }
     }
 
+    public Version getVersion() {
+        return version;
+    }
+
+    public Map<String, String> getStrings() { return strings; }
+
     /**
      * construct the path of the project languages
      *
@@ -138,6 +150,11 @@ public class WalletFactoryMiddlewareProjectLanguage implements DealsWithPluginFi
     public void setType(Languages type) {
         this.type = type;
     }
+
+    public void setVersion(Version version) { this.version = version; }
+
+    public void setStrings(Map<String, String> strings) { this.strings = strings; }
+
 
     /**
      * set parent after unmarshal (xml conversion)

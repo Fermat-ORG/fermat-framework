@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -10,7 +12,7 @@ import java.util.UUID;
  */
 public interface WalletFactoryProjectLanguage {
 
-    // TRANSLATOR?
+    // TODO TRANSLATOR?
 
     UUID getId();
 
@@ -19,6 +21,10 @@ public interface WalletFactoryProjectLanguage {
     String getName();
 
     Languages getType();
+
+    Version getVersion();
+
+    Map<String, String> getStrings();
 
     WalletFactoryProjectProposal getWalletFactoryProjectProposal();
 
