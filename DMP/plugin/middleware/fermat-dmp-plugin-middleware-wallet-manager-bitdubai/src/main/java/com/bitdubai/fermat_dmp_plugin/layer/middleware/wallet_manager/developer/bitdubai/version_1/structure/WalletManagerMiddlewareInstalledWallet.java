@@ -11,7 +11,7 @@ import java.util.List;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerInstalledWallet</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledWallet</code>
  * is the implementation of InstalledWallet.
  * <p/>
  *
@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 
-public class WalletManagerInstalledWallet implements InstalledWallet {
+public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet {
 
     private WalletCategory walletCategory;
     private List<InstalledSkin> skinsId;

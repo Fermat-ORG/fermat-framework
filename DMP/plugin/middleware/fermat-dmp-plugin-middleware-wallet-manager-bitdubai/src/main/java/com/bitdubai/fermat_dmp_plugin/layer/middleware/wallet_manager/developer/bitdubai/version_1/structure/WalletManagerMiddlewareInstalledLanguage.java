@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.In
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerInstalledLanguage</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledLanguage</code>
  * is the implementation of InstalledLanguage.
  * <p/>
  *
@@ -15,7 +15,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerInstalledLanguage implements InstalledLanguage {
+public class WalletManagerMiddlewareInstalledLanguage implements InstalledLanguage {
 
 
     private Languages languages;
