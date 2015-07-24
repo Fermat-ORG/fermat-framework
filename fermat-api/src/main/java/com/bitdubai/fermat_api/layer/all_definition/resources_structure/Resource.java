@@ -42,6 +42,13 @@ public class Resource implements FermatResource {
     public Resource() {
     }
 
+    public Resource(String name, String fileName, ResourceType resourceType) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.fileName = fileName;
+        this.resourceType = resourceType;
+    }
+
     public Resource(UUID id, String name, String fileName, ResourceType resourceType) {
         this.id = id;
         this.name = name;
