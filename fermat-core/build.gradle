@@ -107,6 +107,8 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-store-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-manager-bitdubai')
+    compile project(':fermat-dmp-plugin-middleware-wallet-settings-bitdubai')
+
 
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')

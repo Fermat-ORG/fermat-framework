@@ -7,15 +7,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
+
+
 /**
- * Created by Matias
+ * Created by Matias Furszyfer
  */
 
 
@@ -26,15 +32,19 @@ public class WalletActivity extends FermatActivity{
      *  Called when the activity is first created
      * @param savedInstanceState
      */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
+
         try {
 
             /*
             * Load wallet UI
             */
-            super.onCreate(savedInstanceState);;
+
+            loadUI();
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
@@ -47,6 +57,7 @@ public class WalletActivity extends FermatActivity{
      * @param menu
      * @return true if all is okey
      */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -73,6 +84,7 @@ public class WalletActivity extends FermatActivity{
      * @param item
      * @return true if button is clicked
      */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -100,6 +112,7 @@ public class WalletActivity extends FermatActivity{
      *  Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle)
      * @param outState
      */
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -111,6 +124,7 @@ public class WalletActivity extends FermatActivity{
      * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
      * @param savedInstanceState
      */
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -120,11 +134,12 @@ public class WalletActivity extends FermatActivity{
     /**
      * Method call when back button is pressed
      */
+
     @Override
     public void onBackPressed() {
 
 
-        if (getWalletRuntimeManager().getLasActivity().getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 
@@ -134,7 +149,47 @@ public class WalletActivity extends FermatActivity{
         }else{
             super.onBackPressed();
         }
+    }
+
+    /**
+     * Method that loads the UI
+    */
+    protected void loadUI() {
+
+        try
+        {
+            /**
+             * Selected wallet to paint
+             */
+            Wallet wallet= getWalletRuntimeManager().getLastWallet();
+
+            /**
+             * Get current activity to paint
+             */
+            Activity activity=wallet.getLastActivity();
 
 
+            /**
+             * Load screen basics returning PagerSlidingTabStrip to load fragments
+             */
+            loadBasicUI(activity);
+
+            /**
+             * Paint a simgle fragment
+             */
+            if(activity.getTabStrip() == null && activity.getFragments().size() > 1){
+                initialisePaging();
+            }else{
+                /**
+                 * Paint tabs
+                 */
+                setPagerTabs(wallet,activity.getTabStrip());
+            }
+        }
+        catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }
