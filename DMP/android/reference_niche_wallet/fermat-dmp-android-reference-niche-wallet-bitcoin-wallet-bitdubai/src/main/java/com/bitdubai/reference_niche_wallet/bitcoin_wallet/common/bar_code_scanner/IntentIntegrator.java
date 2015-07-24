@@ -1,6 +1,5 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +13,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;

@@ -199,11 +199,11 @@ public class ProbandoTest extends TestCase {
     private WalletFactoryMiddlewareProjectSkin getSkin(String name) {
         List<WalletFactoryProjectResource> resources = new ArrayList<>();
 
-        WalletFactoryProjectResource res = new WalletFactoryMiddlewareProjectResource(name+"imagen1.png", ResourceType.IMAGE);
+        WalletFactoryProjectResource res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", name+"imagen1.png", ResourceType.IMAGE);
         resources.add(res);
-        res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", ResourceType.FONT_STYLE);
+        res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", name+"fuente1.BLABLA", ResourceType.FONT_STYLE);
         resources.add(res);
-        res = new WalletFactoryMiddlewareProjectResource(name+"layout1.xml", ResourceType.LAYOUT);
+        res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", name+"layout1.xml", ResourceType.LAYOUT);
         resources.add(res);
 
         return new WalletFactoryMiddlewareProjectSkin(name, "as5a5s4da6s4das", resources);

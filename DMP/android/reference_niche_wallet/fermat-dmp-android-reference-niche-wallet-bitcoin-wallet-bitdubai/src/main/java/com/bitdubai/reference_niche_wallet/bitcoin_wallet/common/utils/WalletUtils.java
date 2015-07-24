@@ -1,7 +1,9 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Utils;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils;
 
 
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 
 import java.text.DecimalFormat;
 
@@ -57,5 +59,18 @@ public class WalletUtils {
                 break;
         }*/
         return stringBalance;
+    }
+
+    public static void showMessage(Context context,String text) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setTitle("Warning");
+        alertDialog.setMessage(text);
+        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // aquí puedes añadir funciones
+            }
+        });
+        // alertDialog.setIcon(R.drawable.icon);
+        alertDialog.show();
     }
 }

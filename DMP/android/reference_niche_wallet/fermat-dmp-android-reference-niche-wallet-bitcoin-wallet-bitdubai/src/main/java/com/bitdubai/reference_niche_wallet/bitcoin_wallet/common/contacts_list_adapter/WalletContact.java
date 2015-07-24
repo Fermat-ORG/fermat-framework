@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter;
 
 import java.util.UUID;
 
@@ -9,11 +9,6 @@ public class WalletContact {
     public String name;
 
     public String address;
-
-    public WalletContact(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
 
     public WalletContact(String name, String address, UUID actorId) {
         this.name = name;
