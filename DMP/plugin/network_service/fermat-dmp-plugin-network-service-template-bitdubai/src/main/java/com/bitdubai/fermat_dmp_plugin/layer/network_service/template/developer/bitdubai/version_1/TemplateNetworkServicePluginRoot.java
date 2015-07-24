@@ -59,7 +59,10 @@ import java.util.logging.Logger;
  */
 public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, Plugin {
 
-   public static Logger LOG = Logger.getGlobal();
+    /**
+     * Represent the logger
+     */
+    public static Logger LOG = Logger.getGlobal();
 
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
