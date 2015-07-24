@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSessionManager;
@@ -17,6 +20,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -25,13 +30,7 @@ import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
@@ -49,12 +48,17 @@ import java.util.List;
      */
     public class TabsPagerAdapter extends FragmentPagerAdapter {
 
+
         private String[] titles;
 
 
         private Context context;
 
         private Activity activity;
+
+        private FragmentFactory fragmentFactory;
+
+        private TabStrip tabStrip;
 
 
         private WalletSessionManager walletSessionManager;
@@ -72,10 +76,33 @@ import java.util.List;
             this.platform=applicationSession.getFermatPlatform();
             this.errorManager=errorManager;
             this.activity=activity;
+            tabStrip=activity.getTabStrip();
 
 
             if(activity.getTabStrip() != null){
                 List<Tab> titleTabs = activity.getTabStrip().getTabs();
+                titles = new String[titleTabs.size()];
+                for (int i = 0; i < titleTabs.size(); i++) {
+                    Tab tab = titleTabs.get(i);
+                    titles[i] = tab.getLabel();
+                }
+            }
+
+        }
+
+        public TabsPagerAdapter(FragmentManager fm,Context context,FragmentFactory fragmentFactory,TabStrip tabStrip,ApplicationSession applicationSession,ErrorManager errorManager) {
+            super(fm);
+            this.context=context;
+
+            this.walletSessionManager=applicationSession.getWalletSessionManager();
+            this.subAppSessionManager=applicationSession.getSubAppSessionManager();
+            this.platform=applicationSession.getFermatPlatform();
+            this.errorManager=errorManager;
+            this.fragmentFactory=fragmentFactory;
+            this.tabStrip=tabStrip;
+
+            if(tabStrip != null){
+                List<Tab> titleTabs = tabStrip.getTabs();
                 titles = new String[titleTabs.size()];
                 for (int i = 0; i < titleTabs.size(); i++) {
                     Tab tab = titleTabs.get(i);
@@ -132,7 +159,7 @@ import java.util.List;
 
             android.support.v4.app.Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
-            List<Tab> titleTabs =activity.getTabStrip().getTabs();
+            List<Tab> titleTabs =tabStrip.getTabs();
             for (int j = 0; j < titleTabs.size(); j++) {
                 if (j == position)
                 {
@@ -143,46 +170,38 @@ import java.util.List;
             }
 
 
-            if(activity.getType()== Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN){
-                walletSession = walletSessionManager.openWalletSession(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                        (CryptoWalletManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE),
-                        (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
-            }
-            if(activity.getType()== Activities.CWP_SUP_APP_ALL_DEVELOPER){
-                subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
-                        (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
-                        (ToolManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+
+            walletSession = walletSessionManager.openWalletSession(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+                    (CryptoWalletManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE),
+                    (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
+            if(activity!=null){
+                if(activity.getType()== Activities.CWP_SUP_APP_ALL_DEVELOPER){
+                    subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
+                            (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
+                            (ToolManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+                }
             }
 
 
+
+
+
+            try {
+                if(fragmentFactory!=null){
+                    currentFragment=fragmentFactory.getFragment(fragmentType.getKey(), walletSession);
+                }
+            } catch (FragmentNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            /**
+             *  Swith for subApps
+             */
             //execute current activity fragments
             try {
                 switch (fragmentType) {
                     case CWP_SHELL_LOGIN:
 
-                        break;
-                    case CWP_WALLET_MANAGER_MAIN:
-                        currentFragment =  WalletDesktopFragment.newInstance(position);
-                        break;
-                    /**
-                     * Executing fragments for BITCOIN WALLET.
-                     */
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
-                        currentFragment =  BalanceFragment.newInstance(0,walletSession);
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
-                        currentFragment = ReceiveFragment.newInstance(0,walletSession);
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
-                        currentFragment =  SendFragment.newInstance(0,walletSession);
-                        break;
-
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
-                        currentFragment =  TransactionsFragment.newInstance(0,walletSession);
-
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
-                        currentFragment =  ContactsFragment.newInstance(0,walletSession);
                         break;
                     //developr aap
                     case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
@@ -225,9 +244,10 @@ import java.util.List;
             {
                 errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
-                Toast.makeText(context, "Error in PagerAdapter GetItem " + ex.getMessage(),
+                Toast.makeText(context, "Error in ScreenPagerAdapter GetItem " + ex.getMessage(),
                         Toast.LENGTH_LONG).show();
             }
+
 
             return currentFragment;
         }
