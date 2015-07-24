@@ -147,7 +147,7 @@ public class WalletActivity extends FermatActivity{
     public void onBackPressed() {
 
 
-        if (getWalletRuntimeManager().getLastWallet().getLastActivity()!= Activities.CWP_WALLET_MANAGER_MAIN){
+        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
 
             resetThisActivity();
 
@@ -166,71 +166,32 @@ public class WalletActivity extends FermatActivity{
 
         try
         {
-
+            /**
+             * Selected wallet to paint
+             */
             Wallet wallet= getWalletRuntimeManager().getLastWallet();
 
-
-            // Testimg purpose
-            //FragmentFactory fragmentFactory= WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getType().getCode());
-            //fragmentFactory.getFragment(wallet.getStartActivity())
-            //fragmentFactory.getFragment(wallet.)
             /**
              * Get current activity to paint
              */
-            Activity activity=wallet.getStartActivity();
+            Activity activity=wallet.getLastActivity();
+
 
             /**
-             * Get tabs to paint
+             * Load screen basics returning PagerSlidingTabStrip to load fragments
              */
-            TabStrip tabs = activity.getTabStrip();
-            /**
-             * Get activities fragment
-             */
-            Map<WalletFragments, Fragment> fragments =activity.getFragments();
-            /**
-             * get actionBar to paint
-             */
-            TitleBar titleBar = activity.getTitleBar();
-            /**
-             * Get mainMenu to paint
-             */
-            MainMenu mainMenu= activity.getMainMenu();
-            /**
-             * Get NavigationDrawer to paint
-             */
-            SideMenu sideMenu = activity.getSideMenu();
-
-            /**
-             * Pick the layout
-             */
-            setMainLayout(sideMenu);
-
-            /**
-             * Paint tabs in layout
-             */
-            PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
-            paintTabs(tabs, pagerSlidingTabStrip, activity);
-
-            /**
-             * Paint statusBar
-             */
-            paintStatusBar(activity.getStatusBar());
-            /**
-             * Paint titleBar
-             */
-            paintTitleBar(titleBar,activity);
+            PagerSlidingTabStrip pagerSlidingTabStrip=loadBasicUI(activity);
 
             /**
              * Paint a simgle fragment
              */
-            if(tabs == null && fragments.size() > 1){
+            if(activity.getTabStrip() == null && activity.getFragments().size() > 1){
                 initialisePaging();
             }else{
                 /**
                  * Paint tabs
                  */
-                Map<WalletFragments,Fragment> fragmentsFragmentMap= activity.getFragments();
-                setPagerTabs(pagerSlidingTabStrip,wallet,tabs);
+                setPagerTabs(pagerSlidingTabStrip,wallet,activity.getTabStrip());
             }
         }
         catch (Exception e) {

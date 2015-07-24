@@ -3,7 +3,7 @@ package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions;
 /**
  * Created by ciencias on 23.01.15.
  */
-public class CantCreateDeviceUserException extends Exception {
+public class DEPRECATED_CantCreateDeviceUserException extends Exception {
 
 	/**
 	 * 

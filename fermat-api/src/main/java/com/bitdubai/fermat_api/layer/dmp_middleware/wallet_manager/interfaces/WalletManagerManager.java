@@ -1,6 +1,13 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallWalletException;
@@ -42,27 +49,43 @@ public interface WalletManagerManager {
     public List<InstalledWallet> getInstalledWallets() throws CantListWalletsException;
 
     /**
+
      * This method starts the process of installing a new language for an specific wallet
      *
      * @param walletCatalogueId the identifier of the wallet we want to install the language to
      * @param languageId the identifier of the language to install
+     * @param language the enum that represent the language
+     * @param label a label associated to the language (e.g. fot the English language we can have the UK label)
+     * @param version the version of the language package
+     * @throws CantInstallLanguageException
      */
-    public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantInstallLanguageException;
+    public void installLanguage(UUID walletCatalogueId, UUID languageId, Languages language, String label, Version version) throws CantInstallLanguageException;
 
     /**
      * This method starts the process of installing a new skin for an specific wallet
      *
      * @param walletCatalogueId the identifier of the wallet we want to install the skin to
      * @param skinId the identifier of the skin
+     * @param alias the alias (name) of the skin
+     * @param Preview the name of the preview image of the skin
+     * @param version the version of the skin
+     * @throws CantInstallSkinException
      */
-    public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantInstallSkinException;
+    public void installSkin(UUID walletCatalogueId, UUID skinId, String alias, String Preview, Version version) throws CantInstallSkinException;
 
     /**
-     * This method returns the interface responsible of the installation process of a wallet
      *
+     * This method returns the interface responsible of the installation process of a niche wallet
+     *
+     * @param walletCategory The category of the wallet to install
+     * @param walletPlatformIdentifier an string that encodes the wallet identifier in the platform
+     *                                 We are usign the term platform to identify the software installed
+     *                                 in the device and not the network.
      * @return an interface to manage the installation of a new wallet
+     * @throws CantFindProcessException
      */
-    public WalletInstallationProcess installWallet();
+    public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException;
+
 
     /**
      * This method starts the process of uninstalling a new language for an specific wallet

@@ -14,5 +14,5 @@ public interface FermatWallet {
     public Activity getActivity(Activities activities);
     public Activity getStartActivity();
     public void setStartActivity(Activities activity);
-    public Activities getLastActivity();
+    public Activity getLastActivity();
 }
