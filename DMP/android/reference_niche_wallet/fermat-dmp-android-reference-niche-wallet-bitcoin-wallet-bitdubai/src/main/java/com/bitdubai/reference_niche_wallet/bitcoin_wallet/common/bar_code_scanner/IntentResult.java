@@ -1,6 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet;
-
-import android.widget.EditText;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner;
 
 public final class IntentResult {
 

@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;

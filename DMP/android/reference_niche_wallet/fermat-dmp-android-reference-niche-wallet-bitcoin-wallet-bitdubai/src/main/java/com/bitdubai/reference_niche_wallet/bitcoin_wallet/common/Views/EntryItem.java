@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views;
 
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 
