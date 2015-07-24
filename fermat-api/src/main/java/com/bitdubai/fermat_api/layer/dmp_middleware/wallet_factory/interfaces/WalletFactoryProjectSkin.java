@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
@@ -27,7 +28,9 @@ public interface WalletFactoryProjectSkin {
     String getName();
 
     // hash of the skin, calculated each time you do a change in a resource
-    String getHash();
+    String getDesignerPublicKey();
+
+    Version getVersion();
 
     // get all resources from a skin
     List<WalletFactoryProjectResource> getResources() throws CantGetWalletFactoryProjectResourcesException;

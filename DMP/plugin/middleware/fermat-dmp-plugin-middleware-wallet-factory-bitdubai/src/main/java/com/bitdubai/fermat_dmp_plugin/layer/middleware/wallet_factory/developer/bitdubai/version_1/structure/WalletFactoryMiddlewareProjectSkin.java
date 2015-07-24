@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
@@ -53,7 +54,6 @@ import ae.javax.xml.bind.annotation.XmlTransient;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@XmlRootElement( name = "skin" )
 public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSystem, DealsWithPluginIdentity, WalletFactoryProjectSkin {
 
     /**
@@ -63,11 +63,13 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
 
     private String name;
 
-    private String hash;
+    private String designerPublicKey;
 
-    private List<WalletFactoryProjectResource> resources = new ArrayList<>();
+    private Version version;
 
     private WalletFactoryProjectProposal walletFactoryProjectProposal;
+
+    private List<WalletFactoryProjectResource> resources = new ArrayList<>();
 
 
     /**
@@ -76,37 +78,50 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
     public WalletFactoryMiddlewareProjectSkin() {
     }
 
-    public WalletFactoryMiddlewareProjectSkin(String name, String hash, List<WalletFactoryProjectResource> resources) {
+    public WalletFactoryMiddlewareProjectSkin(UUID id, String name, String designerPublicKey, Version version, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+        this.id = id;
+        this.name = name;
+        this.designerPublicKey = designerPublicKey;
+        this.version = version;
+        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+    }
+
+    public WalletFactoryMiddlewareProjectSkin(UUID id, String name, String designerPublicKey, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+        this.id = id;
+        this.name = name;
+        this.designerPublicKey = designerPublicKey;
+        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+    }
+
+    public WalletFactoryMiddlewareProjectSkin(String name, String designerPublicKey, List<WalletFactoryProjectResource> resources) {
         this.id = UUID.randomUUID();
         this.name = name;
-        this.hash = hash;
+        this.designerPublicKey = designerPublicKey;
         this.resources = resources;
     }
 
     /**
      * private Class getters
      */
-    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement( required=true )
     public String getName() {
         return name;
     }
 
-    @XmlElement( required=true )
-    public String getHash() {
-        return hash;
+    public String getDesignerPublicKey() {
+        return designerPublicKey;
     }
 
-    @XmlElements({
-            @XmlElement(name="resource", type=WalletFactoryMiddlewareProjectResource.class),
-    })
-    @XmlElementWrapper
-        public List<WalletFactoryProjectResource> getResources() {
+    @Override
+    public Version getVersion() {
+        return version;
+    }
+
+    public List<WalletFactoryProjectResource> getResources() {
         return resources;
     }
 
@@ -286,8 +301,16 @@ public class WalletFactoryMiddlewareProjectSkin implements DealsWithPluginFileSy
         this.name = name;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setDesignerPublicKey(String designerPublicKey) {
+        this.designerPublicKey = designerPublicKey;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setVersion(Version version) {
+        this.version = version;
     }
 
     public void setResources(List<WalletFactoryProjectResource> resources) {

@@ -34,20 +34,8 @@ public interface WalletFactoryProjectProposal {
     // state of the proposal
     FactoryProjectState getState();
 
-    // brings the navigation structure of the project proposal
-    Wallet getNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException;
-
-    // brings the navigation structure of the project proposal
-    String getNavigationStructureXml() throws CantGetWalletFactoryProjectNavigationStructureException;
-
-    // get list of the skins
-    List<WalletFactoryProjectSkin> getSkins();
-
     // get list of languages
     List<WalletFactoryProjectLanguage> getLanguages();
-
-    // get an specific skin
-    WalletFactoryProjectSkin getSkin(String skinName) throws CentGetWalletFactoryProjectSkinFileException, SkinNotFoundException;
 
     // get an specific language
     WalletFactoryProjectLanguage getLanguageFileByName(String fileName) throws CentGetWalletFactoryProjectLanguageFileException, LanguageNotFoundException;
@@ -58,8 +46,6 @@ public interface WalletFactoryProjectProposal {
     // get all language files of an specific language
     List<WalletFactoryProjectLanguage> getLanguageFilesByType(Languages type) throws CentGetWalletFactoryProjectLanguageFileException;
 
-
-    // TODO CORROBORAR EXCEPTION CHANGE NAME IN CASE
     // create a new empty skin
     WalletFactoryProjectSkin createEmptySkin(String name) throws CantCreateEmptyWalletFactoryProjectSkinException;
 

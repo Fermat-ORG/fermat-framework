@@ -71,8 +71,6 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
 
     private List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
 
-    private Wallet navigationStructure;
-
     private WalletFactoryProject walletFactoryProject;
 
 
@@ -96,11 +94,10 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         this.walletFactoryProject = walletFactoryProject;
     }
 
-    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, Wallet navigationStructure, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
+    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
         this.id = UUID.randomUUID();
         this.alias = alias;
         this.state = state;
-        this.navigationStructure = navigationStructure;
         this.skins = skins;
         this.languages = languages;
     }
@@ -132,44 +129,6 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
         return state;
     }
 
-    @XmlElement( required=true )
-    @Override
-    public Wallet getNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException {
-        return navigationStructure;
-    }
-
-    @Override
-    public String getNavigationStructureXml() throws CantGetWalletFactoryProjectNavigationStructureException {
-        if (navigationStructure != null) {
-            try {
-                RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
-
-                JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
-
-                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
-
-                Writer outputStream = new StringWriter();
-                jaxbMarshaller.marshal(navigationStructure, outputStream);
-
-                return outputStream.toString();
-            } catch (JAXBException e) {
-                throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't get navigation structure XML.", "");
-            }
-        }
-        throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, null, "Navigation Structure is null", "");
-    }
-
-    @XmlElements({
-        @XmlElement(name="skin", type=WalletFactoryMiddlewareProjectSkin.class),
-    })
-    @XmlElementWrapper
-    @Override
-    public List<WalletFactoryProjectSkin> getSkins() {
-        return skins;
-    }
-
     @XmlElements({
         @XmlElement(name="language", type=WalletFactoryMiddlewareProjectLanguage.class),
     })
@@ -177,18 +136,6 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     @Override
     public List<WalletFactoryProjectLanguage> getLanguages() {
         return languages;
-    }
-
-    @Override
-    public WalletFactoryProjectSkin getSkin(String skinName) throws CentGetWalletFactoryProjectSkinFileException, SkinNotFoundException {
-        if (skins == null) {
-            throw new CentGetWalletFactoryProjectSkinFileException(CentGetWalletFactoryProjectSkinFileException.DEFAULT_MESSAGE, null, "There isn't skins.", "");
-        } else {
-            for(WalletFactoryProjectSkin skin : skins) {
-                if (skin.getName().equals(skinName)) return skin;
-            }
-            throw new SkinNotFoundException(SkinNotFoundException.DEFAULT_MESSAGE, null, "Skin not found.", "");
-        }
     }
 
     @Override
@@ -306,14 +253,6 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
 
     public void setState(FactoryProjectState state) {
         this.state = state;
-    }
-
-    public void setNavigationStructure(Wallet navigationStructure) {
-        this.navigationStructure = navigationStructure;
-    }
-
-    public void setSkins(List<WalletFactoryProjectSkin> skins) {
-        this.skins = skins;
     }
 
     /**

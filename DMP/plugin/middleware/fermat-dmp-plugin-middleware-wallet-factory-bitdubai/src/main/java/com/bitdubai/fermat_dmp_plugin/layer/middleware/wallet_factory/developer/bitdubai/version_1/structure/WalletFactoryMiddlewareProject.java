@@ -109,7 +109,7 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginDatabaseSy
         return developerPublicKey;
     }
 
-
+/*
     @XmlElements({
         @XmlElement(name="proposal", type=WalletFactoryMiddlewareProjectProposal.class),
     })
@@ -141,8 +141,8 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginDatabaseSy
             }
             throw new ProposalNotFoundException(ProposalNotFoundException.DEFAULT_MESSAGE, null, "Proposal not found.", "");
         }
-    }
-
+    }*/
+/*
     @Override
     public String getProjectXml(WalletFactoryProject walletFactoryProject) throws CantGetObjectStructureXmlException {
         try {
@@ -179,7 +179,7 @@ public class WalletFactoryMiddlewareProject implements DealsWithPluginDatabaseSy
             throw new CantGetObjectStructureFromXmlException(CantGetObjectStructureFromXmlException.DEFAULT_MESSAGE, e, "Can't get Project from XML.", "");
         }
     }
-
+*/
     /**
      * private Class setters
      */

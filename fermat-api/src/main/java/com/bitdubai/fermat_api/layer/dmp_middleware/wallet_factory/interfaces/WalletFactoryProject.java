@@ -21,14 +21,4 @@ public interface WalletFactoryProject {
 
     String getName();
 
-    List<WalletFactoryProjectProposal> getProposals() throws CantGetWalletFactoryProjectProposalsException;
-
-    WalletFactoryProjectProposal getProposalByName(String proposal) throws CantGetWalletFactoryProjectProposalException, ProposalNotFoundException;
-
-    WalletFactoryProjectProposal getProposalById(UUID id) throws CantGetWalletFactoryProjectProposalException, ProposalNotFoundException;
-
-    String getProjectXml(WalletFactoryProject walletFactoryProject) throws CantGetObjectStructureXmlException;
-
-    WalletFactoryProject getProjectFromXml(String stringXml) throws CantGetObjectStructureFromXmlException;
-
 }
