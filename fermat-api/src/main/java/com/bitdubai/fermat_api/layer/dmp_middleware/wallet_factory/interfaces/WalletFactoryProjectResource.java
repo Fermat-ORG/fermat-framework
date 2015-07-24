@@ -21,6 +21,9 @@ public interface WalletFactoryProjectResource {
     // name of the resource
     String getName();
 
+    // fileName of the resource
+    String getFileName();
+
     // resource file
     byte[] getResource() throws CantGetWalletFactoryProjectResourceException;
 

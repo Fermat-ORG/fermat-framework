@@ -8,7 +8,9 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSessionManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -19,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -54,15 +57,23 @@ import java.util.List;
         private Activity activity;
 
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,int activityType) {
+        private WalletSessionManager walletSessionManager;
+        private SubAppSessionManager subAppSessionManager;
+
+        private Platform platform;
+        private ErrorManager errorManager;
+
+        public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,ApplicationSession applicationSession,ErrorManager errorManager) {
             super(fm);
             this.context=context;
 
-            if(activityType== FermatActivity.ACTIVITY_TYPE_SUB_APP){
-                activity= ApplicationSession.getAppRuntimeMiddleware().getLasActivity();
-            }else if(activityType== FermatActivity.ACTIVITY_TYPE_WALLET){
-                activity= ApplicationSession.getWalletRuntimeManager().getLasActivity();
-            }
+            this.walletSessionManager=applicationSession.getWalletSessionManager();
+            this.subAppSessionManager=applicationSession.getSubAppSessionManager();
+            this.platform=applicationSession.getFermatPlatform();
+            this.errorManager=errorManager;
+            this.activity=activity;
+
+
             if(activity.getTabStrip() != null){
                 List<Tab> titleTabs = activity.getTabStrip().getTabs();
                 titles = new String[titleTabs.size()];
@@ -133,14 +144,14 @@ import java.util.List;
 
 
             if(activity.getType()== Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN){
-                walletSession = ApplicationSession.getWalletSessionManager().openWalletSession(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                        (CryptoWalletManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE),
-                        (ErrorManager)ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
+                walletSession = walletSessionManager.openWalletSession(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+                        (CryptoWalletManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE),
+                        (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
             }
             if(activity.getType()== Activities.CWP_SUP_APP_ALL_DEVELOPER){
-                subAppSession = ApplicationSession.getSubAppSessionManager().openSubAppSession(SubApps.CWP_DEVELOPER_APP,
-                        (ErrorManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
-                        (ToolManager) ApplicationSession.getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+                subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
+                        (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
+                        (ToolManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
             }
 
 
@@ -212,7 +223,7 @@ import java.util.List;
             }
             catch(Exception ex)
             {
-                ApplicationSession.getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+                errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
                 Toast.makeText(context, "Error in PagerAdapter GetItem " + ex.getMessage(),
                         Toast.LENGTH_LONG).show();

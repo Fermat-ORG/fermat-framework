@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.common.ResourceTypeAdapter;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.adapters.ResourceTypeAdapter;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -43,6 +43,8 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
 
     private String name;
 
+    private String fileName;
+
     private byte[] resource;
 
     private ResourceType resourceType;
@@ -55,15 +57,17 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
     public WalletFactoryMiddlewareProjectResource() {
     }
 
-    public WalletFactoryMiddlewareProjectResource(String name, ResourceType resourceType) {
+    public WalletFactoryMiddlewareProjectResource(String name, String fileName, ResourceType resourceType) {
         this.id = UUID.randomUUID();
         this.name = name;
+        this.fileName = fileName;
         this.resourceType = resourceType;
     }
 
-    public WalletFactoryMiddlewareProjectResource(String name, byte[] resource, ResourceType resourceType) {
+    public WalletFactoryMiddlewareProjectResource(String name, String fileName, byte[] resource, ResourceType resourceType) {
         this.id = UUID.randomUUID();
         this.name = name;
+        this.fileName = fileName;
         this.resource = resource;
         this.resourceType = resourceType;
     }
@@ -82,12 +86,17 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
         return name;
     }
 
+    @XmlElement( required=true )
+    public String getFileName() {
+        return fileName;
+    }
+
     public byte[] getResource() throws CantGetWalletFactoryProjectResourceException {
         if (resource != null) {
             return resource;
         } else {
             try {
-                PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, walletFactoryProjectSkin.getResourceTypePath(resourceType), name, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, walletFactoryProjectSkin.getResourceTypePath(resourceType), fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 newFile.loadFromMedia();
                 return newFile.getContent();
             } catch (CantCreateFileException | FileNotFoundException | CantLoadFileException e) {
@@ -117,6 +126,8 @@ public class WalletFactoryMiddlewareProjectResource implements DealsWithPluginFi
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setFileName(String fileName) { this.fileName = fileName; }
 
     public void setResourceType(ResourceType resourceType) {
         this.resourceType = resourceType;

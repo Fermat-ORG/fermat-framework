@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -21,7 +22,7 @@ public interface FermatActivity {
 
     public Activities getType();
 
-    public Map<Fragments, Fragment> getFragments();
+    public Map<WalletFragments, Fragment> getFragments();
 
     public TitleBar getTitleBar() ;
 

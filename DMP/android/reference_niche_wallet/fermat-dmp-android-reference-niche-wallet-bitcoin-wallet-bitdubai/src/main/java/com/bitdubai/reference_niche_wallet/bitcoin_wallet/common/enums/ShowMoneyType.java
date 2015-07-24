@@ -1,7 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums;
 
 /**
- * Created by Matis Furszyfer on 2015.07.21..
+ * Created by Matias Furszyfer on 2015.07.21..
  */
 public enum ShowMoneyType {
 

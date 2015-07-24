@@ -6,11 +6,21 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchV
  * Created by rodrigo on 2015.07.20..
  */
 public interface FermatTitleBar {
-    public String getLabel();
 
-    public void setLabel(String label);
+    String getLabel();
 
-    public void setRuntimeSearchView(SearchView runtimeSearchView);
-    public SearchView getRuntimeSearchView();
+    SearchView getRuntimeSearchView();
+
+    String getBackgroundImage();
+
+    String getColor();
+
+    void setLabel(String label);
+
+    void setRuntimeSearchView(SearchView runtimeSearchView);
+
+    void setBackgroundImage(String backgroundImage);
+
+    void setColor(String color);
 
 }

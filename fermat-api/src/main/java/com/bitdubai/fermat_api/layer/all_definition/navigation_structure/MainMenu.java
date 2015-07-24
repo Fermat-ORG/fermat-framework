@@ -4,18 +4,51 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import java.util.ArrayList;
 import java.util.List;
 
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlElementWrapper;
+import ae.javax.xml.bind.annotation.XmlElements;
+import ae.javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by rodrigo on 2015.07.17..
  */
+@XmlRootElement(name = "mainMenu")
 public class MainMenu implements FermatMainMenu {
 
-    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> menuItems = new ArrayList<>();
+    /**
+     * MainMenu class member variables
+     */
+    List<MenuItem> menuItems = new ArrayList<>();
 
-    public void addMenuItem (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem){
+    /**
+     * MainMenu class constructors
+     */
+    public MainMenu() {
+    }
+
+    public MainMenu(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
+    }
+
+    public void addMenuItem (MenuItem menuItem){
         menuItems.add(menuItem);
     }
 
-    public List<MenuItem> getMenuItems() {
+    /**
+     * MainMenu class getters
+     */
+    @XmlElements({
+            @XmlElement(name="menuItem", type=MenuItem.class),
+    })
+    @XmlElementWrapper
+    public List<MenuItem> getMenuItems () {
         return menuItems;
+    }
+
+    /**
+     * MainMenu class setters
+     */
+    public void setMenuItems (List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
     }
 }
