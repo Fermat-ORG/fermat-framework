@@ -194,7 +194,6 @@ import java.util.List;
                 e.printStackTrace();
             }
 
-
             /**
              *  Swith for subApps
              */
@@ -204,9 +203,6 @@ import java.util.List;
                     case CWP_SHELL_LOGIN:
 
                         break;
-                    //case CWP_WALLET_MANAGER_MAIN:
-                    //    currentFragment =  WalletDesktopFragment.newInstance(position);
-                    //    break;
                     //developr aap
                     case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
                         currentFragment = DatabaseToolsFragment.newInstance(position,subAppSession);
