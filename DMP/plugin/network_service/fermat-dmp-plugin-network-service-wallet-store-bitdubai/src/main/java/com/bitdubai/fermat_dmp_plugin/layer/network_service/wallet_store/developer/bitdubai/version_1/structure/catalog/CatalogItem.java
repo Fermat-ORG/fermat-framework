@@ -106,6 +106,18 @@ public class CatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_se
         this.detailedCatalogItem = detailedCatalogItem;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Id: ");

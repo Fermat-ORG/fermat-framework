@@ -22,7 +22,9 @@ public class WalletStoreNetworkServiceDatabaseConstants {
     public static final String WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME = "walletInitialVersion";
     public static final String WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME = "walletFinalVersion";
     public static final String WALLETSKIN_URL_COLUMN_NAME = "url";
+    public static final String WALLETSKIN_SIZE_COLUMN_NAME = "size";
     public static final String WALLETSKIN_DESIGNERID_COLUMN_NAME = "designerId";
+    public static final String WALLETSKIN_ISDEFAULT_COLUMN_NAME = "isDefault";
 
     static final String WALLETSKIN_FIRST_KEY_COLUMN = "id";
 
@@ -53,6 +55,7 @@ public class WalletStoreNetworkServiceDatabaseConstants {
     public static final String WALLETLANGUAGE_URL_COLUMN_NAME = "url";
     public static final String WALLETLANGUAGE_FILESIZE_COLUMN_NAME = "filesize";
     public static final String WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME = "translatorId";
+    public static final String WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME = "isDefault";
 
     static final String WALLETLANGUAGE_FIRST_KEY_COLUMN = "id";
 

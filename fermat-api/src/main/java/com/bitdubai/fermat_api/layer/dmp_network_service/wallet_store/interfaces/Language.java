@@ -39,4 +39,6 @@ public interface Language {
      */
     public UUID getTranslatorId();
 
+    public boolean isDefault();
+
 }

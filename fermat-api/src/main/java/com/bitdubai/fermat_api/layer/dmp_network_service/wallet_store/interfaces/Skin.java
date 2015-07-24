@@ -49,4 +49,6 @@ public interface Skin {
      */
     public UUID getSkinDesignerId();
 
+    public boolean isDefault();
+
 }

@@ -279,6 +279,7 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 12, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FIRST_KEY_COLUMN);
 
@@ -333,7 +334,9 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 12, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_FIRST_KEY_COLUMN);
 

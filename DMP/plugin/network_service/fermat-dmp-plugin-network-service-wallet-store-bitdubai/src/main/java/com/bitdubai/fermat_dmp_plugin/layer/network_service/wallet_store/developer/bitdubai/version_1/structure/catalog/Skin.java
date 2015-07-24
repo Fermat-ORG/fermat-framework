@@ -26,6 +26,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     URL url;
     int skinSizeInBytes;
     UUID skinDesignerId;
+    boolean isDefault;
 
     /**
      * default constructor
@@ -131,6 +132,11 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         return skinDesignerId;
     }
 
+    @Override
+    public boolean isDefault() {
+        return this.isDefault;
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -181,5 +187,25 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
 
     public void setSkinDesignerId(UUID skinDesignerId) {
         this.skinDesignerId = skinDesignerId;
+    }
+
+    public void setIsDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("Id: ");
+        stringBuilder.append(this.id);
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append("SkinName: ");
+        stringBuilder.append(this.getSkinName());
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append("walletId: ");
+        stringBuilder.append(this.walletId.toString());
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append("IsDefault: ");
+        stringBuilder.append(this.isDefault);
+        return stringBuilder.toString();
     }
 }

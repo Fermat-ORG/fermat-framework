@@ -20,6 +20,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
     Version initialWalletVersion;
     Version finalWalletVersion;
     UUID translatorId;
+    boolean isDefault;
 
     /**
      * default constructor
@@ -40,7 +41,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
      * @param finalWalletVersion
      * @param translatorId
      */
-    public Language(UUID id, UUID walletId, Languages languageName, String languageLabel, int languagePackageSizeInBytes, URL url, Version version, Version initialWalletVersion, Version finalWalletVersion, UUID translatorId) {
+    public Language(UUID id, UUID walletId, Languages languageName, String languageLabel, int languagePackageSizeInBytes, URL url, Version version, Version initialWalletVersion, Version finalWalletVersion, UUID translatorId, boolean isDefault) {
         this.id = id;
         this.walletId = walletId;
         this.languageName = languageName;
@@ -51,6 +52,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         this.initialWalletVersion = initialWalletVersion;
         this.finalWalletVersion = finalWalletVersion;
         this.translatorId = translatorId;
+        this.isDefault = isDefault;
     }
 
     @Override
@@ -103,6 +105,11 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         return translatorId;
     }
 
+    @Override
+    public boolean isDefault() {
+        return this.isDefault;
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -143,6 +150,10 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         this.translatorId = translatorId;
     }
 
+    public void setIsDefault(boolean isDefault){
+        this.isDefault = isDefault;
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Id: ");
@@ -153,6 +164,9 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         stringBuilder.append(System.lineSeparator());
         stringBuilder.append("walletId: ");
         stringBuilder.append(this.walletId.toString());
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append("IsDefault: ");
+        stringBuilder.append(this.isDefault);
         return stringBuilder.toString();
     }
 }
