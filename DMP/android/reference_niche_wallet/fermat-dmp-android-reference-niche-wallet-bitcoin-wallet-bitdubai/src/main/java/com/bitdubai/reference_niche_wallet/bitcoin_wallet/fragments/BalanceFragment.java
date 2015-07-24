@@ -105,7 +105,10 @@ public class BalanceFragment extends Fragment {
         return balanceFragment;
     }
 
-
+    /**
+     *
+     * @param savedInstanceState
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
@@ -157,6 +160,14 @@ public class BalanceFragment extends Fragment {
         }
     }
 
+
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

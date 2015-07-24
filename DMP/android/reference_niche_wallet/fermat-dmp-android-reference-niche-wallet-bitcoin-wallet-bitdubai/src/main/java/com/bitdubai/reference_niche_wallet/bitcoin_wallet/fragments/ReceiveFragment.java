@@ -58,6 +58,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
+
 /**
  * Created by Natalia on 02/06/2015.
  */
@@ -71,11 +73,22 @@ public class ReceiveFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
-    View rootView;
+    /**
+     * Screen members
+     */
+    private View rootView;
 
     private AutoCompleteTextView autocompleteContacts;
+
+    /**
+     * Wallet contact Adapter
+     */
     private WalletContactListAdapter adapter;
 
+
+    /**
+     * font Style
+     */
     Typeface tf;
 
 
@@ -84,14 +97,24 @@ public class ReceiveFragment extends Fragment {
     final int colorBackQR = Color.WHITE;
     final int width = 400;
     final int height = 400;
+
+    /**
+     * Hardcoded wallet_id and user_id
+     */
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
     UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
-    private static CryptoWalletManager cryptoWalletManager;
+
+    private CryptoWalletManager cryptoWalletManager;
     private CryptoWallet cryptoWallet;
+
+    /**
+     * Error Manager
+     */
+
     private ErrorManager errorManager;
 
 
@@ -116,10 +139,10 @@ public class ReceiveFragment extends Fragment {
                 cryptoWallet = cryptoWalletManager.getCryptoWallet();
             } catch (CantGetCryptoWalletException e) {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage("Unexpected error init Crypto Manager - " + e.getMessage());
+                showMessage(getActivity(),"Unexpected error init Crypto Manager - " + e.getMessage());
             }
         } catch (Exception ex) {
-            showMessage("Unexpected error init Crypto Manager - " + ex.getMessage());
+            showMessage(getActivity(),"Unexpected error init Crypto Manager - " + ex.getMessage());
 
         }
     }
@@ -193,7 +216,7 @@ public class ReceiveFragment extends Fragment {
             }
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+            showMessage(getActivity(),"CantGetAllWalletContactsException- " + e.getMessage());
         }
         return contacts;
     }
@@ -232,10 +255,13 @@ public class ReceiveFragment extends Fragment {
 
     private void showQRCodeAndAddress() {
         try {
-            // get qr image
-            Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height, MARGIN_AUTOMATIC, colorQR, colorBackQR);
             // set qr image
             ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
+            // get qr image
+
+
+            Bitmap bitmapQR = generateBitmap(user_address_wallet,imageQR.getWidth(), imageQR.getHeight(), MARGIN_AUTOMATIC, colorQR, colorBackQR);
+
             imageQR.setImageBitmap(bitmapQR);
             // show qr image
             imageQR.setVisibility(View.VISIBLE);
@@ -269,7 +295,7 @@ public class ReceiveFragment extends Fragment {
             user_address_wallet = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
+            showMessage(getActivity(),"Cant Request Crypto Address Exception - " + e.getMessage());
 
         }
     }
@@ -281,7 +307,7 @@ public class ReceiveFragment extends Fragment {
             user_address_wallet = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
+            showMessage(getActivity(),"Cant Request Crypto Address Exception - " + e.getMessage());
 
         }
     }
@@ -356,19 +382,6 @@ public class ReceiveFragment extends Fragment {
         return bitmap;
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
 
     public void setWalletSession(WalletSession walletSession) {
         this.walletSession = walletSession;
