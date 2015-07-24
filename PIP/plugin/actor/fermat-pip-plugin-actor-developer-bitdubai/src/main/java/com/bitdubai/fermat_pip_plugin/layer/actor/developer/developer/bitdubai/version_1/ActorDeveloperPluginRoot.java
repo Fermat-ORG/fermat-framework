@@ -82,7 +82,7 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, Deals
      *DealWithErrors Interface implementation.
      */
     @Override
-    public void setErrorManager(ErrorManager errorManager) {
+    public void setErrorManager(ErrorManager errorManager) {        this.serviceStatus = ServiceStatus.STARTED;
         if(errorManager == null)
             throw new IllegalArgumentException();
         this.errorManager = errorManager;
