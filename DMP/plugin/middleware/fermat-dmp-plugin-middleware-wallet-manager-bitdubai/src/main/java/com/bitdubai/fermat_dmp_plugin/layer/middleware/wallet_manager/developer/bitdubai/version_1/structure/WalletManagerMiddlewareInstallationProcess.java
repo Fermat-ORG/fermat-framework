@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.Wa
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerInstallationProcess</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationProcess</code>
  * is the implementation of WalletInstallationProcess.
  * <p/>
  *
@@ -16,7 +16,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerInstallationProcess implements WalletInstallationProcess {
+public class WalletManagerMiddlewareInstallationProcess implements WalletInstallationProcess {
 
 
 
