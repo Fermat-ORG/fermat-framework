@@ -5,9 +5,6 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
  */
 public interface FermatScreenSwapper {
 
-    public void changeScreen();
+    public void changeScreen(String screen,Object[] objects);
 
-    public void setScreen(String screen);
-
-    public void setParams(Object[] objects);
 }

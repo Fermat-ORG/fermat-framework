@@ -198,12 +198,8 @@ public class DatabaseToolsFragment extends Fragment{
 
                         //set the next fragment and params
                         Object[] params = new Object[1];
-
                         params[0] = item;
-
-                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperDatabaseFragment");
-                        ((FermatScreenSwapper)getActivity()).setParams(params);
-                        ((FermatScreenSwapper)getActivity()).changeScreen();
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperDatabaseFragment",params);
 
                     }
                 });
