@@ -36,39 +36,52 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     /**
      * BitcoinCryptoNetworkMonitoringAgent member variables
      */
-    BitcoinEventListeners myListeners;
-    NetworkParameters networkParameters;
-    StoredBlockChain storedBlockChain;
-    PeerGroup peers;
-    Wallet wallet;
-    UUID userId;
+    private BitcoinEventListeners myListeners;
+    private NetworkParameters networkParameters;
+    private StoredBlockChain storedBlockChain;
+    private PeerGroup peers;
+    private Wallet wallet;
+    private UUID userId;
 
 
     /**
      * Agent interface member variables
      */
-    Thread agentThread;
-    MonitorAgent monitorAgent;
+    private Thread agentThread;
+    private MonitorAgent monitorAgent;
 
      /**
      * DealaWithError interface member variables
      */
-    ErrorManager errorManager;
+     private ErrorManager errorManager;
 
     /**
      * DealsWithLogger interface member variable
      */
-    LogManager logManager;
+    private LogManager logManager;
 
     /**
      * DealsWithPluginFileSystem interface member variable
      */
-    PluginFileSystem pluginFileSystem;
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPluginIdentify interface member variable
      */
-    UUID pluginId;
+    private UUID pluginId;
+
+    /**
+     * constructor
+     * @param wallet the BitcoinJ wallet that will be used to store the transactions and specify which
+     *               addresses to monitore
+     * @param UserId the user ID that we are calling the connection for.
+     */
+    public BitcoinCryptoNetworkMonitoringAgent(Wallet wallet, UUID UserId){
+        this.wallet = wallet;
+        this.userId = UserId;
+        this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
+        peers = null;
+    }
 
     /**
      * DealsWithErrors interface impplementation
@@ -106,18 +119,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         this.logManager = logManager;
     }
 
-    /**
-     * constructor
-     * @param wallet the BitcoinJ wallet that will be used to store the transactions and specify which
-     *               addresses to monitore
-     * @param UserId the user ID that we are calling the connection for.
-     */
-    public BitcoinCryptoNetworkMonitoringAgent(Wallet wallet, UUID UserId){
-        this.wallet = wallet;
-        this.userId = UserId;
-        this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
-        peers = null;
-    }
 
     /**
      * Agent interface implementation
@@ -150,7 +151,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
      * @return
      */
     public int getConnectedPeers(){
-        if (peers.isRunning())
+        if (peers != null && peers.isRunning())
             return peers.numConnectedPeers();
         else
             return 0;

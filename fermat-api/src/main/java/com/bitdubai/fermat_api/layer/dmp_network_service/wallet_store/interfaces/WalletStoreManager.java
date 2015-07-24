@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 
 /**
@@ -9,4 +11,6 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 public interface WalletStoreManager {
     public void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException;
     public WalletCatalog getWalletCatalogue() throws CantGetWalletsCatalogException;
+    public void publishSkin(Skin skin) throws CantPublishSkinInCatalogException;
+    public void pulishLanguage(Language language) throws CantPublishLanguageInCatalogException;
 }

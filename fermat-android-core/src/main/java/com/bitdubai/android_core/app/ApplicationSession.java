@@ -29,9 +29,6 @@ import com.bitdubai.fermat_core.Platform;
 public class ApplicationSession extends android.support.multidex.MultiDexApplication {
 
 
-    public static Object[] mParams; //TODO : Caso creado a Natalia.
-
-
     /**
      *  Fermat platform
      */
@@ -75,6 +72,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
      * Method to get subAppSessionManager which can manipulate the active session of subApps
      * @return SubAppSessionManager
      */
+
     public SubAppSessionManager getSubAppSessionManager(){
         return subAppSessionManager;
     }
@@ -83,6 +81,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
      * Method to get subWalletSessionManager which can manipulate the active session of wallets
      * @return WalletSessionManager
      */
+
     public WalletSessionManager getWalletSessionManager(){
         return walletSessionManager;
     }
