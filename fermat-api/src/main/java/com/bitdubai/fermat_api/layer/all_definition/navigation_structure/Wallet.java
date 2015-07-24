@@ -3,25 +3,34 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesMapAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.WalletsAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import ae.javax.xml.bind.annotation.XmlAttribute;
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlRootElement;
+import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 /**
  * Created by Matias Furszyfer on 2015.07.23..
  */
+
+@XmlRootElement(name = "navigationStructure")
 public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet{
 
-    String walletPlatformIdentifier;
+    private String walletPlatformIdentifier;
 
-    Wallets type;
+    private Wallets type;
 
-    WalletCategory walletCategory;
+    private Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
 
-    Map<Activities, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity> activities = new HashMap<Activities, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity>();
+    private WalletCategory walletCategory;
 
     /**
      * Main screen of the wallet
@@ -33,29 +42,38 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
     private Activities lastActivity;
 
 
-    /**
-     * RuntimeWallet interface implementation.
-     */
+    public Wallet() {
+    }
+
+    public Wallet(Wallets type, Map<Activities, Activity> activities) {
+        this.type = type;
+        this.activities = activities;
+    }
+
+
 
     public void setType(Wallets type) {
         this.type = type;
     }
 
-    public void addActivity (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity){
+    public void addActivity(Activity activity) {
         activities.put(activity.getType(), activity);
     }
-
-
 
     /**
      * Wallet interface implementation.
      */
-
+    @XmlJavaTypeAdapter(WalletsAdapter.class)
+    @XmlAttribute(name = "wallettype", required = true)
     @Override
     public Wallets getType() {
         return type;
     }
 
+
+    /**
+     * RuntimeWallet interface implementation.
+     */
     @Override
     public Activity getActivity(Activities activities) {
         return this.activities.get(activities);
@@ -72,10 +90,20 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
     }
 
     @Override
-    public Activities getLastActivity() {
-        if(lastActivity==null){
-            return startActivity;
+    public Activity getLastActivity() {
+        if (lastActivity == null) {
+            return activities.get(startActivity);
         }
-        return lastActivity;
+        return activities.get(lastActivity);
+    }
+
+    @XmlJavaTypeAdapter(ActivitiesMapAdapter.class)
+    @XmlElement(name = "activities")
+    public Map<Activities, Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(Map<Activities, Activity> activities) {
+        this.activities = activities;
     }
 }

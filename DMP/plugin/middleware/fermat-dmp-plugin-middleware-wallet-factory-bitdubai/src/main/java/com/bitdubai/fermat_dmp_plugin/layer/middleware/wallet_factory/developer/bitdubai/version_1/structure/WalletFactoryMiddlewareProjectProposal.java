@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectLanguageException;
@@ -24,7 +23,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.common.FactoryProjectStateAdapter;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.adapters.FactoryProjectStateAdapter;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -83,6 +82,20 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     public WalletFactoryMiddlewareProjectProposal() {
     }
 
+    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, WalletFactoryProject walletFactoryProject) {
+        this.id = UUID.randomUUID();
+        this.alias = alias;
+        this.state = state;
+        this.walletFactoryProject = walletFactoryProject;
+    }
+
+    public WalletFactoryMiddlewareProjectProposal(UUID id, String alias, FactoryProjectState state, WalletFactoryProject walletFactoryProject) {
+        this.id = id;
+        this.alias = alias;
+        this.state = state;
+        this.walletFactoryProject = walletFactoryProject;
+    }
+
     public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, Wallet navigationStructure, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
         this.id = UUID.randomUUID();
         this.alias = alias;
@@ -123,6 +136,29 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     @Override
     public Wallet getNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException {
         return navigationStructure;
+    }
+
+    @Override
+    public String getNavigationStructureXml() throws CantGetWalletFactoryProjectNavigationStructureException {
+        if (navigationStructure != null) {
+            try {
+                RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+
+                JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+
+                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+                Writer outputStream = new StringWriter();
+                jaxbMarshaller.marshal(navigationStructure, outputStream);
+
+                return outputStream.toString();
+            } catch (JAXBException e) {
+                throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't get navigation structure XML.", "");
+            }
+        }
+        throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, null, "Navigation Structure is null", "");
     }
 
     @XmlElements({

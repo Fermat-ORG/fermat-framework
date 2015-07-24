@@ -4,17 +4,26 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,17 +32,24 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * TODO: This plugin do .
- * <p/>
- * TODO: DETAIL...............................................
- * <p/>
+ * Allows to create a Wallet Factory Project and associate it to a DeveloperIdentity
+ * Manage the relation Developer / Projects
+ * Each project generates different versions of the new Wallet while the developer exports it in a format readable by the wallet publisher.
+ *
+ * You can create a project since nothing.
+ * You can clone an existing project.
+ * If the project is cloned or forked, its structure is copied from the other project and do a local copy.
+ *
+ * One project consist in a navigation structure and multimedia resources (images, etc.).
+ *
+ * Can delivery the list of the projects associated to the current logged developer.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsWithLogger,LogManagerForDevelopers, Plugin, Service, WalletFactoryManager {
+public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryManager {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -45,8 +61,12 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsW
      */
     LogManager logManager;
 
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
+    /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Plugin Interface member variables.
@@ -59,9 +79,19 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsW
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
+    WalletFactoryMiddlewareProjectDao walletFactoryMiddlewareProjectDao;
+
     @Override
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
+        walletFactoryMiddlewareProjectDao = new WalletFactoryMiddlewareProjectDao(pluginDatabaseSystem);
+        try {
+            walletFactoryMiddlewareProjectDao.initializeDatabase(pluginId, pluginId.toString());
+        } catch (CantInitializeWalletFactoryMiddlewareDatabaseException e) {
+            this.serviceStatus = ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "", "");
+        }
+
     }
     @Override
     public void pause(){
@@ -84,22 +114,57 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsW
     }
 
 
-    /**
-     * DealWithErrors Interface implementation. 
-     */
     @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
+    public WalletFactoryMiddlewareProject createEmptyWalletFactoryProject(String name) throws CantCreateWalletFactoryProjectException {
+        try {
+            // TODO GET CURRENT LOGGED DEVELOPER
+            String developerPublicKey = "";
+
+            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletFactoryMiddlewareProject(name, developerPublicKey);
+            walletFactoryMiddlewareProjectDao.create(walletFactoryMiddlewareProject);
+
+            // TODO CREATE EMPTY MANIFEST
+
+            return walletFactoryMiddlewareProject;
+        } catch (CantCreateWalletFactoryProjectException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
     }
 
-    /**
-     * Plugin methods implementation.
-     */
     @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+    public void importWalletFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException {
+        // TODO LOOK FOR A WAY TO TO THIS
     }
 
+    @Override
+    public void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException {
+        // TODO LOOK FOR A WAY TO TO THIS
+    }
+
+    @Override
+    public List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectsException {
+        try {
+            // TODO GET CURRENT LOGGED DEVELOPER
+            String developerPublicKey = "";
+            return walletFactoryMiddlewareProjectDao.findAll(developerPublicKey);
+        } catch (CantGetWalletFactoryProjectsException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
+        try {
+            // TODO GET CURRENT LOGGED DEVELOPER
+            String developerPublicKey = "";
+            return walletFactoryMiddlewareProjectDao.findByName(name, developerPublicKey);
+        } catch (CantGetWalletFactoryProjectException|ProjectNotFoundException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
+    }
 
 
     /**
@@ -119,6 +184,15 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsW
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryMiddlewarePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectDao");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguage");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin");
+
         /**
          * I return the values.
          */
@@ -146,28 +220,28 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors,DealsW
 
     }
 
-    @Override
-    public void createEmptyWalletFactoryProject(String name) {
 
+    /**
+     * DealWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
     }
 
+    /**
+     * DealWithPluginDatabaseSystem Interface implementation.
+     */
     @Override
-    public void importWalletFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException {
-
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+    /**
+     * Plugin methods implementation.
+     */
     @Override
-    public void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException {
-
-    }
-
-    @Override
-    public List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectsException {
-        return null;
-    }
-
-    @Override
-    public WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException {
-        return null;
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
     }
 }

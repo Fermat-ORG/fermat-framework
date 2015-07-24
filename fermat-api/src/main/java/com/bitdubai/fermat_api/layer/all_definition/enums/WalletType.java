@@ -3,14 +3,15 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * Created by eze on 2015.07.20..
+ * Created by eze on 2015.07.22..
  */
-public enum BrandedWallet {
-    UNKNOWN_WALLET ("UNKW");
+public enum WalletType {
+    NICHE("NICHE"),
+    REFERENCE("REFER");
 
     private String code;
 
-    BrandedWallet (String code){
+    WalletType(String code){
         this.code = code;
     }
 
@@ -18,9 +19,10 @@ public enum BrandedWallet {
         return this.code;
     }
 
-    public NicheWallet getByCode(String code) throws InvalidParameterException {
-        switch (code) {
-            case "UNKW" : return NicheWallet.UNKNOWN_WALLET;
+    public static WalletType getByCode(String code) throws InvalidParameterException {
+        switch (code){
+            case "NICHE": return WalletType.NICHE;
+            case "REFER": return WalletType.REFERENCE;
             default: throw new InvalidParameterException();
         }
     }

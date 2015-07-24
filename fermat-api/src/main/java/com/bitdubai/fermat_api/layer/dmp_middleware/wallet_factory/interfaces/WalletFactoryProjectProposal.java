@@ -37,6 +37,9 @@ public interface WalletFactoryProjectProposal {
     // brings the navigation structure of the project proposal
     Wallet getNavigationStructure() throws CantGetWalletFactoryProjectNavigationStructureException;
 
+    // brings the navigation structure of the project proposal
+    String getNavigationStructureXml() throws CantGetWalletFactoryProjectNavigationStructureException;
+
     // get list of the skins
     List<WalletFactoryProjectSkin> getSkins();
 

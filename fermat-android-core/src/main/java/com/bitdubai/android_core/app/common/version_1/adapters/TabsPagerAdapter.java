@@ -169,16 +169,18 @@ import java.util.List;
             }
 
 
-            if(activity.getType()== Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN){
-                walletSession = walletSessionManager.openWalletSession(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                        (CryptoWalletManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE),
-                        (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
+
+            walletSession = walletSessionManager.openWalletSession(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+                    (CryptoWalletManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE),
+                    (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
+            if(activity!=null){
+                if(activity.getType()== Activities.CWP_SUP_APP_ALL_DEVELOPER){
+                    subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
+                            (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
+                            (ToolManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+                }
             }
-            if(activity.getType()== Activities.CWP_SUP_APP_ALL_DEVELOPER){
-                subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
-                        (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
-                        (ToolManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
-            }
+
 
 
 

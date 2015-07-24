@@ -210,35 +210,33 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
 
     @Override
     public App getLastApp() {
-        Iterator<Map.Entry<Apps, App>> eapp = this.listApps.entrySet().iterator();
+        if(lastApp != null){
+            Iterator<Map.Entry<Apps, App>> eapp = this.listApps.entrySet().iterator();
 
-        while (eapp.hasNext()) {
-            Map.Entry<Apps, App> appEntry = eapp.next();
-            RuntimeApp app = (RuntimeApp) appEntry.getValue();
-            if(app.getType().name().equals(lastApp.name())){
-                return app;
+            while (eapp.hasNext()) {
+                Map.Entry<Apps, App> appEntry = eapp.next();
+                RuntimeApp app = (RuntimeApp) appEntry.getValue();
+                if(app.getType().name().equals(lastApp.name())){
+                    return app;
+                }
             }
-
-
         }
         return null;
-
     }
 
     @Override
     public SubApp getLastSubApp() {
-        Iterator<Map.Entry<SubApps, SubApp>> esubapp = this.listSubApp.entrySet().iterator();
+        if(lastSubapp != null){
+            Iterator<Map.Entry<SubApps, SubApp>> esubapp = this.listSubApp.entrySet().iterator();
 
-        while (esubapp.hasNext()) {
-            Map.Entry<SubApps, SubApp> subappEntry = esubapp.next();
-            RuntimeSubApp subapp = (RuntimeSubApp) subappEntry.getValue();
-            if(subapp.getType().name().equals(this.lastSubapp.name())){
-                return subapp;
+            while (esubapp.hasNext()) {
+                Map.Entry<SubApps, SubApp> subappEntry = esubapp.next();
+                RuntimeSubApp subapp = (RuntimeSubApp) subappEntry.getValue();
+                if(subapp.getType().name().equals(this.lastSubapp.name())){
+                    return subapp;
+                }
             }
-
-
         }
-
         return null;
     }
 
@@ -246,32 +244,33 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
 
     @Override
     public Activity getLasActivity() {
-        Iterator<Map.Entry<Activities, Activity>> eactivity = this.listActivities.entrySet().iterator();
+        if(lastActivity != null){
+            Iterator<Map.Entry<Activities, Activity>> eactivity = this.listActivities.entrySet().iterator();
 
-        while (eactivity.hasNext()) {
-            Map.Entry<Activities, Activity> activityEntry = eactivity.next();
-            Activity activity = (Activity) activityEntry.getValue();
-            if(activity.getType().name().equals(this.lastActivity.name())){
-                return activity;
+            while (eactivity.hasNext()) {
+                Map.Entry<Activities, Activity> activityEntry = eactivity.next();
+                Activity activity = (Activity) activityEntry.getValue();
+                if(activity.getType().name().equals(this.lastActivity.name())){
+                    return activity;
+                }
             }
         }
-
         return null;
     }
 
     @Override
     public Fragment getLastFragment() {
+        if(lastFragment != null){
+            Iterator<Map.Entry<Fragments, Fragment>> efragment = this.listFragments.entrySet().iterator();
 
-        Iterator<Map.Entry<Fragments, Fragment>> efragment = this.listFragments.entrySet().iterator();
-
-        while (efragment.hasNext()) {
-            Map.Entry<Fragments, Fragment> fragmentEntry = efragment.next();
-            Fragment fragment = (Fragment) fragmentEntry.getValue();
-            if(fragment.getType().name().equals(this.lastFragment.name())){
-                return fragment;
+            while (efragment.hasNext()) {
+                Map.Entry<Fragments, Fragment> fragmentEntry = efragment.next();
+                Fragment fragment = (Fragment) fragmentEntry.getValue();
+                if(fragment.getType().name().equals(this.lastFragment.name())){
+                    return fragment;
+                }
             }
         }
-
         return null;
     }
 

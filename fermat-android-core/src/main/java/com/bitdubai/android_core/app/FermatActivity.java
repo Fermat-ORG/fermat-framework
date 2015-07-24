@@ -190,14 +190,15 @@ public class FermatActivity extends FragmentActivity{
     /**
      * Method that loads the UI
      */
-    protected void loadUI() {
+    protected PagerSlidingTabStrip loadBasicUI(Activity activity) {
+
+        /**
+         *  Tab member
+         */
+        PagerSlidingTabStrip pagerSlidingTabStrip = null;
 
         try
         {
-            /**
-             * Get current activity to paint
-             */
-            Activity activity = getActivityUsedType();
             /**
              * Get tabs to paint
              */
@@ -227,7 +228,7 @@ public class FermatActivity extends FragmentActivity{
             /**
              * Paint tabs in layout
              */
-            PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+            pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
             paintTabs(tabs, pagerSlidingTabStrip, activity);
 
             /**
@@ -242,20 +243,22 @@ public class FermatActivity extends FragmentActivity{
             /**
              * Paint a simgle fragment
              */
-            if(tabs == null && fragments.size() > 1){
+            /*if(tabs == null && fragments.size() > 1){
                 initialisePaging();
             }else{
                 /**
                  * Paint tabs
                  */
                 //setPagerTabs(pagerSlidingTabStrip,null,tabs);
-            }
+            //}
+
         }
         catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
+        return pagerSlidingTabStrip;
     }
 
     public Activity getActivityUsedType(){
@@ -549,6 +552,8 @@ public class FermatActivity extends FragmentActivity{
     protected void initialisePaging() {
 
         try {
+
+
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
             Iterator<Map.Entry<WalletFragments, Fragment>> efragments =getAppRuntimeMiddleware().getLasActivity().getFragments().entrySet().iterator();
             boolean flag = false;
