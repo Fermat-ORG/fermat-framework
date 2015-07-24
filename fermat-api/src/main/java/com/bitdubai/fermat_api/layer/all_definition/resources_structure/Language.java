@@ -48,6 +48,13 @@ public class Language implements FermatLanguage {
     public Language() {
     }
 
+    public Language(String name, Languages type, Version version) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.type = type;
+        this.version = version;
+    }
+
     public Language(UUID id, String name, Languages type, Map<String, String> strings, Version version) {
         this.id = id;
         this.name = name;

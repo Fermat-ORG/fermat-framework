@@ -2,9 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
 
-import java.util.Map;
 import java.util.UUID;
 
 /**

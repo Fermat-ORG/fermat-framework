@@ -9,16 +9,20 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCopyWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCopyWalletFactoryProjectSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectProposalException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectProposalException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguagesException;
@@ -30,6 +34,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetWalletFactoryProjectSkinStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectProposalException;
@@ -59,7 +64,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguage;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -296,10 +303,10 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     }
 
     @Override
-    public void deleteProposal(UUID id) throws CantDeleteWalletFactoryProjectProposalException, ProposalNotFoundException {
+    public void deleteProposal(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantDeleteWalletFactoryProjectProposalException, ProposalNotFoundException {
         // TODO DELETE STRUCTURE
         try {
-            walletFactoryMiddlewareProjectDao.deleteProposal(id);
+            walletFactoryMiddlewareProjectDao.deleteProposal(walletFactoryProjectProposal.getId());
         } catch (CantDeleteWalletFactoryProjectProposalException|ProposalNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -434,9 +441,23 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
 
     @Override
     public WalletFactoryProjectSkin createEmptySkin(String name, WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCreateEmptyWalletFactoryProjectSkinException {
-        // TODO CREATE EMPTY SKIN FILE (NAME+VERSION)
-        // TODO INSERT A NEW SKIN IN DATABASE
-        return null;
+        try {
+            // TODO FIND DESIGNER PUBLIC KEY
+            String designerPublicKey = "";
+            WalletFactoryProjectSkin walletFactoryProjectSkin = new WalletFactoryMiddlewareProjectSkin(name, designerPublicKey, new Version("1.0.0"), walletFactoryProjectProposal);
+            Skin skin = new Skin(name, new Version("1.0.0"));
+            setSkinStructureXml(skin, walletFactoryProjectSkin);
+            try {
+                walletFactoryMiddlewareProjectDao.createSkin(walletFactoryProjectSkin);
+                return walletFactoryProjectSkin;
+            } catch (CantCreateEmptyWalletFactoryProjectSkinException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw e;
+            }
+        } catch (CantSetWalletFactoryProjectSkinStructureException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateEmptyWalletFactoryProjectSkinException(CantCreateEmptyWalletFactoryProjectSkinException.DEFAULT_MESSAGE, e, "Cant create skin structure directory", "");
+        }
     }
 
     @Override
@@ -448,10 +469,14 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     }
 
     @Override
-    public void deleteSkin(UUID id) throws CantDeleteWalletFactoryProjectSkinException, SkinNotFoundException {
-        // TODO SEARCH BY EXISTENT ID
-        // TODO DELETE FILE STRUCTURE
-        // TODO DELETE RECORD FROM DATABASE
+    public void deleteSkin(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantDeleteWalletFactoryProjectSkinException, SkinNotFoundException {
+        // TODO DELETE STRUCTURE
+        try {
+            walletFactoryMiddlewareProjectDao.deleteSkin(walletFactoryProjectSkin.getId());
+        } catch (CantDeleteWalletFactoryProjectSkinException|SkinNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
     }
 
     @Override
@@ -589,10 +614,24 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     }
 
     @Override
-    public WalletFactoryProjectLanguage createEmptyLanguage(String name, Languages type, WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCreateEmptyWalletFactoryProjectSkinException {
-        // TODO CREATE EMPTY LANGUAGE FILE (NAME+VERSION)
-        // TODO INSERT A NEW LANGUAGE IN DATABASE
-        return null;
+    public WalletFactoryProjectLanguage createEmptyLanguage(String name, Languages type, WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCreateEmptyWalletFactoryProjectLanguageException {
+        try {
+            // TODO FIND TRANSLATOR PUBLIC KEY
+            String translatorPublicKey = "";
+            WalletFactoryProjectLanguage walletFactoryProjectLanguage = new WalletFactoryMiddlewareProjectLanguage(name, type, new Version("1.0.0"), translatorPublicKey, walletFactoryProjectProposal);
+            Language language = new Language(name, type, new Version("1.0.0"));
+            setLanguageXml(language, walletFactoryProjectLanguage);
+            try {
+                walletFactoryMiddlewareProjectDao.createLanguage(walletFactoryProjectLanguage);
+                return walletFactoryProjectLanguage;
+            } catch (CantCreateEmptyWalletFactoryProjectLanguageException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw e;
+            }
+        } catch (CantSetLanguageException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateEmptyWalletFactoryProjectLanguageException(CantCreateEmptyWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "Cant create language", "");
+        }
     }
 
     @Override
@@ -604,10 +643,128 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     }
 
     @Override
-    public void deleteLanguage(UUID id) throws CantDeleteWalletFactoryProjectLanguageException, LanguageNotFoundException {
-        // TODO SEARCH BY EXISTENT ID
-        // TODO DELETE FILE STRUCTURE
-        // TODO DELETE RECORD FROM DATABASE
+    public void deleteLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantDeleteWalletFactoryProjectLanguageException, LanguageNotFoundException {
+        // TODO DELETE STRUCTURE
+        try {
+            walletFactoryMiddlewareProjectDao.deleteLanguage(walletFactoryProjectLanguage.getId());
+        } catch (CantDeleteWalletFactoryProjectLanguageException|LanguageNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public Language getLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantGetLanguageException {
+        String path = createLanguagesPath(walletFactoryProjectLanguage);
+        String languageFileName = createLanguageFileName(walletFactoryProjectLanguage);
+        if (path != null) {
+            try {
+                PluginTextFile newFile = pluginFileSystem.getTextFile(pluginId, path, languageFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.loadFromMedia();
+                try {
+                    return getLanguage(newFile.getContent());
+                } catch (CantGetLanguageException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't convert the xml to the language.", "");
+                }
+            } catch (FileNotFoundException |CantCreateFileException |CantLoadFileException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language file.", "");
+            }
+        }
+        throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, null, "Can't create path, check the proposal", "");
+    }
+
+    @Override
+    public Language getLanguage(String language) throws CantGetLanguageException {
+        if (language != null) {
+            try {
+                RuntimeInlineAnnotationReader.cachePackageAnnotation(Language.class.getPackage(), new XmlSchemaMine(""));
+
+                JAXBContext jaxbContext = JAXBContext.newInstance(Language.class);
+
+                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+                StringReader reader = new StringReader(language);
+
+                return (Language) jaxbUnmarshaller.unmarshal(reader);
+            } catch (JAXBException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language XML.", "");
+            }
+        }
+        throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, null, "language is null", "");
+    }
+
+    @Override
+    public String getLanguageXml(Language language) throws CantGetLanguageException {
+        if (language != null) {
+            try {
+                RuntimeInlineAnnotationReader.cachePackageAnnotation(Language.class.getPackage(), new XmlSchemaMine(""));
+
+                JAXBContext jaxbContext = JAXBContext.newInstance(Language.class);
+
+                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+                Writer outputStream = new StringWriter();
+                jaxbMarshaller.marshal(language, outputStream);
+
+                return outputStream.toString();
+            } catch (JAXBException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language XML.", "");
+            }
+        }
+        throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, null, "language is null", "");
+    }
+
+    @Override
+    public void setLanguageXml(Language language, WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantSetLanguageException {
+        String path = createLanguagesPath(walletFactoryProjectLanguage);
+        String languageFileName = createLanguageFileName(walletFactoryProjectLanguage);
+        if (path != null) {
+            try {
+                String languageStructureXml = getLanguageXml(language);
+                try {
+                    PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, path, languageFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                    newFile.loadFromMedia();
+                    newFile.setContent(languageStructureXml);
+                    newFile.persistToMedia();
+                } catch (CantPersistFileException |CantCreateFileException |CantLoadFileException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    throw new CantSetLanguageException(CantSetLanguageException.DEFAULT_MESSAGE, e, "Can't create or overwrite language file.", "");
+                }
+            } catch (CantGetLanguageException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantSetLanguageException(CantSetLanguageException.DEFAULT_MESSAGE, e, "Can't convert language to xml format", "");
+            }
+        }
+        throw new CantSetLanguageException(CantSetLanguageException.DEFAULT_MESSAGE, null, "Can't create path, check the proposal", "");
+    }
+
+    private String createLanguagesPath(WalletFactoryProjectLanguage walletFactoryProjectLanguage) {
+        if (walletFactoryProjectLanguage != null &&
+                walletFactoryProjectLanguage.getName() != null &&
+                walletFactoryProjectLanguage.getVersion() != null &&
+                walletFactoryProjectLanguage.getWalletFactoryProjectProposal() != null) {
+
+            String proposalPath = createProposalPath(walletFactoryProjectLanguage.getWalletFactoryProjectProposal());
+            String languagesPath = WALLET_FACTORY_LANGUAGES_PATH;
+            return proposalPath + "/" +
+                    languagesPath + "/" +
+                    walletFactoryProjectLanguage.getName() + "/" +
+                    walletFactoryProjectLanguage.getVersion();
+        }
+        return null;
+    }
+
+    private String createLanguageFileName(WalletFactoryProjectLanguage walletFactoryProjectLanguage) {
+        if (walletFactoryProjectLanguage != null &&
+                walletFactoryProjectLanguage.getName() != null) {
+            return walletFactoryProjectLanguage.getName()+".xml";
+        }
+        return null;
     }
 
     /**

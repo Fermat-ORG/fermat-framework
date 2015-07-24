@@ -4,10 +4,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectProposalException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectProposalException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguagesException;
@@ -622,7 +626,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             // Register the failure.
             database.closeDatabase();
             throw new CantDeleteWalletFactoryProjectProposalException(CantDeleteWalletFactoryProjectProposalException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        }catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
             throw new CantDeleteWalletFactoryProjectProposalException(CantDeleteWalletFactoryProjectProposalException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
@@ -707,6 +711,77 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         }
     }
 
+    public void createSkin(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantCreateEmptyWalletFactoryProjectSkinException {
+
+        if (walletFactoryProjectSkin == null &&
+                walletFactoryProjectSkin.getId() != null &&
+                walletFactoryProjectSkin.getDesignerPublicKey() != null &&
+                walletFactoryProjectSkin.getName() != null &&
+                walletFactoryProjectSkin.getVersion() != null &&
+                walletFactoryProjectSkin.getWalletFactoryProjectProposal() != null){
+            throw new CantCreateEmptyWalletFactoryProjectSkinException(CantCreateEmptyWalletFactoryProjectSkinException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, alias, state and get proposal id.");
+        }
+
+        try {
+            database.openDatabase();
+            DatabaseTable projectSkinTable = database.getTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_TABLE_NAME);
+            DatabaseTableRecord entityRecord = projectSkinTable.getEmptyRecord();
+
+            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_ID_COLUMN_NAME, walletFactoryProjectSkin.getId());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME, walletFactoryProjectSkin.getName());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME, walletFactoryProjectSkin.getDesignerPublicKey());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_VERSION_COLUMN_NAME, walletFactoryProjectSkin.getVersion().toString());
+            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME, walletFactoryProjectSkin.getWalletFactoryProjectProposal().getId());
+
+            DatabaseTransaction transaction = database.newTransaction();
+            transaction.addRecordToInsert(projectSkinTable, entityRecord);
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+        } catch (DatabaseTransactionFailedException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantCreateEmptyWalletFactoryProjectSkinException(CantCreateEmptyWalletFactoryProjectSkinException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        }catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+            throw new CantCreateEmptyWalletFactoryProjectSkinException(CantCreateEmptyWalletFactoryProjectSkinException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        }
+    }
+
+    public void deleteSkin(UUID id) throws CantDeleteWalletFactoryProjectSkinException, SkinNotFoundException {
+
+        if (id == null){
+            throw new CantDeleteWalletFactoryProjectSkinException(CantDeleteWalletFactoryProjectSkinException.DEFAULT_MESSAGE, null, "", "The id is required, can not be null");
+        }
+
+        try {
+            database.openDatabase();
+            DatabaseTable projectSkinTable = database.getTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_TABLE_NAME);
+            projectSkinTable.setUUIDFilter(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            projectSkinTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecordList = projectSkinTable.getRecords();
+
+            if (!databaseTableRecordList.isEmpty()) {
+                DatabaseTableRecord record = databaseTableRecordList.get(0);
+
+                projectSkinTable.deleteRecord(record);
+            } else {
+                database.closeDatabase();
+                throw new SkinNotFoundException(SkinNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project skin with that id");
+            }
+            database.closeDatabase();
+        } catch (CantDeleteRecordException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantDeleteWalletFactoryProjectSkinException(CantDeleteWalletFactoryProjectSkinException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+
+        } catch (CantLoadTableToMemoryException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantDeleteWalletFactoryProjectSkinException(CantDeleteWalletFactoryProjectSkinException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+            throw new CantDeleteWalletFactoryProjectSkinException(CantDeleteWalletFactoryProjectSkinException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        }
+    }
+
     /**
      * Method that list the all entities on the database.
      *
@@ -786,6 +861,78 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             throw new CantGetWalletFactoryProjectLanguageException(CantGetWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
             throw new CantGetWalletFactoryProjectLanguageException(CantGetWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        }
+    }
+
+    public void createLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantCreateEmptyWalletFactoryProjectLanguageException {
+
+        if (walletFactoryProjectLanguage == null &&
+                walletFactoryProjectLanguage.getId() != null &&
+                walletFactoryProjectLanguage.getTranslatorPublicKey() != null &&
+                walletFactoryProjectLanguage.getName() != null &&
+                walletFactoryProjectLanguage.getVersion() != null &&
+                walletFactoryProjectLanguage.getWalletFactoryProjectProposal() != null){
+            throw new CantCreateEmptyWalletFactoryProjectLanguageException(CantCreateEmptyWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, alias, state and get proposal id.");
+        }
+
+        try {
+            database.openDatabase();
+            DatabaseTable projectLanguageTable = database.getTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TABLE_NAME);
+            DatabaseTableRecord entityRecord = projectLanguageTable.getEmptyRecord();
+
+            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_ID_COLUMN_NAME, walletFactoryProjectLanguage.getId());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_NAME_COLUMN_NAME, walletFactoryProjectLanguage.getName());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, walletFactoryProjectLanguage.getTranslatorPublicKey());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, walletFactoryProjectLanguage.getType().value());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME, walletFactoryProjectLanguage.getVersion().toString());
+            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME, walletFactoryProjectLanguage.getWalletFactoryProjectProposal().getId());
+
+            DatabaseTransaction transaction = database.newTransaction();
+            transaction.addRecordToInsert(projectLanguageTable, entityRecord);
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+        } catch (DatabaseTransactionFailedException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantCreateEmptyWalletFactoryProjectLanguageException(CantCreateEmptyWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        }catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+            throw new CantCreateEmptyWalletFactoryProjectLanguageException(CantCreateEmptyWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        }
+    }
+
+    public void deleteLanguage(UUID id) throws CantDeleteWalletFactoryProjectLanguageException, LanguageNotFoundException {
+
+        if (id == null){
+            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, null, "", "The id is required, can not be null");
+        }
+
+        try {
+            database.openDatabase();
+            DatabaseTable projectLanguageTable = database.getTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TABLE_NAME);
+            projectLanguageTable.setUUIDFilter(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            projectLanguageTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecordList = projectLanguageTable.getRecords();
+
+            if (!databaseTableRecordList.isEmpty()) {
+                DatabaseTableRecord record = databaseTableRecordList.get(0);
+
+                projectLanguageTable.deleteRecord(record);
+            } else {
+                database.closeDatabase();
+                throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project language with that id");
+            }
+            database.closeDatabase();
+        } catch (CantDeleteRecordException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+
+        } catch (CantLoadTableToMemoryException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
 
