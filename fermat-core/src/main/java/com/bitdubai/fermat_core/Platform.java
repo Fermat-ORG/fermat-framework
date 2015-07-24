@@ -105,6 +105,8 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -119,6 +121,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since Java JDK 1.7
  */
 public class Platform  {
+
+    /**
+     * Represent the Logger
+     */
+    private static Logger LOG = Logger.getGlobal();
 
     /**
      * Represent the dealsWithDatabaseManagersPlugins
@@ -251,6 +258,8 @@ public class Platform  {
      */
     public void start() throws CantStartPlatformException, CantReportCriticalStartingProblemException {
 
+        LOG.info("Platform - start()");
+
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
          * ------------------------------------------------------------------------------------------------------------*
          * Layers initialization                                                                                       *
@@ -301,6 +310,7 @@ public class Platform  {
      */
     private void initializePlatformLayers() throws CantReportCriticalStartingProblemException {
 
+        LOG.info("Platform - initializing Platform Layers ...");
 
         /**
          * Here I will be starting all the platforms layers. It is required that none of them fails. That does not mean
@@ -395,6 +405,9 @@ public class Platform  {
             corePlatformContext.registerPlatformLayer(mPlatformServiceLayer, PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER);
 
         } catch (CantStartLayerException cantStartLayerException) {
+
+            LOG.log(Level.SEVERE, cantStartLayerException.getLocalizedMessage());
+
             /**
              * At this point the platform not only can not be started but also the problem can not be reported. That is
              * the reason why I am going to throw a special exception in order to alert the situation to whoever is running
@@ -411,6 +424,7 @@ public class Platform  {
      */
     private void initializeAddons() throws CantStartPlatformException {
 
+        LOG.info("Platform - initializing Addons ...");
 
         try {
 
@@ -498,8 +512,7 @@ public class Platform  {
 
         } catch (CantStartPluginException cantStartPluginException) {
 
-            System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage());
-            cantStartPluginException.printStackTrace();
+            LOG.log(Level.SEVERE, cantStartPluginException.getLocalizedMessage());
             throw new CantStartPlatformException();
         }
 
@@ -511,7 +524,7 @@ public class Platform  {
      */
     private void initializePlugins() throws CantStartPlatformException {
 
-
+        LOG.info("Platform - initializing Plugins ...");
 
         try {
 
@@ -894,10 +907,7 @@ public class Platform  {
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
-            System.err.println("CantInitializePluginsManager: " + cantInitializePluginsManagerException.getMessage());
-
-            cantInitializePluginsManagerException.printStackTrace();
-
+            LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
             throw new CantStartPlatformException();
         }
     }
@@ -1075,7 +1085,7 @@ public class Platform  {
      *
      * @param plugin
      */
-    private void injectLayerReferences(Plugin plugin) {
+    private void injectLayerReferences(Plugin plugin) throws CantStartPlatformException {
 
         try {
 
@@ -1091,9 +1101,9 @@ public class Platform  {
 
             }
 
-        } catch (Exception e){
-            System.err.println("Exception: Problem with references.");
-            e.printStackTrace();
+        } catch (Exception exception){
+            LOG.log(Level.SEVERE, exception.getLocalizedMessage());
+            throw new CantStartPlatformException();
         }
     }
 
