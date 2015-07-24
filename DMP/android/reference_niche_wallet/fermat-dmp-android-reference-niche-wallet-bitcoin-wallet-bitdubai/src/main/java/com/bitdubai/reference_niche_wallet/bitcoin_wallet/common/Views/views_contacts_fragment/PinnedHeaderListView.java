@@ -15,14 +15,13 @@
  */
 
 // modified by @author Bhavya Mehta
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;

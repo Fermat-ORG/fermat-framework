@@ -15,7 +15,7 @@
  */
 
 // modified by @author Bhavya Mehta
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment;
 
 import android.view.View;
 

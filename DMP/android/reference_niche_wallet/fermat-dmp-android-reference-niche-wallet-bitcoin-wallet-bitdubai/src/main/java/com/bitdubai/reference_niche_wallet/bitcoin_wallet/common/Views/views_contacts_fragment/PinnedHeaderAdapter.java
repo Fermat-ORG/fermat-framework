@@ -1,5 +1,5 @@
 // @author Bhavya Mehta
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,11 +12,9 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment.ListFilter;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.FermatListViewFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
 
 import java.util.ArrayList;
 import java.util.Locale;
