@@ -7,9 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Matias Furszyfer on 2015.07.20..
@@ -31,7 +29,7 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
 
     @Override
     public WalletSession openWalletSession(Wallets walletType,CryptoWalletManager cryptoWalletManager,ErrorManager errorManager) {
-        WalletSession walletSession= new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Session.WalletSession(walletType,cryptoWalletManager,errorManager);
+        WalletSession walletSession= new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.session.WalletSession(walletType,cryptoWalletManager,errorManager);
         lstWalletSession.put(walletType,walletSession);
         return walletSession;
     }
@@ -39,7 +37,7 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
     @Override
     public boolean closeWalletSession(Wallets wallet) {
         try {
-            lstWalletSession.remove(new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Session.WalletSession(wallet));
+            lstWalletSession.remove(new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.session.WalletSession(wallet));
         }catch (Exception e){
             e.printStackTrace();
         }

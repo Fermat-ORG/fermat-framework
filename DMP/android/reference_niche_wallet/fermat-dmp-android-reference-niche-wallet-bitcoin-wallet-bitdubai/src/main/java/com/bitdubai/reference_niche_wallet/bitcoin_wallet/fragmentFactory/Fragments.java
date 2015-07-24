@@ -13,7 +13,7 @@ public enum Fragments implements WalletFragments {
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE("BitcoinReceiveFragment"),
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS("BitcoinTransactionFragment"),
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS("BitcoinContactFragment"),
-    CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS("BitcoinContactFragment");
+    CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS("BitcoinCreateContactFragment");
 
 
     private String key;

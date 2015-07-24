@@ -3,7 +3,6 @@ package com.bitdubai.android_core.app;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -18,10 +17,7 @@ import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
@@ -74,7 +70,6 @@ public class StartActivity extends FragmentActivity {
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                         Toast.LENGTH_LONG).show();
-                // System.err.println("Can't set content view as runtime_app_activity_runtime: " + e.getMessage());
             }
 
             new GetTask(this).execute();
@@ -154,14 +149,13 @@ public class StartActivity extends FragmentActivity {
             }
 
 
-            //get platform object
+            /**
+             * get platform object
+             */
+
             platformContext = platform.getCorePlatformContext();
 
 
-
-
-            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
-            ApplicationSession.mDefaultTypeface=tf;
 
             return true;
         }

@@ -28,11 +28,10 @@ public class setLoggingLevelPerClassTest {
         assertEquals(DeveloperModulePluginRoot.getLogLevelByClass(CLASS), LOG_LEVEL);
 
         data.clear();
-        LogLevel newLogLevel = LogLevel.AGGRESSIVE_LOGGING;
-        data.put(CLASS, newLogLevel);
+        LogLevel logLevel = LogLevel.AGGRESSIVE_LOGGING;
+        data.put(CLASS, logLevel);
         root.setLoggingLevelPerClass(data);
 
-        assertEquals(DeveloperModulePluginRoot.getLogLevelByClass(CLASS), newLogLevel);
-
+        assertEquals(DeveloperModulePluginRoot.getLogLevelByClass(CLASS), logLevel);
     }
 }

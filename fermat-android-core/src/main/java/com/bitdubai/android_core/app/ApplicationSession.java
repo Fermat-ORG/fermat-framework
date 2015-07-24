@@ -15,7 +15,7 @@ import com.bitdubai.fermat_core.Platform;
 
 
 /**
- * Reformated by Matias
+ * Reformated by Matias Furszyfer
  */
 
 /**
@@ -28,27 +28,33 @@ import com.bitdubai.fermat_core.Platform;
 
 public class ApplicationSession extends android.support.multidex.MultiDexApplication {
 
-    public static Typeface mDefaultTypeface;
-    public static Object[] mParams; //TODO : LUIS : Creale el caso a Natalia para que arregle lo del back button.
+
+    public static Object[] mParams; //TODO : Caso creado a Natalia.
 
 
     /**
-     * Fermat platform
+     *  Fermat platform
      */
+
     private Platform fermatPlatform;
+
     /**
      * Sub App session Manager
      */
+
     private SubAppSessionManager subAppSessionManager;
+
     /**
      * Wallet session manager
      */
+
     private WalletSessionManager walletSessionManager;
 
 
     /**
      *  Application session constructor
      */
+
     public ApplicationSession() {
         super();
         fermatPlatform = new Platform();
@@ -56,13 +62,6 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
         walletSessionManager = new WalletSessionManager();
     }
 
-    /**
-     *  Return the default typeface
-     * @return Typeface
-     */
-    public Typeface getDefaultTypeface() {
-        return mDefaultTypeface;
-    }
 
     /**
      *  Method to get the fermat platform

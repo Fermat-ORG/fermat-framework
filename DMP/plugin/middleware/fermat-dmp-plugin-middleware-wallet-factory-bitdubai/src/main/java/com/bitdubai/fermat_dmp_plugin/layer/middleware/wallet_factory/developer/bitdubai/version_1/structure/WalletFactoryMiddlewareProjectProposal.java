@@ -82,6 +82,20 @@ public class WalletFactoryMiddlewareProjectProposal implements DealsWithPluginFi
     public WalletFactoryMiddlewareProjectProposal() {
     }
 
+    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, WalletFactoryProject walletFactoryProject) {
+        this.id = UUID.randomUUID();
+        this.alias = alias;
+        this.state = state;
+        this.walletFactoryProject = walletFactoryProject;
+    }
+
+    public WalletFactoryMiddlewareProjectProposal(UUID id, String alias, FactoryProjectState state, WalletFactoryProject walletFactoryProject) {
+        this.id = id;
+        this.alias = alias;
+        this.state = state;
+        this.walletFactoryProject = walletFactoryProject;
+    }
+
     public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, Wallet navigationStructure, List<WalletFactoryProjectSkin> skins, List<WalletFactoryProjectLanguage> languages) {
         this.id = UUID.randomUUID();
         this.alias = alias;

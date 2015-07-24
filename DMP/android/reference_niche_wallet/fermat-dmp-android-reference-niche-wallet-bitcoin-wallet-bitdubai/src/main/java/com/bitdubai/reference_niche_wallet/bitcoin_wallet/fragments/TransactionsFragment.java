@@ -28,10 +28,10 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.EntryItem;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.Item;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.SectionItem;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionItem;
 
 
 import android.widget.TextView;

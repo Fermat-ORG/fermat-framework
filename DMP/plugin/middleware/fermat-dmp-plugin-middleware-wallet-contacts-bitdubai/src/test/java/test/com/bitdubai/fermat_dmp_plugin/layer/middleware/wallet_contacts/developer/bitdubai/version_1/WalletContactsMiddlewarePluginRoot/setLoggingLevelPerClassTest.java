@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by root on 18/07/15.
+ * Created by Nerio on 18/07/15.
  */
 public class setLoggingLevelPerClassTest {
 

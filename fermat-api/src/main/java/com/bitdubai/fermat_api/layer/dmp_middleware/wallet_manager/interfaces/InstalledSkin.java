@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+
 import java.util.UUID;
 
 /**
@@ -15,6 +17,13 @@ public interface InstalledSkin {
     public String getAlias();
 
     /**
+     * This method gives us the identifier of an skin
+     *
+     * @return the skin identifier
+     */
+    public UUID getId();
+
+    /**
      * This method gives us the name of the preview image of the skin
      *
      * @return the name of the image used to reach it in the wallet resources plug-in
@@ -22,9 +31,9 @@ public interface InstalledSkin {
     public String getPreview();
 
     /**
-     * This method gives us the identifier of an skin
+     * This method gives us the version of the skin
      *
-     * @return the skin identifier
+     * @return the skin version
      */
-    public UUID getId();
+    public Version getVersion();
 }
