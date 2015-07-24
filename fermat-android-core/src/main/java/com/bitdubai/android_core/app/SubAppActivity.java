@@ -297,8 +297,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = getAppRuntimeMiddleware().getFragment(frgBackType); //set back fragment to actual fragment to run
 
-            //I get string context with params pass to fragment to return with this data
-            ApplicationSession.mParams=fragmentBack.getContext();
 
             this.loadFragment(frgBackType);
         }
