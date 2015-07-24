@@ -45,9 +45,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
+
 /**
- * Created by natalia on 19/06/15.
+ * Created by Matias Furszyfer on 19/07/15.
  */
+
 public class ContactsFragment extends Fragment implements FermatListViewFragment{
 
     private static final String ARG_POSITION = "position";
@@ -152,7 +155,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Unexpected error get Contact list - " + e.getMessage());
+            showMessage(getActivity(),"Unexpected error get Contact list - " + e.getMessage());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -170,7 +173,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
             walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+            showMessage(getActivity(),"CantGetAllWalletContactsException- " + e.getMessage());
         }
 
         mItems = new ArrayList<String>();
@@ -412,22 +415,11 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         }
     }
 
-    /*@Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (mListItems != null && mListItems.size() > 0) {
-            outState.putStringArrayList("mListItems", mListItems);
-        }
-        if (mListSectionPos != null && mListSectionPos.size() > 0) {
-            outState.putIntegerArrayList("mListSectionPos", mListSectionPos);
-        }
-        String searchText = mSearchView.getText().toString();
-        if (searchText != null && searchText.length() > 0) {
-            outState.putString("constraint", searchText);
-        }
-        super.onSaveInstanceState(outState);
-    }
-    */
 
+    /**
+     *
+     * @param name
+     */
     private void showAddContact(String name) {
         CreateContactFragment createContactFragment = new CreateContactFragment();
         createContactFragment.walletSession=walletSession;
@@ -443,17 +435,4 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     }
 
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
 }
