@@ -14,13 +14,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by Matias Furszyfer on 24/07/15.
  */
+
 public class RuntimeSubApp implements SubApp {
 
     SubApps type;
+
     Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
-    Map<Wallets, Wallet> wallets= new  HashMap<Wallets, Wallet>();
+
+    Activities startActivity;
+
+    Activities lastActivity;
+
     Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
 
 
@@ -35,9 +41,6 @@ public class RuntimeSubApp implements SubApp {
         activities.put(activity.getType(), activity);
     }
 
-    public void addWallet (Wallet wallet){
-        wallets.put(wallet.getType(), wallet);
-    }
 
     public void addLanguagePackage (LanguagePackage languagePackage){
         languagePackages.put(languagePackage.getName(),languagePackage);
@@ -58,9 +61,24 @@ public class RuntimeSubApp implements SubApp {
     }
 
     @Override
-    public Map<Wallets, Wallet> getWallets(){
-        return wallets;
+    public Activity getActivity(Activities activities) {
+        this.lastActivity=activities;
+        return this.activities.get(activities);
     }
+
+    @Override
+    public Activity getLastActivity() {
+        if(lastActivity==null){
+            return activities.get(startActivity);
+        }
+        return activities.get(lastActivity);
+    }
+
+    @Override
+    public void setStartActivity(Activities activity) {
+        this.startActivity=activity;
+    }
+
 
     @Override
     public Map<String,LanguagePackage> getLanguagePackages(){

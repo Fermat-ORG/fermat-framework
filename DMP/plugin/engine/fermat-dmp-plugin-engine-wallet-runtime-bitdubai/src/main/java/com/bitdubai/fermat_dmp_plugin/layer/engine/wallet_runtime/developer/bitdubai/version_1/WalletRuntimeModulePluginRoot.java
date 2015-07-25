@@ -77,7 +77,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      */
 
 
-
     Map<Wallets, Wallet> listWallets = new HashMap<Wallets, Wallet>();
 
     Wallets lastWallet;
