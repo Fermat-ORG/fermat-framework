@@ -136,7 +136,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      */
 
     @Override
-    public List<DatabaseVariable> getVarialbesResult(){
+    public List<DatabaseVariable> getVariablesResult(){
         return this.variablesResult;
     }
 

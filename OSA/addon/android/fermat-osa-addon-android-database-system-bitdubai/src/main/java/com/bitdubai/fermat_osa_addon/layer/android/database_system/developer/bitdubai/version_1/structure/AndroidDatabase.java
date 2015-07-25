@@ -188,7 +188,7 @@ public class AndroidDatabase implements Database, DatabaseFactory {
                     selectTables.get(i).selectRecord(selectRecords.get(i));
                     //get list of variables and this values to pass at update and insert
                     //I assume that only a select defined
-                    variablesResult =  selectTables.get(i).getVarialbesResult();
+                    variablesResult =  selectTables.get(i).getVariablesResult();
                 }
 
             //update
