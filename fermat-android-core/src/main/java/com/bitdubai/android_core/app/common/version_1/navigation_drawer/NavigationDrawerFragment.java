@@ -29,9 +29,8 @@ import com.bitdubai.android_core.app.SubAppActivity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
@@ -51,7 +50,7 @@ import java.util.List;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
-    private AppRuntimeManager appRuntimeMiddleware;
+    private SubAppRuntimeManager appRuntimeMiddleware;
     private App app;
     private SubApp subApp;
     private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity;
@@ -149,7 +148,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             this.platformContext = platform.getCorePlatformContext();
 
-            this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+            this.appRuntimeMiddleware =  (SubAppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
             menuOption = new ArrayList<String>();
 
@@ -289,15 +288,15 @@ public class NavigationDrawerFragment extends Fragment {
                 mCallbacks.onNavigationDrawerItemSelected(position);
             }
             //test mati
-            if (((FermatActivity)(getActivity())).getAppRuntimeMiddleware().getLasActivity().getType().getKey() == "DesktopActivity") {
+            if (((FermatActivity)(getActivity())).getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getType().getKey() == "DesktopActivity") {
 
 
                 //wallet store
                 if (position == 5) {
-                    AppRuntimeManager appRuntimeMiddleware = (AppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-                    appRuntimeMiddleware = (AppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+                    SubAppRuntimeManager appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+                    appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
                     Intent intent;
-                    appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+                    appRuntimeMiddleware.getLastSubApp().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
                     intent = new Intent(getActivity(), SubAppActivity.class);
                     intent.putExtra("executeStart", "1");
                     startActivity(intent);

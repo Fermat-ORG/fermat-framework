@@ -76,6 +76,7 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
      */
     @Override
     public Activity getActivity(Activities activities) {
+        this.lastActivity=activities;
         return this.activities.get(activities);
     }
 
