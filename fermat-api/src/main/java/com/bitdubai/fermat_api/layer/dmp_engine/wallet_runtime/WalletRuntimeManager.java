@@ -20,8 +20,20 @@ public interface WalletRuntimeManager {
     
     public void recordClosedWallet (UUID walletId) throws CantRecordClosedWalletException;
 
+    /**
+     *  Get the last wallet in screen
+     *
+     * @return Wallet in use
+     */
     public Wallet getLastWallet ();
 
+
+    /**
+     *  Search wallet in the wallet installed list
+     *
+     * @param wallets type of Wallet
+     * @return  The installed Wallet
+     */
     public Wallet getWallet(Wallets wallets);
     
 }
