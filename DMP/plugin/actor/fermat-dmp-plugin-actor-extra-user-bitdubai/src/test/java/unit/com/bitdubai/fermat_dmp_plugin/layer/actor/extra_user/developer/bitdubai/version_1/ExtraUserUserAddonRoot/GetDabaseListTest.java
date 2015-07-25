@@ -64,10 +64,13 @@ public class GetDabaseListTest {
 
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void getDatabaseList_NullDeveloperObjectFactory_ThrowsGenericException() throws Exception{
 
-            extraUserUserAddonRoot.getDatabaseList(null);
+        MockErrorManager mockErrorManager=new MockErrorManager();
+
+        extraUserUserAddonRoot.setErrorManager(mockErrorManager);
+        extraUserUserAddonRoot.getDatabaseList(null);
 
     }
 
