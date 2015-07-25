@@ -1,13 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProposalNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -21,14 +16,6 @@ public interface WalletFactoryProject {
 
     String getName();
 
-    List<WalletFactoryProjectProposal> getProposals() throws CantGetWalletFactoryProjectProposalsException;
-
-    WalletFactoryProjectProposal getProposalByName(String proposal) throws CantGetWalletFactoryProjectProposalException, ProposalNotFoundException;
-
-    WalletFactoryProjectProposal getProposalById(UUID id) throws CantGetWalletFactoryProjectProposalException, ProposalNotFoundException;
-
-    String getProjectXml(WalletFactoryProject walletFactoryProject) throws CantGetObjectStructureXmlException;
-
-    WalletFactoryProject getProjectFromXml(String stringXml) throws CantGetObjectStructureFromXmlException;
+    Wallets getType();
 
 }
