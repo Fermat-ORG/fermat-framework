@@ -300,8 +300,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
-                            ((FermatScreenSwapper) getActivity()).changeScreen();
+                             ((FermatScreenSwapper) getActivity()).changeScreen("WalletBitcoinActivity",null);
 
                         }
                     });
@@ -311,8 +310,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
-                            ((FermatScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).changeScreen("WalletBitcoinActivity",null);
 
                         }
                     });

@@ -214,10 +214,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
                         params[0] = resource;
                         params[1] = developerDatabaseList.get(position);
-                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperTablesFragment");
-                        ((FermatScreenSwapper)getActivity()).setParams(params);
-                        ((FermatScreenSwapper)getActivity()).changeScreen();
 
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperTablesFragment",params);
 
 
                     }

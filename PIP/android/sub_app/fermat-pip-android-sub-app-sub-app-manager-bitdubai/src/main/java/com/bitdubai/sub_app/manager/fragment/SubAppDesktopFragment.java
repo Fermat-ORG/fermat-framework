@@ -192,8 +192,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).setScreen("DevelopersActivity");
-                            ((FermatScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).changeScreen("DevelopersActivity",null);
 
                         }
                     });
@@ -206,8 +205,7 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                          ((FermatScreenSwapper) getActivity()).setScreen("FactoryActivity");
-                            ((FermatScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).changeScreen("FactoryActivity",null);
                         }
                     });
                     break;
@@ -221,8 +219,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).setScreen("PublisherActivity");
-                            ((FermatScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).changeScreen("PublisherActivity",null);
                         }
                     });
                     break;
@@ -236,8 +233,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
           //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).setScreen("StoreFrontActivity");
-                            ((FermatScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).changeScreen("StoreFrontActivity",null);
                         }
                     });
                     break;

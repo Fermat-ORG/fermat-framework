@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -143,6 +145,8 @@ public class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsW
                 context.append("blockChainFileName: " + blockChainFileName.toString());
                 throw new CantCreateBlockStoreFileException("Could not save blockchain in disk and in memory", e, context.toString(), "Not enought space on disk.");
             }
+        }catch (Exception exception){
+            throw new CantCreateBlockStoreFileException("Could not save blockchain in disk and in memory", FermatException.wrapException(exception), null, null);
         }
 
     }
