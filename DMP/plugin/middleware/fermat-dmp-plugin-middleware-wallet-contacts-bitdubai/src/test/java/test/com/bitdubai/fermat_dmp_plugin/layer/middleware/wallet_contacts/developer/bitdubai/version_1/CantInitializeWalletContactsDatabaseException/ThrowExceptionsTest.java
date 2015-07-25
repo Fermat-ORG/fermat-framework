@@ -7,11 +7,11 @@ import org.junit.Test;
 /**
  * Created by Nerio on 18/07/15.
  */
-//public class ThrowExceptionsTest {
+public class ThrowExceptionsTest {
 
 //    @Test
 //    (expected = CantInitializeWalletContactsDatabaseException.class)
 //    public void throwCantCreateBlockStoreFileExceptionTest() throws CantInitializeWalletContactsDatabaseException {
 //        throw new CantInitializeWalletContactsDatabaseException();
 //    }
-//}
+}
