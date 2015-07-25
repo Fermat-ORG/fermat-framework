@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1;
 
 /**
- * Created by ciencias on 2/14/15.
- * Reformated by Matias Furszyfer 24/07/15
+ * Created by Matias Furszyfer 24/07/15
  */
 
 import com.bitdubai.fermat_api.CantStartPluginException;
