@@ -8,7 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum InstallationStatus {
     INSTALLED ("INSED"),
     NOT_INSTALLED ("NOINS"),
-    INSTALLING ("INSING");
+    INSTALLING ("INSING"),
+    INSTALL_AVAILABLE("INSA");
 
     private String code;
 
@@ -25,6 +26,7 @@ public enum InstallationStatus {
             case "INSED": return InstallationStatus.INSTALLED;
             case "NOINS": return InstallationStatus.NOT_INSTALLED;
             case "INSING": return InstallationStatus.INSTALLING;
+            case "INSA": return InstallationStatus.INSTALL_AVAILABLE;
             default:
                 throw new InvalidParameterException(code);
         }

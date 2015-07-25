@@ -16,9 +16,23 @@ public interface WalletInformation {
      *
      * @return an installation status represented by the enum InstallationStatus
      */
-    public InstallationStatus getWalletInstallationStatus() throws CantGetInstallationStatusException;
+    public InstallationStatus getWalletInstallationStatus(UUID walletId) throws CantGetInstallationStatusException;
 
     public InstallationStatus getLanguageInstallationStatus(UUID languageId);
 
     public InstallationStatus getSkinInstallationStatus(UUID skinId);
+
+    public InstallationStatus getTranslatorInstallationStatus(UUID translatorId);
+
+    public InstallationStatus getDesignerInstallationStatus (UUID designerId);
+
+    public void setWalletInstallationStatus(UUID walletId, InstallationStatus status) throws CantGetInstallationStatusException;
+
+    public void setLanguageInstallationStatus(UUID languageId, InstallationStatus status);
+
+    public void setSkinInstallationStatus(UUID skinId, InstallationStatus status);
+
+    public void setTranslatorInstallationStatus(UUID translatorId, InstallationStatus status);
+
+    public void setDesignerInstallationStatus (UUID designerId, InstallationStatus status);
 }

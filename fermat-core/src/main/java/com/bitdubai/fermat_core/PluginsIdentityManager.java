@@ -58,7 +58,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.location.developer.bitdubai.ve
  */
 
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.SubAppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
@@ -291,8 +291,8 @@ public class PluginsIdentityManager {
 
         if (pluginIndex == 0) {
             try {
-                AppRuntimeMiddlewarePluginRoot tryType;
-                tryType = (AppRuntimeMiddlewarePluginRoot) plugin;
+                SubAppRuntimeMiddlewarePluginRoot tryType;
+                tryType = (SubAppRuntimeMiddlewarePluginRoot) plugin;
                 pluginIndex = 6;
             } catch (Exception e) {
                 /**

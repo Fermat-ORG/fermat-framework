@@ -22,6 +22,7 @@ public interface Skin {
     public UUID getWalletId();
 
 
+
     /**
      * Version information, current, Inicial and Final versions accepted.
      */
@@ -33,19 +34,21 @@ public interface Skin {
      * Skin presentation information
      */
     public byte[] getPresentationImage() throws CantGetWalletIconException;
-    public List<Byte[]> getPreviewImageList() throws CantGetWalletIconException;
+    public List<byte[]> getPreviewImageList() throws CantGetWalletIconException;
     public boolean hasVideoPreview();
     public List<URL> getVideoPreviews() throws CantGetSkinVideoPreviewException;
 
     /**
      * Skin resource information
      */
-    public String getSkinURL();
+    public URL getSkinURL();
     public long getSkinSizeInBytes();
 
     /**
      * Skin designer information
      */
-    public String getSkinDesignerName();
-    public String getSkinDesignerPublicKey();
+    public UUID getSkinDesignerId();
+
+    public boolean isDefault();
+
 }

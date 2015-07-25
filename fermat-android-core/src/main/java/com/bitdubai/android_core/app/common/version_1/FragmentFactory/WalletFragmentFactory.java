@@ -1,8 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.FragmentFactory;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 
 
