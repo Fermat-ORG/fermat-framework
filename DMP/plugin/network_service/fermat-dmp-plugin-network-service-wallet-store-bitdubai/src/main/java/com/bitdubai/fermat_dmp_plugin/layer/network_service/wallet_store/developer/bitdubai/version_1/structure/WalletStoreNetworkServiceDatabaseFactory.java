@@ -90,11 +90,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
         }
 
         /**
@@ -107,6 +104,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -120,6 +119,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -134,6 +135,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -147,6 +150,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -160,6 +165,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -173,6 +180,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "OwnerId: " + ownerId.toString(), "There is a problem with the ownerId of the database.");
         } catch (CantCreateTableException cantCreateTableException) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "TableName: " + WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME.toString(), "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch (Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
 
@@ -223,6 +232,7 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
+        table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.ITEM_FIRST_KEY_COLUMN);
 
@@ -278,6 +288,7 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 12, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FIRST_KEY_COLUMN);
 
@@ -332,7 +343,9 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 12, Boolean.FALSE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_FIRST_KEY_COLUMN);
 

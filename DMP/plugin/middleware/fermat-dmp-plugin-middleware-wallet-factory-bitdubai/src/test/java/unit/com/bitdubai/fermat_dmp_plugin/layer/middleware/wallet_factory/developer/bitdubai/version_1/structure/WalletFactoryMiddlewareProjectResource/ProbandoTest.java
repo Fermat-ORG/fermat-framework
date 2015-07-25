@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
@@ -33,9 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -199,11 +196,11 @@ public class ProbandoTest extends TestCase {
     private WalletFactoryMiddlewareProjectSkin getSkin(String name) {
         List<WalletFactoryProjectResource> resources = new ArrayList<>();
 
-        WalletFactoryProjectResource res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", name+"imagen1.png", ResourceType.IMAGE);
+        WalletFactoryProjectResource res = new WalletFactoryMiddlewareProjectResource(name+"imagen1.png", "imagen1.png", ResourceType.IMAGE);
         resources.add(res);
-        res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", name+"fuente1.BLABLA", ResourceType.FONT_STYLE);
+        res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", "fuente1.BLABLA", ResourceType.FONT_STYLE);
         resources.add(res);
-        res = new WalletFactoryMiddlewareProjectResource(name+"fuente1.BLABLA", name+"layout1.xml", ResourceType.LAYOUT);
+        res = new WalletFactoryMiddlewareProjectResource(name+"layout1.xml", "layout1.xml", ResourceType.LAYOUT);
         resources.add(res);
 
         return new WalletFactoryMiddlewareProjectSkin(name, "as5a5s4da6s4das", resources);

@@ -283,37 +283,39 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         try {
             SubAppRuntimeManager subAppRuntimeManager = getAppRuntimeMiddleware();
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment();
+
+
             //get setting fragment to back
             //if not fragment to back I back to desktop
-             frgBackType = fragment.getBack();
 
+            if (fragment != null)
+                frgBackType = fragment.getBack();
+
+
+            if (frgBackType != null) {
+
+                com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(frgBackType); //set back fragment to actual fragment to run
+
+
+                this.loadFragment(frgBackType);
+            } else {
+                // set Desktop current activity
+                Activity activity = getAppRuntimeMiddleware().getLastSubApp().getLastActivity();
+                if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
+                    resetThisActivity();
+                    //getAppRuntimeMiddleware().getHomeScreen();
+                    getAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
+                    getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+                    //cleanWindows();
+
+                    loadUI();
+                } else {
+                    super.onBackPressed();
+                }
+            }
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-        }
-
-
-
-        if(frgBackType != null){
-
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(frgBackType); //set back fragment to actual fragment to run
-
-
-            this.loadFragment(frgBackType);
-        }
-        else{
-            // set Desktop current activity
-            Activity activity=getAppRuntimeMiddleware().getLastSubApp().getLastActivity();
-            if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
-                resetThisActivity();
-                //getAppRuntimeMiddleware().getHomeScreen();
-                getAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-                getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
-                //cleanWindows();
-
-                loadUI();
-            } else {
-                super.onBackPressed();
-            }
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -330,9 +332,12 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      */
 
     @Override
-    public void changeScreen() {
+    public void changeScreen(String screen,Object[] objects) {
 
         try {
+
+            this.screenObjects = objects;
+            this.actionKey = screen;
 
             Intent intent;
 
@@ -424,25 +429,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     }
 
-    /**
-     *
-     * @param screen
-     */
-    @Override
-    public void setScreen(String screen){
-      this.actionKey = screen;
-    }
 
-    /**
-     * This method set de params to pass to screens
-     * @param objects
-     */
-
-    @Override
-    public void setParams(Object[] objects){
-        this.screenObjects = null;
-        this.screenObjects = objects;
-    }
 
     /**
      * Method that loads the UI

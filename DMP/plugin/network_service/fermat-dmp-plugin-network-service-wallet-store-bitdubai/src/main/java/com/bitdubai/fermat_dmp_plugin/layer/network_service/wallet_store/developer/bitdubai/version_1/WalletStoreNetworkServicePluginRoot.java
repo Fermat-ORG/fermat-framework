@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -10,6 +12,19 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalog;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -56,7 +71,7 @@ import java.util.UUID;
  * * * * * 
  */
 
-public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, Service, NetworkService, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
+public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, WalletStoreManager, Service, NetworkService, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
     /**
      * WalletStoreNetworkServicePluginRoot member variables
      */
@@ -135,11 +150,66 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
     /**
+     * WalletStoreManager interface implementation
+     * @param catalogItem
+     * @throws CantPublishWalletInCatalogException
+     */
+    @Override
+    public void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException {
+
+    }
+
+    @Override
+    public void publishSkin(Skin skin) throws CantPublishSkinInCatalogException {
+
+    }
+
+    @Override
+    public void publishLanguage(Language language) throws CantPublishLanguageInCatalogException {
+
+    }
+
+    @Override
+    public void publishDesigner(Designer designer) {
+
+    }
+
+    @Override
+    public void publishTranslator(Translator translator) {
+
+    }
+
+    @Override
+    public WalletCatalog getWalletCatalogue() throws CantGetWalletsCatalogException {
+        return null;
+    }
+
+    @Override
+    public CatalogItem getCatalogItem(UUID walletId) throws CantGetCatalogItemException {
+        return null;
+    }
+
+    @Override
+    public DetailedCatalogItem getDetailedCatalogItem(UUID walletId) throws CantGetCatalogItemException {
+        return null;
+    }
+
+    @Override
+    public Language getLanguage(UUID languageId) {
+        return null;
+    }
+
+    @Override
+    public Skin getSkin(UUID skinId) {
+        return null;
+    }
+
+    /**
      * Service Interface implementation.
      */
 
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
         /**
          * I will try to open the database first, if it doesn't exists, then I create it
          */
@@ -148,16 +218,13 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            /**
-             * The database could not be opened, let try to create it instead.
-             */
             try {
                 createWalletStoreNetworkServiceDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                /**
-                 * something went wrong creating the db, I can't handle this.
-                 */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantStartPluginException();
+            } catch (Exception exception){
+                throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
             }
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             /**
@@ -167,7 +234,10 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                 createWalletStoreNetworkServiceDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                throw new CantStartPluginException();
             }
+        } catch (Exception exception){
+            throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
         }
 
         /**

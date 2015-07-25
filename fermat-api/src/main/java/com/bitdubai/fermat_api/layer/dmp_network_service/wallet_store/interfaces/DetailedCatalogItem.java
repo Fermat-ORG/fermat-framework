@@ -34,4 +34,6 @@ public interface DetailedCatalogItem {
     public Version getVersion();
     public Version getPlatformInitialVersion();
     public Version getPlatformFinalVersion();
+
+    public UUID getDeveloperId();
 }

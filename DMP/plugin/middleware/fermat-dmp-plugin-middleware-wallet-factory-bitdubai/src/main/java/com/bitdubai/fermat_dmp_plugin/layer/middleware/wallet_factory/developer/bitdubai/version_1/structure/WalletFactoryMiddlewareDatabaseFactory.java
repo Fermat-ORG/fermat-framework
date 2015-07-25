@@ -1,4 +1,4 @@
-package   com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -13,11 +13,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.Wallet FactoryMiddlewareDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/07/15.
+ * <p/>
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -76,6 +76,7 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
             table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FIRST_KEY_COLUMN);
 
@@ -90,6 +91,33 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 
             table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FIRST_KEY_COLUMN);
+
+            /**
+             * Create Project Skin table.
+             */
+            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_TABLE_NAME);
+
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+
+            table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_FIRST_KEY_COLUMN);
+
+            /**
+             * Create Project Language table.
+             */
+            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TABLE_NAME);
+
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+
+            table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -115,4 +143,3 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }
-

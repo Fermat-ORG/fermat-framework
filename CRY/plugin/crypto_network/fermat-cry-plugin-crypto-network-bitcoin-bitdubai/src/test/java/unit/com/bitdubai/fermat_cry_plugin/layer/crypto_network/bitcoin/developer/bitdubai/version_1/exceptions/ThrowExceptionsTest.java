@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by rodrigo on 2015.07.15..
  */
-//public class ThrowExceptionsTest {
+public class ThrowExceptionsTest {
 //    @Test (expected = CantCreateBlockStoreFileException.class)
 //    public void throwCantCreateBlockStoreFileExceptionTest() throws CantCreateBlockStoreFileException {
 //        throw new CantCreateBlockStoreFileException("Test error", null, null, null);
@@ -28,4 +28,4 @@ import static org.junit.Assert.assertNotNull;
 //        throw new CantStartPeerServiceException("Test error", null, null, null);
 //    }
 
-//}
+}
