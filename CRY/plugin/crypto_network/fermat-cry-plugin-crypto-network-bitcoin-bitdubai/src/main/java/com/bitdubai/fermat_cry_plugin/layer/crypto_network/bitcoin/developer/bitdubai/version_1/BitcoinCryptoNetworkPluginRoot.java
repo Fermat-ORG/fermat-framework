@@ -214,7 +214,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
                     "on disk.");
         } catch(Exception exception){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw exception;
+            throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", FermatException.wrapException(exception), null, null);
         }
     }
 
