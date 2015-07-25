@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
@@ -20,13 +21,64 @@ import java.util.UUID;
  */
 public interface WalletFactoryManager {
 
-    WalletFactoryProject createEmptyWalletFactoryProject(String name) throws CantCreateWalletFactoryProjectException;
+    /**
+     * This method creates an empty project
+     *
+     * @param name is the name of the new project
+     * @param walletType is the walletType of the new project
+     * @return WalletFactoryProject instance of the new project
+     * @throws CantCreateWalletFactoryProjectException i case i can't create the project
+     */
+    WalletFactoryProject createEmptyWalletFactoryProject(String name, Wallets walletType) throws CantCreateWalletFactoryProjectException;
 
+    /**
+     * Throw this method you can import a wallet factory project from the device which we are working with
+     *
+     * The method insert in database the correspondan information and copy the necessary structure
+     *
+     * TODO see the params i need to send to to this
+     * @param newName
+     * @param resourcesId
+     * @param navigationStructureId
+     * @throws CantImportWalletFactoryProjectException
+     */
     void importWalletFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException;
 
+    /**
+     * Imports a Wallet Factory Project from an extern repository maybe git, maybe another maybe both
+     *
+     * The method insert in database the correspondan information and copy the necessary structure
+     *
+     * @param newName
+     * @param repository
+     * @throws CantImportWalletFactoryProjectException
+     */
     void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException;
 
+    /**
+     * This method returns all the Wallet Factory Projects that exists in the device for the current logged developer user
+     *
+     * @return list of wallet factory projects
+     * @throws CantGetWalletFactoryProjectsException if something goes wrong
+     */
     List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectsException;
 
+    /**
+     * This method return a Wallet Factory Project instance looking by name, and the current developer logged in
+     *
+     * @param name of the project to search
+     * @return the WalletFactoryProject instance
+     * @throws CantGetWalletFactoryProjectException if something goes wrong
+     * @throws ProjectNotFoundException if the project cannot be found
+     */
     WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
+
+    /**
+     * This method returns an instance of the WalletFactoryProjectProposalManager, who has the methods to interact with a proposal
+     *
+     * @param walletFactoryProject the walletFactoryProject we're working with
+     * @return the WalletFactoryProjectProposalManager we need to do the right job
+     */
+    WalletFactoryProjectProposalManager getWalletFactoryProjectProposalManager(WalletFactoryProject walletFactoryProject);
+
 }

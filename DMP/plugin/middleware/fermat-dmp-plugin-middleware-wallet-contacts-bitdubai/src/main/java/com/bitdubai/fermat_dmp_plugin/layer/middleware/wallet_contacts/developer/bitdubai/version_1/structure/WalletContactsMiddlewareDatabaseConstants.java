@@ -15,14 +15,14 @@ public class WalletContactsMiddlewareDatabaseConstants {
     /**
      * Crypto Wallet Contacts Address Book database table definition.
      */
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME = "crypto_wallet_contacts_address_book";
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME = "contact_id";
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME = "wallet_id";
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME = "actor_id";
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME = "actor_name";
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME = "actor_type";
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME = "received_crypto_address";
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME = "received_address_crypto_currency";
-    static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_FIRST_KEY_COLUMN  = "contact_id";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME = "crypto_wallet_contacts_address_book";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME = "contact_id";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME = "wallet_id";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME = "actor_id";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME = "actor_name";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME = "actor_type";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME = "received_crypto_address";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME = "received_address_crypto_currency";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_FIRST_KEY_COLUMN  = "contact_id";
 
 }

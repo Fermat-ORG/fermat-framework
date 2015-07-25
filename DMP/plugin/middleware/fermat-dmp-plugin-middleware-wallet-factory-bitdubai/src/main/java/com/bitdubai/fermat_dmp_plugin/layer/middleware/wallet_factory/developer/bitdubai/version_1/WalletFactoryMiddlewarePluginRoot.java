@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
@@ -13,14 +14,18 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposalManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposalManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -49,7 +54,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryManager {
+public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryManager {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -64,9 +69,14 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
+     * DealsWithPluginFileSystem Interface member variables.
      */
     PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginFileSystem pluginFileSystem;
 
     /**
      * Plugin Interface member variables.
@@ -79,12 +89,12 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
-    WalletFactoryMiddlewareProjectDao walletFactoryMiddlewareProjectDao;
+    WalletFactoryMiddlewareDao walletFactoryMiddlewareProjectDao;
 
     @Override
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
-        walletFactoryMiddlewareProjectDao = new WalletFactoryMiddlewareProjectDao(pluginDatabaseSystem);
+        walletFactoryMiddlewareProjectDao = new WalletFactoryMiddlewareDao(pluginDatabaseSystem);
         try {
             walletFactoryMiddlewareProjectDao.initializeDatabase(pluginId, pluginId.toString());
         } catch (CantInitializeWalletFactoryMiddlewareDatabaseException e) {
@@ -115,15 +125,13 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
 
 
     @Override
-    public WalletFactoryMiddlewareProject createEmptyWalletFactoryProject(String name) throws CantCreateWalletFactoryProjectException {
+    public WalletFactoryMiddlewareProject createEmptyWalletFactoryProject(String name, Wallets walletType) throws CantCreateWalletFactoryProjectException {
         try {
             // TODO GET CURRENT LOGGED DEVELOPER
             String developerPublicKey = "";
 
-            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletFactoryMiddlewareProject(name, developerPublicKey);
+            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletFactoryMiddlewareProject(name, developerPublicKey, walletType);
             walletFactoryMiddlewareProjectDao.create(walletFactoryMiddlewareProject);
-
-            // TODO CREATE EMPTY MANIFEST
 
             return walletFactoryMiddlewareProject;
         } catch (CantCreateWalletFactoryProjectException e){
@@ -166,6 +174,10 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
         }
     }
 
+    @Override
+    public WalletFactoryProjectProposalManager getWalletFactoryProjectProposalManager(WalletFactoryProject walletFactoryProject) {
+        return new WalletFactoryMiddlewareProjectProposalManager(errorManager, pluginFileSystem, pluginId, walletFactoryMiddlewareProjectDao, walletFactoryProject);
+    }
 
     /**
      * DealsWithLogger Interface implementation.
@@ -182,16 +194,8 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
 
     @Override
     public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
+        List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryMiddlewarePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDatabaseConstants");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectDao");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguage");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin");
 
         /**
          * I return the values.
@@ -235,6 +239,15 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+
+    /**
+     * DealWithPluginFileSystem Interface implementation.
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

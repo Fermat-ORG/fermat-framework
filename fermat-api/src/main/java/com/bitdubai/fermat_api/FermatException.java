@@ -21,7 +21,10 @@ public class FermatException extends Exception {
 	private FermatException(final String exceptionName, final String message, final Exception cause, final String context, final String possibleReason){
 		super(message, cause);
 		this.exceptionName = exceptionName;
-		this.cause = cause instanceof FermatException ? (FermatException) cause : null;
+		if(cause != null)
+			this.cause = cause instanceof FermatException ? (FermatException) cause : FermatException.wrapException(cause);
+		else
+			this.cause = null;
 		this.context = context == null || context.isEmpty() ? "N/A" : context;
 		this.possibleReason = possibleReason == null || possibleReason.isEmpty() ? "N/A" : possibleReason;
 		this.depth = (this.cause == null) ? Integer.valueOf(1) : Integer.valueOf(this.cause.getDepth() + 1);

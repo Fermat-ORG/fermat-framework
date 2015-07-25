@@ -3,10 +3,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import ae.javax.xml.bind.annotation.XmlAttribute;
@@ -24,7 +26,9 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      */
     Activities type;
 
-    Map<WalletFragments, Fragment> fragments = new HashMap<WalletFragments, Fragment>();
+    Map<FermatFragments, Fragment> fragments = new HashMap<FermatFragments, Fragment>();
+
+    Fragments lastFragment;
 
     TitleBar titleBar;
 
@@ -124,8 +128,29 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     // TODO VER COMO HACER ESTO
     @Override
-    public Map<WalletFragments, Fragment> getFragments() {
+    public Map<FermatFragments, Fragment> getFragments() {
         return fragments;
     }
+
+    @Override
+    public Fragment getLastFragment() {
+        return fragments.get(lastFragment);
+    }
+
+    @Override
+    public Fragment getFragment(Fragments fragment) {
+        Iterator<Map.Entry<FermatFragments, Fragment>> eSubApp = fragments.entrySet().iterator();
+        while (eSubApp.hasNext()) {
+            Map.Entry<FermatFragments, Fragment> fragmentEntryEntry = eSubApp.next();
+            Fragment subApp = (Fragment) fragmentEntryEntry.getValue();
+            if(subApp.getType().equals(fragment)){
+                lastFragment=fragment;
+                return subApp;
+            }
+        }
+        return null;
+    }
+
+
 }
 

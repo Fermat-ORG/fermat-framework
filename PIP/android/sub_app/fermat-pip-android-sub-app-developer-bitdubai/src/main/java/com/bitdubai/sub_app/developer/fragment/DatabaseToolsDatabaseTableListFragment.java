@@ -237,10 +237,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                         params[1] = developerDatabase;
                         params[2] = developerDatabaseTableList.get(position);
 
-
-                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperRecordsFragment");
-                        ((FermatScreenSwapper)getActivity()).setParams(params);
-                        ((FermatScreenSwapper)getActivity()).changeScreen();
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperRecordsFragment",params);
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
