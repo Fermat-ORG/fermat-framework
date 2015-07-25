@@ -1,6 +1,5 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWalletAvailableBalance;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -11,9 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWalletAvailableBalance;
-import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWalletDao;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletDatabaseConstants;
 
 import org.junit.Before;
@@ -41,13 +39,7 @@ import static org.mockito.Mockito.when;
 public class CreditTest {
 
     @Mock
-    private ErrorManager mockErrorManager;
-    @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
-    @Mock
     private Database mockDatabase;
-
-
     @Mock
     private DatabaseTable mockWalletTable;
     @Mock
@@ -85,7 +77,7 @@ public class CreditTest {
 
     @Before
     public void setUpAvailableBalance(){
-        testBalance = new BitcoinWalletBasicWalletAvailableBalance(mockErrorManager, mockPluginDatabaseSystem, mockDatabase);
+        testBalance = new BitcoinWalletBasicWalletAvailableBalance(mockDatabase);
     }
 
     @Test
@@ -95,7 +87,7 @@ public class CreditTest {
     }
 
     @Test
-    public void Credit_OpenDatabaseCantOpenDatabase_ReturnsAvailableBalance() throws Exception{
+    public void Credit_OpenDatabaseCantOpenDatabase_ThrowsCantRegisterCreditException() throws Exception{
         doThrow(new CantOpenDatabaseException("MOCK", null, null, null)).when(mockDatabase).openDatabase();
 
         catchException(testBalance).credit(mockTransactionRecord);
@@ -105,7 +97,7 @@ public class CreditTest {
     }
 
     @Test
-    public void Credit_OpenDatabaseDatabaseNotFound_Throws() throws Exception{
+    public void Credit_OpenDatabaseDatabaseNotFound_ThrowsCantRegisterCreditException() throws Exception{
         doThrow(new DatabaseNotFoundException("MOCK", null, null, null)).when(mockDatabase).openDatabase();
 
         catchException(testBalance).credit(mockTransactionRecord);
@@ -115,8 +107,18 @@ public class CreditTest {
     }
 
     @Test
-    public void Credit_DaoCantCalculateBalanceException_ReturnsAvailableBalance() throws Exception{
+    public void Credit_DaoCantCalculateBalanceException_ThrowsCantRegisterCreditException() throws Exception{
         doThrow(new CantLoadTableToMemoryException("MOCK", null, null, null)).when(mockWalletTable).loadToMemory();
+
+        catchException(testBalance).credit(mockTransactionRecord);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantRegisterCreditException.class);
+    }
+
+    @Test
+    public void Credit_GeneralException_ThrowsCantRegisterCreditException() throws Exception{
+        when(mockBalanceTable.getRecords()).thenReturn(null);
 
         catchException(testBalance).credit(mockTransactionRecord);
         assertThat(caughtException())

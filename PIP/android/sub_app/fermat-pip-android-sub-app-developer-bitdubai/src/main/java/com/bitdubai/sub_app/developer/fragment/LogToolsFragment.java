@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -34,7 +34,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
-
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,12 +55,17 @@ public class LogToolsFragment extends Fragment {
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
     //List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
 
+    /**
+     * SubApp session
+     */
+    SubAppsSession subAppSession;
+
+
     private static final String ARG_POSITION = "position";
     View rootView;
 
     private LogTool logTool;
 
-    private static Platform platform = new Platform();
 
     private ArrayListLoggers lstLoggers;
 
@@ -68,8 +73,9 @@ public class LogToolsFragment extends Fragment {
 
     Typeface tf;
 
-    public static LogToolsFragment newInstance(int position) {
+    public static LogToolsFragment newInstance(int position,SubAppsSession subAppSession) {
         LogToolsFragment f = new LogToolsFragment();
+        f.setSubAppSession(subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -83,7 +89,7 @@ public class LogToolsFragment extends Fragment {
         tf= Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         try {
-            ToolManager toolManager = platform.getToolManager();
+            ToolManager toolManager = subAppSession.getToolManager();
             try {
                 logTool = toolManager.getLogTool();
             } catch (Exception e) {
@@ -112,7 +118,6 @@ public class LogToolsFragment extends Fragment {
             Plugins plugin = Plugins.getByKey(pluginKey);
 
 
-            //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
              */
@@ -173,21 +178,13 @@ public class LogToolsFragment extends Fragment {
                 /**
                  * I will get the list of the available classes on the plug in
                  */
-                String level1 = "";
-                String level2 = "";
-                String toReplace = "";
+
                 List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
                 //esto es sacar con getClassesHierarchy
                 for (ClassHierarchyLevels classes : logTool.getClassesHierarchyAddons(addon)) {
                     //loading de loggers class
 
                     Loggers log = new Loggers();
-                    /*log.level0 = classes.getLevel0();
-                    log.level1 = classes.getLevel1();
-                    log.level2 = classes.getLevel2();
-                    log.level3 = classes.getLevel3();
-                    log.fullPath = classes.getFullPath();
-                    */
                     log.type = Loggers.TYPE_ADDON;
                     log.picture = "addon";
                     log.pluginKey=addon.getKey();
@@ -244,8 +241,9 @@ public class LogToolsFragment extends Fragment {
         alertDialog.show();
     }
 
-
-
+    public void setSubAppSession(SubAppsSession subAppSession) {
+        this.subAppSession = subAppSession;
+    }
 
 
     public class AppListAdapter extends ArrayAdapter<Loggers> {
@@ -287,9 +285,8 @@ public class LogToolsFragment extends Fragment {
                         Object[] params = new Object[1];
 
                         params[0] = lst;
-                        ((ScreenSwapper)getActivity()).setScreen("DeveloperLogLevel1Fragment");
-                        ((ScreenSwapper)getActivity()).setParams(params);
-                        ((ScreenSwapper)getActivity()).changeScreen();
+
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperLogLevel1Fragment",params);
 
 
                     }

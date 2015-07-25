@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#fbf7ed"
+        android:background="#f3e4c4"
         >
 
         <LinearLayout
@@ -19,7 +19,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/person"
+                android:src="@drawable/person12"
                 android:padding="5sp"
                 android:id="@+id/imageView_contact"
                 />

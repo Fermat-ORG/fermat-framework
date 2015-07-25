@@ -18,7 +18,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -59,11 +60,16 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
     private int database_type;
 
-    private static Platform platform = new Platform();
+
+    /**
+     *SubApp session
+     */
+    SubAppsSession subAppSession;
 
 
-    public static DatabaseToolsDatabaseListFragment newInstance(int position) {
+    public static DatabaseToolsDatabaseListFragment newInstance(int position,SubAppsSession subAppsSession) {
         DatabaseToolsDatabaseListFragment f = new DatabaseToolsDatabaseListFragment();
+        f.setSubAppSession(subAppsSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -75,7 +81,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         try {
-            ToolManager toolManager = platform.getToolManager();
+            ToolManager toolManager = subAppSession.getToolManager();
             try {
                 databaseTools = toolManager.getDatabaseTool();
             } catch (Exception e) {
@@ -165,6 +171,10 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         this.resource = resource;
     }
 
+    public void setSubAppSession(SubAppsSession subAppSession) {
+        this.subAppSession = subAppSession;
+    }
+
 
     public class AppListAdapter extends ArrayAdapter<Databases> {
 
@@ -204,10 +214,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
                         params[0] = resource;
                         params[1] = developerDatabaseList.get(position);
-                        ((ScreenSwapper)getActivity()).setScreen("DeveloperTablesFragment");
-                        ((ScreenSwapper)getActivity()).setParams(params);
-                        ((ScreenSwapper)getActivity()).changeScreen();
 
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperTablesFragment",params);
 
 
                     }

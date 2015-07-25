@@ -43,3 +43,9 @@ versión de la plataforma que tiene instalada pasa a verificar que este hash sea
 última versión de la wallet registrada en la interfaz de la misma y si esto coincide entonces calcula
 hash de la información para verificar la autenticidad del item del catálogo para pasar a registrarlo
 en su copia local del catálogo-
+
+=== Avance versión 2
+
+Lo anterior se reemplazará por encriptación asimétrica. En vez de colocar hashes en la interfaz se
+colocará la clave pública del developer. Así se enviarán las cosas firmadas con la clave privada y
+las verificaciones se realizarán usando la clave pública que se adquiere de la interfaz. +

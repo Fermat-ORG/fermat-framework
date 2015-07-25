@@ -1,25 +1,99 @@
+/*
+ * @#CloudFMPPacket.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp;
 
-/*
- * Fermat Messaging Protocol
- * Created by jorgeejgonzalez 
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+
+/**
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPPacket</code> represent
+ * the package protocol to transport the data
+ * <p/>
+ *
+ * Created by Jorge Gonzales
+ * Update by Roberto Requena - (rart3001@gmail.com) on 11/06/15.
+ *
+ * @version 1.0
  */
 public interface FMPPacket {
 
-	public static final int PACKET_MAX_BYTE_SIZE = 1000;
-	public static final String PACKET_SEPARATOR = "\n";
-	public static final String MESSAGE_SEPARATOR = " ";
-	public static final String SIGNATURE_SEPARATOR = " ";
-	public static final int PACKET_SEPARATOR_PARTS = 5;
+    /**
+     * Represent the PACKET_MAX_BYTE_SIZE = 1024
+     */
+	public static final int PACKET_MAX_BYTE_SIZE = 1024;
 
+    /**
+     * Get the sender of the packet
+     *
+     * @return String
+     */
 	public String getSender();
-	public String getDestination();
-	public FMPPacketType getType();
-	public String getMessage();
-	public String getSignature();
-	public String convertToString();
 
-	public enum FMPPacketType {
+    /**
+     * Get the destination of the packet
+     *
+     * @return String
+     */
+	public String getDestination();
+
+    /**
+     * Get the type of the packet
+     *
+     * @return FMPPacketType
+     */
+	public FMPPacketType getType();
+
+    /**
+     * Get the message of the packet
+     *
+     * @return String
+     */
+	public String getMessage();
+
+    /**
+     * Get the signature of the packet
+     *
+     * @return String
+     */
+	public String getSignature();
+
+    /**
+     * Get the network service type of the packet
+     *
+     * @return NetworkServices
+     */
+	public NetworkServices getNetworkServices();
+
+    /**
+     * Set the network service type of the packet
+     *
+     * @param networkServicesType
+     */
+	public void setNetworkServices(NetworkServices networkServicesType);
+
+    /**
+     * Convert this object to json string
+     *
+     * @return String json
+     */
+    public String toJson();
+
+    /**
+     * Convert to FMPPacket from json
+     *
+     * @param json string object
+     * @return FMPPacket
+     */
+    public FMPPacket fromJson(String json);
+
+
+    /**
+     * Package type definitions
+     */
+	enum FMPPacketType {
 		CONNECTION_REQUEST,
 		CONNECTION_ACCEPT,
 		CONNECTION_ACCEPT_FORWARD,

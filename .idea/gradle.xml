@@ -64,7 +64,6 @@
             <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
-            <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai" />
@@ -81,6 +80,8 @@
             <option value="$PROJECT_DIR$/PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai" />
             <option value="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-developer-bitdubai" />
             <option value="$PROJECT_DIR$/PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai" />
+            <option value="$PROJECT_DIR$/TEST/functional/functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-android-api" />
             <option value="$PROJECT_DIR$/fermat-android-core" />
             <option value="$PROJECT_DIR$/fermat-api" />
             <option value="$PROJECT_DIR$/fermat-core" />

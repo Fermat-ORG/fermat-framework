@@ -1,25 +1,22 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantCreateBlockStoreFileException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantDisconnectFromNetworkException;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
@@ -27,13 +24,9 @@ import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.store.BlockStoreException;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by rodrigo on 08/06/15.
@@ -44,39 +37,52 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     /**
      * BitcoinCryptoNetworkMonitoringAgent member variables
      */
-    BitcoinEventListeners myListeners;
-    NetworkParameters networkParameters;
-    StoredBlockChain storedBlockChain;
-    PeerGroup peers;
-    Wallet wallet;
-    UUID userId;
+    private BitcoinEventListeners myListeners;
+    private NetworkParameters networkParameters;
+    private StoredBlockChain storedBlockChain;
+    private PeerGroup peers;
+    private Wallet wallet;
+    private UUID userId;
 
 
     /**
      * Agent interface member variables
      */
-    Thread agentThread;
-    MonitorAgent monitorAgent;
+    private Thread agentThread;
+    private MonitorAgent monitorAgent;
 
     /**
      * DealaWithError interface member variables
      */
-    ErrorManager errorManager;
+     private ErrorManager errorManager;
 
     /**
      * DealsWithLogger interface member variable
      */
-    LogManager logManager;
+    private LogManager logManager;
 
     /**
      * DealsWithPluginFileSystem interface member variable
      */
-    PluginFileSystem pluginFileSystem;
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPluginIdentify interface member variable
      */
-    UUID pluginId;
+    private UUID pluginId;
+
+    /**
+     * constructor
+     * @param wallet the BitcoinJ wallet that will be used to store the transactions and specify which
+     *               addresses to monitore
+     * @param UserId the user ID that we are calling the connection for.
+     */
+    public BitcoinCryptoNetworkMonitoringAgent(Wallet wallet, UUID UserId){
+        this.wallet = wallet;
+        this.userId = UserId;
+        this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
+        peers = null;
+    }
 
     /**
      * DealsWithErrors interface impplementation
@@ -119,20 +125,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     }
 
     /**
-     * constructor
-     *
-     * @param wallet the BitcoinJ wallet that will be used to store the transactions and specify which
-     *               addresses to monitore
-     * @param UserId the user ID that we are calling the connection for.
-     */
-    public BitcoinCryptoNetworkMonitoringAgent(Wallet wallet, UUID UserId) {
-        this.wallet = wallet;
-        this.userId = UserId;
-        this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration(null);
-        peers = null;
-    }
-
-    /**
      * Agent interface implementation
      *
      * @throws CantStartAgentException
@@ -164,8 +156,8 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
      *
      * @return
      */
-    public int getConnectedPeers() {
-        if (peers.isRunning())
+    public int getConnectedPeers(){
+        if (peers != null && peers.isRunning())
             return peers.numConnectedPeers();
         else
             return 0;
@@ -205,7 +197,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             storedBlockChain.createBlockChain();
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw exception;
+            throw new CantCreateBlockStoreFileException(CantCreateBlockStoreFileException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -240,7 +232,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             peers.addEventListener(myListeners);
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw exception;
         }
     }
 

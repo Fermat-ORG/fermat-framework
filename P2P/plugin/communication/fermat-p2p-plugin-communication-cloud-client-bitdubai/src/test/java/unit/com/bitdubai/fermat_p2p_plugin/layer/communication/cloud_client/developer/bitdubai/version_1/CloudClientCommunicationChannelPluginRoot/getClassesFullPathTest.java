@@ -2,6 +2,7 @@ package unit.com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.dev
 
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.CloudClientCommunicationChannelPluginRoot;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,6 +21,8 @@ public class getClassesFullPathTest {
     final String CLASS_SUFFIX = ".class";
     final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
 
+
+    @Ignore
     @Test
     public void generateClassesTree() throws ClassNotFoundException {
 

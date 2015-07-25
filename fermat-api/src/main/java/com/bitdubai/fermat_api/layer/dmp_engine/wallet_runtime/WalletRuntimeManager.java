@@ -1,16 +1,18 @@
 package com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.Wallet;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Activities;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordClosedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
 
 import java.util.UUID;
 
 /**
- * Created by loui on 05/02/15.
+ * Created by Matias Furszyfer on 23/07/15.
  */
 public interface WalletRuntimeManager {
     
@@ -20,10 +22,6 @@ public interface WalletRuntimeManager {
 
     public Wallet getLastWallet ();
 
-    public Activity getLasActivity ();
-
-    public Fragment getLastFragment ();
-
-    public Activity getActivity(Activities app);
+    public Wallet getWallet(Wallets wallets);
     
 }

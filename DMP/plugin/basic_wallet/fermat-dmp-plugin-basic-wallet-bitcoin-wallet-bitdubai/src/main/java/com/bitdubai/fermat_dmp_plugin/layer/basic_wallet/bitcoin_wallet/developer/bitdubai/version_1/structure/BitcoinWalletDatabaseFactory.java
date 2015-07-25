@@ -35,16 +35,24 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
     }
 
     public Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
-        Database database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
+        Database database = null;
         try {
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
             createBitcoinWalletTable(ownerId, database.getDatabaseFactory());
             createBitcoinWalletBalancesTable(ownerId, database.getDatabaseFactory());
             insertInitialBalancesRecord(database);
             database.closeDatabase();
             return database;
         } catch(CantCreateTableException | CantInsertRecordException exception){
-            database.closeDatabase();
+            if(database != null)
+                database.closeDatabase();
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        } catch(CantCreateDatabaseException exception){
+            throw exception;
+        } catch(Exception exception){
+            if(database != null)
+                database.closeDatabase();
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -52,7 +60,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
         try{
             DatabaseTableFactory tableFactory = createBitcoinWalletTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
-        }catch(InvalidOwnerIdException exception){
+        } catch(InvalidOwnerIdException exception){
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
         }
     }

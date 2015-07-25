@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
@@ -54,20 +55,25 @@ public class LogToolsFragmentLevel3 extends Fragment {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
 
+    /**
+     * SubApp session
+     */
+    SubAppsSession subAppSession;
+
     private static final String ARG_POSITION = "position";
     View rootView;
 
     private LogTool logTool;
 
-    private static Platform platform = new Platform();
 
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
 
     private int loggerLevel=3;
 
-    public static LogToolsFragmentLevel3 newInstance(int position) {
+    public static LogToolsFragmentLevel3 newInstance(int position,SubAppsSession subAppSession) {
         LogToolsFragmentLevel3 f = new LogToolsFragmentLevel3();
+        f.setSubAppSession(subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -80,9 +86,8 @@ public class LogToolsFragmentLevel3 extends Fragment {
         setRetainInstance(true);
 
         try {
-            ToolManager toolManager = platform.getToolManager();
             try {
-                logTool = toolManager.getLogTool();
+                logTool = subAppSession.getToolManager().getLogTool();
             } catch (Exception e) {
                 showMessage("CantGetToolManager - " + e.getMessage());
                 e.printStackTrace();
@@ -194,6 +199,10 @@ public class LogToolsFragmentLevel3 extends Fragment {
 
     public void setLoggers(ArrayListLoggers lstLoggers){
         this.lstLoggers=lstLoggers;
+    }
+
+    public void setSubAppSession(SubAppsSession subAppSession) {
+        this.subAppSession = subAppSession;
     }
 
     public class AppListAdapter extends ArrayAdapter<Loggers> {

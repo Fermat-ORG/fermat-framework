@@ -25,33 +25,56 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentIntegrator;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 
 import java.util.UUID;
+
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.validateAddress;
 
 /**
  * Created by natalia on 19/06/15.
  */
 public class CreateContactFragment extends Fragment {
 
+
+
     private static final String ARG_POSITION = "position";
-    View rootView;
+
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
-    TextView editAddress;
+    /**
+     * Wallet session
+     */
 
+    WalletSession walletSession;
+    
+
+
+    /**
+     * Screen views
+     */
+    private View rootView;
+    private TextView editAddress;
+
+    /**
+     * Members
+     */
     String contactName;
 
+    /**
+     * Fragment style
+     */
     Typeface tf ;
 
 
@@ -59,41 +82,37 @@ public class CreateContactFragment extends Fragment {
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
     private CryptoWalletManager cryptoWalletManager;
-    private Platform platform;
     private CryptoWallet cryptoWallet;
+
+    /**
+     * deals with Error manager
+     */
     private ErrorManager errorManager;
 
-    public static CreateContactFragment newInstance(int position) {
+    public static CreateContactFragment newInstance(int position,WalletSession walletSession) {
         CreateContactFragment f = new CreateContactFragment();
+        f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
         return f;
     }
-
-    public static CreateContactFragment newInstance(final int position, final Platform platform) {
-        CreateContactFragment f = new CreateContactFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
-    }
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
-        platform = new Platform();
-        errorManager = platform.getErrorManager();
+        errorManager = walletSession.getErrorManager();
 
-        cryptoWalletManager = platform.getCryptoWalletManager();
+        cryptoWalletManager = walletSession.getCryptoWalletManager();
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Unexpected error get Contact list - " + e.getMessage());
+            showMessage(getActivity(),"Unexpected error get Contact list - " + e.getMessage());
         }
 
     }
@@ -130,7 +149,7 @@ public class CreateContactFragment extends Fragment {
             editAddress.setTypeface(tf);
             editAddress.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {
-                    if (validateAddress(editAddress.getText().toString()) != null) {
+                    if (validateAddress(editAddress.getText().toString(),cryptoWallet) != null) {
                         editAddress.setTextColor(Color.parseColor("#72af9c"));
                     } else {
                         editAddress.setTextColor(Color.parseColor("#b46a54"));
@@ -156,22 +175,25 @@ public class CreateContactFragment extends Fragment {
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Contacts Fragment onCreateView Exception - " + e.getMessage());
+            showMessage(getActivity(),"Contacts Fragment onCreateView Exception - " + e.getMessage());
 
         }
         return rootView;
     }
 
+    /**
+     * create contact and save it into database
+     */
     private void saveContact() {
         EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
         EditText address = (EditText) rootView.findViewById(R.id.contact_address);
 
-        CryptoAddress validAddress = validateAddress(address.getText().toString());
+        CryptoAddress validAddress = validateAddress(address.getText().toString(),cryptoWallet);
 
         if (validAddress != null) {
             try {
                 // first i add the contact
-                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
 
                 Toast.makeText(getActivity().getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
 
@@ -179,48 +201,37 @@ public class CreateContactFragment extends Fragment {
 
             } catch (CantCreateWalletContactException e) {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage("Error creating wallet contact - " + e.getMessage());
+                showMessage(getActivity(),"Error creating wallet contact - " + e.getMessage());
             }
         } else {
             Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid address...", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private CryptoAddress validateAddress(String strToValidate) {
-        String[] tokens = strToValidate.split("-|\\.|:|,|;| ");
 
-        CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.BITCOIN);
-        for (String token : tokens) {
-            token = token.trim();
-            if (token.length() > 25 && token.length() < 40) {
-                cryptoAddress.setAddress(token);
-                if (cryptoWallet.isValidAddress(cryptoAddress)) {
-                    return cryptoAddress;
-                }
-            }
-        }
-        return null;
-    }
 
     public void setContactName(String contactName) {
         this.contactName = contactName;
     }
 
+    /**
+     * back to contacts
+     */
     private void returnToContacts() {
         ContactsFragment contactsFragment = new ContactsFragment();
+        contactsFragment.setWalletSession(walletSession);
 
         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        //linearLayout.setVisibility(View.GONE);
-        //listViewContacs.setVisibility(View.GONE);
-        //textViewEmptyListView.setVisibility(View.GONE);
-        //createContactFragment.detach(createContactFragment);
-        //FT.attach(createContactFragment);
         FT.replace(R.id.fragment_container2,contactsFragment);
         FT.commit();
     }
 
+    /**
+     *  Paste valid clipboard text into a view
+     * @param rootView
+     */
     private void pasteFromClipboard(View rootView) {
         ClipboardManager clipboard = (ClipboardManager) rootView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
@@ -230,7 +241,7 @@ public class CreateContactFragment extends Fragment {
             mPasteItem.setEnabled(true);
             ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
             EditText editText = (EditText) rootView.findViewById(R.id.contact_address);
-            CryptoAddress validAddress = validateAddress(item.getText().toString());
+            CryptoAddress validAddress = validateAddress(item.getText().toString(),cryptoWallet);
             if (validAddress != null) {
                 editText.setText(validAddress.getAddress());
             } else {
@@ -242,17 +253,13 @@ public class CreateContactFragment extends Fragment {
         }
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
+
+    /**
+     * Set wallet session
+     *
+     * @param walletSession
+     */
+    public void setWalletSession(WalletSession walletSession) {
+        this.walletSession = walletSession;
     }
 }

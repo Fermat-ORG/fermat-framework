@@ -1,14 +1,10 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectResource;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 
-import java.util.List;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin</code>
@@ -21,11 +17,48 @@ import java.util.List;
  */
 public class WalletFactoryMiddlewareProjectSkin implements WalletFactoryProjectSkin {
 
-    String name;
+    /**
+     * Private class Attributes
+     */
+    private UUID id;
 
-    String hash;
+    private String name;
 
-    WalletFactoryProjectProposal walletFactoryProjectProposal;
+    private String designerPublicKey;
+
+    private Version version;
+
+    private WalletFactoryProjectProposal walletFactoryProjectProposal;
+
+    /**
+     * Class Constructors
+     */
+    public WalletFactoryMiddlewareProjectSkin() {
+    }
+
+    public WalletFactoryMiddlewareProjectSkin(String name, String designerPublicKey, Version version, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.designerPublicKey = designerPublicKey;
+        this.version = version;
+        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+    }
+
+    public WalletFactoryMiddlewareProjectSkin(UUID id, String name, String designerPublicKey, Version version, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+        this.id = id;
+        this.name = name;
+        this.designerPublicKey = designerPublicKey;
+        this.version = version;
+        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+    }
+
+    /**
+     * private Class getters
+     */
+    @Override
+    public UUID getId() {
+        return id;
+    }
 
     @Override
     public String getName() {
@@ -33,35 +66,17 @@ public class WalletFactoryMiddlewareProjectSkin implements WalletFactoryProjectS
     }
 
     @Override
-    public String getHash() {
-        return hash;
+    public String getDesignerPublicKey() {
+        return designerPublicKey;
+    }
+
+    @Override
+    public Version getVersion() {
+        return version;
     }
 
     @Override
     public WalletFactoryProjectProposal getWalletFactoryProjectProposal() {
         return walletFactoryProjectProposal;
-    }
-
-    @Override
-    public List<WalletFactoryProjectResource> getAllResources() throws CantGetWalletFactoryProjectResourcesException {
-        // TODO VER COMO A PARTIR DE UN XML GENERAR LA ESTRUCTURA DE CLASES
-        return null;
-    }
-
-    @Override
-    public List<WalletFactoryProjectResource> getAllResourcesByResourceType(ResourceType resourceType) throws CantGetWalletFactoryProjectResourcesException {
-        // TODO VER COMO A PARTIR DE UN XML GENERAR LA ESTRUCTURA DE CLASES
-        return null;
-    }
-
-    @Override
-    public WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException {
-        // TODO VER COMO A PARTIR DE UN XML GENERAR LA ESTRUCTURA DE CLASES
-        return null;
-    }
-
-    @Override
-    public void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException {
-
     }
 }

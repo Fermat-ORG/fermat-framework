@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookCryptoModuleException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleDao;
 
@@ -27,78 +27,78 @@ import static org.mockito.Mockito.*;
 public class InitializeTest extends TestCase {
 
     @Mock
-    ErrorManager errorManager;
+    ErrorManager mockErrorManager;
 
     @Mock
-    PluginDatabaseSystem pluginDatabaseSystem;
+    PluginDatabaseSystem mockPluginDatabaseSystem;
 
     @Mock
-    Database database;
+    Database mockDatabase;
 
-    ActorAddressBookCryptoModuleDao dao;
+    ActorAddressBookCryptoModuleDao testCryptoModuleDao;
 
-    UUID pluginId;
+    UUID testPluginId;
 
     @Before
     public void setUp() throws Exception {
-        pluginId = UUID.randomUUID();
-        dao = new ActorAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
+        testPluginId = UUID.randomUUID();
+        testCryptoModuleDao = new ActorAddressBookCryptoModuleDao(mockErrorManager, mockPluginDatabaseSystem, testPluginId);
     }
 
-    // database exists and can be opened
+    // mockDatabase exists and can be opened
     @Test
     public void testInitialize_NotNull() throws Exception {
-        doReturn(database).when(pluginDatabaseSystem).createDatabase(any(UUID.class), anyString());
-        dao.initialize();
+        when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
+        testCryptoModuleDao.initialize();
     }
 
-    // cant open database
+    // cant open mockDatabase
     @Test(expected=CantInitializeActorAddressBookCryptoModuleException.class)
     public void testInitialize_CantOpenDatabaseException() throws Exception {
-        doThrow(new CantOpenDatabaseException()).when(pluginDatabaseSystem).openDatabase(any(UUID.class), anyString());
+        doThrow(new CantOpenDatabaseException()).when(mockPluginDatabaseSystem).openDatabase(any(UUID.class), anyString());
 
-        dao.initialize();
+        testCryptoModuleDao.initialize();
     }
 
-    // database not found exception, then cant create database.
+    // mockDatabase not found exception, then cant create mockDatabase.
     @Test(expected=CantInitializeActorAddressBookCryptoModuleException.class)
     public void testInitialize_DatabaseNotFoundException() throws Exception {
-        doThrow(new DatabaseNotFoundException()).when(pluginDatabaseSystem).openDatabase(any(UUID.class), anyString());
-        doThrow(new CantCreateDatabaseException()).when(pluginDatabaseSystem).createDatabase(any(UUID.class), anyString());
+        doThrow(new DatabaseNotFoundException()).when(mockPluginDatabaseSystem).openDatabase(any(UUID.class), anyString());
+        doThrow(new CantCreateDatabaseException()).when(mockPluginDatabaseSystem).createDatabase(any(UUID.class), anyString());
 
-        dao.initialize();
+        testCryptoModuleDao.initialize();
     }
 
     /*
      * TODO This test should pass but there is a wrong design decision that makes a cast of the Database interface into the DatabaseFactory; we should really look into that
      */
-    // database not found exception, then create database.
+    // mockDatabase not found exception, then create mockDatabase.
     @Ignore
     public void testInitialize_DatabaseNotFoundException_CreateDatabase() throws Exception {
-        doThrow(new DatabaseNotFoundException()).when(pluginDatabaseSystem).openDatabase(any(UUID.class), anyString());
-        doReturn(database).when(pluginDatabaseSystem).createDatabase(any(UUID.class), anyString());
+        doThrow(new DatabaseNotFoundException()).when(mockPluginDatabaseSystem).openDatabase(any(UUID.class), anyString());
+        doReturn(mockDatabase).when(mockPluginDatabaseSystem).createDatabase(any(UUID.class), anyString());
 
-        dao.initialize();
+        testCryptoModuleDao.initialize();
     }
 
     // error manager null
     @Test(expected=CantInitializeActorAddressBookCryptoModuleException.class)
     public void testInitialize_ErrorManagerNull_CantInitializeActorAddressBookCryptoModuleException() throws Exception {
-        dao.setErrorManager(null);
-        dao.initialize();
+        testCryptoModuleDao.setErrorManager(null);
+        testCryptoModuleDao.initialize();
     }
 
-    // plugin database system null
+    // plugin mockDatabase system null
     @Test(expected=CantInitializeActorAddressBookCryptoModuleException.class)
     public void testInitialize_PluginDatabaseSystemNull_CantInitializeActorAddressBookCryptoModuleException() throws Exception {
-        dao.setPluginDatabaseSystem(null);
-        dao.initialize();
+        testCryptoModuleDao.setPluginDatabaseSystem(null);
+        testCryptoModuleDao.initialize();
     }
 
     // plugin id null
     @Test(expected=CantInitializeActorAddressBookCryptoModuleException.class)
     public void testInitialize_PluginIdNull_CantInitializeActorAddressBookCryptoModuleException() throws Exception {
-        dao.setPluginId(null);
-        dao.initialize();
+        testCryptoModuleDao.setPluginId(null);
+        testCryptoModuleDao.initialize();
     }
 }

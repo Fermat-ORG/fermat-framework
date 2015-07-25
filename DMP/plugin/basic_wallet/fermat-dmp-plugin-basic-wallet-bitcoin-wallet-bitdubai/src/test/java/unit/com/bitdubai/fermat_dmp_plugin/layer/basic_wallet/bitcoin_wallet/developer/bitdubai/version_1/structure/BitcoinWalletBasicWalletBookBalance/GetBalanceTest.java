@@ -8,8 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWalletAvailableBalance;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWalletBookBalance;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletDatabaseConstants;
 
@@ -34,10 +33,6 @@ import static org.mockito.Mockito.when;
 public class GetBalanceTest {
 
     @Mock
-    private ErrorManager mockErrorManager;
-    @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
-    @Mock
     private Database mockDatabase;
     @Mock
     private DatabaseTable mockTable;
@@ -60,7 +55,7 @@ public class GetBalanceTest {
 
     @Before
     public void setUpAvailableBalance(){
-        testBalance = new BitcoinWalletBasicWalletBookBalance(mockErrorManager, mockPluginDatabaseSystem, mockDatabase);
+        testBalance = new BitcoinWalletBasicWalletBookBalance(mockDatabase);
     }
 
     @Test
@@ -92,6 +87,16 @@ public class GetBalanceTest {
     @Test
     public void GetBalance_DaoCantCalculateBalanceException_ReturnsAvailableBalance() throws Exception{
         doThrow(new CantLoadTableToMemoryException("MOCK", null, null, null)).when(mockTable).loadToMemory();
+
+        catchException(testBalance).getBalance();
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCalculateBalanceException.class);
+    }
+
+    @Test
+    public void GetBalance_GeneralException_ReturnsAvailableBalance() throws Exception{
+        when(mockDatabase.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME)).thenReturn(null);
 
         catchException(testBalance).getBalance();
         assertThat(caughtException())

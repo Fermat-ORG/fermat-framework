@@ -5,16 +5,15 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.WalletInstallationStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetInstallationStatusException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +22,10 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * TODO: This plugin do .
- * <p/>
- * TODO: DETAIL...............................................
- * <p/>
+ * Wallet Store - MiddleWare
+ * This plugin controls and maintain the installation status of catalog items like wallets, language packages and skins.
+ * When a new version is available or a catalog item is available, because it was found on a peer or installed on this device, we
+ * keep the status of the installation on this session.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  *
@@ -107,7 +106,7 @@ public class WalletStoreMiddlewarePluginRoot implements DealsWithErrors,DealsWit
     }
 
     @Override
-    public void setStatusToInstalling(UUID walletCatalogId) throws CantSetInstallationStatusException {
+    public void setWalletInformation(WalletInformation walletInformation) throws CantSetInstallationStatusException {
 
     }
 

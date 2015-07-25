@@ -11,22 +11,22 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantCreateDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantLoadDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.LoginFailedException;
-import com.bitdubai.fermat_api.layer.pip_user.User;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.DEPRECATED_CantCreateDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantLoadDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFailedException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.User;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure.PlatformDeviceUser;
 
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
     }
 
     @Override
-    public DeviceUser createUser() throws CantCreateDeviceUserException {
+    public DeviceUser createUser() throws DEPRECATED_CantCreateDeviceUserException {
 
         try
         {
@@ -136,14 +136,14 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
 
             return deviceUser;
         }
-        catch (CantCreateDeviceUserException cantCreateDeviceUserException)
+        catch (DEPRECATED_CantCreateDeviceUserException DEPRECATEDCantCreateDeviceUserException)
         {
             /**
              * This is bad, the only thing I can do is to throw the exception again.
              */
 
-            errorManager.reportUnexpectedAddonsException(Addons.DEVICE_USER, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, cantCreateDeviceUserException);
-            throw cantCreateDeviceUserException;
+            errorManager.reportUnexpectedAddonsException(Addons.DEVICE_USER, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, DEPRECATEDCantCreateDeviceUserException);
+            throw DEPRECATEDCantCreateDeviceUserException;
         }
 
     }
@@ -265,7 +265,7 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
 
 
 
-    private void recoverLastState () throws CantCreateDeviceUserException {
+    private void recoverLastState () throws DEPRECATED_CantCreateDeviceUserException {
 
         try {
 

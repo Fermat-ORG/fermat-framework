@@ -2,12 +2,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.dev
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.ActorAddressBookNotFoundException;
@@ -16,8 +13,6 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.except
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.*;
@@ -37,7 +32,7 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
     }
 
     @Override
-    public void executeTransaction(Transaction<CryptoTransaction> transaction) throws  CantRegisterCreditException, CantRegisterDebitDebitException, UnexpectedTransactionException {
+    public void executeTransaction(Transaction<CryptoTransaction> transaction) throws  CantRegisterCreditException, CantRegisterDebitException, UnexpectedTransactionException {
         switch (transaction.getInformation().getCryptoStatus()){
             case ON_CRYPTO_NETWORK:
                 processOnCryptoNetworkTransaction(transaction);
@@ -75,21 +70,21 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
         }
     }
 
-    private void processReversedOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitDebitException{
+    private void processReversedOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitException {
         try {
             BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
             bitcoinWallet.getBookBalance().debit(record);
         } catch (CantGenerateTransactionException e) {
-            throw new CantRegisterDebitDebitException("I couldn't generate the transaction",e,"","");
+            throw new CantRegisterDebitException("I couldn't generate the transaction",e,"","");
         }
     }
 
-    private void processReversedOnBlockchainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitDebitException{
+    private void processReversedOnBlockchainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitException {
         try {
             BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
             bitcoinWallet.getAvailableBalance().debit(record);
         } catch (CantGenerateTransactionException e) {
-            throw new CantRegisterDebitDebitException("I couldn't generate the transaction",e,"","");
+            throw new CantRegisterDebitException("I couldn't generate the transaction",e,"","");
         }
     }
 

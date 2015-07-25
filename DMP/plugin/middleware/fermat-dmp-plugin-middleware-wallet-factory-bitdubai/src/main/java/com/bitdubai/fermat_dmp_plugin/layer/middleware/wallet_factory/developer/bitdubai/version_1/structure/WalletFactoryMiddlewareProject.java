@@ -1,21 +1,13 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CentGetWalletFactoryProjectLanguageFileException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CentGetWalletFactoryProjectSkinFileException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 
-import java.util.List;
+import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal</code>
- * implementation of WalletFactoryProjectProposal.
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject</code>
+ * implementation of WalletFactoryProject.
  * <p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/07/15.
@@ -24,9 +16,44 @@ import java.util.List;
  */
 public class WalletFactoryMiddlewareProject implements WalletFactoryProject {
 
-    String name;
+    /**
+     * Private class Attributes
+     */
+    private UUID id;
 
-    List<String> proposals;
+    private String name;
+
+    private String developerPublicKey;
+
+    private Wallets type;
+
+    /**
+     * Class Constructors
+     */
+    public WalletFactoryMiddlewareProject() {
+    }
+
+    public WalletFactoryMiddlewareProject(String name, String developerPublicKey, Wallets type) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.developerPublicKey = developerPublicKey;
+        this.type = type;
+    }
+
+    public WalletFactoryMiddlewareProject(UUID id, String name, String developerPublicKey, Wallets type) {
+        this.id = id;
+        this.name = name;
+        this.developerPublicKey = developerPublicKey;
+        this.type = type;
+    }
+
+    /**
+     * private Class getters
+     */
+    @Override
+    public UUID getId() {
+        return id;
+    }
 
     @Override
     public String getName() {
@@ -34,12 +61,12 @@ public class WalletFactoryMiddlewareProject implements WalletFactoryProject {
     }
 
     @Override
-    public List<String> getProposals() throws CantGetWalletFactoryProjectProposalsException {
-        return proposals;
+    public String getDeveloperPublicKey() {
+        return developerPublicKey;
     }
 
     @Override
-    public WalletFactoryProjectProposal getProposal(String proposal) throws CantGetWalletFactoryProjectProposalException {
-        return null;
+    public Wallets getType() {
+        return type;
     }
 }

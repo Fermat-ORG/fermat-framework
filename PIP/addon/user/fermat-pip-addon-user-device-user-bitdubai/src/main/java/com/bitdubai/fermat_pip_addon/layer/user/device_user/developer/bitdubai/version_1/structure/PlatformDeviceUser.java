@@ -4,27 +4,27 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.DeviceUserCreatedEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.DeviceUserLoggedInEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.DeviceUserCreatedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.DeviceUserLoggedInEvent;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUser;
 
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserStatus;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantCreateDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantLoadDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantPersistDeviceUserException;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.LoginFailedException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUserStatus;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.DEPRECATED_CantCreateDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantLoadDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantPersistDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFailedException;
 
 import java.util.UUID;
 
@@ -91,7 +91,7 @@ public class PlatformDeviceUser implements DealsWithEvents, DealsWithErrors,Deal
      * This method is to be used for creating a new user.
      */
 
-    public void createUser () throws CantCreateDeviceUserException {
+    public void createUser () throws DEPRECATED_CantCreateDeviceUserException {
 
         this.userId = UUID.randomUUID();
         this.status = DeviceUserStatus.LOGGED_OUT;
@@ -105,7 +105,7 @@ public class PlatformDeviceUser implements DealsWithEvents, DealsWithErrors,Deal
              * This is bad, but lets handle it...
              */
             errorManager.reportUnexpectedAddonsException(Addons.DEVICE_USER, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, cantPersistDeviceUserException);
-            throw new CantCreateDeviceUserException();
+            throw new DEPRECATED_CantCreateDeviceUserException();
         }
 
         /**

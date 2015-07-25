@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoModulePluginRoot;
@@ -55,6 +55,7 @@ public class GetWalletAddressBookRegistryTest extends TestCase {
 
     @Test
     public void testGetWalletAddressBookRegistryTest_NotNull() throws Exception {
+        when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(database);
         WalletAddressBookRegistry walletAddressBookRegistry = walletAddressBookCryptoModulePluginRoot.getWalletAddressBookRegistry();
         assertNotNull(walletAddressBookRegistry);
     }

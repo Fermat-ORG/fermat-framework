@@ -53,7 +53,7 @@ public abstract class CloudServiceIntegrationTest {
 	}
 	
 	protected void requestConnection() throws Exception{
-		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getIdentityPublicKey());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertEquals(FMPPacketType.CONNECTION_ACCEPT, response.getType());
