@@ -3,9 +3,9 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions;
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.14..
+ * Created by eze on 2015.07.15..
  */
-public class CantGetWalletFactoryProjectResourcesException extends FermatException {
+public class CantAddLanguageStringException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantGetWalletFactoryProjectResourcesException extends FermatExcepti
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetWalletFactoryProjectResourcesException(String message, Exception cause, String context, String possibleReason) {
+    public CantAddLanguageStringException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

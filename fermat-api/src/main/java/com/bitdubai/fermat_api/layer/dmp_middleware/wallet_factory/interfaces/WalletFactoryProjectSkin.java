@@ -1,18 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureFromXmlException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetObjectStructureXmlException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ResourceAlreadyExistsException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ResourceNotFoundException;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -20,18 +9,29 @@ import java.util.UUID;
  */
 public interface WalletFactoryProjectSkin {
 
+    /**
+     * @return the id of the project skin
+     */
     UUID getId();
 
-    // name of skin, first skin is default
+    /**
+     * @return the name of the project skin
+     */
     String getName();
 
-    // designerpublickey of the skin
+    /**
+     * @return the designer public key of the translator who is working with this skin
+     */
     String getDesignerPublicKey();
 
-    // version of the skin
+    /**
+     * @return the version of the project skin
+     */
     Version getVersion();
 
-    // project proposal to which it belongs
+    /**
+     * @return the wallet factory project proposal which the skin belongs
+     */
     WalletFactoryProjectProposal getWalletFactoryProjectProposal();
 
 }
