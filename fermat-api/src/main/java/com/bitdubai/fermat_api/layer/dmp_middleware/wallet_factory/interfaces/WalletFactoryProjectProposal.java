@@ -9,15 +9,24 @@ import java.util.UUID;
  */
 public interface WalletFactoryProjectProposal {
 
+    /**
+     * @return the id of the project proposal
+     */
     UUID getId();
 
-    // alias of the proposal of version
+    /**
+     * @return alias of the proposal
+     */
     String getAlias();
 
-    // state of the proposal
+    /**
+     * @return state of the proposal
+     */
     FactoryProjectState getState();
 
-    // project to which it belongs
+    /**
+     * @return project to which it belongs
+     */
     WalletFactoryProject getProject();
 
 }

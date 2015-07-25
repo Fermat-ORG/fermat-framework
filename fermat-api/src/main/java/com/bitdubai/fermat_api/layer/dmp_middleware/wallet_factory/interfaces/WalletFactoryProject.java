@@ -10,12 +10,24 @@ import java.util.UUID;
  */
 public interface WalletFactoryProject {
 
+    /**
+     * @return the developerPublicKey of the developer who is working with this project
+     */
     String getDeveloperPublicKey();
 
+    /**
+     * @return the id of the project
+     */
     UUID getId();
 
+    /**
+     * @return the name of the project
+     */
     String getName();
 
+    /**
+     * @return the walletType of the project
+     */
     Wallets getType();
 
 }
