@@ -10,16 +10,34 @@ import java.util.UUID;
  */
 public interface WalletFactoryProjectLanguage {
 
+    /**
+     * @return the id of the project language
+     */
     UUID getId();
 
+    /**
+     * @return the name of the project language
+     */
     String getName();
 
+    /**
+     * @return the type of the project language
+     */
     Languages getType();
 
+    /**
+     * @return the version of the project language
+     */
     Version getVersion();
 
+    /**
+     * @return the translator public key of the translator who is working with this language
+     */
     String getTranslatorPublicKey();
 
+    /**
+     * @return the wallet factory project proposal which the language belongs
+     */
     WalletFactoryProjectProposal getWalletFactoryProjectProposal();
 
 }

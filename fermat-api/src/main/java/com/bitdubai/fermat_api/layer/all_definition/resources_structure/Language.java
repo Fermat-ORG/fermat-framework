@@ -63,6 +63,19 @@ public class Language implements FermatLanguage {
         this.version = version;
     }
 
+    /**
+     * FermatLanguage interface implementation
+     */
+
+    @Override
+    public void addString(String name, String value) {
+        strings.put(name, value);
+    }
+
+    @Override
+    public void deleteString(String name) {
+        strings.remove(name);
+    }
 
     /**
      * Language Class getters

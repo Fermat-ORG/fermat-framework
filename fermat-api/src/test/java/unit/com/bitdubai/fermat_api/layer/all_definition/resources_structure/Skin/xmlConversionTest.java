@@ -8,6 +8,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.io.StringReader;
+import java.util.Map;
+import java.util.UUID;
 
 import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
 import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
@@ -30,13 +32,13 @@ public class xmlConversionTest extends TestCase {
             stringBuffer.append("<name>main</name>");
             stringBuffer.append("<fileName>main.xml</fileName>");
             stringBuffer.append("</resource>");
-            stringBuffer.append("<resource id=\"31c5724c-876e-4a5b-8bcd-62d63ad033e4\" resourceType=\"layout\">");
-            stringBuffer.append("<name>main</name>");
-            stringBuffer.append("<fileName>main.xml</fileName>");
+            stringBuffer.append("<resource id=\"31c5724c-876e-4a5b-8bcd-62d63ad033e5\" resourceType=\"layout\">");
+            stringBuffer.append("<name>main1</name>");
+            stringBuffer.append("<fileName>main1.xml</fileName>");
             stringBuffer.append("</resource>");
-            stringBuffer.append("<resource id=\"31c5724c-876e-4a5b-8bcd-62d63ad033e4\" resourceType=\"layout\">");
-            stringBuffer.append("<name>main</name>");
-            stringBuffer.append("<fileName>main.xml</fileName>");
+            stringBuffer.append("<resource id=\"31c5724c-876e-4a5b-8bcd-62d63ad033e3\" resourceType=\"layout\">");
+            stringBuffer.append("<name>main2</name>");
+            stringBuffer.append("<fileName>main2.xml</fileName>");
             stringBuffer.append("</resource>");
             stringBuffer.append("</resources>");
             stringBuffer.append("<version>1.0.0</version>");
@@ -58,11 +60,11 @@ public class xmlConversionTest extends TestCase {
             skinBuilder.append("\nName: "+skin.getName());
             skinBuilder.append("\nVersion: "+skin.getVersion());
             skinBuilder.append("\n\nThese are my resources: \n\n");
-            for (FermatResource resource : skin.getResources()) {
-                skinBuilder.append("  Resource: ID: " + resource.getId() + "\n");
-                skinBuilder.append("            Name: " + resource.getName() + "\n");
-                skinBuilder.append("            FileName: " + resource.getFileName() + "\n");
-                skinBuilder.append("            ResourceType: " + resource.getResourceType() + "\n");
+            for (Map.Entry<UUID, FermatResource> resource : skin.getResources().entrySet()) {
+                skinBuilder.append("  Resource: ID: " + resource.getValue().getId() + "\n");
+                skinBuilder.append("            Name: " + resource.getValue().getName() + "\n");
+                skinBuilder.append("            FileName: " + resource.getValue().getFileName() + "\n");
+                skinBuilder.append("            ResourceType: " + resource.getValue().getResourceType() + "\n");
             }
             System.out.println(skinBuilder.toString());
 
