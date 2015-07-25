@@ -1,16 +1,8 @@
 package com.bitdubai.android_core.app;
 
 
-import android.graphics.Typeface;
-import android.os.Handler;
-
 import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_core.Platform;
 
 

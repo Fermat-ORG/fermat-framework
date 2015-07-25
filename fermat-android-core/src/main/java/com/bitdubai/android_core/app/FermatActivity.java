@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
-import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSession;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
@@ -37,7 +36,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFragments;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -47,11 +46,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
@@ -181,7 +179,7 @@ public class FermatActivity extends FragmentActivity{
             /**
              * Get activities fragment
              */
-            Map<WalletFragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
+            Map<FermatFragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments =activity.getFragments();
             /**
              * get actionBar to paint
              */
@@ -225,7 +223,8 @@ public class FermatActivity extends FragmentActivity{
     public Activity getActivityUsedType(){
         Activity activity=null;
         if(ActivityType.ACTIVITY_TYPE_SUB_APP==activityType){
-            activity = getAppRuntimeMiddleware().getLasActivity();
+            SubApp subApp = getAppRuntimeMiddleware().getLastSubApp();
+            activity = subApp.getLastActivity();
         }else if(ActivityType.ACTIVITY_TYPE_WALLET==activityType){
             //activity = getWalletRuntimeManager().getLasActivity();
         }
@@ -338,7 +337,7 @@ public class FermatActivity extends FragmentActivity{
         /**
          * Making the pagerTab adapter
          */
-        adapter = new TabsPagerAdapter(getSupportFragmentManager(), getApplicationContext(), getAppRuntimeMiddleware().getLasActivity(), (ApplicationSession) getApplication(), getErrorManager());
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(), getApplicationContext(), getAppRuntimeMiddleware().getLastSubApp().getLastActivity(), (ApplicationSession) getApplication(), getErrorManager());
 
         pagertabs.setAdapter(adapter);
         final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
@@ -534,10 +533,12 @@ public class FermatActivity extends FragmentActivity{
 
 
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<WalletFragments, Fragment>> efragments =getAppRuntimeMiddleware().getLasActivity().getFragments().entrySet().iterator();
+            SubApp subApp = getAppRuntimeMiddleware().getHomeScreen();
+            Activity activity = subApp.getLastActivity();
+            Iterator<Map.Entry<FermatFragments, Fragment>> efragments =activity.getFragments().entrySet().iterator();
             boolean flag = false;
             while (efragments.hasNext()) {
-                Map.Entry<WalletFragments, Fragment> fragmentEntry = efragments.next();
+                Map.Entry<FermatFragments, Fragment> fragmentEntry = efragments.next();
 
                 Fragment fragment = (Fragment) fragmentEntry.getValue();
                 Fragments type = fragment.getType();
@@ -592,12 +593,12 @@ public class FermatActivity extends FragmentActivity{
     }
 
     /**
-     *  Get AppRuntimeManager from the fermat platform
-     * @return  reference of AppRuntimeManager
+     *  Get SubAppRuntimeManager from the fermat platform
+     * @return  reference of SubAppRuntimeManager
      */
 
-    public AppRuntimeManager getAppRuntimeMiddleware(){
-        return (AppRuntimeManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+    public SubAppRuntimeManager getAppRuntimeMiddleware(){
+        return (SubAppRuntimeManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
     }
 
     /**

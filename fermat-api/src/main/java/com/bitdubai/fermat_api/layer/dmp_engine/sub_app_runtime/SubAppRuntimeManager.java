@@ -5,25 +5,21 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragmen
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 
 /**
- * Created by ciencias on 2/14/15.
+ * Created by Matias Furszyfer on 2/14/15.
  */
-public interface AppRuntimeManager {
+public interface SubAppRuntimeManager {
 
-    public App getApp (Apps app);
-
-    public App getLastApp ();
 
     public SubApp getLastSubApp ();
 
-    public Activity getLasActivity ();
+    public SubApp getSubApp(SubApps subApps);
 
-    public Fragment getLastFragment ();
+    public SubApp getHomeScreen();
 
-    public Activity getActivity(Activities app);
 
-    public Fragment getFragment(Fragments frag);
 
 }

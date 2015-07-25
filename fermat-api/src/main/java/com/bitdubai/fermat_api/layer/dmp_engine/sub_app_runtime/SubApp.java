@@ -19,7 +19,12 @@ public interface SubApp {
 
     public Map<Activities, Activity> getActivities();
 
-    public Map<Wallets, Wallet> getWallets();
+    public Activity getActivity(Activities activities);
+
+    public Activity getLastActivity();
+
+    public void setStartActivity(Activities activity);
     
     public Map<String,LanguagePackage> getLanguagePackages();
+
 }
