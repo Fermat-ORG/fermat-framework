@@ -50,7 +50,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     private Thread agentThread;
     private MonitorAgent monitorAgent;
 
-     /**
+    /**
      * DealaWithError interface member variables
      */
      private ErrorManager errorManager;
@@ -85,6 +85,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
     /**
      * DealsWithErrors interface impplementation
+     *
      * @param errorManager
      */
     @Override
@@ -94,6 +95,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
     /**
      * DealsWithPlugInFileSystem interface implementation
+     *
      * @param pluginFileSystem
      */
     @Override
@@ -103,6 +105,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
     /**
      * DealsWithPluginIdentity interface implementation
+     *
      * @param pluginId
      */
     @Override
@@ -112,6 +115,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
     /**
      * DealsWithLogger interface implementation
+     *
      * @param logManager
      */
     @Override
@@ -119,9 +123,9 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         this.logManager = logManager;
     }
 
-
     /**
      * Agent interface implementation
+     *
      * @throws CantStartAgentException
      */
     @Override
@@ -148,6 +152,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
     /**
      * return the amount of connected peers. Warning, may change as soon as this is executed.
+     *
      * @return
      */
     public int getConnectedPeers(){
@@ -159,76 +164,82 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
     /**
      * Used by the Vault when we want to send bitcoins.
+     *
      * @return
      */
-    public PeerGroup getPeers(){
+    public PeerGroup getPeers() {
         return peers;
     }
 
     /**
      * return true if the service is running. It doest't mean we are connected. We might be without
      * internet access but the service still running.
+     *
      * @return
      */
-    public boolean isRunning(){
+    public boolean isRunning() {
         if (peers == null)
             return false;
         else
-         return peers.isRunning();
+            return peers.isRunning();
     }
 
     public void configureBlockChain() throws CantCreateBlockStoreFileException {
         /**
          * I prepare the block chain object
          */
-        storedBlockChain = new StoredBlockChain(wallet, userId);
-        storedBlockChain.setPluginId(pluginId);
-        storedBlockChain.setPluginFileSystem(pluginFileSystem);
-        storedBlockChain.setErrorManager(errorManager);
-        storedBlockChain.createBlockChain();
+        try {
+            storedBlockChain = new StoredBlockChain(wallet, userId);
+            storedBlockChain.setPluginId(pluginId);
+            storedBlockChain.setPluginFileSystem(pluginFileSystem);
+            storedBlockChain.setErrorManager(errorManager);
+            storedBlockChain.createBlockChain();
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 
     public void configurePeers() {
         /**
          * I define the peers information that I will be connecting to.
          */
-        storedBlockChain.getBlockChain().addWallet(wallet);
-        peers = new PeerGroup(this.networkParameters, storedBlockChain.getBlockChain());
-        peers.addWallet(wallet);
+        try {
+            storedBlockChain.getBlockChain().addWallet(wallet);
+            peers = new PeerGroup(this.networkParameters, storedBlockChain.getBlockChain());
+            peers.addWallet(wallet);
 
-        peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
-        peers.setUseLocalhostPeerWhenPossible(true);
-        /**
-         * If we are using RegTest network, we will connect to local server
-         */
-        if (networkParameters == RegTestParams.get())
-        {
-            InetSocketAddress inetSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
-            PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
-            peers.addAddress(peerAddress);
-            logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString(), null, null);
+            peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
+            peers.setUseLocalhostPeerWhenPossible(true);
+            /**
+             * If we are using RegTest network, we will connect to local server
+             */
+            if (networkParameters == RegTestParams.get()) {
+                InetSocketAddress inetSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
+                PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
+                peers.addAddress(peerAddress);
+                logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString(), null, null);
+            } else
+            /**
+             * If it is not RegTest, then I will get the Peers by DNSDiscovery
+             */ {
+                logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using " + networkParameters.toString() + " network.", null, null);
+                peers.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
+            }
+            myListeners = new BitcoinEventListeners();
+            myListeners.setLogManager(this.logManager);
+            peers.addEventListener(myListeners);
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
-        else
-        /**
-         * If it is not RegTest, then I will get the Peers by DNSDiscovery
-         */
-        {
-            logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using " + networkParameters.toString() + " network.", null, null);
-            peers.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
-        }
-
-
-        myListeners = new BitcoinEventListeners();
-        myListeners.setLogManager(this.logManager);
-        peers.addEventListener(myListeners);
-
     }
 
 
     /**
      * private class executed by the start of the Agent.
      */
-    private class MonitorAgent implements Runnable{
+    private class MonitorAgent implements Runnable {
         @Override
         public void run() {
             try {
@@ -244,12 +255,12 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          * and the listening to incoming transactions.
          */
         private void doTheMainTask() throws CantConnectToBitcoinNetwork {
-            try{
+            try {
                 peers.startAsync();
                 peers.awaitRunning();
                 peers.downloadBlockChain();
-            } catch (Exception exception){
-                throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception,"", "Error executing Agent.");
+            } catch (Exception exception) {
+                throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
             }
         }
     }

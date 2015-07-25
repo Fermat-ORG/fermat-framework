@@ -203,21 +203,18 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
 
         try {
             bitcoinCryptoNetworkMonitoringAgent.configureBlockChain();
-        } catch (CantCreateBlockStoreFileException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", e, "UserId : " + cryptoVault.getUserId().toString(), "Blockchain not saved " +
-                    "on disk.");
-
-
-        }
-
-        bitcoinCryptoNetworkMonitoringAgent.configurePeers();
-
-        try {
+            bitcoinCryptoNetworkMonitoringAgent.configurePeers();
             bitcoinCryptoNetworkMonitoringAgent.start();
-        } catch (CantStartAgentException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", e, "UserId : " + cryptoVault.getUserId().toString(), "Error starting Agent.");
+        } catch (CantStartAgentException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "UserId : " + cryptoVault.getUserId().toString(), "Error starting Agent.");
+        } catch (CantCreateBlockStoreFileException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "UserId : " + cryptoVault.getUserId().toString(), "Blockchain not saved " +
+                    "on disk.");
+        } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
     }
 

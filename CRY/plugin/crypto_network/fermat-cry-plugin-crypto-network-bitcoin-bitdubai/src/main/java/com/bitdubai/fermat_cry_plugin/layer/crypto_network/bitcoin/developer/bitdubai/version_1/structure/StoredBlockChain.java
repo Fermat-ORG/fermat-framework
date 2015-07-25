@@ -143,6 +143,9 @@ public class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsW
                 context.append("blockChainFileName: " + blockChainFileName.toString());
                 throw new CantCreateBlockStoreFileException("Could not save blockchain in disk and in memory", e, context.toString(), "Not enought space on disk.");
             }
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
     }
