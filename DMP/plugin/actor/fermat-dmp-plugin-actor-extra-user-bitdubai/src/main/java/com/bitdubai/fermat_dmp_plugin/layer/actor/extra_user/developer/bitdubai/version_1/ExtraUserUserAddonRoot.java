@@ -62,7 +62,7 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
         } catch (Exception exception) {
             //System.out.println("******* Error trying to get database list for plugin Wallet Contacts");
             //modified by Manuel on 23/07/2015
-            exception.printStackTrace();
+            //exception.printStackTrace();
             FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getDatabaseList: "+developerObjectFactory ,"Check the cause");
             this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
 

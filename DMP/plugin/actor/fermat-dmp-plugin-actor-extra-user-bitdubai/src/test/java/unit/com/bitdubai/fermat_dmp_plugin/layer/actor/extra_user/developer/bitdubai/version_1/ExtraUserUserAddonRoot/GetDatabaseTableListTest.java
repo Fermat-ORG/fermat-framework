@@ -62,11 +62,13 @@ public class GetDatabaseTableListTest {
     }
 
 
-    @Test(expected = Exception.class)
+    @Test
     public void getDatabaseTableList_NullsArguments_ThrowsGenericException() throws Exception{
         /**
          * With null DeveloperObjectFactory argument this method throws an exception
          */
+        MockErrorManager mockErrorManager=new MockErrorManager();
+        extraUserUserAddonRoot.setErrorManager(mockErrorManager);
         extraUserUserAddonRoot.getDatabaseTableList(null, null);
 
     }

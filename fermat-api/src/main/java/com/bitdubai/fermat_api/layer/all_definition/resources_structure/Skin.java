@@ -1,11 +1,15 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesMapAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.adapters.FermatResourceMapAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.adapters.VersionAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatResource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatSkin;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import ae.javax.xml.bind.annotation.XmlAttribute;
@@ -34,7 +38,7 @@ public class Skin implements FermatSkin {
 
     private String name;
 
-    private List<FermatResource> resources;
+    private Map<UUID, FermatResource> resources = new HashMap<>();
 
     private Version version;
 
@@ -51,11 +55,25 @@ public class Skin implements FermatSkin {
         this.version = version;
     }
 
-    public Skin(UUID id, String name, List<FermatResource> resources, Version version) {
+    public Skin(UUID id, String name, Map<UUID, FermatResource> resources, Version version) {
         this.id = id;
         this.name = name;
         this.resources = resources;
         this.version = version;
+    }
+
+    /**
+     * FermatSkin interface implementation
+     */
+
+    @Override
+    public void addResource(FermatResource fermatResource) {
+        resources.put(fermatResource.getId(), fermatResource);
+    }
+
+    @Override
+    public void deleteResource(FermatResource fermatResource) {
+        resources.remove(fermatResource.getId());
     }
 
     /**
@@ -73,11 +91,9 @@ public class Skin implements FermatSkin {
         return name;
     }
 
-    @XmlElements({
-            @XmlElement(name="resource", type=Resource.class),
-    })
-    @XmlElementWrapper
-    public List<FermatResource> getResources() {
+    @XmlJavaTypeAdapter(FermatResourceMapAdapter.class)
+    @XmlElement(name = "resources")
+    public Map<UUID, FermatResource> getResources() {
         return resources;
     }
 
@@ -99,7 +115,7 @@ public class Skin implements FermatSkin {
         this.name = name;
     }
 
-    public void setResources(List<FermatResource> resources) {
+    public void setResources(Map<UUID, FermatResource> resources) {
         this.resources = resources;
     }
 

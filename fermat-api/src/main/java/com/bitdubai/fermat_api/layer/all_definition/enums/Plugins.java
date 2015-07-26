@@ -136,6 +136,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE;
             case "Wallet Store Network Service":
                 return Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE;
+            case "Wallet Store Middleware":
+                return Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE;
             case "Wallet Contacts Middleware":
                 return Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE;
             case "Wallet Community Network Service":

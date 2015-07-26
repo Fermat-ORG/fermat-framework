@@ -33,4 +33,10 @@ public interface FermatLanguage {
     // version of language
     Version getVersion();
 
+    // add strings to the language
+    void addString(String name, String value);
+
+    // delete strings from the language
+    void deleteString(String name);
+
 }

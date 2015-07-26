@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by eze on 2015.07.15..
  */
-public class CentGetWalletFactoryProjectLanguageFileException extends FermatException {
+public class CantAddResourceToSkinException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CentGetWalletFactoryProjectLanguageFileException extends FermatExce
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CentGetWalletFactoryProjectLanguageFileException(String message, Exception cause, String context, String possibleReason) {
+    public CantAddResourceToSkinException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

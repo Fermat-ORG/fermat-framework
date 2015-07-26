@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -24,9 +25,15 @@ public interface FermatSkin {
     String getName();
 
     // get all resources from a skin
-    List<FermatResource> getResources();
+    Map<UUID, FermatResource> getResources();
 
     // version of skin
     Version getVersion();
+
+    // add Resource to the skin
+    void addResource(FermatResource fermatResource);
+
+    // delete Resource from the skin
+    void deleteResource(FermatResource fermatResource);
 
 }
