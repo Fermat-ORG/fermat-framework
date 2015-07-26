@@ -18,6 +18,7 @@ public interface WalletSession {
     public Object getData (String key);
     public CryptoWalletManager getCryptoWalletManager();
     public ErrorManager getErrorManager();
-    public BalanceType getBalanceTypeSelected();
+    public String getBalanceTypeSelected();
+    public void setBalanceTypeSelected(BalanceType balanceTypeSelected);
 
 }
