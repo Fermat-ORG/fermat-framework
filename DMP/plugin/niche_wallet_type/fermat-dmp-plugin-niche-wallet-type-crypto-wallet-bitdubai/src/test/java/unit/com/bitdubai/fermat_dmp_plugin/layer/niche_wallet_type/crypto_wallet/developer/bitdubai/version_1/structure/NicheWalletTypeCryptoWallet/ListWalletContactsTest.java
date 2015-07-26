@@ -20,9 +20,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static com.googlecode.catchexception.CatchException.*;
+import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListWalletContactsTest extends TestCase {
@@ -74,14 +74,26 @@ public class ListWalletContactsTest extends TestCase {
     @Test
     public void testListWalletContacts_NotNull() throws Exception {
         List<WalletContactRecord> walletContactRecordsList = nicheWalletTypeCryptoWallet.listWalletContacts(walletId);
-        assertNotNull(walletContactRecordsList);
+        assertThat(walletContactRecordsList).isNotNull();
     }
 
-    @Test(expected=CantGetAllWalletContactsException.class)
+    @Test
     public void testListWalletContacts_CantGetAllWalletContactsException() throws Exception {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException())
         .when(walletContactsRegistry).listWalletContacts(any(UUID.class));
 
-        nicheWalletTypeCryptoWallet.listWalletContacts(walletId);
+        catchException(nicheWalletTypeCryptoWallet).listWalletContacts(walletId);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantGetAllWalletContactsException.class);
+    }
+
+    @Test
+    public void testListWalletContacts_RegistryIsNotInitialized_CantGetAllWalletContactsException() throws Exception {
+        nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
+        catchException(nicheWalletTypeCryptoWallet).listWalletContacts(walletId);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantGetAllWalletContactsException.class);
     }
 }

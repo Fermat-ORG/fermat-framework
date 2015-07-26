@@ -23,6 +23,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.doThrow;
+import static com.googlecode.catchexception.CatchException.*;
+import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitializeTest extends TestCase {
@@ -93,27 +95,48 @@ public class InitializeTest extends TestCase {
 
     @Test
     public void testGetCryptoWallet_Success() throws Exception {
-        nicheWalletTypeCryptoWallet.initialize();
+        catchException(nicheWalletTypeCryptoWallet).initialize();
+        assertThat(caughtException()).isNull();
     }
 
-    @Test(expected=CantInitializeCryptoWalletManagerException.class)
+    @Test
     public void testInitialize_CantGetActorAddressBookRegistryException() throws Exception {
         doThrow(new CantGetActorAddressBookRegistryException()).when(actorAddressBookManager).getActorAddressBookRegistry();
 
-        nicheWalletTypeCryptoWallet.initialize();
+        catchException(nicheWalletTypeCryptoWallet).initialize();
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
     }
 
-    @Test(expected=CantInitializeCryptoWalletManagerException.class)
+    @Test
     public void testInitialize_CantGetWalletContactRegistryException() throws Exception {
         doThrow(new CantGetWalletContactRegistryException()).when(walletContactsManager).getWalletContactsRegistry();
 
-        nicheWalletTypeCryptoWallet.initialize();
+        catchException(nicheWalletTypeCryptoWallet).initialize();
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
     }
 
-    @Test(expected=CantInitializeCryptoWalletManagerException.class)
+    @Test
     public void testInitialize_CantGetWalletAddressBookRegistryException() throws Exception {
         doThrow(new CantGetWalletAddressBookRegistryException()).when(walletAddressBookManager).getWalletAddressBookRegistry();
 
-        nicheWalletTypeCryptoWallet.initialize();
+        catchException(nicheWalletTypeCryptoWallet).initialize();
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
     }
+
+    @Test
+    public void testInitialize_NullPointerException_ThrowCantInitializeCryptoWalletManagerException() throws Exception {
+        nicheWalletTypeCryptoWallet.setActorAddressBookManager(null);
+
+        catchException(nicheWalletTypeCryptoWallet).initialize();
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
+    }
+
 }

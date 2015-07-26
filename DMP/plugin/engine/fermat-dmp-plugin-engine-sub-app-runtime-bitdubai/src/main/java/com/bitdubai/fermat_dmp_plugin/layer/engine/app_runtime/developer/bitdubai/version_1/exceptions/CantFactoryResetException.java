@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.exceptions.AppRu
 /**
  * Created by natalia on 01/07/15.
  */
-public class CantFactoryReset extends AppRuntimeExceptions {
+public class CantFactoryResetException extends AppRuntimeExceptions {
 
     /**
      *
@@ -25,7 +25,7 @@ public class CantFactoryReset extends AppRuntimeExceptions {
      */
 
 
-    public CantFactoryReset(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantFactoryResetException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
