@@ -169,61 +169,19 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
 
     }
 
-    private UUID createAndRegisterActor(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, CryptoAddress cryptoAddress) throws CantCreateOrRegisterActorException {
-        UUID deliveredToActorId = createActor(deliveredToActorName, deliveredToActorType);
-        try {
-            actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, cryptoAddress);
-            return deliveredToActorId;
-        } catch (CantRegisterActorAddressBookException e) {
-            throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
-        }
-    }
-
-    private UUID createActor(String actorName, Actors actorType) throws CantCreateOrRegisterActorException {
-        switch (actorType){
-            case EXTRA_USER:
-                Actor actor = extraUserManager.createActor(actorName);
-                return actor.getId();
-            default:
-                throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, null, "", "ActorType is not Compatible.");
-        }
-            // TODO ADD CANTCREATEXTRAUSER EXCEPTION IN PLUGIN EXTRA USER
-      //      throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
-    }
-
-    private CryptoAddress requestAndRegisterCryptoAddress(UUID walletId, ReferenceWallet referenceWallet) throws CantRequestOrRegisterCryptoAddressException {
-        CryptoAddress cryptoAddress;
-        switch (referenceWallet){
-            case BASIC_WALLET_BITCOIN_WALLET:
-                cryptoAddress = cryptoVaultManager.getAddress();
-                break;
-            default:
-                throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
-        }
-        // TODO ADD CANT GET ADDRESS EXCEPTION IN PLUGIN CRYPTO VAULT
-        try {
-            walletAddressBookRegistry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletId);
-            return cryptoAddress;
-        } catch (CantRegisterWalletAddressBookException e) {
-            throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
-        }
-    }
-
     @Override
     public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, ReferenceWallet referenceWallet, UUID walletId) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
-            try {
-                deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletId, referenceWallet);
-            } catch (CantRequestOrRegisterCryptoAddressException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
-            }
+            deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletId, referenceWallet);
             createAndRegisterActor(deliveredByActorId, deliveredByActorType, deliveredToActorName, deliveredToActorType, deliveredCryptoAddress);
             return deliveredCryptoAddress;
         } catch (CantCreateOrRegisterActorException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
+        } catch (CantRequestOrRegisterCryptoAddressException e) {
+            throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
+        } catch (Exception exception){
+            throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
     }
 
@@ -231,21 +189,15 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, ReferenceWallet referenceWallet, UUID walletId) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
-            try {
-                deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletId, referenceWallet);
-            } catch (CantRequestOrRegisterCryptoAddressException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
-            }
-            try {
-                actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, deliveredCryptoAddress);
-            } catch (CantRegisterActorAddressBookException e) {
-                throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
-            }
+            deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletId, referenceWallet);
+            actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, deliveredCryptoAddress);
             return deliveredCryptoAddress;
-        } catch (CantCreateOrRegisterActorException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantRequestOrRegisterCryptoAddressException e) {
             throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
+        } catch (CantRegisterActorAddressBookException e) {
+            throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
+        } catch(Exception exception){
+            throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
     }
 
@@ -254,7 +206,6 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             walletContactsRegistry.updateWalletContact(contactId, receivedCryptoAddress, actorName);
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e);
         }  catch (Exception e) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -266,7 +217,6 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             walletContactsRegistry.deleteWalletContact(contactId);
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e);
         } catch (Exception e) {
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -278,10 +228,12 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             return walletContactsRegistry.getWalletContactByNameContainsAndWalletId(actorName, walletId);
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e);
+        } catch(Exception exception){
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
     }
+
     // TODO:  ESTOS DOS METODOS SON LOS QUE NATALIA/EZE ME TIENEN QUE PASAR PARA YO HACER CORRER LA APP
     @Override
     public long getAvailableBalance(UUID walletId) throws CantGetBalanceException {
@@ -324,40 +276,10 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
 
             return cryptoWalletTransactionList;
         } catch (CantLoadWalletException|com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e);
         } catch(Exception e){
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
-    }
-
-    private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction) {
-        String involvedActorName = null;
-        switch(bitcoinWalletTransaction.getTransactionType()) {
-            case CREDIT:
-                involvedActorName = getActorNameByActorIdAndType(bitcoinWalletTransaction.getActorFrom(), bitcoinWalletTransaction.getActorFromType());
-                break;
-            case DEBIT:
-                try {
-                    WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorId(bitcoinWalletTransaction.getActorTo());
-                    involvedActorName = walletContactRecord.getActorName();
-                } catch(Exception e) {
-                    involvedActorName = getActorNameByActorIdAndType(bitcoinWalletTransaction.getActorTo(), bitcoinWalletTransaction.getActorToType());
-                }
-                break;
-        }
-        return new CryptoWalletNicheWalletTypeTransaction(bitcoinWalletTransaction, involvedActorName);
-    }
-
-    private String getActorNameByActorIdAndType(UUID actorId, Actors actorType) {
-        switch (actorType) {
-            case EXTRA_USER:
-                Actor actor = extraUserManager.getActor(actorId);
-                return actor.getName();
-            default:
-                return null;
-        }
-        // TODO ADD cant get extrauser EXCEPTION IN PLUGIN EXTRA USER
     }
 
     @Override
@@ -365,16 +287,13 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
         } catch (com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE, e);
         } catch (CantSendFundsException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, e);
         } catch (CantGetTransactionManagerException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, e);
         }  catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
@@ -446,5 +365,76 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     @Override
     public void setWalletAddressBookManager(WalletAddressBookManager walletAddressBookManager) {
         this.walletAddressBookManager = walletAddressBookManager;
+    }
+
+
+
+    private UUID createAndRegisterActor(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, CryptoAddress cryptoAddress) throws CantCreateOrRegisterActorException {
+        try {
+            UUID deliveredToActorId = createActor(deliveredToActorName, deliveredToActorType);
+            actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, cryptoAddress);
+            return deliveredToActorId;
+        } catch (CantRegisterActorAddressBookException e) {
+            throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
+        }
+    }
+
+    private UUID createActor(String actorName, Actors actorType) throws CantCreateOrRegisterActorException {
+        switch (actorType){
+            case EXTRA_USER:
+                Actor actor = extraUserManager.createActor(actorName);
+                return actor.getId();
+            default:
+                throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, null, "", "ActorType is not Compatible.");
+        }
+        // TODO ADD CANTCREATEXTRAUSER EXCEPTION IN PLUGIN EXTRA USER
+        //      throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
+    }
+
+    private CryptoAddress requestAndRegisterCryptoAddress(UUID walletId, ReferenceWallet referenceWallet) throws CantRequestOrRegisterCryptoAddressException {
+        CryptoAddress cryptoAddress;
+        switch (referenceWallet){
+            case BASIC_WALLET_BITCOIN_WALLET:
+                cryptoAddress = cryptoVaultManager.getAddress();
+                break;
+            default:
+                throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
+        }
+        // TODO ADD CANT GET ADDRESS EXCEPTION IN PLUGIN CRYPTO VAULT
+        try {
+            walletAddressBookRegistry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletId);
+            return cryptoAddress;
+        } catch (CantRegisterWalletAddressBookException e) {
+            throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
+        }
+    }
+
+    private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction) {
+        String involvedActorName = null;
+        switch(bitcoinWalletTransaction.getTransactionType()) {
+            case CREDIT:
+                involvedActorName = getActorNameByActorIdAndType(bitcoinWalletTransaction.getActorFrom(), bitcoinWalletTransaction.getActorFromType());
+                break;
+            case DEBIT:
+                try {
+                    WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorId(bitcoinWalletTransaction.getActorTo());
+                    involvedActorName = walletContactRecord.getActorName();
+                } catch(Exception e) {
+                    involvedActorName = getActorNameByActorIdAndType(bitcoinWalletTransaction.getActorTo(), bitcoinWalletTransaction.getActorToType());
+                }
+                break;
+        }
+        return new CryptoWalletNicheWalletTypeTransaction(bitcoinWalletTransaction, involvedActorName);
+    }
+
+    private String getActorNameByActorIdAndType(UUID actorId, Actors actorType) {
+        switch (actorType) {
+            case EXTRA_USER:
+                Actor actor = extraUserManager.getActor(actorId);
+                return actor.getName();
+            default:
+                return null;
+        }
+        // TODO ADD cant get extrauser EXCEPTION IN PLUGIN EXTRA USER
     }
 }
