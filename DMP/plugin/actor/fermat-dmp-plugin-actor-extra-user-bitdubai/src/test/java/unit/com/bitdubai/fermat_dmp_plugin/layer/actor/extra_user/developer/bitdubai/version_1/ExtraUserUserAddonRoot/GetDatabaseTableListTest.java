@@ -70,6 +70,7 @@ public class GetDatabaseTableListTest {
         MockErrorManager mockErrorManager=new MockErrorManager();
         extraUserUserAddonRoot.setErrorManager(mockErrorManager);
         extraUserUserAddonRoot.getDatabaseTableList(null, null);
+        Assertions.assertThat(mockErrorManager).isNotNull();
 
     }
 

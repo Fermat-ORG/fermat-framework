@@ -22,6 +22,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -71,6 +72,8 @@ public class GetDabaseListTest {
 
         extraUserUserAddonRoot.setErrorManager(mockErrorManager);
         extraUserUserAddonRoot.getDatabaseList(null);
+
+        Assertions.assertThat(mockErrorManager).isNotNull();
 
     }
 
