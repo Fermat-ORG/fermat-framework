@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -17,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 11/06/15.
  */
-public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithErrors{
+public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithErrors {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -39,6 +40,7 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
 
     /**
      * DealsWithErrors interface implementation
+     *
      * @param errorManager
      */
     @Override
@@ -47,50 +49,30 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
     }
 
     public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
-
-        Database database;
-
-        /**
-         * I will create the database where I am going to store the information of this wallet.
-         */
         try {
-
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            Database database;
 
             /**
-             * I can not handle this situation.
+             * I will create the database where I am going to store the information of this wallet.
              */
-            throw new CantCreateDatabaseException();
-        }
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
 
+            /**
+             * Next, I will add the needed tables.
+             */
+            DatabaseTableFactory table;
 
-        /**
-         * Next, I will add the needed tables.
-         */
-        DatabaseTableFactory table;
-
-        /**
-         * First the incoming crypto table.
-         */
-        table = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 34, true);
-        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 64, true);
-        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-
-        try {
-            ((DatabaseFactory) database).createTable(table);
-        } catch (CantCreateTableException cantCreateTableException) {
-            throw new CantCreateDatabaseException();
-        }
-
-        /**
-         * Next, I will add the needed tables.
-         */
-
-
+            /**
+             * First the incoming crypto table.
+             */
+            table = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+            table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 34, true);
+            table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 64, true);
+            table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+            table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+            /**
+             * Next, I will add the needed tables.
+             */
             DatabaseTableFactory table2;
 
             /**
@@ -99,35 +81,30 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
             table2 = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
             table2.addColumn(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 34, true);
 
+            /**
+             * Next, I will add the needed tables.
+             */
 
-            try {
-                ((DatabaseFactory) database).createTable(table2);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException();
-            }
+            DatabaseTableFactory table3;
 
-        /**
-         * Next, I will add the needed tables.
-         */
+            /**
+             * Transaction Status table to hold the ocurrences of how many times I'm notifying there are new transactions but noone is getting them
+             * we are  keeping track of this because it may be an error if no one consumes my transactions.
+             */
+            table3 = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS);
+            table3.addColumn(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 34, true);
+            table3.addColumn(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, DatabaseDataType.INTEGER, 4, false);
 
+            return database;
 
-        DatabaseTableFactory table3;
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
-        /**
-         * Transaction Status table to hold the ocurrences of how many times I'm notifying there are new transactions but noone is getting them
-         * we are  keeping track of this because it may be an error if no one consumes my transactions.
-         */
-        table3 = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS);
-        table3.addColumn(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 34, true);
-        table3.addColumn(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, DatabaseDataType.INTEGER, 4, false);
-
-
-        try {
-            ((DatabaseFactory) database).createTable(table3);
-        } catch (CantCreateTableException cantCreateTableException) {
+            /**
+             * I can not handle this situation.
+             */
             throw new CantCreateDatabaseException();
-        }
-
-        return database;
+        }catch(Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
+}
