@@ -1,13 +1,10 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
 /**
- * Created by rodrigo on 2015.07.20..
+ * Created by Furszyfer Matias on 2015.07.23..
  */
 public interface FermatScreenSwapper {
 
-    public void changeScreen();
+    public void changeScreen(String screen,Object[] objects);
 
-    public void setScreen(String screen);
-
-    public void setParams(Object[] objects);
 }

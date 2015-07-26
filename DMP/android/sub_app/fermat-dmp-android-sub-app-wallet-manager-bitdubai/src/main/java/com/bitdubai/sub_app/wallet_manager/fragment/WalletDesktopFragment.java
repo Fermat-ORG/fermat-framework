@@ -23,6 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 
@@ -43,9 +46,18 @@ public class WalletDesktopFragment extends Fragment {
     private int position;
     Typeface tf;
 
+    private WalletManagerManager walletManager;
 
-    //private SearchView mSearchView;
+    private List<InstalledWallet> lstInstalledWallet;
 
+    public static WalletDesktopFragment newInstance(int position,WalletManagerManager walletManager) {
+        WalletDesktopFragment f = new WalletDesktopFragment();
+        f.setWalletManager(walletManager);
+        Bundle b = new Bundle();
+        b.putInt(ARG_POSITION, position);
+        f.setArguments(b);
+        return f;
+    }
     public static WalletDesktopFragment newInstance(int position) {
         WalletDesktopFragment f = new WalletDesktopFragment();
         Bundle b = new Bundle();
@@ -59,6 +71,12 @@ public class WalletDesktopFragment extends Fragment {
 
          tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         setHasOptionsMenu(true);
+
+        try {
+            if(walletManager!=null) lstInstalledWallet=walletManager.getInstalledWallets();
+        } catch (CantListWalletsException e) {
+            e.printStackTrace();
+        }
         String[] installed =
                 {"false",
                         "false",
@@ -191,6 +209,15 @@ public class WalletDesktopFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *  Set Wallet manager plugin
+     *
+     * @param walletManager
+     */
+    public void setWalletManager(WalletManagerManager walletManager) {
+        this.walletManager = walletManager;
+    }
+
 
     public class App implements Serializable {
 
@@ -273,8 +300,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
-                            ((FermatScreenSwapper) getActivity()).changeScreen();
+                             ((FermatScreenSwapper) getActivity()).changeScreen("WalletBitcoinActivity",null);
 
                         }
                     });
@@ -284,8 +310,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
-                            ((FermatScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).changeScreen("WalletBitcoinActivity",null);
 
                         }
                     });

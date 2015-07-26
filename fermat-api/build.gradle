@@ -35,6 +35,8 @@ dependencies {
 
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.52'
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    compile 'com.sun.istack:istack-commons-runtime:2.22'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     
     testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interface
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -11,7 +12,6 @@ import java.util.UUID;
  * @author Ezequiel Postan - (ezequiel.postan@gmail.com)
  */
 public interface Language {
-
 
     /**
      * Language identifiers
@@ -25,7 +25,7 @@ public interface Language {
      * Language file information
      */
     public int getLanguagePackageSizeInBytes();
-    public String getFileURL();
+    public URL getFileURL();
 
     /**
      * Version information, current, Initial and Final.
@@ -37,6 +37,8 @@ public interface Language {
     /**
      * Translator information
      */
-    public String getTranslatorName();
-    public String getTranslatorPublicKey();
+    public UUID getTranslatorId();
+
+    public boolean isDefault();
+
 }

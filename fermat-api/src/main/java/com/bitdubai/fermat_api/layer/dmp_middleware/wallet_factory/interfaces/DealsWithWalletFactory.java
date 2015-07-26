@@ -11,5 +11,12 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
  * @since Java JDK 1.7
  */
 public interface DealsWithWalletFactory {
+
+    /**
+     * Throw this method the platform can set to the plugins who implements this interface the WalletFactory Manager
+     * that they need to do the right job.
+     *
+     * @param walletFactoryManager
+     */
     void setWalletFactoryManager(WalletFactoryManager walletFactoryManager);
 }

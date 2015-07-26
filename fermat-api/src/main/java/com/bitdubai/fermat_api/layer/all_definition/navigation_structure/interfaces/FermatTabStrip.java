@@ -9,42 +9,42 @@ import java.util.List;
  */
 public interface FermatTabStrip {
 
-    public List<Tab> getTabs();
+    List<Tab> getTabs();
 
-    public void setDividerColor(int color);
+    void setDividerColor(int color);
 
-    public int getDividerColor();
+    int getDividerColor();
 
-    public void setIndicatorColor(int color);
+    void setIndicatorColor(int color);
 
-    public int getIndicatorColor();
+    int getIndicatorColor();
 
-    public void setIndicatorHeight(int color);
+    void setIndicatorHeight(int color);
 
-    public int getIndicatorHeight();
+    int getIndicatorHeight();
 
-    public void setBackgroundColor(int color);
+    void setBackgroundColor(int color);
 
-    public int getBackgroundColor();
+    int getBackgroundColor();
 
-    public void setTextColor(int color);
+    void setTextColor(int color);
 
-    public int getTextColor();
+    int getTextColor();
 
-    public void setBackgroundResource(int id);
+    void setBackgroundResource(int id);
 
-    public int getBackgroundResource();
+    int getBackgroundResource();
 
-    public void setTabsColor(String color);
+    void setTabsColor(String color);
 
-    public String getTabsColor();
+    String getTabsColor();
 
-    public void setTabsTextColor(String color);
+    void setTabsTextColor(String color);
 
-    public String getTabsTextColor();
+    String getTabsTextColor();
 
-    public void setTabsIndicateColor(String color);
+    void setTabsIndicateColor(String color);
 
-    public String getTabsIndicateColor();
+    String getTabsIndicateColor();
 
 }

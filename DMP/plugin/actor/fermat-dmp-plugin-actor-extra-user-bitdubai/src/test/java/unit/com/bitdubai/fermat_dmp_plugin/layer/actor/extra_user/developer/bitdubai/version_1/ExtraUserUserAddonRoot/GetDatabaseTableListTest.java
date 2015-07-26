@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 
+
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -7,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 
 import org.fest.assertions.api.Assertions;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -43,7 +43,6 @@ public class GetDatabaseTableListTest {
     public void getDataBaseTableList_DeveloperObjectFactoryImplemented__DatabaseTableListWithValidContent(){
 
         List<DeveloperDatabaseTable> resultList;
-
         /**
          * Creating a fake DeveloperDatabase, mocking some interfaces, we can test the DatabaseList return
          */
@@ -62,37 +61,22 @@ public class GetDatabaseTableListTest {
 
     }
 
-    //@Ignore
+
     @Test
-    public void getDatabaseTableList_NullDeveloperObjectFactory_ThrowsGenericException() throws Exception{
+    public void getDatabaseTableList_NullsArguments_ThrowsGenericException() throws Exception{
         /**
-         * With nulls arguments this method throws an exception
+         * With null DeveloperObjectFactory argument this method throws an exception
          */
+        MockErrorManager mockErrorManager=new MockErrorManager();
+        extraUserUserAddonRoot.setErrorManager(mockErrorManager);
         extraUserUserAddonRoot.getDatabaseTableList(null, null);
 
     }
 
-    //For future use
-    @Ignore
-    //@Test
-    public void getDatabaseTableList_NullDeveloperObjectFactory_ThrowsException() throws Exception{
-
-        Exception exception=null;
-        try{
-            extraUserUserAddonRoot.getDatabaseTableList(null, null);
-        }catch(Exception e){
-
-            e.printStackTrace();
-            exception=e;
-
-        }
-        Assertions.assertThat(exception).isNotNull();
-
-    }
 
     @Test
-    public void getDatabaseTableListOpenDeveloperObjectFactoryCanGetDatabaseTableList_DatabaseTableListNotNull() throws Exception {
-        List<DeveloperDatabaseTable> developerDatabaseTableList=null;
+    public void getDatabaseTableList_OpenDeveloperObjectFactoryCanGetDatabaseTableList_DatabaseTableListNotNull() throws Exception {
+        List<DeveloperDatabaseTable> developerDatabaseTableList;
 
         developerDatabaseTableList= extraUserUserAddonRoot.getDatabaseTableList(testDeveloperObjectFactory,testDeveloperDatabase);
         Assertions.assertThat(developerDatabaseTableList.isEmpty()).isEqualTo(false);
