@@ -14,9 +14,28 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 public interface SubAppRuntimeManager {
 
 
+    /**
+     *  Get the last active SubApp
+     *
+     * @return Wallet in use
+     */
+
     public SubApp getLastSubApp ();
 
+    /**
+     *  Search SubApp in the subApp installed list
+     *
+     * @param subApps type of SubApps
+     * @return  The installed SubApps
+     */
+
     public SubApp getSubApp(SubApps subApps);
+
+    /**
+     *  Search HomeScreen SubApp
+     *
+     * @return SubApp HomeScreen
+     */
 
     public SubApp getHomeScreen();
 

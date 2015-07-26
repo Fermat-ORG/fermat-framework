@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 
@@ -20,14 +21,8 @@ import java.util.UUID;
  */
 public interface WalletStoreManager {
 
-    /**
-     *
-     * @param walletCatalogId the wallet catalogue Id that we want to get information from
-     * @return A <Code>WalletInformation</Code> interface that gives us the information we are looking for
-     */
-    public WalletInformation getWalletInformation(UUID walletCatalogId);
+    public CatalogItemInformation getItemInformation(CatalogItems catalogItemType, UUID itemId);
 
 
-
-    public void setWalletInformation(WalletInformation walletInformation) throws CantSetInstallationStatusException;
+    public void setCatalogItemInformation(CatalogItems catalogItemType, UUID itemId, CatalogItemInformation catalogItemInformation) throws CantSetInstallationStatusException;
 }
