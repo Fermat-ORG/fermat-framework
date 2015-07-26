@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.session;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.session;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -42,11 +42,12 @@ public class WalletSession implements com.bitdubai.fermat_android_api.layer.defi
 
     /*
     * Options selected
+    *
     */
 
-    private BalanceType TYPE_BALANCE_TYPE_SELECTED=BalanceType.AVAILABLE;
+    private String typeBalanceSelected =BalanceType.AVAILABLE.getCode();
 
-    public static int TYPE_AMOUNT_SELECTED= ShowMoneyType.BITCOIN.getCode();
+    private int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
 
 
 
@@ -86,8 +87,16 @@ public class WalletSession implements com.bitdubai.fermat_android_api.layer.defi
     }
 
     @Override
-    public BalanceType getBalanceTypeSelected() {
-        return TYPE_BALANCE_TYPE_SELECTED;
+    public String getBalanceTypeSelected() {
+        return typeBalanceSelected;
+    }
+
+    public int getTypeAmount(){
+        return typeAmountSelected;
+    }
+
+    public void setTypeAmount(ShowMoneyType showMoneyType){
+        typeAmountSelected=showMoneyType.getCode();
     }
 
     @Override
@@ -104,5 +113,9 @@ public class WalletSession implements com.bitdubai.fermat_android_api.layer.defi
     @Override
     public int hashCode() {
         return walletType.hashCode();
+    }
+
+    public void setBalanceTypeSelected(BalanceType balaceType) {
+        typeBalanceSelected=balaceType.getCode();
     }
 }

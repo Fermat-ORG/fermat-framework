@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by Matias on 23.07.15.
+ * Created by Matias Furszyfer on 23.07.15.
  */
 public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 

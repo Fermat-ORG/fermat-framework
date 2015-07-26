@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -36,15 +37,14 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
      */
-    UUID pluginId;
+    private UUID pluginId;
 
-
-    Database database;
+    private Database database;
 
     /**
      * Constructor
@@ -63,53 +63,40 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
      * @throws CantInitializeWalletAddressBookCryptoModuleException
      */
     public void initializeDatabase() throws CantInitializeWalletAddressBookCryptoModuleException {
-
-        /**
-         * I will try to open the wallets' database..
-         */
         try {
-            this.database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
-        }
-        catch (CantOpenDatabaseException cantOpenDatabaseException){
-
-            /**
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            throw new CantInitializeWalletAddressBookCryptoModuleException();
-        }
-        catch (DatabaseNotFoundException databaseNotFoundException) {
-
-            WalletAddressBookCryptoModuleDatabaseFactory databaseFactory = new WalletAddressBookCryptoModuleDatabaseFactory();
-            databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-
-            /**
-             * I will create the database where I am going to store the information of this wallet.
-             */
-            try {
-
-                this.database =  databaseFactory.createDatabase(this.pluginId);
-
-            }
-            catch (CantCreateDatabaseException cantCreateDatabaseException){
-
-                /**
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                throw new CantInitializeWalletAddressBookCryptoModuleException();
-            }
+            database = pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database.closeDatabase();
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            createDatabase();
+        } catch (CantOpenDatabaseException cantOpenDatabaseException){
+            throw new CantInitializeWalletAddressBookCryptoModuleException(CantInitializeWalletAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantOpenDatabaseException);
+        } catch(Exception exception){
+            throw new CantInitializeWalletAddressBookCryptoModuleException(CantInitializeWalletAddressBookCryptoModuleException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unchecked Exception, check the cause");
         }
     }
 
+    private void createDatabase() throws CantInitializeWalletAddressBookCryptoModuleException{
+        try {
+            WalletAddressBookCryptoModuleDatabaseFactory databaseFactory = new WalletAddressBookCryptoModuleDatabaseFactory();
+            databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
+            database =  databaseFactory.createDatabase(this.pluginId);
+        } catch (CantCreateDatabaseException cantCreateDatabaseException){
+            throw new CantInitializeWalletAddressBookCryptoModuleException(CantInitializeWalletAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantCreateDatabaseException);
+        }
+    }
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        /**
-         * I only have one database on my plugin. I will return its name.
-         */
-        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Address Book", this.pluginId.toString()));
-        return databases;
+        try{
+            List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
+            databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Address Book", this.pluginId.toString()));
+            return databases;
+        } catch (Exception exception){
+            /*
+             * If any error occurs we return an empty list
+             */
+            return new ArrayList<>();
+        }
     }
-
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
@@ -134,50 +121,29 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
         return tables;
     }
 
-
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
-        /**
-         * Will get the records for the given table
-         */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
-        /**
-         * I load the passed table name from the SQLite database.
-         */
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
+            database.openDatabase();
+            DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
             selectedTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * if there was an error, I will returned an empty list.
-             */
-            return returnedRecords;
-        }
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            database.closeDatabase();
 
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            List<String> developerRow = new ArrayList<String>();
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
+            List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
+            for (DatabaseTableRecord row : records) {
+                List<String> developerRow = new ArrayList<String>();
+                for (DatabaseRecord field : row.getValues()) {
+                    developerRow.add(field.getValue().toString());
+                }
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
             }
-            /**
-             * I create the Developer Database record
+            return returnedRecords;
+        } catch (Exception exception) {
+            /*
+             * If any error occurs we return an empty list
              */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            return new ArrayList<>();
         }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
-        return returnedRecords;
     }
 
     @Override

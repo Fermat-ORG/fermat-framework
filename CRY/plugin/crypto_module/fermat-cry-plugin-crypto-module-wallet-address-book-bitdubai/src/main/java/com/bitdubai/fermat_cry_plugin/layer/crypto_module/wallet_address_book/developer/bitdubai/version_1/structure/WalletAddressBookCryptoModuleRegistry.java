@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -64,8 +65,9 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
         try {
             return walletCryptoAddressBookDao.getWalletAddressBookModuleByCryptoAddress(cryptoAddress);
         } catch (CantGetWalletAddressBookException|WalletAddressBookNotFoundException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
     }
 
@@ -74,22 +76,20 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
         try {
             return walletCryptoAddressBookDao.getAllWalletAddressBookModuleByWalletId(walletId);
         } catch (CantGetWalletAddressBookException|WalletAddressBookNotFoundException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, UUID walletId) throws CantRegisterWalletAddressBookException {
-
-        /**
-         * Here I create the Wallet Crypto Address book record for new address.
-         */
         try {
             walletCryptoAddressBookDao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletId);
         } catch (CantRegisterWalletAddressBookException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception exception){
+            throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
     }
 

@@ -118,5 +118,11 @@
     <string name="search_hint">Contact name</string>
     <string name="empty_list_msg">No contacts</string>
 
+    <!-- TAB TRANSACTIONS -->
+    <string name="nullActorName">Unknown</string>
+    <string name="debit">Send</string>
+    <string name="credit">Received</string>
+
+
 
 </resources>

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -27,73 +28,29 @@ public class WalletAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    /***
+     *  Creates the Database identified by the pluginId and the CRYPTO_WALLET_ADDRESS_BOOK_TABLE
+     * @param pluginId
+     * @return
+     * @throws CantCreateDatabaseException
+     */
     public Database createDatabase(UUID pluginId) throws CantCreateDatabaseException {
-
-        Database database;
-
-        /**
-         * I will create the database where I am going to store the information
-         of this wallet.
-         */
         try {
-
-            database = this.pluginDatabaseSystem.createDatabase(pluginId, pluginId.toString());
-
+            Database database = this.pluginDatabaseSystem.createDatabase(pluginId, pluginId.toString());
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+            DatabaseTableFactory cryptoAddressBookTable = createTableCryptoAddressBookTable(pluginId, databaseFactory);
+            databaseFactory.createTable(pluginId, cryptoAddressBookTable);
+            return database;
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
-        }
-
-
-        /**
-         * Next, I will add the needed tables.
-         */
-        try {
-
-            DatabaseTableFactory table;
-
-            /**
-             * First the Address book table.
-             */
-            table = ((DatabaseFactory) database).newTableFactory(pluginId, WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
-
-            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36, true);
-
-            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, DatabaseDataType.STRING, 36, false);
-
-            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, DatabaseDataType.STRING, 3, false);
-
-            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 34, false);
-
-            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, DatabaseDataType.STRING, 3, false);
-
-            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_TIME_STAMP, DatabaseDataType.LONG_INTEGER, 0, false);
-
-            table.addIndex(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_FIRST_KEY_COLUMN_NAME);
-
-            try {
-                ((DatabaseFactory) database).createTable(pluginId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-
-        } catch (InvalidOwnerIdException invalidOwnerId) {
-            /**
-             * This shouldn't happen here because I was the one who gave the
-             owner id to the database file system,
-             * but anyway, if this happens, I can not continue.
-             * * *
-             */
+            throw cantCreateDatabaseException;
+        }  catch (InvalidOwnerIdException invalidOwnerId) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+        } catch (CantCreateTableException cantCreateTableException) {
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+        } catch(Exception exception){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unchecked Exception, check the cause");
         }
-
-        return database;
     }
-
 
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
@@ -101,5 +58,17 @@ public class WalletAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    private DatabaseTableFactory createTableCryptoAddressBookTable(final UUID pluginId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
+        DatabaseTableFactory tableFactory = databaseFactory.newTableFactory(pluginId, WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+        tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36, true);
+        tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, DatabaseDataType.STRING, 36, false);
+        tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, DatabaseDataType.STRING, 3, false);
+        tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 34, false);
+        tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, DatabaseDataType.STRING, 3, false);
+        tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_TIME_STAMP, DatabaseDataType.LONG_INTEGER, 0, false);
+        tableFactory.addIndex(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_FIRST_KEY_COLUMN_NAME);
+        return tableFactory;
     }
 }

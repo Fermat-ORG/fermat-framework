@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
@@ -20,7 +20,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
@@ -46,59 +45,54 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * DealsWithActorAddressBook Interface member variables.
      */
-    ActorAddressBookManager actorAddressBookManager;
+    private ActorAddressBookManager actorAddressBookManager;
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
      */
-    BitcoinWalletManager bitcoinWalletManager;
+    private BitcoinWalletManager bitcoinWalletManager;
 
     /**
      * DealsWithCryptoVault Interface member variables.
      */
-    CryptoVaultManager cryptoVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
 
     /**
      * DealsWithLogger interface member variable
      */
-    LogManager logManager;
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    private LogManager logManager;
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
      * DealsWithErrors Interface member variables.
      */
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
     /**
      * DealsWithExtraUsers Interface member variables.
      */
-    ExtraUserManager extraUserManager;
+    private ExtraUserManager extraUserManager;
 
     /**
      * DealsWithOutgoingExtraUser Interface member variables.
      */
-    OutgoingExtraUserManager outgoingExtraUserManager;
+    private OutgoingExtraUserManager outgoingExtraUserManager;
 
     /**
      * DealsWithWalletAddressBook Interface member variables.
      */
-    WalletAddressBookManager walletAddressBookManager;
+    private WalletAddressBookManager walletAddressBookManager;
 
     /**
      * DealsWithWalletContacts Interface member variables.
      */
-    WalletContactsManager walletContactsManager;
+    private WalletContactsManager walletContactsManager;
     private UUID pluginId;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    //UUID pluginId;
 
 
 
@@ -133,24 +127,22 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
 
     @Override
     public CryptoWallet getCryptoWallet() throws CantGetCryptoWalletException {
-        NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
-        nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
-        nicheWalletTypeCryptoWallet.setBitcoinWalletManager(bitcoinWalletManager);
-        nicheWalletTypeCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
-        nicheWalletTypeCryptoWallet.setExtraUserManager(extraUserManager);
-        nicheWalletTypeCryptoWallet.setErrorManager(errorManager);
-        nicheWalletTypeCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
-        nicheWalletTypeCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
-        nicheWalletTypeCryptoWallet.setWalletContactsManager(walletContactsManager);
-
         try {
+            NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
+            nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
+            nicheWalletTypeCryptoWallet.setBitcoinWalletManager(bitcoinWalletManager);
+            nicheWalletTypeCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
+            nicheWalletTypeCryptoWallet.setExtraUserManager(extraUserManager);
+            nicheWalletTypeCryptoWallet.setErrorManager(errorManager);
+            nicheWalletTypeCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
+            nicheWalletTypeCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
+            nicheWalletTypeCryptoWallet.setWalletContactsManager(walletContactsManager);
             nicheWalletTypeCryptoWallet.initialize();
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetCryptoWalletException();
-        }
 
-        return nicheWalletTypeCryptoWallet;
+            return nicheWalletTypeCryptoWallet;
+        } catch (Exception e) {
+            throw new CantGetCryptoWalletException(CantGetCryptoWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
     }
 
     @Override

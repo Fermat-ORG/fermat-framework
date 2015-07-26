@@ -22,8 +22,9 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
+import static com.googlecode.catchexception.CatchException.*;
+import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListWalletContactsScrollingTest extends TestCase {
@@ -75,14 +76,27 @@ public class ListWalletContactsScrollingTest extends TestCase {
     @Test
     public void testListWalletContactsScrolling_NotNull() throws Exception {
         List<WalletContactRecord> walletContactRecordsList = nicheWalletTypeCryptoWallet.listWalletContactsScrolling(walletId, 1, 10);
-        assertNotNull(walletContactRecordsList);
+        assertThat(walletContactRecordsList).isNotNull();
     }
 
-    @Test(expected=CantGetAllWalletContactsException.class)
+    @Test
     public void testListWalletContacts_CantGetAllWalletContactsException() throws Exception {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException())
         .when(walletContactsRegistry).listWalletContactsScrolling(any(UUID.class), anyInt(), anyInt());
 
-        nicheWalletTypeCryptoWallet.listWalletContactsScrolling(walletId, 1, 10);
+        catchException(nicheWalletTypeCryptoWallet).listWalletContactsScrolling(walletId, 1, 10);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantGetAllWalletContactsException.class);
+    }
+
+    @Test
+    public void ListWalletContacts_RegistryIsNotInitialized_CantGetAllWalletContactsException() throws Exception {
+        nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
+
+        catchException(nicheWalletTypeCryptoWallet).listWalletContactsScrolling(walletId, 1, 10);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantGetAllWalletContactsException.class);
     }
 }
