@@ -1,10 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
-import android.app.AlertDialog;
 import android.content.Context;
 
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +26,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
@@ -35,7 +34,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionIt
 
 
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -171,7 +169,7 @@ public class TransactionsFragment extends Fragment{
             e.printStackTrace();
         }
 
-        BalanceType balanceType = walletSession.getBalanceTypeSelected();
+        BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
         lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
 
         // Set the emptyView to the ListView
@@ -326,7 +324,7 @@ public class TransactionsFragment extends Fragment{
         }
         pointerOffset=lstTransactions.size();
 
-        showTransactionListSelected(lstTransactions, walletSession.getBalanceTypeSelected());
+        showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
 
     }
 
@@ -381,22 +379,27 @@ public class TransactionsFragment extends Fragment{
                     /**
                      * Setting values and validations
                      */
-                    if (textView_contact_name != null)
-                        textView_contact_name.setText(entryItem.cryptoWalletTransaction.getInvolvedActorName());
+                    if (textView_contact_name != null) {
+                        String actorName = entryItem.cryptoWalletTransaction.getInvolvedActorName();
+                        if(actorName!=null)
+                        textView_contact_name.setText(actorName);
+                        else textView_contact_name.setText(R.string.nullActorName);
+                    }
+
                     if(textView_amount != null)
-                        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE){
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance()));
-                        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK)
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance()));
+                        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(), ShowMoneyType.BITCOIN.getCode()));
+                        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode())
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode()));
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
                     }
                     if(textView_type!=null){
                         if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.CREDIT){
-                            textView_type.setText("Received");
+                            textView_type.setText(R.string.credit);
                         }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.DEBIT){
-                            textView_type.setText("Send");
+                            textView_type.setText(R.string.debit);
                         }
                     }
 

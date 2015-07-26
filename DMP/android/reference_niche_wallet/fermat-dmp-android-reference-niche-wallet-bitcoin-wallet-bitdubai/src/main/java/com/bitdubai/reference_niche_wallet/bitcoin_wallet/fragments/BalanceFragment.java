@@ -1,9 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,15 +14,18 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+
+
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -38,8 +38,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class BalanceFragment extends Fragment {
     
-    final int TYPE_BALANCE_AVAILABLE=1;
-    final int TYPE_BALANCE_BOOK=2;
+
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
@@ -66,11 +65,6 @@ public class BalanceFragment extends Fragment {
     private CryptoWalletManager cryptoWalletManager;
     CryptoWallet cryptoWallet;
 
-    /**
-     *  Flag to show one balance or other
-     */
-
-    int showTypeBalance=TYPE_BALANCE_AVAILABLE;
 
     /**
      * TypeFace to apply in all fragment
@@ -99,9 +93,9 @@ public class BalanceFragment extends Fragment {
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,WalletSession walletSession) {
+    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession) {
         BalanceFragment balanceFragment = new BalanceFragment();
-        balanceFragment.setWalletSession(walletSession);
+        balanceFragment.setWalletSession((WalletSession)walletSession);
         return balanceFragment;
     }
 
@@ -184,14 +178,11 @@ public class BalanceFragment extends Fragment {
             }
         });
 
-        // Setting type balance
-        showTypeBalance=TYPE_BALANCE_AVAILABLE;
-
 
         // Loading a setting textView Balance amount
         txtViewBalance = ((TextView) rootView.findViewById(R.id.txtViewBalance));
         txtViewBalance.setTypeface(tf);
-        txtViewBalance.setText(formatBalanceString(balanceAvailable));
+        txtViewBalance.setText(formatBalanceString(balanceAvailable, ShowMoneyType.BITCOIN.getCode()));
         txtViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,25 +210,28 @@ public class BalanceFragment extends Fragment {
         Method to change the balance type
      */
     private void changeBalanceType() {
-        if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
-            txtViewBalance.setText(formatBalanceString(bookBalance));
+        com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession walletSession =(com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession) this.walletSession;
+
+        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()) {
+            txtViewBalance.setText(formatBalanceString(bookBalance, walletSession.getTypeAmount()));
             txtViewTypeBalance.setText(R.string.book_balance);
-            showTypeBalance=TYPE_BALANCE_BOOK;
-        }else if (showTypeBalance==TYPE_BALANCE_BOOK){
-            txtViewBalance.setText(formatBalanceString(balanceAvailable));
+            walletSession.setBalanceTypeSelected(BalanceType.BOOK);
+        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+            txtViewBalance.setText(formatBalanceString(balanceAvailable,walletSession.getTypeAmount()));
             txtViewTypeBalance.setText(R.string.available_balance);
-            showTypeBalance=TYPE_BALANCE_AVAILABLE;
+            walletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+
         }
     }
 
     /*
         Method to change the balance amount
      */
-    private void changeBalance(){
-        if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
-            txtViewBalance.setText(formatBalanceString(balanceAvailable));
-        }else if (showTypeBalance==TYPE_BALANCE_BOOK){
-            txtViewBalance.setText(formatBalanceString(bookBalance));
+    private void changeBalance() {
+        if (walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+            txtViewBalance.setText(formatBalanceString(balanceAvailable,walletSession.getTypeAmount()));
+        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+            txtViewBalance.setText(formatBalanceString(bookBalance,walletSession.getTypeAmount()));
         }
     }
 
@@ -276,11 +270,10 @@ public class BalanceFragment extends Fragment {
                 showMessage(getActivity(),"CantGetBalanceException- " + e.getMessage());
 
             }
-
-            if(showTypeBalance==TYPE_BALANCE_AVAILABLE){
-                txtViewBalance.setText(formatBalanceString(balanceAvailable));
-            }else if(showTypeBalance==TYPE_BALANCE_BOOK){
-                txtViewBalance.setText(formatBalanceString(bookBalance));
+            if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+                txtViewBalance.setText(formatBalanceString(balanceAvailable,walletSession.getTypeAmount()));
+            }else if(walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+                txtViewBalance.setText(formatBalanceString(bookBalance,walletSession.getTypeAmount()));
             }
 
 

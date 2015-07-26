@@ -29,7 +29,7 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
 
     @Override
     public WalletSession openWalletSession(Wallets walletType,CryptoWalletManager cryptoWalletManager,ErrorManager errorManager) {
-        WalletSession walletSession= new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.session.WalletSession(walletType,cryptoWalletManager,errorManager);
+        WalletSession walletSession= new com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession(walletType,cryptoWalletManager,errorManager);
         lstWalletSession.put(walletType,walletSession);
         return walletSession;
     }
@@ -37,7 +37,7 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
     @Override
     public boolean closeWalletSession(Wallets wallet) {
         try {
-            lstWalletSession.remove(new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.session.WalletSession(wallet));
+            lstWalletSession.remove(new com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession(wallet));
         }catch (Exception e){
             e.printStackTrace();
         }
