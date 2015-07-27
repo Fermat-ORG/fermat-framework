@@ -6,7 +6,8 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 public enum ActivityType {
 
     ACTIVITY_TYPE_SUB_APP ("SubAppActivity"),
-    ACTIVITY_TYPE_WALLET   ("WalletActivity");
+    ACTIVITY_TYPE_WALLET   ("WalletActivity"),
+    ACTIVITY_TYPE_FACTORY("WalletFactoryActivity");
 
     private final String code;
 
@@ -21,6 +22,7 @@ public enum ActivityType {
         switch (code) {
             case "SubAppActivity": return ActivityType.ACTIVITY_TYPE_SUB_APP;
             case "WalletActivity": return ActivityType.ACTIVITY_TYPE_WALLET;
+            case "WalletFactoryActivity":return ACTIVITY_TYPE_FACTORY;
         }
 
         /**
