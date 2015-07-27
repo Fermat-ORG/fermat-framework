@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -18,9 +19,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.UserRegistry;
@@ -77,7 +80,7 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
     }
 
     public void initialize() throws CantInitializeExtraUserRegistryException {
-
+        //TODO Manuel este metodo tiene que gestionar excepciones genericas
         /**
          * I will try to open the users' database..
          */
@@ -90,41 +93,20 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             databaseFactory.setErrorManager(this.errorManager);
 
-            /**
-             * I will create the database where I am going to store the information of this wallet.
-             */
-
             try {
 
                 this.database = databaseFactory.createDatabase(pluginId);
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
-                /**
-                 * The database cannot be created. I can not handle this situation.
-                 */
-/*Francisco Arce
-        Exception in the context Fermat Context
-        *
-        * */
                 String message = CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE;
                 FermatException cause = cantCreateDatabaseException.getCause();
                 String context = "DataBase Factory: " + cantCreateDatabaseException.getContext();
                 String possibleReason = "The exception occurred when calling  'databaseFactory.createDatabase()': " + cantCreateDatabaseException.getPossibleReason();
 
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-               /*Francisco Arce*/
                 throw new CantInitializeExtraUserRegistryException(message, cause, context, possibleReason);
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            /**
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-/*Francisco Arce
-        Exception in the context Fermat Context
-        *
-        * */
             String message = CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE;
             FermatException cause = cantOpenDatabaseException.getCause();
             String context = "Create Database:" + cantOpenDatabaseException.getContext();
@@ -159,27 +141,29 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
          */
 
         Actor actor = new ExtraUser();
+        //Modified by Manuel Pérez on 26/07/2015
+        DatabaseTable extrauserTable=null;
+        DatabaseTableRecord extrauserRecord=null;
+        try{
 
-        UUID userId = UUID.randomUUID();
+            UUID userId = UUID.randomUUID();
 
-        actor.setId(userId);
-        actor.setName(userName);
-        /**
-         * Here I create a new Extra User record .
-         */
-        long unixTime = System.currentTimeMillis() / 1000L;
+            actor.setId(userId);
+            actor.setName(userName);
+            /**
+             * Here I create a new Extra User record .
+             */
+            long unixTime = System.currentTimeMillis() / 1000L;
 
-        DatabaseTable extrauserTable = database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
-        DatabaseTableRecord extrauserRecord = extrauserTable.getEmptyRecord();
+            extrauserTable = database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            extrauserRecord = extrauserTable.getEmptyRecord();
 
-        extrauserRecord.setUUIDValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId);
-        extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, userName);
-        extrauserRecord.setLongValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
-
-
-        try {
+            extrauserRecord.setUUIDValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId);
+            extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, userName);
+            extrauserRecord.setLongValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
             extrauserTable.insertRecord(extrauserRecord);
-        } catch (CantInsertRecordException cantInsertRecord) {
+
+        }catch (CantInsertRecordException cantInsertRecord) {
             /**
              * I can not solve this situation.
              */
@@ -196,6 +180,12 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
           modified by Francisco Arce
             */
             throw new CantCreateExtraUserRegistry(message, cause, context, possibleReason);
+        }catch(Exception exception){
+
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "PluginID: "+pluginId ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+
+
         }
 
         return actor;
@@ -214,14 +204,27 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
          * Reads the user data table , in this case only the name , creates an instance and returns
          */
         DatabaseTable table;
-
+        //Modified by Manuel Pérez on 26/07/2015
+        Actor actor = new ExtraUser();
+        try {
         /**
          *  I will load the information of table into a memory structure, filter by user id .
          */
-        table = this.database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
-        table.setUUIDFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId, DatabaseFilterType.EQUAL);
-        try {
+            table = this.database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            table.setUUIDFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId, DatabaseFilterType.EQUAL);
+
             table.loadToMemory();
+
+            /**
+             * Will go through the records getting each extra user.
+             */
+
+            actor.setId(userId);
+            for (DatabaseTableRecord record : table.getRecords()) {
+                actor.setName(record.getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME));
+
+            }
+
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * I can not solve this situation.
@@ -237,18 +240,14 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantGetExtraUserRegistry(message, cause, context, possibleReason);
-        }
+        }catch(Exception exception){
 
-
-        /**
-         * Will go through the records getting each extra user.
-         */
-        Actor actor = new ExtraUser();
-        actor.setId(userId);
-        for (DatabaseTableRecord record : table.getRecords()) {
-            actor.setName(record.getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME));
+            throw new CantGetExtraUserRegistry(CantGetExtraUserRegistry.DEFAULT_MESSAGE,FermatException.wrapException(exception), null, null);
 
         }
+
+
+
 
         return actor;
     }
