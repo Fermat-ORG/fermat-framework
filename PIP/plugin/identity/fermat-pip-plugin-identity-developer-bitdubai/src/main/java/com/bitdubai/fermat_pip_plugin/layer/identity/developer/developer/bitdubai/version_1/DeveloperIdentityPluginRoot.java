@@ -219,10 +219,10 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             if (this.dao == null) {
 
                 this.dao = new DeveloperIdentityDao (this.pluginDatabaseSystem, new DeveloperIdentityDatabaseFactory(this.pluginDatabaseSystem), this.pluginId,this.logManager);
-                this.dao.initializeDatabase (this.pluginId, this.getClass ().getName ());
+                this.dao.initializeDatabase (this.pluginId, this.getClass().getName());
 
             } else {
-                 this.dao.initializeDatabase (this.pluginId, this.getClass ().getName ());
+                 this.dao.initializeDatabase (this.pluginId, this.getClass().getName());
             }
 
         } catch (Exception e) {
@@ -283,7 +283,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
 
             // Get developer list.
             logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting developers from current device user for : " + deviceUserManager.getLoggedInDeviceUser(), _DEFAUL_STRING, _DEFAUL_STRING);
-            return this.dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser ());
+            return this.dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser());
 
         } catch (CantGetUserDeveloperIdentitiesException ce) {
 
@@ -318,7 +318,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             }
 
             logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Creating new developer for : " + alias, _DEFAUL_STRING, _DEFAUL_STRING);
-            return this.dao.createNewDeveloper(alias, new ECCKeyPair(), deviceUserManager.getLoggedInDeviceUser());
+            return this.dao.createNewDeveloper(alias,null , null); //new ECCKeyPair(),deviceUserManager.getLoggedInDeviceUser()
 
         } catch (CantGetUserDeveloperIdentitiesException ce) {
 
