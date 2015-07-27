@@ -283,20 +283,16 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.pluginFileSystem = pluginFileSystem;
     }
 
-
+    //TODO Franklin, aqui falta la gestion de excepciones genericas
     @Override
     public void start() throws CantStartPluginException {
         //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault Starting...", null, null);
-        // TODO COMMENTED PRINTLN
-        System.out.println("CryptoVault starting...");
 
         /**
          * I get the userId from the deviceUserManager
          */
         //userId = deviceUserManager.getLoggedInUser().getId();
         userId = UUID.fromString("4c4322c7-8c73-4633-956d-96991f413e93"); //todo fix deviceUser Implementation
-        //userId = UUID.randomUUID();
-
 
         /**
          * I will try to open the database first, if it doesn't exists, then I create it
@@ -442,6 +438,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
+    //TODO Franklin, aqui falta la gestion de excepciones genericas
     /**
      * CryptoVaultManager interface implementation
      */
@@ -455,6 +452,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         }
     }
 
+    //TODO Franklin, aqui falta la gestion de excepciones genericas, usa el errorManager
     /**
      * CryptoVaultManager interface implementation
      */
@@ -516,6 +514,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         }
     }
 
+    //TODO Franklin, aqui falta la gestion de excepciones genericas
     @Override
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException {
         try {

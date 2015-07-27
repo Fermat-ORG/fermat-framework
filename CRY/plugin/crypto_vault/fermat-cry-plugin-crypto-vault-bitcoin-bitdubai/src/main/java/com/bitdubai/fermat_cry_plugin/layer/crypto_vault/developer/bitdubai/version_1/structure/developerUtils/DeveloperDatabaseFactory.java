@@ -77,12 +77,12 @@ public class DeveloperDatabaseFactory {
          */
         List<String> TransitionProtocol_StatusTableColumns = new ArrayList<String>();
         TransitionProtocol_StatusTableColumns.add(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME);
-        TransitionProtocol_StatusTableColumns.add(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME);
+        TransitionProtocol_StatusTableColumns.add(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME);
 
         /**
          * TransitionProtocol_Status table
          */
-        DeveloperDatabaseTable  TransitionProtocol_StatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS, TransitionProtocol_StatusTableColumns);
+        DeveloperDatabaseTable  TransitionProtocol_StatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_NAME, TransitionProtocol_StatusTableColumns);
         tables.add(TransitionProtocol_StatusTable);
 
 
