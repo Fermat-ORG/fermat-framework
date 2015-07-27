@@ -69,11 +69,11 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
         List<WalletContactRecord> walletContactRecords;
         try {
             walletContactRecords = walletContactsMiddlewareDao.findAll(walletId);
-            return walletContactRecords;
         } catch (CantGetAllWalletContactsException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
+        return walletContactRecords;
     }
 
     /**

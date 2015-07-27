@@ -31,6 +31,9 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
+
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.bitdubai.fermat.R;
 
@@ -73,6 +76,25 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unbindDrawables(findViewById(R.id.drawer_layout));
+        System.gc();
+    }
+
+    private void unbindDrawables(View view) {
+        if (view.getBackground() != null) {
+            view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            ((ViewGroup) view).removeAllViews();
+        }
     }
 
 
@@ -379,7 +401,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         getAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_FACTORY);
                         getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
 
-                        intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+                        intent = new Intent(this, com.bitdubai.android_core.app.WalletFactoryActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
 

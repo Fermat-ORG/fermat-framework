@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantG
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.exceptions.CantInitializeDeveloperIdentityDatabaseException;
 
 // Packages and classes to import of apache commons.
@@ -125,14 +127,13 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         if (isEmpty (alias)) {
 
             // Cancel the process.
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Alias is empty, arguments are null or empty.", _DEFAUL_STRING, _DEFAUL_STRING);
+            logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Alias is empty, arguments are null or empty.", _DEFAUL_STRING, _DEFAUL_STRING);
             return Boolean.FALSE;
         }
 
         if (this.dataBase == null) {
 
             // Cancel the process.
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Cant check if alias exists or not, Database is closed o null.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantCreateNewDeveloperException ("Cant check if alias exists or not, Database is closed o null.", "Plugin Identity", "Cant check if alias exists or not, Database is closed o null.");
         }
 
@@ -140,42 +141,40 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         // Get developers identities list.
         try {
 
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Checking if alias " + alias + " exists.", _DEFAUL_STRING, _DEFAUL_STRING);
+            logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Checking if alias " + alias + " exists.", _DEFAUL_STRING, _DEFAUL_STRING);
 
 
             // 1) Get the table.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+            logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
             table = this.dataBase.getTable (DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME);
 
             if (table == null) {
 
                 // Table not found.
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Cant check if alias exists, table not " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " found.", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Cant check if alias exists, table not " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " found.", _DEFAUL_STRING, _DEFAUL_STRING);
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not \" + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.", "Plugin Identity", "Cant check if alias exists, table not \" + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.");
             }
 
 
             // 2) Find the developers.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Applying filter to " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table by developer alias key [" + alias.trim() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
+            logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Applying filter to " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table by developer alias key [" + alias.trim() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
             table.setStringFilter(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
             // 3) Get developers.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Developer alias found (" + table.getRecords().size() + ") by alias [" + alias + "].", _DEFAUL_STRING, _DEFAUL_STRING);
+            logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Developer alias found (" + table.getRecords().size() + ") by alias [" + alias + "].", _DEFAUL_STRING, _DEFAUL_STRING);
             return table.getRecords ().size () > 0;
 
 
         } catch (CantLoadTableToMemoryException em) {
 
             // Failure unknown.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Cant load " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table in memory.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantCreateNewDeveloperException (em.getMessage(), em, "Plugin Identity", "Cant load " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
 
             // Failure unknown.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Cant check if alias exists, unknown failure.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantCreateNewDeveloperException (e.getMessage(), e, "Plugin Identity", "Cant check if alias exists, unknown failure.");
         }
     }
@@ -229,29 +228,36 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         if (ownerId == null || isEmpty (databaseName)) {
 
             // Cancel the process.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Cant create database, arguments are null or empty.", _DEFAUL_STRING, _DEFAUL_STRING);
-            throw new CantInitializeDeveloperIdentityDatabaseException ("Cant create database, arguments are null or empty.", "Plugin Identity", "Cant create database, arguments are null or empty.");
+             throw new CantInitializeDeveloperIdentityDatabaseException ("Cant create database, arguments are null or empty.", "Plugin Identity", "Cant create database, arguments are null or empty.");
         }
 
 
         // Create the database.
         try {
-
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Initializing identity database system...", _DEFAUL_STRING, _DEFAUL_STRING);
+            logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Initializing identity database system...", _DEFAUL_STRING, _DEFAUL_STRING);
             this.databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-            this.dataBase = this.databaseFactory.createDatabase (ownerId, isEmpty (databaseName) ? DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME : databaseName);
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Identity database initialized...", _DEFAUL_STRING, _DEFAUL_STRING);
+
+            //Check the database exist
+            try {
+
+                this.dataBase = pluginDatabaseSystem.openDatabase(pluginId, databaseName);
+
+            } catch (CantOpenDatabaseException e) {
+
+                this.dataBase = this.databaseFactory.createDatabase (ownerId, isEmpty (databaseName) ? DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME : databaseName);
+
+            }
+
+            logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Identity database initialized..." ,_DEFAUL_STRING, _DEFAUL_STRING);
 
         } catch (CantCreateDatabaseException e){
 
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Cant create database", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantInitializeDeveloperIdentityDatabaseException(e.getMessage(), e, "Plugin Identity", "Cant create database.");
 
         } catch (Exception e) {
 
             // Failure unknown.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Cant create database unknown failure.", _DEFAUL_STRING, _DEFAUL_STRING);
-            throw new CantInitializeDeveloperIdentityDatabaseException (e.getMessage(), e, "Plugin Identity", "Cant create database, unknown failure.");
+           throw new CantInitializeDeveloperIdentityDatabaseException (e.getMessage(), e, "Plugin Identity", "Cant create database, unknown failure.");
         }
     }
 
@@ -271,15 +277,13 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         if (developerKeyPair == null || isEmpty (alias) || deviceUser == null) {
 
             // Cancel the process.
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Cant create new developer, arguments are null or empty.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantCreateNewDeveloperException ("Cant create new developer, arguments are null or empty.", "Plugin Identity", "Cant create database, arguments are null or empty.");
-        }
+       }
 
 
         if (this.dataBase == null) {
 
             // Cancel the process.
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Cant check if alias exists or not, Database is closed o null.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantCreateNewDeveloperException ("Cant create new developer, Database is closed o null.", "Plugin Identity", "Cant create new developer, Database is closed o null.");
         }
 
@@ -288,46 +292,43 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
             // Create the new developer.
             try {
 
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Initializing developer record creation.", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Initializing developer record creation.", _DEFAUL_STRING, _DEFAUL_STRING);
 
                 if (aliasExists (alias)) {
 
-                    logManager.log (LogLevel.MINIMAL_LOGGING, "Cant create new developer, alias exists.", _DEFAUL_STRING, _DEFAUL_STRING);
                     throw new CantCreateNewDeveloperException ("Cant create new developer, alias exists.", "Plugin Identity", "Cant create new developer, alias exists.");
                 }
 
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 DatabaseTable        table = this.dataBase.getTable (DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord ();
 
 
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, developerKeyPair.getPublicKey());
                 record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME, developerKeyPair.getPrivateKey());
                 record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-                record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME, deviceUser.getAlias());
+                record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME, alias);//deviceUser.getAlias()
 
 
-                logManager.log(LogLevel.MINIMAL_LOGGING, "Inserting [Alias=" + deviceUser.getAlias() + ", PK=" + developerKeyPair.getPublicKey() + "] in " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+              //  logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Inserting [Alias=" + deviceUser.getAlias() + ", PK=" + developerKeyPair.getPublicKey() + "] in " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 table.insertRecord(record);
-                logManager.log(LogLevel.MINIMAL_LOGGING, "New developer record created [" + developerKeyPair.getPublicKey() + "]", _DEFAUL_STRING, _DEFAUL_STRING);
+              //  logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "New developer record created [" + developerKeyPair.getPublicKey() + "]", _DEFAUL_STRING, _DEFAUL_STRING);
 
             } catch (CantInsertRecordException e){
 
                 // Cant insert record.
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Cant create new developer, insert database problems.", _DEFAUL_STRING, _DEFAUL_STRING);
                 throw new CantCreateNewDeveloperException (e.getMessage(), e, "Plugin Identity", "Cant create new developer, insert database problems.");
 
             } catch (Exception e) {
 
                 // Failure unknown.
-                logManager.log(LogLevel.MINIMAL_LOGGING, "Cant create new developer, unknown failure.", _DEFAUL_STRING, _DEFAUL_STRING);
                 throw new CantCreateNewDeveloperException (e.getMessage(), e, "Plugin Identity", "Cant create new developer, unknown failure.");
             }
 
 
         // Return the new developer.
-        return new DeveloperIdentityRecord (alias, developerKeyPair.getPublicKey ());
+        return new DeveloperIdentityRecord (alias,"nn","cc" ); //developerKeyPair.getPublicKey(),developerKeyPair.getPrivateKey()
     }
 
     /**
@@ -348,14 +349,12 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         if (deviceUser == null) {
 
             // Cancel the process.
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Cant get developers from current device, arguments are null or empty.", _DEFAUL_STRING, _DEFAUL_STRING);
-            throw new CantGetUserDeveloperIdentitiesException ("Cant get developers from current device, arguments are null or empty.", "Plugin Identity", "Cant get developers from current device, arguments are null or empty.");
+              throw new CantGetUserDeveloperIdentitiesException ("Cant get developers from current device, arguments are null or empty.", "Plugin Identity", "Cant get developers from current device, arguments are null or empty.");
         }
 
         if (this.dataBase == null) {
 
             // Cancel the process.
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Cant check if alias exists or not, Database is closed o null.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantGetUserDeveloperIdentitiesException ("Cant get developers from current device, Database is closed o null.", "Plugin Identity", "Cant get developers from current device, Database is closed o null.");
         }
 
@@ -363,46 +362,43 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
             // Get developers identities list.
             try {
 
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Getting developer list.", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting developer list.", _DEFAUL_STRING, _DEFAUL_STRING);
 
                 // 1) Get the table.
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 table = this.dataBase.getTable (DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME);
 
                 if (table == null) {
 
                     // Table not found.
-                    logManager.log (LogLevel.MINIMAL_LOGGING, "Cant get developer identity list, table not " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " found.", _DEFAUL_STRING, _DEFAUL_STRING);
-                    throw new CantGetUserDeveloperIdentitiesException ("Cant get developer identity list, table not \" + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.", "Plugin Identity", "Cant get developer identity list, table not \" + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.");
+                   throw new CantGetUserDeveloperIdentitiesException ("Cant get developer identity list, table not \" + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.", "Plugin Identity", "Cant get developer identity list, table not \" + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.");
                 }
 
 
                 // 2) Find the developers.
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Applying filter to " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table by developer public key [" + deviceUser.getPublicKey() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Applying filter to " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table by developer public key [" + deviceUser.getPublicKey() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
                 table.setStringFilter(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
                 table.loadToMemory();
 
 
                 // 3) Get developers.
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Developer identity found (" + table.getRecords ().size () + ") by public key [" + deviceUser.getPublicKey () + "].", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Developer identity found (" + table.getRecords ().size () + ") by public key [" + deviceUser.getPublicKey () + "].", _DEFAUL_STRING, _DEFAUL_STRING);
                 for (DatabaseTableRecord record : table.getRecords ()) {
 
                     // Add records to list.
                     list.add(new DeveloperIdentityRecord (record.getStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME),
-                            record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME)));
+                            record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME),record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME)));
                 }
 
 
             } catch (CantLoadTableToMemoryException em) {
 
                 // Failure unknown.
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Cant load " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table in memory.", _DEFAUL_STRING, _DEFAUL_STRING);
                 throw new CantGetUserDeveloperIdentitiesException (em.getMessage(), em, "Plugin Identity", "Cant load " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table in memory.");
 
             } catch (Exception e) {
 
                 // Failure unknown.
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Cant get developer identity list, unknown failure.", _DEFAUL_STRING, _DEFAUL_STRING);
                 throw new CantGetUserDeveloperIdentitiesException (e.getMessage(), e, "Plugin Identity", "Cant get developer identity list, unknown failure.");
             }
 

@@ -9,6 +9,7 @@ package com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdub
 
 // Packages and classes to import of jdk 1.7
 import java.util.*;
+import java.util.regex.Pattern;
 
 // Packages and classes to import of fermat api.
 import com.bitdubai.fermat_api.FermatException;
@@ -209,22 +210,18 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
     public void start() {
 
 
-        logManager.log(LogLevel.MINIMAL_LOGGING, "Starting plugin...", _DEFAUL_STRING, _DEFAUL_STRING);
-        this.serviceStatus = ServiceStatus.STARTED;
+          this.serviceStatus = ServiceStatus.STARTED;
 
         // Initializing the dao object.
         try {
 
             if (this.dao == null) {
 
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Creating and initializing dao object...", _DEFAUL_STRING, _DEFAUL_STRING);
                 this.dao = new DeveloperIdentityDao (this.pluginDatabaseSystem, new DeveloperIdentityDatabaseFactory(this.pluginDatabaseSystem), this.pluginId,this.logManager);
-                this.dao.initializeDatabase (this.pluginId, this.getClass ().getName ());
+                this.dao.initializeDatabase (this.pluginId, this.getClass().getName());
 
             } else {
-
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Initializing dao object...", _DEFAUL_STRING, _DEFAUL_STRING);
-                this.dao.initializeDatabase (this.pluginId, this.getClass ().getName ());
+                 this.dao.initializeDatabase (this.pluginId, this.getClass().getName());
             }
 
         } catch (Exception e) {
@@ -234,7 +231,8 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             throw new RuntimeException (e);
 
         } finally {
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Plugin started...", _DEFAUL_STRING, _DEFAUL_STRING);
+            logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()),  "Plugin started...", _DEFAUL_STRING, _DEFAUL_STRING);
+
         }
     }
 
@@ -279,25 +277,21 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
 
             // Check values.
             if (this.dao == null) {
-
-                logManager.log(LogLevel.MINIMAL_LOGGING, "Cant get developers from current device user, Dao object is null.", _DEFAUL_STRING, _DEFAUL_STRING);
-                throw new com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException ("Cant get developers from current device user, Dao object is null.", "Plugin Identity", "Cant get developers from current device user, Dao object is null.");
+              throw new com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException ("Cant get developers from current device user, Dao object is null.", "Plugin Identity", "Cant get developers from current device user, Dao object is null.");
             }
 
             // Get developer list.
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Getting developers from current device user for : " + deviceUserManager.getLoggedInDeviceUser(), _DEFAUL_STRING, _DEFAUL_STRING);
-            return this.dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser ());
+            logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting developers from current device user for : " + deviceUserManager.getLoggedInDeviceUser(), _DEFAUL_STRING, _DEFAUL_STRING);
+            return this.dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser());
 
         } catch (CantGetUserDeveloperIdentitiesException ce) {
 
             // Failure CantGetLoggedInDeviceUserException.
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Cant get developers from current device user, Cant get logged in device user failure.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantGetUserDeveloperIdentitiesException (ce.getMessage(), ce, "Plugin Identity", "Cant get developers from current device user, Cant get logged in device user failure..");
 
         } catch (Exception e) {
 
             // Failure unknown.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Cant get developers from current device user, unknown failure.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantGetUserDeveloperIdentitiesException (e.getMessage(), e, "Plugin Identity", "Cant get developers from current device user, unknown failure.");
         }
     }
@@ -319,27 +313,44 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             // Check values.
             if (this.dao == null) {
 
-                logManager.log (LogLevel.MINIMAL_LOGGING, "Cant create new developer, Dao object is null.", _DEFAUL_STRING, _DEFAUL_STRING);
-                throw new CantGetUserDeveloperIdentitiesException ("Cant create new developer, Dao object is null.", "Plugin Identity", "Cant create new developer, Dao object is null.");
+                   throw new CantGetUserDeveloperIdentitiesException ("Cant create new developer, Dao object is null.", "Plugin Identity", "Cant create new developer, Dao object is null.");
             }
 
-            logManager.log (LogLevel.MINIMAL_LOGGING, "Creating new developer for : " + alias, _DEFAUL_STRING, _DEFAUL_STRING);
-            return this.dao.createNewDeveloper (alias, new ECCKeyPair (), deviceUserManager.getLoggedInDeviceUser ());
+            logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Creating new developer for : " + alias, _DEFAUL_STRING, _DEFAUL_STRING);
+            return this.dao.createNewDeveloper(alias,null , null); //new ECCKeyPair(),deviceUserManager.getLoggedInDeviceUser()
 
         } catch (CantGetUserDeveloperIdentitiesException ce) {
 
             // Failure CantGetLoggedInDeviceUserException.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Cant create new developer, Cant get logged in device user failure.", _DEFAUL_STRING, _DEFAUL_STRING);
             throw new CantCreateNewDeveloperException (ce.getMessage(), ce, "Plugin Identity", "create new developer, Cant get logged in device user failure..");
 
         } catch (Exception e) {
 
             // Failure unknown.
-            logManager.log(LogLevel.MINIMAL_LOGGING, "Cant create new developer, unknown failure.", _DEFAUL_STRING, _DEFAUL_STRING);
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Plugin Identity", "Cant create new developer, unknown failure.");
+           throw new CantCreateNewDeveloperException (e.getMessage(), e, "Plugin Identity", "Cant create new developer, unknown failure.");
         }
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return DeveloperIdentityPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
 
     /**
      * LogManagerForDevelopers Interface implementation.
