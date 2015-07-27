@@ -34,7 +34,8 @@
 
     <application
         android:name="com.bitdubai.android_core.app.ApplicationSession"
-        android:allowBackup="true" >
+        android:allowBackup="true"
+        android:largeHeap="true">
 
 
         <!-- Google Maps Fragment API Key Data -->
@@ -68,6 +69,12 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.StartActivity" />
+        </activity>
+        <activity android:name="com.bitdubai.android_core.app.WalletFactoryActivity"
+            android:label="Factory">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.android_core.app.SubAppActivity"></meta-data>
         </activity>
         <activity
             android:name="com.bitdubai.sub_app.wallet_publisher.activity.PublisherActivity"
