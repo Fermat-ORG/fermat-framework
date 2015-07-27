@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
@@ -235,7 +236,18 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         try {
             logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Initializing identity database system...", _DEFAUL_STRING, _DEFAUL_STRING);
             this.databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-            this.dataBase = this.databaseFactory.createDatabase (ownerId, isEmpty (databaseName) ? DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME : databaseName);
+
+            //Check the database exist
+            try {
+
+                this.dataBase = pluginDatabaseSystem.openDatabase(pluginId, databaseName);
+
+            } catch (CantOpenDatabaseException e) {
+
+                this.dataBase = this.databaseFactory.createDatabase (ownerId, isEmpty (databaseName) ? DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME : databaseName);
+
+            }
+
             logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Identity database initialized..." ,_DEFAUL_STRING, _DEFAUL_STRING);
 
         } catch (CantCreateDatabaseException e){
@@ -266,7 +278,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
             // Cancel the process.
             throw new CantCreateNewDeveloperException ("Cant create new developer, arguments are null or empty.", "Plugin Identity", "Cant create database, arguments are null or empty.");
-        }
+       }
 
 
         if (this.dataBase == null) {
@@ -292,16 +304,16 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
                 DatabaseTableRecord record = table.getEmptyRecord ();
 
 
-                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, developerKeyPair.getPublicKey());
                 record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME, developerKeyPair.getPrivateKey());
                 record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-                record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME, deviceUser.getAlias());
+                record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME, alias);//deviceUser.getAlias()
 
 
-                logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Inserting [Alias=" + deviceUser.getAlias() + ", PK=" + developerKeyPair.getPublicKey() + "] in " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+              //  logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Inserting [Alias=" + deviceUser.getAlias() + ", PK=" + developerKeyPair.getPublicKey() + "] in " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 table.insertRecord(record);
-                logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "New developer record created [" + developerKeyPair.getPublicKey() + "]", _DEFAUL_STRING, _DEFAUL_STRING);
+              //  logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "New developer record created [" + developerKeyPair.getPublicKey() + "]", _DEFAUL_STRING, _DEFAUL_STRING);
 
             } catch (CantInsertRecordException e){
 
@@ -316,7 +328,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
 
         // Return the new developer.
-        return new DeveloperIdentityRecord (alias, developerKeyPair.getPublicKey ());
+        return new DeveloperIdentityRecord (alias,"nn","cc" ); //developerKeyPair.getPublicKey(),developerKeyPair.getPrivateKey()
     }
 
     /**
@@ -375,7 +387,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
                     // Add records to list.
                     list.add(new DeveloperIdentityRecord (record.getStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME),
-                            record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME)));
+                            record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME),record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME)));
                 }
 
 
