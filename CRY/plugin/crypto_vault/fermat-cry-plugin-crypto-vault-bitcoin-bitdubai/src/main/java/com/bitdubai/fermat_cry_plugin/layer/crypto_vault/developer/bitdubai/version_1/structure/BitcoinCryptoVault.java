@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
@@ -231,12 +232,21 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     }
 
     public  void loadOrCreateVault() throws CantCreateCryptoWalletException {
-        if (vaultFile.exists())
-            loadExistingVaultFromFile();
-        else
-            createNewVault();
+        /**
+         * Last Update: 23/07/2015 for: fmarcano
+         */
+        try {
+            if (vaultFile.exists())
+                loadExistingVaultFromFile();
+            else
+                createNewVault();
 
-        configureVault();
+            configureVault();
+        }catch(CantCreateCryptoWalletException exception){
+            throw exception;
+        }catch(Exception exception){
+            throw new CantCreateCryptoWalletException(CantCreateCryptoWalletException.DEFAULT_MESSAGE,exception,null,"Unchecked exception, chech the cause");
+        }
     }
 
     /**
@@ -655,8 +665,19 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     }
 
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-        db.setVault(vault);
-        return db.getCryptoStatus(transactionId.toString());
+        /**
+         * Last Update: 23/07/2015 for: fmarcano
+         */
+        try{
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            db.setVault(vault);
+            return db.getCryptoStatus(transactionId.toString());
+        }catch(CantExecuteQueryException exception){
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        }catch(UnexpectedResultReturnedFromDatabaseException exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        }catch(Exception exception){
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
     }
 }

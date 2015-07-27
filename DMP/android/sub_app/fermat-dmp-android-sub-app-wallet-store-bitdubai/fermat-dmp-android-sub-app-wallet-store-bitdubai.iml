@@ -12,6 +12,7 @@
         <option name="SELECTED_TEST_ARTIFACT" value="_unit_test_" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
         <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
+
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDebugUnitTest" />
         <option name="COMPILE_JAVA_TEST_TASK_NAME" value="compileDebugUnitTestSources" />
         <afterSyncTasks>
@@ -19,6 +20,7 @@
           <task>mockableAndroidJar</task>
           <task>prepareDebugUnitTestDependencies</task>
         </afterSyncTasks>
+
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
@@ -27,7 +29,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
     <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/debug" />
     <exclude-output />
@@ -86,7 +88,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -94,6 +95,7 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="jcip-annotations-1.0" level="project" />
     <orderEntry type="library" exported="" name="scala-library-2.11.1" level="project" />
+    <orderEntry type="library" exported="" name="log4j-1.2.17" level="project" />
     <orderEntry type="library" exported="" name="bitcoinj-core-0.12.3" level="project" />
     <orderEntry type="library" exported="" name="support-v13-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="guava-16.0.1" level="project" />
@@ -148,13 +150,15 @@
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-factory-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-factory-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-api" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
