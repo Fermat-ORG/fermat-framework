@@ -6,6 +6,7 @@ import android.util.Base64;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -84,6 +85,24 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
         return new AndroidPlatformTextFile( this.context,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
     }
 
+    @Override
+    public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
+        checkContext();
+        try {
+            AndroidPlatformBinaryFile newFile = new AndroidPlatformBinaryFile(this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            newFile.loadFromMedia();
+            return newFile;
+        } catch (CantLoadFileException e){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, e, "", "Check the cause");
+        }
+    }
+
+    @Override
+    public PlatformBinaryFile createBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
+        checkContext();
+        return new AndroidPlatformBinaryFile(this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+    }
+
     /**
      <p>This method set the os context
      *
@@ -91,9 +110,7 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
      */
     @Override
     public void setContext(Object context) {
-
         this.context = (Context)context;
-
     }
 
     /**
