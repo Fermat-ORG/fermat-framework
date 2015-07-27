@@ -8,17 +8,11 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 
-import java.util.UUID;
-
 /**
  * Created by loui on 22/02/15.
  */
-public class UserCratedEventHandler implements EventHandler {
+public class UserCreatedEventHandler implements EventHandler {
     IntraUserManager intraUserManager;
-
-
-
-
 
 
     public void setIntraUserManager(IntraUserManager intraUserManager) {
@@ -26,24 +20,17 @@ public class UserCratedEventHandler implements EventHandler {
     }
 
 
-
-
-
-
-
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception {
-        UUID userId = ((DeviceUserCreatedEvent)platformEvent).getUserId();
+        // TODO CHANGED THE RETURNING OF UUID OF THE DEVICE USER TO ITS PUBLIC KEY
+        String userPublicKey = ((DeviceUserCreatedEvent) platformEvent).getPublicKey();
 
 
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {
 
-            try
-            {
-                this.intraUserManager.crateActor(userId);
-            }
-            catch (CantCreateIntraUserException cantCreateIntraUserException)
-            {
+            try {
+                this.intraUserManager.createActor(userPublicKey);
+            } catch (CantCreateIntraUserException cantCreateIntraUserException) {
                 System.err.println("CantCreateIntraUserException: " + cantCreateIntraUserException.getMessage());
                 cantCreateIntraUserException.printStackTrace();
 

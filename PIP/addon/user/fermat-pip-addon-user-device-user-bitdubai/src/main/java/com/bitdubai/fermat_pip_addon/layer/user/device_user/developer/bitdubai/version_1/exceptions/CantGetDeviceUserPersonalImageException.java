@@ -1,11 +1,15 @@
-package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2;
+package com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.17..
+ * <p>The exception <code>com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantPersistDeviceUserException</code>
+ * is thrown when i cannot persist the file with the device user information.
+ * <p/>
+ *
+ * Created by Leon Acosta (laion.cj91@gmail.com) on 27/06/2015.
  */
-public class CantGetPersonalImageException extends FermatException {
+public class CantGetDeviceUserPersonalImageException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +18,7 @@ public class CantGetPersonalImageException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetPersonalImageException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetDeviceUserPersonalImageException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
