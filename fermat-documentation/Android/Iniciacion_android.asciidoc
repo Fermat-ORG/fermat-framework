@@ -1,6 +1,6 @@
 == Iniciación en fermat sobre la plataforma Android
 
-=== Comenzaré con una brebe introduccion a la aplicación para que sepan cual será su ubicación dentro de Fermat.
+=== Comenzaré con una breve introduccion a la aplicación para que sepan cual será su ubicación dentro de Fermat.
 
 Basicamente deberia comenzar con el concepto de wallet o cartera. Una Wallet es un applicación que en su version más simple nos permite enviar y recibir dinero. En este caso nos abocamos al intercambio de cryptocurrencies (por el momento Bitcoins).
 A partir de este concepto podemos decir que lo que nosotros estamos construyendo es una fabrica de Wallet, las cuales derivan de una wallet padre llamada reference Wallet. Aquí es donde nos vamos a centrar en este momento en la capa de Android:
