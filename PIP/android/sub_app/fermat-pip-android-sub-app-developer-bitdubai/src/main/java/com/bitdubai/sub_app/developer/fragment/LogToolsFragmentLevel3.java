@@ -25,17 +25,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +56,7 @@ public class LogToolsFragmentLevel3 extends Fragment {
     /**
      * SubApp session
      */
-    SubAppsSession subAppSession;
+    DeveloperSubAppSession developerSubAppSession;
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -71,9 +69,9 @@ public class LogToolsFragmentLevel3 extends Fragment {
 
     private int loggerLevel=3;
 
-    public static LogToolsFragmentLevel3 newInstance(int position,SubAppsSession subAppSession) {
+    public static LogToolsFragmentLevel3 newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         LogToolsFragmentLevel3 f = new LogToolsFragmentLevel3();
-        f.setSubAppSession(subAppSession);
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -87,7 +85,7 @@ public class LogToolsFragmentLevel3 extends Fragment {
 
         try {
             try {
-                logTool = subAppSession.getToolManager().getLogTool();
+                logTool = developerSubAppSession.getToolManager().getLogTool();
             } catch (Exception e) {
                 showMessage("CantGetToolManager - " + e.getMessage());
                 e.printStackTrace();
@@ -201,8 +199,8 @@ public class LogToolsFragmentLevel3 extends Fragment {
         this.lstLoggers=lstLoggers;
     }
 
-    public void setSubAppSession(SubAppsSession subAppSession) {
-        this.subAppSession = subAppSession;
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
 
     public class AppListAdapter extends ArrayAdapter<Loggers> {
