@@ -33,7 +33,7 @@ Este metodo recibe un objeto de tipo DatabaseTableRecord donde se especifica el 
  Las variables donde se guardan los resultados del select se pueden recuperar con el metodo de a interface DatabaseTable:
 
  ```
-  public List<DatabaseVariable> getVarialbesResult();
+  public List<DatabaseVariable> getVariablesResult();
 
   ```
 
@@ -65,5 +65,5 @@ El parametro columnName es el nombre del campo de la tabla al que se le va a asi
 
 **NOTA:**  Los metodos nuevos para hacer selects con operadores o especificando que campos obtener se pueden usar fuera de una transaccion, el resultado de la consulta se carga en un arreglo de campo|valor que se puede obtener con el metodo
 
- public List<DatabaseVariable> getVarialbesResult(); del objeto DatabaseTable usado para hacer el select.
+ public List<DatabaseVariable> getVariablesResult(); del objeto DatabaseTable usado para hacer el select.
 

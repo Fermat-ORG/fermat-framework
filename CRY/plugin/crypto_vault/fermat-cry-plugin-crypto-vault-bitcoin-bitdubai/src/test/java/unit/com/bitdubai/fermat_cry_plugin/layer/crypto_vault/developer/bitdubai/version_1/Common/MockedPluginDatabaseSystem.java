@@ -250,7 +250,7 @@ public class MockedPluginDatabaseSystem implements PluginDatabaseSystem {
                     }
 
                     @Override
-                    public List<DatabaseVariable> getVarialbesResult() {
+                    public List<DatabaseVariable> getVariablesResult() {
                         return null;
                     }
 
