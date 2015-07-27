@@ -76,7 +76,7 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
      * @throws CantInitializeExtraUserRegistryException
      */
     public void initializeDatabase() throws CantInitializeExtraUserRegistryException {
-
+        //TODO Manuel, este metodo esta pendiente por la implementacion de las excepciones genericas
         /**
          * I will try to open the users' database..
          */

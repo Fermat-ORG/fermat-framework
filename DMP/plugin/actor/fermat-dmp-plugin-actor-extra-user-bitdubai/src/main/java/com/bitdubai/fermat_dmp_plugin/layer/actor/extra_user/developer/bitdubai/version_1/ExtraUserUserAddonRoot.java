@@ -210,10 +210,8 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
             }
 
         }catch (Exception exception){
-
             FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ExtraUserUserAddonRoot.newLoggingLevel ,"Check the cause");
             this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
-
         }
 
     }
@@ -236,12 +234,6 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
-            //Modify by Manuel on 23/07/2015
-            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ExtraUserUserAddonRoot.newLoggingLevel ,"Check the cause");
-            /**
-             * This is an static method, so, I need to have an instance and then invoke the non-static method.
-             * */
-            new ExtraUserUserAddonRoot().errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
             return DEFAULT_LOG_LEVEL;
         }
     }
@@ -286,6 +278,7 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
         } catch (CantCreateExtraUserRegistry cantCreateExtraUserRegistry) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateExtraUserRegistry);
         }
+        //TODO Manuel, aqui falta el manejo de la exception generica
         return user;
     }
 

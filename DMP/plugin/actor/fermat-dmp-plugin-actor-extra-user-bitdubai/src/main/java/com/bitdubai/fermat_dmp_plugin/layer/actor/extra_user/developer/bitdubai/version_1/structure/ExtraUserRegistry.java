@@ -80,7 +80,7 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
     }
 
     public void initialize() throws CantInitializeExtraUserRegistryException {
-
+        //TODO Manuel este metodo tiene que gestionar excepciones genericas
         /**
          * I will try to open the users' database..
          */
@@ -93,41 +93,20 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             databaseFactory.setErrorManager(this.errorManager);
 
-            /**
-             * I will create the database where I am going to store the information of this wallet.
-             */
-
             try {
 
                 this.database = databaseFactory.createDatabase(pluginId);
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
-                /**
-                 * The database cannot be created. I can not handle this situation.
-                 */
-/*Francisco Arce
-        Exception in the context Fermat Context
-        *
-        * */
                 String message = CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE;
                 FermatException cause = cantCreateDatabaseException.getCause();
                 String context = "DataBase Factory: " + cantCreateDatabaseException.getContext();
                 String possibleReason = "The exception occurred when calling  'databaseFactory.createDatabase()': " + cantCreateDatabaseException.getPossibleReason();
 
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-               /*Francisco Arce*/
                 throw new CantInitializeExtraUserRegistryException(message, cause, context, possibleReason);
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            /**
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-/*Francisco Arce
-        Exception in the context Fermat Context
-        *
-        * */
             String message = CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE;
             FermatException cause = cantOpenDatabaseException.getCause();
             String context = "Create Database:" + cantOpenDatabaseException.getContext();
