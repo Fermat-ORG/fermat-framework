@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2;
+package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.14..
+ * Created by eze on 2015.07.17..
  */
-public class IncorrectUserOrPasswordException extends FermatException {
+public class CantSetImageException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class IncorrectUserOrPasswordException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public IncorrectUserOrPasswordException(String message, Exception cause, String context, String possibleReason) {
+    public CantSetImageException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
