@@ -14,8 +14,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
@@ -156,27 +158,33 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      */
     @Override
     public void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException {
-
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager walletStoreManager = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+        walletStoreManager.publishWallet((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem) catalogItem);
     }
+
 
     @Override
     public void publishSkin(Skin skin) throws CantPublishSkinInCatalogException {
-
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager walletStoreManager = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+        walletStoreManager.publishSkin((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin) skin);
     }
 
     @Override
     public void publishLanguage(Language language) throws CantPublishLanguageInCatalogException {
-
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager walletStoreManager = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+        walletStoreManager.publishLanguage((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language) language);
     }
 
     @Override
-    public void publishDesigner(Designer designer) {
-
+    public void publishDesigner(Designer designer) throws CantPublishDesignerInCatalogException {
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager walletStoreManager = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+        walletStoreManager.publishDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) designer);
     }
 
     @Override
-    public void publishTranslator(Translator translator) {
-
+    public void publishTranslator(Translator translator) throws CantPublishTranslatorInCatalogException {
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager walletStoreManager = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+        walletStoreManager.publishTranslator((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator) translator);
     }
 
     @Override

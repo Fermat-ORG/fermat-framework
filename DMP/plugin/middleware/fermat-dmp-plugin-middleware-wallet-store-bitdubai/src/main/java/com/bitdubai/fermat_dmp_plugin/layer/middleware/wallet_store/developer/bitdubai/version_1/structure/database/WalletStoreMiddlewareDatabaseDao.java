@@ -190,12 +190,15 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
      * @return
      */
     public CatalogItemInformation getCatalogItemInformationFromDatabase (Map<CatalogItems, UUID> catalogItemsIds) throws CantExecuteDatabaseOperationException {
+        database = openDatabase();
         CatalogItemInformation catalogItemInformation = new CatalogItemInformation();
         for (Map.Entry<CatalogItems, UUID> entry : catalogItemsIds.entrySet()){
             catalogItemInformation.setCatalogItemId(entry.getKey(), entry.getValue());
             try {
                 catalogItemInformation.setInstallationStatus(entry.getValue(), getCatalogItemFromDatabaseTableRecord(entry.getKey(), entry.getValue()));
+                database.closeDatabase();
             } catch (Exception e) {
+                database.closeDatabase();
                 throw new CantExecuteDatabaseOperationException(e, null, null);
             }
         }
