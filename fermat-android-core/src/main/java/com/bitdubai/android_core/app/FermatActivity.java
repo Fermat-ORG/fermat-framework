@@ -52,6 +52,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -554,7 +555,7 @@ public class FermatActivity extends FragmentActivity{
                     case CWP_SHELL_LOGIN:
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
-                        //SubAppSession subAppSession = new SubAppSession();
+                        //DeveloperSubAppSession subAppSession = new DeveloperSubAppSession();
                         //Excepcion que no puede ser casteado  a WalletManagerManager
                         //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0,getWalletManagerManager());
                         WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0);
@@ -633,6 +634,15 @@ public class FermatActivity extends FragmentActivity{
 
     public ErrorManager getErrorManager(){
         return (ErrorManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
+    }
+
+    /**
+     * Get WalletManagerManager from the fermat platform
+     * @return  reference of WalletManagerManager
+     */
+
+    public WalletFactoryManager getWalletFactoryManager(){
+        return (WalletFactoryManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
     }
 
 
