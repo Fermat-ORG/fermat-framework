@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -56,6 +57,7 @@ public class onCoinsReceivedTest {
     @Mock
     DatabaseTransaction transaction;
 
+    @Ignore
     @Test (expected = NullPointerException.class)
     public void test(){
         List<DatabaseTableRecord> records = mock(ArrayList.class);
