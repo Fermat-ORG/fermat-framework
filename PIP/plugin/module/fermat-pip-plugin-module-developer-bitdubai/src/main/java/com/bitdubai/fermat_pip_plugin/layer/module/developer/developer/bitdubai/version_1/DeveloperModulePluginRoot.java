@@ -101,8 +101,8 @@ public class DeveloperModulePluginRoot implements DeveloperModuleManager, DealsW
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        if (errorManager == null)
-            throw new IllegalArgumentException();
+       // if (errorManager == null)
+       //     throw new IllegalArgumentException();
         this.errorManager = errorManager;
     }
 

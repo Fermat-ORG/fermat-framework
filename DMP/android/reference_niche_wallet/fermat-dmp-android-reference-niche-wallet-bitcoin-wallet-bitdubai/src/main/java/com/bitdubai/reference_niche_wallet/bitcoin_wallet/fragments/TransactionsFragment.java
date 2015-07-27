@@ -87,7 +87,7 @@ public class TransactionsFragment extends Fragment{
     /**
      * List of transactions pointers
      */
-    //TODO: esto deberia ir en la session
+    //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
     private int cantTransactions = 10;
 
@@ -155,10 +155,6 @@ public class TransactionsFragment extends Fragment{
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 
         //adapter.
-
-
-
-
 
 
         // Create the adapter to convert the array to views

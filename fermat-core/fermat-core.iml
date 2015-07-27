@@ -13,7 +13,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/classes/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/test" />
     <exclude-output />
@@ -25,7 +25,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
-    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fermat-api" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-api" exported="" />
@@ -87,6 +87,5 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-addon-license-wallet-bitdubai" exported="" />
-    <orderEntry type="library" exported="" name="fermat-core.fermat-core-1.0" level="project" />
   </component>
 </module>

@@ -194,14 +194,15 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             this.content =buffer.toByteArray();
 
         } catch (Exception e) {
-            throw new CantLoadFileException(e.getMessage());
+            throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e,"","Check the cause of this error");
             
         } finally {
         	try {
         		if (binaryStream != null)
         		binaryStream.close();	
         	} catch (Exception e) {
-        		e.printStackTrace();
+        	//	e.printStackTrace();
+                throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Check the cause of this error");
         	}
         	
         }

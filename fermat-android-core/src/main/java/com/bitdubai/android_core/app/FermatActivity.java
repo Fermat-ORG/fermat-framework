@@ -1,8 +1,11 @@
 package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -487,8 +490,8 @@ public class FermatActivity extends FragmentActivity{
      *  Method used to clean the screen
      */
 
-    protected void resetThisActivity()
-    {
+    protected void resetThisActivity(){
+
         try
         {
             //clean page adapter
@@ -583,7 +586,10 @@ public class FermatActivity extends FragmentActivity{
 
             pager.setAdapter(this.screenPagerAdapter);
 
-            pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+            if (pager.getBackground() == null) {
+                Drawable d = Drawable.createFromStream(getAssets().open("drawables/home2.png"), null);
+                pager.setBackground(d);
+            }
 
 
         } catch (Exception ex) {
@@ -591,6 +597,7 @@ public class FermatActivity extends FragmentActivity{
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     /**
      *  Get SubAppRuntimeManager from the fermat platform

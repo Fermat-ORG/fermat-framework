@@ -62,6 +62,9 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
             throw new CantOpenDatabaseException(message, cause, context, possibleReason);
         }
+        catch(Exception e){
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
+        }
 
     }
 
@@ -87,6 +90,9 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             String context = "Database Name : " + databaseName;
             String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
             throw new CantCreateDatabaseException(message, cause, context, possibleReason);
+        }
+        catch (Exception e){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
         }
 
     }
