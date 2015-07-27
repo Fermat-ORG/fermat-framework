@@ -292,7 +292,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
         catch (Exception exception)
         {
-            throw new CantSelectRecordException();
+            throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause for this error");
         }
 
 
@@ -355,7 +355,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
        }
         catch (Exception exception)
         {
-            throw new CantUpdateRecordException();
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause for this error");
         }
     }
 
@@ -411,7 +411,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         }
         catch (Exception exception) {
-            throw new CantInsertRecordException();
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause for this error");
         }
 
 
@@ -465,7 +465,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         } catch (Exception e) {
             if(cursor != null)
                 cursor.close();
-            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
+            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
         }
     }
 
@@ -843,7 +843,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
             }
 
         }catch (Exception exception) {
-            throw new CantDeleteRecordException();
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause for this error");
         }
     }
 
@@ -874,7 +874,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
             if(c.moveToNext()){
                 //si pasa esto es porque hay algo mal
-                throw new Exception();
+                throw new Exception(); //TODO:Se deberia lanzar una FermatException
             }
 
         }else{
