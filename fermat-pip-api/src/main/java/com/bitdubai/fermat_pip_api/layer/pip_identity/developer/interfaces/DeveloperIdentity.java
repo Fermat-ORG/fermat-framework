@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces;
 
+import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantSingMessageException;
+
 /**
  * This interface let you access to the Developer public Information
  *
@@ -18,4 +20,11 @@ public interface DeveloperIdentity {
      * @return the public key of the represented developer
      */
     String getPublicKey();
+
+    /**
+     *
+     * @param mensage unsigned
+     * @return signed message
+     */
+    String createMessageSignature(String mensage) throws CantSingMessageException;
 }
