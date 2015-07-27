@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.exceptions.InconsistentDatabaseResultException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.*;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -102,7 +102,7 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
         try {
-            return pluginDatabaseSystem.openDatabase(pluginId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.DATABASE_NAME);
+            return pluginDatabaseSystem.openDatabase(pluginId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.DATABASE_NAME);
         } catch (CantOpenDatabaseException  | DatabaseNotFoundException exception) {
             throw  new CantExecuteDatabaseOperationException(exception, null, "Error in database plugin.");
         }
@@ -118,26 +118,26 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
 
         UUID walletId = catalogItemInformation.getCatalogItemId(CatalogItems.WALLET);
         if (walletId != null){
-            DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME).getEmptyRecord();
-            record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_ID_COLUMN_NAME, walletId);
-            record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(walletId).getCode());
-            records.put(getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME), record);
+            DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME).getEmptyRecord();
+            record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_ID_COLUMN_NAME, walletId);
+            record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(walletId).getCode());
+            records.put(getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME), record);
         }
 
         UUID languageId = catalogItemInformation.getCatalogItemId(CatalogItems.LANGUAGE);
         if (languageId != null){
-            DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME).getEmptyRecord();
-            record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME, languageId);
-            record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(languageId).getCode());
-            records.put(getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME), record);
+            DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME).getEmptyRecord();
+            record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME, languageId);
+            record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(languageId).getCode());
+            records.put(getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME), record);
         }
 
         UUID skinId = catalogItemInformation.getCatalogItemId(CatalogItems.SKIN);
         if (skinId != null){
-            DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME).getEmptyRecord();
-            record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, skinId);
-            record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(skinId).getCode());
-            records.put(getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME), record);
+            DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME).getEmptyRecord();
+            record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, skinId);
+            record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(skinId).getCode());
+            records.put(getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME), record);
         }
 
         if (records.isEmpty())
