@@ -1,13 +1,12 @@
-package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2;
+package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces;
 
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CabtGetDeviceUserListException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantCreateNewDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantGetDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantLogOutException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantSetImageException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.LoginFailedException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.IncorrectUserOrPasswordException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserListException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantCreateNewDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantSetImageException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFailedException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.IncorrectUserOrPasswordException;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public interface DeviceUserManager {
      * @return An string representing the Public Key of the user created
      * @throws CantCreateNewDeviceUserException
      */
-    public String createNewDeviceUser(String alias, String password) throws CantCreateNewDeviceUserException;
+    String createNewDeviceUser(String alias, String password) throws CantCreateNewDeviceUserException;
 
     /**
      * This method creates internally a new device user and returns the public key assigned to it.
@@ -38,14 +37,14 @@ public interface DeviceUserManager {
      * @return An string representing the Public Key of the user created
      * @throws CantCreateNewDeviceUserException
      */
-    public String createNewDeviceUser(String alias, String password, byte[] personalImage) throws CantCreateNewDeviceUserException;
+    String createNewDeviceUser(String alias, String password, byte[] personalImage) throws CantCreateNewDeviceUserException;
 
     /**
      * This method give us the list of all the device users registered in the device
      * @return A list containing all the device users registered in the device
-     * @throws CabtGetDeviceUserListException
+     * @throws CantGetDeviceUserListException
      */
-    public List<DeviceUser> getAllDeviceUsers() throws CabtGetDeviceUserListException;
+    List<DeviceUser> getAllDeviceUsers() throws CantGetDeviceUserListException;
 
     /**
      *
@@ -53,13 +52,13 @@ public interface DeviceUserManager {
      * @return The Device User information asked
      * @throws CantGetDeviceUserException report any problem to get the Device User information
      */
-    public DeviceUser getDeviceUser(String publicKey) throws CantGetDeviceUserException;
+    DeviceUser getDeviceUser(String publicKey) throws CantGetDeviceUserException;
 
     /**
      *
      * @return the actual user logged in
      */
-    public DeviceUser getLoggedInDeviceUser() throws CantGetLoggedInDeviceUserException;
+    DeviceUser getLoggedInDeviceUser() throws CantGetLoggedInDeviceUserException;
 
     /**
      * This method check the password of the Device User assigned to the public key, set the logged in
@@ -70,19 +69,18 @@ public interface DeviceUserManager {
      * @throws IncorrectUserOrPasswordException An exception indicating that the parameters do not match an existing user information
      * @throws LoginFailedException An exception indicating different failures
      */
-    public void login(String publicKey, String password) throws LoginFailedException, IncorrectUserOrPasswordException;
+    void login(String publicKey, String password) throws LoginFailedException, IncorrectUserOrPasswordException;
 
     /**
      * Logs out the current Device User logged in and lunch an informative event
-     * @throws CantLogOutException
      */
-    public void logout() throws CantLogOutException;
+    void logout();
 
     /**
      * This method let the user set his personal image
      *
      * @param personalImage the image to ser
      */
-    public void setPersonalImage(byte[] personalImage) throws CantSetImageException;
+    void setPersonalImage(byte[] personalImage) throws CantSetImageException;
 
 }
