@@ -101,7 +101,7 @@ public class saveIncomingTransactionTest {
 
 
                         @Override
-                        public List<DatabaseVariable> getVarialbesResult() {
+                        public List<DatabaseVariable> getVariablesResult() {
                             return null;
                         }
 
