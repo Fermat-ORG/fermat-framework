@@ -19,8 +19,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
+import static com.googlecode.catchexception.CatchException.*;
+import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeleteWalletContactTest extends TestCase {
@@ -71,7 +72,8 @@ public class DeleteWalletContactTest extends TestCase {
 
     @Test
     public void testDeleteWalletContact_Success() throws Exception {
-        nicheWalletTypeCryptoWallet.deleteWalletContact(contactId);
+        catchException(nicheWalletTypeCryptoWallet).deleteWalletContact(contactId);
+        assertThat(caughtException()).isNull();
     }
 
     @Test(expected=CantDeleteWalletContactException.class)

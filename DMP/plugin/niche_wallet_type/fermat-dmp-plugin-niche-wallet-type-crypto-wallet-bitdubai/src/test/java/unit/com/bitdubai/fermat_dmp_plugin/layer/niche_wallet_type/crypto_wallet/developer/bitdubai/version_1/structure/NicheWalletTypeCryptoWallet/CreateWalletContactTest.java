@@ -31,8 +31,9 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
+import static com.googlecode.catchexception.CatchException.*;
+import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CreateWalletContactTest extends TestCase {
@@ -125,7 +126,7 @@ public class CreateWalletContactTest extends TestCase {
     @Test
     public void testCreateWalletContact_NotNull() throws Exception {
         WalletContactRecord walletContactRecord = nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
-        assertNotNull(walletContactRecord);
+        assertThat(walletContactRecord).isNotNull();
     }
 
     // CONTACTS ALREADY EXISTS TEST
@@ -166,5 +167,14 @@ public class CreateWalletContactTest extends TestCase {
             .when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));
 
         nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+    }
+
+    @Test
+    public void testCreateWalletContact_RegistryIsNotInitialized_CantGetWalletContactException() throws Exception {
+        nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
+        catchException(nicheWalletTypeCryptoWallet).createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCreateWalletContactException.class);
     }
 }
