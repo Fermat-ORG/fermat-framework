@@ -15,7 +15,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
  * Created by rodrigo on 7/24/15.
  */
 public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem {
-
+    /**
+     * WalletStoreNetworkServiceMonitoringAgent
+     */
+    boolean runner;
 
     /**
      * DealsWithEvents interface member variable
@@ -58,12 +61,25 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
 
     @Override
     public void start() throws CantStartAgentException {
+        Thread thread = new Thread(new Monitoring());
+        runner = true;
+
+        while (runner){
+            thread.start();
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                throw  new CantStartAgentException();
+            } catch (Exception exception){
+                throw  new CantStartAgentException();
+            }
+        }
 
     }
 
     @Override
     public void stop() {
-
+        runner = false;
     }
 
     /**
@@ -98,5 +114,16 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    private class Monitoring implements Runnable{
+        @Override
+        public void run() {
+            doTheMainTask();
+        }
+
+        private void doTheMainTask() {
+
+        }
     }
 }

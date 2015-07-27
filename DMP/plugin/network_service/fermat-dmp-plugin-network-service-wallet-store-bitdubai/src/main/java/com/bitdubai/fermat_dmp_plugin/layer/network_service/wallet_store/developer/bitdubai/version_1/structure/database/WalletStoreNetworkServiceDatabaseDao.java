@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -407,6 +407,54 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         return catalogItem;
     }
 
+    private List<CatalogItem> getAllCatalogItemsFromDatabase() throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException{
+        List<CatalogItem> catalogItems = new ArrayList<CatalogItem>();
+
+        DatabaseTableFilter tableFilter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue() {
+                return "";
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.LIKE;
+            }
+        };
+        List<DatabaseTableRecord> records = getRecordsFromDatabase(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME, tableFilter);
+
+        for (DatabaseTableRecord record : records){
+            CatalogItem catalogItem = new CatalogItem();
+            catalogItem.setWalletName(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_NAME_COLUMN_NAME));
+            catalogItem.setCategory(WalletCategory.valueOf(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME)));
+            catalogItem.setDescription(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME));
+            catalogItem.setDefaultSizeInBytes(record.getIntegerValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_SIZE_COLUMN_NAME));
+
+            catalogItems.add(catalogItem);
+        }
+        return catalogItems;
+    }
+
     private DetailedCatalogItem getDetailedCatalogItemFromDatabase (final UUID walletId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
         DetailedCatalogItem detailedCatalogItem = new DetailedCatalogItem();
 
@@ -582,6 +630,25 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         }
 
         return catalogItem;
+    }
+
+    /**
+     * Gets the entire catalog from the database
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public List<CatalogItem> getCatalogItems() throws CantExecuteDatabaseOperationException{
+        openDatabase();
+        try {
+            List<CatalogItem> catalogItems =getAllCatalogItemsFromDatabase();
+            closeDatabase();
+            return  catalogItems;
+        } catch (InvalidResultReturnedByDatabaseException e) {
+            closeDatabase();
+            throw new CantExecuteDatabaseOperationException(e, null,null);
+        } catch (Exception exception){
+            throw new CantExecuteDatabaseOperationException(exception, null,null);
+        }
     }
 
     /**

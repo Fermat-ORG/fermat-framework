@@ -2,8 +2,10 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interface
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 
 import java.util.UUID;
@@ -15,8 +17,8 @@ public interface WalletStoreManager {
     public void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException;
     public void publishSkin(Skin skin) throws CantPublishSkinInCatalogException;
     public void publishLanguage(Language language) throws CantPublishLanguageInCatalogException;
-    public void publishDesigner(Designer designer);
-    public void publishTranslator (Translator translator);
+    public void publishDesigner(Designer designer) throws CantPublishDesignerInCatalogException;
+    public void publishTranslator (Translator translator) throws CantPublishTranslatorInCatalogException, CantPublishLanguageInCatalogException;
 
 
     public WalletCatalog getWalletCatalogue() throws CantGetWalletsCatalogException;
