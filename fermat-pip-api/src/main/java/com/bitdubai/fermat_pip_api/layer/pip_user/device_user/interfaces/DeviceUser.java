@@ -1,4 +1,6 @@
-package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2;
+package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces;
+
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetPersonalImageException;
 
 /**
  * DeviceUser interface that represents the device user information.
@@ -12,19 +14,20 @@ public interface DeviceUser {
      *
      * @return the alias of the represented Device User
      */
-    public String getAlias();
+    String getAlias();
 
     /**
      * This method gives us the device user personal image
      *
      * @return the device user image
      */
-    public byte[] getPersonalImage() throws com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions_milestone2.CantGetPersonalImageException;
+    byte[] getPersonalImage() throws CantGetPersonalImageException;
 
     /**
      * This method returns the public key of the user
      *
      * @return the public key of the represented Device User
      */
-    public String getPublicKey();
+    String getPublicKey();
+
 }
