@@ -1,40 +1,43 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantPublishItemInCatalogException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.WalletCatalog;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -115,11 +118,14 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         this.pluginFileSystem = pluginFileSystem;
     }
 
+    private WalletStoreNetworkServiceDatabaseDao getDatabaseDAO() throws CantExecuteDatabaseOperationException {
+        WalletStoreNetworkServiceDatabaseDao dbDAO = new WalletStoreNetworkServiceDatabaseDao(errorManager, logManager, pluginDatabaseSystem, pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
+        return dbDAO;
+    }
 
     private void publishItemInDB (CatalogItem catalogItem, Developer developer, Language language, Translator translator, Skin skin, Designer designer) throws CantPublishItemInCatalogException {
         try {
-            WalletStoreNetworkServiceDatabaseDao dbDAO = new WalletStoreNetworkServiceDatabaseDao(errorManager, logManager, pluginDatabaseSystem, pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
-            dbDAO.catalogDatabaseOperation(DatabaseOperations.INSERT, catalogItem, developer, language, translator, skin, designer);
+            getDatabaseDAO().catalogDatabaseOperation(DatabaseOperations.INSERT, catalogItem, developer, language, translator, skin, designer);
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantPublishItemInCatalogException(CantPublishItemInCatalogException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -213,6 +219,80 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         } catch (Exception e) {
             throw new CantPublishTranslatorInCatalogException (CantPublishTranslatorInCatalogException.DEFAULT_MESSAGE, e, null, null);
         }
+    }
+
+
+    private DetailedCatalogItem getDetailedCatalogItemFromDatabase (UUID walletId) throws CantGetCatalogItemException {
+        try {
+            return getDatabaseDAO().getDetailedCatalogItem(walletId);
+        } catch (Exception e) {
+            throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, e, null, null);
+        }
+    }
+
+    private byte[] getSkinContent(String directory, String fileName) throws  CantGetCatalogItemException{
+        try {
+            PluginBinaryFile skinFile = pluginFileSystem.getBinaryFile(pluginId, directory, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            skinFile.loadFromMedia();
+            return skinFile.getContent();
+        } catch (FileNotFoundException | CantCreateFileException | CantLoadFileException exception) {
+          throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+    /**
+     * Get the detailed catalog item from db and icon imagess.
+     * @param walletId
+     * @return
+     * @throws CantGetCatalogItemException
+     */
+    public DetailedCatalogItem getDetailedCatalogItem (UUID walletId) throws CantGetCatalogItemException {
+        try{
+            DetailedCatalogItem detailedCatalogItem;
+            detailedCatalogItem = getDetailedCatalogItemFromDatabase (walletId);
+            Skin defaultSkin = (Skin) detailedCatalogItem.getDefaultSkin();
+            defaultSkin.setPresentationImage(getSkinContent(pluginId.toString(), defaultSkin.getSkinName()));
+            detailedCatalogItem.setDefaultSkin(defaultSkin);
+
+            return detailedCatalogItem;
+        } catch (Exception exception){
+            throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+    /**
+     * Gets the catalogItem from the database
+     * @param walletId
+     * @return
+     * @throws CantGetCatalogItemException
+     */
+    public CatalogItem getCatalogItem(UUID walletId) throws CantGetCatalogItemException{
+        CatalogItem catalogItem;
+        try {
+            catalogItem = getDatabaseDAO().getCatalogItem(walletId);
+            catalogItem.setDetailedCatalogItem(getDetailedCatalogItem(walletId));
+        } catch (Exception e) {
+            throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, e, null, null);
+        }
+
+        return catalogItem;
+    }
+
+    /**
+     * gets the entire wallet catalog
+     * @return
+     * @throws CantGetWalletsCatalogException
+     */
+    public WalletCatalog getWalletCatalogue() throws CantGetWalletsCatalogException {
+        WalletCatalog walletCatalog = new WalletCatalog();
+        try {
+            List<CatalogItem> catalogItemList =getDatabaseDAO().getCatalogItems();
+            walletCatalog.setCatalogItems(catalogItemList);
+            walletCatalog.setCatalogSize(catalogItemList.size());
+        } catch (Exception e) {
+            throw new CantGetWalletsCatalogException(CantGetWalletsCatalogException.DEFAULT_MESSAGE, e, null, null);
+        }
+        return walletCatalog;
     }
 
 }
