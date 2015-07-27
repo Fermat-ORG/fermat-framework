@@ -18,7 +18,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -30,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.List;
  * haves all methods for the database tools activity of a developer
  * <p/>
  * <p/>
- * Created by MAti
+ * Created by Matias Furszyfer
  *
  * @version 1.0
  */
@@ -67,11 +67,11 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     /**
      * SubApp session
      */
-    SubAppsSession subAppsSession;
+    DeveloperSubAppSession subAppsSession;
 
-    public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position,SubAppsSession subAppsSession) {
+    public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsDatabaseTableRecordListFragment f = new DatabaseToolsDatabaseTableRecordListFragment();
-        f.setSubAppsSession(subAppsSession);
+        f.setSubAppsSession((DeveloperSubAppSession)subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -231,7 +231,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         this.resource = resource;
     }
 
-    public void setSubAppsSession(SubAppsSession subAppsSession) {
+    public void setSubAppsSession(DeveloperSubAppSession subAppsSession) {
         this.subAppsSession = subAppsSession;
     }
 }
