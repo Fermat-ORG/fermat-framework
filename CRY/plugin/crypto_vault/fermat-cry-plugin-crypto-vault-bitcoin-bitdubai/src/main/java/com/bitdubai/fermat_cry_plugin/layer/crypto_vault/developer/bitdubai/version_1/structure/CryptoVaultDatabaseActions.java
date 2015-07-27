@@ -77,7 +77,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         this.vault = vault;
     }
 
-
+    //TODO Franklin, el try catch deberia abarcar todo el codigo del metodo
     public void saveIncomingTransaction(String txId, String txHash) throws CantExecuteQueryException, CantLoadTableToMemoryException {
         /**
          * I need to validate that this is not a transaction I already saved because it might be from a transaction
@@ -403,6 +403,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
     }
 
 
+    //TODO Franklin, aca deberia existir un solo try para controlar todas las excepciones del metodo incluida la generica
     /**
      * increase by one or resets to zero the counter of transactions found ready to be consumed
      * @param newOcurrence
@@ -499,6 +500,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         }
     }
 
+    //TODO Franklin, aca deberia existir un solo try para controlar todas las excepciones del metodo incluida la generica
     /**
      * Insert a new transaction with the confidence level or update an outgoing cryptostatus of an existing transaction.
      * @param hashAsString

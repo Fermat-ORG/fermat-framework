@@ -27,7 +27,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
@@ -66,6 +65,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+//TODO Franklin, hay que chequear en esta clase la gestion de excepciones publicas
 /**
  * Created by rodrigo on 09/06/15.
  */
@@ -250,46 +250,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     }
 
     /**
-     * creates a new vault.
-     * @throws CantCreateCryptoWalletException
-     */
-    private void createNewVault() throws CantCreateCryptoWalletException {
-        vault = new Wallet(networkParameters);
-        try {
-            PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            vaultFile.persistToMedia();
-
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault created into file " + vaultFileName, null, null);
-            /**
-             * If I couldn't create it I can't go on
-             */
-        } catch (CantCreateFileException cantCreateFileException) {
-            throw new CantCreateCryptoWalletException("There was an error trying to create a new Vault." ,cantCreateFileException, "Vault filename: " + vaultFileName, "Not enought space on disk?");
-        } catch (CantPersistFileException e) {
-            throw new CantCreateCryptoWalletException("There was an error trying to save the Vault into a file." ,e, "Vault filename: " + vaultFileName, "Not enought space on disk?");
-        }
-    }
-
-    /**
-     * Loads an existing Vault from file
-     * @throws CantCreateCryptoWalletException
-     */
-    private void loadExistingVaultFromFile() throws CantCreateCryptoWalletException {
-        try {
-            vault = Wallet.loadFromFile(vaultFile);
-
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault loaded from file " + vaultFile.getAbsoluteFile().toString(), "CryptoVault current balance: " + vault.getBalance().getValue(), "CryptoVault estimated current balance: " + vault.getBalance(Wallet.BalanceType.ESTIMATED).toFriendlyString());
-
-            /**
-             * If I couldn't load it I can't go on.
-             */
-        } catch (UnreadableWalletException unreadableWalletException) {
-            throw new CantCreateCryptoWalletException("Vault file not accesible.", unreadableWalletException, "Vault filename: " + vaultFileName, "Corrupted file.");
-        }
-
-    }
-
-    /**
      * Will load the Vault from a provided seed. The user will need to provide the mNemonic code,
      * which is a series of prefedined words and the creation time. The vault will need to provide the methods
      * to retrieve this information at soma point.
@@ -324,19 +284,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         bitcoinCryptoNetworkManager.setVault(this);
         bitcoinCryptoNetworkManager.disconnectFromBitcoinNetwork();
     }
-
-    /**
-     * configures internal vault parameters and creates the database that will hold
-     * the transactions status.
-     * @throws CantCreateCryptoWalletException
-     */
-    private void configureVault() throws CantCreateCryptoWalletException {
-        vault.autosaveToFile(vaultFile, 0, TimeUnit.NANOSECONDS, null);
-        vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager, logManager);
-        vault.addEventListener(vaultEventListeners);
-
-    }
-
 
     /**
      * returns a valid CryptoAddrres from this vault
@@ -474,38 +421,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         return txHash;
     }
 
-    /**
-     * Validates if this transaction is to send money to ourselves.
-     * This is not allowed.
-     * @param transaction
-     * @return
-     */
-    private boolean isSendingMoneyToMyself(Transaction transaction) {
-        int size = transaction.getOutputs().size();
-        boolean[] confirmaciones = new boolean[size];
-        int i=0;
-        for (TransactionOutput output : transaction.getOutputs()){
-            /**
-             * will save the confirmations for every address in the output.
-             * If I get all trues, then I'm sending money to myself.
-             */
-            confirmaciones[i] = output.isMine(vault);
-            i++;
-        }
 
-        /**
-         * I will loop the array, If I get a false, then I return false.
-         */
-        for (int x=0; x<size; x++){
-            if (!confirmaciones[x])
-                return false;
-        }
-
-        /**
-         * All address returned true, so I'm returning true.
-         */
-        return true;
-    }
 
     /**
      * Validates if the address sent is valid in the current network or not.
@@ -594,11 +510,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         }
     }
 
-    /**
-     * gets the amount of satoshis of the transaction
-     * @param txHash
-     * @return satoshis
-     */
+
     private long getAmountFromVault(String txHash) {
         /**
          * I calculate the ammount by SUM all the outputs amounts.
@@ -609,11 +521,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         return values.getValue();
     }
 
-    /**
-     * gets the address To of the transaction
-     * @param txHash
-     * @return the string of the address
-     */
     private String[] getAddressFromTransaction(String txHash) {
         String[] addresses = new String[2];
 
@@ -641,12 +548,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     }
 
 
-
-    /**
-     * Get the timestamp of the transaction
-     * @param txHash
-     * @return
-     */
     private long getTransactionTimestampFromVault(String txHash){
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
@@ -679,5 +580,70 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         }catch(Exception exception){
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
+    }
+
+    private void createNewVault() throws CantCreateCryptoWalletException {
+        vault = new Wallet(networkParameters);
+        try {
+            PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            vaultFile.persistToMedia();
+
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault created into file " + vaultFileName, null, null);
+            /**
+             * If I couldn't create it I can't go on
+             */
+        } catch (CantCreateFileException cantCreateFileException) {
+            throw new CantCreateCryptoWalletException("There was an error trying to create a new Vault." ,cantCreateFileException, "Vault filename: " + vaultFileName, "Not enought space on disk?");
+        } catch (CantPersistFileException e) {
+            throw new CantCreateCryptoWalletException("There was an error trying to save the Vault into a file." ,e, "Vault filename: " + vaultFileName, "Not enought space on disk?");
+        }
+    }
+
+    private void loadExistingVaultFromFile() throws CantCreateCryptoWalletException {
+        try {
+            vault = Wallet.loadFromFile(vaultFile);
+
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault loaded from file " + vaultFile.getAbsoluteFile().toString(), "CryptoVault current balance: " + vault.getBalance().getValue(), "CryptoVault estimated current balance: " + vault.getBalance(Wallet.BalanceType.ESTIMATED).toFriendlyString());
+
+            /**
+             * If I couldn't load it I can't go on.
+             */
+        } catch (UnreadableWalletException unreadableWalletException) {
+            throw new CantCreateCryptoWalletException("Vault file not accesible.", unreadableWalletException, "Vault filename: " + vaultFileName, "Corrupted file.");
+        }
+    }
+
+    private void configureVault() throws CantCreateCryptoWalletException {
+        vault.autosaveToFile(vaultFile, 0, TimeUnit.NANOSECONDS, null);
+        vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager, logManager);
+        vault.addEventListener(vaultEventListeners);
+
+    }
+
+    private boolean isSendingMoneyToMyself(Transaction transaction) {
+        int size = transaction.getOutputs().size();
+        boolean[] confirmaciones = new boolean[size];
+        int i=0;
+        for (TransactionOutput output : transaction.getOutputs()){
+            /**
+             * will save the confirmations for every address in the output.
+             * If I get all trues, then I'm sending money to myself.
+             */
+            confirmaciones[i] = output.isMine(vault);
+            i++;
+        }
+
+        /**
+         * I will loop the array, If I get a false, then I return false.
+         */
+        for (int x=0; x<size; x++){
+            if (!confirmaciones[x])
+                return false;
+        }
+
+        /**
+         * All address returned true, so I'm returning true.
+         */
+        return true;
     }
 }

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -63,7 +64,7 @@ public class getCurrentTransactionProtocolStatusTest {
         cryptoVaultDatabaseActions.getCurrentTransactionProtocolStatus(UUID.randomUUID());
     }
 
-
+    @Ignore
     @Test (expected = UnexpectedResultReturnedFromDatabaseException.class)
     public void getCurrentTransactionProtocolStatus_UnexpectedResultReturnedFromDatabaseException() throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         List<DatabaseTableRecord> records = mock(ArrayList.class);
