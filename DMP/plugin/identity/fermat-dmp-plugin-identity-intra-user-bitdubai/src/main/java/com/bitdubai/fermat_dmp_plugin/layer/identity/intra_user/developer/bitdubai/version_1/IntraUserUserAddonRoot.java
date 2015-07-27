@@ -18,11 +18,11 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.UserCratedEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.UserCreatedEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.UUID;
  */
 
 
-public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, DealsWithEvents, DealsWithErrors, DealsWithPlatformDatabaseSystem,DealsWithPlatformFileSystem, IntraUserManager, Service  {
+public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithPlatformDatabaseSystem, DealsWithPlatformFileSystem, IntraUserManager, Service  {
 
 
     /**
@@ -120,12 +120,12 @@ public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, Deal
      */
 
     @Override
-    public void crateActor(UUID userId) throws CantCreateIntraUserException {
+    public void createActor(String deviceUserPublicKey) throws CantCreateIntraUserException {
 
     }
 
     @Override
-    public Actor getActor(UUID id){
+    public Actor getActor(String deviceUserPublicKey){
         return null;
     }
 
@@ -140,8 +140,8 @@ public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, Deal
         EventHandler eventHandler;
 
         eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
-        eventHandler = new UserCratedEventHandler();
-        ((UserCratedEventHandler) eventHandler).setIntraUserManager(this);
+        eventHandler = new UserCreatedEventHandler();
+        ((UserCreatedEventHandler) eventHandler).setIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);

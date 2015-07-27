@@ -26,14 +26,14 @@ public class UserCreatedEventHandler  implements EventHandler {
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception{
 
-        UUID userId = ((DeviceUserCreatedEvent) platformEvent).getUserId();
+        String deviceUserPublicKey = ((DeviceUserCreatedEvent) platformEvent).getPublicKey();
 
 
         if (((Service) this.walletManager).getStatus() == ServiceStatus.STARTED) {
 
             try
             {
-                this.walletManager.createDefaultWallets(userId);
+                this.walletManager.createDefaultWallets(deviceUserPublicKey);
             }
             catch (CantCreateDefaultWalletsException cantCreateDefaultWalletsException)
             {
