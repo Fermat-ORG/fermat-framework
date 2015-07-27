@@ -140,8 +140,6 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
@@ -172,8 +170,6 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
              */
             returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
         }
-
-
         /**
          * return the list of DeveloperRecords for the passed table.
          */
