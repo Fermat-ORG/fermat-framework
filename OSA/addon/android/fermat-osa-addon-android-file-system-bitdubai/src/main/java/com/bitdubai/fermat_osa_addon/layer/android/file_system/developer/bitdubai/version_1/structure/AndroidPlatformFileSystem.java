@@ -59,9 +59,11 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
             newFile.loadFromMedia();
             return newFile;
         }
-        catch (CantLoadFileException e){
-            e.printStackTrace();
-            throw new FileNotFoundException();
+        catch (CantLoadFileException exception){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE,exception,null,"Check the cause of this error");
+        }
+        catch(Exception exception){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause of this error");
         }
 
     }

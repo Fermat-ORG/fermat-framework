@@ -116,7 +116,7 @@ public class insertNewTransactionWithNewConfidenceTest {
 
 
                         @Override
-                        public List<DatabaseVariable> getVarialbesResult() {
+                        public List<DatabaseVariable> getVariablesResult() {
                             return null;
                         }
 
