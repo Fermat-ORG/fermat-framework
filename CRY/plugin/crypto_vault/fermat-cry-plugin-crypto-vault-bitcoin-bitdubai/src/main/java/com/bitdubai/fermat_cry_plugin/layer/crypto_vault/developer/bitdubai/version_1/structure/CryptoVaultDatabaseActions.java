@@ -412,7 +412,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      */
     public int updateTransactionProtocolStatus(boolean newOcurrence) throws CantExecuteQueryException {
         DatabaseTable transactionProtocolStatusTable;
-        transactionProtocolStatusTable = database.getTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS);
+        transactionProtocolStatusTable = database.getTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_NAME);
 
         try {
             transactionProtocolStatusTable.loadToMemory();
@@ -427,7 +427,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             long timestamp = System.currentTimeMillis() / 1000L;
             DatabaseTableRecord emptyRecord = transactionProtocolStatusTable.getEmptyRecord();
             emptyRecord.setLongValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME, timestamp);
-            emptyRecord.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, 0);
+            emptyRecord.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME, 0);
 
             DatabaseTransaction transaction = database.newTransaction();
             transaction.addRecordToInsert(transactionProtocolStatusTable, emptyRecord);
@@ -450,9 +450,9 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             /**
              * I need to increase the ocurrences counter by one
              */
-            int ocurrence = record.getIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME);
+            int ocurrence = record.getIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME);
             ocurrence++;
-            record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, ocurrence);
+            record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME, ocurrence);
             dbTx.addRecordToUpdate(transactionProtocolStatusTable, record);
 
             try {
@@ -466,7 +466,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             /**
              * I need to reset the counter to 0
              */
-            record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, 0);
+            record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME, 0);
             dbTx.addRecordToUpdate(transactionProtocolStatusTable, record);
             try {
                 database.executeTransaction(dbTx);
