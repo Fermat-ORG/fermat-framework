@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
@@ -94,10 +95,13 @@ public class LogToolsFragmentLevel1 extends Fragment {
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
             logTool = toolManager.getLogTool();
+
+        } catch (CantGetLogTool e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
 
         pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();

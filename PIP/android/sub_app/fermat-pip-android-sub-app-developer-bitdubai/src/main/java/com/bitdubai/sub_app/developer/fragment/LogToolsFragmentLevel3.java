@@ -1,13 +1,13 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+
 import android.app.Dialog;
 
 import android.support.v4.app.FragmentTransaction;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
+
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
 
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 
@@ -93,12 +94,16 @@ public class LogToolsFragmentLevel3 extends Fragment {
         try {
             errorManager = developerSubAppSession.getErrorManager();
             logTool = developerSubAppSession.getToolManager().getLogTool();
+            pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
+        } catch (CantGetLogTool e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-        pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
+
     }
 
 
@@ -212,11 +217,7 @@ public class LogToolsFragmentLevel3 extends Fragment {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.grid_items_with_button2, parent, false);
 
-
                 holder = new ViewHolder();
-
-
-
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 

@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
@@ -97,6 +98,9 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         try {
             ToolManager toolManager = subAppsSession.getToolManager();
             databaseTools = toolManager.getDatabaseTool();
+        } catch (CantGetDataBaseTool e) {
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
