@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 
 
-
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
@@ -23,6 +25,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.excepti
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -36,8 +39,6 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by Natalia on 02/06/2015.
  */
 public class BalanceFragment extends Fragment {
-    
-
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
@@ -77,13 +78,6 @@ public class BalanceFragment extends Fragment {
     ReferenceWalletSession referenceWalletSession;
     
 
-    /**
-     * Error manager Addon
-     * Used to capture exceptions
-     */
-
-    private ErrorManager errorManager;
-
 
     /**
      *  Create a new instance of BalanceFragment and set referenceWalletSession and platforms plugin inside
@@ -105,51 +99,46 @@ public class BalanceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
-
-        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-
         /**
          *
          */
         try {
-            errorManager = referenceWalletSession.getErrorManager();
+
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+
             balanceAvailable = 0;
-            bookBalance=0;
+            bookBalance = 0;
             cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
 
-            try {
 
-                /**
-                 * Get cryptoWalet that manage balance in wallet
-                 */
-                cryptoWallet = cryptoWalletManager.getCryptoWallet();
+            /**
+             * Get cryptoWalet that manage balance in wallet
+             */
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
 
-            }catch (CantGetCryptoWalletException e) {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage(getActivity(),"CantGetCryptoWalletException- " + e.getMessage());
 
-            }
-            try {
-                /**
-                 * Get AvailableBalance
-                 */
-                balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
+            /**
+             * Get AvailableBalance
+             */
+            balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
 
-                /**
-                 * Get BookBalance
-                 */
-                bookBalance= cryptoWallet.getBookBalance(wallet_id);
+            /**
+             * Get BookBalance
+             */
+            bookBalance = cryptoWallet.getBookBalance(wallet_id);
+        }
+         catch (CantGetCryptoWalletException e) {
+             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+         }
+        catch (CantGetBalanceException e){
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
-            } catch (CantGetBalanceException e)
-            {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage(getActivity(),"CantGetBalanceException- " + e.getMessage());
-
-            }
         } catch (Exception ex) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-            showMessage(getActivity(),"Unexpected error getting the balance - " + ex.getMessage());
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -209,29 +198,44 @@ public class BalanceFragment extends Fragment {
         Method to change the balance type
      */
     private void changeBalanceType() {
-        ReferenceWalletSession referenceWalletSession =(ReferenceWalletSession) this.referenceWalletSession;
 
-        if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()) {
-            txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
-            txtViewTypeBalance.setText(R.string.book_balance);
-            referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
-        }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
-            txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-            txtViewTypeBalance.setText(R.string.available_balance);
-            referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+        ReferenceWalletSession referenceWalletSession =(ReferenceWalletSession) this.referenceWalletSession;
+        try
+        {
+            if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()) {
+                txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+                txtViewTypeBalance.setText(R.string.book_balance);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
+            }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+                txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
+                txtViewTypeBalance.setText(R.string.available_balance);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+            }
+        }catch (Exception e){
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
 
         }
+
     }
 
     /*
         Method to change the balance amount
      */
     private void changeBalance() {
-        if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-            txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-        }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
-            txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+        try {
+            if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+                txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
+            }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+                txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+            }
+        }catch (Exception e){
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
+
     }
 
 
@@ -258,29 +262,25 @@ public class BalanceFragment extends Fragment {
      */
     private void refreshBalance() {
         try {
-            try {
-                balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
 
-                bookBalance= cryptoWallet.getBookBalance(wallet_id);
+            balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
 
-            } catch (CantGetBalanceException e)
-            {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage(getActivity(),"CantGetBalanceException- " + e.getMessage());
+            bookBalance = cryptoWallet.getBookBalance(wallet_id);
 
-            }
+
             if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
             }else if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
                 txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
             }
 
-
-        } catch (Exception ex) {
-
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-            showMessage(getActivity(),"Unexpected error getting the balance - " + ex.getMessage());
-
+        }catch (CantGetBalanceException e)
+        {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex){
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
 

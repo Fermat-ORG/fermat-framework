@@ -448,7 +448,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             vault.connectVault();
         } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
             throw new VaultNotConnectedToNetworkException();
-
         }
     }
 
@@ -457,9 +456,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
      * CryptoVaultManager interface implementation
      */
     @Override
-    public void disconnectFromBitcoin() {
-        vault.disconnectVault();
+    public void disconnectFromBitcoin()  {
+        try {
+            vault.disconnectVault();
+        } catch (Exception exception){
 
+        }
     }
 
     /**

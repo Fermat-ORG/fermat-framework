@@ -456,6 +456,11 @@ public  class ProjectsFragment extends Fragment {
             return null;
         }
 
+        @Override
+        public String getPath() {
+            return null;
+        }
+
         public String getDetail(){
             return detail;
         }
@@ -488,9 +493,10 @@ public  class ProjectsFragment extends Fragment {
         }
 
         @Override
-        public com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject getProject() {
+        public String getPath() {
             return null;
         }
+
 
     }
 

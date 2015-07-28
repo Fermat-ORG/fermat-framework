@@ -28,8 +28,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDao;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposalManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -95,6 +95,11 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
+    /**
+     * WalletFactoryManager Interfaces member variables.
+     */
+
+    private final String WALLET_FACTORY_PROJECTS_PATH = "wallet_factory_projects";
     WalletFactoryMiddlewareDao walletFactoryMiddlewareProjectDao;
 
     @Override
@@ -136,7 +141,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
             // TODO GET CURRENT LOGGED DEVELOPER
             String developerPublicKey = "";
 
-            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletFactoryMiddlewareProject(name, developerPublicKey, walletType);
+            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletFactoryMiddlewareProject(name, developerPublicKey, walletType, WALLET_FACTORY_PROJECTS_PATH);
             walletFactoryMiddlewareProjectDao.create(walletFactoryMiddlewareProject);
 
             return walletFactoryMiddlewareProject;

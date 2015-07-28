@@ -31,7 +31,8 @@ public class WalletFactoryMiddlewareProjectLanguage implements WalletFactoryProj
 
     private String translatorPublicKey;
 
-    private WalletFactoryProjectProposal walletFactoryProjectProposal;
+    private String path;
+
 
     /**
      * Class Constructors
@@ -39,22 +40,22 @@ public class WalletFactoryMiddlewareProjectLanguage implements WalletFactoryProj
     public WalletFactoryMiddlewareProjectLanguage() {
     }
 
-    public WalletFactoryMiddlewareProjectLanguage(String name, Languages type, Version version, String translatorPublicKey, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+    public WalletFactoryMiddlewareProjectLanguage(String name, Languages type, Version version, String translatorPublicKey, String path) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.type = type;
         this.version = version;
         this.translatorPublicKey = translatorPublicKey;
-        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+        this.path = path;
     }
 
-    public WalletFactoryMiddlewareProjectLanguage(UUID id, String name, Languages type, Version version, String translatorPublicKey, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+    public WalletFactoryMiddlewareProjectLanguage(UUID id, String name, Languages type, Version version, String translatorPublicKey, String path) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.version = version;
         this.translatorPublicKey = translatorPublicKey;
-        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+        this.path = path;
     }
 
     /**
@@ -85,7 +86,6 @@ public class WalletFactoryMiddlewareProjectLanguage implements WalletFactoryProj
     }
 
     @Override
-    public WalletFactoryProjectProposal getWalletFactoryProjectProposal() {
-        return walletFactoryProjectProposal;
-    }
+    public String getPath() { return path + name; }
+
 }

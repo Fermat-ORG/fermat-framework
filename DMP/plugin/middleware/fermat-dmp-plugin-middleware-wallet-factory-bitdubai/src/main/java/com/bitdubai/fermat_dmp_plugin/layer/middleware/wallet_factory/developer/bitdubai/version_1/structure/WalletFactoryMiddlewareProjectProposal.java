@@ -26,7 +26,7 @@ public class WalletFactoryMiddlewareProjectProposal implements WalletFactoryProj
 
     private FactoryProjectState state;
 
-    private WalletFactoryProject walletFactoryProject;
+    private String path;
 
 
     /**
@@ -35,18 +35,18 @@ public class WalletFactoryMiddlewareProjectProposal implements WalletFactoryProj
     public WalletFactoryMiddlewareProjectProposal() {
     }
 
-    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, WalletFactoryProject walletFactoryProject) {
+    public WalletFactoryMiddlewareProjectProposal(String alias, FactoryProjectState state, String path) {
         this.id = UUID.randomUUID();
         this.alias = alias;
         this.state = state;
-        this.walletFactoryProject = walletFactoryProject;
+        this.path = path;
     }
 
-    public WalletFactoryMiddlewareProjectProposal(UUID id, String alias, FactoryProjectState state, WalletFactoryProject walletFactoryProject) {
+    public WalletFactoryMiddlewareProjectProposal(UUID id, String alias, FactoryProjectState state, String path) {
         this.id = id;
         this.alias = alias;
         this.state = state;
-        this.walletFactoryProject = walletFactoryProject;
+        this.path = path;
     }
 
     /**
@@ -63,12 +63,12 @@ public class WalletFactoryMiddlewareProjectProposal implements WalletFactoryProj
     }
 
     @Override
-    public WalletFactoryProject getProject() {
-        return walletFactoryProject;
-    }
-
-    @Override
     public FactoryProjectState getState() {
         return state;
     }
+
+    @Override
+    public String getPath() { return path + alias; }
+
 }
+
