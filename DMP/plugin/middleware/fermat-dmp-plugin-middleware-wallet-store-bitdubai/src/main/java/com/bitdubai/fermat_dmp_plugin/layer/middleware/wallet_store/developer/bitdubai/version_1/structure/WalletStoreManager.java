@@ -122,6 +122,7 @@ public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,Deals
             catalogItemInformation.setInstallationStatus(itemId, installationStatus);
 
             WalletStoreMiddlewareDatabaseDao databaseDao = getDatabaseDao();
+
             Map<CatalogItems, UUID> items = new HashMap<CatalogItems, UUID>();
             items.put(catalogItemType, itemId);
             try {
