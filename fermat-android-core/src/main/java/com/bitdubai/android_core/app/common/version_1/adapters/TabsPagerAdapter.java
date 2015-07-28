@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
-import com.bitdubai.android_core.app.FermatActivity;
-import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
@@ -21,10 +19,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
@@ -34,8 +32,11 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
+import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ManagerFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
-import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
+import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ProjectsFragment;
+import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.SendFragment;
+import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_store.fragment.AcceptedNearbyFragment;
 import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
 import com.bitdubai.sub_app.wallet_store.fragment.FreeFragment;
@@ -176,9 +177,13 @@ import java.util.List;
                     (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
             if(activity!=null){
                 if(activity.getType()== Activities.CWP_SUP_APP_ALL_DEVELOPER){
-                    subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
+                     subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
                             (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
-                            (ToolManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+                             platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+                }else if (activity.getType()== Activities.CWP_WALLET_FACTORY_MAIN){
+                     subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_WALLET_FACTORY,
+                            (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
+                             platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MODULE));
                 }
             }
 
@@ -230,7 +235,13 @@ import java.util.List;
                         break;
 
                     case CWP_WALLET_FACTORY_MAIN:
-                        currentFragment = MainFragment.newInstance(position);
+                        currentFragment = MainFragment.newInstance(position,subAppSession);
+                        break;
+                    case CWP_WALLET_FACTORY_MANAGER:
+                        currentFragment = ManagerFragment.newInstance(position,subAppSession);
+                        break;
+                    case CWP_WALLET_FACTORY_ESTRUCTURE:
+                        currentFragment = ProjectsFragment.newInstance(position,subAppSession);
                         break;
                     case CWP_WALLET_PUBLISHER_MAIN:
                         currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);
