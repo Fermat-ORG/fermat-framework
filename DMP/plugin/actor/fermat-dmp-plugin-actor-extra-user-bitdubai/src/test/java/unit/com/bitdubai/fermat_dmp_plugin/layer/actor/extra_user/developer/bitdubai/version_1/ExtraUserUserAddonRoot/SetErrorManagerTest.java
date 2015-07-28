@@ -10,12 +10,14 @@ import org.junit.Test;
  */
 public class SetErrorManagerTest {
 
-    @Test
-    public void setErrorManagerTest_setValidErrorManager_theErrorManagerIsSet()throws Exception{
+    @Test(expected = Exception.class)
+    public void setErrorManagerTest_setNullErrorManagerAnExceptionIsThrown_throwsAnException() throws Exception{
 
-        ExtraUserUserAddonRoot extraUserUserAddonRoot=new ExtraUserUserAddonRoot();
-        MockErrorManager mockErrorManager=new MockErrorManager();
-        extraUserUserAddonRoot.setErrorManager(mockErrorManager);
+        ExtraUserUserAddonRoot anotherExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
+        MockErrorManager mockErrorManager=null;
+        anotherExtraUserUserAddonRoot.setErrorManager(mockErrorManager);
+        anotherExtraUserUserAddonRoot.createActor(null);
+        Assertions.assertThat(mockErrorManager).isNotNull();
 
     }
 
@@ -30,15 +32,16 @@ public class SetErrorManagerTest {
 
     }
 
-    @Test(expected = Exception.class)
-    public void setErrorManagerTest_setNullErrorManagerAnExceptionIsThrown_throwsAnException() throws Exception{
+    @Test
+    public void setErrorManagerTest_setValidErrorManager_theErrorManagerIsSet()throws Exception{
 
-        ExtraUserUserAddonRoot anotherExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
-        MockErrorManager mockErrorManager=null;
-        anotherExtraUserUserAddonRoot.setErrorManager(mockErrorManager);
-        anotherExtraUserUserAddonRoot.createActor(null);
-        Assertions.assertThat(mockErrorManager).isNotNull();
+        ExtraUserUserAddonRoot extraUserUserAddonRoot=new ExtraUserUserAddonRoot();
+        MockErrorManager mockErrorManager=new MockErrorManager();
+        extraUserUserAddonRoot.setErrorManager(mockErrorManager);
 
     }
+
+
+
 
 }
