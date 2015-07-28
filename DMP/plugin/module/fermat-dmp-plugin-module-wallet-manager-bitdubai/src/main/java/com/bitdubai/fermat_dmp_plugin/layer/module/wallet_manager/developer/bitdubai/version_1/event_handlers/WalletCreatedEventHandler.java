@@ -26,6 +26,8 @@ public class WalletCreatedEventHandler implements EventHandler {
 
     @Override
     public  void handleEvent(PlatformEvent platformEvent) throws Exception {
+
+        // TODO USABA LA WALLETID DE LA WALLET CREADA PARA CARGAR LAS BILLETERAS DEL USUARIO?
         UUID walletId = ((WalletCreatedEvent) platformEvent).getWalletId();
         EventSource eventSource = platformEvent.getSource();
         if (eventSource == EventSource.MIDDLEWARE_WALLET_PLUGIN) {
@@ -34,7 +36,8 @@ public class WalletCreatedEventHandler implements EventHandler {
             if (((Service) this.walletManager).getStatus() == ServiceStatus.STARTED) {
 
                 try {
-                    this.walletManager.loadUserWallets(walletId);
+                    // TODO USABA LA WALLETID DE LA WALLET CREADA PARA CARGAR LAS BILLETERAS DEL USUARIO?
+                    this.walletManager.loadUserWallets("");
                 } catch (CantLoadWalletsException cantLoadWalletsException) {
                     /**
                      * The main module could not handle this exception. Me neither. Will throw it again.

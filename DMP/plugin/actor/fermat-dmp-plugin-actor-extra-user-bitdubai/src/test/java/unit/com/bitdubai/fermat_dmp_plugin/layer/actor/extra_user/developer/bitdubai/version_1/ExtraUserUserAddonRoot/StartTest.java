@@ -123,7 +123,7 @@ public class StartTest {
         testExtraUserUserAddonRoot.setId(pluginId);
         testExtraUserUserAddonRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         testExtraUserUserAddonRoot.start();
-        System.out.println(mockErrorManager.getReportedException());
+        //System.out.println(mockErrorManager.getReportedException());
 
     }
 

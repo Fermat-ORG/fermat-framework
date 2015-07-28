@@ -22,4 +22,7 @@ public interface WalletCatalog {
     public List<CatalogItem> getWalletCatalog (int offset, int top) throws CantGetWalletsCatalogException;
     public int getCatalogSize();
 
+
+    public void setCatalogSize(int catalogSize);
+
 }

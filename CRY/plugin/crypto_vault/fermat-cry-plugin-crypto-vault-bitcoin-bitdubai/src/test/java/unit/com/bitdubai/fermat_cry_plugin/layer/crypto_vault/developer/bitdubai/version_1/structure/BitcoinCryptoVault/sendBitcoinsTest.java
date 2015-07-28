@@ -72,7 +72,7 @@ public class sendBitcoinsTest {
 
     @Mock DatabaseTableRecord record;
 
-    @Test (expected = NullPointerException.class)
+    @Test (expected = CouldNotSendMoneyException.class)
     public void sendBitcoins_RaiseInsufficientFundsException() throws CantCreateCryptoWalletException, InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException, CantCreateFileException {
        BitcoinCryptoVault vault = new BitcoinCryptoVault(id);
         List<DatabaseTableRecord> records = mock(ArrayList.class);

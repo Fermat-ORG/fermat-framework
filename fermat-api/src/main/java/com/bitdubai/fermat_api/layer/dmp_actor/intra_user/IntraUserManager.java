@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 public interface IntraUserManager {
     
-    public void crateActor(UUID userId) throws CantCreateIntraUserException;
+    void createActor(String deviceUserPublicKey) throws CantCreateIntraUserException;
 
-    public Actor getActor(UUID id);
+    Actor getActor(String deviceUserPublicKey);
 }

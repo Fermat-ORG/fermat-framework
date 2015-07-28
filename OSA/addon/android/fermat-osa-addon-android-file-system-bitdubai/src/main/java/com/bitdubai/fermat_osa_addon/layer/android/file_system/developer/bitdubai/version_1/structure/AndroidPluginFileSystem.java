@@ -68,6 +68,9 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
         catch (CantLoadFileException e){
             throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, e, "", "Check the cause");
         }
+        catch (Exception e){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause");
+        }
     }
 
     /**
@@ -108,6 +111,8 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
             return newFile;
         } catch (CantLoadFileException e){
             throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, e, "", "Check the cause");
+        } catch (Exception e){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause");
         }
     }
 

@@ -16,8 +16,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -25,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Resource;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class DatabaseToolsFragment extends Fragment{
      * SubApp session
      */
 
-    SubAppsSession subAppSession;
+    DeveloperSubAppSession developerSubAppSession;
 
     private static final String ARG_POSITION = "position";
     private static final int TAG_FRAGMENT_DATABASE = 1;
@@ -60,9 +59,9 @@ public class DatabaseToolsFragment extends Fragment{
 
     private GridView gridView;
 
-    public static DatabaseToolsFragment newInstance(int position,SubAppsSession subAppSession) {
+    public static DatabaseToolsFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsFragment f = new DatabaseToolsFragment();
-        f.setSubAppSession(subAppSession);
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -75,7 +74,7 @@ public class DatabaseToolsFragment extends Fragment{
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         try {
-            ToolManager toolManager = subAppSession.getToolManager();
+            ToolManager toolManager = developerSubAppSession.getToolManager();
             try {
                 databaseTools = toolManager.getDatabaseTool();
             } catch (Exception e) {
@@ -163,8 +162,8 @@ public class DatabaseToolsFragment extends Fragment{
         alertDialog.show();
     }
 
-    public void setSubAppSession(SubAppsSession subAppSession) {
-        this.subAppSession = subAppSession;
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
 
 

@@ -1,8 +1,11 @@
 package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -49,6 +52,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -487,8 +491,8 @@ public class FermatActivity extends FragmentActivity{
      *  Method used to clean the screen
      */
 
-    protected void resetThisActivity()
-    {
+    protected void resetThisActivity(){
+
         try
         {
             //clean page adapter
@@ -551,7 +555,7 @@ public class FermatActivity extends FragmentActivity{
                     case CWP_SHELL_LOGIN:
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
-                        //SubAppSession subAppSession = new SubAppSession();
+                        //DeveloperSubAppSession subAppSession = new DeveloperSubAppSession();
                         //Excepcion que no puede ser casteado  a WalletManagerManager
                         //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0,getWalletManagerManager());
                         WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0);
@@ -583,7 +587,10 @@ public class FermatActivity extends FragmentActivity{
 
             pager.setAdapter(this.screenPagerAdapter);
 
-            pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+            if (pager.getBackground() == null) {
+                Drawable d = Drawable.createFromStream(getAssets().open("drawables/home2.png"), null);
+                pager.setBackground(d);
+            }
 
 
         } catch (Exception ex) {
@@ -591,6 +598,7 @@ public class FermatActivity extends FragmentActivity{
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     /**
      *  Get SubAppRuntimeManager from the fermat platform
@@ -626,6 +634,15 @@ public class FermatActivity extends FragmentActivity{
 
     public ErrorManager getErrorManager(){
         return (ErrorManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
+    }
+
+    /**
+     * Get WalletManagerManager from the fermat platform
+     * @return  reference of WalletManagerManager
+     */
+
+    public WalletFactoryManager getWalletFactoryManager(){
+        return (WalletFactoryManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
     }
 
 

@@ -1,38 +1,24 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddLanguageStringException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddResourceToSkinException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCopyWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCopyWalletFactoryProjectSkinException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateEmptyWalletFactoryProjectSkinException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteLanguageStringException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteResourceFromSkinException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectSkinException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguagesException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinsException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetWalletFactoryProjectSkinStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateResourceToSkinException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.LanguageNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ResourceAlreadyExistsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ResourceNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.SkinNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguageManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkinManager;
@@ -46,6 +32,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -93,9 +80,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
      * WalletFactoryProjectLanguageManager Interface member variables
      */
 
-    public static String WALLET_FACTORY_PROJECTS_PATH = "wallet_factory_projects";
-
-    public static String WALLET_FACTORY_SKINS_PATH = "skins";
+    private final String WALLET_FACTORY_SKINS_PATH = "skins";
 
     WalletFactoryMiddlewareDao walletFactoryMiddlewareProjectDao;
 
@@ -107,23 +92,6 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
         this.pluginId = pluginId;
         this.walletFactoryMiddlewareProjectDao = walletFactoryMiddlewareProjectDao;
         this.walletFactoryProjectProposal = walletFactoryProjectProposal;
-    }
-
-    private String createProposalPath() {
-        if (walletFactoryProjectProposal != null &&
-                walletFactoryProjectProposal.getAlias() != null &&
-                walletFactoryProjectProposal.getProject() != null &&
-                walletFactoryProjectProposal.getProject().getName() != null) {
-
-            String initialPath = WALLET_FACTORY_PROJECTS_PATH;
-            String projectPath = walletFactoryProjectProposal.getProject().getName();
-            String proposalPath = walletFactoryProjectProposal.getAlias();
-            return initialPath + "/" +
-                    projectPath + "/" +
-                    proposalPath;
-        } else {
-            return null;
-        }
     }
 
     @Override
@@ -151,11 +119,11 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
         try {
             // TODO FIND DESIGNER PUBLIC KEY
             String designerPublicKey = "";
-            WalletFactoryProjectSkin walletFactoryProjectSkin = new WalletFactoryMiddlewareProjectSkin(name, designerPublicKey, new Version("1.0.0"), walletFactoryProjectProposal);
+            WalletFactoryProjectSkin walletFactoryProjectSkin = new WalletFactoryMiddlewareProjectSkin(name, designerPublicKey, new Version("1.0.0"), walletFactoryProjectProposal.getPath() + WALLET_FACTORY_SKINS_PATH);
             Skin skin = new Skin(name, new Version("1.0.0"));
             setSkinStructureXml(skin, walletFactoryProjectSkin);
             try {
-                walletFactoryMiddlewareProjectDao.createSkin(walletFactoryProjectSkin);
+                walletFactoryMiddlewareProjectDao.createSkin(walletFactoryProjectSkin, walletFactoryProjectProposal);
                 return walletFactoryProjectSkin;
             } catch (CantCreateEmptyWalletFactoryProjectSkinException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -188,24 +156,20 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
 
     @Override
     public Skin getSkinStructure(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantGetWalletFactoryProjectSkinStructureException {
-        String path = createSkinPath(walletFactoryProjectSkin);
         String skinFileName = createSkinFileName(walletFactoryProjectSkin);
-        if (path != null) {
+        try {
+            PluginTextFile newFile = pluginFileSystem.getTextFile(pluginId, walletFactoryProjectSkin.getPath(), skinFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            newFile.loadFromMedia();
             try {
-                PluginTextFile newFile = pluginFileSystem.getTextFile(pluginId, path, skinFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                newFile.loadFromMedia();
-                try {
-                    return getSkinStructure(newFile.getContent());
-                } catch (CantGetWalletFactoryProjectSkinStructureException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't convert the xml to the Skin structure.", "");
-                }
-            } catch (FileNotFoundException |CantCreateFileException |CantLoadFileException e) {
+                return getSkinStructure(newFile.getContent());
+            } catch (CantGetWalletFactoryProjectSkinStructureException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't get skin structure file.", "");
+                throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't convert the xml to the Skin structure.", "");
             }
+        } catch (FileNotFoundException |CantCreateFileException |CantLoadFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't get skin structure file.", "");
         }
-        throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, null, "Can't create path, check the proposal", "");
     }
 
     @Override
@@ -254,42 +218,22 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
 
     @Override
     public void setSkinStructureXml(Skin skin, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantSetWalletFactoryProjectSkinStructureException {
-        String path = createSkinPath(walletFactoryProjectSkin);
         String skinFileName = createSkinFileName(walletFactoryProjectSkin);
-        if (path != null) {
+        try {
+            String skinStructureXml = getSkinStructureXml(skin);
             try {
-                String skinStructureXml = getSkinStructureXml(skin);
-                try {
-                    PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, path, skinFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                    newFile.loadFromMedia();
-                    newFile.setContent(skinStructureXml);
-                    newFile.persistToMedia();
-                } catch (CantPersistFileException |CantCreateFileException |CantLoadFileException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    throw new CantSetWalletFactoryProjectSkinStructureException(CantSetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't create or overwrite skin structure file.", "");
-                }
-            } catch (CantGetWalletFactoryProjectSkinStructureException e) {
+                PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, walletFactoryProjectSkin.getPath(), skinFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.loadFromMedia();
+                newFile.setContent(skinStructureXml);
+                newFile.persistToMedia();
+            } catch (CantPersistFileException |CantCreateFileException |CantLoadFileException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSetWalletFactoryProjectSkinStructureException(CantSetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't convert skin structure to xml format", "");
+                throw new CantSetWalletFactoryProjectSkinStructureException(CantSetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't create or overwrite skin structure file.", "");
             }
+        } catch (CantGetWalletFactoryProjectSkinStructureException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantSetWalletFactoryProjectSkinStructureException(CantSetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't convert skin structure to xml format", "");
         }
-        throw new CantSetWalletFactoryProjectSkinStructureException(CantSetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, null, "Can't create path, check the proposal", "");
-    }
-
-    private String createSkinPath(WalletFactoryProjectSkin walletFactoryProjectSkin) {
-        if (walletFactoryProjectSkin != null &&
-                walletFactoryProjectSkin.getName() != null &&
-                walletFactoryProjectSkin.getVersion() != null &&
-                walletFactoryProjectSkin.getWalletFactoryProjectProposal() != null) {
-
-            String proposalPath = createProposalPath();
-            String skinsPath = WALLET_FACTORY_SKINS_PATH;
-            return proposalPath + "/" +
-                    skinsPath + "/" +
-                    walletFactoryProjectSkin.getName() + "/" +
-                    walletFactoryProjectSkin.getVersion();
-        }
-        return null;
     }
 
     private String createSkinFileName(WalletFactoryProjectSkin walletFactoryProjectSkin) {
@@ -300,22 +244,8 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
         return null;
     }
 
-    private String createResourcePath(ResourceType resourceType, WalletFactoryProjectSkin walletFactoryProjectSkin) {
-        if (walletFactoryProjectSkin != null &&
-                walletFactoryProjectSkin.getName() != null &&
-                walletFactoryProjectSkin.getVersion() != null &&
-                walletFactoryProjectSkin.getWalletFactoryProjectProposal() != null &&
-                resourceType != null) {
-
-            String proposalPath = createProposalPath();
-            String skinsPath = WALLET_FACTORY_SKINS_PATH;
-            return proposalPath + "/" +
-                    skinsPath + "/" +
-                    walletFactoryProjectSkin.getName() + "/" +
-                    walletFactoryProjectSkin.getVersion() + "/" +
-                    resourceType.value();
-        }
-        return null;
+    private String createResourcePath(ResourceType resourceType, String path) {
+        return path + "/" + resourceType.value();
     }
 
     @Override
@@ -325,7 +255,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
             skin.addResource(resource);
             try {
                 // TODO CHECK IF FILE ALREADY EXIST THROW EXCEPTION ResourceAlreadyExistsException
-                String resourcePath = createResourcePath(resource.getResourceType(), walletFactoryProjectSkin);
+                String resourcePath = createResourcePath(resource.getResourceType(), walletFactoryProjectSkin.getPath());
 
                 PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, resourcePath, resource.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 newFile.loadFromMedia();
@@ -350,7 +280,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
     @Override
     public void updateResourceToSkin(Resource resource, byte[] file, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantUpdateResourceToSkinException, ResourceNotFoundException {
         try {
-            String resourcePath = createResourcePath(resource.getResourceType(), walletFactoryProjectSkin);
+            String resourcePath = createResourcePath(resource.getResourceType(), walletFactoryProjectSkin.getPath());
 
             PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, resourcePath, resource.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
@@ -371,7 +301,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
             Skin skin = getSkinStructure(walletFactoryProjectSkin);
             skin.deleteResource(resource);
             try {
-                String resourcePath = createResourcePath(resource.getResourceType(), walletFactoryProjectSkin);
+                String resourcePath = createResourcePath(resource.getResourceType(), walletFactoryProjectSkin.getPath());
 
 
                 PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, resourcePath, resource.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);

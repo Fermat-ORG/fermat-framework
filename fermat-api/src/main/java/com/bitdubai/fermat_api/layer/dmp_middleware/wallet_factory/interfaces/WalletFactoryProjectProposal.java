@@ -24,9 +24,6 @@ public interface WalletFactoryProjectProposal {
      */
     FactoryProjectState getState();
 
-    /**
-     * @return project to which it belongs
-     */
-    WalletFactoryProject getProject();
+    String getPath();
 
 }

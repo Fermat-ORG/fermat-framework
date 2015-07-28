@@ -3,6 +3,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -23,7 +28,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposalManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -54,7 +60,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryManager {
+public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryManager {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -89,6 +95,11 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
+    /**
+     * WalletFactoryManager Interfaces member variables.
+     */
+
+    private final String WALLET_FACTORY_PROJECTS_PATH = "wallet_factory_projects";
     WalletFactoryMiddlewareDao walletFactoryMiddlewareProjectDao;
 
     @Override
@@ -130,7 +141,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
             // TODO GET CURRENT LOGGED DEVELOPER
             String developerPublicKey = "";
 
-            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletFactoryMiddlewareProject(name, developerPublicKey, walletType);
+            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletFactoryMiddlewareProject(name, developerPublicKey, walletType, WALLET_FACTORY_PROJECTS_PATH);
             walletFactoryMiddlewareProjectDao.create(walletFactoryMiddlewareProject);
 
             return walletFactoryMiddlewareProject;
@@ -177,6 +188,53 @@ public class WalletFactoryMiddlewarePluginRoot implements DealsWithErrors, Deals
     @Override
     public WalletFactoryProjectProposalManager getWalletFactoryProjectProposalManager(WalletFactoryProject walletFactoryProject) {
         return new WalletFactoryMiddlewareProjectProposalManager(errorManager, pluginFileSystem, pluginId, walletFactoryMiddlewareProjectDao, walletFactoryProject);
+    }
+
+    /**
+     * DatabaseManagerForDevelopers Interface Implementation
+     */
+    /**
+     * DatabaseManagerForDevelopers interface implementation
+     * Returns the list of databases implemented on this plug in.
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        WalletFactoryMiddlewareDeveloperDatabaseFactory dbFactory = new WalletFactoryMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    /**
+     * returns the list of tables for the given database
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        WalletFactoryMiddlewareDeveloperDatabaseFactory dbFactory = new WalletFactoryMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    /**
+     * returns the list of records for the passed table
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @param developerDatabaseTable
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        WalletFactoryMiddlewareDeveloperDatabaseFactory dbFactory = new WalletFactoryMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database table list for plugin Wallet Factory");
+        }
+        return developerDatabaseTableRecordList;
     }
 
     /**

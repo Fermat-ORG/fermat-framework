@@ -24,7 +24,7 @@ public class CryptoVaultDatabaseConstants {
     /**
      * TransitionProtocol_Status table definition
      */
-    public static final String TRANSITION_PROTOCOL_STATUS = "transition_protocol_status";
+    public static final String TRANSITION_PROTOCOL_STATUS_TABLE_NAME = "transition_protocol_status";
     public static final String TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME = "timestamp";
-    public static final String TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME = "ocurrences";
+    public static final String TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME = "ocurrences";
 }
