@@ -16,7 +16,7 @@ public class GetStatusTest {
     ExtraUserUserAddonRoot testExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
 
     @Test
-    public void getStatus_verifyExtraUserUserAddonRootServiceStatus_getServiceStatus(){
+    public void getStatusTest_verifyExtraUserUserAddonRootServiceStatus_getServiceStatus(){
 
         ServiceStatus serviceStatus=testExtraUserUserAddonRoot.getStatus();
         Assertions.assertThat(serviceStatusArray).contains(serviceStatus);

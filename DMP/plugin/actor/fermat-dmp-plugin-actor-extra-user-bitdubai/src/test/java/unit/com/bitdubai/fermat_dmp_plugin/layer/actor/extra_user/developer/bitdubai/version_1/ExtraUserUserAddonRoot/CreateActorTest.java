@@ -45,7 +45,7 @@ public class CreateActorTest {
     String testUserName;
 
     @Test
-    public void createActor_setInvalidDatabaseTableRecord_throwsException() throws Exception{
+    public void createActorTest_setInvalidDatabaseTableRecord_throwsException() throws Exception{
 
         doThrow(new CantInsertRecordException()).when(mockDatabaseTable).insertRecord(mockDatabaseTableRecord);
         testActor=extraUserUserAddonRoot.createActor(null);
@@ -53,7 +53,7 @@ public class CreateActorTest {
     }
 
     @Test
-    public void createActor_ExtraUserAddonRootNotstated_throwsGenericException() throws Exception{
+    public void createActorTest_ExtraUserAddonRootNotstated_throwsGenericException() throws Exception{
 
         ExtraUserUserAddonRoot anotherExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
         anotherExtraUserUserAddonRoot.setErrorManager(mockErrorManager);
@@ -63,7 +63,7 @@ public class CreateActorTest {
     }
 
     @Test
-    public void createActor_setNullName_getsNullActor() throws Exception{
+    public void createActorTest_setNullName_getsNullActor() throws Exception{
 
         testActor=extraUserUserAddonRoot.createActor(null);
 
@@ -73,7 +73,7 @@ public class CreateActorTest {
     }
 
     @Test
-    public void createActor_setValidName_getsValidActor() throws Exception{
+    public void createActorTest_setValidName_getsValidActor() throws Exception{
 
         testActor=extraUserUserAddonRoot.createActor(testUserName);
         Assertions.assertThat(testActor)

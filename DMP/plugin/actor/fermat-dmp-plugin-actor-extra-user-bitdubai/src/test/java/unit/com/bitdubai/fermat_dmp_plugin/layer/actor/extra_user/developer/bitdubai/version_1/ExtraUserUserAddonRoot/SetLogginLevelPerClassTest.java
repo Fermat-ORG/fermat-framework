@@ -21,7 +21,7 @@ public class SetLogginLevelPerClassTest {
     LogLevel testLogLevel=LogLevel.NOT_LOGGING;
 
     @Test(expected = Exception.class)
-    public void setLogginLevelPerClass_setANullMapArgumentNullErrorManager_throwsAnException() throws Exception{
+    public void setLogginLevelPerClassTest_setANullMapArgumentNullErrorManager_throwsAnException() throws Exception{
 
         testLogginLevelMap=null;
         mockErrorManager=null;
@@ -30,7 +30,7 @@ public class SetLogginLevelPerClassTest {
     }
 
     @Test
-    public void setLogginLevelPerClass_setANullMapArgument_throwsAGenericException() throws Exception{
+    public void setLogginLevelPerClassTest_setANullMapArgument_throwsAGenericException() throws Exception{
 
         testLogginLevelMap=null;
         mockErrorManager=new MockErrorManager();
@@ -41,7 +41,7 @@ public class SetLogginLevelPerClassTest {
     }
 
     @Test
-    public void setLogginLevelPerClass_setAValidMapArgument_getsAValidLogLevel() throws Exception{
+    public void setLogginLevelPerClassTest_setAValidMapArgument_getsAValidLogLevel() throws Exception{
 
         LogLevel resultLogLevel;
         testLogginLevelMap=new HashMap<>();
@@ -55,7 +55,7 @@ public class SetLogginLevelPerClassTest {
     }
 
     @Test
-    public void setLogginLevelPerClass_setNullLevelLogInMapArgument_returnsNull() throws Exception{
+    public void setLogginLevelPerClassTest_setNullLevelLogInMapArgument_returnsNull() throws Exception{
 
         LogLevel resultLogLevel;
         testLogginLevelMap=new HashMap<>();
@@ -68,7 +68,7 @@ public class SetLogginLevelPerClassTest {
     }
 
     @Test
-    public void setLogginLevelPerClass_setNullStringClassInMapArgument_throwsAGenericException() throws Exception{
+    public void setLogginLevelPerClassTest_setNullStringClassInMapArgument_throwsAGenericException() throws Exception{
 
         testLogginLevelMap=new HashMap<>();
         testLogginLevelMap.put(null,testLogLevel);
@@ -82,7 +82,7 @@ public class SetLogginLevelPerClassTest {
     }
 
     @Test
-    public void setLogginLevelPerClass_setNullValuesInMapArgument_returnsNull() throws Exception{
+    public void setLogginLevelPerClassTest_setNullValuesInMapArgument_returnsNull() throws Exception{
 
         LogLevel resultLogLevel;
         testLogginLevelMap=new HashMap<>();

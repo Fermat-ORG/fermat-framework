@@ -15,7 +15,7 @@ public class SetLogManagerTest {
     ExtraUserUserAddonRoot testExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
 
     @Test
-    public void setLogManager_setValidLogManager_throwsNoExceptions(){
+    public void setLogManagerTest_setValidLogManager_throwsNoExceptions(){
 
         testExtraUserUserAddonRoot.setLogManager(mockLogManager);
 
