@@ -65,6 +65,25 @@ public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPlugi
         try {
 
             database = this.pluginDatabaseSystem.createDatabase(pluginId, "ExtraUser");
+            /**
+             * Modified by Manuel Perez on 27/07/2015
+             * */
+            /**
+             * Next, I will add the needed tables.
+             */
+
+            DatabaseTableFactory table;
+
+            /**
+             * First the Extra User table.
+             */
+            table = ((DatabaseFactory) database).newTableFactory(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
+            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+            table.addIndex(ExtraUserDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUMN);
+
+            ((DatabaseFactory) database).createTable(table);
 
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
@@ -85,25 +104,6 @@ public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPlugi
             modified by Francisco Arce
             */
             throw new CantCreateDatabaseException(message, cause, context, possibleReason);
-        }
-
-        /**
-         * Next, I will add the needed tables.
-         */
-
-        DatabaseTableFactory table;
-
-        /**
-         * First the Extra User table.
-         */
-        table = ((DatabaseFactory) database).newTableFactory(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
-        table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
-        table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
-        table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
-        table.addIndex(ExtraUserDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUMN);
-
-        try {
-            ((DatabaseFactory) database).createTable(table);
         } catch (CantCreateTableException cantCreateTableException) {
                  /*Francisco Arce
         Exception in the context Fermat Context
@@ -117,6 +117,10 @@ public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPlugi
            modified by Francisco Arce
             */
             throw new CantCreateDatabaseException(message, cause, context, possibleReason);
+        } catch(Exception exception){
+
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
         }
 
         return database;
