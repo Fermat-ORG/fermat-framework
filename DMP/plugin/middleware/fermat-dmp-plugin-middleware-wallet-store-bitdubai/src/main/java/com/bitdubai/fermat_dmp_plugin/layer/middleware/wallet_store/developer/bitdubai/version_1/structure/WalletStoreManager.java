@@ -120,7 +120,16 @@ public class WalletStoreManager implements DealsWithErrors,DealsWithLogger,Deals
             CatalogItemInformation catalogItemInformation = new CatalogItemInformation();
             catalogItemInformation.setCatalogItemId(catalogItemType, itemId);
             catalogItemInformation.setInstallationStatus(itemId, installationStatus);
-            getDatabaseDao().persistCatalogItemInformation(DatabaseOperations.UPDATE, catalogItemInformation);
+
+            WalletStoreMiddlewareDatabaseDao databaseDao = getDatabaseDao();
+            Map<CatalogItems, UUID> items = new HashMap<CatalogItems, UUID>();
+            items.put(catalogItemType, itemId);
+            try {
+                databaseDao.getCatalogItemInformationFromDatabase(items);
+                databaseDao.persistCatalogItemInformation(DatabaseOperations.UPDATE, catalogItemInformation);
+            } catch (CantExecuteDatabaseOperationException e) {
+                databaseDao.persistCatalogItemInformation(DatabaseOperations.INSERT, catalogItemInformation);
+            }
         } catch (Exception e) {
             throw new CantSetInstallationStatusException(CantSetInstallationStatusException.DEFAULT_MESSAGE, e, null, null);
         }

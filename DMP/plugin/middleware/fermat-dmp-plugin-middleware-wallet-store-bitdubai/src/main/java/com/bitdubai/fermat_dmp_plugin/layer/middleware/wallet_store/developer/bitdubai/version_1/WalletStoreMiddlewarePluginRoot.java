@@ -144,7 +144,9 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
 
         //todo testing borrar
         try {
-            this.setInstallationStatus(CatalogItems.WALLET, UUID.randomUUID(), InstallationStatus.INSTALLING);
+            UUID id = UUID.fromString("12f8ae20-4585-44a6-bacf-a09537984ab1");
+
+            this.setInstallationStatus(CatalogItems.SKIN, id, InstallationStatus.INSTALLED);
         } catch (CantSetInstallationStatusException e) {
             e.printStackTrace();
         }
@@ -260,7 +262,7 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
     }
 
     @Override
-    public void setInstallationStatus   (CatalogItems catalogItemType, UUID itemId, InstallationStatus installationStatus) throws CantSetInstallationStatusException {
+    public void setInstallationStatus  (CatalogItems catalogItemType, UUID itemId, InstallationStatus installationStatus) throws CantSetInstallationStatusException {
         getWalletStoreManager().setCatalogItemInformation(catalogItemType, itemId, installationStatus);
     }
 }
