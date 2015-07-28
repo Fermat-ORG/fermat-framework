@@ -12,7 +12,9 @@ import java.util.*;
 
 // Packages and classes to import of fermat api
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -22,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
@@ -237,21 +240,19 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
             this.databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
             //Check the database exist
-            try {
-
                 this.dataBase = pluginDatabaseSystem.openDatabase(pluginId, DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME);
 
-            } catch (CantOpenDatabaseException e) {
-
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            try{
                 this.dataBase = this.databaseFactory.createDatabase (ownerId, DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME );
 
             }
+              catch (CantCreateDatabaseException e) {
+                  throw new CantInitializeDeveloperIdentityDatabaseException(e.getMessage(), e, "Plugin Identity", "Cant create database.");
 
-            logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Identity database initialized..." ,_DEFAUL_STRING, _DEFAUL_STRING);
-
-        } catch (CantCreateDatabaseException e){
-
-            throw new CantInitializeDeveloperIdentityDatabaseException(e.getMessage(), e, "Plugin Identity", "Cant create database.");
+              }
+        } catch (CantOpenDatabaseException cantOpenDatabaseException){
+            throw new CantInitializeDeveloperIdentityDatabaseException(cantOpenDatabaseException.getMessage(), cantOpenDatabaseException, "Plugin Identity", "Cant create database.");
 
         } catch (Exception e) {
 
@@ -398,7 +399,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
             } catch (Exception e) {
 
                 // Failure unknown.
-                throw new CantGetUserDeveloperIdentitiesException (e.getMessage(), e, "Plugin Identity", "Cant get developer identity list, unknown failure.");
+                throw new CantGetUserDeveloperIdentitiesException (e.getMessage(), FermatException.wrapException(e), "Plugin Identity", "Cant get developer identity list, unknown failure.");
             }
 
 
