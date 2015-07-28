@@ -722,7 +722,7 @@ public class Platform  {
          * Plugin Wallet Settings Middleware
          * ----------------------------------
          */
-        Plugin walletSettingsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletStorePlugin();
+        Plugin walletSettingsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletSettingPlugin();
         setPluginReferencesAndStart(walletSettingsMiddleware, Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
 
 
