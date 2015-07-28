@@ -196,7 +196,6 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
             /**
              * I will check the current values and update the LogLevel in those which is different
              */
-
             for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
                 /**
                  * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
@@ -237,11 +236,11 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
             //Modify by Manuel on 23/07/2015
-            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ExtraUserUserAddonRoot.newLoggingLevel ,"Check the cause");
+            //FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ExtraUserUserAddonRoot.newLoggingLevel ,"Check the cause");
             /**
              * This is an static method, so, I need to have an instance and then invoke the non-static method.
              * */
-            new ExtraUserUserAddonRoot().errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+            //new ExtraUserUserAddonRoot().errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
             return DEFAULT_LOG_LEVEL;
         }
     }
@@ -285,6 +284,12 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
             user = this.extraUserRegistry.createUser(userName);
         } catch (CantCreateExtraUserRegistry cantCreateExtraUserRegistry) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateExtraUserRegistry);
+        }/*Modified by Manuel Perez on 27/07/2015*/
+        catch(Exception exception){
+
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "createActor: "+userName ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+
         }
         return user;
     }

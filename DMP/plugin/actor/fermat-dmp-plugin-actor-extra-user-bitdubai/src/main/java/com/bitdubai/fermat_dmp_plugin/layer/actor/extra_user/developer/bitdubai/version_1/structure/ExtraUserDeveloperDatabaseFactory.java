@@ -83,6 +83,9 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
         try {
 
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, "ExtraUser");
+            /**
+             * Modified by Manuel Perez on 27/07/2015
+             * */
         } catch (DatabaseNotFoundException databaseNotFoundException) {
 
             ExtraUserDatabaseFactory databaseFactory = new ExtraUserDatabaseFactory();
@@ -104,6 +107,10 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
                  * The database cannot be created. I can not handle this situation.
                  */
                 throw new CantInitializeExtraUserRegistryException();
+            } catch(Exception exception){
+
+                throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
@@ -113,6 +120,10 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
              */
 
             throw new CantInitializeExtraUserRegistryException();
+        }catch(Exception exception){
+
+            throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
         }
     }
 

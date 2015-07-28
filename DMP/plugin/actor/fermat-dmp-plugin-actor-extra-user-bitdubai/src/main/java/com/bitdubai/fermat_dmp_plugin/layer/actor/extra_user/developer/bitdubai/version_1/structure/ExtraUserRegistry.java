@@ -82,6 +82,9 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
     public void initialize() throws CantInitializeExtraUserRegistryException {
 
         /**
+         * Modified by Manuel Perez on 27/97/2015
+         * */
+        /**
          * I will try to open the users' database..
          */
         try {
@@ -118,6 +121,10 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                /*Francisco Arce*/
                 throw new CantInitializeExtraUserRegistryException(message, cause, context, possibleReason);
+            }catch(Exception exception){
+
+                throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,null);
+
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -138,6 +145,10 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
             Modified by Francisco Arce
             */
             throw new CantInitializeExtraUserRegistryException(message, cause, context, possibleReason);
+        }catch(Exception exception){
+
+            throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,null);
+
         }
 
     }
