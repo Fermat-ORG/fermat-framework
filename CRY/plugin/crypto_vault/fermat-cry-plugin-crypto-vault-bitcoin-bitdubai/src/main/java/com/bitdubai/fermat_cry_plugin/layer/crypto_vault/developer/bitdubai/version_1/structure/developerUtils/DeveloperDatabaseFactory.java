@@ -43,50 +43,55 @@ public class DeveloperDatabaseFactory {
 
 
     public static List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
-        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
+        try {
+            List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
-        /**
-         * Crypto Transactions columns
-         */
-        List<String> cryptoTransactionsTableColumns = new ArrayList<String>();
-        cryptoTransactionsTableColumns.add(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME);
-        cryptoTransactionsTableColumns.add(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME);
-        cryptoTransactionsTableColumns.add(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME);
-        cryptoTransactionsTableColumns.add(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME);
-        /**
-         * cryptoTransactions table
-         */
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME, cryptoTransactionsTableColumns);
-        tables.add(cryptoTransactionsTable);
-
-
-        /**
-         * Fermat transaction columns
-         */
-        List<String> FermatTransactionTableColumns = new ArrayList<String>();
-        FermatTransactionTableColumns.add(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME);
-
-        /**
-         * Fermat transaction table
-         */
-        DeveloperDatabaseTable  fermatTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME, FermatTransactionTableColumns);
-        tables.add(fermatTransactionsTable);
-
-        /**
-         * TransitionProtocol_Status  columns
-         */
-        List<String> TransitionProtocol_StatusTableColumns = new ArrayList<String>();
-        TransitionProtocol_StatusTableColumns.add(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME);
-        TransitionProtocol_StatusTableColumns.add(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME);
-
-        /**
-         * TransitionProtocol_Status table
-         */
-        DeveloperDatabaseTable  TransitionProtocol_StatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_NAME, TransitionProtocol_StatusTableColumns);
-        tables.add(TransitionProtocol_StatusTable);
+            /**
+             * Crypto Transactions columns
+             */
+            List<String> cryptoTransactionsTableColumns = new ArrayList<String>();
+            cryptoTransactionsTableColumns.add(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME);
+            cryptoTransactionsTableColumns.add(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME);
+            cryptoTransactionsTableColumns.add(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME);
+            cryptoTransactionsTableColumns.add(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME);
+            /**
+             * cryptoTransactions table
+             */
+            DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME, cryptoTransactionsTableColumns);
+            tables.add(cryptoTransactionsTable);
 
 
-        return tables;
+            /**
+             * Fermat transaction columns
+             */
+            List<String> FermatTransactionTableColumns = new ArrayList<String>();
+            FermatTransactionTableColumns.add(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME);
+
+            /**
+             * Fermat transaction table
+             */
+            DeveloperDatabaseTable fermatTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME, FermatTransactionTableColumns);
+            tables.add(fermatTransactionsTable);
+
+            /**
+             * TransitionProtocol_Status  columns
+             */
+            List<String> TransitionProtocol_StatusTableColumns = new ArrayList<String>();
+            TransitionProtocol_StatusTableColumns.add(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME);
+            TransitionProtocol_StatusTableColumns.add(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME);
+
+            /**
+             * TransitionProtocol_Status table
+             */
+            DeveloperDatabaseTable TransitionProtocol_StatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_NAME, TransitionProtocol_StatusTableColumns);
+            tables.add(TransitionProtocol_StatusTable);
+
+
+            return tables;
+        }
+        catch(Exception exception){
+            throw exception;
+        }
     }
 
 
