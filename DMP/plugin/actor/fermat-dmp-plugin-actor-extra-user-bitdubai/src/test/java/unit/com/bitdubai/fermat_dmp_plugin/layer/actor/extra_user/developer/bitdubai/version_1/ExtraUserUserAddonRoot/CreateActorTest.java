@@ -58,6 +58,7 @@ public class CreateActorTest {
         ExtraUserUserAddonRoot anotherExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
         anotherExtraUserUserAddonRoot.setErrorManager(mockErrorManager);
         testActor=anotherExtraUserUserAddonRoot.createActor(null);
+        Assertions.assertThat(mockErrorManager).isNotNull();
 
     }
 
