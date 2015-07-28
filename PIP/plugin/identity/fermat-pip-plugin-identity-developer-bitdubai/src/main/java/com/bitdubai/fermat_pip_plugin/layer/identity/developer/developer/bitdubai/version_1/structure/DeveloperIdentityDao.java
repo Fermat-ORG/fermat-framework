@@ -218,14 +218,13 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
      * This method open or creates the database i'll be working with.
      *
      * @param ownerId plugin id
-     * @param databaseName database name
      * @throws CantInitializeDeveloperIdentityDatabaseException
      */
-    public void initializeDatabase (UUID ownerId, String databaseName) throws CantInitializeDeveloperIdentityDatabaseException {
+    public void initializeDatabase (UUID ownerId) throws CantInitializeDeveloperIdentityDatabaseException {
 
 
         // Check the arguments.
-        if (ownerId == null || isEmpty (databaseName)) {
+        if (ownerId == null) {
 
             // Cancel the process.
              throw new CantInitializeDeveloperIdentityDatabaseException ("Cant create database, arguments are null or empty.", "Plugin Identity", "Cant create database, arguments are null or empty.");
@@ -240,11 +239,11 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
             //Check the database exist
             try {
 
-                this.dataBase = pluginDatabaseSystem.openDatabase(pluginId, databaseName);
+                this.dataBase = pluginDatabaseSystem.openDatabase(pluginId, DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME);
 
             } catch (CantOpenDatabaseException e) {
 
-                this.dataBase = this.databaseFactory.createDatabase (ownerId, isEmpty (databaseName) ? DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME : databaseName);
+                this.dataBase = this.databaseFactory.createDatabase (ownerId, DeveloperIdentityDatabaseConstants.DEVELOPER_DB_NAME );
 
             }
 
@@ -328,7 +327,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
 
         // Return the new developer.
-        return new DeveloperIdentityRecord (alias,"nn","cc" ); //developerKeyPair.getPublicKey(),developerKeyPair.getPrivateKey()
+        return new DeveloperIdentityRecord (alias,developerKeyPair.getPublicKey(),developerKeyPair.getPrivateKey());
     }
 
     /**
