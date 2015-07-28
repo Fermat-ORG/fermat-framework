@@ -27,24 +27,28 @@ public class WalletFactoryMiddlewareProject implements WalletFactoryProject {
 
     private Wallets type;
 
+    private String path;
+
     /**
      * Class Constructors
      */
     public WalletFactoryMiddlewareProject() {
     }
 
-    public WalletFactoryMiddlewareProject(String name, String developerPublicKey, Wallets type) {
+    public WalletFactoryMiddlewareProject(String name, String developerPublicKey, Wallets type, String path) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.developerPublicKey = developerPublicKey;
         this.type = type;
+        this.path = path;
     }
 
-    public WalletFactoryMiddlewareProject(UUID id, String name, String developerPublicKey, Wallets type) {
+    public WalletFactoryMiddlewareProject(UUID id, String name, String developerPublicKey, Wallets type, String path) {
         this.id = id;
         this.name = name;
         this.developerPublicKey = developerPublicKey;
         this.type = type;
+        this.path = path;
     }
 
     /**
@@ -69,4 +73,7 @@ public class WalletFactoryMiddlewareProject implements WalletFactoryProject {
     public Wallets getType() {
         return type;
     }
+
+    public String getPath() { return path + name; }
+
 }

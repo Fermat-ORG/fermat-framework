@@ -30,6 +30,6 @@ public interface WalletFactoryProject {
      */
     Wallets getType();
 
-
+    String getPath();
 
 }

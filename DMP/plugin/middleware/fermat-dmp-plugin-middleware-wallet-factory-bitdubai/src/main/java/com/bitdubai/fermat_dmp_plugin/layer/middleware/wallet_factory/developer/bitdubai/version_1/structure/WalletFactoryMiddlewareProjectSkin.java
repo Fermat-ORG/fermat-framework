@@ -28,7 +28,8 @@ public class WalletFactoryMiddlewareProjectSkin implements WalletFactoryProjectS
 
     private Version version;
 
-    private WalletFactoryProjectProposal walletFactoryProjectProposal;
+    private String path;
+
 
     /**
      * Class Constructors
@@ -36,20 +37,20 @@ public class WalletFactoryMiddlewareProjectSkin implements WalletFactoryProjectS
     public WalletFactoryMiddlewareProjectSkin() {
     }
 
-    public WalletFactoryMiddlewareProjectSkin(String name, String designerPublicKey, Version version, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+    public WalletFactoryMiddlewareProjectSkin(String name, String designerPublicKey, Version version, String path) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.designerPublicKey = designerPublicKey;
         this.version = version;
-        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+        this.path = path;
     }
 
-    public WalletFactoryMiddlewareProjectSkin(UUID id, String name, String designerPublicKey, Version version, WalletFactoryProjectProposal walletFactoryProjectProposal) {
+    public WalletFactoryMiddlewareProjectSkin(UUID id, String name, String designerPublicKey, Version version, String path) {
         this.id = id;
         this.name = name;
         this.designerPublicKey = designerPublicKey;
         this.version = version;
-        this.walletFactoryProjectProposal = walletFactoryProjectProposal;
+        this.path = path;
     }
 
     /**
@@ -76,7 +77,6 @@ public class WalletFactoryMiddlewareProjectSkin implements WalletFactoryProjectS
     }
 
     @Override
-    public WalletFactoryProjectProposal getWalletFactoryProjectProposal() {
-        return walletFactoryProjectProposal;
-    }
+    public String getPath() { return path + name; }
+
 }
