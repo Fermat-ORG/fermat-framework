@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -838,6 +840,83 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
             throw new CantExecuteDatabaseOperationException(databaseTransactionFailedException, catalogItem.toString(), null);
         } catch (Exception exception){
             throw new CantExecuteDatabaseOperationException(exception, catalogItem.toString(), null);
+        }
+    }
+
+    private List<UUID> getWalletIdsForNetworkService() throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
+        List<UUID> uuids = new ArrayList<>();
+        try {
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            for (DatabaseTableRecord record : records){
+                uuids.add(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME));
+            }
+            return uuids;
+        } catch (CantLoadTableToMemoryException e) {
+            throw  new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    private List<UUID> getWalletLanguagesForNetworkService() throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
+        List<UUID> uuids = new ArrayList<>();
+        try {
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            for (DatabaseTableRecord record : records){
+                uuids.add(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME));
+            }
+            return uuids;
+        } catch (CantLoadTableToMemoryException e) {
+            throw  new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    private List<UUID> getWalletSkinsForNetworkService() throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME);
+        List<UUID> uuids = new ArrayList<>();
+        try {
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            for (DatabaseTableRecord record : records){
+                uuids.add(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME));
+            }
+            return uuids;
+        } catch (CantLoadTableToMemoryException e) {
+            throw  new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    /**
+     * Used by the network service. Gets the list of IDs installed in the catalog to compare.
+     * @param catalogItems
+     * @return
+     * @throws InvalidParameterException
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public List<UUID> getCatalogIdsForNetworkService(CatalogItems catalogItems) throws InvalidParameterException, CantExecuteDatabaseOperationException {
+        List<UUID> uuids;
+        openDatabase();
+        try{
+            switch (catalogItems){
+                case LANGUAGE:
+                    uuids = getWalletLanguagesForNetworkService();
+                    break;
+                case SKIN:
+                    uuids=  getWalletSkinsForNetworkService();
+                    break;
+                case WALLET:
+                    uuids=  getWalletIdsForNetworkService();
+                    break;
+                default:
+                    throw new InvalidParameterException("Invalid parameter.", null, catalogItems.toString(), null);
+            }
+            closeDatabase();
+            return uuids;
+        } catch (Exception exception) {
+            closeDatabase();
+            throw new CantExecuteDatabaseOperationException(exception, null, null);
         }
     }
 
