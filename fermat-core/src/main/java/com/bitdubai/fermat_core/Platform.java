@@ -61,8 +61,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
@@ -98,6 +96,8 @@ import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWith
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.Map;
 import java.util.UUID;
@@ -916,8 +916,8 @@ public class Platform  {
             if (plugin instanceof DealsWithDeveloperModule)
                 ((DealsWithDeveloperModule) plugin).setDeveloperModuleManager((DeveloperModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE));
 
-            if (plugin instanceof DealsWithDeviceUsers)
-                ((DealsWithDeviceUsers) plugin).setDeviceUserManager((DeviceUserManager) corePlatformContext.getAddon(Addons.DEVICE_USER));
+            if (plugin instanceof DealsWithDeviceUser)
+                ((DealsWithDeviceUser) plugin).setDeviceUserManager((DeviceUserManager) corePlatformContext.getAddon(Addons.DEVICE_USER));
 
             if (plugin instanceof DealsWithErrors)
                 ((DealsWithErrors) plugin).setErrorManager(errorManager);
