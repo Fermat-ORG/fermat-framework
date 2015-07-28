@@ -17,8 +17,13 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -49,7 +54,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     View rootView;
 
     private DatabaseTool databaseTools;
-
+    private ErrorManager errorManager;
     private Resource resource;
 
     List<DeveloperDatabase> developerDatabaseList;
@@ -80,17 +85,15 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        errorManager = developerSubAppSession.getErrorManager();
+
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
-            try {
-                databaseTools = toolManager.getDatabaseTool();
-            } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
-            }
+            databaseTools = toolManager.getDatabaseTool();
         } catch (Exception ex) {
-            showMessage("Unexpected error get Transactions - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -145,25 +148,13 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
             gridView.setAdapter(_adpatrer);
 
         } catch (Exception e) {
-            showMessage("DatabaseTools Database List onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
         return rootView;
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
 
 
 
@@ -203,7 +194,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
-               holder.imageView.setOnClickListener(new View.OnClickListener() {
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 

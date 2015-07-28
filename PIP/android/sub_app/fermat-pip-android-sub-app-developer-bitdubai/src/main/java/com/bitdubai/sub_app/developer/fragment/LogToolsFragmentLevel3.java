@@ -25,10 +25,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bitdubai.fermat_api.FermatException;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
+
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
@@ -63,7 +71,7 @@ public class LogToolsFragmentLevel3 extends Fragment {
 
     private LogTool logTool;
 
-
+    private ErrorManager errorManager;
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
 
@@ -82,17 +90,12 @@ public class LogToolsFragmentLevel3 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
         try {
-            try {
-                logTool = developerSubAppSession.getToolManager().getLogTool();
-            } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
-            }
+            errorManager = developerSubAppSession.getErrorManager();
+            logTool = developerSubAppSession.getToolManager().getLogTool();
         } catch (Exception ex) {
-            showMessage("Unexpected error get tool manager - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
         pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
@@ -115,7 +118,9 @@ public class LogToolsFragmentLevel3 extends Fragment {
             logTool.setNewLogLevelInClass(plugin, data);
 
         } catch (Exception e) {
-            System.out.println("*********** soy un error " + e.getMessage());
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
     }
@@ -164,8 +169,9 @@ public class LogToolsFragmentLevel3 extends Fragment {
             gridView.setAdapter(_adpatrer);
 
         }catch (Exception e){
-            showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
         //registerForContextMenu(gridView);
@@ -174,20 +180,6 @@ public class LogToolsFragmentLevel3 extends Fragment {
 
 
 
-
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
     public void setLoggerLevel(int level){
         loggerLevel=level;
     }
