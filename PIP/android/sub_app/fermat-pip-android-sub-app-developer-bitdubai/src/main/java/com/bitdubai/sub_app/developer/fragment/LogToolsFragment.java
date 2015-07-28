@@ -34,7 +34,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ public class LogToolsFragment extends Fragment {
     /**
      * SubApp session
      */
-    SubAppsSession subAppSession;
+    DeveloperSubAppSession developerSubAppSession;
 
 
     private static final String ARG_POSITION = "position";
@@ -73,9 +74,9 @@ public class LogToolsFragment extends Fragment {
 
     Typeface tf;
 
-    public static LogToolsFragment newInstance(int position,SubAppsSession subAppSession) {
+    public static LogToolsFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         LogToolsFragment f = new LogToolsFragment();
-        f.setSubAppSession(subAppSession);
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -89,7 +90,7 @@ public class LogToolsFragment extends Fragment {
         tf= Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         try {
-            ToolManager toolManager = subAppSession.getToolManager();
+            ToolManager toolManager = developerSubAppSession.getToolManager();
             try {
                 logTool = toolManager.getLogTool();
             } catch (Exception e) {
@@ -241,8 +242,8 @@ public class LogToolsFragment extends Fragment {
         alertDialog.show();
     }
 
-    public void setSubAppSession(SubAppsSession subAppSession) {
-        this.subAppSession = subAppSession;
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
 
 

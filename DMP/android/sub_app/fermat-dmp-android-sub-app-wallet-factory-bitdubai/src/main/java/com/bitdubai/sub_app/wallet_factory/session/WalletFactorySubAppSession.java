@@ -1,11 +1,8 @@
-package com.bitdubai.android_core.app.common.version_1.Sessions;
+package com.bitdubai.sub_app.wallet_factory.session;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class SubAppSession implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession{
+public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession{
 
 
     /**
@@ -32,9 +29,9 @@ public class SubAppSession implements com.bitdubai.fermat_android_api.layer.defi
     private ErrorManager errorManager;
 
     /**
-     * Tool Manager
+     *  WalletFactoryManager
      */
-    private ToolManager toolManager;
+    private WalletFactoryManager walletFactoryManager;
 
     /**
      * Event manager.
@@ -44,14 +41,14 @@ public class SubAppSession implements com.bitdubai.fermat_android_api.layer.defi
 
 
 
-    public SubAppSession(SubApps subApps,ErrorManager errorManager,ToolManager toolManager){
+    public WalletFactorySubAppSession(SubApps subApps, ErrorManager errorManager,WalletFactoryManager walletFactoryManager){
         this.subApps=subApps;
         data= new HashMap<String,Object>();
         this.errorManager=errorManager;
-        this.toolManager=toolManager;
+        this.walletFactoryManager=walletFactoryManager;
     }
 
-    public SubAppSession(SubApps subApps) {
+    public WalletFactorySubAppSession(SubApps subApps) {
         this.subApps = subApps;
     }
 
@@ -74,8 +71,9 @@ public class SubAppSession implements com.bitdubai.fermat_android_api.layer.defi
         return errorManager;
     }
 
-    public ToolManager getToolManager() {
-        return toolManager;
+
+    public WalletFactoryManager getWalletFactoryManager() {
+        return walletFactoryManager;
     }
 
     @Override
@@ -83,7 +81,7 @@ public class SubAppSession implements com.bitdubai.fermat_android_api.layer.defi
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SubAppSession that = (SubAppSession) o;
+        WalletFactorySubAppSession that = (WalletFactorySubAppSession) o;
 
         return subApps == that.subApps;
 
