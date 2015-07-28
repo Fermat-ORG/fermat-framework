@@ -35,9 +35,6 @@ public interface WalletFactoryProjectLanguage {
      */
     String getTranslatorPublicKey();
 
-    /**
-     * @return the wallet factory project proposal which the language belongs
-     */
-    WalletFactoryProjectProposal getWalletFactoryProjectProposal();
+    String getPath();
 
 }

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -45,13 +45,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguage;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDao</code> have
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao</code> have
  * all methods implementation to access the data base (CRUD)
  * <p/>
  *
@@ -68,12 +72,6 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * Represent de Database where i will be working with
-     */
-    Database database;
-
-
-    /**
      * Constructor with parameters
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
@@ -81,6 +79,11 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     public WalletFactoryMiddlewareDao(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
+    /**
+     * Represent de Database where i will be working with
+     */
+    Database database;
 
     /**
      * This method open or creates the database i'll be working with
@@ -142,8 +145,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 UUID id = record.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME);
                 String name = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME);
                 Wallets walletType = Wallets.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
 
-                WalletFactoryMiddlewareProject walletFactoryProject = new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType);
+                WalletFactoryMiddlewareProject walletFactoryProject = new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
 
                 walletFactoryProjectList.add(walletFactoryProject);
             }
@@ -184,8 +188,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 UUID id = record.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME);
                 String name = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME);
                 Wallets walletType = Wallets.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
 
-                WalletFactoryProject walletFactoryProject = new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType);
+                WalletFactoryProject walletFactoryProject = new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
 
                 walletFactoryProjectList.add(walletFactoryProject);
             }
@@ -222,8 +227,10 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 DatabaseTableRecord record = records.get(0);
                 UUID id = record.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME);
                 Wallets walletType = Wallets.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
+
                 database.closeDatabase();
-                return new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType);
+                return new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
             } else {
                 database.closeDatabase();
                 throw new ProjectNotFoundException(ProjectNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project with that name that belongs to the user.");
@@ -252,9 +259,10 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 String name = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME);
                 String developerPublicKey = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME);
                 Wallets walletType = Wallets.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
 
                 database.closeDatabase();
-                return new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType);
+                return new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
             } else {
                 database.closeDatabase();
                 throw new ProjectNotFoundException(ProjectNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project with that name that belongs to the user.");
@@ -288,6 +296,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, walletFactoryProject.getName());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, walletFactoryProject.getDeveloperPublicKey());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME, walletFactoryProject.getType().getCode());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME, walletFactoryProject.getPath());
 
             DatabaseTransaction transaction = database.newTransaction();
             transaction.addRecordToInsert(projectTable, entityRecord);
@@ -326,6 +335,10 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 if (walletFactoryProject.getName() != null) {
                     record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, walletFactoryProject.getName());
                 }
+                if (walletFactoryProject.getPath() != null) {
+                    record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME, walletFactoryProject.getPath());
+                }
+
                 DatabaseTransaction transaction = database.newTransaction();
                 transaction.addRecordToUpdate(projectTable, record);
                 database.executeTransaction(transaction);
@@ -413,8 +426,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 UUID id = record.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ID_COLUMN_NAME);
                 String alias = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ALIAS_COLUMN_NAME);
                 FactoryProjectState state = FactoryProjectState.fromValue(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PATH_COLUMN_NAME);
 
-                WalletFactoryProjectProposal walletFactoryProjectProposal = new WalletFactoryMiddlewareProjectProposal(id, alias, state, walletFactoryProject);
+                WalletFactoryProjectProposal walletFactoryProjectProposal = new WalletFactoryMiddlewareProjectProposal(id, alias, state, path);
 
                 walletFactoryProjectProposalList.add(walletFactoryProjectProposal);
             }
@@ -441,17 +455,12 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
-                WalletFactoryProject walletFactoryMiddlewareProject;
                 String alias = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ALIAS_COLUMN_NAME);
                 FactoryProjectState state = FactoryProjectState.fromValue(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME));
-                try {
-                    UUID projectId = record.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME);
-                    walletFactoryMiddlewareProject = findProjectById(projectId);
-                } catch (CantGetWalletFactoryProjectException|ProjectNotFoundException e) {
-                    throw new CantGetWalletFactoryProjectProposalException(CantGetWalletFactoryProjectProposalException.DEFAULT_MESSAGE, e, "Can't find the project associated to this proposal.", "");
-                }
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PATH_COLUMN_NAME);
+
                 database.closeDatabase();
-                return new WalletFactoryMiddlewareProjectProposal(id, alias, state, walletFactoryMiddlewareProject);
+                return new WalletFactoryMiddlewareProjectProposal(id, alias, state, path);
             } else {
                 database.closeDatabase();
                 throw new ProposalNotFoundException(ProposalNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project proposal with this alias.");
@@ -488,9 +497,10 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 DatabaseTableRecord record = records.get(0);
                 UUID id = record.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME);
                 FactoryProjectState state = FactoryProjectState.fromValue(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PATH_COLUMN_NAME);
 
                 database.closeDatabase();
-                return new WalletFactoryMiddlewareProjectProposal(id, alias, state, walletFactoryProject);
+                return new WalletFactoryMiddlewareProjectProposal(id, alias, state, path);
             } else {
                 database.closeDatabase();
                 throw new ProposalNotFoundException(ProposalNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project proposal with this alias.");
@@ -510,13 +520,13 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      *
      *  @param walletFactoryProjectProposal WalletFactoryProjectProposal to create.
      */
-    public void createProposal(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCreateWalletFactoryProjectProposalException {
+    public void createProposal(WalletFactoryProjectProposal walletFactoryProjectProposal, WalletFactoryProject walletFactoryProject) throws CantCreateWalletFactoryProjectProposalException {
 
         if (walletFactoryProjectProposal == null &&
                 walletFactoryProjectProposal.getId() != null &&
                 walletFactoryProjectProposal.getAlias() != null &&
                 walletFactoryProjectProposal.getState() != null &&
-                walletFactoryProjectProposal.getProject().getId() != null){
+                walletFactoryProjectProposal.getPath() != null){
             throw new CantCreateWalletFactoryProjectProposalException(CantCreateWalletFactoryProjectProposalException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, alias, state and get project id.");
         }
 
@@ -527,7 +537,8 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ID_COLUMN_NAME, walletFactoryProjectProposal.getId());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ALIAS_COLUMN_NAME, walletFactoryProjectProposal.getAlias());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME, walletFactoryProjectProposal.getState().value());
-            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME, walletFactoryProjectProposal.getProject().getId());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PATH_COLUMN_NAME, walletFactoryProjectProposal.getPath());
+            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME, walletFactoryProject.getId());
 
             DatabaseTransaction transaction = database.newTransaction();
             transaction.addRecordToInsert(projectProposalTable, entityRecord);
@@ -567,6 +578,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                     record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ALIAS_COLUMN_NAME, walletFactoryProjectProposal.getAlias());
                 if (walletFactoryProjectProposal.getState() != null)
                     record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME, walletFactoryProjectProposal.getState().value());
+                if (walletFactoryProjectProposal.getPath() != null)
+                    record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PATH_COLUMN_NAME, walletFactoryProjectProposal.getPath());
+
 
                 DatabaseTransaction transaction = database.newTransaction();
                 transaction.addRecordToUpdate(projectProposalTable, record);
@@ -655,8 +669,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 String name = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME);
                 String designerPublicKey = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME);
                 Version version = new Version(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_VERSION_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PATH_COLUMN_NAME);
 
-                WalletFactoryProjectSkin walletFactoryProjectSkin = new WalletFactoryMiddlewareProjectSkin(id, name, designerPublicKey, version, walletFactoryProjectProposal);
+                WalletFactoryProjectSkin walletFactoryProjectSkin = new WalletFactoryMiddlewareProjectSkin(id, name, designerPublicKey, version, path);
 
                 walletFactoryProjectSkins.add(walletFactoryProjectSkin);
             }
@@ -683,20 +698,14 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
-                WalletFactoryProjectProposal walletFactoryProjectProposal;
 
                 String name = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME);
                 String designerPublicKey = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME);
                 Version version = new Version(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_VERSION_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PATH_COLUMN_NAME);
 
-                try {
-                    UUID proposalId = record.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME);
-                    walletFactoryProjectProposal = findProposalById(proposalId);
-                } catch (CantGetWalletFactoryProjectProposalException|ProposalNotFoundException e) {
-                    throw new CantGetWalletFactoryProjectSkinException(CantGetWalletFactoryProjectSkinException.DEFAULT_MESSAGE, e, "Can't find the project associated to this proposal.", "");
-                }
                 database.closeDatabase();
-                return new WalletFactoryMiddlewareProjectSkin(id, name, designerPublicKey, version, walletFactoryProjectProposal);
+                return new WalletFactoryMiddlewareProjectSkin(id, name, designerPublicKey, version, path);
             } else {
                 database.closeDatabase();
                 throw new SkinNotFoundException(SkinNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project proposal with this alias.");
@@ -711,14 +720,14 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         }
     }
 
-    public void createSkin(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantCreateEmptyWalletFactoryProjectSkinException {
+    public void createSkin(WalletFactoryProjectSkin walletFactoryProjectSkin, WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCreateEmptyWalletFactoryProjectSkinException {
 
         if (walletFactoryProjectSkin == null &&
                 walletFactoryProjectSkin.getId() != null &&
                 walletFactoryProjectSkin.getDesignerPublicKey() != null &&
                 walletFactoryProjectSkin.getName() != null &&
                 walletFactoryProjectSkin.getVersion() != null &&
-                walletFactoryProjectSkin.getWalletFactoryProjectProposal() != null){
+                walletFactoryProjectSkin.getPath() != null){
             throw new CantCreateEmptyWalletFactoryProjectSkinException(CantCreateEmptyWalletFactoryProjectSkinException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, alias, state and get proposal id.");
         }
 
@@ -731,7 +740,8 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME, walletFactoryProjectSkin.getName());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME, walletFactoryProjectSkin.getDesignerPublicKey());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_VERSION_COLUMN_NAME, walletFactoryProjectSkin.getVersion().toString());
-            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME, walletFactoryProjectSkin.getWalletFactoryProjectProposal().getId());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PATH_COLUMN_NAME, walletFactoryProjectSkin.getPath());
+            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME, walletFactoryProjectProposal.getId());
 
             DatabaseTransaction transaction = database.newTransaction();
             transaction.addRecordToInsert(projectSkinTable, entityRecord);
@@ -807,8 +817,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 String translatorPublicKey = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
                 Languages type = Languages.fromValue(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME));
                 Version version = new Version(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PATH_COLUMN_NAME);
 
-                WalletFactoryProjectLanguage walletFactoryProjectLanguage = new WalletFactoryMiddlewareProjectLanguage(id, name, type, version, translatorPublicKey, walletFactoryProjectProposal);
+                WalletFactoryProjectLanguage walletFactoryProjectLanguage = new WalletFactoryMiddlewareProjectLanguage(id, name, type, version, translatorPublicKey, path);
 
                 walletFactoryProjectLanguages.add(walletFactoryProjectLanguage);
             }
@@ -841,15 +852,10 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 String translatorPublicKey = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
                 Languages type = Languages.fromValue(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME));
                 Version version = new Version(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME));
+                String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PATH_COLUMN_NAME);
 
-                try {
-                    UUID proposalId = record.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME);
-                    walletFactoryProjectProposal = findProposalById(proposalId);
-                } catch (CantGetWalletFactoryProjectProposalException|ProposalNotFoundException e) {
-                    throw new CantGetWalletFactoryProjectLanguageException(CantGetWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "Can't find the project associated to this proposal.", "");
-                }
                 database.closeDatabase();
-                return new WalletFactoryMiddlewareProjectLanguage(id, name, type, version, translatorPublicKey, walletFactoryProjectProposal);
+                return new WalletFactoryMiddlewareProjectLanguage(id, name, type, version, translatorPublicKey, path);
             } else {
                 database.closeDatabase();
                 throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project language with this name.");
@@ -864,14 +870,14 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         }
     }
 
-    public void createLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantCreateEmptyWalletFactoryProjectLanguageException {
+    public void createLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage, WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCreateEmptyWalletFactoryProjectLanguageException {
 
         if (walletFactoryProjectLanguage == null &&
                 walletFactoryProjectLanguage.getId() != null &&
                 walletFactoryProjectLanguage.getTranslatorPublicKey() != null &&
                 walletFactoryProjectLanguage.getName() != null &&
                 walletFactoryProjectLanguage.getVersion() != null &&
-                walletFactoryProjectLanguage.getWalletFactoryProjectProposal() != null){
+                walletFactoryProjectLanguage.getPath() != null){
             throw new CantCreateEmptyWalletFactoryProjectLanguageException(CantCreateEmptyWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, alias, state and get proposal id.");
         }
 
@@ -885,7 +891,8 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, walletFactoryProjectLanguage.getTranslatorPublicKey());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, walletFactoryProjectLanguage.getType().value());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME, walletFactoryProjectLanguage.getVersion().toString());
-            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME, walletFactoryProjectLanguage.getWalletFactoryProjectProposal().getId());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PATH_COLUMN_NAME, walletFactoryProjectLanguage.getPath());
+            entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME, walletFactoryProjectProposal.getId());
 
             DatabaseTransaction transaction = database.newTransaction();
             transaction.addRecordToInsert(projectLanguageTable, entityRecord);
