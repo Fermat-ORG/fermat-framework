@@ -15,10 +15,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
@@ -31,7 +31,7 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
-
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -390,10 +390,12 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         //go to wallet basic definition
                         //getWalletRuntimeManager().getActivity(Activities.getValueFromString("CWRWBWBV1M"));
                         //get the Wallet type
-                        getWalletRuntimeManager().getWallet(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI);
-                        intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+
+                        //getWalletRuntimeManager().getWallet();
+                        //intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
+                        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        //startActivity(intent);
+                        Toast.makeText(this,"por acá no tiene que venir",Toast.LENGTH_LONG).show();
                         break;
                     //wallet factory
                     case CWP_WALLET_FACTORY_MAIN:
@@ -449,6 +451,40 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Override
+    public void selectWallet(String screen, InstalledWallet installedWallet){
+        Intent intent;
+
+        this.actionKey=screen;
+
+        Activities activityType = Activities.getValueFromString(this.actionKey);
+
+        //if activity type is null I execute a fragment, get fragment type
+
+        if(activityType != null) {
+            //Clean all object from the previous activity
+            resetThisActivity();
+
+            switch (activityType) {
+                case CWP_WALLET_BASIC_ALL_MAIN: //basic Wallet
+                    //go to wallet basic definition
+                    //getWalletRuntimeManager().getActivity(Activities.getValueFromString("CWRWBWBV1M"));
+                    //get the Wallet type
+                    try {
+                        getWalletRuntimeManager().getWallet(installedWallet.getWalletPublicKey());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                    intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
+                    intent.putExtra(WalletActivity.INSTALLED_WALLET,installedWallet);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+            }
+        }
     }
 
 

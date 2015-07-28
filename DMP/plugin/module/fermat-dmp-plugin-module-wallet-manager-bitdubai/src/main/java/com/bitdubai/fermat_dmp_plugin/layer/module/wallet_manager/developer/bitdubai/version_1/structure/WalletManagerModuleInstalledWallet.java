@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 
-public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, Serializable {
+public class WalletManagerModuleInstalledWallet implements InstalledWallet, Serializable {
 
     private WalletCategory walletCategory;
     private List<InstalledSkin> skinsId;
@@ -33,7 +33,7 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     private String walletPlatformIdentifier;
     private Version version;
 
-    public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+    public WalletManagerModuleInstalledWallet(WalletCategory walletCategory, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
         this.languajesId = languajesId;

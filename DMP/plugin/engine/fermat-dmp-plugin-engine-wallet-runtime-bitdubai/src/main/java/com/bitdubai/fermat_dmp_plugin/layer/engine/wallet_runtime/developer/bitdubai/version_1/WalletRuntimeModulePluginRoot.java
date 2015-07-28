@@ -77,9 +77,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      */
 
 
-    Map<Wallets, Wallet> listWallets = new HashMap<Wallets, Wallet>();
+    Map<String, Wallet> listWallets = new HashMap<String, Wallet>();
 
-    Wallets lastWallet;
+    String lastWalletPublicKey;
 
 
     /**
@@ -217,12 +217,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     @Override
     public Wallet getLastWallet() {
 
-        Iterator<Map.Entry<Wallets, Wallet>> ewallet = this.listWallets.entrySet().iterator();
+        Iterator<Map.Entry<String, Wallet>> ewallet = this.listWallets.entrySet().iterator();
 
         while (ewallet.hasNext()) {
-            Map.Entry<Wallets, Wallet> walletEntry = ewallet.next();
+            Map.Entry<String, Wallet> walletEntry = ewallet.next();
             Wallet wallet = (Wallet) walletEntry.getValue();
-            if(wallet.getType().name().equals(this.lastWallet.name())){
+            if(wallet.getPublicKey().equals(lastWalletPublicKey)){
                 return wallet;
             }
         }
@@ -231,13 +231,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
     @Override
-    public Wallet getWallet(Wallets wallets) {
-        Iterator<Map.Entry<Wallets, Wallet>> ewallet = this.listWallets.entrySet().iterator();
+    public Wallet getWallet(String publicKey) {
+        Iterator<Map.Entry<String, Wallet>> ewallet = this.listWallets.entrySet().iterator();
         while (ewallet.hasNext()) {
-            Map.Entry<Wallets, Wallet> walletEntry = ewallet.next();
+            Map.Entry<String, Wallet> walletEntry = ewallet.next();
             Wallet wallet = (Wallet) walletEntry.getValue();
-            if(wallet.getType().equals(wallets)){
-                this.lastWallet=wallets;
+            if(wallet.getPublicKey().equals(publicKey)){
+                this.lastWalletPublicKey=publicKey;
                 return wallet;
             }
         }
@@ -263,6 +263,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             Tab runtimeTab;
 
+            String publicKey;
+
 
             /**
              * Wallet Kids definition.
@@ -272,7 +274,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeWallet = new Wallet();
             runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
             //   runtimeSubApp.addWallet(runtimeWallet);
-            listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI,runtimeWallet);
+            publicKey="kids";
+            listWallets.put(publicKey, runtimeWallet);
+            runtimeWallet.setPublicKey(publicKey);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
@@ -363,7 +367,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeWallet = new Wallet();
             runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI);
-            listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, runtimeWallet);
+            publicKey="reference_wallet";
+            runtimeWallet.setPublicKey(publicKey);
+            listWallets.put(publicKey, runtimeWallet);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
@@ -471,7 +477,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeWallet = new Wallet();
             runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI);
             // runtimeSubApp.addWallet(runtimeWallet);
-            listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI,runtimeWallet);
+            publicKey="adults_wallet";
+            runtimeWallet.setPublicKey(publicKey);
+            listWallets.put(publicKey,runtimeWallet);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_MAIN);

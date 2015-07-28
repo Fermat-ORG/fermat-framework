@@ -1,8 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.session;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
@@ -13,24 +13,31 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class WalletSession implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession{
+
+public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession{
 
 
     /**
      * Wallet type
      */
-    Wallets walletType;
+    InstalledWallet wallet;
     /**
      * Active objects in wallet session
      */
     Map<String,Object> data;
+
     /**
-     * Basic wallet
+     * Navigation Estructure
+     */
+
+
+    /**
+     * Basic wallet plugin
      */
     private CryptoWalletManager cryptoWalletManager;
 
     /**
-     * Error manager
+     * Error manager addon
      */
     private ErrorManager errorManager;
 
@@ -52,21 +59,19 @@ public class WalletSession implements com.bitdubai.fermat_android_api.layer.defi
 
 
 
-    public WalletSession(Wallets wallets,CryptoWalletManager cryptoWalletManager,ErrorManager errorManager){//,EventManager eventManager){
-        walletType=wallets;
+    public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager, ErrorManager errorManager){//,EventManager eventManager){
+        this.wallet=installedWallet;
         data= new HashMap<String,Object>();
         this.cryptoWalletManager=cryptoWalletManager;
         //this.eventManager=eventManager;
         this.errorManager=errorManager;
     }
 
-    public WalletSession(Wallets walletType) {
-        this.walletType = walletType;
-    }
+
 
     @Override
-    public Wallets getWalletSessionType() {
-        return walletType;
+    public InstalledWallet getWalletSessionType() {
+        return wallet;
     }
 
     @Override
@@ -104,15 +109,15 @@ public class WalletSession implements com.bitdubai.fermat_android_api.layer.defi
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        WalletSession that = (WalletSession) o;
+        ReferenceWalletSession that = (ReferenceWalletSession) o;
 
-        return walletType == that.walletType;
+        return wallet == that.wallet;
 
     }
 
     @Override
     public int hashCode() {
-        return walletType.hashCode();
+        return wallet.hashCode();
     }
 
     public void setBalanceTypeSelected(BalanceType balaceType) {

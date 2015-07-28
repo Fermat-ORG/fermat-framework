@@ -25,9 +25,8 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
-import java.text.DecimalFormat;
 import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
@@ -75,7 +74,7 @@ public class BalanceFragment extends Fragment {
      * Wallet Session
      */
 
-    WalletSession walletSession;
+    ReferenceWalletSession referenceWalletSession;
     
 
     /**
@@ -87,7 +86,7 @@ public class BalanceFragment extends Fragment {
 
 
     /**
-     *  Create a new instance of BalanceFragment and set walletSession and platforms plugin inside
+     *  Create a new instance of BalanceFragment and set referenceWalletSession and platforms plugin inside
      * @param position
      * @param walletSession   An object that contains all session data
      * @return BalanceFragment with Session and platform plugins inside
@@ -95,7 +94,7 @@ public class BalanceFragment extends Fragment {
 
     public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession) {
         BalanceFragment balanceFragment = new BalanceFragment();
-        balanceFragment.setWalletSession((WalletSession)walletSession);
+        balanceFragment.setReferenceWalletSession((ReferenceWalletSession) walletSession);
         return balanceFragment;
     }
 
@@ -114,10 +113,10 @@ public class BalanceFragment extends Fragment {
          *
          */
         try {
-            errorManager = walletSession.getErrorManager();
+            errorManager = referenceWalletSession.getErrorManager();
             balanceAvailable = 0;
             bookBalance=0;
-            cryptoWalletManager = walletSession.getCryptoWalletManager();
+            cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
 
             try {
 
@@ -210,16 +209,16 @@ public class BalanceFragment extends Fragment {
         Method to change the balance type
      */
     private void changeBalanceType() {
-        com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession walletSession =(com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession) this.walletSession;
+        ReferenceWalletSession referenceWalletSession =(ReferenceWalletSession) this.referenceWalletSession;
 
-        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()) {
-            txtViewBalance.setText(formatBalanceString(bookBalance, walletSession.getTypeAmount()));
+        if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()) {
+            txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
             txtViewTypeBalance.setText(R.string.book_balance);
-            walletSession.setBalanceTypeSelected(BalanceType.BOOK);
-        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
-            txtViewBalance.setText(formatBalanceString(balanceAvailable,walletSession.getTypeAmount()));
+            referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
+        }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+            txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
             txtViewTypeBalance.setText(R.string.available_balance);
-            walletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+            referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
 
         }
     }
@@ -228,10 +227,10 @@ public class BalanceFragment extends Fragment {
         Method to change the balance amount
      */
     private void changeBalance() {
-        if (walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-            txtViewBalance.setText(formatBalanceString(balanceAvailable,walletSession.getTypeAmount()));
-        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
-            txtViewBalance.setText(formatBalanceString(bookBalance,walletSession.getTypeAmount()));
+        if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+            txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
+        }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+            txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
         }
     }
 
@@ -270,10 +269,10 @@ public class BalanceFragment extends Fragment {
                 showMessage(getActivity(),"CantGetBalanceException- " + e.getMessage());
 
             }
-            if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-                txtViewBalance.setText(formatBalanceString(balanceAvailable,walletSession.getTypeAmount()));
-            }else if(walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
-                txtViewBalance.setText(formatBalanceString(bookBalance,walletSession.getTypeAmount()));
+            if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+                txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
+            }else if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+                txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
             }
 
 
@@ -288,10 +287,10 @@ public class BalanceFragment extends Fragment {
 
     /**
      *  Set Wallet Session object
-     * @param walletSession
+     * @param referenceWalletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
-        this.walletSession = walletSession;
+    public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
+        this.referenceWalletSession = referenceWalletSession;
     }
 }
 

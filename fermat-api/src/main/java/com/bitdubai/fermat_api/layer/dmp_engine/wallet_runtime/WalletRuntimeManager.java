@@ -31,9 +31,8 @@ public interface WalletRuntimeManager {
     /**
      *  Search wallet in the wallet installed list
      *
-     * @param wallets type of Wallet
      * @return  The installed Wallet
      */
-    public Wallet getWallet(Wallets wallets);
+    public Wallet getWallet(String publicKey);
     
 }

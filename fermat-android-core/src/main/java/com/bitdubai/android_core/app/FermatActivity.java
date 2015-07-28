@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
+import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
@@ -35,6 +36,7 @@ import com.bitdubai.android_core.app.common.version_1.navigation_drawer.Navigati
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -54,6 +56,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
@@ -298,7 +301,7 @@ public class FermatActivity extends FragmentActivity{
     /**
     * Method used from a Wallet to paint tabs
     */
-    protected void setPagerTabs(Wallet wallet,TabStrip tabStrip){
+    protected void setPagerTabs(Wallet wallet,TabStrip tabStrip,WalletSession walletSession){
         /**
          * Get pager from xml
          */
@@ -313,7 +316,11 @@ public class FermatActivity extends FragmentActivity{
          * Making the pagerTab adapter
          */
 
-        adapter = new TabsPagerAdapter(getSupportFragmentManager(),getApplicationContext(),WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getType().getCode()),tabStrip,(ApplicationSession)getApplication(),getErrorManager());
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(),
+                getApplicationContext(),
+                WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getPublicKey()),
+                tabStrip,
+                walletSession);
         pagertabs.setAdapter(adapter);
         final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
@@ -558,7 +565,8 @@ public class FermatActivity extends FragmentActivity{
                         //DeveloperSubAppSession subAppSession = new DeveloperSubAppSession();
                         //Excepcion que no puede ser casteado  a WalletManagerManager
                         //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0,getWalletManagerManager());
-                        WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0);
+                        WalletManager manager= getWalletManager();
+                        WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0,manager);
                         fragments.add(walletDesktopFragment);
                         //fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
                         break;
@@ -600,6 +608,9 @@ public class FermatActivity extends FragmentActivity{
     }
 
 
+    public WalletSessionManager getWalletSessionManager(){
+        return ((ApplicationSession)getApplication()).getWalletSessionManager();
+    }
     /**
      *  Get SubAppRuntimeManager from the fermat platform
      * @return  reference of SubAppRuntimeManager
@@ -619,12 +630,12 @@ public class FermatActivity extends FragmentActivity{
     }
 
     /**
-     * Get WalletManagerManager from the fermat platform
+     * Get WalletManager from the fermat platform
      * @return  reference of WalletManagerManager
      */
 
-    public WalletManagerManager getWalletManagerManager(){
-        return (WalletManagerManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
+    public WalletManager getWalletManager(){
+        return (WalletManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
     }
 
     /**

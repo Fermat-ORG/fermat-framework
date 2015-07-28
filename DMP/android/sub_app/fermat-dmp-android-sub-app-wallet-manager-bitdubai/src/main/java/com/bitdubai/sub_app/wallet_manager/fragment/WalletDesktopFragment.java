@@ -26,6 +26,10 @@ import android.widget.TextView;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResources;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 
@@ -46,20 +50,13 @@ public class WalletDesktopFragment extends Fragment {
     private int position;
     Typeface tf;
 
-    private WalletManagerManager walletManager;
+    private WalletManager walletManager;
 
     private List<InstalledWallet> lstInstalledWallet;
 
-    public static WalletDesktopFragment newInstance(int position,WalletManagerManager walletManager) {
+    public static WalletDesktopFragment newInstance(int position,WalletManager walletManager) {
         WalletDesktopFragment f = new WalletDesktopFragment();
         f.setWalletManager(walletManager);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
-    }
-    public static WalletDesktopFragment newInstance(int position) {
-        WalletDesktopFragment f = new WalletDesktopFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -72,12 +69,9 @@ public class WalletDesktopFragment extends Fragment {
          tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         setHasOptionsMenu(true);
 
-        try {
-            if(walletManager!=null) lstInstalledWallet=walletManager.getInstalledWallets();
-        } catch (CantListWalletsException e) {
-            e.printStackTrace();
-        }
-        String[] installed =
+        if(walletManager!=null) lstInstalledWallet=walletManager.getUserWallets();
+
+        /*String[] installed =
                 {"false",
                         "false",
                         "false",
@@ -157,6 +151,7 @@ public class WalletDesktopFragment extends Fragment {
                 mlist.add(item);
             }
         }
+        */
 
         GridView gridView = new GridView(getActivity());
 
@@ -169,7 +164,7 @@ public class WalletDesktopFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
+        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
         _adpatrer.notifyDataSetChanged();
         gridView.setAdapter(_adpatrer);
 
@@ -214,7 +209,7 @@ public class WalletDesktopFragment extends Fragment {
      *
      * @param walletManager
      */
-    public void setWalletManager(WalletManagerManager walletManager) {
+    public void setWalletManager(WalletManager walletManager) {
         this.walletManager = walletManager;
     }
 
@@ -253,17 +248,17 @@ public class WalletDesktopFragment extends Fragment {
 
 
 
-    public class AppListAdapter extends ArrayAdapter<App> {
+    public class AppListAdapter extends ArrayAdapter<InstalledWallet> {
 
 
-        public AppListAdapter(Context context, int textViewResourceId, List<App> objects) {
+        public AppListAdapter(Context context, int textViewResourceId, List<InstalledWallet> objects) {
             super(context, textViewResourceId, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            App item = getItem(position);
+            final InstalledWallet installedWallet = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
@@ -282,15 +277,17 @@ public class WalletDesktopFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.company);
-            holder.companyTextView.setTypeface(tf,Typeface.BOLD);
+            holder.companyTextView.setText(installedWallet.getWalletName());
+            holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
 
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);
-            switch (item.picture)
+
+            //Hardcodeado hasta que esté el wallet resources
+            switch (installedWallet.getWalletIcon())
             {
 
-                case "wallet_store_cover_fermat":
+                case "reference_wallet_icon":
                     holder.imageView.setImageResource(R.drawable.fermat);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
@@ -300,7 +297,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                             ((FermatScreenSwapper) getActivity()).changeScreen("WalletBitcoinActivity",null);
+                             ((FermatScreenSwapper) getActivity()).selectWallet("WalletBitcoinActivity", installedWallet);
 
                         }
                     });
@@ -310,7 +307,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen("WalletBitcoinActivity",null);
+                            ((FermatScreenSwapper) getActivity()).selectWallet("WalletBitcoinActivity", installedWallet);
 
                         }
                     });

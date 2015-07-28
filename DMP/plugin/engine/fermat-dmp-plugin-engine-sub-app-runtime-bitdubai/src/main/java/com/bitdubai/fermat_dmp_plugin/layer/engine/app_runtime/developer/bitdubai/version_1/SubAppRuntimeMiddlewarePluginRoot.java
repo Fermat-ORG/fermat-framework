@@ -905,11 +905,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
          */
         activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
         Fragment fragment = new Fragment();
-        /**
-         * Add WalletManager fragment
-         */
-        fragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
-        activity.addFragment(fragment);
 
         /**
          * Add developer subApp fragment
@@ -917,6 +912,12 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
         fragment = new Fragment();
         fragment.setType(Fragments.CWP_SUB_APP_DEVELOPER);
         activity.addFragment(fragment);
+        /**
+         * Add WalletManager fragment
+         */
+        fragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
+        activity.addFragment(fragment);
+
         homeScreen.setStartActivity(activity.getType());
         homeScreen.addActivity(activity);
 

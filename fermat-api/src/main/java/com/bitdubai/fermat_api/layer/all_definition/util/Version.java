@@ -1,13 +1,15 @@
 package com.bitdubai.fermat_api.layer.all_definition.util;
 
 
+import java.io.Serializable;
+
 /**
  * Version class
  * @author rodrigo
  * @version 1.0
  * Class used to define an object version in the platform. Can be used to calculate comparissions between different versions.
  */
-public class Version {
+public class Version implements Serializable {
     Integer major;
     Integer minor;
     Integer patch;

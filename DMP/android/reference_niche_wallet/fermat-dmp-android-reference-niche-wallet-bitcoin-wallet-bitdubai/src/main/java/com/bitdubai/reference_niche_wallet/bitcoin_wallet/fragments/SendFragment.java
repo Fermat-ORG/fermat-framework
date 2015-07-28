@@ -94,7 +94,7 @@ public class SendFragment extends Fragment{
 
 
     /**
-     * Create a new instance of SendFragment and set walletSession and platforms plugin inside
+     * Create a new instance of SendFragment and set referenceWalletSession and platforms plugin inside
      * @param position  An object that contains all session data
      * @param walletSession SendFragment with Session and platform plugins inside
      * @return
