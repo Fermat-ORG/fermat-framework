@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatfo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 
 //import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.*;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerRegistry;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerReportAgent;
@@ -133,7 +134,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     }
 
     private void printErrorReport(final String source, final String severity, final FermatException exception){
-        //System.err.println(new ErrorReport(source, severity, exception).generateReport());
+        System.err.println(new ErrorReport(source, severity, exception).generateReport());
     }
 
 }

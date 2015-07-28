@@ -17,7 +17,13 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -47,16 +53,13 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     View rootView;
-
+    private ErrorManager errorManager;
     private DatabaseTool databaseTools;
 
     private DeveloperDatabase developerDatabase;
     private DeveloperDatabaseTable developerDatabaseTable;
 
     List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList;
-
-
-
 
 
     private Resource resource;
@@ -71,7 +74,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsDatabaseTableRecordListFragment f = new DatabaseToolsDatabaseTableRecordListFragment();
-        f.setSubAppsSession((DeveloperSubAppSession)subAppSession);
+        f.setSubAppsSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -82,17 +85,16 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        errorManager = subAppsSession.getErrorManager();
         try {
             ToolManager toolManager = subAppsSession.getToolManager();
-            try {
-                databaseTools = toolManager.getDatabaseTool();
-            } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
-            }
+            databaseTools = toolManager.getDatabaseTool();
+        } catch (CantGetDataBaseTool e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            showMessage("Unexpected error get Transactions - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -128,12 +130,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
             }
 
-        } catch (Exception e) {
-            showMessage("DatabaseTools Database Table List Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
-        }
-
-
         base=(LinearLayout)rootView.findViewById(R.id.base);
 
 
@@ -147,6 +143,11 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             base.addView(scrollView);
         }
 
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }
         return rootView;
     }
 
@@ -199,26 +200,15 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             }
 
         }catch (Exception e){
-            showMessage("Table layout create Exception - " + e.getMessage());
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
         return tableLayout;
     }
 
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
+
 
     public void setDeveloperDatabase(DeveloperDatabase developerDatabase) {
         this.developerDatabase = developerDatabase;
