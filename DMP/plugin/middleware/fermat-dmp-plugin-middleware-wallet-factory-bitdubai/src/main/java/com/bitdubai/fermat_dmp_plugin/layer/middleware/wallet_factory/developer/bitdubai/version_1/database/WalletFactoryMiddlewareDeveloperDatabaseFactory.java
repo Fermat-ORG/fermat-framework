@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 27/07/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 28/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -106,7 +106,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("WalletFactory", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Factory", this.pluginId.toString()));
         return databases;
     }
 
@@ -122,6 +122,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME);
         /**
          * Table Project addition.
@@ -137,6 +138,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
         projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ID_COLUMN_NAME);
         projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ALIAS_COLUMN_NAME);
         projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME);
+        projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PATH_COLUMN_NAME);
         projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME);
         /**
          * Table Project Proposal addition.
@@ -153,6 +155,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
         projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME);
         projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME);
         projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_VERSION_COLUMN_NAME);
+        projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PATH_COLUMN_NAME);
         projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME);
         /**
          * Table Project Skin addition.
@@ -170,6 +173,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
         projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME);
         projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
         projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME);
+        projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PATH_COLUMN_NAME);
         projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME);
         /**
          * Table Project Language addition.

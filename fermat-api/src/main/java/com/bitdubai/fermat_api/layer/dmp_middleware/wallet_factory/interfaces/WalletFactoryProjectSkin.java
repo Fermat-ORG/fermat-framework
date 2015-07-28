@@ -29,9 +29,6 @@ public interface WalletFactoryProjectSkin {
      */
     Version getVersion();
 
-    /**
-     * @return the wallet factory project proposal which the skin belongs
-     */
-    WalletFactoryProjectProposal getWalletFactoryProjectProposal();
+    String getPath();
 
 }
