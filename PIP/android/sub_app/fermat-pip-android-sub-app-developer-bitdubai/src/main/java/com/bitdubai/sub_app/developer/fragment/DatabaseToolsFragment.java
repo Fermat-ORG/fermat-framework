@@ -15,8 +15,15 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -41,6 +48,7 @@ public class DatabaseToolsFragment extends Fragment{
 
 
     public static final String TAG_DATABASE_TOOLS_FRAGMENT= "DatabaseToolsFragment";
+    private ErrorManager errorManager;
 
     /**
      * SubApp session
@@ -73,17 +81,22 @@ public class DatabaseToolsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        errorManager = developerSubAppSession.getErrorManager();
         try {
+
             ToolManager toolManager = developerSubAppSession.getToolManager();
+
             try {
                 databaseTools = toolManager.getDatabaseTool();
             } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
             }
         } catch (Exception ex) {
-            showMessage("Unexpected error get tool manager - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
 
@@ -108,10 +121,10 @@ public class DatabaseToolsFragment extends Fragment{
             for (int i = 0; i < plugins.size(); i++) {
                 Resource item = new Resource();
 
-                    item.picture = "plugin";
-                    item.resource = plugins.get(i).getKey();
-                    item.type=Resource.TYPE_PLUGIN;
-                    mlist.add(item);
+                item.picture = "plugin";
+                item.resource = plugins.get(i).getKey();
+                item.type=Resource.TYPE_PLUGIN;
+                mlist.add(item);
                 //}
             }
             for (int i = 0; i < addons.size(); i++) {
@@ -138,8 +151,9 @@ public class DatabaseToolsFragment extends Fragment{
 
             //listView.setAdapter(adapter);
         } catch (Exception e) {
-            showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
         //LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
@@ -148,19 +162,7 @@ public class DatabaseToolsFragment extends Fragment{
         return rootView;
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
+
 
     public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
         this.developerSubAppSession = developerSubAppSession;
