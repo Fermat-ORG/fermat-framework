@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -135,18 +137,41 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
         }
 
         private void doTheMainTask() throws InvalidParameterException, CantExecuteDatabaseOperationException {
-            if (getMissingIds(CatalogItems.WALLET).size() != 0)
+            if (areMissingIds(CatalogItems.LANGUAGE)){
+                insertValidLanguagesFromPeer();
+                raiseEvent();
+            }
+
+
+            if (areMissingIds(CatalogItems.SKIN))
                 raiseEvent();
 
-            if (getMissingIds(CatalogItems.LANGUAGE).size() != 0)
+            if (areMissingIds(CatalogItems.WALLET))
                 raiseEvent();
+        }
 
-            if (getMissingIds(CatalogItems.SKIN).size() != 0)
-                raiseEvent();
+        private void insertValidLanguagesFromPeer() throws InvalidParameterException, CantExecuteDatabaseOperationException {
+            for (UUID idToInsert : getMissingIds(CatalogItems.LANGUAGE)){
+                //todo get the object from peer
+                //validate if the version is for our platform
+                //persist in the catalog
+            }
+
+        }
+
+        private boolean isValidVersion(Version version){
+            return true;
         }
 
         private void raiseEvent(){
             //todo add events depending on the event raised I need find the way to pass the missing Ids.
+        }
+
+        private boolean areMissingIds(CatalogItems catalogItems) throws CantExecuteDatabaseOperationException, InvalidParameterException {
+            if (getDatabaseDao().getCatalogIdsForNetworkService(catalogItems).size() != 0)
+                return true;
+            else
+                return false;
         }
 
         private List<UUID> getIdsFromMyCatalog(CatalogItems catalogItems) throws CantExecuteDatabaseOperationException, InvalidParameterException {
