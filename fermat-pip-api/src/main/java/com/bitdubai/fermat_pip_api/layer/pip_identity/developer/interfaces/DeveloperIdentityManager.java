@@ -6,7 +6,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantG
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager</code>
+ * The Interface <code>com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager</code>
  * indicates the functionality of a DeveloperIdentityManager
  * <p/>
  *
@@ -29,7 +29,7 @@ public interface DeveloperIdentityManager {
      * associated public key
      *
      * @param alias the alias that the user choose as developer identity
-     * @return the public key associated to this new Device User
+     * @return the new developer just created
      * @throws CantCreateNewDeveloperException
      */
     DeveloperIdentity createNewDeveloper(String alias) throws CantCreateNewDeveloperException;
