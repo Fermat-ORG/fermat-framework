@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
@@ -24,6 +26,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
@@ -34,6 +37,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionIt
 
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -127,105 +131,114 @@ public class TransactionsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
-
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-
-        cryptoWalletManager = walletSession.getCryptoWalletManager();
         errorManager = walletSession.getErrorManager();
-
         try {
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(),"CantGetCryptoWalletException- " + e.getMessage());
 
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+
+            cryptoWalletManager = walletSession.getCryptoWalletManager();
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+
+            mapTransactionPerDate= new HashMap<Date, Set<CryptoWalletTransaction>>();
+
+        } catch (CantGetCryptoWalletException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-        mapTransactionPerDate= new HashMap<Date, Set<CryptoWalletTransaction>>();
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
-        // Get ListView object from xml
-        listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-
-        //adapter.
-
-
-        // Create the adapter to convert the array to views
-
         try {
-            lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+            rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
+            // Get ListView object from xml
+            listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
+            swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+
+            //adapter.
+
+
+            // Create the adapter to convert the array to views
+
+
+                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+
+
+            BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
+            lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
+
+            // Set the emptyView to the ListView
+            TextView textViewEmptyListView = (TextView) rootView.findViewById(R.id.emptyElement);
+
+            if(lstTransactions.isEmpty()){
+                textViewEmptyListView.setTypeface(tf);
+                listViewTransactions.setEmptyView(textViewEmptyListView);
+            }
+
+            /**
+             * Setting swipe Refresh
+             */
+            swipeRefreshLayout.setColorSchemeColors(R.color.green);
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    refreshTransactionsContent();
+                }
+            });
+
+
+
+            /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    //view.
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    //showMessage("holas");
+                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
+                            +"first vible item:"+firstVisibleItem+"\n"
+                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            */
+
+            /**
+             * Load transactions
+             */
+            loadTransactionMap();
+
+
+            for (Date date: mapTransactionPerDate.keySet()){
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                items.add(new SectionItem(sdf.format(date)));
+                for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
+                    items.add(new EntryItem(cryptoWalletTransaction));
+                }
+            }
+
+            /**
+             *
+             */
+            EntryAdapter adapter = new EntryAdapter(getActivity(), items);
+            listViewTransactions.setAdapter(adapter);
+
         } catch (CantGetTransactionsException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
-
-        BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
-        lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
-
-        // Set the emptyView to the ListView
-        TextView textViewEmptyListView = (TextView) rootView.findViewById(R.id.emptyElement);
-
-        if(lstTransactions.isEmpty()){
-            textViewEmptyListView.setTypeface(tf);
-            listViewTransactions.setEmptyView(textViewEmptyListView);
-        }
-
-        /**
-         * Setting swipe Refresh
-         */
-        swipeRefreshLayout.setColorSchemeColors(R.color.green);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshTransactionsContent();
-            }
-        });
-
-
-
-        /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                //view.
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                //showMessage("holas");
-                Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
-                        +"first vible item:"+firstVisibleItem+"\n"
-                        +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
-
-            }
-        });
-        */
-
-        /**
-         * Load transactions
-         */
-        loadTransactionMap();
-
-
-        for (Date date: mapTransactionPerDate.keySet()){
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-            items.add(new SectionItem(sdf.format(date)));
-            for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
-                items.add(new EntryItem(cryptoWalletTransaction));
-            }
-        }
-
-        /**
-         *
-         */
-        EntryAdapter adapter = new EntryAdapter(getActivity(), items);
-        listViewTransactions.setAdapter(adapter);
-
         return rootView;
     }
 
@@ -282,45 +295,40 @@ public class TransactionsFragment extends Fragment{
      *  Update transaction list
      */
     private void loadNewTransactions(){
+        try {
+            if (lstTransactions.isEmpty()){
 
-        if(lstTransactions.isEmpty())
-            try {
-                List<CryptoWalletTransaction> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
-                for(CryptoWalletTransaction transaction: lst){
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+
+                for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
                 }
+            }
+            else{
 
-            } catch (CantGetTransactionsException e)
-            {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage(getActivity(),"Cant Get Transactions Exception- " + e.getMessage());
-            }
-            catch(Exception ex)
-            {
-                showMessage(getActivity(),"Unexpected error get Transactions - " + ex.getMessage());
-            }
-        else{
-            try {
-                List<CryptoWalletTransaction> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
-                for(CryptoWalletTransaction transaction: lst){
-                   lstTransactions.add(0, transaction);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                for (CryptoWalletTransaction transaction : lst) {
+                    lstTransactions.add(0, transaction);
+
+
                 }
+                pointerOffset = lstTransactions.size();
 
-            } catch (CantGetTransactionsException e)
-            {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage(getActivity(),"Cant Get Transactions Exception- " + e.getMessage());
-            }
-            catch(Exception ex)
-            {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                showMessage(getActivity(),"Unexpected error get Transactions - " + ex.getMessage());
-
+                showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
             }
         }
-        pointerOffset=lstTransactions.size();
 
-        showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
+        catch (CantGetTransactionsException e)
+        {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+        catch(Exception ex)
+        {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
@@ -89,13 +90,12 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
-            try {
+
                 databaseTools = toolManager.getDatabaseTool();
-            } catch (Exception e) {
+        } catch (CantGetDataBaseTool e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
                 Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
-            }
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -256,7 +256,6 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
      * ViewHolder.
      */
     private class ViewHolder {
-
 
 
         public ImageView imageView;

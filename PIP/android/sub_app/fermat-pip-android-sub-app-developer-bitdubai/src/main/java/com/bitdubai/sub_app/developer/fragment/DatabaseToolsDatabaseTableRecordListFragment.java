@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
@@ -73,7 +74,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsDatabaseTableRecordListFragment f = new DatabaseToolsDatabaseTableRecordListFragment();
-        f.setSubAppsSession((DeveloperSubAppSession)subAppSession);
+        f.setSubAppsSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -87,13 +88,13 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         errorManager = subAppsSession.getErrorManager();
         try {
             ToolManager toolManager = subAppsSession.getToolManager();
-            try {
+
                 databaseTools = toolManager.getDatabaseTool();
-            } catch (Exception e) {
+
+        } catch (CantGetDataBaseTool e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
                 Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
-            }
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -133,13 +134,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
             }
 
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
-        }
-
-
         base=(LinearLayout)rootView.findViewById(R.id.base);
 
 
@@ -153,6 +147,11 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             base.addView(scrollView);
         }
 
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }
         return rootView;
     }
 
