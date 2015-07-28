@@ -28,7 +28,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
@@ -40,6 +39,7 @@ import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,11 +73,11 @@ public class LogToolsFragmentLevel2 extends Fragment {
     /**
      * SubApp Session
      */
-    private SubAppsSession subAppSession;
+    private DeveloperSubAppSession developerSubAppSession;
 
-    public static LogToolsFragmentLevel2 newInstance(int position,SubAppsSession subAppSession) {
+    public static LogToolsFragmentLevel2 newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
-        f.setSubAppSession(subAppSession);
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -90,7 +90,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
         setRetainInstance(true);
 
         try {
-            ToolManager toolManager = subAppSession.getToolManager();
+            ToolManager toolManager = developerSubAppSession.getToolManager();
             try {
                 logTool = toolManager.getLogTool();
             } catch (Exception e) {
@@ -603,7 +603,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
         }
 
     }
-    public void setSubAppSession(SubAppsSession subAppSession) {
-        this.subAppSession = subAppSession;
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
 }

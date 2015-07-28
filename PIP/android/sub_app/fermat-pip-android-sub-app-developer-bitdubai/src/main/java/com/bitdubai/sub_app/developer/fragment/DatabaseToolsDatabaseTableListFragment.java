@@ -18,8 +18,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -32,6 +30,7 @@ import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.DatabasesTable;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +72,11 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     /**
      * SubApp session
      */
-    SubAppsSession subAppsSession;
+    DeveloperSubAppSession subAppsSession;
 
-    public static DatabaseToolsDatabaseTableListFragment newInstance(int position,SubAppsSession subAppSession) {
+    public static DatabaseToolsDatabaseTableListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsDatabaseTableListFragment f = new DatabaseToolsDatabaseTableListFragment();
-        f.setSubAppsSession(subAppSession);
+        f.setSubAppsSession((DeveloperSubAppSession)subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -186,7 +185,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         this.developerDatabase = developerDatabase;
     }
 
-    public void setSubAppsSession(SubAppsSession subAppsSession) {
+    public void setSubAppsSession(DeveloperSubAppSession subAppsSession) {
         this.subAppsSession = subAppsSession;
     }
 
