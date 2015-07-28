@@ -90,19 +90,12 @@ public class LogToolsFragmentLevel3 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = developerSubAppSession.getErrorManager();
         try {
-            try {
-                logTool = developerSubAppSession.getToolManager().getLogTool();
-            } catch (Exception e) {
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
-            }
+            errorManager = developerSubAppSession.getErrorManager();
+            logTool = developerSubAppSession.getToolManager().getLogTool();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
 
         pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
