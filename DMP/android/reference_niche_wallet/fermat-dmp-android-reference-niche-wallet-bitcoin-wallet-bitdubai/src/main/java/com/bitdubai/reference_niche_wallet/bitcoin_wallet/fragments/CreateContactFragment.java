@@ -23,9 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
@@ -33,6 +35,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.excepti
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
@@ -46,9 +49,6 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by natalia on 19/06/15.
  */
 public class CreateContactFragment extends Fragment {
-
-
-
     private static final String ARG_POSITION = "position";
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
@@ -58,9 +58,6 @@ public class CreateContactFragment extends Fragment {
      */
 
     WalletSession walletSession;
-    
-
-
     /**
      * Screen views
      */
@@ -103,16 +100,15 @@ public class CreateContactFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-
         errorManager = walletSession.getErrorManager();
-
-        cryptoWalletManager = walletSession.getCryptoWalletManager();
-
         try {
+            cryptoWalletManager = walletSession.getCryptoWalletManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
+
         } catch (CantGetCryptoWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(),"Unexpected error get Contact list - " + e.getMessage());
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
     }
@@ -174,9 +170,8 @@ public class CreateContactFragment extends Fragment {
             });
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(),"Contacts Fragment onCreateView Exception - " + e.getMessage());
-
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -185,26 +180,31 @@ public class CreateContactFragment extends Fragment {
      * create contact and save it into database
      */
     private void saveContact() {
-        EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
-        EditText address = (EditText) rootView.findViewById(R.id.contact_address);
+        try {
+            EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+            EditText address = (EditText) rootView.findViewById(R.id.contact_address);
 
-        CryptoAddress validAddress = validateAddress(address.getText().toString(),cryptoWallet);
+            CryptoAddress validAddress = validateAddress(address.getText().toString(),cryptoWallet);
 
-        if (validAddress != null) {
-            try {
-                // first i add the contact
-                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            if (validAddress != null) {
 
-                Toast.makeText(getActivity().getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
+                    // first i add the contact
+                    cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
 
-                returnToContacts();
+                    Toast.makeText(getActivity().getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
+                    returnToContacts();
 
-            } catch (CantCreateWalletContactException e) {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage(getActivity(),"Error creating wallet contact - " + e.getMessage());
+
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid address...", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid address...", Toast.LENGTH_SHORT).show();
+        } catch (CantCreateWalletContactException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -233,24 +233,31 @@ public class CreateContactFragment extends Fragment {
      * @param rootView
      */
     private void pasteFromClipboard(View rootView) {
-        ClipboardManager clipboard = (ClipboardManager) rootView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        try
+        {
+            ClipboardManager clipboard = (ClipboardManager) rootView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        // Gets the ID of the "paste" menu item
-        ImageView mPasteItem = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
-        if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-            mPasteItem.setEnabled(true);
-            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-            EditText editText = (EditText) rootView.findViewById(R.id.contact_address);
-            CryptoAddress validAddress = validateAddress(item.getText().toString(),cryptoWallet);
-            if (validAddress != null) {
-                editText.setText(validAddress.getAddress());
+            // Gets the ID of the "paste" menu item
+            ImageView mPasteItem = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
+            if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                mPasteItem.setEnabled(true);
+                ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+                EditText editText = (EditText) rootView.findViewById(R.id.contact_address);
+                CryptoAddress validAddress = validateAddress(item.getText().toString(),cryptoWallet);
+                if (validAddress != null) {
+                    editText.setText(validAddress.getAddress());
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Cannot find an address in the clipboard text.\n\n"+item.getText().toString(), Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Cannot find an address in the clipboard text.\n\n"+item.getText().toString(), Toast.LENGTH_SHORT).show();
+                // This enables the paste menu item, since the clipboard contains plain text.
+                mPasteItem.setEnabled(false);
             }
-        } else {
-            // This enables the paste menu item, since the clipboard contains plain text.
-            mPasteItem.setEnabled(false);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
+
     }
 
 

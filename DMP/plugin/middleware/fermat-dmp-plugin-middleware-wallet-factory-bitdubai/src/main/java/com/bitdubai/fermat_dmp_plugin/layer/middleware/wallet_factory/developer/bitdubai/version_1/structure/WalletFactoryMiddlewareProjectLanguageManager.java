@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddLanguageStringException;
@@ -16,11 +15,9 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguagesException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.LanguageNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguageManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -31,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -78,9 +76,7 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
      * WalletFactoryProjectLanguageManager Interface member variables
      */
 
-    public static String WALLET_FACTORY_PROJECTS_PATH = "wallet_factory_projects";
-
-    public static String WALLET_FACTORY_LANGUAGES_PATH = "languages";
+    private final String WALLET_FACTORY_LANGUAGES_PATH = "languages";
 
     WalletFactoryMiddlewareDao walletFactoryMiddlewareProjectDao;
 
@@ -119,11 +115,11 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
         try {
             // TODO FIND TRANSLATOR PUBLIC KEY
             String translatorPublicKey = "";
-            WalletFactoryProjectLanguage walletFactoryProjectLanguage = new WalletFactoryMiddlewareProjectLanguage(name, type, new Version("1.0.0"), translatorPublicKey, walletFactoryProjectProposal);
+            WalletFactoryProjectLanguage walletFactoryProjectLanguage = new WalletFactoryMiddlewareProjectLanguage(name, type, new Version("1.0.0"), translatorPublicKey, walletFactoryProjectProposal.getPath() + WALLET_FACTORY_LANGUAGES_PATH);
             Language language = new Language(name, type, new Version("1.0.0"));
             setLanguageXml(language, walletFactoryProjectLanguage);
             try {
-                walletFactoryMiddlewareProjectDao.createLanguage(walletFactoryProjectLanguage);
+                walletFactoryMiddlewareProjectDao.createLanguage(walletFactoryProjectLanguage, walletFactoryProjectProposal);
                 return walletFactoryProjectLanguage;
             } catch (CantCreateEmptyWalletFactoryProjectLanguageException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -146,9 +142,8 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
     @Override
     public void deleteLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantDeleteWalletFactoryProjectLanguageException, LanguageNotFoundException {
         try {
-            String languagePath = createLanguagesPath(walletFactoryProjectLanguage);
 
-            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, languagePath, walletFactoryProjectLanguage.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginBinaryFile newFile = pluginFileSystem.getBinaryFile(pluginId, walletFactoryProjectLanguage.getPath(), walletFactoryProjectLanguage.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             newFile.loadFromMedia();
             //newFile.deleteFile();
             // TODO DELETE FILE IN PLUGIN FILE SYSTEM
@@ -166,24 +161,20 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
 
     @Override
     public Language getLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantGetLanguageException {
-        String path = createLanguagesPath(walletFactoryProjectLanguage);
         String languageFileName = createLanguageFileName(walletFactoryProjectLanguage);
-        if (path != null) {
+        try {
+            PluginTextFile newFile = pluginFileSystem.getTextFile(pluginId, walletFactoryProjectLanguage.getPath(), languageFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            newFile.loadFromMedia();
             try {
-                PluginTextFile newFile = pluginFileSystem.getTextFile(pluginId, path, languageFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                newFile.loadFromMedia();
-                try {
-                    return getLanguage(newFile.getContent());
-                } catch (CantGetLanguageException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't convert the xml to the language.", "");
-                }
-            } catch (FileNotFoundException |CantCreateFileException |CantLoadFileException e) {
+                return getLanguage(newFile.getContent());
+            } catch (CantGetLanguageException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language file.", "");
+                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't convert the xml to the language.", "");
             }
+        } catch (FileNotFoundException |CantCreateFileException |CantLoadFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language file.", "");
         }
-        throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, null, "Can't create path, check the proposal", "");
     }
 
     @Override
@@ -232,42 +223,22 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
 
     @Override
     public void setLanguageXml(Language language, WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantSetLanguageException {
-        String path = createLanguagesPath(walletFactoryProjectLanguage);
         String languageFileName = createLanguageFileName(walletFactoryProjectLanguage);
-        if (path != null) {
+        try {
+            String languageStructureXml = getLanguageXml(language);
             try {
-                String languageStructureXml = getLanguageXml(language);
-                try {
-                    PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, path, languageFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                    newFile.loadFromMedia();
-                    newFile.setContent(languageStructureXml);
-                    newFile.persistToMedia();
-                } catch (CantPersistFileException |CantCreateFileException |CantLoadFileException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    throw new CantSetLanguageException(CantSetLanguageException.DEFAULT_MESSAGE, e, "Can't create or overwrite language file.", "");
-                }
-            } catch (CantGetLanguageException e) {
+                PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, walletFactoryProjectLanguage.getPath(), languageFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.loadFromMedia();
+                newFile.setContent(languageStructureXml);
+                newFile.persistToMedia();
+            } catch (CantPersistFileException |CantCreateFileException |CantLoadFileException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSetLanguageException(CantSetLanguageException.DEFAULT_MESSAGE, e, "Can't convert language to xml format", "");
+                throw new CantSetLanguageException(CantSetLanguageException.DEFAULT_MESSAGE, e, "Can't create or overwrite language file.", "");
             }
+        } catch (CantGetLanguageException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantSetLanguageException(CantSetLanguageException.DEFAULT_MESSAGE, e, "Can't convert language to xml format", "");
         }
-        throw new CantSetLanguageException(CantSetLanguageException.DEFAULT_MESSAGE, null, "Can't create path, check the proposal", "");
-    }
-
-    private String createLanguagesPath(WalletFactoryProjectLanguage walletFactoryProjectLanguage) {
-        if (walletFactoryProjectLanguage != null &&
-                walletFactoryProjectLanguage.getName() != null &&
-                walletFactoryProjectLanguage.getVersion() != null &&
-                walletFactoryProjectLanguage.getWalletFactoryProjectProposal() != null) {
-
-            String proposalPath = createProposalPath();
-            String languagesPath = WALLET_FACTORY_LANGUAGES_PATH;
-            return proposalPath + "/" +
-                    languagesPath + "/" +
-                    walletFactoryProjectLanguage.getName() + "/" +
-                    walletFactoryProjectLanguage.getVersion();
-        }
-        return null;
     }
 
     private String createLanguageFileName(WalletFactoryProjectLanguage walletFactoryProjectLanguage) {
@@ -276,23 +247,6 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
             return walletFactoryProjectLanguage.getName()+".xml";
         }
         return null;
-    }
-
-    private String createProposalPath() {
-        if (walletFactoryProjectProposal != null &&
-                walletFactoryProjectProposal.getAlias() != null &&
-                walletFactoryProjectProposal.getProject() != null &&
-                walletFactoryProjectProposal.getProject().getName() != null) {
-
-            String initialPath = WALLET_FACTORY_PROJECTS_PATH;
-            String projectPath = walletFactoryProjectProposal.getProject().getName();
-            String proposalPath = walletFactoryProjectProposal.getAlias();
-            return initialPath + "/" +
-                    projectPath + "/" +
-                    proposalPath;
-        } else {
-            return null;
-        }
     }
 
     @Override

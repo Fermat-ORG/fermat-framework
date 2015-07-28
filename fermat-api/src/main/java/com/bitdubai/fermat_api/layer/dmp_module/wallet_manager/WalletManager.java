@@ -12,11 +12,11 @@ import java.util.UUID;
  */
 public interface WalletManager {
 
-    public List<Wallet> getUserWallets();
+    List<Wallet> getUserWallets();
 
-    public void loadUserWallets (UUID userId) throws CantLoadWalletsException;
+    void loadUserWallets (String deviceUserPublicKey) throws CantLoadWalletsException;
 
-    public void createDefaultWallets (UUID userId) throws CantCreateDefaultWalletsException;
+    void createDefaultWallets (String deviceUserPublicKey) throws CantCreateDefaultWalletsException;
     
-    public void enableWallet() throws CantEnableWalletException;
+    void enableWallet() throws CantEnableWalletException;
 }

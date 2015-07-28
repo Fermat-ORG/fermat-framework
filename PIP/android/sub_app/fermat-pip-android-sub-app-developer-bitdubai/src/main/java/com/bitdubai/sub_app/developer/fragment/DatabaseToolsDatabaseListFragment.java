@@ -17,9 +17,14 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -29,6 +34,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +55,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     View rootView;
 
     private DatabaseTool databaseTools;
-
+    private ErrorManager errorManager;
     private Resource resource;
 
     List<DeveloperDatabase> developerDatabaseList;
@@ -64,12 +70,12 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     /**
      *SubApp session
      */
-    SubAppsSession subAppSession;
+    DeveloperSubAppSession developerSubAppSession;
 
 
-    public static DatabaseToolsDatabaseListFragment newInstance(int position,SubAppsSession subAppsSession) {
+    public static DatabaseToolsDatabaseListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppsSession) {
         DatabaseToolsDatabaseListFragment f = new DatabaseToolsDatabaseListFragment();
-        f.setSubAppSession(subAppsSession);
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppsSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -80,17 +86,19 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        errorManager = developerSubAppSession.getErrorManager();
+
         try {
-            ToolManager toolManager = subAppSession.getToolManager();
-            try {
-                databaseTools = toolManager.getDatabaseTool();
-            } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
-            }
+            ToolManager toolManager = developerSubAppSession.getToolManager();
+
+            databaseTools = toolManager.getDatabaseTool();
+        } catch (CantGetDataBaseTool e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            showMessage("Unexpected error get Transactions - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -145,25 +153,13 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
             gridView.setAdapter(_adpatrer);
 
         } catch (Exception e) {
-            showMessage("DatabaseTools Database List onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
         return rootView;
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
 
 
 
@@ -171,8 +167,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         this.resource = resource;
     }
 
-    public void setSubAppSession(SubAppsSession subAppSession) {
-        this.subAppSession = subAppSession;
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
 
 
@@ -203,7 +199,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
-               holder.imageView.setOnClickListener(new View.OnClickListener() {
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -259,7 +255,6 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
      * ViewHolder.
      */
     private class ViewHolder {
-
 
 
         public ImageView imageView;

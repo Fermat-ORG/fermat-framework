@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.Addon;
  * Created by ciencias on 22.01.15.
  */
 public interface UserSubsystem {
-    public void start () throws CantStartSubsystemException;
-    public Addon getAddon();
+
+    void start () throws CantStartSubsystemException;
+
+    Addon getAddon();
+
 }

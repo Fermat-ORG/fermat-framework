@@ -37,4 +37,22 @@ public class CatalogItemInformation implements com.bitdubai.fermat_api.layer.dmp
     public InstallationStatus getInstallationStatus(UUID itemId) {
         return itemInstallationStatus.get(itemId);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("WalletId: " + getCatalogItemId(CatalogItems.WALLET));
+        stringBuilder.append(" - Status: " + getInstallationStatus(getCatalogItemId(CatalogItems.WALLET)));
+        stringBuilder.append(System.lineSeparator());
+
+        stringBuilder.append("LanguageId: " + getCatalogItemId(CatalogItems.LANGUAGE));
+        stringBuilder.append(" - Status: " + getInstallationStatus(getCatalogItemId(CatalogItems.LANGUAGE)));
+        stringBuilder.append(System.lineSeparator());
+
+        stringBuilder.append("SkinId: " + getCatalogItemId(CatalogItems.SKIN));
+        stringBuilder.append(" - Status: " + getInstallationStatus(getCatalogItemId(CatalogItems.SKIN)));
+        stringBuilder.append(System.lineSeparator());
+
+        return  stringBuilder.toString();
+    }
 }

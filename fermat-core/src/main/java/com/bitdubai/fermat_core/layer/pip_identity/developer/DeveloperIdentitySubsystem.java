@@ -29,8 +29,7 @@ public class DeveloperIdentitySubsystem implements IdentitySubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            //TODO: Comentado por error al iniciar la APP
-           // plugin = developerBitDubai.getPlugin();
+            plugin = developerBitDubai.getPlugin();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();

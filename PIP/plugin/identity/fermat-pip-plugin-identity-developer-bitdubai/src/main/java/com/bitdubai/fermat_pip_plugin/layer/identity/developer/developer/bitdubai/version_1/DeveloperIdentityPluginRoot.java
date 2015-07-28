@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 // Packages and classes to import of fermat api.
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -39,8 +40,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.Devel
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2.DealsWithDeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces_milestone2.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
@@ -170,8 +171,6 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
      */
     @Override
     public void setDeviceUserManager (DeviceUserManager deviceUserManager) {
-        if (deviceUserManager == null)
-            throw new IllegalArgumentException();
         this.deviceUserManager = deviceUserManager;
     }
 
@@ -180,9 +179,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
      */
     @Override
     public void setErrorManager (ErrorManager errorManager) {
-        if (errorManager == null)
-            throw new IllegalArgumentException();
-        this.errorManager = errorManager;
+            this.errorManager = errorManager;
     }
 
     /**
@@ -208,7 +205,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
      * Service Interface implementation.
      */
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
 
 
           this.serviceStatus = ServiceStatus.STARTED;
@@ -219,20 +216,30 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             if (this.dao == null) {
 
                 this.dao = new DeveloperIdentityDao (this.pluginDatabaseSystem, new DeveloperIdentityDatabaseFactory(this.pluginDatabaseSystem), this.pluginId,this.logManager);
-                this.dao.initializeDatabase (this.pluginId, this.getClass ().getName ());
+                this.dao.initializeDatabase (this.pluginId);
 
             } else {
-                 this.dao.initializeDatabase (this.pluginId, this.getClass ().getName ());
+                 this.dao.initializeDatabase (this.pluginId);
             }
+
+        } catch (CantInitializeDeveloperIdentityDatabaseException e) {
+            /*
+             * Catch the failure.
+             * */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Registry failed to start", e, Plugins.BITDUBAI_DEVELOPER_IDENTITY.getKey(), "");
 
         } catch (Exception e) {
         /*
          * Catch the failure.
          * */
-            throw new RuntimeException (e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Registry failed to start", e, Plugins.BITDUBAI_DEVELOPER_IDENTITY.getKey(), "");
 
-        } finally {
-            logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()),  "Plugin started...", _DEFAUL_STRING, _DEFAUL_STRING);
+
+        }
+        finally {
+                logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()),  "Plugin started...", _DEFAUL_STRING, _DEFAUL_STRING);
 
         }
     }
@@ -283,7 +290,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
 
             // Get developer list.
             logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting developers from current device user for : " + deviceUserManager.getLoggedInDeviceUser(), _DEFAUL_STRING, _DEFAUL_STRING);
-            return this.dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser ());
+            return this.dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser());
 
         } catch (CantGetUserDeveloperIdentitiesException ce) {
 
@@ -318,7 +325,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             }
 
             logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Creating new developer for : " + alias, _DEFAUL_STRING, _DEFAUL_STRING);
-            return this.dao.createNewDeveloper(alias, new ECCKeyPair(), deviceUserManager.getLoggedInDeviceUser());
+            return this.dao.createNewDeveloper(alias,new ECCKeyPair(),deviceUserManager.getLoggedInDeviceUser());
 
         } catch (CantGetUserDeveloperIdentitiesException ce) {
 
