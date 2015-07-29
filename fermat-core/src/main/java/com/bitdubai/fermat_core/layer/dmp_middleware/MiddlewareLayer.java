@@ -10,8 +10,10 @@ import com.bitdubai.fermat_core.layer.dmp_middleware.app_runtime.AppRuntimeSubsy
 import com.bitdubai.fermat_core.layer.dmp_middleware.bank_notes.BankNotesSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_contacts.WalletContactsSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_factory.WalletFactorySubsystem;
+import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_language.WalletLanguageSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_publisher.WalletPublisherSubsystem;
+import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_skin.WalletSkinSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_store.WalletStoreSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_settings.WalletSettingsSubsystem;
 /**
@@ -25,6 +27,8 @@ public class MiddlewareLayer implements PlatformLayer {
     private Plugin mWalletFactoryPlugin;
     private Plugin mWalletManagerPlugin;
     private Plugin mWalletPublisherPlugin;
+    private Plugin mWalletSkinPlugin;
+    private Plugin mWalletLanguagePlugin;
     private Plugin mWalletStorePlugin;
     private Plugin mWalletSettingPlugin;
 
@@ -54,6 +58,14 @@ public class MiddlewareLayer implements PlatformLayer {
     }
 
     public Plugin getmWalletStorePlugin() {
+        return mWalletStorePlugin;
+    }
+
+    public Plugin getmWalletSkinPlugin() {
+        return mWalletStorePlugin;
+    }
+
+    public Plugin getmWalletLanguagePlugin() {
         return mWalletStorePlugin;
     }
 
@@ -149,6 +161,32 @@ public class MiddlewareLayer implements PlatformLayer {
         try {
             walletStoreSubsystem.start();
             mWalletStorePlugin = walletStoreSubsystem.getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
+        /**
+         * Let's try to start the wallet skin subsystem.
+         */
+        MiddlewareSubsystem walletSkinSubsystem = new WalletSkinSubsystem();
+
+        try {
+            walletSkinSubsystem.start();
+            mWalletSkinPlugin = walletSkinSubsystem.getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
+        /**
+         * Let's try to start the wallet language subsystem.
+         */
+        MiddlewareSubsystem walletLanguageSubsystem = new WalletLanguageSubsystem();
+
+        try {
+            walletLanguageSubsystem.start();
+            mWalletLanguagePlugin = walletLanguageSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

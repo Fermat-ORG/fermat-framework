@@ -107,7 +107,10 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
      */
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
         try {
-            database = pluginDatabaseSystem.openDatabase(this.databaseOwnerId, this.databaseName);
+            if(database == null)
+                database = pluginDatabaseSystem.openDatabase(this.databaseOwnerId, this.databaseName);
+            else
+                database.openDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantExecuteDatabaseOperationException(cantOpenDatabaseException, "Trying to open database " + databaseName, "Error in Database plugin");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -120,7 +123,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
      * closes the database
      */
     private void closeDatabase(){
-        database.closeDatabase();
+        if(database != null)
+            database.closeDatabase();
     }
 
 
