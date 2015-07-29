@@ -376,6 +376,16 @@ public class Platform  {
         Service eventManager = (Service) ((PlatformServiceLayer) mPlatformServiceLayer).getEventManager();
         corePlatformContext.addAddon((Addon) eventManager, Addons.EVENT_MANAGER);
 
+
+        /**
+         * -----------------------------
+         * Addon PlatformInfo
+         * -----------------------------
+         */
+        Service platformInfo = (Service) ((PlatformServiceLayer) mPlatformServiceLayer).getPlatformInfo();
+        ((DealsWithErrors) platformInfo).setErrorManager((ErrorManager) errorManager);
+        corePlatformContext.addAddon((Addon) eventManager, Addons.PLATFORM_INFO);
+
         /**
          * I will give the Event Monitor to the Event Manager, in order to allow it to monitor listeners exceptions.
          */
