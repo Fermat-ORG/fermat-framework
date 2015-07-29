@@ -3,13 +3,15 @@ package com.bitdubai.fermat_api.layer.osa_android.file_system;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import java.util.UUID;
+
 
 /**
  *
  *  <p>The abstract class <code>PlatformFileSystem</code> is a interface
  *     that define the methods to manage text files on device.
  *
- *
+ * Modified by Leon Acosta (laion.cj91@gmail.com) on 27/06/2015.
  *  @author  Luis
  *  @version 1.0.0
  *  @since   01/02/15.
@@ -17,9 +19,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 
  public interface PlatformFileSystem {
 
-    public PlatformTextFile getFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException;
+    PlatformTextFile getFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException;
 
-    public PlatformTextFile createFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan )throws CantCreateFileException;
+    PlatformTextFile createFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan ) throws CantCreateFileException;
+
+    PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException;
+
+    PlatformBinaryFile createBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException;
 
     void setContext (Object context);
 

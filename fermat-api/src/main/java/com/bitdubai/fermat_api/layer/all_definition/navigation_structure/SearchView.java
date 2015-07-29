@@ -1,35 +1,65 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import java.awt.Image;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatSearchView;
+
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by rodrigo on 2015.07.17..
  */
-public class SearchView implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatSearchView {
+@XmlRootElement(name = "searchView")
+public class SearchView implements FermatSearchView {
 
+    /**
+     * Class private attributes
+     */
     String label;
-    Image searchIcon;
+    String icon;
+    String text;
 
+    /**
+     * Class constructors
+     */
+    public SearchView() {
+    }
+
+    public SearchView(String label, String icon, String text) {
+        this.label = label;
+        this.icon = icon;
+        this.text = text;
+    }
+
+    /**
+     * Class getters
+     */
+    @XmlElement
     public String getLabel() {
         return label;
     }
 
-    @Override
+    @XmlElement
     public String getText() {
-        return null;
+        return text;
     }
 
-    @Override
-    public Image getIcon() {
-        return searchIcon;
+    @XmlElement
+    public String getIcon() {
+        return icon;
     }
 
-    @Override
-    public void setIcon(Image icon) {
-        searchIcon=icon;
+    /**
+     * Class setters
+     */
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

@@ -2,7 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interface
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions_milestone2.CantGetSkinVideoPreviewException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
 
 import java.net.URL;
 import java.util.List;
@@ -13,20 +13,42 @@ import java.util.UUID;
  */
 public interface Skin {
 
-    public Version getVersion();
+
+    /**
+     * Skin identified information
+     */
     public UUID getSkinId();
-
     public String getSkinName();
-    public String getSkinDesignerName();
-    public String getSkinDesignerPublicKey();
+    public UUID getWalletId();
 
-    public byte[] getPresentationImage();
 
-    public List<String> getPreviewImageList();
-    public byte[] getImage(String imageName) throws CantGetWalletIconException;
 
+    /**
+     * Version information, current, Inicial and Final versions accepted.
+     */
+    public Version getVersion();
+    public Version getInitialWalletVersion();
+    public Version getFinalWalletVersion();
+
+    /**
+     * Skin presentation information
+     */
+    public byte[] getPresentationImage() throws CantGetWalletIconException;
+    public List<byte[]> getPreviewImageList() throws CantGetWalletIconException;
     public boolean hasVideoPreview();
     public List<URL> getVideoPreviews() throws CantGetSkinVideoPreviewException;
 
+    /**
+     * Skin resource information
+     */
+    public URL getSkinURL();
     public long getSkinSizeInBytes();
+
+    /**
+     * Skin designer information
+     */
+    public UUID getSkinDesignerId();
+
+    public boolean isDefault();
+
 }

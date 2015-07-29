@@ -13,6 +13,7 @@ public class WalletInstalledEvent implements PlatformEvent {
     private UUID walletId;
     private EventType eventType;
     private EventSource eventSource;
+    private String publicKey;
     
     public void setWalletId (UUID walletId){
         this.walletId = walletId;        
@@ -20,7 +21,11 @@ public class WalletInstalledEvent implements PlatformEvent {
     
     public UUID getWalletId(){
         return this.walletId;
-    } 
+    }
+
+    public String getPublicKey(){
+        return publicKey;
+    }
     
     public WalletInstalledEvent (EventType eventType){
         this.eventType = eventType;        

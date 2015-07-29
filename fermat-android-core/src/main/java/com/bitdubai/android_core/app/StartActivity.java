@@ -3,7 +3,6 @@ package com.bitdubai.android_core.app;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -15,16 +14,16 @@ import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.LoggerAddonRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 
 
 /**
@@ -45,9 +44,6 @@ public class StartActivity extends FragmentActivity {
     // Indicate if the app was loaded, for not load again the start activity.
     private static boolean WAS_START_ACTIVITY_LOADED = false;
 
-    private AppRuntimeManager appRuntimeMiddleware;
-    private WalletRuntimeManager walletRuntimeMiddleware;
-    private ErrorManager errorManager;
 
     private AndroidOsFileSystem fileSystemOs;
     private CorePlatformContext platformContext;
@@ -72,9 +68,8 @@ public class StartActivity extends FragmentActivity {
             try {
                 setContentView(R.layout.splash_screen);
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Can't set content view as runtime_app_activity_runtime: " + e.getMessage(),
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                         Toast.LENGTH_LONG).show();
-                // System.err.println("Can't set content view as runtime_app_activity_runtime: " + e.getMessage());
             }
 
             new GetTask(this).execute();
@@ -116,12 +111,10 @@ public class StartActivity extends FragmentActivity {
             Context context = getApplicationContext();
 
 
-            platform = ApplicationSession.getFermatPlatform();
+            platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
 
-            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            //StrictMode.setThreadPolicy(policy);
-
+            ErrorManager errorManager = (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
 
             //set Os Addons in platform
             fileSystemOs = new AndroidOsFileSystem();
@@ -141,7 +134,8 @@ public class StartActivity extends FragmentActivity {
                 ((Service) loggerSystemOs).start();
                 platform.setLoggerSystemOs(loggerSystemOs);
             } catch (Exception e) {
-                System.out.println("cant start logger exception: "+e.getMessage());
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             }
 
         //execute start platform
@@ -150,24 +144,18 @@ public class StartActivity extends FragmentActivity {
                     platform.start();
 
             } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
-                System.err.println("CantStartPlatformException: " + e.getMessage());
-
-                Toast.makeText(getApplicationContext(), "Catastrophic Failure Starting Fermat Platform" + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             }
 
 
-            //get platform object
+            /**
+             * get platform object
+             */
+
             platformContext = platform.getCorePlatformContext();
 
-            //get instances of Runtime Middleware object
-            appRuntimeMiddleware = (AppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-            walletRuntimeMiddleware = (WalletRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
-
-
-            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
-            ApplicationSession.mDefaultTypeface=tf;
 
             return true;
         }

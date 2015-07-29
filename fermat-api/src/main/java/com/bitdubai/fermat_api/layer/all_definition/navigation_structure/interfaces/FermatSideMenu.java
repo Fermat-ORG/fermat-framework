@@ -8,5 +8,7 @@ import java.util.List;
  * Created by rodrigo on 2015.07.20..
  */
 public interface FermatSideMenu {
-    public List<MenuItem> getMenuItems ();
+
+    List<MenuItem> getMenuItems ();
+
 }

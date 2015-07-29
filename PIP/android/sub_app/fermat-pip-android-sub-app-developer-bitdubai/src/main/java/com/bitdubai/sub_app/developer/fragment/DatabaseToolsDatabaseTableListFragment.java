@@ -17,9 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -31,6 +37,7 @@ import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.DatabasesTable;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +56,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     private static final String ARG_POSITION = "position";
     private static final String TAG_DATABASE_TABLES_TOOLS_FRAGMENT = "databases tables list tools";
     View rootView;
-
+    private ErrorManager errorManager;
 
     private DatabaseTool databaseTools;
 
@@ -68,10 +75,15 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     private String[] params;
     private GridView gridView;
 
-    private static Platform platform = new Platform();
 
-    public static DatabaseToolsDatabaseTableListFragment newInstance(int position) {
+    /**
+     * SubApp session
+     */
+    DeveloperSubAppSession subAppsSession;
+
+    public static DatabaseToolsDatabaseTableListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsDatabaseTableListFragment f = new DatabaseToolsDatabaseTableListFragment();
+        f.setSubAppsSession((DeveloperSubAppSession)subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -81,18 +93,18 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        errorManager = subAppsSession.getErrorManager();
         setRetainInstance(true);
         try {
-            ToolManager toolManager = platform.getToolManager();
-            try {
-                databaseTools = toolManager.getDatabaseTool();
-            } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
-            }
+            ToolManager toolManager = subAppsSession.getToolManager();
+            databaseTools = toolManager.getDatabaseTool();
+        } catch (CantGetDataBaseTool e) {
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            showMessage("Unexpected error get Transactions - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -156,28 +168,21 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             gridView.setAdapter(_adpatrer);
 
         } catch (Exception e) {
-            showMessage("DatabaseTools Database Table List Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
         return rootView;
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
+
 
     public void setDeveloperDatabase(DeveloperDatabase developerDatabase) {
         this.developerDatabase = developerDatabase;
+    }
+
+    public void setSubAppsSession(DeveloperSubAppSession subAppsSession) {
+        this.subAppsSession = subAppsSession;
     }
 
 
@@ -227,10 +232,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                         params[1] = developerDatabase;
                         params[2] = developerDatabaseTableList.get(position);
 
-
-                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperRecordsFragment");
-                        ((FermatScreenSwapper)getActivity()).setParams(params);
-                        ((FermatScreenSwapper)getActivity()).changeScreen();
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperRecordsFragment",params);
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);

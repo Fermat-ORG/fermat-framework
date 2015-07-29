@@ -19,24 +19,21 @@ public class UserLoggedInEventHandler implements EventHandler {
 
     WalletManager walletManager;
 
-    public void setWalletManager (WalletManager walletManager){
+    public void setWalletManager(WalletManager walletManager) {
         this.walletManager = walletManager;
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception{
+    public void handleEvent(PlatformEvent platformEvent) throws Exception {
 
-        UUID userId = ((DeviceUserLoggedInEvent) platformEvent).getUserId();
+        String deviceUserPublicKey = ((DeviceUserLoggedInEvent) platformEvent).getPublicKey();
 
 
         if (((Service) this.walletManager).getStatus() == ServiceStatus.STARTED) {
 
-            try
-            {
-                this.walletManager.loadUserWallets(userId);
-            }
-            catch (CantLoadWalletsException cantLoadWalletsException)
-            {
+            try {
+                this.walletManager.loadUserWallets(deviceUserPublicKey);
+            } catch (CantLoadWalletsException cantLoadWalletsException) {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
@@ -45,9 +42,7 @@ public class UserLoggedInEventHandler implements EventHandler {
 
                 throw cantLoadWalletsException;
             }
-        }
-        else
-        {
+        } else {
             throw new ModuleNotRunningException();
         }
 

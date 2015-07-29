@@ -15,11 +15,49 @@ import java.util.Map;
  */
 public interface SubApp {
 
+    /**
+     * SubApp type
+     *
+     * @return SubApps
+     */
+
     public SubApps getType();
+
+    /**
+     * Screens in a SubApp
+     */
 
     public Map<Activities, Activity> getActivities();
 
-    public Map<Wallets, Wallet> getWallets();
+    /**
+     *  Search screen in the SubApp activities
+     *
+     * @param activities
+     * @return Activity
+     */
+
+    public Activity getActivity(Activities activities);
+
+    /**
+     * Last screen active
+     */
+
+    public Activity getLastActivity();
+
+    /**
+     * Main screen of a SubApp
+     *
+     * @param activity
+     */
+
+    public void setStartActivity(Activities activity);
+
+    /**
+     *  Available languages
+     *
+     * @return Map of languages
+     */
     
     public Map<String,LanguagePackage> getLanguagePackages();
+
 }

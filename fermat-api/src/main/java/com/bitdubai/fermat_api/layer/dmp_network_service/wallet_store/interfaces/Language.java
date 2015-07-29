@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interface
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -12,47 +13,32 @@ import java.util.UUID;
  */
 public interface Language {
 
-    public Version getVersion();
-
     /**
-     * This method gives us the identifier of the language package
-     *
-     * @return the language id
+     * Language identifiers
      */
     public UUID getLanguageId();
-
-    /**
-     * This method gives us the name of the language
-     *
-     * @return an enum representing the language
-     */
+    public UUID getWalletId();
     public Languages getLanguageName();
-
-    /**
-     * This method gives us a label given for the language
-     *
-     * @return a label for the language
-     */
     public String getLanguageLabel();
 
     /**
-     * This method gives us the size of the language package
-     *
-     * @return an int representing the language package size
+     * Language file information
      */
     public int getLanguagePackageSizeInBytes();
+    public URL getFileURL();
 
     /**
-     * This method gives us the name of the author of this translation
-     *
-     * @return the alias of the translator
+     * Version information, current, Initial and Final.
      */
-    public String getTranslatorName();
+    public Version getVersion();
+    public Version getInitialWalletVersion();
+    public Version getFinalWalletVersion();
 
     /**
-     * This method gives us the public key of the author of this translation
-     *
-     * @return the public key of the translator
+     * Translator information
      */
-    public String getTranslatorPublicKey();
+    public UUID getTranslatorId();
+
+    public boolean isDefault();
+
 }

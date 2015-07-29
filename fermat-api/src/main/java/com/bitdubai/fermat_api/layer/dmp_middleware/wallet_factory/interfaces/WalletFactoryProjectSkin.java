@@ -1,13 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.ResourceType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantAddWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourceException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectResourceException;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -15,35 +9,26 @@ import java.util.UUID;
  */
 public interface WalletFactoryProjectSkin {
 
-    // TODO DESIGNER?
+    /**
+     * @return the id of the project skin
+     */
+    UUID getId();
 
-    // name of skin, first skin is default
+    /**
+     * @return the name of the project skin
+     */
     String getName();
 
-    // hash of the skin, calculated each time you do a change in a resource
-    String getHash();
+    /**
+     * @return the designer public key of the translator who is working with this skin
+     */
+    String getDesignerPublicKey();
 
-    // get all resources from a skin
-    List<WalletFactoryProjectResource> getResources() throws CantGetWalletFactoryProjectResourcesException;
+    /**
+     * @return the version of the project skin
+     */
+    Version getVersion();
 
-    // project proposal to which it belongs
-    WalletFactoryProjectProposal getWalletFactoryProjectProposal();
-
-    // get all resources of a skin by type
-    List<WalletFactoryProjectResource> getAllResourcesByResourceType(ResourceType resourceType);
-
-    // get a specific resource
-    WalletFactoryProjectResource getResource(String name, ResourceType resourceType) throws CantGetWalletFactoryProjectResourceException;
-
-    // add a resource of the skin
-    void addResource(String name, byte[] resource, ResourceType resourceType) throws CantAddWalletFactoryProjectResourceException;
-
-    // update a resource of the skin
-    void updateResource(String name, byte[] resource, ResourceType resourceType) throws CantUpdateWalletFactoryProjectResourceException;
-
-    // delete a resource of the skin
-    void deleteResource(String name, byte[] resource, ResourceType resourceType) throws CantDeleteWalletFactoryProjectResourceException;
-
-    String getResourceTypePath(ResourceType resourceType);
+    String getPath();
 
 }

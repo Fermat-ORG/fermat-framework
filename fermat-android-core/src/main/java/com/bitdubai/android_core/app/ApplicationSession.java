@@ -1,21 +1,13 @@
 package com.bitdubai.android_core.app;
 
 
-import android.graphics.Typeface;
-import android.os.Handler;
-
 import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_core.Platform;
 
 
 /**
- * Reformated by Matias
+ * Reformated by Matias Furszyfer
  */
 
 /**
@@ -28,23 +20,29 @@ import com.bitdubai.fermat_core.Platform;
 
 public class ApplicationSession extends android.support.multidex.MultiDexApplication {
 
-    public static Typeface mDefaultTypeface;
-    public static Object[] mParams;
 
     /**
-     * Fermat platform
+     *  Fermat platform
      */
-    private static Platform fermatPlatform;
+
+    private Platform fermatPlatform;
+
     /**
      * Sub App session Manager
      */
-    private static SubAppSessionManager subAppSessionManager;
+
+    private SubAppSessionManager subAppSessionManager;
+
     /**
      * Wallet session manager
      */
-    private static WalletSessionManager walletSessionManager;
+
+    private WalletSessionManager walletSessionManager;
 
 
+    /**
+     *  Application session constructor
+     */
 
     public ApplicationSession() {
         super();
@@ -53,20 +51,31 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
         walletSessionManager = new WalletSessionManager();
     }
 
-    public static Typeface getDefaultTypeface() {
-        return mDefaultTypeface;
-    }
-    public static Platform getFermatPlatform() {
+
+    /**
+     *  Method to get the fermat platform
+     * @return Platform
+     */
+    public Platform getFermatPlatform() {
         return fermatPlatform;
     }
-    public static AppRuntimeManager getAppRuntimeMiddleware(){
-        return (AppRuntimeManager) fermatPlatform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+
+    /**
+     * Method to get subAppSessionManager which can manipulate the active session of subApps
+     * @return SubAppSessionManager
+     */
+
+    public SubAppSessionManager getSubAppSessionManager(){
+        return subAppSessionManager;
     }
-    public static WalletRuntimeManager getWalletRuntimeManager(){
-        return (WalletRuntimeManager) fermatPlatform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
-    }
-    public static ErrorManager getErrorManager(){
-        return (ErrorManager) fermatPlatform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
+
+    /**
+     * Method to get subWalletSessionManager which can manipulate the active session of wallets
+     * @return WalletSessionManager
+     */
+
+    public WalletSessionManager getWalletSessionManager(){
+        return walletSessionManager;
     }
 
 }

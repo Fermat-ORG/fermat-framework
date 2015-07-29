@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantStartSubsystemException extends FermatException {
 
-	private static final String DEFAULT_MESSAGE = "CAN'T START THE IDENTITY LAYER DUE TO AN EXCEPTION: ";
+	private static final String DEFAULT_MESSAGE = "CAN'T START THE USER SUBSYSTEM DUE TO AN EXCEPTION: ";
 
 	public CantStartSubsystemException(final String message, final Exception cause, final String context, final String possibleReason){
 		super(DEFAULT_MESSAGE + message, cause, context, possibleReason);

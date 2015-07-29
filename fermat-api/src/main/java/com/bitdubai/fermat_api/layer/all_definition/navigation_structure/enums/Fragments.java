@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
+
 /**
  * Created by rodrigo on 2015.07.20..
  */
-public enum Fragments {
+public enum Fragments implements FermatFragments {
     CWP_SHELL_LOGIN ("LoginFragment"),
     CWP_WALLET_MANAGER_MAIN ("DesktopFragment"),
     CWP_SUB_APP_DEVELOPER ("SubAppDesktopFragment"),
@@ -67,8 +69,17 @@ public enum Fragments {
     CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS("DeveloperLogLevel3Fragment"),
 
     CWP_WALLET_STORE_MAIN ("StoreFragment"),
+
+    CWP_WALLET_PUBLISHER_MAIN("PublisherFragment"),
+
+
+    /**
+     * WAllet factory
+     */
     CWP_WALLET_FACTORY_MAIN ("FactoryFragment"),
-    CWP_WALLET_PUBLISHER_MAIN("PublisherFragment");
+    CWP_WALLET_FACTORY_MANAGER ("ManagerFragment"),
+    CWP_WALLET_FACTORY_ESTRUCTURE ("EstructureFragment");
+
 
 
     private String key;

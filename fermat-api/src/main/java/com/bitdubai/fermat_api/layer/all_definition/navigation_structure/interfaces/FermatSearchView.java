@@ -1,18 +1,19 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
-import java.awt.Image;
-
 /**
  * Created by rodrigo on 2015.07.20..
  */
 public interface FermatSearchView {
-    public String getText();
 
-    public Image getIcon() ;
+    String getText();
 
-    public void setIcon(Image icon);
+    String getIcon() ;
 
-    public void setLabel(String label);
+    String getLabel();
 
-    public String getLabel();
+    void setText(String text);
+
+    void setIcon(String icon);
+
+    void setLabel(String label);
 }

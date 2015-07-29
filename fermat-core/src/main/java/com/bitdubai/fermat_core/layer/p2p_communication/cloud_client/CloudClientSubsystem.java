@@ -29,8 +29,7 @@ public class CloudClientSubsystem implements CommunicationSubsystem {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
         }
-        catch (Exception exception)
-        {
+        catch (Exception exception) {
             String message = CantStartSubsystemException.DEFAULT_MESSAGE;
             FermatException cause = (exception instanceof FermatException) ? (FermatException) exception : FermatException.wrapException(exception);
             String context = "Plugin: " + plugin.getClass();

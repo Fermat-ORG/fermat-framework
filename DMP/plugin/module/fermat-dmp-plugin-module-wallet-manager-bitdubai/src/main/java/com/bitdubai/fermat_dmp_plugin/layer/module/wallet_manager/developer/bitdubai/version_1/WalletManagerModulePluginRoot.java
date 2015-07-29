@@ -1,22 +1,24 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1;
 
 
-
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.NicheWalletType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantPersistWalletException;
@@ -32,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerModuleInstalledWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -53,19 +56,19 @@ import java.util.UUID;
 /**
  * Created by ciencias on 21.01.15.
  */
-public class WalletManagerModulePluginRoot implements Service, WalletManager, DealsWithBitcoinWallet,DealsWithEvents,DealsWithErrors, DealsWithLogger,DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
-    
 
-    
+public class WalletManagerModulePluginRoot implements Service, WalletManager, DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin {
+
+
     /**
      * WalletManager Interface member variables.
      */
-    UUID userId = UUID.fromString("78850988-6e00-4d63-8204-e101a4f4a651");
+    String deviceUserPublicKey = "";
     UUID walletId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
-    List<Wallet> userWallets;
+    List<InstalledWallet> userWallets;
 
-    private Map<UUID, UUID> walletIds =  new HashMap<>();
+    private Map<String, UUID> walletIds = new HashMap<>();
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -116,16 +119,10 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     UUID pluginId;
 
 
-    
-
-
-    public WalletManagerModulePluginRoot(){
+    public WalletManagerModulePluginRoot() {
         userWallets = new ArrayList<>();
         this.serviceStatus = ServiceStatus.CREATED;
     }
-
-
-
 
 
     /**
@@ -141,27 +138,26 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
          */
 
         boolean existWallet = false;
-        try{
+        try {
             //load user's wallets ids
-            this.loadUserWallets(userId);
+            this.loadUserWallets(deviceUserPublicKey);
 
             Iterator iterator = walletIds.entrySet().iterator();
 
             while (iterator.hasNext()) {
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
-                if( mapEntry.getValue().toString().equals(walletId.toString()))
+                if (mapEntry.getValue().toString().equals(walletId.toString()))
                     existWallet = true;
             }
 
-            if(!existWallet)
-            {
+            if (!existWallet) {
                 //Create new Bitcoin Wallet
 
                 try {
 
-                    ((DealsWithPluginFileSystem)bitcoinWalletManager).setPluginFileSystem(this.pluginFileSystem);
-                    ((DealsWithErrors)bitcoinWalletManager).setErrorManager(this.errorManager);
-                    ((DealsWithPluginDatabaseSystem)bitcoinWalletManager).setPluginDatabaseSystem(this.pluginDatabaseSystem);
+                    ((DealsWithPluginFileSystem) bitcoinWalletManager).setPluginFileSystem(this.pluginFileSystem);
+                    ((DealsWithErrors) bitcoinWalletManager).setErrorManager(this.errorManager);
+                    ((DealsWithPluginDatabaseSystem) bitcoinWalletManager).setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
                     bitcoinWalletManager.createWallet(walletId);
 
@@ -169,26 +165,21 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
                     try {
                         this.persistWallet(walletId);
-                    }
-                    catch (CantPersistWalletException cantPersistWalletException) {
+                    } catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 
                     }
 
-                }
-                catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException cantCreateWalletException) {
+                } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException cantCreateWalletException) {
                     throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 
                 }
             }
 
-        }
-        catch(CantLoadWalletsException cantLoadWalletsException)
-        {
-           errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
+        } catch (CantLoadWalletsException cantLoadWalletsException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
             throw new CantStartPluginException();
         }
-
 
 
         /**
@@ -233,7 +224,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);*/
 
-        
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -245,7 +236,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     public void resume() {
 
     }
-    
+
     @Override
     public void stop() {
 
@@ -264,33 +255,45 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
-    
-    
-    
-    public void enableWallet(){
-        
-        
+
+
+    public void enableWallet() {
+
+
     }
-    
-    
-    private void finishedWalletInstallation(){
+
+
+    private void finishedWalletInstallation() {
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.FINISHED_WALLET_INSTALLATION);
         platformEvent.setSource(EventSource.MODULE_WALLET_MANAGER_PLUGIN);
         eventManager.raiseEvent(platformEvent);
-        
+
     }
-    
+
     /**
      * WalletManager Interface implementation.
      */
 
-    public List<Wallet> getUserWallets() {
-        return userWallets;
+    public List<InstalledWallet> getUserWallets() {
+        // Harcoded para testear el circuito más arriba
+        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "reference_wallet_icon",
+                "Bitcoin Reference Wallet",
+                "reference_wallet",
+                "wallet_platform_identifier",
+                new Version(1,0,0)
+        );
+
+        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+        lstInstalledWallet.add(installedWallet);
+        return lstInstalledWallet;
     }
 
-    public void loadUserWallets (UUID userId) throws CantLoadWalletsException {
+    public void loadUserWallets(String deviceUserPublicKey) throws CantLoadWalletsException {
 
-        this.userId = userId;
+        this.deviceUserPublicKey = deviceUserPublicKey;
         /**
          *I check if the file containing all the wallets  ids managed by this plug-in already exists or not.
          * and load wallets ids for user
@@ -300,10 +303,9 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
         try {
 
-            try{
+            try {
                 walletIdsFile = pluginFileSystem.getTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            }
-            catch (CantCreateFileException cantCreateFileException ) {
+            } catch (CantCreateFileException cantCreateFileException) {
 
                 /**
                  * If I can not save this file, then this plugin shouldn't be running at all.
@@ -322,12 +324,11 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
                 /**
                  * Now I read the content of the file and place it in memory.
                  */
-                String[] stringWalletIds = walletIdsFile.getContent().split(";" , -1);
+                String[] stringWalletIds = walletIdsFile.getContent().split(";", -1);
 
-                for (String stringWalletId : stringWalletIds ) {
+                for (String stringWalletId : stringWalletIds) {
 
-                    if(!stringWalletId.equals(""))
-                    {
+                    if (!stringWalletId.equals("")) {
                         /**
                          * Each record in the file has to values: the first is the external id of the wallet, and the
                          * second is the internal id of the wallet.
@@ -336,16 +337,15 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
                         String[] idPair = stringWalletId.split(",", -1);
 
                         //put wallets of this user
-                        if(UUID.fromString(idPair[0]).equals(userId))
-                            walletIds.put( UUID.fromString(idPair[0]),  UUID.fromString(idPair[1]));
+                        if (idPair[0].equals(deviceUserPublicKey))
+                            walletIds.put(idPair[0], UUID.fromString(idPair[1]));
 
                         /**
                          * Great, now the wallet list is in memory.
                          */
                     }
                 }
-            }
-            catch (CantLoadFileException cantLoadFileException) {
+            } catch (CantLoadFileException cantLoadFileException) {
 
                 /**
                  * In this situation we might have a corrupted file we can not read. For now the only thing I can do is
@@ -359,8 +359,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
                 throw new CantLoadWalletsException();
             }
-        }
-        catch (FileNotFoundException fileNotFoundException) {
+        } catch (FileNotFoundException fileNotFoundException) {
             /**
              * If the file did not exist it is not a problem. It only means this is the first time this plugin is running.
              *
@@ -369,11 +368,10 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
              * * * * *
              */
 
-            try{
+            try {
 
                 walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            }
-            catch (CantCreateFileException cantCreateFileException ) {
+            } catch (CantCreateFileException cantCreateFileException) {
 
                 /**
                  * If I can not save this file, then this plugin shouldn't be running at all.
@@ -384,8 +382,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
             }
             try {
                 walletIdsFile.persistToMedia();
-            }
-            catch (CantPersistFileException cantPersistFileException ) {
+            } catch (CantPersistFileException cantPersistFileException) {
 
                 /**
                  * If I can not save this file, then this plugin shouldn't be running at all.
@@ -397,19 +394,17 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
         }
     }
 
-    public void persistWallet(UUID walletId)  throws CantPersistWalletException
-    {
+    public void persistWallet(UUID walletId) throws CantPersistWalletException {
         /**
          * Now I will add this wallet to the list of wallets managed by the plugin.
          */
-        walletIds.put(userId,walletId);
+        walletIds.put(deviceUserPublicKey, walletId);
 
         PluginTextFile walletIdsFile = null;
 
-        try{
+        try {
             walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        }
-        catch (CantCreateFileException cantCreateFileException ) {
+        } catch (CantCreateFileException cantCreateFileException) {
 
             /**
              * If I can not save this file, then this plugin shouldn't be running at all.
@@ -426,7 +421,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
         Iterator iterator = walletIds.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry pair = (Map.Entry)iterator.next();
+            Map.Entry pair = (Map.Entry) iterator.next();
             stringBuilder.append(pair.getKey().toString() + "," + pair.getValue().toString() + ";");
             iterator.remove();
         }
@@ -437,10 +432,9 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
          */
         walletIdsFile.setContent(stringBuilder.toString());
 
-        try{
+        try {
             walletIdsFile.persistToMedia();
-        }
-        catch (CantPersistFileException cantPersistFileException) {
+        } catch (CantPersistFileException cantPersistFileException) {
             /**
              * If I can not save the id of the new wallet created, then this method fails.
              */
@@ -451,7 +445,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     }
 
     @Override
-    public void createDefaultWallets(UUID userId) throws CantCreateDefaultWalletsException {
+    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException {
 
         /**
          * By now I will create only a new wallet, In the future there will be more than one default wallets.
@@ -462,21 +456,19 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
         ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
         ((DealsWithEvents) wallet).setEventManager(eventManager);
         ((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
-        
-        try
-        {
-            wallet.createWallet(NicheWalletType.DEFAULT);
-        }
-        catch (CantCreateWalletException cantCreateWalletException)
-        {
+
+        //try {
+            //aquí al crear la wallet se le deben pasar todos los parametros de esta
+            //wallet.createWallet("public_key_hardcoded");
+        //} catch (CantCreateWalletException cantCreateWalletException) {
             /**
              * Well, if it is not possible to create a wallet, then we have a problem that I can not handle...
              */
-            System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
-            cantCreateWalletException.printStackTrace();
+        //    System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
+        //    cantCreateWalletException.printStackTrace();
 
-            throw new CantCreateDefaultWalletsException();
-        }
+        //    throw new CantCreateDefaultWalletsException();
+        //}
 
     }
 
@@ -485,7 +477,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
      */
 
     @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager){
+    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
         this.bitcoinWalletManager = bitcoinWalletManager;
     }
 
@@ -496,8 +488,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
     @Override
 
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem)
-    {
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -512,7 +503,6 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     }
 
 
-
     /**
      * DealWithEvents Interface implementation.
      */
@@ -523,11 +513,11 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     }
 
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        this.errorManager = errorManager;
     }
 
     /**

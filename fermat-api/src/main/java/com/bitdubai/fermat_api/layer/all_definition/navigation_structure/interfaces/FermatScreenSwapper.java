@@ -1,13 +1,14 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+
 /**
- * Created by rodrigo on 2015.07.20..
+ * Created by Furszyfer Matias on 2015.07.23..
  */
 public interface FermatScreenSwapper {
 
-    public void changeScreen();
+    public void changeScreen(String screen,Object[] objects);
 
-    public void setScreen(String screen);
+    public void selectWallet(String screen, InstalledWallet installedWallet);
 
-    public void setParams(Object[] objects);
 }

@@ -24,8 +24,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -34,6 +39,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,12 +61,20 @@ public class LogToolsFragment extends Fragment {
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
     //List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
 
+    /**
+     * SubApp session
+     */
+
+    private ErrorManager errorManager;
+
+    DeveloperSubAppSession developerSubAppSession;
+
+
     private static final String ARG_POSITION = "position";
     View rootView;
 
     private LogTool logTool;
 
-    private static Platform platform = new Platform();
 
     private ArrayListLoggers lstLoggers;
 
@@ -68,8 +82,9 @@ public class LogToolsFragment extends Fragment {
 
     Typeface tf;
 
-    public static LogToolsFragment newInstance(int position) {
+    public static LogToolsFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         LogToolsFragment f = new LogToolsFragment();
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -81,18 +96,16 @@ public class LogToolsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         tf= Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-
+        errorManager = developerSubAppSession.getErrorManager();
         try {
-            ToolManager toolManager = platform.getToolManager();
-            try {
-                logTool = toolManager.getLogTool();
-            } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
-            }
+            ToolManager toolManager = developerSubAppSession.getToolManager();
+            logTool = toolManager.getLogTool();
+        } catch (CantGetLogTool e) {
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            showMessage("Unexpected error get tool manager - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
         pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
@@ -112,7 +125,6 @@ public class LogToolsFragment extends Fragment {
             Plugins plugin = Plugins.getByKey(pluginKey);
 
 
-            //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
              */
@@ -121,12 +133,13 @@ public class LogToolsFragment extends Fragment {
             logTool.setNewLogLevelInClass(plugin, data);
 
         } catch (Exception e) {
-            System.out.println("*********** soy un error " + e.getMessage());
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-        @Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
 
@@ -173,21 +186,13 @@ public class LogToolsFragment extends Fragment {
                 /**
                  * I will get the list of the available classes on the plug in
                  */
-                String level1 = "";
-                String level2 = "";
-                String toReplace = "";
+
                 List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
                 //esto es sacar con getClassesHierarchy
                 for (ClassHierarchyLevels classes : logTool.getClassesHierarchyAddons(addon)) {
                     //loading de loggers class
 
                     Loggers log = new Loggers();
-                    /*log.level0 = classes.getLevel0();
-                    log.level1 = classes.getLevel1();
-                    log.level2 = classes.getLevel2();
-                    log.level3 = classes.getLevel3();
-                    log.fullPath = classes.getFullPath();
-                    */
                     log.type = Loggers.TYPE_ADDON;
                     log.picture = "addon";
                     log.pluginKey=addon.getKey();
@@ -208,7 +213,7 @@ public class LogToolsFragment extends Fragment {
 
             ArrayListLoggers lstLoggersToShow=new ArrayListLoggers();
             for(Loggers loggers:lstLoggers){
-               //String level_0 = loggers.level0;
+                //String level_0 = loggers.level0;
                 if(!lstLoggersToShow.containsLevel0(loggers)){
                     lstLoggersToShow.add(loggers);
 
@@ -221,31 +226,21 @@ public class LogToolsFragment extends Fragment {
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
         }catch (Exception e){
-                showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
-                e.printStackTrace();
-            }
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }
 
         registerForContextMenu(gridView);
         return rootView;
 
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
+
+
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
-
-
-
 
 
     public class AppListAdapter extends ArrayAdapter<Loggers> {
@@ -287,9 +282,8 @@ public class LogToolsFragment extends Fragment {
                         Object[] params = new Object[1];
 
                         params[0] = lst;
-                        ((FermatScreenSwapper)getActivity()).setScreen("DeveloperLogLevel1Fragment");
-                        ((FermatScreenSwapper)getActivity()).setParams(params);
-                        ((FermatScreenSwapper)getActivity()).changeScreen();
+
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperLogLevel1Fragment",params);
 
 
                     }

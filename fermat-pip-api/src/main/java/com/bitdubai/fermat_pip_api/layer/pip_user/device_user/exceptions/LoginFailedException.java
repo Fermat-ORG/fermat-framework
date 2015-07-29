@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
+
 /**
  * Created by ciencias on 22.01.15.
  */

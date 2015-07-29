@@ -50,9 +50,8 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     @Override
     public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
         try{
-            AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(this.Context, ownerId, hasDBName);
+            AndroidDatabase database = new AndroidDatabase(this.Context, ownerId, hasDBName);
             database.openDatabase();
             return database;
         } catch (NoSuchAlgorithmException e) {
@@ -61,6 +60,10 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             String context = "Database Name : " + databaseName;
             String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
             throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        } catch (DatabaseNotFoundException exception){
+          throw exception;
+        } catch (Exception e){
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
         }
 
     }
@@ -86,6 +89,9 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             String context = "Database Name : " + databaseName;
             String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
             throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        }
+        catch (Exception e){
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
         }
 
     }
@@ -113,6 +119,9 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             String context = "Database Name : " + databaseName;
             String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
             throw new CantCreateDatabaseException(message, cause, context, possibleReason);
+        }
+        catch (Exception e){
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
         }
 
     }

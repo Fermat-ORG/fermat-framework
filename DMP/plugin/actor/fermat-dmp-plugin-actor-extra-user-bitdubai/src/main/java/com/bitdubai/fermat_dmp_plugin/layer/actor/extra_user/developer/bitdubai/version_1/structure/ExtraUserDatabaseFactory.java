@@ -56,7 +56,7 @@ public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPlugi
      * @throws CantCreateDatabaseException
      */
     public Database createDatabase(UUID pluginId) throws CantCreateDatabaseException {
-
+        //TODO Manuel este meotod tambien tiene que gestionar las excepciones genericas
         Database database;
 
         /**

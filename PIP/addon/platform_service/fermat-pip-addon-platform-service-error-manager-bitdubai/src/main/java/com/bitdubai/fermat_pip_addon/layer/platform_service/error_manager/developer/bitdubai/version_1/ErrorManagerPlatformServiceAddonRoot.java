@@ -3,6 +3,7 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.devel
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatfo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 
 //import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.*;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerRegistry;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerReportAgent;
@@ -88,6 +90,11 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         processException(exceptionSource.toString(), unexpectedSubAppExceptionSeverity.toString(), exception);
     }
 
+    @Override
+    public void reportUnexpectedUIException(UISource exceptionSource, UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
+        processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
+    }
+
     /**
      * Service Interface implementation.
      */
@@ -127,7 +134,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     }
 
     private void printErrorReport(final String source, final String severity, final FermatException exception){
-        //System.err.println(new ErrorReport(source, severity, exception).generateReport());
+        System.err.println(new ErrorReport(source, severity, exception).generateReport());
     }
 
 }

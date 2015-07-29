@@ -8,26 +8,25 @@ import java.util.UUID;
 
 /**
  * Created by ciencias on 26.01.15.
+ * modified by  by Leon Acosta (laion.cj91@gmail.com) on 27/06/2015.
  */
 public class DeviceUserCreatedEvent implements PlatformEvent {
 
-    private UUID userId;
+    private String publicKey;
     private EventType eventType;
     private EventSource eventSource;
 
-    public void setUserId (UUID userId){
-        this.userId = userId;
+    public void setPublicKey (String publicKey){
+        this.publicKey = publicKey;
     }
 
-    public UUID getUserId() {
-        return this.userId;
+    public String getPublicKey() {
+        return this.publicKey;
     }
-
 
     public DeviceUserCreatedEvent(EventType eventType){
         this.eventType = eventType;
     }
-
 
     @Override
     public EventType getEventType() {
