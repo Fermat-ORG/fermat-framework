@@ -624,10 +624,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         try {
             catalogItem = getCatalogItemFromDatabase(walletId);
             closeDatabase();
-        } catch (InvalidResultReturnedByDatabaseException e) {
-            closeDatabase();
-            throw new CantExecuteDatabaseOperationException(e, null,null);
         } catch (Exception exception){
+            closeDatabase();
             throw new CantExecuteDatabaseOperationException(exception, null,null);
         }
 
@@ -645,10 +643,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
             List<CatalogItem> catalogItems =getAllCatalogItemsFromDatabase();
             closeDatabase();
             return  catalogItems;
-        } catch (InvalidResultReturnedByDatabaseException e) {
-            closeDatabase();
-            throw new CantExecuteDatabaseOperationException(e, null,null);
         } catch (Exception exception){
+            closeDatabase();
             throw new CantExecuteDatabaseOperationException(exception, null,null);
         }
     }
@@ -665,10 +661,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         try {
             detailedCatalogItem= getDetailedCatalogItemFromDatabase(walletId);
             closeDatabase();
-        } catch (InvalidResultReturnedByDatabaseException e) {
-            closeDatabase();
-            throw new CantExecuteDatabaseOperationException(e, null,null);
         } catch (Exception exception){
+            closeDatabase();
             throw new CantExecuteDatabaseOperationException(exception, null,null);
         }
 
@@ -832,13 +826,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
             database.executeTransaction(transaction);
             closeDatabase();
-        } catch (InvalidDatabaseOperationException invalidDatabaseOperationException) {
+        }  catch (Exception exception){
             closeDatabase();
-            throw new CantExecuteDatabaseOperationException(invalidDatabaseOperationException, databaseOperation.toString(), null);
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-            closeDatabase();
-            throw new CantExecuteDatabaseOperationException(databaseTransactionFailedException, catalogItem.toString(), null);
-        } catch (Exception exception){
             throw new CantExecuteDatabaseOperationException(exception, catalogItem.toString(), null);
         }
     }
