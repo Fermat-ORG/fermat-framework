@@ -2,6 +2,8 @@ Author: Furszyfer Matias
 
 == Soporte para multiples pantallas:
 
+El soporte para multiples pantallas se encuentra dado por diversos factores los cuales voy a detallar a continuación.
+
 === El tamaño de la pantalla en la cual puede estar corriendo la aplicación:
 
 * Small:	Recursos para small size screens.
