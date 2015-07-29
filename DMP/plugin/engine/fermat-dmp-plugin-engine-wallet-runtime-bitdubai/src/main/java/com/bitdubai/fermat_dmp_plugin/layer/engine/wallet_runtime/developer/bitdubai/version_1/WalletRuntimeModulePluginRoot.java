@@ -1121,7 +1121,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String xml=null;
         if (wallet != null) {
             xml = XMLParser.parseObject(wallet);
-            System.out.println("SerializedCountry XML:"+xml);
         }
         return xml;
     }
@@ -1134,7 +1133,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             String navigationStructureXml = getNavigationStructureXml(wallet);
             try {
                 PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, "walletStructure", NAVIGATION_STRUCTURE_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                //newFile.loadFromMedia();
                 newFile.setContent(navigationStructureXml);
                 newFile.persistToMedia();
             } catch (CantPersistFileException e) {
