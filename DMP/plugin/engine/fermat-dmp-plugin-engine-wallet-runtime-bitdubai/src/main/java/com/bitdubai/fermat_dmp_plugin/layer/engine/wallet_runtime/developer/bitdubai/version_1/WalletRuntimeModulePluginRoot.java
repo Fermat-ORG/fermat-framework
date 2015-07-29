@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -18,13 +19,23 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.XML;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordClosedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletClosedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
@@ -32,10 +43,13 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,11 +57,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+
 /**
  * Created by Matias Furszyfer on 23.07.15.
  */
 
-public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager,XML, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * PlatformService Interface member variables.
@@ -83,6 +98,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     Map<String, Wallet> listWallets = new HashMap<String, Wallet>();
 
     String lastWalletPublicKey;
+
+    /**
+     * WalletFactoryProjectLanguageManager Interface member variables
+     */
+
+    private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation-structure.xml";
 
 
     /**
@@ -485,6 +506,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
 
+
+            // Testing purpose Mati
+            //setNavigationStructureXml(runtimeWallet);
+
+            //getNavigationStructure("fasf");
 
 
             /**
@@ -1058,8 +1084,68 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         }
 
+    }
+
+    /**
+     *
+     * @param navigationStructure
+     * @return
+     * @throws CantGetWalletFactoryProjectNavigationStructureException
+     */
+    @Override
+    public Wallet getNavigationStructure(String navigationStructure) throws CantGetWalletFactoryProjectNavigationStructureException {
+        Wallet wallet=null;
+        if (navigationStructure != null) {
+            try {
+                PluginTextFile pluginTextFile= pluginFileSystem.getTextFile(pluginId, "walletStructure", NAVIGATION_STRUCTURE_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.loadFromMedia();
+                String xml= pluginTextFile.getContent();
+
+
+                wallet=(Wallet)XMLParser.parseXML(xml, wallet);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (CantCreateFileException e) {
+                e.printStackTrace();
+            } catch (CantLoadFileException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return wallet;
+    }
+
+    @Override
+    public String getNavigationStructureXml(Wallet wallet) throws CantGetWalletFactoryProjectNavigationStructureException {
+        String xml=null;
+        if (wallet != null) {
+            xml = XMLParser.parseObject(wallet);
+            System.out.println("SerializedCountry XML:"+xml);
+        }
+        return xml;
+    }
 
 
 
+    @Override
+    public void setNavigationStructureXml(Wallet wallet) throws CantSetWalletFactoryProjectNavigationStructureException {
+        try {
+            String navigationStructureXml = getNavigationStructureXml(wallet);
+            try {
+                PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, "walletStructure", NAVIGATION_STRUCTURE_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                //newFile.loadFromMedia();
+                newFile.setContent(navigationStructureXml);
+                newFile.persistToMedia();
+            } catch (CantPersistFileException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't create or overwrite navigation structure file.", "");
+            } catch (CantCreateFileException e) {
+                e.printStackTrace();
+            }
+        } catch (CantGetWalletFactoryProjectNavigationStructureException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't convert navigation structure to xml format", "");
+        }
     }
 }

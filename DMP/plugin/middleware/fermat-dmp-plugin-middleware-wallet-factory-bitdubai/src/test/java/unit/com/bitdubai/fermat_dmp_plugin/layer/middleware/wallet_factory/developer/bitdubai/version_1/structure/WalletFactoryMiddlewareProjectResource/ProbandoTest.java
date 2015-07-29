@@ -1,5 +1,8 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectResource;
 
+import junit.framework.TestCase;
+
+/*
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -45,9 +48,9 @@ import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
 import ae.javax.xml.bind.JAXBContext;
 import ae.javax.xml.bind.Marshaller;
 import ae.javax.xml.bind.Unmarshaller;
-
+*/
 public class ProbandoTest extends TestCase {
-
+/*
     @Before
     public void setUp() throws Exception {
 
@@ -478,5 +481,5 @@ public class ProbandoTest extends TestCase {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
