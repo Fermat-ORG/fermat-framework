@@ -9,7 +9,9 @@ public enum InstallationStatus {
     INSTALLED ("INSED"),
     NOT_INSTALLED ("NOINS"),
     INSTALLING ("INSING"),
-    INSTALL_AVAILABLE("INSA");
+    INSTALL_AVAILABLE("INSA"),
+    UPGRADE_AVAILABLE("UPGA"),
+    UPGRADING("UPGING");
 
     private String code;
 
@@ -27,6 +29,8 @@ public enum InstallationStatus {
             case "NOINS": return InstallationStatus.NOT_INSTALLED;
             case "INSING": return InstallationStatus.INSTALLING;
             case "INSA": return InstallationStatus.INSTALL_AVAILABLE;
+            case "UPGA": return InstallationStatus.UPGRADE_AVAILABLE;
+            case "UPGING": return InstallationStatus.UPGRADING;
             default:
                 throw new InvalidParameterException(code);
         }

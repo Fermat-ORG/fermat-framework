@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public interface FermatWallet {
 
-    public Wallets getType();
+    public String getPublicKey();
 
     public Activity getActivity(Activities activities);
 
@@ -20,4 +20,8 @@ public interface FermatWallet {
     public void setStartActivity(Activities activity);
 
     public Activity getLastActivity();
+
+    public void setPublicKey(String publicKey);
+
+
 }

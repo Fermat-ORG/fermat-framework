@@ -8,14 +8,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
@@ -27,6 +30,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 
 
 public class WalletActivity extends FermatActivity{
+
+
+    public static final String INSTALLED_WALLET="installedWallet";
 
 
     /**
@@ -45,7 +51,7 @@ public class WalletActivity extends FermatActivity{
             * Load wallet UI
             */
 
-            loadUI();
+            loadUI(createOrCallWalletSession());
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
@@ -156,7 +162,7 @@ public class WalletActivity extends FermatActivity{
     /**
      * Method that loads the UI
     */
-    protected void loadUI() {
+    protected void loadUI(WalletSession walletSession) {
 
         try
         {
@@ -185,7 +191,7 @@ public class WalletActivity extends FermatActivity{
                 /**
                  * Paint tabs
                  */
-                setPagerTabs(wallet,activity.getTabStrip());
+                setPagerTabs(wallet,activity.getTabStrip(),walletSession);
             }
         }
         catch (Exception e) {
@@ -194,4 +200,23 @@ public class WalletActivity extends FermatActivity{
                     Toast.LENGTH_LONG).show();
         }
     }
+    private WalletSession createOrCallWalletSession(){
+        Bundle bundle = getIntent().getExtras();
+        InstalledWallet installedWallet=(InstalledWallet) bundle.getSerializable(INSTALLED_WALLET);
+
+
+        WalletSession walletSession=null;
+        if(getWalletSessionManager().isWalletOpen(installedWallet.getWalletPublicKey())){
+            walletSession=getWalletSessionManager().getWalletSession(installedWallet.getWalletPublicKey());
+        }else{
+            walletSession=getWalletSessionManager().openWalletSession(installedWallet,getCryptoWalletManager(),getErrorManager());
+        }
+
+        return walletSession;
+    }
+
+    public CryptoWalletManager getCryptoWalletManager(){
+        return (CryptoWalletManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE);
+    }
+
 }
