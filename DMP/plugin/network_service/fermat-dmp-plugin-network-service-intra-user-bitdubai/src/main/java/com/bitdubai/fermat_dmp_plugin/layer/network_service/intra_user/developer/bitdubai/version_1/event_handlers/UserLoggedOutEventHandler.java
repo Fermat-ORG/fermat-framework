@@ -56,7 +56,7 @@ public class UserLoggedOutEventHandler implements EventHandler{
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {
 
             /*
-             *  IntraUserManager make the job
+             *  ActorIntraUserManager make the job
              */
             //((IntraUserNetworkServicePluginRoot) this.intraUserManager).logIn(((IntraUserLoggedOutEvent) platformEvent).getIntraUserId());
 

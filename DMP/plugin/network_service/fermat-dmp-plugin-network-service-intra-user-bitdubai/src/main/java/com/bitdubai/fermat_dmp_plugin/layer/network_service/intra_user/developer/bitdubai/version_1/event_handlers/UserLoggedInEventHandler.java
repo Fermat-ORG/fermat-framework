@@ -56,7 +56,7 @@ public class UserLoggedInEventHandler implements EventHandler{
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {
 
             /*
-             *  IntraUserManager make the job
+             *  ActorIntraUserManager make the job
              */
            // ((IntraUserNetworkServicePluginRoot) this.intraUserManager).logIn(((IntraUserLoggedInEvent) platformEvent).getIntraUserId());
 
