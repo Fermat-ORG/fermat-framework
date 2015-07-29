@@ -124,7 +124,8 @@ public class WalletFactoryMiddlewareProjectProposalManager implements DealsWithE
         try {
             WalletFactoryProjectProposal walletFactoryProjectProposal = new WalletFactoryMiddlewareProjectProposal(alias, FactoryProjectState.DRAFT, walletFactoryProject.getPath());
             Wallet navigationStructure = new Wallet();
-            navigationStructure.setType(walletType);
+            //TODO: Acá no deberia ir el Wallet type si no el publicKey
+            //navigationStructure.setType(walletType);
             setNavigationStructureXml(navigationStructure, walletFactoryProjectProposal);
             try {
                 walletFactoryMiddlewareProjectDao.createProposal(walletFactoryProjectProposal, walletFactoryProject);

@@ -57,8 +57,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.type = type;
     }
 
-    public void addFragment (Fragment fragment){
-        fragments.put(fragment.getType(), fragment);
+    public void addFragment (FermatFragments fermatFragments ,Fragment fragment){
+        fragments.put(fermatFragments, fragment);
     }
 
     public void setTitleBar(TitleBar titleBar) {

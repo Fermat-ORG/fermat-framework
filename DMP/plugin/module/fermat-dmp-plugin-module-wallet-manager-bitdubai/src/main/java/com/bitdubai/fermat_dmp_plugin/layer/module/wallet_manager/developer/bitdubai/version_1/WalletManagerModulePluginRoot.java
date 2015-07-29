@@ -7,15 +7,18 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.NicheWalletType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantPersistWalletException;
@@ -31,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerModuleInstalledWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -52,6 +56,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 21.01.15.
  */
+
 public class WalletManagerModulePluginRoot implements Service, WalletManager, DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin {
 
 
@@ -61,7 +66,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     String deviceUserPublicKey = "";
     UUID walletId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
-    List<Wallet> userWallets;
+    List<InstalledWallet> userWallets;
 
     private Map<String, UUID> walletIds = new HashMap<>();
 
@@ -269,8 +274,21 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
      * WalletManager Interface implementation.
      */
 
-    public List<Wallet> getUserWallets() {
-        return userWallets;
+    public List<InstalledWallet> getUserWallets() {
+        // Harcoded para testear el circuito más arriba
+        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "reference_wallet_icon",
+                "Bitcoin Reference Wallet",
+                "reference_wallet",
+                "wallet_platform_identifier",
+                new Version(1,0,0)
+        );
+
+        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+        lstInstalledWallet.add(installedWallet);
+        return lstInstalledWallet;
     }
 
     public void loadUserWallets(String deviceUserPublicKey) throws CantLoadWalletsException {
@@ -439,17 +457,18 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
         ((DealsWithEvents) wallet).setEventManager(eventManager);
         ((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
 
-        try {
-            wallet.createWallet(NicheWalletType.DEFAULT);
-        } catch (CantCreateWalletException cantCreateWalletException) {
+        //try {
+            //aquí al crear la wallet se le deben pasar todos los parametros de esta
+            //wallet.createWallet("public_key_hardcoded");
+        //} catch (CantCreateWalletException cantCreateWalletException) {
             /**
              * Well, if it is not possible to create a wallet, then we have a problem that I can not handle...
              */
-            System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
-            cantCreateWalletException.printStackTrace();
+        //    System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
+        //    cantCreateWalletException.printStackTrace();
 
-            throw new CantCreateDefaultWalletsException();
-        }
+        //    throw new CantCreateDefaultWalletsException();
+        //}
 
     }
 

@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
@@ -25,6 +26,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantUninstallLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantUninstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantUninstallWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -40,9 +43,13 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationProcess;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletInstalledEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +68,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithErrors,DealsWithLogger,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletManagerManager {
+public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithErrors,DealsWithEvents,DealsWithLogger,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletManagerManager {
 
     private List<InstalledWallet> installedWallets = null;
     /**
@@ -74,6 +81,12 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
+
+    /**
+     * DealsWithEvents interface member variable
+     */
+    EventManager eventManager;
+
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -245,7 +258,25 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
      *
      */
     public List<InstalledWallet> getInstalledWallets() throws CantListWalletsException{
-        return installedWallets;
+        //Voy a harcodear esto para tener la reference wallet instalada
+        //return installedWallets;
+
+
+        // Harcoded para testear el circuito más arriba
+        InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "reference_wallet_icon",
+                "Reference nich wallet",
+                "public_key",
+                "wallet_platform_identifier",
+                new Version(1,0,0)
+                );
+
+        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+        lstInstalledWallet.add(installedWallet);
+        return lstInstalledWallet;
+
     }
 
     /**
@@ -283,7 +314,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
      * @throws CantFindProcessException
      */
     public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException{
-
+        eventManager.raiseEvent(new WalletInstalledEvent(EventType.WALLET_INSTALLED));
         return new WalletManagerMiddlewareInstallationProcess();
     }
 
@@ -349,5 +380,14 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /*
+     * DealsWithEvents interface methods implementation
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager=eventManager;
     }
 }
