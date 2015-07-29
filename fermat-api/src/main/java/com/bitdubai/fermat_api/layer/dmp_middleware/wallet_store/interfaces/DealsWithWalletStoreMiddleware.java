@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.DealsWithWalletStore</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.DealsWithWalletStoreMiddleware</code>
  * indicates that the plugin needs the functionality of a WalletStoreManager
  * <p/>
  *
@@ -10,6 +10,6 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface DealsWithWalletStore {
+public interface DealsWithWalletStoreMiddleware {
     void setWalletStoreManager(WalletStoreManager walletStoreManager);
 }
