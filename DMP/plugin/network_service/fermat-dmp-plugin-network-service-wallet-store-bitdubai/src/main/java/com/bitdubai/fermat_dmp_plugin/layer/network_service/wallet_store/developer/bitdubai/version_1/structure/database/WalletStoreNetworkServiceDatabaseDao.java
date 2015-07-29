@@ -79,8 +79,6 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.databaseOwnerId = databaseOwnerId;
         this.databaseName = databaseName;
-
-        openDatabase();
     }
 
 

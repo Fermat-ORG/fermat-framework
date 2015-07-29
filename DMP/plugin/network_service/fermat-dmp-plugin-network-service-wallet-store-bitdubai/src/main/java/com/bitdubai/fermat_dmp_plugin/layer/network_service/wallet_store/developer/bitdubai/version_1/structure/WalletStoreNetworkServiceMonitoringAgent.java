@@ -35,6 +35,7 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
      */
     boolean runner;
     UUID pluginId;
+    WalletStoreNetworkServiceDatabaseDao databaseDao;
 
     /**
      * DealsWithEvents interface member variable
@@ -80,6 +81,8 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
     public void start() throws CantStartAgentException {
         Thread thread = new Thread(new Monitoring());
         runner = true;
+        //todo replace with logger
+        System.out.println("WalletStore NetworkService Monitoring Agent started...");
         thread.start();
     }
 
@@ -183,7 +186,9 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
         }
 
         private WalletStoreNetworkServiceDatabaseDao getDatabaseDao() throws CantExecuteDatabaseOperationException {
-            WalletStoreNetworkServiceDatabaseDao databaseDao = new WalletStoreNetworkServiceDatabaseDao(errorManager, logManager, pluginDatabaseSystem, pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
+            if (databaseDao == null)
+                databaseDao = new WalletStoreNetworkServiceDatabaseDao(errorManager, logManager, pluginDatabaseSystem, pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
+
             return databaseDao;
         }
 
