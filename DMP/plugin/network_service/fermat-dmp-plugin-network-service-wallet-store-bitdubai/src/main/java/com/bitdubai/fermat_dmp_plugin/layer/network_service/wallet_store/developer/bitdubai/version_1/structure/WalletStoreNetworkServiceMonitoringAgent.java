@@ -81,8 +81,7 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
     public void start() throws CantStartAgentException {
         Thread thread = new Thread(new Monitoring());
         runner = true;
-        //todo replace with logger
-        System.out.println("WalletStore NetworkService Monitoring Agent started...");
+
         thread.start();
     }
 
