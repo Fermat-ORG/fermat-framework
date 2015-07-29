@@ -13,25 +13,22 @@ import org.junit.Test;
  */
 public class GetLogLevelByClassTest_NotSetLogginLevel {
 
-    ExtraUserUserAddonRoot extraUserUserAddonRoot;
-
-    //TODO: This is not going to work in real life, the whole sense of the static logic of the method is going to bug this behaviour. This should be an issue of the logging system
-    @Ignore
+    /**
+     * I need to test the static method behavior and call the static LogLevel Map
+     */
     @Test
-    public void getLogLevelByClassTest_notSetLogginLevel_ReturnNull() throws Exception{
-        LogLevel resultLogLevel =  ExtraUserUserAddonRoot.getLogLevelByClass("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUser");
-        Assertions.assertThat(resultLogLevel).isNull();
+    public void getLogLevelByClassTest_testingStaticBehaviorSetAValidArgument_returnNullLogLevel() throws Exception{
+        LogLevel resultLogLevel=ExtraUserUserAddonRoot.getLogLevelByClass("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUser");
+        Assertions.assertThat(resultLogLevel)
+                .isNotNull();
     }
 
     @Test
-    public void getLogLevelByClassTest_NotSetLogginLevelNullArgument_returnDEFAULT_LOG_LEVEL() throws Exception{
-
-        extraUserUserAddonRoot=new ExtraUserUserAddonRoot();
-        LogLevel resultLogLevel =  ExtraUserUserAddonRoot.getLogLevelByClass(null);
+    public void getLogLevelByClassTest_testingStaticBehaviorLevelNullArgument_returnNullLogLevel() throws Exception{
+        LogLevel resultLogLevel=ExtraUserUserAddonRoot.getLogLevelByClass(null);
         Assertions.assertThat(resultLogLevel)
                 .isNotNull()
                 .isEqualTo(LogManagerForDevelopers.DEFAULT_LOG_LEVEL);
-
     }
 
 }
