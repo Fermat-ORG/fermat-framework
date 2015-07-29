@@ -28,9 +28,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
-import java.text.DecimalFormat;
 import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
@@ -76,19 +75,12 @@ public class BalanceFragment extends Fragment {
      * Wallet Session
      */
 
-    WalletSession walletSession;
+    ReferenceWalletSession referenceWalletSession;
     
 
-    /**
-     * Error manager Addon
-     * Used to capture exceptions
-     */
-
-    private ErrorManager errorManager;
-
 
     /**
-     *  Create a new instance of BalanceFragment and set walletSession and platforms plugin inside
+     *  Create a new instance of BalanceFragment and set referenceWalletSession and platforms plugin inside
      * @param position
      * @param walletSession   An object that contains all session data
      * @return BalanceFragment with Session and platform plugins inside
@@ -96,7 +88,7 @@ public class BalanceFragment extends Fragment {
 
     public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession) {
         BalanceFragment balanceFragment = new BalanceFragment();
-        balanceFragment.setWalletSession((WalletSession)walletSession);
+        balanceFragment.setReferenceWalletSession((ReferenceWalletSession) walletSession);
         return balanceFragment;
     }
 
@@ -107,16 +99,16 @@ public class BalanceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = walletSession.getErrorManager();
         /**
          *
          */
         try {
+
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
             balanceAvailable = 0;
             bookBalance = 0;
-            cryptoWalletManager = walletSession.getCryptoWalletManager();
+            cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
 
 
             /**
@@ -136,15 +128,15 @@ public class BalanceFragment extends Fragment {
             bookBalance = cryptoWallet.getBookBalance(wallet_id);
         }
          catch (CantGetCryptoWalletException e) {
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
                 Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
          }
         catch (CantGetBalanceException e){
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
                 Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -206,22 +198,23 @@ public class BalanceFragment extends Fragment {
         Method to change the balance type
      */
     private void changeBalanceType() {
+
+        ReferenceWalletSession referenceWalletSession =(ReferenceWalletSession) this.referenceWalletSession;
         try
         {
-            com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession walletSession =(com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.WalletSession) this.walletSession;
-
-            if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()) {
-                txtViewBalance.setText(formatBalanceString(bookBalance, walletSession.getTypeAmount()));
+            if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()) {
+                txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
                 txtViewTypeBalance.setText(R.string.book_balance);
-                walletSession.setBalanceTypeSelected(BalanceType.BOOK);
-            }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
-                txtViewBalance.setText(formatBalanceString(balanceAvailable,walletSession.getTypeAmount()));
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
+            }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+                txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
                 txtViewTypeBalance.setText(R.string.available_balance);
-                walletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
             }
         }catch (Exception e){
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
 
         }
 
@@ -231,16 +224,14 @@ public class BalanceFragment extends Fragment {
         Method to change the balance amount
      */
     private void changeBalance() {
-        try
-        {
-            if (walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-                txtViewBalance.setText(formatBalanceString(balanceAvailable,walletSession.getTypeAmount()));
-            }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
-                txtViewBalance.setText(formatBalanceString(bookBalance,walletSession.getTypeAmount()));
+        try {
+            if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+                txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
+            }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+                txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
             }
-
         }catch (Exception e){
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -276,19 +267,19 @@ public class BalanceFragment extends Fragment {
 
             bookBalance = cryptoWallet.getBookBalance(wallet_id);
 
-            if (walletSession.getBalanceTypeSelected() == BalanceType.AVAILABLE.getCode()) {
-                txtViewBalance.setText(formatBalanceString(balanceAvailable, walletSession.getTypeAmount()));
-            } else if (walletSession.getBalanceTypeSelected() == BalanceType.BOOK.getCode()) {
-                txtViewBalance.setText(formatBalanceString(bookBalance, walletSession.getTypeAmount()));
-            }
-        }
-        catch (CantGetBalanceException e)
-        {
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        } catch (Exception ex) {
 
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+                txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
+            }else if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+                txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+            }
+
+        }catch (CantGetBalanceException e)
+        {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex){
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
@@ -296,10 +287,10 @@ public class BalanceFragment extends Fragment {
 
     /**
      *  Set Wallet Session object
-     * @param walletSession
+     * @param referenceWalletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
-        this.walletSession = walletSession;
+    public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
+        this.referenceWalletSession = referenceWalletSession;
     }
 }
 
