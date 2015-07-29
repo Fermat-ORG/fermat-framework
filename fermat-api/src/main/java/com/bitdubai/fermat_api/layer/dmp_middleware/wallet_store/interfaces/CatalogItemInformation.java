@@ -10,6 +10,7 @@ import java.util.UUID;
  * Created by rodrigo on 7/25/15.
  */
 public interface CatalogItemInformation {
+
     public void setCatalogItemId (CatalogItems catalogItem, UUID itemId);
     public UUID getCatalogItemId (CatalogItems catalogItem);
 
