@@ -36,6 +36,7 @@ import com.bitdubai.android_core.app.common.version_1.navigation_drawer.Navigati
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -546,19 +547,11 @@ public class FermatActivity extends FragmentActivity{
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
             SubApp subApp = getAppRuntimeMiddleware().getHomeScreen();
             Activity activity = subApp.getLastActivity();
-            Iterator<Map.Entry<FermatFragments, Fragment>> efragments =activity.getFragments().entrySet().iterator();
-            boolean flag = false;
-            while (efragments.hasNext()) {
-                Map.Entry<FermatFragments, Fragment> fragmentEntry = efragments.next();
 
-                Fragment fragment = (Fragment) fragmentEntry.getValue();
-                Fragments type = fragment.getType();
+            for(FermatFragments key: activity.getFragments().keySet()) {
+                Fragment fragment = activity.getFragments().get(key);
 
-                /**
-                 *  Pages values
-                 */
-
-                switch (type) {
+                switch (fragment.getType()) {
                     case CWP_SHELL_LOGIN:
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
@@ -582,6 +575,10 @@ public class FermatActivity extends FragmentActivity{
 
                 }
             }
+
+            fragments.add(0,fragments.get(1));
+            fragments.remove(2);
+
             /**
              * this pagerAdapter is the screenPagerAdapter with no tabs
              */

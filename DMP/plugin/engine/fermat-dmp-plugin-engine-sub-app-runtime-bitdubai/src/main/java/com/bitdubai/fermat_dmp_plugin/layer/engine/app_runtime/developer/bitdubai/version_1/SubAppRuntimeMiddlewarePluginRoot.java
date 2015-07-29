@@ -303,7 +303,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             Fragment runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SHELL_LOGIN);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SHELL_LOGIN,runtimeFragment);
 
             TitleBar runtimeTitleBar;
             SideMenu runtimeSideMenu;
@@ -408,41 +408,41 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
             runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
             runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
             runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
             runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
             runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS);
             runtimeFragment.setBack(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS,runtimeFragment);
 
             /**
              * End of Developer tabs.
@@ -506,19 +506,19 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MANAGER);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_MANAGER,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_ESTRUCTURE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_ESTRUCTURE,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MAIN);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_MAIN,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MAIN);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_MAIN,runtimeFragment);
 
 
             /**End Wallet Publisher*/
@@ -556,7 +556,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_PUBLISHER_MAIN);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN,runtimeFragment);
 
             /**End Wallet Publisher*/
 
@@ -574,13 +574,13 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_MANAGER_MAIN,runtimeFragment);
 
 
             //Desktop page Developer sub App
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER,runtimeFragment);
 
 
             runtimeSubApp = new RuntimeSubApp();
@@ -601,7 +601,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MAIN,runtimeFragment);
 
 
 
@@ -658,29 +658,29 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP,runtimeFragment);
 
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS,runtimeFragment);
 
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP,runtimeFragment);
             /**
              * End of SHOPS tabs.
              */
@@ -741,21 +741,21 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_MAIN);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_MAIN,runtimeFragment);
 
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_FREE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_FREE,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_PAID);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_PAID,runtimeFragment);
 
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_ACCEPTED_NEARBY);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_ACCEPTED_NEARBY,runtimeFragment);
 
 
 
@@ -797,17 +797,17 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS,runtimeFragment);
 
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS,runtimeFragment);
 
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL,runtimeFragment);
 
 
 
@@ -826,7 +826,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED,runtimeFragment);
 //------------------------------------------------------------------------------------
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
@@ -834,7 +834,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND,runtimeFragment);
 //-----------------------------------------------------------------------------------
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS);
@@ -865,15 +865,15 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL,runtimeFragment);
             /**
              * End of Wallet Accounts tabs.
              */
@@ -907,16 +907,19 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
         Fragment fragment = new Fragment();
 
         /**
+         * Add WalletManager fragment
+         */
+        fragment = new Fragment();
+        fragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
+        activity.addFragment(Fragments.CWP_WALLET_MANAGER_MAIN,fragment);
+
+        /**
          * Add developer subApp fragment
          */
         fragment = new Fragment();
         fragment.setType(Fragments.CWP_SUB_APP_DEVELOPER);
-        activity.addFragment(fragment);
-        /**
-         * Add WalletManager fragment
-         */
-        fragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
-        activity.addFragment(fragment);
+        activity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER,fragment);
+
 
         homeScreen.setStartActivity(activity.getType());
         homeScreen.addActivity(activity);

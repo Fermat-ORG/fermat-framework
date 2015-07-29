@@ -326,19 +326,19 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY,runtimeFragment);
 
 
             /**
@@ -434,25 +434,25 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE,runtimeFragment);
 
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND,runtimeFragment);
 
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
 
 
 
@@ -472,7 +472,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MAIN,runtimeFragment);
 
             runtimeWallet = new Wallet();
             runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI);
@@ -578,31 +578,31 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
@@ -621,7 +621,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT,runtimeFragment);
 
 
 
@@ -642,7 +642,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS,runtimeFragment);
 
 
             runtimeActivity= new Activity();
@@ -662,7 +662,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SEND_HISTORY);
@@ -681,7 +681,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_SEND_HISTORY);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_SEND_HISTORY,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
@@ -700,7 +700,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
@@ -719,7 +719,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY);
@@ -738,7 +738,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_RECEIVE);
@@ -757,7 +757,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_RECEIVE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_RECEIVE,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT);
@@ -770,7 +770,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT);
@@ -783,7 +783,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT);
@@ -796,7 +796,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT,runtimeFragment);
 
 
             runtimeActivity= new Activity();
@@ -810,7 +810,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_SEND);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_SEND,runtimeFragment);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_NEW_RECEIVE);
@@ -823,7 +823,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE,runtimeFragment);
 
             /**
              * End of Wallet Adults tabs.
@@ -878,27 +878,27 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP,runtimeFragment);
             /**
              * End of SHOPS tabs.
              */
@@ -938,15 +938,15 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL,runtimeFragment);
 
 
 
@@ -962,7 +962,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED,runtimeFragment);
 //------------------------------------------------------------------------------------
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
@@ -970,7 +970,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND,runtimeFragment);
 //-----------------------------------------------------------------------------------
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS);
@@ -1001,16 +1001,16 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS,runtimeFragment);
             //listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS,runtimeFragment);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
-            runtimeActivity.addFragment(runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL,runtimeFragment);
             //  listApps.put(Apps.CRYPTO_WALLET_PLATFORM,runtimeApp);
             //lastApp = Apps.CRYPTO_WALLET_PLATFORM;
             /**
