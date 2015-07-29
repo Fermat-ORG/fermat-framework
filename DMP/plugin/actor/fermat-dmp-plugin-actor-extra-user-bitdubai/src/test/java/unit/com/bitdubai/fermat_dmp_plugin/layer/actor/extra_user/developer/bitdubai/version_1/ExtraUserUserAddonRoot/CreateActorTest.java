@@ -53,6 +53,15 @@ public class CreateActorTest {
     }
 
     @Test
+    public void createActor_ExtraUserAddonRootNotstated_throwsGenericException() throws Exception{
+
+        ExtraUserUserAddonRoot anotherExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
+        anotherExtraUserUserAddonRoot.setErrorManager(mockErrorManager);
+        testActor=anotherExtraUserUserAddonRoot.createActor(null);
+
+    }
+
+    @Test
     public void createActor_setNullName_getsNullActor() throws Exception{
 
         testActor=extraUserUserAddonRoot.createActor(null);

@@ -472,7 +472,29 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeTabStrip.setTabsIndicateColor("#b46a54");
 
             runtimeTab = new Tab();
-            runtimeTab.setLabel("Wallet Factory");
+            runtimeTab.setLabel("Manager");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_MANAGER);
+
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Edit");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_ESTRUCTURE);
+
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeActivity.setTabStrip(runtimeTabStrip);
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Estructure");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_MAIN);
+
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeActivity.setTabStrip(runtimeTabStrip);
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Image loader");
             runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_MAIN);
 
             runtimeTabStrip.addTab(runtimeTab);
@@ -483,8 +505,21 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeSubApp.addActivity(runtimeActivity);
 
             runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MANAGER);
+            runtimeActivity.addFragment(runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_ESTRUCTURE);
+            runtimeActivity.addFragment(runtimeFragment);
+
+            runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MAIN);
             runtimeActivity.addFragment(runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MAIN);
+            runtimeActivity.addFragment(runtimeFragment);
+
 
             /**End Wallet Publisher*/
 
