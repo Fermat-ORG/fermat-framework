@@ -31,17 +31,8 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
      * Wallet identifiers
      */
 
-    private String walletPlatformIdentifier;
-
-    private WalletCategory walletCategory;
-
     private String publicKey;
 
-    /**
-     * Enum type until WalletManagerManager is ready
-     */
-
-    private Wallets type;
 
     /**
      * Screens in a Wallet
@@ -70,11 +61,9 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
 
     /**
      *
-     * @param type
      * @param activities
      */
-    public Wallet(Wallets type, Map<Activities, Activity> activities) {
-        this.type = type;
+    public Wallet( Map<Activities, Activity> activities) {
         this.activities = activities;
     }
 
@@ -151,16 +140,6 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
 
     public void setActivities(Map<Activities, Activity> activities) {
         this.activities = activities;
-    }
-
-    /**
-     * Set wallet Enum type
-     *
-     * @param type
-     */
-
-    public void setType(Wallets type) {
-        this.type = type;
     }
 
     /**

@@ -22,10 +22,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordClosedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletClosedEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletUnnInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -33,7 +36,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +46,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 23.07.15.
  */
+
 public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
@@ -106,6 +109,20 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             eventListener = eventManager.getNewListener(EventType.WALLET_CLOSED);
             eventHandler = new WalletClosedEventHandler();
             ((WalletClosedEventHandler) eventHandler).setWalletRuntimeManager(this);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
+
+            eventListener = eventManager.getNewListener(EventType.WALLET_INSTALLED);
+            eventHandler = new WalletInstalledEventHandler();
+            ((WalletInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
+
+            eventListener = eventManager.getNewListener(EventType.WALLET_UNINSTALLED);
+            eventHandler = new WalletUnnInstalledEventHandler();
+            ((WalletUnnInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
             eventListener.setEventHandler(eventHandler);
             eventManager.addListener(eventListener);
             listenersAdded.add(eventListener);
@@ -177,7 +194,23 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     public void recordClosedWallet(UUID walletId) throws CantRecordClosedWalletException {
 
     }
-    
+
+    @Override
+    public void recordNavigationStructure(String walletId) {
+
+    }
+
+    @Override
+    public boolean removeNavigationStructure(String publicKey) throws CantRemoveWalletNavigationStructureException {
+        return false;
+    }
+
+    @Override
+    public Wallet getNavigationStructureFromWallet(String publicKey) {
+
+        return null;
+    }
+
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -272,7 +305,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
             runtimeWallet = new Wallet();
-            runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
             //   runtimeSubApp.addWallet(runtimeWallet);
             publicKey="kids";
             listWallets.put(publicKey, runtimeWallet);
@@ -366,7 +398,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
             runtimeWallet = new Wallet();
-            runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI);
             publicKey="reference_wallet";
             runtimeWallet.setPublicKey(publicKey);
             listWallets.put(publicKey, runtimeWallet);
@@ -475,7 +506,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MAIN,runtimeFragment);
 
             runtimeWallet = new Wallet();
-            runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI);
             // runtimeSubApp.addWallet(runtimeWallet);
             publicKey="adults_wallet";
             runtimeWallet.setPublicKey(publicKey);

@@ -7,7 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordClosedWalletException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordInstalledWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 
 import java.util.UUID;
 
@@ -19,6 +21,15 @@ public interface WalletRuntimeManager {
     public void recordOpenedWallet (UUID walletId) throws CantRecordOpenedWalletException;
     
     public void recordClosedWallet (UUID walletId) throws CantRecordClosedWalletException;
+
+    public void recordNavigationStructure(String walletId) throws CantRecordInstalledWalletNavigationStructureException;
+
+    public boolean removeNavigationStructure(String publicKey) throws CantRemoveWalletNavigationStructureException;
+
+    public Wallet getNavigationStructureFromWallet(String publicKey);
+
+
+
 
     /**
      *  Get the last wallet in screen
@@ -34,5 +45,6 @@ public interface WalletRuntimeManager {
      * @return  The installed Wallet
      */
     public Wallet getWallet(String publicKey);
-    
+
+
 }

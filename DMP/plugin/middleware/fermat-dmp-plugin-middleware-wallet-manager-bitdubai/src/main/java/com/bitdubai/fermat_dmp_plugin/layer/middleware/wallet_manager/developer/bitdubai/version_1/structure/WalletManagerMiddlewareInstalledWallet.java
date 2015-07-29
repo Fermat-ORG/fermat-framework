@@ -32,6 +32,7 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     private String publicKey;
     private String walletPlatformIdentifier;
     private Version version;
+    private String walletCatalogId;
 
     public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.walletCategory = walletCategory;
@@ -112,6 +113,11 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
       */
     public Version getWalletVersion(){
         return version;
+    }
+
+    @Override
+    public String getWalletCatalogId() {
+        return walletCatalogId;
     }
 
 

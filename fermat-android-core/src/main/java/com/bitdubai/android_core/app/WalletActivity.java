@@ -17,8 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
@@ -46,24 +45,13 @@ public class WalletActivity extends FermatActivity{
         super.onCreate(savedInstanceState);
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
 
-        Bundle bundle = getIntent().getExtras();
-        InstalledWallet installedWallet=(InstalledWallet) bundle.getSerializable(INSTALLED_WALLET);
-
-
-        WalletSession walletSession=null;
-        if(getWalletSessionManager().isWalletOpen(installedWallet.getWalletPublicKey())){
-            getWalletSessionManager().getWalletSession(installedWallet.getWalletPublicKey());
-        }else{
-            walletSession=getWalletSessionManager().openWalletSession(installedWallet,getCryptoWalletManager(),getErrorManager());
-        }
-
         try {
 
             /*
             * Load wallet UI
             */
 
-            loadUI(walletSession);
+            loadUI(createOrCallWalletSession());
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
@@ -211,6 +199,20 @@ public class WalletActivity extends FermatActivity{
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
+    }
+    private WalletSession createOrCallWalletSession(){
+        Bundle bundle = getIntent().getExtras();
+        InstalledWallet installedWallet=(InstalledWallet) bundle.getSerializable(INSTALLED_WALLET);
+
+
+        WalletSession walletSession=null;
+        if(getWalletSessionManager().isWalletOpen(installedWallet.getWalletPublicKey())){
+            getWalletSessionManager().getWalletSession(installedWallet.getWalletPublicKey());
+        }else{
+            walletSession=getWalletSessionManager().openWalletSession(installedWallet,getCryptoWalletManager(),getErrorManager());
+        }
+
+        return walletSession;
     }
 
     public CryptoWalletManager getCryptoWalletManager(){
