@@ -128,9 +128,7 @@ public class Version implements Serializable {
      * @return true if the version is between version1 and version2.
      */
     public boolean isBetween(Version version1, Version version2){
-        if (version1.equals(version2))
-            return false;
-        if (this.isAbove(version1) && !this.isAbove(version2))
+        if (this.isAbove(version1) && !this.isAbove(version2)  || this.equals(version1) && this.equals(version2))
             return true;
         else
             return false;
