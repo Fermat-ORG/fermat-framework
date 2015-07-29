@@ -20,12 +20,16 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.D
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.DealsWithWalletLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguageManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStore;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
@@ -687,7 +691,7 @@ public class Platform  {
 
         /**
          * ----------------------------------
-         * Plugin Wallet Contacts Middleware
+         * Plugin Wallet Factory Middleware
          * ----------------------------------
          */
         Plugin walletFactoryMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletFactoryPlugin();
@@ -695,7 +699,15 @@ public class Platform  {
 
         /**
          * ----------------------------------
-         * Plugin Wallet Contacts Middleware
+         * Plugin Wallet Language Middleware
+         * ----------------------------------
+         */
+        Plugin walletLanguageMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletLanguagePlugin();
+        setPluginReferencesAndStart(walletLanguageMiddleware, Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE);
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Manager Middleware
          * ----------------------------------
          */
         Plugin walletManagerMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletManagerPlugin();
@@ -703,7 +715,7 @@ public class Platform  {
 
         /**
          * ----------------------------------
-         * Plugin Wallet Contacts Middleware
+         * Plugin Wallet Publisher Middleware
          * ----------------------------------
          */
         Plugin walletPublisherMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletPublisherPlugin();
@@ -711,7 +723,15 @@ public class Platform  {
 
         /**
          * ----------------------------------
-         * Plugin Wallet Contacts Middleware
+         * Plugin Wallet Skin Middleware
+         * ----------------------------------
+         */
+        Plugin walletSkinMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletSkinPlugin();
+        setPluginReferencesAndStart(walletSkinMiddleware, Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE);
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Store Middleware
          * ----------------------------------
          */
         Plugin walletStoreMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletStorePlugin();
@@ -955,6 +975,9 @@ public class Platform  {
             if (plugin instanceof DealsWithWalletFactory)
                 ((DealsWithWalletFactory) plugin).setWalletFactoryManager((WalletFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE));
 
+            if (plugin instanceof DealsWithWalletLanguage)
+                ((DealsWithWalletLanguage) plugin).setWalletLanguageManager((WalletLanguageManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE));
+
             if (plugin instanceof DealsWithWalletManager)
                 ((DealsWithWalletManager) plugin).setWalletManagerManager((WalletManagerManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE));
 
@@ -963,6 +986,9 @@ public class Platform  {
 
             if (plugin instanceof DealsWithWalletResources)
                 ((DealsWithWalletResources) plugin).setWalletResourcesManager((WalletResourcesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+
+            if (plugin instanceof DealsWithWalletSkin)
+                ((DealsWithWalletSkin) plugin).setWalletSkinManager((WalletSkinManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE));
 
             if (plugin instanceof DealsWithWalletStatisticsNetworkService)
                 ((DealsWithWalletStatisticsNetworkService) plugin).setWalletStatisticsManager((WalletStatisticsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE));

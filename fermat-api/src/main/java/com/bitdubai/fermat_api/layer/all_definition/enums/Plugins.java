@@ -55,8 +55,10 @@ public enum Plugins {
     BITDUBAI_LOCATION_WORLD("Location World", Developers.BITDUBAI),
     BITDUBAI_ACTOR_DEVELOPER("Actor Developer", Developers.BITDUBAI),
     BITDUBAI_WALLET_FACTORY_MIDDLEWARE("Wallet Factory Middleware", Developers.BITDUBAI),
+    BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE("Wallet Language Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_MANAGER_MIDDLEWARE("Wallet Manager Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE("Wallet Publisher Middleware", Developers.BITDUBAI),
+    BITDUBAI_WALLET_SKIN_MIDDLEWARE("Wallet Skin Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_STORE_MIDDLEWARE("Wallet Store Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_SETTINGS_MIDDLEWARE("Wallet Settings Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("Wallet Statistics Network Service", Developers.BITDUBAI),
@@ -140,6 +142,14 @@ public enum Plugins {
                 return Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE;
             case "Wallet Factory Middleware":
                 return Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE;
+            case "Wallet Language Middleware":
+                return Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE;
+            case "Wallet Skin Middleware":
+                return Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE;
+            case "Wallet Manager Middleware":
+                return Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE;
+            case "Wallet Publisher Middleware":
+                return Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE;
             case "Wallet Contacts Middleware":
                 return Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE;
             case "Wallet Community Network Service":
