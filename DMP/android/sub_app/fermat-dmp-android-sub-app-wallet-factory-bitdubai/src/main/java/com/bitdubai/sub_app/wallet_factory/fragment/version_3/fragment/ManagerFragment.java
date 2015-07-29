@@ -10,8 +10,15 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposalManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
+
+import java.util.List;
 
 
 public class ManagerFragment extends  Fragment {
@@ -55,6 +62,20 @@ public class ManagerFragment extends  Fragment {
         account_types = new String[]{"1 current and 2 saving accounts"};
         balances = new String[]{"$5,693.50"};
         balances_available = new String[]{"$1,970.00 available"};
+
+        /*try {
+            //List<WalletFactoryProject> lstFactoryProjects= subAppSession.getWalletFactoryManager().getAllWalletFactoryProjects();
+
+            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletFactoryManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
+
+            //List<WalletFactoryProjectProposal> walletFactoryProjectProposal= walletFactoryProjectProposalManager.getProposals();
+
+        } catch (CantGetWalletFactoryProjectsException e) {
+            e.printStackTrace();
+        } catch (CantGetWalletFactoryProjectProposalsException e) {
+            e.printStackTrace();
+        }*/
+
 
         //ApplicationSession.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
 

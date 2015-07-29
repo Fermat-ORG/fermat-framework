@@ -28,9 +28,9 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStore;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
@@ -51,10 +51,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatfo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DealsWithToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DealsWithDeveloperIdentity;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
@@ -134,6 +131,8 @@ public class Platform  {
     PlatformLayer mActorLayer = new ActorLayer();
     PlatformLayer mIdentityLayer = new IdentityLayer();
     PlatformLayer mModuleLayerPip = new com.bitdubai.fermat_core.layer.pip_module.ModuleLayer();
+    PlatformLayer mNetworkServiceLayerPip = new com.bitdubai.fermat_core.layer.pip_network_service.NetworkServiceLayer();
+
 
 
 
@@ -224,6 +223,10 @@ public class Platform  {
 
     public PlatformLayer getmModuleLayerPip() {
         return mModuleLayerPip;
+    }
+
+    public PlatformLayer getmNetworkServiceLayerPip() {
+        return mNetworkServiceLayerPip;
     }
 
 
@@ -401,6 +404,7 @@ public class Platform  {
             mActorLayer.start();
             mIdentityLayer.start();
             mModuleLayerPip.start();
+            mNetworkServiceLayerPip.start();
         } catch (CantStartLayerException cantStartLayerException) {
             ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, cantStartLayerException);
             throw new CantStartPlatformException();
@@ -742,7 +746,7 @@ public class Platform  {
          * Plugin Wallet Settings Middleware
          * ----------------------------------
          */
-        Plugin walletSettingsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletStorePlugin();
+        Plugin walletSettingsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getmWalletSettingPlugin();
         setPluginReferencesAndStart(walletSettingsMiddleware, Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
 
 
@@ -903,6 +907,17 @@ public class Platform  {
         Plugin walletRuntime =  ((ModuleLayer) mModuleLayer).getWalletRuntime();
         setPluginReferencesAndStart(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
+
+
+        /**
+         * -----------------------------
+         * Plugin SubApp Resources Network Service
+         * -----------------------------
+         */
+        Plugin subAppResourcesNetworkService = ((com.bitdubai.fermat_core.layer.pip_network_service.NetworkServiceLayer) mNetworkServiceLayerPip).getSubAppResources();
+        setPluginReferencesAndStart(subAppResourcesNetworkService, Plugins.BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE);
+
+
         for(Addons registeredDescriptor : corePlatformContext.getRegisteredAddonsDescriptors())
             checkAddonForDeveloperInterfaces(registeredDescriptor);
         for(Plugins registeredDescriptor : corePlatformContext.getRegisteredPluginsDescriptors())
@@ -993,8 +1008,8 @@ public class Platform  {
             if (plugin instanceof DealsWithWalletStatisticsNetworkService)
                 ((DealsWithWalletStatisticsNetworkService) plugin).setWalletStatisticsManager((WalletStatisticsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE));
 
-            if (plugin instanceof DealsWithWalletStore)
-                ((DealsWithWalletStore) plugin).setWalletStoreManager((WalletStoreManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE));
+            if (plugin instanceof DealsWithWalletStoreMiddleware)
+                ((DealsWithWalletStoreMiddleware) plugin).setWalletStoreManager((WalletStoreManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE));
 
             if (plugin instanceof DealsWithWalletSettings)
                 ((DealsWithWalletSettings) plugin).setWalletSettingsManager((WalletSettingsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE));

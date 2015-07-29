@@ -36,8 +36,8 @@ import java.util.UUID;
  */
 public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPluginFileSystem, DealsWithErrors, DealsWithPluginIdentity {
 
-    UUID walletId;
-    String walletName = "";
+    String walletName;
+
     NicheWalletType nicheWalletType;
     WalletStatus status;
 
@@ -63,8 +63,8 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
 
 
 
-    public void createWallet(NicheWalletType nicheWalletType) throws CantCreateWalletException {
-        this.walletId = UUID.randomUUID();
+    public void createWallet(String publicKey) throws CantCreateWalletException {
+        this.pluginId = UUID.randomUUID();
         this.status = WalletStatus.CLOSED;
         this.nicheWalletType = nicheWalletType;
 
@@ -93,13 +93,18 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
     }
 
 
+    @Override
+    public void createWallet(NicheWalletType nicheWalletType) throws CantCreateWalletException {
+
+    }
+
     /**
      * This method is to be used to load a saved wallet and to put it online.
      */
 
-    public void loadWallet (UUID walletId) throws CantLoadWalletException {
+    public void loadWallet (UUID pluginId) throws CantLoadWalletException {
 
-        this.walletId = walletId;
+        this.pluginId = pluginId;
 
         try {
             load();
@@ -119,7 +124,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
 
     @Override
     public UUID getId() {
-        return this.walletId ;
+        return this.pluginId ;
     }
 
     @Override
@@ -191,7 +196,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
          */
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_WENT_ONLINE);
-        ((WalletWentOnlineEvent) platformEvent).setWalletId(this.walletId);
+        ((WalletWentOnlineEvent) platformEvent).setWalletId(this.pluginId);
         platformEvent.setSource(EventSource.MODULE_WALLET_MANAGER_PLUGIN);
         eventManager.raiseEvent(platformEvent);
 
@@ -204,7 +209,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
             PluginTextFile file = this.pluginFileSystem.createTextFile(
                     pluginId,
                     DeviceDirectory.LOCAL_WALLETS.getName(),
-                    this.walletId.toString(),
+                    this.pluginId.toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

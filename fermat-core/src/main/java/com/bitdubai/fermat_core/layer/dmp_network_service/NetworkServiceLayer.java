@@ -33,6 +33,8 @@ public class NetworkServiceLayer implements PlatformLayer {
     private Plugin mWalletStore;
 
 
+
+
     public Plugin getBankNotesPlugin() {
         return mBankNotesPlugin;
     }
@@ -61,6 +63,7 @@ public class NetworkServiceLayer implements PlatformLayer {
     public Plugin getWalletStore() {
         return mWalletStore;
     }
+
 
     @Override
     public void start() throws CantStartLayerException {
@@ -163,6 +166,7 @@ public class NetworkServiceLayer implements PlatformLayer {
             throw new CantStartLayerException();
 
         }
+
 
         /**
          * Let's try to start the Wallet Statistics subsystem.

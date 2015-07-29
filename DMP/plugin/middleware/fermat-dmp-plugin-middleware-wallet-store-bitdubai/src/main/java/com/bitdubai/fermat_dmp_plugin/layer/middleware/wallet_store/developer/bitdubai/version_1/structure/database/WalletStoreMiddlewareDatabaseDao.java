@@ -154,7 +154,11 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
                         transaction.addRecordToInsert((DatabaseTable) entry.getKey(), (DatabaseTableRecord) entry.getValue());
                         break;
                     case UPDATE:
-                        transaction.addRecordToUpdate((DatabaseTable) entry.getKey(), (DatabaseTableRecord) entry.getValue());
+                        // I define the filter for the update
+                        DatabaseTable table = (DatabaseTable) entry.getKey();
+                        DatabaseTableRecord record = (DatabaseTableRecord) entry.getValue();
+                        table.setStringFilter(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, record.getUUIDValue(WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME).toString(), DatabaseFilterType.EQUAL);
+                        transaction.addRecordToUpdate(table, record);
                         break;
                     default:
                         throw new CantExecuteDatabaseOperationException(null,databaseOperation.toString(),"invalid database operation");

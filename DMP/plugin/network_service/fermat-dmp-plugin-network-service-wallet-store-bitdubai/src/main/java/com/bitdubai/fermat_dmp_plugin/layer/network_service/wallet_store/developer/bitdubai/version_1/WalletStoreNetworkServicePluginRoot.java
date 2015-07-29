@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalog;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -36,6 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreNetworkServiceMonitoringAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
@@ -78,6 +80,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      * WalletStoreNetworkServicePluginRoot member variables
      */
     Database database;
+    WalletStoreNetworkServiceMonitoringAgent agent;
 
     /**
      * Service Interface member variables.
@@ -249,11 +252,24 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
         }
 
+
+        /**
+         * I will initialize the Monitoring agent
+         */
+        agent = new WalletStoreNetworkServiceMonitoringAgent(eventManager, errorManager, logManager, pluginDatabaseSystem, pluginId);
+        try {
+            agent.start();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+
+
         /**
          * I will initialize the handling of platform events.
          */
         EventListener eventListener;
         EventHandler eventHandler;
+
 
         this.serviceStatus = ServiceStatus.STARTED;
 
@@ -270,21 +286,27 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
     @Override
     public void pause() {
-
+        agent.stop();
         this.serviceStatus = ServiceStatus.PAUSED;
 
     }
 
     @Override
     public void resume() {
-
+        try {
+            agent.start();
+        } catch (CantStartAgentException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
-
+        /**
+         * stop the monitoring agent
+         */
+        agent.stop();
 
         /**
          * I will remove all the event listeners registered with the event manager.
