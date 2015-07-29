@@ -280,7 +280,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",
-                "Reference nich wallet",
+                "Bitcoin Reference Wallet",
                 "reference_wallet",
                 "wallet_platform_identifier",
                 new Version(1,0,0)

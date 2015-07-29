@@ -593,7 +593,7 @@ public class FermatActivity extends FragmentActivity{
             pager.setAdapter(this.screenPagerAdapter);
 
             if (pager.getBackground() == null) {
-                Drawable d = Drawable.createFromStream(getAssets().open("drawables/home2.png"), null);
+                Drawable d = Drawable.createFromStream(getAssets().open("drawables/home3.png"), null);
                 pager.setBackground(d);
             }
 
