@@ -1,6 +1,6 @@
 
 
-include ':fermat-android-core'
+include ':fermat-android-core', ':fermat-pip-plugin-network-service-subapp-resources-bitdubai'
 include ':fermat-android-api'
 
 include ':fermat-core'
@@ -358,6 +358,12 @@ project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File(
 include ':fermat-pip-plugin-module-developer-bitdubai'
 project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai')
 
+//
+
+include ':fermat-pip-plugin-network-service-subapp-resources-bitdubai'
+project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')
+
 // FUNCTIONAL TEST PROJECT
 //include ':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
 //project(':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')
+project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')

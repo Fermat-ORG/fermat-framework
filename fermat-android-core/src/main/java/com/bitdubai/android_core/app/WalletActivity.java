@@ -207,7 +207,7 @@ public class WalletActivity extends FermatActivity{
 
         WalletSession walletSession=null;
         if(getWalletSessionManager().isWalletOpen(installedWallet.getWalletPublicKey())){
-            getWalletSessionManager().getWalletSession(installedWallet.getWalletPublicKey());
+            walletSession=getWalletSessionManager().getWalletSession(installedWallet.getWalletPublicKey());
         }else{
             walletSession=getWalletSessionManager().openWalletSession(installedWallet,getCryptoWalletManager(),getErrorManager());
         }

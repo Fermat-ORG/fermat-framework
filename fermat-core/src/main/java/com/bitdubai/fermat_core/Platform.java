@@ -127,6 +127,8 @@ public class Platform  {
     PlatformLayer mActorLayer = new ActorLayer();
     PlatformLayer mIdentityLayer = new IdentityLayer();
     PlatformLayer mModuleLayerPip = new com.bitdubai.fermat_core.layer.pip_module.ModuleLayer();
+    PlatformLayer mNetworkServiceLayerPip = new com.bitdubai.fermat_core.layer.pip_network_service.NetworkServiceLayer();
+
 
 
 
@@ -217,6 +219,10 @@ public class Platform  {
 
     public PlatformLayer getmModuleLayerPip() {
         return mModuleLayerPip;
+    }
+
+    public PlatformLayer getmNetworkServiceLayerPip() {
+        return mNetworkServiceLayerPip;
     }
 
 
@@ -394,6 +400,7 @@ public class Platform  {
             mActorLayer.start();
             mIdentityLayer.start();
             mModuleLayerPip.start();
+            mNetworkServiceLayerPip.start();
         } catch (CantStartLayerException cantStartLayerException) {
             ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, cantStartLayerException);
             throw new CantStartPlatformException();
@@ -879,6 +886,17 @@ public class Platform  {
          */
         Plugin walletRuntime =  ((ModuleLayer) mModuleLayer).getWalletRuntime();
         setPluginReferencesAndStart(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
+
+
+
+        /**
+         * -----------------------------
+         * Plugin SubApp Resources Network Service
+         * -----------------------------
+         */
+        Plugin subAppResourcesNetworkService = ((com.bitdubai.fermat_core.layer.pip_network_service.NetworkServiceLayer) mNetworkServiceLayerPip).getSubAppResources();
+        setPluginReferencesAndStart(subAppResourcesNetworkService, Plugins.BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE);
+
 
         for(Addons registeredDescriptor : corePlatformContext.getRegisteredAddonsDescriptors())
             checkAddonForDeveloperInterfaces(registeredDescriptor);
