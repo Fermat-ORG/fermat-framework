@@ -59,6 +59,8 @@ lo seleccionamos para agendarlo. El netwoek service intra user enviará una soli
 acepte como contacto, hasta que B no nos acepte no podemos enviarle dinero ni recibir dinero de B. +
 Cuando B nos acepta como contactos entonces A el network service de B nos comunica la aceptación para
 que quede registrado. +
+Para una descripción detallada ver el archivo "Agregado de Usuarios | Wallet Contacts | Actor Intra
+User | Intra User Network Service". +
 
 == Requerimientos de pago
 
