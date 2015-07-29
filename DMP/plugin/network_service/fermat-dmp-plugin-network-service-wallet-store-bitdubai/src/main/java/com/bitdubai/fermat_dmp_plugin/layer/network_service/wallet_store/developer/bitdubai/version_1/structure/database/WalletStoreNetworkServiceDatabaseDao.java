@@ -81,6 +81,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         this.databaseName = databaseName;
 
         openDatabase();
+        closeDatabase();
     }
 
 
@@ -107,22 +108,25 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
-    private Database openDatabase() throws CantExecuteDatabaseOperationException {
+    private void openDatabase() throws CantExecuteDatabaseOperationException {
         try {
-            database = pluginDatabaseSystem.openDatabase(this.databaseOwnerId, this.databaseName);
+            if(database == null)
+                database = pluginDatabaseSystem.openDatabase(this.databaseOwnerId, this.databaseName);
+            else
+                database.openDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantExecuteDatabaseOperationException(cantOpenDatabaseException, "Trying to open database " + databaseName, "Error in Database plugin");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             throw new CantExecuteDatabaseOperationException(databaseNotFoundException, "Trying to open database " + databaseName, "Error in Database plugin. Database should already exists.");
         }
-        return database;
     }
 
     /**
      * closes the database
      */
     private void closeDatabase(){
-        database.closeDatabase();
+        if(database != null)
+            database.closeDatabase();
     }
 
 
@@ -808,7 +812,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
      * @throws CantExecuteDatabaseOperationException
      */
     public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItem  catalogItem, Developer developer, Language language, Translator translator, Skin skin, Designer designer) throws CantExecuteDatabaseOperationException {
-        database = openDatabase();
+        openDatabase();
         DatabaseTransaction transaction = database.newTransaction();
         try{
             if (catalogItem != null)
