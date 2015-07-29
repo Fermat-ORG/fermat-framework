@@ -12,8 +12,8 @@ public class WalletFragmentFactory {
 
 
     public static FragmentFactory getFragmentFactoryByWalletType(String walletType) {
-        switch (Wallets.getByCode(walletType)) {
-            case CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI:
+        switch (walletType) {
+            case "reference_wallet":
                 return new com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.WalletFragmentFactory();
             default:
                 return null;

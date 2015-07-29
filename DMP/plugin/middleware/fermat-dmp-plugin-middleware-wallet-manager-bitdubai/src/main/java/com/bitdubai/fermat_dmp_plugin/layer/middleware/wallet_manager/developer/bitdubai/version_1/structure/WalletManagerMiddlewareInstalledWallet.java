@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.In
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -21,7 +22,7 @@ import java.util.List;
  */
 
 
-public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet {
+public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, Serializable {
 
     private WalletCategory walletCategory;
     private List<InstalledSkin> skinsId;
@@ -31,6 +32,18 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet {
     private String publicKey;
     private String walletPlatformIdentifier;
     private Version version;
+    private String walletCatalogId;
+
+    public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+        this.walletCategory = walletCategory;
+        this.skinsId = skinsId;
+        this.languajesId = languajesId;
+        this.walletIcon = walletIcon;
+        this.walletName = walletName;
+        this.publicKey = publicKey;
+        this.walletPlatformIdentifier = walletPlatformIdentifier;
+        this.version = version;
+    }
 
     /**
      * InstalledWallet Interface implementation.
@@ -100,6 +113,11 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet {
       */
     public Version getWalletVersion(){
         return version;
+    }
+
+    @Override
+    public String getWalletCatalogId() {
+        return walletCatalogId;
     }
 
 

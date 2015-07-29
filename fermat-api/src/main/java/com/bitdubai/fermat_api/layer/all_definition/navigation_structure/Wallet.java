@@ -2,12 +2,15 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesMapAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.WalletsAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,15 +31,8 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
      * Wallet identifiers
      */
 
-    private String walletPlatformIdentifier;
+    private String publicKey;
 
-    private WalletCategory walletCategory;
-
-    /**
-     * Enum type until WalletManagerManager is ready
-     */
-
-    private Wallets type;
 
     /**
      * Screens in a Wallet
@@ -65,11 +61,9 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
 
     /**
      *
-     * @param type
      * @param activities
      */
-    public Wallet(Wallets type, Map<Activities, Activity> activities) {
-        this.type = type;
+    public Wallet( Map<Activities, Activity> activities) {
         this.activities = activities;
     }
 
@@ -82,8 +76,8 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
     @XmlJavaTypeAdapter(WalletsAdapter.class)
     @XmlAttribute(name = "wallettype", required = true)
     @Override
-    public Wallets getType() {
-        return type;
+    public String getPublicKey() {
+        return publicKey;
     }
 
 
@@ -128,6 +122,11 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
         return activities.get(lastActivity);
     }
 
+    @Override
+    public void setPublicKey(String publicKey) {
+        this.publicKey=publicKey;
+    }
+
     /**
      *  Screens in a Wallet
      *
@@ -144,16 +143,6 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
     }
 
     /**
-     * Set wallet Enum type
-     *
-     * @param type
-     */
-
-    public void setType(Wallets type) {
-        this.type = type;
-    }
-
-    /**
      *  Add Screen to Wallet
      *
      * @param activity
@@ -161,4 +150,6 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
     public void addActivity(Activity activity) {
         activities.put(activity.getType(), activity);
     }
+
+
 }

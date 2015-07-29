@@ -13,6 +13,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetItemInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.CatalogItemInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
@@ -139,6 +141,17 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
             throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
         }
 
+
+        //todo testing borrar
+        try {
+            UUID id = UUID.fromString("12f8ae20-4585-44a6-bacf-a09537984ab1");
+
+            this.setInstallationStatus(CatalogItems.SKIN, id, InstallationStatus.INSTALLED);
+        } catch (CantSetInstallationStatusException e) {
+            e.printStackTrace();
+        }
+
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -237,13 +250,19 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
 
     }
 
-    @Override
-    public CatalogItemInformation getItemInformation(CatalogItems catalogItemType, UUID itemId) {
-        return null;
+    private com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager getWalletStoreManager(){
+        com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager walletStoreManager;
+        walletStoreManager = new com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager(pluginId, errorManager, logManager, pluginDatabaseSystem);
+        return walletStoreManager;
     }
 
     @Override
-    public void setCatalogItemInformation(CatalogItems catalogItemType, UUID itemId, CatalogItemInformation catalogItemInformation) throws CantSetInstallationStatusException {
+    public InstallationStatus getInstallationStatus(CatalogItems catalogItemType, UUID itemId) throws CantGetItemInformationException {
+        return getWalletStoreManager().getInstallationStatus(catalogItemType, itemId);
+    }
 
+    @Override
+    public void setInstallationStatus  (CatalogItems catalogItemType, UUID itemId, InstallationStatus installationStatus) throws CantSetInstallationStatusException {
+        getWalletStoreManager().setCatalogItemInformation(catalogItemType, itemId, installationStatus);
     }
 }
