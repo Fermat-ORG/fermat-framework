@@ -35,7 +35,10 @@ Por ejemplo la forma de tratarlo para una determinada wallet sería:
 * wallet/small/portrait/layout_portrait.xml
 * wallet/large/landscape/layout_large.xml
 
-A la vez tambíen debe haber un directorio con las imagenes e iconos que puedan ser llamados desde la aplicación para un tipo de densidad y un tamaño de pantalla. Esto lo va a saber la aplicación al momento en el que se instala la wallet, que va a obtener los recursos necesarios a traves del walletResources y a guardarlos en el dispositivo.
+A su vez tambíen debe haber un directorio con las imagenes e iconos que puedan ser llamados desde la
+aplicación para un tipo de densidad y un tamaño de pantalla. Esto lo va a saber la aplicación al
+momento en el que se instala la wallet, que va a obtener los recursos necesarios a traves del
+walletResources y a guardarlos en el dispositivo.
 
 === En github los directorios estos van a estar dispuestos de la siguiente forma:
 
@@ -53,10 +56,11 @@ A la vez tambíen debe haber un directorio con las imagenes e iconos que puedan 
 ==== Wallet resources:
 * Deberá implementar la funcionalidad para obtener desde el repositorio solo los recursos que son compatibles con el dispositivo en el cual se encuentra instalado, se le debe entregar desde el sistema operativo el tamaño de la pantalla y la densidad que la misma posee.
 Encargando se de está manera de traer los siguientes recursos:
-	* layout: estos vienen dados por el tamaño de la pantalla y si esta misma soporta landscape o portrait.
-	* Drawables: estos vienen dados por la densidad de la pantalla en cuestión (dpi).
+** layout: estos vienen dados por el tamaño de la pantalla y si esta misma soporta landscape o portrait.
+** Drawables: estos vienen dados por la densidad de la pantalla en cuestión (dpi).
 
 ==== Wallets:
 * Los fragmentos de la wallet van a tener que implementar la logica para decidir si el dispositivo se encuentra en landscape usar un layout y si se encuentra en portrait usar el otro correspondiente.
 * El manejo de las imagenes/iconos es indistinto ya que solo se bajarian los cuales son compatibles con el dispositivo en cuestión.
 
+TODO: Analizar cambios en Wallet Factory y Wallet Store
