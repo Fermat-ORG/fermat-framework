@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * This interface manage the presentation logic of the wallet store
  */
-public interface WalletStoreModule {
+public interface WalletStoreModuleManager {
 
     /**
      * This method let us get the wallet catalogue
