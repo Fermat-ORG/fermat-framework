@@ -62,7 +62,7 @@ import java.util.List;
         private TabStrip tabStrip;
 
 
-        private WalletSessionManager walletSessionManager;
+        private WalletSession walletSession;
         private SubAppSessionManager subAppSessionManager;
 
         private Platform platform;
@@ -72,7 +72,7 @@ import java.util.List;
             super(fm);
             this.context=context;
 
-            this.walletSessionManager=applicationSession.getWalletSessionManager();
+            //this.walletSessionManager=applicationSession.getWalletSessionManager();
             this.subAppSessionManager=applicationSession.getSubAppSessionManager();
             this.platform=applicationSession.getFermatPlatform();
             this.errorManager=errorManager;
@@ -91,13 +91,11 @@ import java.util.List;
 
         }
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,FragmentFactory fragmentFactory,TabStrip tabStrip,ApplicationSession applicationSession,ErrorManager errorManager) {
+        public TabsPagerAdapter(FragmentManager fm,Context context,FragmentFactory fragmentFactory,TabStrip tabStrip,WalletSession walletSession) {
             super(fm);
             this.context=context;
 
-            this.walletSessionManager=applicationSession.getWalletSessionManager();
-            this.subAppSessionManager=applicationSession.getSubAppSessionManager();
-            this.platform=applicationSession.getFermatPlatform();
+            this.walletSession=walletSession;
             this.errorManager=errorManager;
             this.fragmentFactory=fragmentFactory;
             this.tabStrip=tabStrip;
@@ -149,11 +147,6 @@ import java.util.List;
 
 
             /**
-             * Wallet Session
-             */
-            WalletSession walletSession=null;
-
-            /**
              * SubApp Session
              */
             SubAppsSession subAppSession=null;
@@ -172,9 +165,6 @@ import java.util.List;
 
 
 
-            walletSession = walletSessionManager.openWalletSession(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                    (CryptoWalletManager) platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE),
-                    (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER));
             if(activity!=null){
                 if(activity.getType()== Activities.CWP_SUP_APP_ALL_DEVELOPER){
                      subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,

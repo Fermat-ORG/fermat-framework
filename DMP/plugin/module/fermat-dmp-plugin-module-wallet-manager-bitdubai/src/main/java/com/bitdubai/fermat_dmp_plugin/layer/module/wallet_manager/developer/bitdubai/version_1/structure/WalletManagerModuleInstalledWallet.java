@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 
-public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, Serializable {
+public class WalletManagerModuleInstalledWallet implements InstalledWallet, Serializable {
 
     private WalletCategory walletCategory;
     private List<InstalledSkin> skinsId;
@@ -32,9 +32,8 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     private String publicKey;
     private String walletPlatformIdentifier;
     private Version version;
-    private String walletCatalogId;
 
-    public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+    public WalletManagerModuleInstalledWallet(WalletCategory walletCategory, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
         this.languajesId = languajesId;
@@ -113,11 +112,6 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
       */
     public Version getWalletVersion(){
         return version;
-    }
-
-    @Override
-    public String getWalletCatalogId() {
-        return walletCatalogId;
     }
 
 
