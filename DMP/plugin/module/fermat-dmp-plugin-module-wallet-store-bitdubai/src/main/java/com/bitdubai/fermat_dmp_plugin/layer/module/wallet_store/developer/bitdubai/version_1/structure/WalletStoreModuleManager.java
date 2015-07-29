@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdu
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
@@ -12,6 +13,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStar
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -45,6 +48,20 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
      * DealsWithWalletStoreNetworkService interface member variable
      */
     com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager walletStoreManagerNetworkService;
+
+    /**
+     * Constructor
+     * @param errorManager
+     * @param logManager
+     * @param walletStoreManagerMiddleware
+     * @param walletStoreManagerNetworkService
+     */
+    public WalletStoreModuleManager(ErrorManager errorManager, LogManager logManager, WalletStoreManager walletStoreManagerMiddleware, com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager walletStoreManagerNetworkService) {
+        this.errorManager = errorManager;
+        this.logManager = logManager;
+        this.walletStoreManagerMiddleware = walletStoreManagerMiddleware;
+        this.walletStoreManagerNetworkService = walletStoreManagerNetworkService;
+    }
 
     /**
      * DealsWithErrors interface implementation
@@ -95,7 +112,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
     }
 
 
-    public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, String version) throws CantStartInstallationException {
+    public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
 
     }
 
@@ -112,5 +129,10 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
 
     public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException {
 
+    }
+
+
+    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
+        return null;
     }
 }

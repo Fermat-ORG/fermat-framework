@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartInstallationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartLanguageInstallationException;
@@ -9,6 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStar
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallWalletException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 
 import java.util.UUID;
 
@@ -24,6 +26,8 @@ public interface WalletStoreModuleManager {
      * @throws CantGetRefinedCatalogException
      */
     public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException;
+
+    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException;
 
     /**
      * This method initialize the installation presses of a skin by giving the control to the
@@ -62,7 +66,7 @@ public interface WalletStoreModuleManager {
                               UUID skinId,
                               UUID languageId,
                               UUID walletCatalogueId,
-                              String version) throws CantStartInstallationException;
+                              Version version) throws CantStartInstallationException;
 
     /**
      * This method initialize the uninstall presses of a skin by giving the control to the
