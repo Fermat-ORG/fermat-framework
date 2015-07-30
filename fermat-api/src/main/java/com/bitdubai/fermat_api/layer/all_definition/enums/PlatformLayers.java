@@ -23,28 +23,29 @@ public enum PlatformLayers {
     /**
      *  Definitions types
      */
-    BITDUBAI_COMMUNICATION_LAYER     ("Communication Layer",     Developers.BITDUBAI),
-    BITDUBAI_DEFINITION_LAYER        ("Definition Layer",        Developers.BITDUBAI),
-    BITDUBAI_PLATFORM_SERVICE_LAYER  ("Platform Service Layer",  Developers.BITDUBAI),
-    BITDUBAI_OS_LAYER                ("Operating System Layer",  Developers.BITDUBAI),
-    BITDUBAI_HARDWARE_LAYER          ("Hardware Layer",          Developers.BITDUBAI),
-    BITDUBAI_USER_LAYER              ("User Layer",              Developers.BITDUBAI),
-    BITDUBAI_LICENSE_LAYER           ("License Layer",           Developers.BITDUBAI),
-    BITDUBAI_WORLD_LAYER             ("World Layer",             Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_LAYER            ("Crypto Layer",            Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_NETWORK_LAYER    ("Crypto Network Layer",    Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_VAULT_LAYER      ("Crypto Vault Layer",      Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_ROUTER_LAYER     ("Crypto Router Layer",     Developers.BITDUBAI),
-    BITDUBAI_NETWORK_SERVICE_LAYER   ("Network Service Layer",   Developers.BITDUBAI),
-    BITDUBAI_TRANSACTION_LAYER       ("Transaction Layer",       Developers.BITDUBAI),
-    BITDUBAI_MIDDLEWARE_LAYER        ("Middleware Layer",        Developers.BITDUBAI),
-    BITDUBAI_MODULE_LAYER            ("Module Layer",            Developers.BITDUBAI),
-    BITDUBAI_AGENT_LAYER             ("Agent Layer",             Developers.BITDUBAI),
-    BITDUBAI_BASIC_WALLET_LAYER      ("Basic Wallet Layer",      Developers.BITDUBAI),
-    BITDUBAI_NICHE_WALLET_TYPE_LAYER ("Niche Wallet Type Layer", Developers.BITDUBAI),
-    BITDUBAI_ACTOR_LAYER             ("Actor Layer",             Developers.BITDUBAI),
-    BITDUBAI_IDENTITY_LAYER          ("Identity Layer",          Developers.BITDUBAI),
-    BITDUBAI_PIP_MODULE_LAYER        ("PIP Module Layer",        Developers.BITDUBAI);
+    BITDUBAI_COMMUNICATION_LAYER         ("Communication Layer",       Developers.BITDUBAI),
+    BITDUBAI_DEFINITION_LAYER            ("Definition Layer",          Developers.BITDUBAI),
+    BITDUBAI_PLATFORM_SERVICE_LAYER      ("Platform Service Layer",    Developers.BITDUBAI),
+    BITDUBAI_OS_LAYER                    ("Operating System Layer",    Developers.BITDUBAI),
+    BITDUBAI_HARDWARE_LAYER              ("Hardware Layer",            Developers.BITDUBAI),
+    BITDUBAI_USER_LAYER                  ("User Layer",                Developers.BITDUBAI),
+    BITDUBAI_LICENSE_LAYER               ("License Layer",             Developers.BITDUBAI),
+    BITDUBAI_WORLD_LAYER                 ("World Layer",               Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_LAYER                ("Crypto Layer",              Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_NETWORK_LAYER        ("Crypto Network Layer",      Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_VAULT_LAYER          ("Crypto Vault Layer",        Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_ROUTER_LAYER         ("Crypto Router Layer",       Developers.BITDUBAI),
+    BITDUBAI_NETWORK_SERVICE_LAYER       ("Network Service Layer",     Developers.BITDUBAI),
+    BITDUBAI_TRANSACTION_LAYER           ("Transaction Layer",         Developers.BITDUBAI),
+    BITDUBAI_MIDDLEWARE_LAYER            ("Middleware Layer",          Developers.BITDUBAI),
+    BITDUBAI_MODULE_LAYER                ("Module Layer",              Developers.BITDUBAI),
+    BITDUBAI_AGENT_LAYER                 ("Agent Layer",               Developers.BITDUBAI),
+    BITDUBAI_BASIC_WALLET_LAYER          ("Basic Wallet Layer",        Developers.BITDUBAI),
+    BITDUBAI_NICHE_WALLET_TYPE_LAYER     ("Niche Wallet Type Layer",   Developers.BITDUBAI),
+    BITDUBAI_ACTOR_LAYER                 ("Actor Layer",               Developers.BITDUBAI),
+    BITDUBAI_IDENTITY_LAYER              ("Identity Layer",            Developers.BITDUBAI),
+    BITDUBAI_PIP_MODULE_LAYER            ("PIP Module Layer",          Developers.BITDUBAI),
+    BITDUBAI_PIP_NETWORK_SERVICE_LAYER   ("PIP Network Service Layer", Developers.BITDUBAI);
 
     /**
      * Represent the key
@@ -156,7 +157,12 @@ public enum PlatformLayers {
 
             case "PIP Module Layer":
                 return PlatformLayers.BITDUBAI_PIP_MODULE_LAYER;
+
+            case "PIP Network Service Layer":
+                return PlatformLayers.BITDUBAI_PIP_NETWORK_SERVICE_LAYER;
         }
+
+
 
         throw new InvalidParameterException(key);
     }
