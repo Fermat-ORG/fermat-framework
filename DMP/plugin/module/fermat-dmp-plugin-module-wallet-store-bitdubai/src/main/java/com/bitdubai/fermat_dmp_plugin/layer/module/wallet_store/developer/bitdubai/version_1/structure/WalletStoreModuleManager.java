@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.C
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetItemInformationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
@@ -128,59 +129,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
         this.walletStoreManagerNetworkService = walletStoreManager;
     }
 
-    /**
-     * returns the WalletStore Catalag
-     * @return
-     * @throws CantGetRefinedCatalogException
-     */
-    public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException {
-        try {
-            final List<WalletStoreCatalogueItem> walletStoreCatalogueItemList = new ArrayList<WalletStoreCatalogueItem>();
-            WalletCatalog walletCatalog = walletStoreManagerNetworkService.getWalletCatalogue();
-            for (CatalogItem catalogItem : walletCatalog.getWalletCatalog(0, 0)){
-                InstallationStatus installationStatus = getWalletInstallationStatus(catalogItem);
-                WalletStoreCatalogueItem walletStoreCatalogueItem = getWalletCatalogueItem(catalogItem, installationStatus);
-                walletStoreCatalogueItemList.add(walletStoreCatalogueItem);
-            }
-
-            WalletStoreCatalogue walletStoreCatalogue = new WalletStoreCatalogue() {
-                @Override
-                public List<WalletStoreCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsFromCatalogueException {
-                    return walletStoreCatalogueItemList;
-                }
-
-                @Override
-                public void addFilter(WalletCatalogueFilter walletFilter) {
-
-                }
-
-                @Override
-                public void clearFilters() {
-
-                }
-            };
-
-            return walletStoreCatalogue;
-        } catch (Exception exception) {
-            throw new CantGetRefinedCatalogException(CantGetRefinedCatalogException.DEFAULT_MESSAGE, exception, null, null);
-        }
-
-    }
-
-    /**
-     * Gets the WalletStoreDetailed CAtalogItem object for the passes wallet
-     * @param walletCatalogId
-     * @return
-     * @throws CantGetWalletsCatalogException
-     */
-    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
-        try {
-            return getWalletStoreDetailedCatalogItem(walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId));
-        } catch (Exception exception) {
-            throw new CantGetWalletsCatalogException(CantGetWalletsCatalogException.DEFAULT_MESSAGE, exception, null, null);
-        }
-    }
-
     private InstallationStatus getWalletInstallationStatus(CatalogItem catalogItem) throws CantGetItemInformationException {
         return walletStoreManagerMiddleware.getInstallationStatus(CatalogItems.WALLET, catalogItem.getId());
     }
@@ -243,39 +191,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
 
         return walletStoreCatalogueItem;
     }
-
-
-    public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartLanguageInstallationException {
-
-    }
-
-
-    public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartSkinInstallationException {
-
-    }
-
-
-    public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
-
-    }
-
-
-    public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartUninstallLanguageException {
-
-    }
-
-
-    public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantStartUninstallSkinException {
-
-    }
-
-
-    public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException {
-
-    }
-
-
-
 
     private Designer getDesigner(UUID designerId) throws CantGetDesignerException {
         return walletStoreManagerNetworkService.getDesigner(designerId);
@@ -518,4 +433,155 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
     private Developer getDeveloper (UUID developerId) throws CantGetDeveloperException {
         return walletStoreManagerNetworkService.getDeveloper(developerId);
     }
+
+
+    /**
+     * Puts to installing status the specified language and its wallet.
+     * @param walletCatalogueId
+     * @param languageId
+     * @throws CantStartLanguageInstallationException
+     */
+    public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartLanguageInstallationException {
+        try {
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.INSTALLING);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
+        } catch (Exception exception) {
+            throw new CantStartLanguageInstallationException(CantStartLanguageInstallationException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+
+    /**
+     * Puts to installing status the specified skin and its wallet.
+     * @param walletCatalogueId
+     * @param skinId
+     * @throws CantStartSkinInstallationException
+     */
+    public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartSkinInstallationException {
+        try {
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.INSTALLING);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
+        } catch (Exception exception) {
+            throw new CantStartSkinInstallationException (CantStartSkinInstallationException .DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+
+    /**
+     * start the installation of the passed wallet.
+     * @param walletCategory
+     * @param nicheWallet
+     * @param skinId
+     * @param languageId
+     * @param walletCatalogueId
+     * @param version
+     * @throws CantStartInstallationException
+     */
+    public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
+        try {
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
+        } catch (Exception exception) {
+            throw new CantStartInstallationException(CantStartInstallationException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+
+    /**
+     * unisntall the specified Language
+     * @param walletCatalogueId
+     * @param languageId
+     * @throws CantStartUninstallLanguageException
+     */
+    public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartUninstallLanguageException {
+        try {
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.UNINSTALLING);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLING);
+        } catch (Exception exception) {
+            throw new CantStartUninstallLanguageException(CantStartUninstallLanguageException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+
+    /**
+     * uninstall the specified skin
+     * @param walletCatalogueId
+     * @param skinId
+     * @throws CantStartUninstallSkinException
+     */
+    public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantStartUninstallSkinException {
+        try {
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.UNINSTALLING);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLING);
+        } catch (Exception exception) {
+            throw new CantStartUninstallSkinException (CantStartUninstallSkinException .DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+    /**
+     * unisntall the specified wallet
+     * @param walletCatalogueId
+     * @throws CantStartUninstallWalletException
+     */
+    public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException {
+        try {
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLING);
+        } catch (Exception exception) {
+            throw new CantStartUninstallWalletException (CantStartUninstallWalletException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+    /**
+     * returns the WalletStore Catalag
+     * @return
+     * @throws CantGetRefinedCatalogException
+     */
+    public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException {
+        try {
+            final List<WalletStoreCatalogueItem> walletStoreCatalogueItemList = new ArrayList<WalletStoreCatalogueItem>();
+            WalletCatalog walletCatalog = walletStoreManagerNetworkService.getWalletCatalogue();
+            for (CatalogItem catalogItem : walletCatalog.getWalletCatalog(0, 0)){
+                InstallationStatus installationStatus = getWalletInstallationStatus(catalogItem);
+                WalletStoreCatalogueItem walletStoreCatalogueItem = getWalletCatalogueItem(catalogItem, installationStatus);
+                walletStoreCatalogueItemList.add(walletStoreCatalogueItem);
+            }
+
+            WalletStoreCatalogue walletStoreCatalogue = new WalletStoreCatalogue() {
+                @Override
+                public List<WalletStoreCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsFromCatalogueException {
+                    return walletStoreCatalogueItemList;
+                }
+
+                @Override
+                public void addFilter(WalletCatalogueFilter walletFilter) {
+
+                }
+
+                @Override
+                public void clearFilters() {
+
+                }
+            };
+
+            return walletStoreCatalogue;
+        } catch (Exception exception) {
+            throw new CantGetRefinedCatalogException(CantGetRefinedCatalogException.DEFAULT_MESSAGE, exception, null, null);
+        }
+
+    }
+
+    /**
+     * Gets the WalletStoreDetailed CAtalogItem object for the passes wallet
+     * @param walletCatalogId
+     * @return
+     * @throws CantGetWalletsCatalogException
+     */
+    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
+        try {
+            return getWalletStoreDetailedCatalogItem(walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId));
+        } catch (Exception exception) {
+            throw new CantGetWalletsCatalogException(CantGetWalletsCatalogException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+
 }
