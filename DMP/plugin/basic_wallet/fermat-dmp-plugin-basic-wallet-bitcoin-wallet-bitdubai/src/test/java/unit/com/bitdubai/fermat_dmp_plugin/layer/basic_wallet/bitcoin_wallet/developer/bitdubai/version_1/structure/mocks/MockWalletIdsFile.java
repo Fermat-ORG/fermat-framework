@@ -30,4 +30,9 @@ public class MockWalletIdsFile implements PluginTextFile {
     public void loadFromMedia() throws CantLoadFileException {
 
     }
+
+    @Override
+    public void delete() {
+        
+    }
 }
