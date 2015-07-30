@@ -27,6 +27,8 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRe
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetWalletFactoryProjectNavigationStructureException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -41,8 +43,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletUnnInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure.WalletRuntimeEngineDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure.WalletRuntimeNavigationStructureDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -65,6 +65,11 @@ import java.util.UUID;
  */
 
 public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager,XML, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+
+    /**
+     * Path of xml files
+     */
+    final String NAVIGATION_STRUCTURE_FILE_PATH ="NavigationStructure";
 
     /**
      * PlatformService Interface member variables.
@@ -93,6 +98,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     UUID pluginId;
 
     /**
+     * UsesDatabaseSystem Interface member variables
+     */
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
      * WalletRuntimeManager Interface member variables.
      */
 
@@ -105,7 +115,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      * WalletFactoryProjectLanguageManager Interface member variables
      */
 
-    private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation-structure.xml";
+    private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation-structure-";
+
 
 
     /**
@@ -157,7 +168,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
         try
         {
-            factoryReset();
+            //factoryReset();
+            loadLastWalletNavigationStructure();
 
 
         } catch(CantFactoryReset ex){
@@ -172,6 +184,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
+
 
     @Override
     public void pause() {
@@ -267,6 +280,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
 
 
 
@@ -1080,8 +1094,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
 
         }
-        catch(Exception e)
-        {
+        catch(Exception e){
             String message = CantFactoryReset.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
             String context = "Error on method Factory Reset, setting the structure of the apps";
@@ -1092,18 +1105,43 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
     }
 
+
+
+    private void loadLastWalletNavigationStructure() throws CantFactoryReset {
+        try{
+            /**
+             * Esto es hasta que tengamos las cosas andando y conectadas
+             */
+            String publicKey="reference_wallet";
+            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+            if(walletNavigationStructure==null){
+                setNavigationStructureXml(startWalletNavigationStructure());
+                walletNavigationStructure= getNavigationStructure(publicKey);
+            }
+            listWallets.put(publicKey, walletNavigationStructure);
+        }catch(Exception e){
+            String message = CantFactoryReset.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Error on method Factory Reset, setting the structure of the apps";
+            String possibleReason = "some null definition";
+            throw new CantFactoryReset(message, cause, context, possibleReason);
+
+        }
+    }
+
     /**
      *
-     * @param navigationStructure
+     * @param walletPublicKey
      * @return
      * @throws CantGetWalletFactoryProjectNavigationStructureException
      */
     @Override
-    public WalletNavigationStructure getNavigationStructure(String navigationStructure) throws CantGetWalletFactoryProjectNavigationStructureException {
+    public WalletNavigationStructure getNavigationStructure(String walletPublicKey) throws CantGetWalletFactoryProjectNavigationStructureException {
         WalletNavigationStructure walletNavigationStructure =null;
-        if (navigationStructure != null) {
+        if (walletPublicKey != null) {
+            String navigationStructureName=NAVIGATION_STRUCTURE_FILE_NAME+walletPublicKey+".xml";
             try {
-                PluginTextFile pluginTextFile= pluginFileSystem.getTextFile(pluginId, "walletStructure", NAVIGATION_STRUCTURE_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile= pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.loadFromMedia();
                 String xml= pluginTextFile.getContent();
 
@@ -1135,10 +1173,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
     @Override
     public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) throws CantSetWalletFactoryProjectNavigationStructureException {
+        String publiKey=walletNavigationStructure.getPublicKey();
         try {
             String navigationStructureXml = getNavigationStructureXml(walletNavigationStructure);
+            String navigationStructureName=NAVIGATION_STRUCTURE_FILE_NAME+publiKey+".xml";
             try {
-                PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, "walletStructure", NAVIGATION_STRUCTURE_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 newFile.setContent(navigationStructureXml);
                 newFile.persistToMedia();
             } catch (CantPersistFileException e) {
@@ -1152,4 +1192,121 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't convert navigation structure to xml format", "");
         }
     }
+
+
+
+    /**
+     *  Meanwhile
+     *
+     * @return
+     */
+
+    private WalletNavigationStructure startWalletNavigationStructure(){
+
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+        WalletNavigationStructure runtimeWalletNavigationStructure;
+        TitleBar runtimeTitleBar;
+        SideMenu runtimeSideMenu;
+        MainMenu runtimeMainMenu;
+        MenuItem runtimeMenuItem;
+        TabStrip runtimeTabStrip;
+        StatusBar runtimeStatusBar;
+
+        Tab runtimeTab;
+
+        String publicKey;
+
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        publicKey="reference_wallet";
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        listWallets.put(publicKey, runtimeWalletNavigationStructure);
+
+        runtimeActivity= new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setColor("#8bba9e");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#72af9c");
+        //runtimeActivity.setColor("#d07b62");
+
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#72af9c");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#8bba9e");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#72af9c");
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Balance");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Send");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Receive");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Transactions");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Contacts");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+        runtimeTabStrip.addTab(runtimeTab);
+
+
+
+
+
+        runtimeTabStrip.setDividerColor(0x72af9c);
+        //runtimeTabStrip.setBackgroundColor("#72af9c");
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE,runtimeFragment);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND,runtimeFragment);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE,runtimeFragment);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
+
+        return runtimeWalletNavigationStructure;
+    }
+
+
 }
