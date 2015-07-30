@@ -16,6 +16,7 @@ public enum Addons {
     INTRA_USER("Intra User"),
     EXTRA_USER("Extra User"),
     DEVICE_CONNECTIVITY("Device Connectivity"),
+    PLATFORM_INFO("Platform Info"),
     LOG_MANAGER("Log Manager");
 
     public static Addons getByKey(String key) throws InvalidParameterException {
@@ -40,6 +41,8 @@ public enum Addons {
                 return Addons.EXTRA_USER;
             case "Device Connectivity":
                 return Addons.DEVICE_CONNECTIVITY;
+            case "Platform Info":
+                return Addons.PLATFORM_INFO;
             case "Log Manager":
                 return Addons.LOG_MANAGER;
         }
