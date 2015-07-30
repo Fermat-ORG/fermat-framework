@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -169,7 +170,7 @@ public class WalletActivity extends FermatActivity{
             /**
              * Selected wallet to paint
              */
-            Wallet wallet= getWalletRuntimeManager().getLastWallet();
+            WalletNavigationStructure wallet= getWalletRuntimeManager().getLastWallet();
 
             /**
              * Get current activity to paint

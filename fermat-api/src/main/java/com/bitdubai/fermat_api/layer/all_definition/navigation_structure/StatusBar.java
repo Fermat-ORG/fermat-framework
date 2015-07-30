@@ -1,12 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import ae.javax.xml.bind.annotation.XmlElement;
-import ae.javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by Matias
  */
-@XmlRootElement(name = "statusBar")
 public class StatusBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStatusBar {
 
     /**
@@ -39,7 +36,7 @@ public class StatusBar implements com.bitdubai.fermat_api.layer.all_definition.n
      * StatusBar class getters
      */
 
-    @XmlElement
+
     @Override
     public String getColor() {
         return color;
