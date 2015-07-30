@@ -10,17 +10,17 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.23..
  */
 
-public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet{
+public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet{
 
     /**
-     * Wallet identifiers
+     * WalletNavigationStructure identifiers
      */
 
     private String publicKey;
 
 
     /**
-     * Screens in a Wallet
+     * Screens in a WalletNavigationStructure
      */
 
     private Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
@@ -39,16 +39,16 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
 
 
     /**
-     * Wallet constructor
+     * WalletNavigationStructure constructor
      */
-    public Wallet() {
+    public WalletNavigationStructure() {
     }
 
     /**
      *
      * @param activities
      */
-    public Wallet( Map<Activities, Activity> activities) {
+    public WalletNavigationStructure(Map<Activities, Activity> activities) {
         this.activities = activities;
     }
 
@@ -56,7 +56,7 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
 
 
     /**
-     * Wallet interface implementation.
+     * WalletNavigationStructure interface implementation.
      */
 
     @Override
@@ -112,7 +112,7 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
     }
 
     /**
-     *  Screens in a Wallet
+     *  Screens in a WalletNavigationStructure
      *
      * @return Map<Activities, Activity>
      */
@@ -126,7 +126,7 @@ public class Wallet implements com.bitdubai.fermat_api.layer.all_definition.navi
     }
 
     /**
-     *  Add Screen to Wallet
+     *  Add Screen to WalletNavigationStructure
      *
      * @param activity
      */

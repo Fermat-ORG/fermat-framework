@@ -39,12 +39,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.UUID;
 
-import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
-import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
-import ae.javax.xml.bind.JAXBContext;
-import ae.javax.xml.bind.JAXBException;
-import ae.javax.xml.bind.Marshaller;
-import ae.javax.xml.bind.Unmarshaller;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguageManager</code>
@@ -180,19 +175,19 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
     @Override
     public Language getLanguage(String language) throws CantGetLanguageException {
         if (language != null) {
-            try {
-                RuntimeInlineAnnotationReader.cachePackageAnnotation(Language.class.getPackage(), new XmlSchemaMine(""));
-
-                JAXBContext jaxbContext = JAXBContext.newInstance(Language.class);
-
-                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-                StringReader reader = new StringReader(language);
-
-                return (Language) jaxbUnmarshaller.unmarshal(reader);
-            } catch (JAXBException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language XML.", "");
-            }
+//            try {
+//                RuntimeInlineAnnotationReader.cachePackageAnnotation(Language.class.getPackage(), new XmlSchemaMine(""));
+//
+//                JAXBContext jaxbContext = JAXBContext.newInstance(Language.class);
+//
+//                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+//                StringReader reader = new StringReader(language);
+//
+//                return (Language) jaxbUnmarshaller.unmarshal(reader);
+//            } catch (JAXBException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language XML.", "");
+//            }
         }
         throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, null, "language is null", "");
     }
@@ -200,23 +195,23 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
     @Override
     public String getLanguageXml(Language language) throws CantGetLanguageException {
         if (language != null) {
-            try {
-                RuntimeInlineAnnotationReader.cachePackageAnnotation(Language.class.getPackage(), new XmlSchemaMine(""));
-
-                JAXBContext jaxbContext = JAXBContext.newInstance(Language.class);
-
-                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
-
-                Writer outputStream = new StringWriter();
-                jaxbMarshaller.marshal(language, outputStream);
-
-                return outputStream.toString();
-            } catch (JAXBException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language XML.", "");
-            }
+//            try {
+//                RuntimeInlineAnnotationReader.cachePackageAnnotation(Language.class.getPackage(), new XmlSchemaMine(""));
+//
+//                JAXBContext jaxbContext = JAXBContext.newInstance(Language.class);
+//
+//                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+//                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//                jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+//
+//                Writer outputStream = new StringWriter();
+//                jaxbMarshaller.marshal(language, outputStream);
+//
+//                return outputStream.toString();
+//            } catch (JAXBException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, e, "Can't get language XML.", "");
+//            }
         }
         throw new CantGetLanguageException(CantGetLanguageException.DEFAULT_MESSAGE, null, "language is null", "");
     }
