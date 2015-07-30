@@ -1,12 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatMenuItem;
 
-import ae.javax.xml.bind.annotation.XmlAttribute;
-import ae.javax.xml.bind.annotation.XmlElement;
-import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 
 /**
  * Created by rodrigo on 2015.07.17..
@@ -52,18 +49,15 @@ public class MenuItem implements FermatMenuItem {
     /**
      * SideMenu class getters
      */
-    @XmlElement
     public String getLabel() {
         return label;
     }
 
-    @XmlElement
     public String getIcon() {
         return icon;
     }
 
-    @XmlJavaTypeAdapter(ActivitiesAdapter.class)
-    @XmlElement(name = "linkToActivity", required = true)
+
     @Override
     public Activities getLinkToActivity() {
         return linkToActivity;

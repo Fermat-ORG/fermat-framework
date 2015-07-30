@@ -38,12 +38,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.UUID;
 
-import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
-import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
-import ae.javax.xml.bind.JAXBContext;
-import ae.javax.xml.bind.JAXBException;
-import ae.javax.xml.bind.Marshaller;
-import ae.javax.xml.bind.Unmarshaller;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguageManager</code>
@@ -190,19 +185,19 @@ public class WalletFactoryMiddlewareProjectProposalManager implements DealsWithE
     @Override
     public Wallet getNavigationStructure(String navigationStructure) throws CantGetWalletFactoryProjectNavigationStructureException {
         if (navigationStructure != null) {
-            try {
-                RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
-
-                JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
-
-                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-                StringReader reader = new StringReader(navigationStructure);
-
-                return (Wallet) jaxbUnmarshaller.unmarshal(reader);
-            } catch (JAXBException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't get navigation structure XML.", "");
-            }
+//            try {
+//                RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+//
+//                JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+//
+//                Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+//                StringReader reader = new StringReader(navigationStructure);
+//
+//                return (Wallet) jaxbUnmarshaller.unmarshal(reader);
+//            } catch (JAXBException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't get navigation structure XML.", "");
+//            }
         }
         throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, null, "Navigation Structure is null", "");
     }
@@ -210,23 +205,23 @@ public class WalletFactoryMiddlewareProjectProposalManager implements DealsWithE
     @Override
     public String getNavigationStructureXml(Wallet wallet) throws CantGetWalletFactoryProjectNavigationStructureException {
         if (wallet != null) {
-            try {
-                RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
-
-                JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
-
-                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
-
-                Writer outputStream = new StringWriter();
-                jaxbMarshaller.marshal(wallet, outputStream);
-
-                return outputStream.toString();
-            } catch (JAXBException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't get navigation structure XML.", "");
-            }
+//            try {
+//                RuntimeInlineAnnotationReader.cachePackageAnnotation(Wallet.class.getPackage(), new XmlSchemaMine(""));
+//
+//                JAXBContext jaxbContext = JAXBContext.newInstance(Wallet.class);
+//
+//                Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+//                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+//                jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+//
+//                Writer outputStream = new StringWriter();
+//                jaxbMarshaller.marshal(wallet, outputStream);
+//
+//                return outputStream.toString();
+//            } catch (JAXBException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't get navigation structure XML.", "");
+//            }
         }
         throw new CantGetWalletFactoryProjectNavigationStructureException(CantGetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, null, "Navigation Structure is null", "");
     }
