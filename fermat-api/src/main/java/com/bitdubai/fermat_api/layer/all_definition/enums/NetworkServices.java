@@ -5,6 +5,7 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
  */
 public enum NetworkServices {
 
+    TEMPLATE,
     UNDEFINED,
     BANK_NOTES,
     CRYPTO_ADDRESSES,

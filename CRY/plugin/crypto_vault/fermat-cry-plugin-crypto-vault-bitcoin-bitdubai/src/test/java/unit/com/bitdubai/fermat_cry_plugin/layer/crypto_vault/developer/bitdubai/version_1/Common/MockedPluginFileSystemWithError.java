@@ -38,6 +38,11 @@ public class MockedPluginFileSystemWithError implements PluginFileSystem{
             public void loadFromMedia() throws CantLoadFileException {
 
             }
+
+            @Override
+            public void delete() {
+
+            }
         };
         return pluginTextFile;
     }
@@ -62,6 +67,11 @@ public class MockedPluginFileSystemWithError implements PluginFileSystem{
 
             @Override
             public void loadFromMedia() throws CantLoadFileException {
+
+            }
+
+            @Override
+            public void delete() {
 
             }
         };

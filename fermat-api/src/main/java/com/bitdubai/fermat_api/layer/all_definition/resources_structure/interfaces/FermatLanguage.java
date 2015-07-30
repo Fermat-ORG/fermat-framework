@@ -33,6 +33,8 @@ public interface FermatLanguage {
     // version of language
     Version getVersion();
 
+    // TODO: WALLETVERSIONBETWEEN
+
     // add strings to the language
     void addString(String name, String value);
 

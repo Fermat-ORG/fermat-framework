@@ -97,6 +97,11 @@ public class StartAgentTest {
                 public void loadFromMedia() throws CantLoadFileException {
 
                 }
+
+                @Override
+                public void delete() {
+
+                }
             };
             return textFile;
         }
