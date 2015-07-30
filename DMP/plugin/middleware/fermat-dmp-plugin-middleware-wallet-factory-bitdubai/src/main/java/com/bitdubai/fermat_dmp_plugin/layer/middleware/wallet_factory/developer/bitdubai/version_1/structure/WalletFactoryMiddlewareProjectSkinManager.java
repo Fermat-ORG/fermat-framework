@@ -43,12 +43,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.UUID;
 
-import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
-import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
-import ae.javax.xml.bind.JAXBContext;
-import ae.javax.xml.bind.JAXBException;
-import ae.javax.xml.bind.Marshaller;
-import ae.javax.xml.bind.Unmarshaller;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguageManager</code>
@@ -175,7 +170,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
     @Override
     public Skin getSkinStructure(String skinStructure) throws CantGetWalletFactoryProjectSkinStructureException {
         if (skinStructure != null) {
-            try {
+            /*try {
                 RuntimeInlineAnnotationReader.cachePackageAnnotation(Skin.class.getPackage(), new XmlSchemaMine(""));
 
                 JAXBContext jaxbContext = JAXBContext.newInstance(Skin.class);
@@ -187,7 +182,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
             } catch (JAXBException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't get skin structure XML.", "");
-            }
+            }          */
         }
         throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, null, "Skin Structure is null", "");
     }
@@ -195,7 +190,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
     @Override
     public String getSkinStructureXml(Skin skin) throws CantGetWalletFactoryProjectSkinStructureException {
         if (skin != null) {
-            try {
+           /* try {
                 RuntimeInlineAnnotationReader.cachePackageAnnotation(Skin.class.getPackage(), new XmlSchemaMine(""));
 
                 JAXBContext jaxbContext = JAXBContext.newInstance(Skin.class);
@@ -211,7 +206,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
             } catch (JAXBException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, e, "Can't get skin structure XML.", "");
-            }
+            }           */
         }
         throw new CantGetWalletFactoryProjectSkinStructureException(CantGetWalletFactoryProjectSkinStructureException.DEFAULT_MESSAGE, null, "skin Structure is null", "");
     }

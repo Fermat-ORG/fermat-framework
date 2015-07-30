@@ -1,16 +1,11 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.adapters.LanguagesAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.adapters.ResourceTypeAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatResource;
 
 import java.util.UUID;
 
-import ae.javax.xml.bind.annotation.XmlAttribute;
-import ae.javax.xml.bind.annotation.XmlElement;
-import ae.javax.xml.bind.annotation.XmlRootElement;
-import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource</code>
@@ -20,8 +15,7 @@ import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/07/15.
  * @version 1.0
  * @since Java JDK 1.7
- */
-@XmlRootElement( name = "resource" )
+*/
 public class Resource implements FermatResource {
 
     /**
@@ -59,26 +53,22 @@ public class Resource implements FermatResource {
     /**
      * Resource Class getters
      */
-    @XmlAttribute( required=true )
     @Override
     public UUID getId() {
         return id;
     }
 
-    @XmlElement( required=true )
     @Override
     public String getName() {
         return name;
     }
 
-    @XmlElement( required=true )
     @Override
     public String getFileName() {
         return fileName;
     }
 
-    @XmlJavaTypeAdapter( ResourceTypeAdapter.class )
-    @XmlAttribute( required=true )
+
     public ResourceType getResourceType() {
         return resourceType;
     }
