@@ -120,11 +120,15 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
         List<String> walletLanguageColumns = new ArrayList<String>();
 
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
+        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_STATE_COLUMN_NAME);
+        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME);
+        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME);
+        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME);
+        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILITY_COLUMN_NAME);
+        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME);
+        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME);
         /**
          * Table Wallet Language addition.
          */
