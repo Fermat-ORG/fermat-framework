@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
  */
 public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
-    public static final String HOST_CLOUD_SERVER = "192.168.1.2";
+    public static final String HOST_CLOUD_SERVER = "192.168.1.6";
 
     public static final int PORT_CLOUD_SERVER = 9090;
 
@@ -351,6 +351,9 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
      */
     @Override
     public void start() {
+
+		if (true) //skip connect to the server
+			return;
 
         System.out.println("Starting plugin CloudClientCommunicationChannelPluginRoot");
         System.out.println("Trying to connect to server: "+serverAddress);
