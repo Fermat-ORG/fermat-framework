@@ -20,7 +20,7 @@ public class GetClasesFullPathTest {
     final ExtraUserUserAddonRoot testExtraUserUserAddonRoot= Mockito.spy(new ExtraUserUserAddonRoot());
 
     @Test
-    public void getClassesFullPath_callingMethod_getEmptyList() throws Exception {
+    public void getClassesFullPathTest_callingMethod_getEmptyList() throws Exception {
         List<String> returnedClasses;
         List<String> emptyTestList=new ArrayList<>();
         when(testExtraUserUserAddonRoot.getClassesFullPath()).thenReturn(emptyTestList);
@@ -29,7 +29,7 @@ public class GetClasesFullPathTest {
     }
 
     @Test
-    public void getClassesFullPath_callingMethod_getFullPath() throws Exception {
+    public void getClassesFullPathTest_callingMethod_getFullPath() throws Exception {
         List<String> returnedClasses;
         returnedClasses = extraUserUserAddonRoot.getClassesFullPath();
 
@@ -38,7 +38,7 @@ public class GetClasesFullPathTest {
 
 
     @Test
-    public void getClassesFullPath_callingMethod_getNull() throws Exception {
+    public void getClassesFullPathTest_callingMethod_getNull() throws Exception {
         List<String> returnedClasses;
         when(testExtraUserUserAddonRoot.getClassesFullPath()).thenReturn(null);
         returnedClasses =testExtraUserUserAddonRoot.getClassesFullPath();

@@ -47,7 +47,7 @@ public class GetDabaseListTest {
     String testName="Extra User";
 
     @Test
-    public void getDatabaseList_DeveloperObjectFactoryImplemented_DatabaseListWithValidContent() throws Exception{
+    public void getDatabaseListTest_DeveloperObjectFactoryImplemented_DatabaseListWithValidContent() throws Exception{
 
         /**
          * Creating a fake DeveloperDatabase, mocking some interfaces, we can test the DatabaseList return
@@ -66,7 +66,7 @@ public class GetDabaseListTest {
     }
 
     @Test
-    public void getDatabaseList_NullDeveloperObjectFactory_ThrowsGenericException() throws Exception{
+    public void getDatabaseListTest_NullDeveloperObjectFactory_ThrowsGenericException() throws Exception{
 
         MockErrorManager mockErrorManager=new MockErrorManager();
 
@@ -78,7 +78,7 @@ public class GetDabaseListTest {
     }
 
      @Test
-     public void getDatabaseList_OpenDeveloperObjectFactoryCanGetDatabaseList_DatabaseListNotNull() throws Exception {
+     public void getDatabaseListTest_OpenDeveloperObjectFactoryCanGetDatabaseList_DatabaseListNotNull() throws Exception {
         List<DeveloperDatabase> developerDatabaseList = null;
         //Mocking DeveloperObjectFactory
         developerDatabaseList=extraUserUserAddonRoot.getDatabaseList(testDeveloperObjectFactory);

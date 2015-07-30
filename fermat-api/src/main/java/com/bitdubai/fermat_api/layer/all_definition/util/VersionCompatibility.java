@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Used to define the versions in which this object will be valid.
  * Can be used to compare against the platform version or a Wallet version.
  */
-public class VersionCompability implements Serializable {
+public class VersionCompatibility implements Serializable {
     Version initialVersion;
     Version finalVersion;
 
@@ -22,7 +22,7 @@ public class VersionCompability implements Serializable {
      * @param finalVersion the final Version in which this object will be executed. For example 2.0.0
      * @throws InvalidParameterException if the inital version is greater than the final, or viceversa
      */
-    public VersionCompability(Version initialVersion, Version finalVersion) throws InvalidParameterException {
+    public VersionCompatibility(Version initialVersion, Version finalVersion) throws InvalidParameterException {
         this.initialVersion = initialVersion;
         this.finalVersion = finalVersion;
 
@@ -53,7 +53,7 @@ public class VersionCompability implements Serializable {
     }
 
     /**
-     * Returns true if this VersionCompability is valid to run on this platform.
+     * Returns true if this VersionCompatibility is valid to run on this platform.
      * @return
      */
     public boolean isValidInPlatform(){
