@@ -16,7 +16,8 @@ public enum Plugins {
     BITDUBAI_CLOUD_CHANNEL("Cloud Channel", Developers.BITDUBAI),
     BITDUBAI_CLOUD_SERVER_COMMUNICATION("cloud Server Communication", Developers.BITDUBAI),
     BITDUBAI_USER_NETWORK_SERVICE("User NetWork Service", Developers.BITDUBAI),
-    BITDUBAI_INTRAUSER_NETWORK_SERVICE("IntraUser NetWork Service", Developers.BITDUBAI),
+    BITDUBAI_TEMPLATE_NETWORK_SERVICE("Template NetWork Service", Developers.BITDUBAI),
+    BITDUBAI_INTRAUSER_NETWORK_SERVICE("Intra User NetWork Service", Developers.BITDUBAI),
     BITDUBAI_APP_RUNTIME_MIDDLEWARE("App Runtime Middleware", Developers.BITDUBAI),
     BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET("Discount Wallet Basic Wallet", Developers.BITDUBAI),
     BITDUBAI_WALLET_RUNTIME_MODULE("Wallet runtime Module", Developers.BITDUBAI),
@@ -65,6 +66,7 @@ public enum Plugins {
     BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE("SubApp Resources Network Service", Developers.BITDUBAI),
 
     BITDUBAI_DEVELOPER_IDENTITY("Developer Identity", Developers.BITDUBAI),
+    BITDUBAI_IDENTITY_MANAGER("Identity Managers", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_MODULE("Developer Module", Developers.BITDUBAI);
 
 
@@ -182,6 +184,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_LOCATION_WORLD;
             case "Actor Developer":
                 return Plugins.BITDUBAI_ACTOR_DEVELOPER;
+            case "Identity Managers":
+                return Plugins.BITDUBAI_IDENTITY_MANAGER;
         }
 
         throw new InvalidParameterException(key);

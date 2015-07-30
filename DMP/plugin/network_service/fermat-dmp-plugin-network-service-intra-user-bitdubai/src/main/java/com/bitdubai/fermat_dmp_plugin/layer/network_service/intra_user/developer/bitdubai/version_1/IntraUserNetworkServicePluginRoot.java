@@ -247,7 +247,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                 String context = contextBuffer.toString();
-                String possibleCause = "The IntraUser Database triggered an unexpected problem that wasn't able to solve by itself";
+                String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
                 CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
