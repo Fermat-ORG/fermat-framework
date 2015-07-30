@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -84,9 +85,16 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeDaoException("I couldn't create the database",cantCreateDatabaseException,"Database Name: "+OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME,"");
             }
+            catch (Exception exception){
+                throw new CantInitializeDaoException(CantInitializeDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            }
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeDaoException("I couldn't open the database",cantOpenDatabaseException,"Database Name: "+OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME,"");
+        }
+        catch (Exception exception){
+            throw new CantInitializeDaoException(CantInitializeDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -96,7 +104,15 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
 
         loadRecordAsNew(recordToInsert, walletID, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
-        transactionTable.insertRecord(recordToInsert);
+        try {
+            transactionTable.insertRecord(recordToInsert);
+        } catch (CantInsertRecordException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
+        }
+        catch (Exception exception){
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
     }
 
     public List<TransactionWrapper> getNewTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
@@ -165,7 +181,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         // TODO: This need to be completed in the future
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ADDRESS_FROM_COLUMN_NAME, "MY_ADDRESS");
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ADDRESS_TO_COLUMN_NAME, destinationAddress.getAddress());
-        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENY_COLUMN_NAME, destinationAddress.getCryptoCurrency().getCode());
+        databaseTableRecord. setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENY_COLUMN_NAME, destinationAddress.getCryptoCurrency().getCode());
         databaseTableRecord.setLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.NEW.getCode());
 
