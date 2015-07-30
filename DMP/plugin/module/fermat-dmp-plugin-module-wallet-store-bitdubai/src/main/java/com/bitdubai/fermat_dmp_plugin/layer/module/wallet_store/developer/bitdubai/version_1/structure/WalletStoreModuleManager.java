@@ -128,7 +128,11 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
         this.walletStoreManagerNetworkService = walletStoreManager;
     }
 
-
+    /**
+     * returns the WalletStore Catalag
+     * @return
+     * @throws CantGetRefinedCatalogException
+     */
     public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException {
         try {
             final List<WalletStoreCatalogueItem> walletStoreCatalogueItemList = new ArrayList<WalletStoreCatalogueItem>();
@@ -161,6 +165,20 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
             throw new CantGetRefinedCatalogException(CantGetRefinedCatalogException.DEFAULT_MESSAGE, exception, null, null);
         }
 
+    }
+
+    /**
+     * Gets the WalletStoreDetailed CAtalogItem object for the passes wallet
+     * @param walletCatalogId
+     * @return
+     * @throws CantGetWalletsCatalogException
+     */
+    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
+        try {
+            return getWalletStoreDetailedCatalogItem(walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId));
+        } catch (Exception exception) {
+            throw new CantGetWalletsCatalogException(CantGetWalletsCatalogException.DEFAULT_MESSAGE, exception, null, null);
+        }
     }
 
     private InstallationStatus getWalletInstallationStatus(CatalogItem catalogItem) throws CantGetItemInformationException {
@@ -257,19 +275,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
     }
 
 
-    /**
-     * Gets the WalletStoreDetailed CAtalogItem object for the passes wallet
-     * @param walletCatalogId
-     * @return
-     * @throws CantGetWalletsCatalogException
-     */
-    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
-        try {
-            return getWalletStoreDetailedCatalogItem(walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId));
-        } catch (Exception exception) {
-            throw new CantGetWalletsCatalogException(CantGetWalletsCatalogException.DEFAULT_MESSAGE, exception, null, null);
-        }
-    }
+
 
     private Designer getDesigner(UUID designerId) throws CantGetDesignerException {
         return walletStoreManagerNetworkService.getDesigner(designerId);
