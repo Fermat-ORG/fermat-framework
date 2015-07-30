@@ -962,6 +962,41 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         }
     }
 
+    private DatabaseTableRecord getTranslatorRecord(UUID translatorId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME);
+        databaseTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translatorId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+            if (databaseTable.getRecords().size() != 1)
+                throw new InvalidResultReturnedByDatabaseException(null, "Designer Id: " + translatorId.toString(), null );
+
+            return databaseTable.getRecords().get(0);
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+
+    /**
+     * Gets the specified translator Id
+     * @param translatorId
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Translator getTranslator(UUID translatorId) throws CantExecuteDatabaseOperationException {
+        try{
+            DatabaseTableRecord record = getDesignerRecord(translatorId);
+            Translator translator= new Translator();
+            translator.setId(translatorId);
+            translator.setName(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME));
+            translator.setPublicKey(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME));
+
+            return translator;
+        } catch (Exception exception){
+            throw new CantExecuteDatabaseOperationException(exception,null,null);
+        }
+    }
+
     /**
      * Used by the network service. Gets the list of IDs installed in the catalog to compare.
      * @param catalogItems

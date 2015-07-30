@@ -234,7 +234,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
     @Override
     public Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
-        return null;
+        return getWalletStoreManager().getTranslator(translatorId);
     }
 
     /**

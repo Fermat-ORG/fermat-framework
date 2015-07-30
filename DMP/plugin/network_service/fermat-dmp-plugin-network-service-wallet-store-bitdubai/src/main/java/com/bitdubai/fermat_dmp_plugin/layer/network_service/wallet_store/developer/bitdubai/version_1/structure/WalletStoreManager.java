@@ -362,8 +362,19 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
     }
 
 
+    /**
+     * Gets the specidied translarot from db
+     * @param translatorId
+     * @return
+     * @throws CantGetTranslatorException
+     */
     public Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
-        return null;
+        try{
+            Translator translatorr= getDatabaseDAO().getTranslator(translatorId);
+            return translatorr;
+        } catch (Exception exception){
+            throw new CantGetTranslatorException(CantGetTranslatorException.DEFAULT_MESSAGE, exception, null, null);
+        }
     }
 
 }
