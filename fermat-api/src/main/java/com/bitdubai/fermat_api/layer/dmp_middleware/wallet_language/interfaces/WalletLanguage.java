@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 
 import java.util.UUID;
 
@@ -32,13 +33,18 @@ public interface WalletLanguage {
     Languages getType();
 
     /**
+     * @return the translator public key of the translator who is working with this language
+     */
+    String getTranslatorPublicKey();
+
+    /**
      * @return the version of the project language
      */
     Version getVersion();
 
     /**
-     * @return the translator public key of the translator who is working with this language
+     * @return the version of the project language
      */
-    String getTranslatorPublicKey();
+    VersionCompatibility getVersionCompatibility();
 
 }
