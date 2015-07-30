@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -41,6 +41,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletUnnInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure.WalletRuntimeEngineDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.structure.WalletRuntimeNavigationStructureDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -95,7 +97,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      */
 
 
-    Map<String, Wallet> listWallets = new HashMap<String, Wallet>();
+    Map<String, WalletNavigationStructure> listWallets = new HashMap<String, WalletNavigationStructure>();
 
     String lastWalletPublicKey;
 
@@ -161,7 +163,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         } catch(CantFactoryReset ex){
             String message = CantStartPluginException.DEFAULT_MESSAGE;
             FermatException cause = ex;
-            String context = "Wallet Runtime Start";
+            String context = "WalletNavigationStructure Runtime Start";
 
             String possibleReason = "Some null definition";
             throw new CantStartPluginException(message, cause, context, possibleReason);
@@ -227,7 +229,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
     @Override
-    public Wallet getNavigationStructureFromWallet(String publicKey) {
+    public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) {
 
         return null;
     }
@@ -269,15 +271,15 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
     @Override
-    public Wallet getLastWallet() {
+    public WalletNavigationStructure getLastWallet() {
 
-        Iterator<Map.Entry<String, Wallet>> ewallet = this.listWallets.entrySet().iterator();
+        Iterator<Map.Entry<String, WalletNavigationStructure>> ewallet = this.listWallets.entrySet().iterator();
 
         while (ewallet.hasNext()) {
-            Map.Entry<String, Wallet> walletEntry = ewallet.next();
-            Wallet wallet = (Wallet) walletEntry.getValue();
-            if(wallet.getPublicKey().equals(lastWalletPublicKey)){
-                return wallet;
+            Map.Entry<String, WalletNavigationStructure> walletEntry = ewallet.next();
+            WalletNavigationStructure walletNavigationStructure = (WalletNavigationStructure) walletEntry.getValue();
+            if(walletNavigationStructure.getPublicKey().equals(lastWalletPublicKey)){
+                return walletNavigationStructure;
             }
         }
         return null;
@@ -285,14 +287,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
     @Override
-    public Wallet getWallet(String publicKey) {
-        Iterator<Map.Entry<String, Wallet>> ewallet = this.listWallets.entrySet().iterator();
+    public WalletNavigationStructure getWallet(String publicKey) {
+        Iterator<Map.Entry<String, WalletNavigationStructure>> ewallet = this.listWallets.entrySet().iterator();
         while (ewallet.hasNext()) {
-            Map.Entry<String, Wallet> walletEntry = ewallet.next();
-            Wallet wallet = (Wallet) walletEntry.getValue();
-            if(wallet.getPublicKey().equals(publicKey)){
+            Map.Entry<String, WalletNavigationStructure> walletEntry = ewallet.next();
+            WalletNavigationStructure walletNavigationStructure = (WalletNavigationStructure) walletEntry.getValue();
+            if(walletNavigationStructure.getPublicKey().equals(publicKey)){
                 this.lastWalletPublicKey=publicKey;
-                return wallet;
+                return walletNavigationStructure;
             }
         }
         return null;
@@ -307,7 +309,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             Activity runtimeActivity;
             Fragment runtimeFragment;
-            Wallet runtimeWallet;
+            WalletNavigationStructure runtimeWalletNavigationStructure;
             TitleBar runtimeTitleBar;
             SideMenu runtimeSideMenu;
             MainMenu runtimeMainMenu;
@@ -321,19 +323,19 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
             /**
-             * Wallet Kids definition.
+             * WalletNavigationStructure Kids definition.
              * */
 
 
-            runtimeWallet = new Wallet();
-            //   runtimeSubApp.addWallet(runtimeWallet);
+            runtimeWalletNavigationStructure = new WalletNavigationStructure();
+            //   runtimeSubApp.addWallet(runtimeWalletNavigationStructure);
             publicKey="kids";
-            listWallets.put(publicKey, runtimeWallet);
-            runtimeWallet.setPublicKey(publicKey);
+            listWallets.put(publicKey, runtimeWalletNavigationStructure);
+            runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Kids Wallet");
@@ -395,7 +397,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
             /**
-             * End of Wallet Kids fragments.
+             * End of WalletNavigationStructure Kids fragments.
              * */
 
             /**
@@ -405,7 +407,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              *
              * TYPE: CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN
              *
-             * TITLE: Fermat Bitcoin Wallet
+             * TITLE: Fermat Bitcoin WalletNavigationStructure
              *
              * TAB STRIP:
              *      *BALANCE - CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE
@@ -418,16 +420,16 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
 
 
-            runtimeWallet = new Wallet();
+            runtimeWalletNavigationStructure = new WalletNavigationStructure();
             publicKey="reference_wallet";
-            runtimeWallet.setPublicKey(publicKey);
-            listWallets.put(publicKey, runtimeWallet);
+            runtimeWalletNavigationStructure.setPublicKey(publicKey);
+            listWallets.put(publicKey, runtimeWalletNavigationStructure);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
             runtimeActivity.setColor("#8bba9e");
-            runtimeWallet.addActivity(runtimeActivity);
-            runtimeWallet.setStartActivity(runtimeActivity.getType());
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
@@ -508,20 +510,24 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
             // Testing purpose Mati
-            //setNavigationStructureXml(runtimeWallet);
+            //setNavigationStructureXml(runtimeWalletNavigationStructure);
 
             //getNavigationStructure("fasf");
 
+            //WalletRuntimeEngineDatabaseFactory walletRuntimeEngineDatabaseFactory = new WalletRuntimeEngineDatabaseFactory();
+
+            //WalletRuntimeNavigationStructureDao walletRuntimeNavigationStructureDao = new WalletRuntimeNavigationStructureDao();
+
 
             /**
-             * End of Wallet basic fragments.
+             * End of WalletNavigationStructure basic fragments.
              */
 
 
 
 
 
-            // Wallet adults
+            // WalletNavigationStructure adults
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN);
@@ -531,11 +537,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN);
             runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MAIN,runtimeFragment);
 
-            runtimeWallet = new Wallet();
-            // runtimeSubApp.addWallet(runtimeWallet);
+            runtimeWalletNavigationStructure = new WalletNavigationStructure();
+            // runtimeSubApp.addWallet(runtimeWalletNavigationStructure);
             publicKey="adults_wallet";
-            runtimeWallet.setPublicKey(publicKey);
-            listWallets.put(publicKey,runtimeWallet);
+            runtimeWalletNavigationStructure.setPublicKey(publicKey);
+            listWallets.put(publicKey, runtimeWalletNavigationStructure);
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
@@ -662,7 +668,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("");
@@ -683,7 +689,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Contacts");
@@ -703,7 +709,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Available balance");
@@ -722,7 +728,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SEND_HISTORY);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Sent History");
@@ -741,7 +747,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Send To Contact");
@@ -760,7 +766,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("");
@@ -779,7 +785,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("");
@@ -798,7 +804,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_RECEIVE);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Receive From Contact");
@@ -817,7 +823,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("");
@@ -830,7 +836,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("");
@@ -843,7 +849,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("");
@@ -857,7 +863,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_NEW_SEND);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Send to new contact");
@@ -870,7 +876,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_NEW_RECEIVE);
-            runtimeWallet.addActivity(runtimeActivity);
+            runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Receive from new contact");
@@ -882,7 +888,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE,runtimeFragment);
 
             /**
-             * End of Wallet Adults tabs.
+             * End of WalletNavigationStructure Adults tabs.
              */
 
             runtimeActivity= new Activity();
@@ -1070,7 +1076,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             //  listApps.put(Apps.CRYPTO_WALLET_PLATFORM,runtimeApp);
             //lastApp = Apps.CRYPTO_WALLET_PLATFORM;
             /**
-             * End of Wallet Accounts tabs.
+             * End of WalletNavigationStructure Accounts tabs.
              */
 
         }
@@ -1093,8 +1099,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      * @throws CantGetWalletFactoryProjectNavigationStructureException
      */
     @Override
-    public Wallet getNavigationStructure(String navigationStructure) throws CantGetWalletFactoryProjectNavigationStructureException {
-        Wallet wallet=null;
+    public WalletNavigationStructure getNavigationStructure(String navigationStructure) throws CantGetWalletFactoryProjectNavigationStructureException {
+        WalletNavigationStructure walletNavigationStructure =null;
         if (navigationStructure != null) {
             try {
                 PluginTextFile pluginTextFile= pluginFileSystem.getTextFile(pluginId, "walletStructure", NAVIGATION_STRUCTURE_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
@@ -1102,7 +1108,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
                 String xml= pluginTextFile.getContent();
 
 
-                wallet=(Wallet)XMLParser.parseXML(xml, wallet);
+                walletNavigationStructure =(WalletNavigationStructure)XMLParser.parseXML(xml, walletNavigationStructure);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -1113,14 +1119,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             }
         }
 
-        return wallet;
+        return walletNavigationStructure;
     }
 
     @Override
-    public String getNavigationStructureXml(Wallet wallet) throws CantGetWalletFactoryProjectNavigationStructureException {
+    public String getNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) throws CantGetWalletFactoryProjectNavigationStructureException {
         String xml=null;
-        if (wallet != null) {
-            xml = XMLParser.parseObject(wallet);
+        if (walletNavigationStructure != null) {
+            xml = XMLParser.parseObject(walletNavigationStructure);
         }
         return xml;
     }
@@ -1128,9 +1134,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
     @Override
-    public void setNavigationStructureXml(Wallet wallet) throws CantSetWalletFactoryProjectNavigationStructureException {
+    public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) throws CantSetWalletFactoryProjectNavigationStructureException {
         try {
-            String navigationStructureXml = getNavigationStructureXml(wallet);
+            String navigationStructureXml = getNavigationStructureXml(walletNavigationStructure);
             try {
                 PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, "walletStructure", NAVIGATION_STRUCTURE_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 newFile.setContent(navigationStructureXml);
