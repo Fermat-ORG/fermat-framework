@@ -511,7 +511,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
                 detailedCatalogItem.setLanguage(language);
         }
 
-        //todo why this does not work?
+
+        //todo resolver
         //detailedCatalogItem.setLanguages(languages);
 
         /**
@@ -876,6 +877,39 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
             return uuids;
         } catch (CantLoadTableToMemoryException e) {
             throw  new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    private DatabaseTableRecord getDeveloperRecord(UUID developerId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME);
+        databaseTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, developerId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+            if (databaseTable.getRecords().size() != 1)
+                throw new InvalidResultReturnedByDatabaseException(null, "developer Id: " + developerId.toString(), null );
+
+            return databaseTable.getRecords().get(0);
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    /**
+     * Returns the developer from Database with the passed ID
+     * @param developerId
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Developer getDeveloper(UUID developerId) throws CantExecuteDatabaseOperationException {
+        try {
+            DatabaseTableRecord record = getDeveloperRecord(developerId);
+            Developer developer = new Developer();
+            developer.setid(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
+            developer.setName(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME));
+            developer.setPublicKey(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME));
+            return developer;
+        } catch (Exception e) {
+            throw new CantExecuteDatabaseOperationException(e, null, null);
         }
     }
 
