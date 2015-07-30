@@ -20,7 +20,7 @@ import ae.javax.xml.bind.Unmarshaller;
 /**
  * Created by lnacosta on 2015.07.24..
  */
-public class xmlConversionTest extends TestCase {
+public class xmlConversionTest {
   /*  @Test
     public void testXmlToClassStructureAndInverseConversion() {
         try {
