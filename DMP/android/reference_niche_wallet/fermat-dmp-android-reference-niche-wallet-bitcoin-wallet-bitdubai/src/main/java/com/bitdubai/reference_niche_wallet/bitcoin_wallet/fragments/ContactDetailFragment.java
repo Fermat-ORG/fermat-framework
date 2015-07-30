@@ -137,10 +137,12 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     public void onClick(View view) {
         if (view.getId() == R.id.action_send
                 && walletContact != null) {
-            Fragment fragment = SendFragment.newInstance(walletSession, walletContact);
+            SendFragment fragment = SendFragment.newInstance(walletSession, walletContact);
+            fragment.fromContacts = true;
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container2, fragment)
+                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
                     .commit();
