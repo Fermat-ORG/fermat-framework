@@ -11,6 +11,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -21,6 +22,7 @@ import sun.misc.resources.Messages;
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
  * is the implementation of the message<p/>
+ *
  * Created by Roberto Requena - (rart3001@gmail.com) on 09/06/15.
  *
  * @version 1.0
@@ -217,6 +219,30 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
      */
     public void setStatus(MessagesStatus status) {
         this.status = status;
+    }
+
+
+    /**
+     * (non-Javadoc)
+     * @see Message#toJson()
+     */
+    @Override
+    public String toJson(){
+
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see Message#fromJson(String)
+     */
+    @Override
+    public IntraUserNetworkServiceMessage fromJson(String json){
+
+        Gson gson = new Gson();
+        return gson.fromJson(json, IntraUserNetworkServiceMessage.class);
+
     }
 
     /**

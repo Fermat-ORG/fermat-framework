@@ -227,6 +227,9 @@ project(':fermat-dmp-plugin-network-service-wallet-resources-bitdubai').projectD
 include ':fermat-dmp-plugin-network-service-wallet-store-bitdubai'
 project(':fermat-dmp-plugin-network-service-wallet-store-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai')
 
+include ':fermat-dmp-plugin-network-service-template-bitdubai'
+project(':fermat-dmp-plugin-network-service-template-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-template-bitdubai')
+
 
 include ':fermat-dmp-plugin-module-wallet-factory-bitdubai'
 project(':fermat-dmp-plugin-module-wallet-factory-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai')
