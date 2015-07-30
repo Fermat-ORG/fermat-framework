@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 
 import org.fest.assertions.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -81,6 +82,7 @@ public class SetLogginLevelPerClassTest {
 
     }
 
+    @Ignore
     @Test
     public void setLogginLevelPerClassTest_setNullValuesInMapArgument_returnsNull() throws Exception{
 
