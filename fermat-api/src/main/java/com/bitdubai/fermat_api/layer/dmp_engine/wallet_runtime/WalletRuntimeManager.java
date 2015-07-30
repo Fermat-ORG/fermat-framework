@@ -18,12 +18,9 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 23/07/15.
  */
 public interface WalletRuntimeManager {
-    
-    public void recordOpenedWallet (UUID walletId) throws CantRecordOpenedWalletException;
-    
-    public void recordClosedWallet (UUID walletId) throws CantRecordClosedWalletException;
 
-    public void recordNavigationStructure(String walletId) throws CantRecordInstalledWalletNavigationStructureException;
+
+    public void recordNavigationStructure(String publicKey) throws CantRecordInstalledWalletNavigationStructureException;
 
     public boolean removeNavigationStructure(String publicKey) throws CantRemoveWalletNavigationStructureException;
 
