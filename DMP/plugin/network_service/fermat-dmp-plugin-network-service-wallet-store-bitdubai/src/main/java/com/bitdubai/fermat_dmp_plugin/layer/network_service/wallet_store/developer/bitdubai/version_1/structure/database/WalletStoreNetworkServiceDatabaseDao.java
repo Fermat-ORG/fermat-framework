@@ -928,6 +928,40 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         }
     }
 
+    private DatabaseTableRecord getDesignerRecord(UUID designerId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME);
+        databaseTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designerId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+            if (databaseTable.getRecords().size() != 1)
+                throw new InvalidResultReturnedByDatabaseException(null, "Designer Id: " + designerId.toString(), null );
+
+            return databaseTable.getRecords().get(0);
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    /**
+     * Gets the designer with the specified id.
+     * @param designerId
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Designer getDesigner(UUID designerId) throws CantExecuteDatabaseOperationException {
+        try{
+            DatabaseTableRecord record = getDesignerRecord(designerId);
+            Designer designer = new Designer();
+            designer.setiD(designerId);
+            designer.setName(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_NAME_COLUMN_NAME));
+            designer.setPublicKey(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME));
+
+            return designer;
+        } catch (Exception exception){
+            throw new CantExecuteDatabaseOperationException(exception,null,null);
+        }
+    }
+
     /**
      * Used by the network service. Gets the list of IDs installed in the catalog to compare.
      * @param catalogItems

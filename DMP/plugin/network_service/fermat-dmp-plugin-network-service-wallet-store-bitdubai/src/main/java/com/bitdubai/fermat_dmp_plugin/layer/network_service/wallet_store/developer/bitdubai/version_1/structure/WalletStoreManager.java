@@ -2,8 +2,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetTranslatorException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
@@ -341,6 +343,27 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         } catch (Exception exception){
             throw new CantGetSkinException(CantGetSkinException.DEFAULT_MESSAGE, exception, null,null);
         }
+    }
+
+
+    /**
+     * gets the specified designer
+     * @param designerId
+     * @return
+     * @throws CantGetDesignerException
+     */
+    public Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+        try{
+            Designer designer= getDatabaseDAO().getDesigner(designerId);
+            return designer;
+        } catch (Exception exception){
+            throw new CantGetDesignerException(CantGetDesignerException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+
+    public Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
+        return null;
     }
 
 }
