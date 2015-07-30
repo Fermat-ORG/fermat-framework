@@ -1,6 +1,5 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 
@@ -28,7 +27,7 @@ public class GetLogLevelByClassTest_NotSetLogginLevel {
         LogLevel resultLogLevel=ExtraUserUserAddonRoot.getLogLevelByClass(null);
         Assertions.assertThat(resultLogLevel)
                 .isNotNull()
-                .isEqualTo(LogManagerForDevelopers.DEFAULT_LOG_LEVEL);
+                .isEqualTo(LogLevel.MINIMAL_LOGGING);
     }
 
 }
