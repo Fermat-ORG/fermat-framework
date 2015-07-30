@@ -1,3 +1,9 @@
+/*
+ * @#CloudClientCommunicationChannelPluginRoot.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -36,19 +42,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
-/**
- * Created by ciencias on 20.01.15.
- */
-
 // TODO; JORE: Cuando llega una llamada entrante disparar un evento para que el Network Service venga a tomarla.
 
 /**
- * Hi! I am a cloud service which centralizes the communications between system users.
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.CloudClientCommunicationChannelPluginRoot</code> is
+ * the responsible to initialize all component to work together, and hold all resources they needed.
+ * <p/>
+ *
+ * Created by ciencias on 20/01/15.
+ * Update by Jorge Gonzales
+ * Update by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
+ *
+ * @version 1.0
  */
-
 public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
-    public static final String HOST_CLOUD_SERVER = "192.168.1.6";
+    public static final String HOST_CLOUD_SERVER = "192.168.1.2";
 
     public static final int PORT_CLOUD_SERVER = 9090;
 
@@ -191,7 +200,9 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	@Override
 	public void acceptIncomingNetworkServiceConnectionRequest(final NetworkServices networkService, String remoteNetworkService) {
 		try {
+
 			cloudClient.getNetworkServiceClient(networkService).acceptPendingVPNRequest(remoteNetworkService);
+
 		} catch (CloudCommunicationException | FMPException e) {
 			return;
 		}
@@ -341,9 +352,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     @Override
     public void start() {
 
-        if (true) //skip connect to the server
-            return;
-
         System.out.println("Starting plugin CloudClientCommunicationChannelPluginRoot");
         System.out.println("Trying to connect to server: "+serverAddress);
 		System.out.println("Server Identity Public Key:  "+serverPublicKey);
@@ -358,8 +366,9 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
 
 		try{
+
     		cloudClient.start();
-    		cloudClient.requestConnectionToServer();
+
     		this.serviceStatus = ServiceStatus.STARTED;
     	} catch(CommunicationException ex){
 			StringBuilder contextBuilder = new StringBuilder();

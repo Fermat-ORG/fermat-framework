@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.develope
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
+import com.google.gson.Gson;
 
 public class CloudClientCommunicationMessage implements Message {
 	
@@ -33,6 +34,29 @@ public class CloudClientCommunicationMessage implements Message {
 	@Override
 	public MessagesStatus getStatus() {
 		return status;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * @see Message#toJson()
+	 */
+	@Override
+	public String toJson(){
+
+		Gson gson = new Gson();
+		return gson.toJson(this);
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * @see Message#fromJson(String)
+	 */
+	@Override
+	public CloudClientCommunicationMessage fromJson(String json){
+
+		Gson gson = new Gson();
+		return gson.fromJson(json, CloudClientCommunicationMessage.class);
+
 	}
 	
 	@Override
