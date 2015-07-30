@@ -1,8 +1,5 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
-/**
- * Created by Natalia on 22/04/2015.
- */
 
 import android.app.Service;
 import android.content.Context;
@@ -21,32 +18,31 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
-
-
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Natalia on 31/12/2014.
+ * Created by Matias Furszyfer
  */
+
+
 public class WalletDesktopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
-    private ArrayList<App> mlist;
-    private static int tabId;
 
-    private int position;
     Typeface tf;
 
+    private WalletManager walletManager;
 
-    //private SearchView mSearchView;
+    private List<InstalledWallet> lstInstalledWallet;
 
-    public static WalletDesktopFragment newInstance(int position) {
+    public static WalletDesktopFragment newInstance(int position,WalletManager walletManager) {
         WalletDesktopFragment f = new WalletDesktopFragment();
+        f.setWalletManager(walletManager);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -58,86 +54,9 @@ public class WalletDesktopFragment extends Fragment {
 
          tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         setHasOptionsMenu(true);
-        String[] installed =
-                {"false",
-                        "false",
-                        "false",
-                        "true",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false",
-                        "false"
-                };
-        String[] company_names =
-                {"Girls' wallet",
-                        "Boys' wallet",
-                        "Ladies' wallet",
-                        "Bitcoin Reference Wallet",
-                        "Boca Juniors' wallet",
-                        "Carrefour's wallet",
-                        "Gucci's wallet",
-                        "Bank Itau's wallet",
-                        "Mc donals' wallet",
-                        "Vans' wallet",
-                        "Samsung's wallet",
-                        "Popular Bank's wallet",
-                        "Sony's wallet",
-                        "BMW's wallet",
-                        "HP's wallet",
-                        "Billabong's wallet",
-                        "Starbucks' wallet"
 
-                };
+        if(walletManager!=null) lstInstalledWallet=walletManager.getUserWallets();
 
-
-        String[] company_picture =
-                {"wallet_store_cover_photo_girl",
-                        "wallet_store_cover_photo_boy",
-                        "wallet_store_cover_photo_lady",
-                        "wallet_store_cover_fermat",
-                        "wallet_store_cover_photo_boca_juniors",
-                        "wallet_store_cover_photo_carrefour",
-                        "wallet_store_cover_photo_gucci",
-                        "wallet_store_cover_photo_bank_itau",
-                        "wallet_store_cover_photo_mcdonals",
-                        "wallet_store_cover_photo_vans",
-                        "wallet_store_cover_photo_samsung",
-                        "wallet_store_cover_photo_bank_popular",
-                        "wallet_store_cover_photo_sony",
-                        "wallet_store_cover_photo_bmw",
-                        "wallet_store_cover_photo_hp",
-                        "wallet_store_cover_photo_billabong",
-                        "wallet_store_cover_photo_starbucks"
-
-                };
-
-        mlist = new ArrayList<App>();
-
-
-        for (int i = 0; i < installed.length; i++) {
-            if (installed[i] == "true") {
-                App item = new App();
-
-                item.picture = company_picture[i];
-                item.company = company_names[i];
-                item.rate = (float) Math.random() * 5;
-                item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
-                item.favorite = (float) Math.random() * 5;
-                item.timetoarraive = (float) Math.random() * 5;
-                item.sale = (float) Math.random() * 5;
-                item.installed = true;
-                mlist.add(item);
-            }
-        }
 
         GridView gridView = new GridView(getActivity());
 
@@ -148,9 +67,7 @@ public class WalletDesktopFragment extends Fragment {
             gridView.setNumColumns(4);
         }
 
-        //@SuppressWarnings("unchecked")
-        //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
+        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
         _adpatrer.notifyDataSetChanged();
         gridView.setAdapter(_adpatrer);
 
@@ -190,52 +107,29 @@ public class WalletDesktopFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
-    public class App implements Serializable {
-
-        private static final long serialVersionUID = -8730067026050196758L;
-
-        public String title;
-
-        public String description;
-
-        public String picture;
-
-        public String company;
-
-        public String Open_hours;
-
-        public String Address;
-
-        public String Phone;
-
-        public float rate;
-
-        public int value;
-
-        public float favorite;
-
-        public float sale;
-
-        public float timetoarraive;
-
-        public boolean installed;
-
+    /**
+     *  Set Wallet manager plugin
+     *
+     * @param walletManager
+     */
+    public void setWalletManager(WalletManager walletManager) {
+        this.walletManager = walletManager;
     }
 
 
 
-    public class AppListAdapter extends ArrayAdapter<App> {
+
+    public class AppListAdapter extends ArrayAdapter<InstalledWallet> {
 
 
-        public AppListAdapter(Context context, int textViewResourceId, List<App> objects) {
+        public AppListAdapter(Context context, int textViewResourceId, List<InstalledWallet> objects) {
             super(context, textViewResourceId, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            App item = getItem(position);
+            final InstalledWallet installedWallet = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
@@ -254,15 +148,17 @@ public class WalletDesktopFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.company);
-            holder.companyTextView.setTypeface(tf,Typeface.BOLD);
+            holder.companyTextView.setText(installedWallet.getWalletName());
+            holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
 
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);
-            switch (item.picture)
+
+            //Hardcodeado hasta que esté el wallet resources
+            switch (installedWallet.getWalletIcon())
             {
 
-                case "wallet_store_cover_fermat":
+                case "reference_wallet_icon":
                     holder.imageView.setImageResource(R.drawable.fermat);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
@@ -272,8 +168,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((ScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
-                            ((ScreenSwapper) getActivity()).changeScreen();
+                             ((FermatScreenSwapper) getActivity()).selectWallet("WalletBitcoinActivity", installedWallet);
 
                         }
                     });
@@ -283,89 +178,12 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((ScreenSwapper) getActivity()).setScreen("WalletBitcoinActivity");
-                            ((ScreenSwapper) getActivity()).changeScreen();
+                            ((FermatScreenSwapper) getActivity()).selectWallet("WalletBitcoinActivity", installedWallet);
 
                         }
                     });
 
                     break;
-
-                //Prototype
-                /*
-                 case "wallet_store_cover_photo_girl":
-                    holder.imageView.setImageResource(R.drawable.icono_piggy_pink);
-
-                    holder.imageView.setTag("CPWWRWAKAV1M|1");
-                    linearLayout.setTag("CPWWRWAKAV1M|1");
-
-                    break;
-                case "wallet_store_cover_photo_boy":
-                    holder.imageView.setImageResource(R.drawable.icono_piggy_yellow);
-                    holder.imageView.setTag("CPWWRWAKAV1M|2");
-                    linearLayout.setTag("CPWWRWAKAV1M|2");
-                    break;
-                case "wallet_store_cover_photo_lady":
-                    holder.imageView.setImageResource(R.drawable.wallet_1);
-                    holder.imageView.setTag("AdultsActivity|3");
-                    linearLayout.setTag("AdultsActivity|3");
-                    break;
-                case "wallet_store_cover_photo_young":
-                    holder.imageView.setImageResource(R.drawable.wallet_2);
-                    holder.imageView.setTag("WalletBitcoinActivity|4");
-                    break;
-                    case "wallet_store_cover_photo_boca_juniors":
-                    holder.imageView.setImageResource(R.drawable.icono_club_1);
-                    holder.imageView.setTag("AdultsActivity|10");
-                    break;
-                case "wallet_store_cover_photo_carrefour":
-                    holder.imageView.setImageResource(R.drawable.icono_retailer_1);
-                    holder.imageView.setTag("AdultsActivity|7");
-                    break;
-                case "wallet_store_cover_photo_gucci":
-                    holder.imageView.setImageResource(R.drawable.wallet_4);
-                    holder.imageView.setTag("AdultsActivity|6");
-                    break;
-                case "wallet_store_cover_photo_bank_itau":
-                    holder.imageView.setImageResource(R.drawable.icono_banco_1);
-                    holder.imageView.setTag("AdultsActivity|8");
-                    break;
-                case "wallet_store_cover_photo_mcdonals":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_mcdonals);
-                    holder.imageView.setTag("AdultsActivity|11");
-                    break;
-                case "wallet_store_cover_photo_vans":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_vans);
-                    break;
-                case "wallet_store_cover_photo_samsung":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_samsung);
-                    holder.imageView.setTag("AdultsActivity|12");
-                    break;
-                case "wallet_store_cover_photo_bank_popular":
-                    holder.imageView.setImageResource(R.drawable.icono_banco_2);
-                    holder.imageView.setTag("AdultsActivity|9");
-                    break;
-                case "wallet_store_cover_photo_sony":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_sony);
-                    holder.imageView.setTag("AdultsActivity|13");
-                    break;
-                case "wallet_store_cover_photo_hp":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_hp);
-                    holder.imageView.setTag("AdultsActivity|14");
-                    break;
-                case "wallet_store_cover_photo_bmw":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_bmw);
-                    holder.imageView.setTag("AdultsActivity|15");
-                    break;
-                case "wallet_store_cover_photo_billabong":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_billabong);
-                    holder.imageView.setTag("AdultsActivity|16");
-                    break;
-                case "wallet_store_cover_photo_starbucks":
-                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_starbucks);
-                    holder.imageView.setTag("AdultsActivity|17");
-                    break;
-                */
 
 
             }

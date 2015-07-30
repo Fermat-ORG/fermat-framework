@@ -53,7 +53,7 @@ public class IntraUserEstablishedRequestedNetworkServiceConnectionHandler implem
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {
 
             /*
-             *  TemplateManager make the job
+             *  ActorIntraUserManager make the job
              */
             EstablishedNetworkServiceConnectionEvent stablishedNetworkServiceConnectionEvent = (EstablishedNetworkServiceConnectionEvent) platformEvent;
             ((IntraUserNetworkServiceManager) this.intraUserManager).handleEstablishedRequestedNetworkServiceConnection(stablishedNetworkServiceConnectionEvent.getCommunicationChannels(),

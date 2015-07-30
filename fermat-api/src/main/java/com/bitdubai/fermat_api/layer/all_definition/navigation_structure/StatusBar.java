@@ -1,25 +1,53 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import java.awt.Image;
+import ae.javax.xml.bind.annotation.XmlElement;
+import ae.javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by Matias
  */
-public class StatusBar implements com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.StatusBar {
+@XmlRootElement(name = "statusBar")
+public class StatusBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStatusBar {
 
+    /**
+     * StatusBar class member variables
+     */
     String color;
+
     boolean isVisible;
 
-    @Override
-    public String getColor() {
-        return color;
+    /**
+     * StatusBar class constructors
+     */
+    public StatusBar() {
     }
 
+    public StatusBar(String color, boolean isVisible) {
+        this.color = color;
+        this.isVisible = isVisible;
+    }
+
+    /**
+     * StatusBar class methods
+     */
     @Override
     public boolean isVisible() {
         return isVisible;
     }
 
+    /**
+     * StatusBar class getters
+     */
+
+    @XmlElement
+    @Override
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * StatusBar class setters
+     */
     @Override
     public void setColor(String color) {
         this.color=color;

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -9,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -16,11 +18,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateExtraUserRegistry;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserRegistry;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantInitializeExtraUserRegistryException;
@@ -51,11 +56,16 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         ExtraUserDeveloperDatabaseFactory dbFactory = new ExtraUserDeveloperDatabaseFactory(errorManager, pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabase> developerDatabaseList = null;
+        List<DeveloperDatabase> developerDatabaseList = new ArrayList<>();
         try {
             developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database list for plugin Wallet Contacts");
+        } catch (Exception exception) {
+            //System.out.println("******* Error trying to get database list for plugin Wallet Contacts");
+            //modified by Manuel on 23/07/2015
+            exception.printStackTrace();
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getDatabaseList: "+developerObjectFactory ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+
         }
         return developerDatabaseList;
     }
@@ -70,11 +80,14 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         ExtraUserDeveloperDatabaseFactory dbFactory = new ExtraUserDeveloperDatabaseFactory(errorManager, pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabaseTable> developerDatabaseTableList = null;
+        List<DeveloperDatabaseTable> developerDatabaseTableList = new ArrayList<>();
         try {
             developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+        } catch (Exception exception) {
+            //System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+            //modified by Manuel on 23/07/2015
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getDatabasetableList: "+developerObjectFactory ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
         }
         return developerDatabaseTableList;
     }
@@ -90,12 +103,15 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         ExtraUserDeveloperDatabaseFactory dbFactory = new ExtraUserDeveloperDatabaseFactory(errorManager, pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = new ArrayList<>();
         try {
             dbFactory.initializeDatabase();
             developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+        } catch (Exception exception) {
+            //System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+            //modified by Manuel on 23/07/2015
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getDatabaseTableContent: "+dbFactory+"-"+developerObjectFactory ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
         }
         return developerDatabaseTableRecordList;
     }
@@ -172,20 +188,31 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         /**
-         * I will check the current values and update the LogLevel in those which is different
+         * Modify by Manuel on 25/07/2015
+         * I will wrap all this method within a try, I need to catch any generic java Exception
          */
+        try{
 
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             * I will check the current values and update the LogLevel in those which is different
              */
-            if (ExtraUserUserAddonRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                ExtraUserUserAddonRoot.newLoggingLevel.remove(pluginPair.getKey());
-                ExtraUserUserAddonRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                ExtraUserUserAddonRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+                /**
+                 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+                 */
+                if (ExtraUserUserAddonRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    ExtraUserUserAddonRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    ExtraUserUserAddonRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    ExtraUserUserAddonRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
             }
+
+        }catch (Exception exception){
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ExtraUserUserAddonRoot.newLoggingLevel ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
         }
+
     }
 
     /**
@@ -202,7 +229,7 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
             String[] correctedClass = className.split((Pattern.quote("$")));
             return ExtraUserUserAddonRoot.newLoggingLevel.get(correctedClass[0]);
 
-        } catch (Exception e){
+        } catch (Exception exception){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
@@ -221,14 +248,19 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
      *   @param UUID user id.
      * */
     @Override
-    public User getUser(UUID id) {
-        User user = null;
+    public Actor getActor(UUID id) {
+        Actor actor = null;
         try {
-            user = this.extraUserRegistry.getUser(id);
+            actor = this.extraUserRegistry.getUser(id);
         } catch (CantGetExtraUserRegistry cantGetExtraUserRegistry) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetExtraUserRegistry);
+        } catch (Exception exception){
+
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getActor: "+id ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+
         }
-        return user;
+        return actor;
     }
 
     /**
@@ -238,13 +270,20 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
      * @return Object user
      */
     @Override
-    public User createUser(String userName) {
-        User user = null;
+    public Actor createActor(String userName) {
+        Actor user = null;
         try {
             user = this.extraUserRegistry.createUser(userName);
         } catch (CantCreateExtraUserRegistry cantCreateExtraUserRegistry) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateExtraUserRegistry);
+        }/*Modified by Manuel Perez on 27/07/2015*/
+        catch(Exception exception){
+
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "createActor: "+userName ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+
         }
+        //TODO Manuel, aqui falta el manejo de la exception generica
         return user;
     }
 

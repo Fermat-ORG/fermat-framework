@@ -4,12 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
@@ -31,8 +31,9 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
+import static com.googlecode.catchexception.CatchException.*;
+import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CreateWalletContactTest extends TestCase {
@@ -83,7 +84,7 @@ public class CreateWalletContactTest extends TestCase {
     WalletContactsRegistry walletContactsRegistry;
 
     @Mock
-    User user;
+    Actor user;
 
     @Mock
     CryptoAddress cryptoAddress;
@@ -116,7 +117,7 @@ public class CreateWalletContactTest extends TestCase {
         doReturn(actorAddressBookRegistry).when(actorAddressBookManager).getActorAddressBookRegistry();
         doReturn(walletAddressBookRegistry).when(walletAddressBookManager).getWalletAddressBookRegistry();
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
-        doReturn(user).when(extraUserManager).createUser(anyString());
+        doReturn(user).when(extraUserManager).createActor(anyString());
         doReturn(cryptoAddress).when(cryptoVaultManager).getAddress();
         doReturn(walletContactRecord).when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), any(UUID.class));
         nicheWalletTypeCryptoWallet.initialize();
@@ -125,7 +126,7 @@ public class CreateWalletContactTest extends TestCase {
     @Test
     public void testCreateWalletContact_NotNull() throws Exception {
         WalletContactRecord walletContactRecord = nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
-        assertNotNull(walletContactRecord);
+        assertThat(walletContactRecord).isNotNull();
     }
 
     // CONTACTS ALREADY EXISTS TEST
@@ -166,5 +167,14 @@ public class CreateWalletContactTest extends TestCase {
             .when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));
 
         nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+    }
+
+    @Test
+    public void testCreateWalletContact_RegistryIsNotInitialized_CantGetWalletContactException() throws Exception {
+        nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
+        catchException(nicheWalletTypeCryptoWallet).createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCreateWalletContactException.class);
     }
 }

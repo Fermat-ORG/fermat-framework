@@ -64,8 +64,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
         try {
 
             cloudClientSubsystem.start();
-            mCloudPlugin = ((CloudClientSubsystem) cloudClientSubsystem).getPlugin();
-
+            mCloudPlugin = cloudClientSubsystem.getPlugin();
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
 
@@ -83,8 +82,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
         try {
 
             cloudServerSubsystem.start();
-            mCloudServerPlugin = ((CloudServerSubsystem) cloudServerSubsystem).getPlugin();
-
+            mCloudServerPlugin = cloudServerSubsystem.getPlugin();
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
 

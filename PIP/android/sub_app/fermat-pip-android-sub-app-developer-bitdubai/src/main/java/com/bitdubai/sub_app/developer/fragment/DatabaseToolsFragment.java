@@ -15,14 +15,23 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.ScreenSwapper;
+
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Resource;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +41,7 @@ import java.util.List;
  * haves all methods for the database tools activity of a developer
  * <p/>
  * <p/>
- * Created by Mati
+ * Created by Matias Furszyfer
  *
  * @version 1.0
  */
@@ -40,6 +49,13 @@ public class DatabaseToolsFragment extends Fragment{
 
 
     public static final String TAG_DATABASE_TOOLS_FRAGMENT= "DatabaseToolsFragment";
+    private ErrorManager errorManager;
+
+    /**
+     * SubApp session
+     */
+
+    DeveloperSubAppSession developerSubAppSession;
 
     private static final String ARG_POSITION = "position";
     private static final int TAG_FRAGMENT_DATABASE = 1;
@@ -47,14 +63,14 @@ public class DatabaseToolsFragment extends Fragment{
 
     private DatabaseTool databaseTools;
 
-    private static Platform platform = new Platform();
 
     private ArrayList<Resource> mlist;
 
     private GridView gridView;
 
-    public static DatabaseToolsFragment newInstance(int position) {
+    public static DatabaseToolsFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsFragment f = new DatabaseToolsFragment();
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -66,17 +82,18 @@ public class DatabaseToolsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        errorManager = developerSubAppSession.getErrorManager();
         try {
-            ToolManager toolManager = platform.getToolManager();
-            try {
-                databaseTools = toolManager.getDatabaseTool();
-            } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
-            }
+
+            ToolManager toolManager = developerSubAppSession.getToolManager();
+            databaseTools = toolManager.getDatabaseTool();
+        } catch (CantGetDataBaseTool e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            showMessage("Unexpected error get tool manager - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
 
@@ -101,10 +118,10 @@ public class DatabaseToolsFragment extends Fragment{
             for (int i = 0; i < plugins.size(); i++) {
                 Resource item = new Resource();
 
-                    item.picture = "plugin";
-                    item.resource = plugins.get(i).getKey();
-                    item.type=Resource.TYPE_PLUGIN;
-                    mlist.add(item);
+                item.picture = "plugin";
+                item.resource = plugins.get(i).getKey();
+                item.type=Resource.TYPE_PLUGIN;
+                mlist.add(item);
                 //}
             }
             for (int i = 0; i < addons.size(); i++) {
@@ -131,8 +148,9 @@ public class DatabaseToolsFragment extends Fragment{
 
             //listView.setAdapter(adapter);
         } catch (Exception e) {
-            showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
         //LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
@@ -141,21 +159,11 @@ public class DatabaseToolsFragment extends Fragment{
         return rootView;
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
+
+
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
-
-
 
 
     public class AppListAdapter extends ArrayAdapter<Resource> {
@@ -188,12 +196,8 @@ public class DatabaseToolsFragment extends Fragment{
 
                         //set the next fragment and params
                         Object[] params = new Object[1];
-
                         params[0] = item;
-
-                        ((ScreenSwapper)getActivity()).setScreen("DeveloperDatabaseFragment");
-                        ((ScreenSwapper)getActivity()).setParams(params);
-                        ((ScreenSwapper)getActivity()).changeScreen();
+                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperDatabaseFragment",params);
 
                     }
                 });

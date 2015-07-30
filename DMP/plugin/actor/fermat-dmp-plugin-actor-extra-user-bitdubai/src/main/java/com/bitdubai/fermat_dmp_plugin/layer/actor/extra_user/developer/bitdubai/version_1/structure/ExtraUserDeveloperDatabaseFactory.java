@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
@@ -16,8 +18,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantInitializeExtraUserRegistryException;
 
@@ -72,13 +76,16 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
      * @throws CantInitializeExtraUserRegistryException
      */
     public void initializeDatabase() throws CantInitializeExtraUserRegistryException {
-
+        //TODO Manuel, este metodo esta pendiente por la implementacion de las excepciones genericas
         /**
          * I will try to open the users' database..
          */
         try {
 
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, "ExtraUser");
+            /**
+             * Modified by Manuel Perez on 27/07/2015
+             * */
         } catch (DatabaseNotFoundException databaseNotFoundException) {
 
             ExtraUserDatabaseFactory databaseFactory = new ExtraUserDatabaseFactory();
@@ -100,6 +107,10 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
                  * The database cannot be created. I can not handle this situation.
                  */
                 throw new CantInitializeExtraUserRegistryException();
+            } catch(Exception exception){
+
+                throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
@@ -109,16 +120,37 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
              */
 
             throw new CantInitializeExtraUserRegistryException();
+        }catch(Exception exception){
+
+            throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
         }
     }
 
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+
         /**
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Extra User", "ExtraUser"));
+        /**
+         * Modified by Manuel Perez on 26/07/2015
+         * I wrapped this method line inside a try-catch struture, I need to catch any
+         * generic java exception
+         */
+        try{
+
+            databases.add(developerObjectFactory.getNewDeveloperDatabase("Extra User", "ExtraUser"));
+
+        }catch(Exception exception){
+
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getDatabaseList: "+developerObjectFactory ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+            return databases;
+
+        }
+
         return databases;
     }
 
@@ -135,10 +167,25 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
         extraUserTableColumns.add(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME);
 
         /**
-         * extraUser table
+         * Modified by Manuel Perez on 26/07/2015
+         * I wrapped this method line inside a try-catch struture, I need to catch any
+         * generic java exception
          */
-        DeveloperDatabaseTable extraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME, extraUserTableColumns);
-        tables.add(extraUserTable);
+        try{
+
+            /**
+             * extraUser table
+             */
+            DeveloperDatabaseTable extraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME, extraUserTableColumns);
+            tables.add(extraUserTable);
+
+        }catch(Exception exception){
+
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getDatabaseTableList: "+developerObjectFactory ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+            return tables;
+
+        }
 
         return tables;
     }
@@ -150,13 +197,33 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 
-
         /**
          * I load the passed table name from the SQLite database.
          */
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
-        try {
+        //Modified by Manuel Pérez 26/07/2015
+        DatabaseTable selectedTable=null;
+        try{
+
+            selectedTable = database.getTable(developerDatabaseTable.getName());
+
             selectedTable.loadToMemory();
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            for (DatabaseTableRecord row : records) {
+                /**
+                 * for each row in the table list
+                 */
+                List<String> developerRow = new ArrayList<String>();
+                for (DatabaseRecord field : row.getValues()) {
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue().toString());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadTableToMemory);
 
@@ -164,24 +231,11 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
              * if there was an error, I will returned an empty list.
              */
             return returnedRecords;
-        }
+        }catch (Exception exception){
 
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            List<String> developerRow = new ArrayList<String>();
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getDatabaseTableContent: "+developerObjectFactory ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+
         }
 
         /**

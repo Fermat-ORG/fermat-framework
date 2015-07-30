@@ -23,16 +23,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.interfaces.FermatListViewFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.IndexBarView;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -42,9 +48,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
+
 /**
- * Created by natalia on 19/06/15.
+ * Created by Matias Furszyfer on 19/07/15.
  */
+
 public class ContactsFragment extends Fragment implements FermatListViewFragment{
 
     private static final String ARG_POSITION = "position";
@@ -59,18 +68,19 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     //Type face font
     Typeface tf ;
 
-
-
-
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
     private CryptoWalletManager cryptoWalletManager;
-    private Platform platform;
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
 
 
+    /**
+     * Wallet session
+     */
+    WalletSession walletSession;
+    
     //  add person floating button
     private FloatingActionButton fab_add_person;
 
@@ -117,104 +127,108 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         //imageView_add_contact.
     }
 
-
-    public static ContactsFragment newInstance(int position) {
-        ContactsFragment f = new ContactsFragment();
+    
+    public static ContactsFragment newInstance(int position,WalletSession walletSession) {
+        ContactsFragment balanceFragment = new ContactsFragment();
+        balanceFragment.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
-        b.putSerializable(ARG_PLATFORM, new Platform());
-        f.setArguments(b);
-        return f;
+        balanceFragment.setArguments(b);
+        return balanceFragment;
     }
 
-    public static ContactsFragment newInstance(final int position, final Platform platform) {
-        ContactsFragment f = new ContactsFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        b.putSerializable(ARG_PLATFORM, platform);
-        f.setArguments(b);
-        return f;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
+        errorManager = walletSession.getErrorManager();
+        try {
+             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
                 .penaltyDeath().build());
 
-        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
-        platform = new Platform();
-        errorManager = platform.getErrorManager();
+            cryptoWalletManager = walletSession.getCryptoWalletManager();
 
-        cryptoWalletManager = platform.getCryptoWalletManager();
-
-        try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
+
         } catch (CantGetCryptoWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Unexpected error get Contact list - " + e.getMessage());
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.main_act, container, false);
-        setupViews(rootView);
+        try
+        {
+            rootView = inflater.inflate(R.layout.main_act, container, false);
+            setupViews(rootView);
 
 
-        //get contacts list
-        List<WalletContactRecord> walletContactRecords = new ArrayList<>();
-        try {
-            walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
-        } catch (CantGetAllWalletContactsException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+            //get contacts list
+            List<WalletContactRecord> walletContactRecords = new ArrayList<>();
+
+           walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+
+
+            mItems = new ArrayList<String>();
+
+            for(WalletContactRecord walletContactRecords1:walletContactRecords){
+                mItems.add(walletContactRecords1.getActorName());
+            }
+
+            // Array to ArrayList
+            // mItems = new ArrayList<String>(Arrays.asList(ITEMS));
+            mListSectionPos = new ArrayList<Integer>();
+            mListItems = new ArrayList<String>();
+
+            // for handling configuration change
+            if (savedInstanceState != null) {
+                mListItems = savedInstanceState.getStringArrayList("mListItems");
+                mListSectionPos = savedInstanceState.getIntegerArrayList("mListSectionPos");
+
+                if (mListItems != null && mListItems.size() > 0 && mListSectionPos != null && mListSectionPos.size() > 0) {
+                    setListAdaptor();
+                }
+
+                String constraint = savedInstanceState.getString("constraint");
+                if (constraint != null && constraint.length() > 0) {
+                    mSearchView.setText(constraint);
+                    setIndexBarViewVisibility(constraint);
+                }
+            } else {
+                new Poplulate().execute(mItems);
+            }
+
+            mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                    Toast.makeText(getActivity(),mListItems.get(position),Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
         }
+        catch(CantGetAllWalletContactsException  e)
+        {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
-        mItems = new ArrayList<String>();
-
-        for(WalletContactRecord walletContactRecords1:walletContactRecords){
-            mItems.add(walletContactRecords1.getActorName());
         }
-
-        // Array to ArrayList
-       // mItems = new ArrayList<String>(Arrays.asList(ITEMS));
-        mListSectionPos = new ArrayList<Integer>();
-        mListItems = new ArrayList<String>();
-
-        // for handling configuration change
-        if (savedInstanceState != null) {
-            mListItems = savedInstanceState.getStringArrayList("mListItems");
-            mListSectionPos = savedInstanceState.getIntegerArrayList("mListSectionPos");
-
-            if (mListItems != null && mListItems.size() > 0 && mListSectionPos != null && mListSectionPos.size() > 0) {
-                setListAdaptor();
-            }
-
-            String constraint = savedInstanceState.getString("constraint");
-            if (constraint != null && constraint.length() > 0) {
-                mSearchView.setText(constraint);
-                setIndexBarViewVisibility(constraint);
-            }
-        } else {
-            new Poplulate().execute(mItems);
-        }
-
-        mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                Toast.makeText(getActivity(),mListItems.get(position),Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        catch(Exception e)
+        {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+       }
 
         return rootView;
     }
@@ -281,6 +295,10 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
     public ListFilter instanceOfListFilter(){
         return new ListFilter();
+    }
+
+    public void setWalletSession(WalletSession walletSession) {
+        this.walletSession = walletSession;
     }
 
     public class ListFilter extends Filter {
@@ -410,25 +428,14 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         }
     }
 
-    /*@Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (mListItems != null && mListItems.size() > 0) {
-            outState.putStringArrayList("mListItems", mListItems);
-        }
-        if (mListSectionPos != null && mListSectionPos.size() > 0) {
-            outState.putIntegerArrayList("mListSectionPos", mListSectionPos);
-        }
-        String searchText = mSearchView.getText().toString();
-        if (searchText != null && searchText.length() > 0) {
-            outState.putString("constraint", searchText);
-        }
-        super.onSaveInstanceState(outState);
-    }
-    */
 
+    /**
+     *
+     * @param name
+     */
     private void showAddContact(String name) {
         CreateContactFragment createContactFragment = new CreateContactFragment();
-
+        createContactFragment.walletSession=walletSession;
         createContactFragment.setContactName(name);
 
         FragmentTransaction FT = getFragmentManager().beginTransaction();
@@ -441,17 +448,4 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     }
 
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
-    }
 }

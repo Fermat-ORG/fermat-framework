@@ -54,7 +54,8 @@ public class GetActorAddressBookRegistryTest extends TestCase {
     }
 
     @Test
-    public void testGetActorAddressBookRegistryTeste_NotNul() throws CantGetActorAddressBookRegistryException {
+    public void testGetActorAddressBookRegistryTeste_NotNul() throws Exception {
+        when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(database);
         ActorAddressBookRegistry actorAddressBookRegistry = actorAddressBookCryptoModulePluginRoot.getActorAddressBookRegistry();
         assertNotNull(actorAddressBookRegistry);
     }

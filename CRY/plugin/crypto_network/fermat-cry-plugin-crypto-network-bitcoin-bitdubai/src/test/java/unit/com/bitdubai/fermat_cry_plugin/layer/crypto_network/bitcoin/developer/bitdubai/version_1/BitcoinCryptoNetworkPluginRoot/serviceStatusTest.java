@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.S
 
 /**
  * Created by rodrigo on 2015.07.14..
+ * Edited by Nerio on 2015-07-23
  */
 public class serviceStatusTest {
 
@@ -23,9 +25,15 @@ public class serviceStatusTest {
     }
 
     @Test
-    public void startedTest(){
+    public void startedTest() throws CantStartPluginException {
         BitcoinCryptoNetworkPluginRoot root = new BitcoinCryptoNetworkPluginRoot();
-        root.start();
+        try {
+            root.start();
+        } catch (CantStartPluginException exception) {
+            Assert.assertNotNull(exception);
+        } catch (Exception exception){
+            Assert.assertNotNull(exception);
+        }
         Assert.assertEquals(STARTED, root.getStatus());
     }
 

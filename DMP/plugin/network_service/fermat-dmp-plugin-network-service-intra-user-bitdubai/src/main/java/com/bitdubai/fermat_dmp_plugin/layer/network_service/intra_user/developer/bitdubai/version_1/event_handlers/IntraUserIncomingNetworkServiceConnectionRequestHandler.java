@@ -52,7 +52,7 @@ public class IntraUserIncomingNetworkServiceConnectionRequestHandler implements 
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {
 
             /*
-             *  TemplateManager make the job
+             *  ActorIntraUserManager make the job
              */
             IncomingNetworkServiceConnectionRequestEvent incomingNetworkServiceConnectionRequestEvent = (IncomingNetworkServiceConnectionRequestEvent) platformEvent;
             ((IntraUserNetworkServiceManager) this.intraUserManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getCommunicationChannels(),

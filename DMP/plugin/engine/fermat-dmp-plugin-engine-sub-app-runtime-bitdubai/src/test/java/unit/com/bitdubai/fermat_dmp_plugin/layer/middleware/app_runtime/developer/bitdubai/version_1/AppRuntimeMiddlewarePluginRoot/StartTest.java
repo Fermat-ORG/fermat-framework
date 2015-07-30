@@ -1,12 +1,12 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventType;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.SubAppRuntimeMiddlewarePluginRoot;
 import junit.framework.TestCase;
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
@@ -45,14 +45,14 @@ public class StartTest extends TestCase {
     @Mock
     private EventListener mockEventListener;
 
-    private AppRuntimeMiddlewarePluginRoot testAppRuntimeMiddlewarePluginRoot;
+    private SubAppRuntimeMiddlewarePluginRoot testSubAppRuntimeMiddlewarePluginRoot;
 
     @Before
     public void setUp() throws Exception {
-        testAppRuntimeMiddlewarePluginRoot = new AppRuntimeMiddlewarePluginRoot();
-        testAppRuntimeMiddlewarePluginRoot.setPluginFileSystem(mockPluginFileSystem);
-        testAppRuntimeMiddlewarePluginRoot.setEventManager(mockEventManager);
-        testAppRuntimeMiddlewarePluginRoot.setErrorManager(mockErrorManager);
+        testSubAppRuntimeMiddlewarePluginRoot = new SubAppRuntimeMiddlewarePluginRoot();
+        testSubAppRuntimeMiddlewarePluginRoot.setPluginFileSystem(mockPluginFileSystem);
+        testSubAppRuntimeMiddlewarePluginRoot.setEventManager(mockEventManager);
+        testSubAppRuntimeMiddlewarePluginRoot.setErrorManager(mockErrorManager);
     }
 
 
@@ -60,9 +60,9 @@ public class StartTest extends TestCase {
     public void teststart_ThePlugInHasStartedOk_ThrowsCantStartPluginException() throws Exception {
 
         when(mockEventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED)).thenReturn(mockEventListener);
-        catchException(testAppRuntimeMiddlewarePluginRoot).start();
+        catchException(testSubAppRuntimeMiddlewarePluginRoot).start();
 
-        Assertions.assertThat(testAppRuntimeMiddlewarePluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
+        Assertions.assertThat(testSubAppRuntimeMiddlewarePluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
     }
 
 }

@@ -29,7 +29,7 @@ public interface DatabaseTable {
 
     public List<DatabaseTableRecord> getRecords();
 
-    public List<DatabaseVariable> getVarialbesResult();
+    public List<DatabaseVariable> getVariablesResult();
 
     public DatabaseTableRecord getEmptyRecord();
 

@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguagesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinsException;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,53 +16,24 @@ import java.util.UUID;
 public interface DetailedCatalogItem {
 
     /**
-     * This method tells us the category of the wallet
-     *
-     * @return the wallet category
+     * Language associated with this catalog item
      */
-    public WalletCategory getCategory();
-
-    /**
-     * This method finds the languages supported in the said wallet.
-     *
-     * @return the list of languages supported
-     */
+    public Language getDefaultLanguage() throws CantGetLanguageException;
     public List<Language> getLanguages() throws CantGetLanguagesException;
 
     /**
-     * Given an Skin id this method returns the skin information
-     *
-     * @param skinId the id of the skin
-     * @return The skin
-     * @throws CantGetSkinException
+     * Skins associated with this catalog item
      */
-    public Skin getSkin(UUID skinId) throws CantGetSkinException;
+    public Skin getDefaultSkin() throws CantGetSkinException;
+    public List<Skin> getSkins() throws CantGetSkinsException;
+
 
     /**
-     * This method finds the lost of identifiers of the skins associated to the wallet
-     *
-     * @return the list of identifiers
+     * Wallet version information, current and initial and final version of the platform on which this wallet will run.
      */
-    public List<UUID> getSkinsList();
+    public Version getVersion();
+    public Version getPlatformInitialVersion();
+    public Version getPlatformFinalVersion();
 
-    /**
-     * This method gives us the niche wallet type
-     *
-     * @return the wallet type
-     */
-    public NicheWallet getWalletType();
-
-    /**
-     * This method gives us a description of the wallet in the catalogue
-     *
-     * @return a description represented as a String
-     */
-    public String getWalletDescription();
-
-    /**
-     * This method gives us the version of the wallet
-     *
-     * @return the version of the wallet represented as a String
-     */
-    public String getWalletVersion();
+    public UUID getDeveloperId();
 }

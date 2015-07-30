@@ -19,8 +19,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develope
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.WalletLanguageMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.WalletManagerMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.WalletSkinMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.WalletStoreMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1.WalletStatisticsNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.bank_notes_wallet.developer.bitdubai.version_1.BankNotesWalletNicheWalletTypePluginRoot;
@@ -58,7 +60,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.location.developer.bitdubai.ve
  */
 
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.SubAppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
@@ -78,7 +80,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 48;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 50;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -291,8 +293,8 @@ public class PluginsIdentityManager {
 
         if (pluginIndex == 0) {
             try {
-                AppRuntimeMiddlewarePluginRoot tryType;
-                tryType = (AppRuntimeMiddlewarePluginRoot) plugin;
+                SubAppRuntimeMiddlewarePluginRoot tryType;
+                tryType = (SubAppRuntimeMiddlewarePluginRoot) plugin;
                 pluginIndex = 6;
             } catch (Exception e) {
                 /**
@@ -798,6 +800,30 @@ public class PluginsIdentityManager {
                 DeveloperIdentityPluginRoot tryType;
                 tryType = (DeveloperIdentityPluginRoot) plugin;
                 pluginIndex = 47;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                WalletSkinMiddlewarePluginRoot tryType;
+                tryType = (WalletSkinMiddlewarePluginRoot) plugin;
+                pluginIndex = 48;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                WalletLanguageMiddlewarePluginRoot tryType;
+                tryType = (WalletLanguageMiddlewarePluginRoot) plugin;
+                pluginIndex = 49;
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.

@@ -33,8 +33,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
@@ -62,7 +62,7 @@ import java.util.regex.Pattern;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUser, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
 
     /**
@@ -283,20 +283,16 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.pluginFileSystem = pluginFileSystem;
     }
 
-
+    //TODO Franklin, aqui falta la gestion de excepciones genericas
     @Override
     public void start() throws CantStartPluginException {
         //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault Starting...", null, null);
-        // TODO COMMENTED PRINTLN
-        System.out.println("CryptoVault starting...");
 
         /**
          * I get the userId from the deviceUserManager
          */
         //userId = deviceUserManager.getLoggedInUser().getId();
         userId = UUID.fromString("4c4322c7-8c73-4633-956d-96991f413e93"); //todo fix deviceUser Implementation
-        //userId = UUID.randomUUID();
-
 
         /**
          * I will try to open the database first, if it doesn't exists, then I create it
@@ -442,6 +438,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
+    //TODO Franklin, aqui falta la gestion de excepciones genericas
     /**
      * CryptoVaultManager interface implementation
      */
@@ -451,17 +448,20 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             vault.connectVault();
         } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
             throw new VaultNotConnectedToNetworkException();
-
         }
     }
 
+    //TODO Franklin, aqui falta la gestion de excepciones genericas, usa el errorManager
     /**
      * CryptoVaultManager interface implementation
      */
     @Override
-    public void disconnectFromBitcoin() {
-        vault.disconnectVault();
+    public void disconnectFromBitcoin()  {
+        try {
+            vault.disconnectVault();
+        } catch (Exception exception){
 
+        }
     }
 
     /**
@@ -516,6 +516,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         }
     }
 
+    //TODO Franklin, aqui falta la gestion de excepciones genericas
     @Override
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException {
         try {

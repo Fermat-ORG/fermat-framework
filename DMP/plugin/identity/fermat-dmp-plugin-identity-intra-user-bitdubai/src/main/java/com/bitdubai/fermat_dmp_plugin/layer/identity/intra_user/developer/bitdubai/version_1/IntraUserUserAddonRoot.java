@@ -17,23 +17,18 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
-import com.bitdubai.fermat_api.layer.pip_user.User;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.IntraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.UserCratedEventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by loui on 22/02/15.
  */
 
 
-public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, DealsWithEvents, DealsWithErrors, DealsWithPlatformDatabaseSystem,DealsWithPlatformFileSystem, IntraUserManager, Service  {
+public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithPlatformDatabaseSystem, DealsWithPlatformFileSystem, Service  {
 
 
     /**
@@ -116,21 +111,6 @@ public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, Deal
 
 
     /**
-     * TemplateManager Interface implementation.
-     */
-
-    @Override
-    public void crateUser(UUID userId) throws CantCreateIntraUserException {
-
-    }
-
-    @Override
-    public User getUser(UUID id){
-        return null;
-    }
-
-
-    /**
      * Service Interface implementation.
      */
     @Override
@@ -138,14 +118,14 @@ public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, Deal
 
         EventListener eventListener;
         EventHandler eventHandler;
-
+        /*
         eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
-        eventHandler = new UserCratedEventHandler();
-        ((UserCratedEventHandler) eventHandler).setIntraUserManager(this);
+        eventHandler = new UserCreatedEventHandler();
+        ((UserCreatedEventHandler) eventHandler).setIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
-
+        */
         this.serviceStatus = ServiceStatus.STARTED;
 
     }

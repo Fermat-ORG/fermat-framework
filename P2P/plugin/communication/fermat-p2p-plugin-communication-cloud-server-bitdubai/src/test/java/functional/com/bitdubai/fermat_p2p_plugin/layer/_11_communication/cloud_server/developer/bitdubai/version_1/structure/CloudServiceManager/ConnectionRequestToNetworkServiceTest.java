@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import functional.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
@@ -53,7 +54,8 @@ public class ConnectionRequestToNetworkServiceTest extends CloudServiceIntegrati
 		setUpKeyPair();
 		setUpExecutor(2);
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRegister_SendValidRequest_ClientGetsAcceptForward() throws Exception{
 		setUpConnections(1);
@@ -67,7 +69,8 @@ public class ConnectionRequestToNetworkServiceTest extends CloudServiceIntegrati
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT_FORWARD);
 		System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(response.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY));
 	}
-	
+
+	@Ignore
 	@Test
 	public void ConnectionRegister_SendValidRequest_ClientGetsDeny() throws Exception{
 		setUpConnections(2);

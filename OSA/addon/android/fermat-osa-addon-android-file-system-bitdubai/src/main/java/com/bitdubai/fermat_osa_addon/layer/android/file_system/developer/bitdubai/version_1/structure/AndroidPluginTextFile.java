@@ -202,6 +202,9 @@ public class AndroidPluginTextFile implements PluginTextFile {
             String possibleReason = "This problem should be related with the FileOutputStream either in the construction or the write operation";
             throw new CantPersistFileException(message, cause, context, possibleReason);
         }
+        catch (Exception e){
+            throw new CantPersistFileException(CantPersistFileException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
+        }
     }
 
     /**
@@ -262,6 +265,9 @@ public class AndroidPluginTextFile implements PluginTextFile {
             String context = "File Path: " + file.getPath();
             String possibleReason = "This problem should be related with the FileInputStream either in the construction or the read operation";
             throw new CantLoadFileException(message, cause, context, possibleReason);
+        }
+        catch (Exception e){
+            throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
         }
     }
 
