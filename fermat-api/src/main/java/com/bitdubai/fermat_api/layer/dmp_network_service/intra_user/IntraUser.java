@@ -10,7 +10,7 @@ import java.util.UUID;
 
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.network_service.intra_user.IntraUser</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.network_service.intra_user.Template</code>
  * expose the basic method of a Network Intra User
  * <p/>
  *
@@ -53,7 +53,7 @@ public interface IntraUser {
     /**
      * Return the status
      *
-     * @return IntraUserStatus
+     * @return TemplateStatus
      */
     public IntraUserStatus getStatus ();
 
