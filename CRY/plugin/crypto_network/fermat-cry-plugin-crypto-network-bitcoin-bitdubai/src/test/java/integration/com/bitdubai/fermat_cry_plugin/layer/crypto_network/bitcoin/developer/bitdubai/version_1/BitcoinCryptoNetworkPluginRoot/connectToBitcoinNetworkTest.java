@@ -124,6 +124,11 @@ public class connectToBitcoinNetworkTest {
                 public void loadFromMedia() throws CantLoadFileException {
 
                 }
+
+                @Override
+                public void delete() {
+
+                }
             };
             return textFile;
         }

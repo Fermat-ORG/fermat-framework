@@ -103,6 +103,11 @@ public class createBlockChainTest {
                 public void loadFromMedia() throws CantLoadFileException {
 
                 }
+
+                @Override
+                public void delete() {
+
+                }
             };
             return pluginTextFile;
         }
@@ -152,6 +157,11 @@ public class createBlockChainTest {
                 public void loadFromMedia() throws CantLoadFileException {
 
                 }
+
+                @Override
+                public void delete() {
+
+                }
             };
             throw new CantCreateFileException("Mocked error");
         }
@@ -199,6 +209,11 @@ public class createBlockChainTest {
 
                 @Override
                 public void loadFromMedia() throws CantLoadFileException {
+
+                }
+
+                @Override
+                public void delete() {
 
                 }
             };
