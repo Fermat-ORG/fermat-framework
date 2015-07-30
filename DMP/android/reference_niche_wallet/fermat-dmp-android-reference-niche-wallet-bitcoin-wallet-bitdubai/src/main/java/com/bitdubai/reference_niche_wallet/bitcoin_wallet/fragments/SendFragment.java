@@ -7,18 +7,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.hardware.input.InputManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
@@ -76,16 +80,16 @@ public class SendFragment extends Fragment {
     /**
      * Layout members
      */
-
     private EditText editAddress;
     private EditText editAmount;
     private EditText editNotes;
 
-    private LinearLayout linear_notes;
-    private LinearLayout linear_send;
+    //private LinearLayout linear_notes;
+    //private LinearLayout linear_send;
 
     private WalletContact contact;
 
+    public boolean fromContacts = false;
 
     /**
      * Create a new instance of SendFragment and set walletSession and platforms plugin inside
@@ -160,18 +164,27 @@ public class SendFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_send, container, false);
-
+        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_send_new, container, false);
         try {
             editAddress = (EditText) rootView.findViewById(R.id.address);
             editAddress.setTypeface(tf);
             editAmount = (EditText) rootView.findViewById(R.id.amount);
             editAmount.setTypeface(tf);
             editNotes = (EditText) rootView.findViewById(R.id.notes);
+            editNotes.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                    if (actionId == EditorInfo.IME_ACTION_SEND) {
+                        /* Send coins... */
+                        rootView.findViewById(R.id.send_button).performClick();
+                        return true;
+                    }
+                    return false;
+                }
+            });
             editNotes.setTypeface(tf);
-            linear_notes = (LinearLayout) rootView.findViewById(R.id.linear_notes);
-            linear_send = (LinearLayout) rootView.findViewById(R.id.linear_send);
+            //linear_notes = (LinearLayout) rootView.findViewById(R.id.linear_notes);
+            //linear_send = (LinearLayout) rootView.findViewById(R.id.linear_send);
 
             autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
             adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
@@ -194,14 +207,32 @@ public class SendFragment extends Fragment {
 
             }
 
-            ImageView b = (ImageView) rootView.findViewById(R.id.send_button);
-            b.setOnClickListener(new View.OnClickListener() {
+            final ImageView sendButton = (ImageView) rootView.findViewById(R.id.send_button);
+            sendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
+                        im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    }
                     sendCrypto();
                 }
             });
-
+            if (fromContacts) {
+                rootView.findViewById(R.id.change_account).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+                                .replace(R.id.fragment_container2, ContactsFragment.newInstance(0, walletSession))
+                                .commit();
+                    }
+                });
+                ((TextView) rootView.findViewById(R.id.change_account)).setTypeface(tf);
+            } else {
+                rootView.findViewById(R.id.change_account).setVisibility(View.GONE);
+            }
             /**
              *  Address validation
              */
@@ -223,13 +254,12 @@ public class SendFragment extends Fragment {
 
             /**
              *  Paste clipboard button
-             */
-            ImageView pasteFromClipboardButton = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
-            pasteFromClipboardButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    pasteFromClipboard(rootView);
-                }
-            });
+             ImageView pasteFromClipboardButton = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
+             pasteFromClipboardButton.setOnClickListener(new View.OnClickListener() {
+             public void onClick(View v) {
+             pasteFromClipboard(rootView);
+             }
+             });*/
 
             /**
              *  Amount observer
@@ -239,8 +269,8 @@ public class SendFragment extends Fragment {
                     try {
                         Long amount = Long.parseLong(editAmount.getText().toString());
                         if (amount > 0) {
-                            linear_notes.setVisibility(View.VISIBLE);
-                            linear_send.setVisibility(View.VISIBLE);
+                            sendButton.setEnabled(true);
+                            editNotes.setEnabled(true);
                         }
                     } catch (Exception e) {
                         try {
@@ -249,9 +279,8 @@ public class SendFragment extends Fragment {
                         } catch (Exception ex) {
 
                         }
-
-                        linear_notes.setVisibility(View.GONE);
-                        linear_send.setVisibility(View.GONE);
+                        sendButton.setEnabled(false);
+                        editNotes.setEnabled(false);
                     }
                 }
 
@@ -265,9 +294,7 @@ public class SendFragment extends Fragment {
             /**
              * BarCode Scanner
              */
-            ImageView scanImage = (ImageView) rootView.findViewById(R.id.scan_qr);
-
-            scanImage.setOnClickListener(new View.OnClickListener() {
+            rootView.findViewById(R.id.scan_qr).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
@@ -283,12 +310,19 @@ public class SendFragment extends Fragment {
             /* Set Enable only if it's called from tab, otherwise the user cannot edit this controls */
             editAddress.setEnabled(contact == null);
             autocompleteContacts.setEnabled(contact == null);
+            /*Setting up typeface*/
+            ((TextView) rootView.findViewById(R.id.transaction_title)).setTypeface(tf);
+            ((TextView) rootView.findViewById(R.id.account_details_title)).setTypeface(tf);
+            ((TextView) rootView.findViewById(R.id.account_name_title)).setTypeface(tf);
+            ((TextView) rootView.findViewById(R.id.account_address_title)).setTypeface(tf);
+            ((TextView) rootView.findViewById(R.id.amount_title)).setTypeface(tf);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), " CreateView Exception- " + e.getMessage());
 
         }
+
         return rootView;
     }
 
