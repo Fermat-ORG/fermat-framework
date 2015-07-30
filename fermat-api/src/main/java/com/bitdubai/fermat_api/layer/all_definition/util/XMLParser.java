@@ -7,7 +7,18 @@ import com.thoughtworks.xstream.XStream;
  */
 
 
+/**
+ *  XML Parser convert objects to xml string to save in file and viceversa
+ */
+
 public class XMLParser {
+
+    /**
+     *   the method receives an object and returns a parsing of set object in a xml format string,
+     *
+     * @param object
+     * @return String xml
+     */
 
     public static String parseObject(Object object){
         String xml=null;
@@ -22,6 +33,14 @@ public class XMLParser {
         return xml;
     }
 
+    /**
+     *  the method receives a string in xml format and a root object to instantiate, returning the new objects loaded with the xml data
+     *
+     * @param xml
+     * @param root
+     * @return object
+     */
+
     public static Object parseXML(String xml,Object root){
         Object object=null;
         if (xml != null) {
@@ -30,6 +49,12 @@ public class XMLParser {
         }
         return object;
     }
+
+    /**
+     *  Obtain XStream object
+     *
+     * @return XStream
+     */
 
     private static XStream getXstreamObject() {
         XStream xstream = new XStream(); // DomDriver and StaxDriver instances also can be used with constructor
