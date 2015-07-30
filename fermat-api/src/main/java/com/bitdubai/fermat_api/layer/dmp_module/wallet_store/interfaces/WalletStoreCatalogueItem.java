@@ -13,10 +13,6 @@ import java.util.UUID;
  */
 public interface WalletStoreCatalogueItem extends CatalogItem{
 
-    public String getDeveloperName();
-
-    public String getDeveloperPublicKey();
-
     public InstallationStatus getInstallationStatus();
 
     public WalletStoreDetailedCatalogItem getWalletDetailedCatalogItem() throws DatailedInformationNotFoundException;
