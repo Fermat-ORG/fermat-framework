@@ -271,7 +271,23 @@ public class AndroidPluginTextFile implements PluginTextFile {
         }
     }
 
-    
+    /**
+     *  remove files from the system
+     */
+
+    @Override
+    public void delete() {
+        /**
+         *  Evaluate privacyLevel to determine the location of directory - external or internal
+         */
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir().toString();
+        File file = new File(path +"/"+ this.directoryName, this.fileName);
+        file.delete();
+    }
 
 
     @Override
