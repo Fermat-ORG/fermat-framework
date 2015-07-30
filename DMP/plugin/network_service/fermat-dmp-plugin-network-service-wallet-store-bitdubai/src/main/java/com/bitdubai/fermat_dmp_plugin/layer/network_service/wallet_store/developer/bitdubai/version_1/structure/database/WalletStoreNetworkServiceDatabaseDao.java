@@ -79,9 +79,6 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.databaseOwnerId = databaseOwnerId;
         this.databaseName = databaseName;
-
-        openDatabase();
-        closeDatabase();
     }
 
 
@@ -108,7 +105,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
-    private void openDatabase() throws CantExecuteDatabaseOperationException {
+    private Database openDatabase() throws CantExecuteDatabaseOperationException {
         try {
             if(database == null)
                 database = pluginDatabaseSystem.openDatabase(this.databaseOwnerId, this.databaseName);
@@ -119,6 +116,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             throw new CantExecuteDatabaseOperationException(databaseNotFoundException, "Trying to open database " + databaseName, "Error in Database plugin. Database should already exists.");
         }
+        return database;
     }
 
     /**
@@ -812,7 +810,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
      * @throws CantExecuteDatabaseOperationException
      */
     public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItem  catalogItem, Developer developer, Language language, Translator translator, Skin skin, Designer designer) throws CantExecuteDatabaseOperationException {
-        openDatabase();
+        database = openDatabase();
         DatabaseTransaction transaction = database.newTransaction();
         try{
             if (catalogItem != null)
