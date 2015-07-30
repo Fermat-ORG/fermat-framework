@@ -512,7 +512,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         }
 
 
-        detailedCatalogItem.setLanguages(languages);
+        //todo resolver
+        //detailedCatalogItem.setLanguages(languages);
 
         /**
          * Get skin records from database
@@ -564,7 +565,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         }
 
         //todo why this does not work?
-        detailedCatalogItem.setSkins(skins);
+        //detailedCatalogItem.setSkins(skins);
 
         /**
          * Get rest of Item information from item table
