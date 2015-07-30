@@ -24,7 +24,6 @@ public interface Wallet {
 
     public WalletStatus getStatus();
 
-
     public void open() throws OpenFailedException;
 
 }

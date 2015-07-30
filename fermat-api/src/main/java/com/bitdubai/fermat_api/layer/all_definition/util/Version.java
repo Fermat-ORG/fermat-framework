@@ -1,13 +1,15 @@
 package com.bitdubai.fermat_api.layer.all_definition.util;
 
 
+import java.io.Serializable;
+
 /**
  * Version class
  * @author rodrigo
  * @version 1.0
  * Class used to define an object version in the platform. Can be used to calculate comparissions between different versions.
  */
-public class Version {
+public class Version implements Serializable {
     Integer major;
     Integer minor;
     Integer patch;
@@ -126,9 +128,7 @@ public class Version {
      * @return true if the version is between version1 and version2.
      */
     public boolean isBetween(Version version1, Version version2){
-        if (version1.equals(version2))
-            return false;
-        if (this.isAbove(version1) && !this.isAbove(version2))
+        if (this.isAbove(version1) && !this.isAbove(version2)  || this.equals(version1) && this.equals(version2))
             return true;
         else
             return false;

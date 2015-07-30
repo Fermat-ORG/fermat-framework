@@ -6,13 +6,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by eze on 2015.07.10..
  */
-public interface InstalledWallet {
+public interface InstalledWallet extends Serializable {
 
     /**
      * This method gives us the list of all the languages installed for this wallet
@@ -72,4 +73,13 @@ public interface InstalledWallet {
      * @return the version of the wallet
      */
     public Version getWalletVersion();
+
+    /**
+     * This method gives us the catalog id of the wallet
+     *
+     * @return the catalog id of the wallet
+     */
+    public String getWalletCatalogId();
+
+
 }
