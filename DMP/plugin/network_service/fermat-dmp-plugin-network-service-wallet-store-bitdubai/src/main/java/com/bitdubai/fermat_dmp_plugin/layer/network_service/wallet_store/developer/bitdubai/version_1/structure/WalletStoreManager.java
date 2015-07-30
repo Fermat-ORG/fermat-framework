@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
@@ -293,6 +294,32 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
             throw new CantGetWalletsCatalogException(CantGetWalletsCatalogException.DEFAULT_MESSAGE, e, null, null);
         }
         return walletCatalog;
+    }
+
+    /**
+     * Returns the developer object
+     * @param developerId
+     * @return
+     * @throws CantGetDeveloperException
+     */
+    public Developer getDeveloper(UUID developerId) throws CantGetDeveloperException {
+        try {
+            Developer developer = getDatabaseDAO().getDeveloper(developerId);
+            return developer;
+        } catch (Exception exception) {
+            throw new CantGetDeveloperException(CantGetDeveloperException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+
+    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language getLanguage(UUID languageId) {
+        //todo completar
+        return null;
+    }
+
+    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin getSkin(UUID skinId) {
+        //todo completar
+        return null;
     }
 
 }
