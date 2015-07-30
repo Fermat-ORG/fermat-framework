@@ -27,7 +27,6 @@ public class XMLParser {
 
             xml = xStream.toXML(object);
 
-            System.out.println("SerializedCountry XML:"+xml);
 
         }
         return xml;
