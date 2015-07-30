@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeMana
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletClosedEvent;
 
@@ -24,22 +25,20 @@ public class WalletClosedEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception {
-        UUID walletId = ((WalletClosedEvent)platformEvent).getWalletId();
+        String publicKey = ((WalletClosedEvent)platformEvent).getPublicKey();
 
 
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
 
             try
             {
-                this.walletRuntimeManager.recordClosedWallet(walletId);
+                this.walletRuntimeManager.removeNavigationStructure(publicKey);
             }
-            catch (CantRecordClosedWalletException cantRecordClosedWalletException)
+            catch (CantRemoveWalletNavigationStructureException cantRecordClosedWalletException)
             {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
-                System.err.println("CantRecordClosedWalletException: " + cantRecordClosedWalletException.getMessage());
-                cantRecordClosedWalletException.printStackTrace();
 
                 throw cantRecordClosedWalletException;
 

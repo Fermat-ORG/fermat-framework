@@ -10,16 +10,16 @@ import java.util.UUID;
  * Created by loui on 05/02/15.
  */
 public class WalletClosedEvent implements PlatformEvent {
-    private UUID walletId;
+    private String publicKey;
     private EventType eventType;
     private EventSource eventSource;
 
-    public void setWalletId (UUID walletId){
-        this.walletId = walletId;
+    public void setWalletPublicKey (String publicKey){
+        this.publicKey = publicKey;
     }
 
-    public UUID getWalletId() {
-        return this.walletId;
+    public String getPublicKey() {
+        return this.publicKey;
     }
 
     public WalletClosedEvent (EventType eventType){

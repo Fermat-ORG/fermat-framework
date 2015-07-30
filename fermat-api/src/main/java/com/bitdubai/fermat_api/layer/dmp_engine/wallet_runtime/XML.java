@@ -11,10 +11,10 @@ public interface XML {
 
     //TODO: cambiar las excepciones por otras del wallet runtime
 
-    public WalletNavigationStructure getNavigationStructure(String navigationStructure) throws CantGetWalletFactoryProjectNavigationStructureException;
+    public WalletNavigationStructure getNavigationStructure(String navigationStructure) ;
 
-    public String getNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) throws CantGetWalletFactoryProjectNavigationStructureException;
+    public String parseNavigationStructureXml(WalletNavigationStructure walletNavigationStructure);
 
-    public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) throws CantSetWalletFactoryProjectNavigationStructureException;
+    public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) ;
 
 }
