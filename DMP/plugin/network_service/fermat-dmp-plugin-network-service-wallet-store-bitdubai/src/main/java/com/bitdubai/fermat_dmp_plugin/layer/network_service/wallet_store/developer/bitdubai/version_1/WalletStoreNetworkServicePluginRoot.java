@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator;
@@ -214,6 +216,11 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     @Override
     public Skin getSkin(UUID skinId) {
         return null;
+    }
+
+    @Override
+    public Developer getDeveloper(UUID developerId) throws CantGetDeveloperException {
+        return getWalletStoreManager().getDeveloper(developerId);
     }
 
     /**

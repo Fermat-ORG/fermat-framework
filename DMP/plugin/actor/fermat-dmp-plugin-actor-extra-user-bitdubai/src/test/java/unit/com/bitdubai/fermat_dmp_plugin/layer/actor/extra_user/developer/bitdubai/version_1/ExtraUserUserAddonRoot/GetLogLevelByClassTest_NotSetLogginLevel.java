@@ -17,21 +17,17 @@ public class GetLogLevelByClassTest_NotSetLogginLevel {
      */
     @Test
     public void getLogLevelByClassTest_testingStaticBehaviorSetAValidArgument_returnNullLogLevel() throws Exception{
-
         LogLevel resultLogLevel=ExtraUserUserAddonRoot.getLogLevelByClass("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUser");
         Assertions.assertThat(resultLogLevel)
                 .isNotNull();
-
     }
 
     @Test
     public void getLogLevelByClassTest_testingStaticBehaviorLevelNullArgument_returnNullLogLevel() throws Exception{
-
         LogLevel resultLogLevel=ExtraUserUserAddonRoot.getLogLevelByClass(null);
         Assertions.assertThat(resultLogLevel)
                 .isNotNull()
                 .isEqualTo(LogLevel.MINIMAL_LOGGING);
-
     }
 
 }

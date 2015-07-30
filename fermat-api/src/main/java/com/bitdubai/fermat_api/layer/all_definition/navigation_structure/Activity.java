@@ -1,8 +1,5 @@
-
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.adapters.ActivitiesAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
@@ -11,15 +8,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import ae.javax.xml.bind.annotation.XmlAttribute;
-import ae.javax.xml.bind.annotation.XmlElement;
-import ae.javax.xml.bind.annotation.XmlRootElement;
-import ae.javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 
 /**
  * Created by rodrigo on 2015.07.17..
  */
-@XmlRootElement(name = "activity")
+
 public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity{
     /**
      * Activity class member variables
@@ -84,43 +78,35 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     /**
      * Activity  interface implementation.
      */
-    @XmlElement
     public String getColor()  {
         return this.color;
     }
 
-    @XmlJavaTypeAdapter(ActivitiesAdapter.class)
-    @XmlAttribute(name = "type", required = true)
     @Override
     public Activities getType() {
         return type;
     }
 
-    @XmlElement
     @Override
     public TitleBar getTitleBar() {
         return titleBar;
     }
 
-    @XmlElement
     @Override
     public SideMenu getSideMenu() {
         return sideMenu;
     }
 
-    @XmlElement
     @Override
     public MainMenu getMainMenu() {
         return mainMenu;
     }
 
-    @XmlElement
     @Override
     public TabStrip getTabStrip() {
         return tabStrip;
     }
 
-    @XmlElement
     @Override
     public StatusBar getStatusBar() {
         return statusBar;

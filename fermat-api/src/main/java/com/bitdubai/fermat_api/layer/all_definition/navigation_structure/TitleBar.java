@@ -1,15 +1,8 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import java.awt.Color;
-import java.awt.Image;
-
-import ae.javax.xml.bind.annotation.XmlElement;
-import ae.javax.xml.bind.annotation.XmlRootElement;
-
 /**
  * Created by rodrigo on 2015.07.17..
  */
-@XmlRootElement(name = "tittleBar")
 public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTitleBar {
 
     /**
@@ -39,22 +32,19 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
     /**
      * Class getters
      */
-    @XmlElement
     public String getLabel() {
         return label;
     }
 
-    @XmlElement
     public String getColor() {
         return color;
     }
 
-    @XmlElement
     public String getBackgroundImage() {
         return backgroundImage;
     }
 
-    @XmlElement
+
     public SearchView getRuntimeSearchView() {
         if (runtimeSearchView != null) {
             return runtimeSearchView;

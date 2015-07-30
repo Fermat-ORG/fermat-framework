@@ -6,6 +6,7 @@ android {
         abortOnError false
     }
 
+
     compileSdkVersion 21
     buildToolsVersion '21.1.2'
 
@@ -25,11 +26,11 @@ android {
     }
 
     dexOptions{ javaMaxHeapSize "4g"}
-    
+
     sourceSets {
         main {
             res.srcDirs = ['src/main/structured_res/app/shell/version_1',
-                             'src/main/res']
+                           'src/main/res']
         }
     }
     buildTypes {
@@ -39,9 +40,9 @@ android {
         }
     }
 
-	lintOptions {
-		abortOnError false
-	}
+    lintOptions {
+        abortOnError false
+    }
 }
 
 
@@ -67,18 +68,13 @@ dependencies {
 
 
     /*
-
-
     Wallets on the pipeline:
-
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
-
-
     */
     // DMP Projects (Sub APPs)
 
@@ -87,9 +83,7 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
 
     /*
-
     Sub APPs on the pipeline
-
     */
 
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')

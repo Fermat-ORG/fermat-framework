@@ -4,15 +4,11 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import java.util.ArrayList;
 import java.util.List;
 
-import ae.javax.xml.bind.annotation.XmlElement;
-import ae.javax.xml.bind.annotation.XmlElementWrapper;
-import ae.javax.xml.bind.annotation.XmlElements;
-import ae.javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by rodrigo on 2015.07.17..
  */
-@XmlRootElement(name = "mainMenu")
+
 public class MainMenu implements FermatMainMenu {
 
     /**
@@ -37,10 +33,7 @@ public class MainMenu implements FermatMainMenu {
     /**
      * MainMenu class getters
      */
-    @XmlElements({
-            @XmlElement(name="menuItem", type=MenuItem.class),
-    })
-    @XmlElementWrapper
+
     public List<MenuItem> getMenuItems () {
         return menuItems;
     }

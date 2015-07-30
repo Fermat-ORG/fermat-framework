@@ -24,6 +24,8 @@ public interface PluginTextFile {
 
     public void loadFromMedia() throws CantLoadFileException;
 
+    public void delete();
+
 
 
 }
