@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.C
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetItemInformationException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
@@ -27,7 +26,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletSt
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreLanguage;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreSkin;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
@@ -45,6 +43,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalog;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -205,12 +204,12 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
 
             @Override
             public String getSkinDesignerName() throws CantGetDesignerException {
-                return walletStoreManagerNetworkService.getDesigner(skin.getSkinDesignerId()).getName();
+                return skin.getDesigner().getName();
             }
 
             @Override
             public String getSkinDesignerPublicKey() throws CantGetDesignerException {
-                return walletStoreManagerNetworkService.getDesigner(skin.getSkinDesignerId()).getPublicKey();
+                return skin.getDesigner().getPublicKey();
             }
 
             @Override
@@ -274,8 +273,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
             }
 
             @Override
-            public UUID getSkinDesignerId() {
-                return skin.getSkinDesignerId();
+            public Designer getDesigner() {
+                return skin.getDesigner();
             }
 
             @Override
@@ -297,12 +296,12 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
 
             @Override
             public String getTranslatorName() throws CantGetTranslatorException {
-                return walletStoreManagerNetworkService.getTranslator(language.getTranslatorId()).getName();
+                return language.getTranslator().getName();
             }
 
             @Override
             public String getTranslatorPublicKey() throws CantGetTranslatorException {
-                return walletStoreManagerNetworkService.getTranslator(language.getTranslatorId()).getPublicKey();
+                return language.getTranslator().getPublicKey();
             }
 
             @Override
@@ -351,8 +350,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
             }
 
             @Override
-            public UUID getTranslatorId() {
-                return language.getTranslatorId();
+            public Translator getTranslator() {
+                return language.getTranslator();
             }
 
             @Override

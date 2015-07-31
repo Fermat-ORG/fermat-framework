@@ -162,7 +162,13 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      */
     public void publishWallet (CatalogItem catalogItem) throws CantPublishWalletInCatalogException {
         try {
-            publishItemInDB(catalogItem, null, null, null, null, null);
+            Developer developer = (Developer) catalogItem.getDetailedCatalogItem().getDeveloper();
+            Language language = (Language) catalogItem.getDetailedCatalogItem().getDefaultLanguage();
+            Translator translator = (Translator) catalogItem.getDetailedCatalogItem().getDefaultLanguage().getTranslator();
+            Skin skin = (Skin) catalogItem.getDetailedCatalogItem().getDefaultSkin();
+            Designer designer = skin.getDesigner();
+            this.publishItemInDB(catalogItem, developer, language, translator, skin, designer);
+
             saveCatalogItemIconFile(catalogItem);
         } catch (Exception exception) {
             throw new CantPublishWalletInCatalogException(CantPublishWalletInCatalogException.DEFAULT_MESSAGE, exception, null, null);
