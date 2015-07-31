@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.io.Serializable;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.enums.ResourceType</code>
  * enumerates type of Resources.
@@ -11,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum ResourceType {
+public enum ResourceType implements Serializable {
     VIDEO("video"),
     SOUND("sound"),
     IMAGE("image"),

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletNavigationStructure;
@@ -75,6 +76,8 @@ import java.util.UUID;
 public class WalletResourcesNetworkServicePluginRoot implements Service, NetworkService,WalletResourcesManager, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
 
 
+    final String RESOURCES_PATH_LOCATION="wallet_resources";
+
     /**
      * Service Interface member variables.
      */
@@ -108,13 +111,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
     UUID pluginId;
 
-    /**
-     * Wallet Type
-     */
 
-    Wallets walletType;
-
-    String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/";
+    //String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/";https://github.com/bitDubai/fermat-wallet-resources
+    String REPOSITORY_LINK = "https://github.com/bitDubai/fermat-wallet-resources/";
 
     /**
      * Service Interface implementation.
@@ -191,19 +190,50 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
 
-    //@Override
-    public void setwalletType(Wallets type) {
-        this.walletType = type;
-    }
-
     @Override
-    public WalletResources getWalletResources(UUID resourcesId) {
+    public WalletResources getWalletResources(String resourceName,String publicKey,Version version) {
+        //pluginFileSystem.getBinaryFile(pluginId,RESOURCES_PATH_LOCATION,)
         return null;
     }
 
     @Override
     public WalletNavigationStructure getWalletNavigationStructure(UUID walletNavigationStructureId) {
         return null;
+    }
+
+
+
+    @Override
+    public void installResources(String walletCategory, String walletType,String screenSize,String screenDensity,String skinName,String languageName) {
+        installSkinResource("null");
+    }
+
+    private WalletResources installSkinResource(String skinResourcesURL){
+        try {
+
+            checkSkinResources("null");
+
+        } catch (CantCheckResourcesException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void checkSkinResources(String repoName) throws CantCheckResourcesException {
+        String repoManifest ="";
+        try{
+            //connect to repo and get manifest file
+            repoManifest = getRepositoryStringFile(repoName, "manifest.xml");
+        }
+        catch(MalformedURLException|FileNotFoundException e){
+
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Http error in connection with the repository to load manifest file", "");
+
+        }catch(IOException e){
+
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error load manifest file ","Repository not exist or manifest file not exist");
+
+        }
     }
 
 
@@ -215,15 +245,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
-    public void checkResources(/*NicheWalletType, Developer, version, publisher*/) throws CantCheckResourcesException {
+    public void checkResources(String repoURL) throws CantCheckResourcesException {
 
         //get repo name to wallet type
-        String reponame = Repositories.getValueFromType (walletType);
+        String reponame = repoURL;//Repositories.getValueFromType (walletType);
 
         String repoManifest ="";
         try{
             //connect to repo and get manifest file
-            repoManifest = getRepositoryStringFile(reponame, "manifest.txt");
+            repoManifest = getRepositoryStringFile(reponame, "manifest.xml");
         }
         catch(MalformedURLException|FileNotFoundException e){
 
@@ -338,7 +368,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         try {
 
             //get repo name to wallet type variable
-            String reponame = Repositories.getValueFromType(walletType);
+            String reponame = "";//Repositories.getValueFromType(walletType);
             //get image from disk
             PluginBinaryFile imageFile;
             imageFile = pluginFileSystem.getBinaryFile(pluginId, reponame, imageName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
@@ -375,7 +405,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String content = "";
         try {
             //get repo name
-            String reponame = Repositories.getValueFromType(walletType);
+            String reponame="";//= Repositories.getValueFromType(walletType);
             //get image from disk
             PluginTextFile layoutFile;
             layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, layoutName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
@@ -412,9 +442,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @throws FileNotFoundException
      */
     private String getRepositoryStringFile(String repoResource,String fileName) throws MalformedURLException, IOException, FileNotFoundException {
-        String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
+        String repoSource = "reference_wallet/bitcoin_wallet/skins/bitDubai_version_1/medium/";
+        //String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
+        //String link = REPOSITORY_LINK + repoSource + fileName;
 
-        URL url = new URL(link);
+        String new_link="https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/reference_wallet/bitcoin_wallet/skins/bitDubai_version_1/medium/manifest.xml";
+
+        URL url = new URL(new_link);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
         Map<String, List<String>> headerFields = http.getHeaderFields();
@@ -422,8 +456,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         // This below for loop is totally optional if you are sure that your URL is not getting redirected to anywhere
         for (String header : headerFields.get(null)) {
             if (header.contains(" 302 ") || header.contains(" 301 ")) {
-                link = headerFields.get("Location").get(0);
-                url = new URL(link);
+                new_link = headerFields.get("Location").get(0);
+                url = new URL(new_link);
                 http = (HttpURLConnection) url.openConnection();
                 headerFields = http.getHeaderFields();
             }
