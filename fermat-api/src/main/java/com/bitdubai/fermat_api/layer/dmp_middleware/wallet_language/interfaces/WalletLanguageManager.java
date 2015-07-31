@@ -2,15 +2,15 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantAddLanguageStringException;
+import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantUpdateLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCopyWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCreateEmptyWalletLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantDeleteLanguageStringException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantDeleteWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguagesException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantSetLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantSaveLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.LanguageNotFoundException;
 
 import java.util.List;
@@ -28,36 +28,49 @@ import java.util.UUID;
 public interface WalletLanguageManager {
 
     /**
-     * this method returns all the instances of WalletFactoryProjectLanguage related with the walletProjectProposal we are working with
-     * (when we create an instance of this manager we pass throw parameters the walletProjectProposal).
+     * this method returns all the instances of WalletLanguage related with the current logged translator
      *
-     * @return a list of the WalletFactoryProjectLanguages
+     * @return a list of the WalletLanguages
      * @throws CantGetWalletLanguagesException if something goes wrong
      */
-    List<WalletLanguage> getLanguages() throws CantGetWalletLanguagesException;
+    List<WalletLanguage> getLanguages(String translatorPublicKey) throws CantGetWalletLanguagesException;
 
     /**
-     * this method return an instance of the WalletFactoryProjectLanguage with the id passed throw parameters
+     * this method return an instance of the WalletLanguage with the id passed throw parameters
      *
      * @param id of the language
-     * @return an instance of WalletFactoryProjectLanguage
+     * @return an instance of WalletLanguage
      * @throws CantGetWalletLanguageException if something goes wrong
      * @throws LanguageNotFoundException if we cant find the language
      */
     WalletLanguage getLanguageById(UUID id) throws CantGetWalletLanguageException, LanguageNotFoundException;
 
     /**
-     * throw this method you can create a new empty WalletFactoryProjectLanguage
+     * throw this method you can create a new empty WalletLanguage
      *
-     * @param name of the new WalletFactoryProjectLanguage
-     * @param type of the new WalletFactoryProjectLanguage
-     * @return an instance of the new WalletFactoryProjectLanguage
+     * @param name of the new WalletLanguage
+     * @param type of the new WalletLanguage
+     * @return an instance of the new WalletLanguage
      * @throws CantCreateEmptyWalletLanguageException if something goes wrong
      */
-    WalletLanguage createEmptyLanguage(String name, Languages type) throws CantCreateEmptyWalletLanguageException;
+    WalletLanguage createEmptyLanguage(String name, Languages type, String translatorPublicKey) throws CantCreateEmptyWalletLanguageException;
 
     /**
-     * throw this method you can clone an existent WalletFactoryProjectLanguage
+     * throw this method you can clone an existent WalletLanguage creating a new version of it
+     * you can identify it throw the alias
+     * this language has to keep the language id of the old one
+     *
+     * @param alias of the new wallet language
+     * @param walletLanguage you want to clone
+     * @return a new instance of the WalletLanguage you just create
+     * @throws CantCopyWalletLanguageException if something goes wrong
+     * @throws LanguageNotFoundException if you cannot find the project that you're trying to copy
+     */
+    WalletLanguage createNewVersion(String alias, WalletLanguage walletLanguage) throws CantCopyWalletLanguageException;
+
+    /**
+     * throw this method you can clone an existent WalletLanguage with a new name
+     * it creates a new language id
      *
      * @param newName of the walletFactoryProjectLanguage
      * @param walletLanguage you want to clone
@@ -65,10 +78,19 @@ public interface WalletLanguageManager {
      * @throws CantCopyWalletLanguageException if something goes wrong
      * @throws LanguageNotFoundException if you cannot find the project that you're trying to copy
      */
-    WalletLanguage copyLanguage(String newName, WalletLanguage walletLanguage) throws CantCopyWalletLanguageException, LanguageNotFoundException;
+    WalletLanguage copyLanguage(String newName, WalletLanguage walletLanguage, String translatorPublicKey) throws CantCopyWalletLanguageException, LanguageNotFoundException;
 
     /**
-     * delete an existent walletFactoryProjectLanguage
+     * update a language
+     *
+     * @param walletLanguage
+     * @throws CantUpdateLanguageException
+     * @throws LanguageNotFoundException
+     */
+    void updateLanguage(WalletLanguage walletLanguage) throws CantUpdateLanguageException, LanguageNotFoundException;
+
+    /**
+     * delete an existent walletLanguage
      *
      * @param walletLanguage that you're trying to delete
      * @throws CantDeleteWalletLanguageException if something goes wrong
@@ -77,22 +99,13 @@ public interface WalletLanguageManager {
     void deleteLanguage(WalletLanguage walletLanguage) throws CantDeleteWalletLanguageException, LanguageNotFoundException;
 
     /**
-     * this methods returns the language structure of the xml related with the walletFactoryProjectLanguage
-     *
-     * @param walletLanguage of the language you're trying to get
-     * @return Language structure
-     * @throws CantGetLanguageException if something goes wrong
-     */
-    Language getLanguage(WalletLanguage walletLanguage) throws CantGetLanguageException;
-
-    /**
      * converts an xml file in a language
      *
      * @param languageStructure xml of the language
      * @return Language class structure
      * @throws CantGetLanguageException if something goes wrong
      */
-    Language getLanguage(String languageStructure) throws CantGetLanguageException;
+    Language getLanguageFromXmlString(String languageStructure) throws CantGetLanguageException;
 
     /**
      * converts the given language in an xml file.
@@ -101,33 +114,24 @@ public interface WalletLanguageManager {
      * @return xml string of the language
      * @throws CantGetLanguageException if something goes wrong
      */
-    String getLanguageXml(Language language) throws CantGetLanguageException;
+    String getLanguageXmlFromClassStructure(Language language) throws CantGetLanguageException;
+
+    /**
+     * this methods returns the language structure of the xml related with the walletFactoryProjectLanguage
+     *
+     * @param walletLanguage of the language you're trying to get
+     * @return Language structure
+     * @throws CantGetLanguageException if something goes wrong
+     */
+    Language getLanguage(WalletLanguage walletLanguage) throws CantGetLanguageException, LanguageNotFoundException;
 
     /**
      * converts the given skin language in an xml file and saves in the proposal structure
      *
      * @param language class structure that you're trying to save
      * @param walletLanguage to wich belongs
-     * @throws CantSetLanguageException if something goes wrong
+     * @throws CantSaveLanguageException if something goes wrong
      */
-    void setLanguageXml(Language language, WalletLanguage walletLanguage) throws CantSetLanguageException;
+    void saveLanguage(Language language, WalletLanguage walletLanguage) throws CantSaveLanguageException;
 
-    /**
-     * add language strings to a language file
-     *
-     * @param name of the string
-     * @param value of the string
-     * @param walletLanguage to wich belongs
-     * @throws CantAddLanguageStringException if something goes wrong
-     */
-    void addLanguageString(String name, String value, WalletLanguage walletLanguage) throws CantAddLanguageStringException;
-
-    /**
-     * delete string from a language file
-     *
-     * @param name of the string you want to delete
-     * @param walletLanguage to wich belongs
-     * @throws CantDeleteLanguageStringException if something goes wrong
-     */
-    void deleteLanguageString(String name, WalletLanguage walletLanguage) throws CantDeleteLanguageStringException;
 }
