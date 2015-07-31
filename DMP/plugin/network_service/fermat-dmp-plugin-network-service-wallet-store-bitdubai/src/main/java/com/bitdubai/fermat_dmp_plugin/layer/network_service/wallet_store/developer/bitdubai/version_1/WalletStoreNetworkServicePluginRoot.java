@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
@@ -58,6 +60,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 
+
+import java.awt.image.BufferedImage;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -292,6 +298,15 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         EventHandler eventHandler;
 
 
+        //todo borrar!
+        try {
+            TestPublishWallet();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (CantPublishWalletInCatalogException e) {
+            e.printStackTrace();
+        }
+
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -450,4 +465,62 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
 
+
+    //todo delete
+    private void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException {
+        UUID walletId = UUID.randomUUID();
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem catalogItem;
+        catalogItem = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem();
+        catalogItem.setId(walletId);
+        catalogItem.setDefaultSizeInBytes(100);
+        catalogItem.setName("MatiWallet");
+        catalogItem.setCategory(WalletCategory.BRANDED_NICHE_WALLET);
+        catalogItem.setDescription("Prueba de insert");
+
+        byte[] myIcon = new byte[]{114, 22};
+        catalogItem.setIcon(myIcon);
+        catalogItem.setWalletCatalogId(walletId);
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skin;
+        skin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
+        byte[] presentationImage = new byte[]{114, 22};
+        skin.setPresentationImage(presentationImage);
+        skin.setUrl(new URL("http://example.com/pages/"));
+        skin.setSkinSizeInBytes(100);
+        //todo esto está mal. no tengo que guardar el designerId si no esl Designer
+        skin.setSkinDesignerId(UUID.randomUUID());
+        skin.setFinalWalletVersion(new Version(1, 0, 0));
+        skin.setHasVideoPreview(false);
+        skin.setInitialWalletVersion(new Version("1.0.0"));
+        skin.setVersion(new Version(1, 0, 0));
+        skin.setWalletId(walletId);
+
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem detailedCatalogItem;
+        detailedCatalogItem = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem();
+        detailedCatalogItem.setDefaultSkin(skin);
+        detailedCatalogItem.setVersion(new Version("1.0.0"));
+        detailedCatalogItem.setPlatformInitialVersion(new Version("1.0.0"));
+        detailedCatalogItem.setPlatformFinalVersion(new Version("1.0.0"));
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language language = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language();
+        language.setUrl(new URL("http://example.com/pages/"));
+        language.setWalletId(walletId);
+        language.setInitialWalletVersion(new Version("1.0.0"));
+        //todo esto esta mal, tiene que guardar el translator
+        language.setTranslatorId(UUID.randomUUID());
+        language.setFinalWalletVersion(new Version("1.0.0"));
+        language.setLanguageLabel("Espaól");
+        language.setIsDefault(true);
+        language.setVersion(new Version("1.0.0"));
+
+        detailedCatalogItem.setLanguage(language);
+        detailedCatalogItem.setDeveloperId(UUID.randomUUID());
+
+        catalogItem.setDetailedCatalogItem(detailedCatalogItem);
+
+
+        this.publishWallet(catalogItem);
+
+    }
 }
