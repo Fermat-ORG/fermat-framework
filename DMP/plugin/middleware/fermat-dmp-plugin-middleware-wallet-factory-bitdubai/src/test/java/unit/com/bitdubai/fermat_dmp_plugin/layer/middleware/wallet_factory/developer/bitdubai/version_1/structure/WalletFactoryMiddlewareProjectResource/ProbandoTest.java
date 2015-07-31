@@ -49,7 +49,7 @@ import ae.javax.xml.bind.JAXBContext;
 import ae.javax.xml.bind.Marshaller;
 import ae.javax.xml.bind.Unmarshaller;
 */
-public class ProbandoTest extends TestCase {
+public class ProbandoTest {
 /*
     @Before
     public void setUp() throws Exception {
