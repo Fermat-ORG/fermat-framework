@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.enums.Langua
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_language.interfaces.WalletLanguage</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.middleware.wallet_language.interfaces.WalletLanguage</code>
  * indicates the functionality of a WalletLanguage
  * <p/>
  *
