@@ -24,7 +24,7 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
     Version version;
     Version platformInitialVersion;
     Version platformFinalVersion;
-    UUID developerId;
+    Developer developer;
 
     /**
      * Default constructor
@@ -42,7 +42,7 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
      * @param platformInitialVersion
      * @param platformFinalVersion
      */
-    public DetailedCatalogItem(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, UUID developerId) {
+    public DetailedCatalogItem(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, Developer developer) {
         this.language = language;
         this.languages = languages;
         this.defaultSkin = defaultSkin;
@@ -50,7 +50,7 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
         this.version = version;
         this.platformInitialVersion = platformInitialVersion;
         this.platformFinalVersion = platformFinalVersion;
-        this.developerId = developerId;
+        this.developer = developer;
     }
 
     @Override
@@ -89,8 +89,8 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
     }
 
     @Override
-    public UUID getDeveloperId() {
-        return developerId;
+    public Developer getDeveloper() {
+        return developer;
     }
 
     public void setLanguage(Language language) {
@@ -121,7 +121,7 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
         this.platformFinalVersion = platformFinalVersion;
     }
 
-    public void setDeveloperId(UUID developerId) {
-        this.developerId = developerId;
+    public void setDeveloper(Developer developer) {
+        this.developer= developer;
     }
 }

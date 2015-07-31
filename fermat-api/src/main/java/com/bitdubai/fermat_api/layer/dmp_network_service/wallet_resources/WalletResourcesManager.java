@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletResourcesException;
 
@@ -22,7 +24,7 @@ public interface  WalletResourcesManager {
     Esto venía de un prototipo/prueba de concepto
     // DEPRECATED - NO USAR - SE ANALIZAR SI SE ELIMINARÁ
     */
-    public void checkResources() throws CantCheckResourcesException;
+    public void checkResources(String repoName) throws CantCheckResourcesException;
 /*
     // DEPRECATED - NO USAR - SE DEBE LIMPIAR
     public byte[] getImageResource(String imageName) throws CantGetResourcesException;
@@ -37,10 +39,15 @@ public interface  WalletResourcesManager {
     /**
      * This method will give us the resources associated to the resourcesId
      *
-     * @param resourcesId identifier of the resources we are looking for
      * @return An object that encapsulates the resources asked.
      */
-    public WalletResources getWalletResources(UUID resourcesId) throws CantGetWalletResourcesException;
+    public WalletResources getWalletResources(String resourceName,String publicKey,Version version) throws CantGetWalletResourcesException;
 
     public WalletNavigationStructure getWalletNavigationStructure(UUID walletNavigationStructureId) throws CantGetWalletNavigationStructureException;
+
+
+    public void installResources(String walletCategory, String walletType,String screenSize,String screenDensity,String skinName,String languageName);
+
+
+
 }
