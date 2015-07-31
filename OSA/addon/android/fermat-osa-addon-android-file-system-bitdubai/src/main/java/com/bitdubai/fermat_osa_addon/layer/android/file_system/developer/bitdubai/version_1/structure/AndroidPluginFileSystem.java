@@ -140,7 +140,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
         return new AndroidPluginBinaryFile(ownerId, this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
           }catch(Exception e){
             throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
-        }
+         }
     }
 
     /**
