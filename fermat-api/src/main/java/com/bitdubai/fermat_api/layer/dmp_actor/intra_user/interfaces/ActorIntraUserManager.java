@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDecideA
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDeleteIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
 
+import java.util.List;
+
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager</code>
  * defines the methods to administrate the intra users,
@@ -18,9 +20,9 @@ public interface ActorIntraUserManager {
      * accepts the connection request sent also by this method.
      *
      * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
-     * @param intraUserToAddName The name of the intra user to add
-     * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage The profile image that the intra user has
+     * @param intraUserToAddName         The name of the intra user to add
+     * @param intraUserToAddPublicKey    The public key of the intra user to add
+     * @param profileImage               The profile image that the intra user has
      * @throws CantCreateIntraUserException
      */
     void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException;
@@ -30,9 +32,9 @@ public interface ActorIntraUserManager {
      * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
      *
      * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
-     * @param intraUserToAddName The name of the intra user to add
-     * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage The profile image that the intra user has
+     * @param intraUserToAddName         The name of the intra user to add
+     * @param intraUserToAddPublicKey    The public key of the intra user to add
+     * @param profileImage               The profile image that the intra user has
      * @throws CantAcceptIntraUserException
      */
     void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptIntraUserException;
@@ -48,14 +50,14 @@ public interface ActorIntraUserManager {
      */
     void decideAcceptanceLater(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantDecideAcceptanceLaterException;
 
-    void denyConnection(String intraUserLoggedInPublicKey, String intraUserToPublicKey);
+    void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey);
 
     void deleteIntraUSer(String intraUserLoggedInPublicKey, String intraUserToRemovePublicKey) throws CantDeleteIntraUserException;
 
-    ActorIntraUser getAllIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
 
-    ActorIntraUser getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
 
-    ActorIntraUser getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
     
 }

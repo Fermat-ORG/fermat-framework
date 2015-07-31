@@ -2,10 +2,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.money_request.devel
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.MoneyRequestManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantRejectRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantSendCryptoRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfaces.MoneyRequestNetworkServiceManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -29,7 +32,7 @@ import java.util.UUID;
 /**
  * Created by loui on 23/02/15.
  */
-public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, MoneyRequestManager {
+public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, MoneyRequestNetworkServiceManager {
 
 
     /**
@@ -174,5 +177,19 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     @Override
     public UUID getId() {
         return null;
+    }
+
+    /*
+     * MoneyRequestNetworkServiceManager Interface methods implementatio
+     */
+
+    @Override
+    public void requestCrypto(UUID requestId, CryptoCurrency cryptoCurrency, long cryptoAmount, String loggedInIntraUserPublicKey, String intraUserToSendRequestPublicKey, String description) throws CantSendCryptoRequestException {
+
+    }
+
+    @Override
+    public void rejectRequest(UUID requestId, String intraUserThatSentTheRequestPublicKey) throws CantRejectRequestException {
+
     }
 }
