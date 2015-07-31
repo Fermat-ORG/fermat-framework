@@ -1,7 +1,11 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetTranslatorException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
@@ -24,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantPublishItemInCatalogException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.InvalidResultReturnedByDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem;
@@ -312,14 +317,64 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
     }
 
 
-    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language getLanguage(UUID languageId) {
-        //todo completar
-        return null;
+    /**
+     * gets the language for the specified wallet id
+     * @param walletId
+     * @return
+     * @throws CantGetWalletLanguageException
+     */
+    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language getLanguage(UUID walletId) throws CantGetWalletLanguageException {
+        try {
+            return getDatabaseDAO().getLanguageFromDatabase(walletId);
+        } catch (Exception exception) {
+            throw new CantGetWalletLanguageException(CantGetWalletLanguageException.DEFAULT_MESSAGE, exception, null, null);
+        }
     }
 
-    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin getSkin(UUID skinId) {
-        //todo completar
-        return null;
+    /**
+     * gets the skin from the specified wallet
+     * @param walletId
+     * @return
+     * @throws CantGetSkinException
+     */
+    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin getSkin(UUID walletId) throws CantGetSkinException {
+        try{
+            return getDatabaseDAO().getSkinFromDatabase(walletId);
+        } catch (Exception exception){
+            throw new CantGetSkinException(CantGetSkinException.DEFAULT_MESSAGE, exception, null,null);
+        }
+    }
+
+
+    /**
+     * gets the specified designer
+     * @param designerId
+     * @return
+     * @throws CantGetDesignerException
+     */
+    public Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+        try{
+            Designer designer= getDatabaseDAO().getDesigner(designerId);
+            return designer;
+        } catch (Exception exception){
+            throw new CantGetDesignerException(CantGetDesignerException.DEFAULT_MESSAGE, exception, null, null);
+        }
+    }
+
+
+    /**
+     * Gets the specidied translarot from db
+     * @param translatorId
+     * @return
+     * @throws CantGetTranslatorException
+     */
+    public Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
+        try{
+            Translator translatorr= getDatabaseDAO().getTranslator(translatorId);
+            return translatorr;
+        } catch (Exception exception){
+            throw new CantGetTranslatorException(CantGetTranslatorException.DEFAULT_MESSAGE, exception, null, null);
+        }
     }
 
 }

@@ -12,8 +12,12 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetTranslatorException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
@@ -209,18 +213,28 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
     @Override
-    public Language getLanguage(UUID languageId) {
-        return null;
+    public Language getLanguage(UUID walletId) throws CantGetWalletLanguageException {
+        return getWalletStoreManager().getLanguage(walletId);
     }
 
     @Override
-    public Skin getSkin(UUID skinId) {
-        return null;
+    public Skin getSkin(UUID walletId) throws CantGetSkinException {
+        return getWalletStoreManager().getSkin(walletId);
     }
 
     @Override
     public Developer getDeveloper(UUID developerId) throws CantGetDeveloperException {
         return getWalletStoreManager().getDeveloper(developerId);
+    }
+
+    @Override
+    public Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+        return getWalletStoreManager().getDesigner(designerId);
+    }
+
+    @Override
+    public Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
+        return getWalletStoreManager().getTranslator(translatorId);
     }
 
     /**
