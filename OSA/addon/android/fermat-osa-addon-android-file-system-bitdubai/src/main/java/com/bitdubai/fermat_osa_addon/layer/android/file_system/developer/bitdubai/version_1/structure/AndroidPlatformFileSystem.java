@@ -82,11 +82,15 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
     @Override
     public PlatformTextFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws  CantCreateFileException{
         checkContext();
+       try{
         return new AndroidPlatformTextFile( this.context,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+           }catch(Exception e){
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
+        }
     }
 
     @Override
-    public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
+    public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
         checkContext();
         try {
             AndroidPlatformBinaryFile newFile = new AndroidPlatformBinaryFile(this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
@@ -99,8 +103,11 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
 
     @Override
     public PlatformBinaryFile createBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
-        checkContext();
+       checkContext(); try {
         return new AndroidPlatformBinaryFile(this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+        }catch(Exception e){
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
+           }
     }
 
     /**
