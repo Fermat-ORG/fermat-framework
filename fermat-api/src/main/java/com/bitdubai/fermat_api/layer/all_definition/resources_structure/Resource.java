@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.*;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatResource;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 
@@ -16,7 +17,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
 */
-public class Resource implements FermatResource {
+public class Resource implements Serializable {
 
     /**
      * Resource Class private attributes
@@ -28,6 +29,8 @@ public class Resource implements FermatResource {
     private String fileName;
 
     private ResourceType resourceType;
+
+    private ResourceDensity resourceDensity;
 
 
     /**
@@ -43,27 +46,25 @@ public class Resource implements FermatResource {
         this.resourceType = resourceType;
     }
 
-    public Resource(UUID id, String name, String fileName, ResourceType resourceType) {
+    public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
         this.id = id;
         this.name = name;
         this.fileName = fileName;
         this.resourceType = resourceType;
+        this.resourceDensity=resourceDensity;
     }
 
     /**
      * Resource Class getters
      */
-    @Override
     public UUID getId() {
         return id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public String getFileName() {
         return fileName;
     }
