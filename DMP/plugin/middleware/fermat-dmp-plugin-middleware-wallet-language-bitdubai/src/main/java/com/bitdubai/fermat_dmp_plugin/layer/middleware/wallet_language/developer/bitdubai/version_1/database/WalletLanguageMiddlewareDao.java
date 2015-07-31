@@ -5,8 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.enums.LanguageState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCreateEmptyWalletLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantDeleteWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguagesException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantUpdateLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.LanguageNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguage;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -19,8 +22,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.exceptions.CantInitializeWalletLanguageMiddlewareDatabaseException;
@@ -33,8 +38,8 @@ import java.util.UUID;
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.database.WalletLanguageMiddlewareDao</code>
  * has all methods related with database access.<p/>
- * <p>
- * <p>
+ * <p/>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/07/15.
  *
  * @version 1.0
@@ -183,7 +188,7 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
                 return new WalletLanguageMiddlewareWalletLanguage(id, languageId, name, alias, type, state, translatorPublicKey, version, versionCompatibility);
             } else {
                 database.closeDatabase();
-                throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project language with this name.");
+                throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet language with this name.");
             }
 
         } catch (CantLoadTableToMemoryException e) {
@@ -192,6 +197,134 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetWalletLanguageException(CantGetWalletLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantGetWalletLanguageException(CantGetWalletLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        }
+    }
+
+    public void createLanguage(WalletLanguage walletLanguage) throws CantCreateEmptyWalletLanguageException {
+        try {
+            database.openDatabase();
+            DatabaseTable projectLanguageTable = database.getTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME);
+
+            DatabaseTableRecord record = projectLanguageTable.getEmptyRecord();
+
+            record.setUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME, walletLanguage.getId());
+            record.setUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME, walletLanguage.getLanguageId());
+            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME, walletLanguage.getName());
+            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME, walletLanguage.getAlias());
+            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, walletLanguage.getType().value());
+            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME, walletLanguage.getState().getCode());
+            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, walletLanguage.getTranslatorPublicKey().toString());
+            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME, walletLanguage.getVersion().toString());
+            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME, walletLanguage.getVersionCompatibility().getInitialVersion().toString());
+            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME, walletLanguage.getVersionCompatibility().getFinalVersion().toString());
+
+            try {
+                projectLanguageTable.insertRecord(record);
+                database.closeDatabase();
+            } catch (CantInsertRecordException e) {
+                database.closeDatabase();
+                throw new CantCreateEmptyWalletLanguageException(CantCreateEmptyWalletLanguageException.DEFAULT_MESSAGE, e, "Cannot insert the wallet language", "");
+            }
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantCreateEmptyWalletLanguageException(CantCreateEmptyWalletLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        }
+    }
+
+    public void updateLanguage(WalletLanguage walletLanguage) throws CantUpdateLanguageException, LanguageNotFoundException {
+        try {
+            database.openDatabase();
+            DatabaseTable projectLanguageTable = database.getTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME);
+            projectLanguageTable.setUUIDFilter(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME, walletLanguage.getId(), DatabaseFilterType.EQUAL);
+            projectLanguageTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = projectLanguageTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                UUID languageId = record.getUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
+                if (!languageId.equals(walletLanguage.getLanguageId()))
+                    record.setUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME, walletLanguage.getLanguageId());
+
+                String name = record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME);
+                if (!name.equals(walletLanguage.getName()))
+                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME, walletLanguage.getName());
+
+                String alias = record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME);
+                if (!alias.equals(walletLanguage.getAlias()))
+                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME, walletLanguage.getAlias());
+
+                Languages type = Languages.fromValue(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME));
+                if (!type.value().equals(walletLanguage.getType().value()))
+                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, walletLanguage.getType().value());
+
+                LanguageState state = LanguageState.getByCode(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME));
+                if (!state.getCode().equals(walletLanguage.getState().getCode()))
+                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME, walletLanguage.getState().getCode());
+
+                Version version = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME));
+                if (!version.equals(walletLanguage.getVersion()))
+                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME, walletLanguage.getVersion().toString());
+
+                Version initialVersion = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME));
+                if (!initialVersion.equals(walletLanguage.getVersionCompatibility().getInitialVersion()))
+                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME, walletLanguage.getVersionCompatibility().getInitialVersion().toString());
+
+                Version finalVersion = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME));
+                if (!finalVersion.equals(walletLanguage.getVersionCompatibility().getFinalVersion()))
+                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME, walletLanguage.getVersionCompatibility().getFinalVersion().toString());
+
+                try {
+                    projectLanguageTable.updateRecord(record);
+                    database.closeDatabase();
+                } catch (CantUpdateRecordException e) {
+                    database.closeDatabase();
+                    throw new CantUpdateLanguageException(CantUpdateLanguageException.DEFAULT_MESSAGE, e, "Cannot update the wallet language", "");
+                }
+            } else {
+                database.closeDatabase();
+                throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet language with this name.");
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantUpdateLanguageException(CantUpdateLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantUpdateLanguageException(CantUpdateLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        }
+    }
+
+    public void deleteLanguage(UUID id) throws CantDeleteWalletLanguageException, LanguageNotFoundException {
+        try {
+            database.openDatabase();
+            DatabaseTable projectLanguageTable = database.getTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME);
+            projectLanguageTable.setUUIDFilter(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            projectLanguageTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = projectLanguageTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                try {
+                    projectLanguageTable.deleteRecord(record);
+                    database.closeDatabase();
+                } catch (CantDeleteRecordException e) {
+                    database.closeDatabase();
+                    throw new CantDeleteWalletLanguageException(CantDeleteWalletLanguageException.DEFAULT_MESSAGE, e, "Cannot delete the wallet language", "");
+                }
+            } else {
+                database.closeDatabase();
+                throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet language with this name.");
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantDeleteWalletLanguageException(CantDeleteWalletLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantDeleteWalletLanguageException(CantDeleteWalletLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
 /*
@@ -268,6 +401,7 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
         }
     }
 */
+
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
