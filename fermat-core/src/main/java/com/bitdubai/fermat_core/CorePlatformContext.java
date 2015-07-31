@@ -1,9 +1,17 @@
+/*
+ * @#CorePlatformContext.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.PlatformContext;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformLayers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 
@@ -12,39 +20,149 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The Class <code>com.bitdubai.fermat_core.CorePlatformContext</code> implements
+ * the core platform context and hold all references of the mains components
+ * <p/>
+ *
  * Created by ciencias on 2/12/15.
+ * Update by Roberto Requena - (rart3001@gmail.com) on 24/07/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class CorePlatformContext implements PlatformContext {
 
-    Map<Addons, Addon> addons = new HashMap<Addons, Addon>();
-    Map<Plugins, Plugin> plugins = new HashMap<Plugins, Plugin>();
-    
-    public void addAddon (Addon addon, Addons descriptor) {
-        addons.put(descriptor,addon);
+    /**
+     * Hold the referent of the existing addons
+     */
+    Map<Addons, Addon> addons;
+
+    /**
+     * Hold the referent of the existing plugins
+     */
+    Map<Plugins, Plugin> plugins;
+
+    /**
+     * Hold the referent of the existing platform layers
+     */
+    Map<PlatformLayers, PlatformLayer> platformLayers;
+
+    /**
+     * Constructor
+     */
+    public CorePlatformContext(){
+        super();
+
+        this.addons = new HashMap<Addons, Addon>();
+        this.plugins = new HashMap<Plugins, Plugin>();
+        this.platformLayers = new HashMap<PlatformLayers, PlatformLayer>();
     }
-    
-    
-    public Addon getAddon (Addons descriptor){
-        return (Addon) addons.get(descriptor);
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#registerAddon(Addon, Addons)
+     */
+    public void registerAddon(Addon addon, Addons key) {
+        addons.put(key,addon);
     }
 
-
-    public void addPlugin (Plugin plugin, Plugins descriptor) {
-        plugins.put(descriptor,plugin);
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#getAddon(Addons)
+     */
+    public Addon getAddon (Addons key){
+        return (Addon) addons.get(key);
     }
 
-
-    public Plugin getPlugin (Plugins descriptor){
-        return (Plugin) plugins.get(descriptor);
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#registerPlugin(Plugin, Plugins)
+     */
+    public void registerPlugin(Plugin plugin, Plugins key) {
+        plugins.put(key,plugin);
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#getPlugin(Plugins)
+     */
+    public Plugin getPlugin (Plugins key){
+        return (Plugin) plugins.get(key);
+    }
 
-    public Collection<Addons> getRegisteredAddonsDescriptors(){
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#registerPlatformLayer(PlatformLayer, PlatformLayers)
+     */
+    public void registerPlatformLayer(PlatformLayer platformLayer, PlatformLayers key) {
+        platformLayers.put(key,platformLayer);
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#getPlatformLayer(PlatformLayers)
+     */
+    public PlatformLayer getPlatformLayer (PlatformLayers key){
+        return (PlatformLayer) platformLayers.get(key);
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#getRegisteredAddonskeys()
+     */
+    public Collection<Addons> getRegisteredAddonskeys(){
         return addons.keySet();
     }
 
-    public Collection<Plugins> getRegisteredPluginsDescriptors(){
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#getRegisteredPluginskeys()
+     */
+    public Collection<Plugins> getRegisteredPluginskeys(){
         return plugins.keySet();
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#getRegisteredPlatformLayerskeys()
+     */
+    public Collection<PlatformLayers> getRegisteredPlatformLayerskeys(){ return platformLayers.keySet();}
+
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#isRegister(Addons)
+     */
+    public boolean isRegister(Addons key){
+        return addons.containsKey(key);
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#isRegister(Plugins)
+     */
+    public boolean isRegister(Plugins key){
+        return plugins.containsKey(key);
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see PlatformContext#isRegister(PlatformLayer)
+     */
+    public boolean isRegister(PlatformLayer key){
+        return platformLayers.containsKey(key);
     }
 
 
