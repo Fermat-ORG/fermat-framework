@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * <p>The enum <code>com.bitdubai.fermat_pip_api.layer.pip_user.device_user.enums.DeviceUserStatus</code> is a enum
  * that defines the status of the device users in the platform.
@@ -9,12 +11,12 @@ package com.bitdubai.fermat_pip_api.layer.pip_user.device_user.enums;
  */
 public enum DeviceUserStatus {
 
-    LOGGED_IN("logged_in"),
-    LOGGED_OUT("logged_out");
+    LOGGED_IN("LI"),
+    LOGGED_OUT("LO");
 
     private final String code;
 
-    DeviceUserStatus(String Code) {
+    DeviceUserStatus(final String Code) {
         this.code = Code;
     }
 
@@ -22,19 +24,13 @@ public enum DeviceUserStatus {
         return this.code;
     }
 
-    public static DeviceUserStatus getByCode(String code) {
+    public static DeviceUserStatus getByCode(final String code) throws InvalidParameterException {
 
         switch (code) {
-            case "logged_in":
-                return DeviceUserStatus.LOGGED_IN;
-            case "logged_out":
-                return DeviceUserStatus.LOGGED_OUT;
+            case "LI": return DeviceUserStatus.LOGGED_IN;
+            case "LO": return DeviceUserStatus.LOGGED_OUT;
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code: " + code, null);
         }
-
-        /**
-         * Return by default logged out TODO check.
-         */
-        return LOGGED_OUT;
     }
 
 }
