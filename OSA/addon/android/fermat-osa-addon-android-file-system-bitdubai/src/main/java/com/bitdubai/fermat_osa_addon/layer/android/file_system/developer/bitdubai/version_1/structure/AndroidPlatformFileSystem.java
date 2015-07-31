@@ -90,7 +90,7 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
     }
 
     @Override
-    public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
+    public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
         checkContext();
         try {
             AndroidPlatformBinaryFile newFile = new AndroidPlatformBinaryFile(this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
