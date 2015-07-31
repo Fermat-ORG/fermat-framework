@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -473,4 +474,41 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     }
 
 
+    /*
+     * IntraUserManager Interface method implementation
+     */
+    @Override
+    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) {
+
+    }
+
+    @Override
+    public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) {
+
+    }
+
+    @Override
+    public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) {
+
+    }
+
+    @Override
+    public void deleteIntraUSer(String intraUserLoggedInPublicKey, String intraUserToRemovePublicKey) {
+
+    }
+
+    @Override
+    public List<IntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) {
+        return null;
+    }
+
+    @Override
+    public List<IntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) {
+        return null;
+    }
+
+    @Override
+    public List<IntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) {
+        return null;
+    }
 }

@@ -5,5 +5,5 @@ package com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces;
  */
 public interface DealsWithIntraUsers {
 
-    public void setIntraUserManager(ActorIntraUserManager intraUserManager);
+    public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager);
 }
