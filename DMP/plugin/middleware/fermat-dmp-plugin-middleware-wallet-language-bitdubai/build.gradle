@@ -10,8 +10,12 @@ repositories {
 
 
 dependencies {
+
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
+
+   // compile 'com.jcabi:jcabi-github:0.23'
+
     testCompile 'junit:junit:4.11'
     compile 'org.jdom:jdom:2.0.2'
 }
