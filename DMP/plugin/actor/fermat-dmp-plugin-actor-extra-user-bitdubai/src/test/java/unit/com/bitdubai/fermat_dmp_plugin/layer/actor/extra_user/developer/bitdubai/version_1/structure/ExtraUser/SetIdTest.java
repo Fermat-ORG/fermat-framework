@@ -16,14 +16,14 @@ public class SetIdTest {
     UUID testId=UUID.randomUUID();
 
     @Test
-    public void setId_setAValidUUID_theIdIsSetInTheClass() throws Exception{
+    public void setIdTest_setAValidUUID_theIdIsSetInTheClass() throws Exception{
 
         testExtraUser.setId(testId);
 
     }
 
     @Test
-    public void setId_setAValidUUIDGetTheId_returnsAUUID() throws Exception{
+    public void setIdTest_setAValidUUIDGetTheId_returnsAUUID() throws Exception{
 
         UUID returnId;
         testExtraUser.setId(testId);

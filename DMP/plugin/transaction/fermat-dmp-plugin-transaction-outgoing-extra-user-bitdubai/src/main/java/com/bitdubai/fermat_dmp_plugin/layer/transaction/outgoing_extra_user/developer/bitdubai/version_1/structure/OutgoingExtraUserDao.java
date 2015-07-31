@@ -72,7 +72,10 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     public void initialize(UUID pluginId) throws CantInitializeDaoException {
 
         try {
-            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME);
+            if (this.database == null)
+                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME);
+            else
+                database.openDatabase();
         } catch (DatabaseNotFoundException e) {
 
             OutgoingExtraUserDatabaseFactory databaseFactory = new OutgoingExtraUserDatabaseFactory();
@@ -87,6 +90,8 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeDaoException("I couldn't open the database",cantOpenDatabaseException,"Database Name: "+OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME,"");
+        } catch (Exception exception){
+            throw new CantInitializeDaoException("I couldn't open the database",exception,"Database Name: "+OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME,"");
         }
     }
 
