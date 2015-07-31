@@ -115,8 +115,9 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
             // TODO FIND DESIGNER PUBLIC KEY
             String designerPublicKey = "";
             WalletFactoryProjectSkin walletFactoryProjectSkin = new WalletFactoryMiddlewareProjectSkin(name, designerPublicKey, new Version("1.0.0"), walletFactoryProjectProposal.getPath() + WALLET_FACTORY_SKINS_PATH);
-            Skin skin = new Skin(name, new Version("1.0.0"));
-            setSkinStructureXml(skin, walletFactoryProjectSkin);
+            //Skin skin = new Skin(name, new Version("1.0.0"));
+            // TODO: va el skin donde dice null mati ;)
+            setSkinStructureXml(null, walletFactoryProjectSkin);
             try {
                 walletFactoryMiddlewareProjectDao.createSkin(walletFactoryProjectSkin, walletFactoryProjectProposal);
                 return walletFactoryProjectSkin;
@@ -247,7 +248,7 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
     public void addResourceToSkin(Resource resource, byte[] file, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantAddResourceToSkinException, ResourceAlreadyExistsException {
         try {
             Skin skin = getSkinStructure(walletFactoryProjectSkin);
-            skin.addResource(resource);
+            //skin.addResource(resource);
             try {
                 // TODO CHECK IF FILE ALREADY EXIST THROW EXCEPTION ResourceAlreadyExistsException
                 String resourcePath = createResourcePath(resource.getResourceType(), walletFactoryProjectSkin.getPath());
@@ -294,7 +295,8 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
     public void deleteResourceFromSkin(Resource resource, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantDeleteResourceFromSkinException, ResourceNotFoundException {
         try {
             Skin skin = getSkinStructure(walletFactoryProjectSkin);
-            skin.deleteResource(resource);
+            //TODO: saqué esto, mati
+            //skin.deleteResource(resource);
             try {
                 String resourcePath = createResourcePath(resource.getResourceType(), walletFactoryProjectSkin.getPath());
 
