@@ -114,22 +114,9 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
 
     }
 
-
     public void setOutgoingExtraUserDao(OutgoingExtraUserDao dao){
         this.dao = dao;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     private static class TransactionProcessorAgent implements  Runnable  {
 
