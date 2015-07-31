@@ -636,6 +636,15 @@ public class Platform  {
             Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getmActorExtraUser();
             injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_USER_EXTRA_USER);
 
+                          /*
+             * Plugin Intra User
+             * -------------------------------
+             */
+            Plugin intraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getmActorIntraUser();
+            injectPluginReferencesAndStart(intraUser, Plugins.BITDUBAI_USER_INTRA_USER);
+
+
+
             /*
              * Plugin Bitcoin Crypto Network
              * -----------------------------

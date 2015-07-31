@@ -53,7 +53,7 @@ dependencies {
 // DMP Projects (Plugins)
 
     compile project(':fermat-dmp-plugin-actor-extra-user-bitdubai')
-
+    compile project(':fermat-dmp-plugin-actor-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-identity-intra-user-bitdubai')
 
 /*
