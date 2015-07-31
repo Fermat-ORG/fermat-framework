@@ -32,6 +32,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -68,7 +72,7 @@ import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitduba
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWithErrors, DeveloperIdentityManager,DatabaseManagerForDevelopers, DealsWithLogger,DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
+public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWithErrors, DeveloperIdentityManager,DatabaseManagerForDevelopers, DealsWithLogger,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,LogManagerForDevelopers, Service, Plugin {
 
 
     // Private instance field declarations.
@@ -78,6 +82,10 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
     // DealsWithErrors Interface member variables.
     private ErrorManager errorManager = null;
 
+    /**
+     * DealsWithPluginFileSystem Interface member variables.
+     */
+    PluginFileSystem pluginFileSystem;
 
     // DealsWithlogManager interface member variable.
     private LogManager logManager = null;
@@ -215,7 +223,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
 
             if (this.dao == null) {
 
-                this.dao = new DeveloperIdentityDao (this.pluginDatabaseSystem, new DeveloperIdentityDatabaseFactory(this.pluginDatabaseSystem), this.pluginId,this.logManager);
+                this.dao = new DeveloperIdentityDao (this.pluginFileSystem,this.pluginDatabaseSystem, new DeveloperIdentityDatabaseFactory(this.pluginDatabaseSystem), this.pluginId,this.logManager);
                 this.dao.initializeDatabase (this.pluginId);
 
             } else {
@@ -289,7 +297,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             }
 
             // Get developer list.
-            logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting developers from current device user for : " + deviceUserManager.getLoggedInDeviceUser(), _DEFAUL_STRING, _DEFAUL_STRING);
+           logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting developers from current device user for : " + deviceUserManager.getLoggedInDeviceUser(), _DEFAUL_STRING, _DEFAUL_STRING);
             return this.dao.getDevelopersFromCurrentDeviceUser (deviceUserManager.getLoggedInDeviceUser());
 
         } catch (CantGetUserDeveloperIdentitiesException ce) {
@@ -325,7 +333,7 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
             }
 
             logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Creating new developer for : " + alias, _DEFAUL_STRING, _DEFAUL_STRING);
-            return this.dao.createNewDeveloper(alias,new ECCKeyPair(),deviceUserManager.getLoggedInDeviceUser());
+            return this.dao.createNewDeveloper(alias, new ECCKeyPair(), deviceUserManager.getLoggedInDeviceUser());
 
         } catch (CantGetUserDeveloperIdentitiesException ce) {
 
@@ -400,6 +408,15 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+
+    /**
+     * DealsWithPlatformFileSystem Interface implementation.
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
 
