@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantAddLanguageStringException extends FermatException {
+public class CantSaveLanguageException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -21,7 +21,7 @@ public class CantAddLanguageStringException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantAddLanguageStringException(String message, Exception cause, String context, String possibleReason) {
+    public CantSaveLanguageException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

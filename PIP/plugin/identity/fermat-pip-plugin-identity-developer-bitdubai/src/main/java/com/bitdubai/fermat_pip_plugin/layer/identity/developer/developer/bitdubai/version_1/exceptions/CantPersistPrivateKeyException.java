@@ -1,18 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions;
+package com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Exception <code>com.bitdubai.fermat_api.layer.middleware.wallet_language.CantAddLanguageStringException</code>
- * is thrown when a we cannot add a language string.
- * <p/>
- *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 29/07/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * Created by natalia on 30/07/15.
  */
-public class CantSetLanguageException extends FermatException {
+public class CantPersistPrivateKeyException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -21,7 +14,7 @@ public class CantSetLanguageException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantSetLanguageException(String message, Exception cause, String context, String possibleReason) {
+    public CantPersistPrivateKeyException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
