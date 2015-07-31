@@ -19,15 +19,20 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.XML;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordClosedWalletException;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetWalletFactoryProjectNavigationStructureException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -53,10 +58,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 
@@ -64,7 +66,7 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 23.07.15.
  */
 
-public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager,XML, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager,XML, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,DealsWithWalletResources, Plugin {
 
     /**
      * Path of xml files
@@ -118,6 +120,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
     private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation-structure-";
 
+    /**
+     * DealsWithWalletResources
+     */
+    private WalletResourcesManager walletResourcesManger;
 
 
     /**
@@ -167,13 +173,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              * functionality based on wallets downloaded by users this wont be an option.
              * * *
              */
-        try
-        {
+        try{
             //factoryReset();
             loadLastWalletNavigationStructure();
 
 
-        } catch(CantFactoryReset ex){
+        }catch(CantFactoryReset ex){
             String message = CantStartPluginException.DEFAULT_MESSAGE;
             FermatException cause = ex;
             String context = "WalletNavigationStructure Runtime Start";
@@ -279,37 +284,15 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
     @Override
     public WalletNavigationStructure getLastWallet() {
-
-        /*Iterator<Map.Entry<String, WalletNavigationStructure>> ewallet = this.listWallets.entrySet().iterator();
-
-        while (ewallet.hasNext()) {
-            Map.Entry<String, WalletNavigationStructure> walletEntry = ewallet.next();
-            WalletNavigationStructure walletNavigationStructure = (WalletNavigationStructure) walletEntry.getValue();
-            if(walletNavigationStructure.getPublicKey().equals(lastWalletPublicKey)){
-                return walletNavigationStructure;
-            }
-        }
-        return null;
-        */
         return walletNavigationStructureOpen;
     }
 
 
     @Override
     public WalletNavigationStructure getWallet(String publicKey) {
-        /*Iterator<Map.Entry<String, WalletNavigationStructure>> ewallet = this.listWallets.entrySet().iterator();
-        while (ewallet.hasNext()) {
-            Map.Entry<String, WalletNavigationStructure> walletEntry = ewallet.next();
-            WalletNavigationStructure walletNavigationStructure = (WalletNavigationStructure) walletEntry.getValue();
-            if(walletNavigationStructure.getPublicKey().equals(publicKey)){
-                this.lastWalletPublicKey=publicKey;
-                return walletNavigationStructure;
-            }
-        }
-        return null;
-        */
         //TODO: acá hay que poner una excepcion si no encuentra la wallet
-        return getNavigationStructure(publicKey);
+        walletNavigationStructureOpen=getNavigationStructure(publicKey);
+        return walletNavigationStructureOpen;
     }
 
     /**
@@ -1105,6 +1088,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
     private void loadLastWalletNavigationStructure() throws CantFactoryReset {
+        String walletCategory = null;
+        String walletType = null;
+        String screenSize = null;
+        String screenDensity = null;
+        String skinName = null;
+        String languageName = null;
+
         try{
             /**
              * Esto es hasta que tengamos las cosas andando y conectadas
@@ -1320,4 +1310,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
 
+    @Override
+    public void setWalletResourcesManager(WalletResourcesManager walletResources) {
+        this.walletResourcesManger=walletResources;
+    }
 }

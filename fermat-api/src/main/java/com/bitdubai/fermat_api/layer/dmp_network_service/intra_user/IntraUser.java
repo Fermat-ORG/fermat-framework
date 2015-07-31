@@ -6,8 +6,6 @@
  */
 package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user;
 
-import java.util.UUID;
-
 
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.network_service.intra_user.Template</code>
@@ -28,13 +26,6 @@ public interface IntraUser {
      * @return String
      */
     public String getAddress();
-
-    /**
-     * Return the userId
-     *
-     * @return UUID
-     */
-    public UUID getUserId ();
 
     /**
      * Return the userName

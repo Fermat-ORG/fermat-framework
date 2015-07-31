@@ -74,7 +74,6 @@ public class DeveloperIdentityDatabaseFactory implements DealsWithPluginDatabase
             table = ((DatabaseFactory) database).newTableFactory(ownerId, DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME);
 
             table.addColumn(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.TRUE);
-            table.addColumn(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
             table.addColumn(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
             table.addColumn(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 

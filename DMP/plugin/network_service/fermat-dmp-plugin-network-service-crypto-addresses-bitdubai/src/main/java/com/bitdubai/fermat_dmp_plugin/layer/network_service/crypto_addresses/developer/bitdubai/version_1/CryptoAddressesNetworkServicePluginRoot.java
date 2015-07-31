@@ -2,8 +2,12 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.de
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.CryptoAddressesManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.enums.AddressExchangeState;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCryptoAddessException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -147,5 +151,21 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
     }
 
 
+    /*
+     * CryptoAddressesManager interface method implementation
+     */
+    @Override
+    public void exchangeAddresses(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressSent, String intraUserToContactPublicKey, String intraUserAskingAddressName) {
 
+    }
+
+    @Override
+    public AddressExchangeState getCurrentExchangeState(String walletPublicKey, ReferenceWallet referenceWallet, String intraUserToContactPublicKey) {
+        return null;
+    }
+
+    @Override
+    public CryptoAddress getReceivedAddress(String walletPublicKey, ReferenceWallet referenceWallet, String intraUserToContactPublicKey) throws CantGetCryptoAddessException {
+        return null;
+    }
 }

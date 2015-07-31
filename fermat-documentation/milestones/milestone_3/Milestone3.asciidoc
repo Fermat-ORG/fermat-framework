@@ -131,29 +131,41 @@ los demás usuarios de la plataforma.
 
 
 
-Plugins Involucrados
+== Plugins Involucrados
+
 La lista de plugins que se van a implementar / modificar en este Milestone es la siguiente:
 
-Reference Wallet / Bitcoin --> UPGRADE
 
-Transaction / Outgoing Intra User --> NEW
-Transaction / Incoming Intra User --> NEW
+Reference Wallet / Bitcoin --> Existe y hay que modificarlo
+Crypto Router --> Existe y hay que modificarlo
 
-Crypto Router --> UPGRADE
-Deberá clasificar el nuevo especialista y enviar cuatro eventos nuevos especializados para el intra
-user.
-
-
-Middleware / Contacts --> UPGRADE
+Middleware / Contacts --> Existe y hay que modificarlo
 Al wallet contacts le agregaremos un campo de estado del proceso de incorporación de un contacto el
 cual podrá ser "Solicitud enviada" o "Contacto". Cuando agreguemos Extra Users se marca como "Contacto"
 
+Transaction / Outgoing Intra User --> Existe y hay que modificarlo
+Transaction / Incoming Intra User --> Existe y hay que modificarlo
 
-Request / Money Request --> NEW
-histórico de request hechos y recibidos
+Request / Money Request --> Crear
+fermat-dmp-plugin-request-money-request-bitdubai
 
-Identity / Intra User
+Module / Intra User --> Crear
+fermat-dmp-plugin-module-intra-user-bitdubai
 
-Network Service / Intra User --> NEW
-Network Service / Money Request --> NEW
-Network Service / Money --> NEW
+Actor / Intra User --> Crear
+fermat-dmp-plugin-actor-intra-user-bitdubai
+
+Identity / Intra User --> Existe y hay que modificarlo
+
+Network Service / Intra User --> Existe y hay que modificarlo
+Network Service / Crypto Addresses -> Existe y hay que modificarlo
+Network Service / Money Request --> Existe y hay que modificarlo
+Network Service / Crypto Transmission --> Crear
+fermat-dmp-plugin-network-service-crypto-transmission-bitdubai
+
+=== Renombrar
+
+Ronombrar el Network Service Money en Money Transmission
+Es decir pasar fermat-dmp-plugin-network-service-money-bitdubai a
+fermat-dmp-plugin-network-service-money-transmission-bitdubai
+
