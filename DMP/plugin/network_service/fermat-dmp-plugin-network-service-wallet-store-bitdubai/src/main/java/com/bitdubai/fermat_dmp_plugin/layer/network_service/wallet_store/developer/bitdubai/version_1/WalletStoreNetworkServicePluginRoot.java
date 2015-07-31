@@ -515,7 +515,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         language.setVersion(new Version("1.0.0"));
 
         detailedCatalogItem.setLanguage(language);
-        detailedCatalogItem.setDeveloperId(UUID.randomUUID());
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
+        developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
+        developer.setName("Rodrigo");
+        developer.setid(UUID.randomUUID());
+        developer.setPublicKey("SDSDSDSDasdojasdiuahsdkasjdaskdasdk");
+        detailedCatalogItem.setDeveloper(developer);
 
         catalogItem.setDetailedCatalogItem(detailedCatalogItem);
 

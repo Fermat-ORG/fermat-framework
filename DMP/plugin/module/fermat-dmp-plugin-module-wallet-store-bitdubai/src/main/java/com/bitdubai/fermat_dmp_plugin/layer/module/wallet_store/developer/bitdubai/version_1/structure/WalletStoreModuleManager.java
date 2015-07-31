@@ -368,12 +368,12 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
         WalletStoreDetailedCatalogItem walletStoreDetailedCatalogItem = new WalletStoreDetailedCatalogItem() {
             @Override
             public String getDeveloperName() throws CantGetDeveloperException {
-                return getDeveloper(detailedCatalogItem.getDeveloperId()).getName();
+                return detailedCatalogItem.getDeveloper().getName();
             }
 
             @Override
             public String getDeveloperPublicKey() throws CantGetDeveloperException {
-                return getDeveloper(detailedCatalogItem.getDeveloperId()).getPublicKey();
+                return detailedCatalogItem.getDeveloper().getPublicKey();
             }
 
             @Override
@@ -422,8 +422,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
             }
 
             @Override
-            public UUID getDeveloperId() {
-                return detailedCatalogItem.getDeveloperId();
+            public Developer getDeveloper() {
+                return detailedCatalogItem.getDeveloper();
             }
         };
 
