@@ -87,7 +87,12 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginTextFile createTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
         checkContext();
+     try{
         return new AndroidPluginTextFile(ownerId, this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+       }catch(Exception e){
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
+        }
+   
     }
 
     /**
@@ -131,7 +136,11 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
         checkContext();
+       try{
         return new AndroidPluginBinaryFile(ownerId, this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+          }catch(Exception e){
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
+        }
     }
 
     /**
