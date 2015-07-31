@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.money.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.money_transmission.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -24,6 +24,7 @@ import java.util.UUID;
 /**
  * Created by loui on 20/02/15.
  */
+
 public class MoneyNetworkServicePluginRoot implements Service, NetworkService, MoneyNetworkServiceManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     /**

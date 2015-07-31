@@ -18,60 +18,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba5a87a3-42ea-4caf-9d7e-1a856a8fd118" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-platform-info-bitdubai/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantAddLanguageStringException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantCopyWalletLanguageException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantCreateEmptyWalletLanguageException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantDeleteLanguageStringException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantDeleteWalletLanguageException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantGetLanguageException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantGetWalletLanguageException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantGetWalletLanguagesException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_language/developer/bitdubai/version_1/exceptions/CantInitializeWalletLanguageMiddlewareDatabaseException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/CantSetLanguageException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-platform-info-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/platform_info/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/exceptions/LanguageNotFoundException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_platform_service/platform_info/interfaces/PlatformInfo.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_pip_api/layer/pip_platform_service/platform_info/interfaces/PlatformInfoManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-platform-info-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/platform_info/developer/bitdubai/version_1/structure/PlatformInfoPlatformService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-platform-info-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/platform_info/developer/bitdubai/version_1/PlatformInfoPlatformServicePluginRoot.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_platform_service/platform_info/PlatformInfoSubsystem.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/test/java/unit/com/bitdubai/fermat_api/layer/all_definition/util/ValidityVersion/PublicMethodsTests.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-platform-info-bitdubai/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/SetErrorManagerTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/SetLogginLevelPerClassTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/all_definition/util/VersionCompatibility.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/interfaces/WalletLanguage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_language/developer/bitdubai/version_1/database/WalletLanguageMiddlewareDatabaseConstants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_language/developer/bitdubai/version_1/database/WalletLanguageMiddlewareDatabaseFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_language/developer/bitdubai/version_1/database/WalletLanguageMiddlewareDeveloperDatabaseFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-platform-info-bitdubai/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-platform-info-bitdubai/fermat-pip-addon-platform-service-platform-info-bitdubai.iml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetLogLevelByClass_NotSetLogginLevel.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/all_definition/enums/Addons.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/all_definition/enums/Addons.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/CreateActorTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/CreateActorTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/all_definition/resources_structure/interfaces/FermatLanguage.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/all_definition/resources_structure/interfaces/FermatLanguage.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetClasesFullPathTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetClasesFullPathTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetDabaseListTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetDabaseListTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetDatabaseTableListTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetDatabaseTableListTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/structure/ExtraUser/GetIdTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/structure/ExtraUser/GetIdTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetLogLevelByClassTest_NotSetLogginLevel.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetLogLevelByClassTest_NotSetLogginLevel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetStatusTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/GetStatusTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/MockErrorManager.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/MockErrorManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-transmission-bitdubai/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_actor/actor_intra_user/ActorIntraUserSubsystem.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/exceptions/CantDeliverDatabaseException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/exceptions/CantGetTranslatorIdentityPrivateKeyException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/exceptions/CantPersistPrivateKeyException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/intra_user/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/estructure/IdentityTranslatorDao.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/database/IdentityTranslatorDatabaseConstants.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/database/IdentityTranslatorDatabaseFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/developerUtils/IdentityTranslatorDeveloperDataBaseFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/IdentityTranslatorPluginRoot.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/src/main/java/com/bitdubai/fermat_pip_plugin/layer/identity_translator/developer/bitdubai/version_1/estructure/IdentityTranslatorTranslator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/intra_user/developer/bitdubai/version_1/IntraUserActorPluginRoot.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/fermat-dmp-plugin-actor-intra-user-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-transmission-bitdubai/fermat-dmp-plugin-network-service-money-transmission-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai/fermat-pip-plugin-identity-translator-bitdubai.iml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai/.gitignore" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/.gitignore" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-transmission-bitdubai/build.gradle" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/money/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-transmission-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/money_transmission/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/money/developer/bitdubai/version_1/MoneyNetworkServicePluginRoot.java" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-transmission-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/money_transmission/developer/bitdubai/version_1/MoneyNetworkServicePluginRoot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_actor/ActorLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_actor/ActorLayer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/money/MoneySubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/money/MoneySubsystem.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_platform_service/PlatformServiceLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_platform_service/PlatformServiceLayer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/SetIdTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/SetIdTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/structure/ExtraUser/SetIdTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/structure/ExtraUser/SetIdTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/SetLogManagerTest.java" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/actor/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot/SetLogManagerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/interfaces/WalletLanguageManager.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_middleware/wallet_language/interfaces/WalletLanguageManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/build.gradle" afterPath="$PROJECT_DIR$/fermat-core/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai/fermat-dmp-plugin-middleware-wallet-language-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai/fermat-dmp-plugin-middleware-wallet-language-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-skin-bitdubai/fermat-dmp-plugin-middleware-wallet-skin-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-skin-bitdubai/fermat-dmp-plugin-middleware-wallet-skin-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai/fermat-pip-plugin-network-service-subapp-resources-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai/fermat-pip-plugin-network-service-subapp-resources-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="fermat.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -322,17 +298,27 @@
         <entry file="file://$PROJECT_DIR$/settings.gradle">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="329" column="0" selection-start-line="329" selection-start-column="0" selection-end-line="329" selection-end-column="0" />
+              <caret line="332" column="0" selection-start-line="332" selection-start-column="0" selection-end-line="332" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ApplicationSession.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ApplicationSession.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="23.608696">
-              <caret line="62" column="5" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Platform.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.59386975">
+              <caret line="134" column="7" selection-start-line="0" selection-start-column="0" selection-end-line="1646" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -17884,10 +17870,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai" />
@@ -17970,14 +17956,14 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.melnykov/floatingactionbutton/1.3.0/c28a6453b8e47eeb0764f649b90cdd67f39c1893/floatingactionbutton-1.3.0.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.zxing/core/3.2.0/e019d15a13a9786f881141d2df6654b8510bce8b/core-3.2.0.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.zxing/android-integration/3.2.0/790720750cfe1e04510d0cb37ca8e8eff2beeed3/android-integration-3.2.0.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.3/recyclerview-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/recyclerview-v7/21.0.3/recyclerview-v7-21.0.3.aar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai" />
@@ -18059,10 +18045,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai" />
@@ -18144,11 +18130,11 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/otto/1.3.5/7941cd2c2c8ec006800d75c35f8a9dacf892ab93/otto-1.3.5.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai" />
@@ -18230,10 +18216,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai" />
@@ -18315,10 +18301,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai" />
@@ -18400,10 +18386,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai" />
@@ -22553,10 +22539,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
@@ -22905,10 +22891,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
@@ -23895,10 +23881,10 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai" />
@@ -23980,8 +23966,8 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-manager-bitdubai" />
@@ -24063,8 +24049,8 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-sub-app-manager-bitdubai" />
@@ -24390,12 +24376,12 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/multidex/1.0.0/multidex-1.0.0.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/google/m2repository/com/google/android/gms/play-services/6.5.87/play-services-6.5.87.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/multidex/1.0.0/multidex-1.0.0.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/google/m2repository/com/google/android/gms/play-services/6.5.87/play-services-6.5.87.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/TEST/functional/functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" />
@@ -24477,12 +24463,12 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.zxing/core/3.2.0/e019d15a13a9786f881141d2df6654b8510bce8b/core-3.2.0.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.zxing/android-integration/3.2.0/790720750cfe1e04510d0cb37ca8e8eff2beeed3/android-integration-3.2.0.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/fermat-android-api" />
@@ -24564,12 +24550,12 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/b4f90836c51edefa4a38c97877b709ed2c15ee32/lombok-ast-0.2.3-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.3/528b6f8bde3157f17530aa366631f2aad2a6cf9/lombok-ast-0.2.3.jar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/multidex/1.0.0/multidex-1.0.0.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/google/m2repository/com/google/android/gms/play-services/6.5.87/play-services-6.5.87.aar" />
-                            <option value="$USER_HOME$/Desktop/Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/multidex/1.0.0/multidex-1.0.0.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/google/m2repository/com/google/android/gms/play-services/6.5.87/play-services-6.5.87.aar" />
+                            <option value="$PROJECT_DIR$/../Android SDK/adt-bundle-linux-x86_64-20140702/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/fermat-android-core" />
@@ -25318,108 +25304,108 @@
               <option name="name" value="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
               <option name="projectBuildClasspath">
                 <list>
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/wrapper" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/open-api" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/reporting" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/jetty" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/antlr" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/cli" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/code-quality" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/model-groovy" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/internal-testing" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/platform-jvm" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/sonar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/ui" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/internal-integ-testing" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/resources" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/scala" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/platform-native" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/resources-http" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/core" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/build-init" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/plugins" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/dependency-management" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/language-jvm" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/language-native" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/tooling-api" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/messaging" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/launcher" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/diagnostics" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/plugin-development" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/plugin-use" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/model-core" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/build-comparison" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/maven" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/base-services" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/ear" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/base-services-groovy" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/osgi" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/javascript" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/language-java" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/announce" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/cunit" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/ide-native" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/publish" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/signing" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/platform-base" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/ide" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/native" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/ivy" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/language-groovy" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/src/jacoco" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-model-core-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-cli-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/ant-launcher-1.9.3.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/groovy-all-2.3.6.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-open-api-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-native-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-core-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-resources-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-launcher-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-docs-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/ant-1.9.3.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-wrapper-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-tooling-api-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-messaging-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-base-services-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-base-services-groovy-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-ui-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/gradle-model-groovy-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-language-jvm-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-diagnostics-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-antlr-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-language-groovy-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-ide-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-signing-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/ivy-2.2.0.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-announce-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-build-comparison-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-cunit-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-osgi-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-reporting-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-language-native-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-build-init-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-platform-base-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-code-quality-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-dependency-management-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-sonar-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-language-java-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-ide-native-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-platform-native-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-jacoco-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/ant-antlr-1.9.3.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-plugin-use-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-publish-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-javascript-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-plugin-development-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-ear-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-platform-jvm-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-jetty-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-resources-http-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-ivy-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-scala-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-maven-2.2.1.jar" />
-                  <option value="$USER_HOME$/Desktop/Idea/gradle-2.2.1/lib/plugins/gradle-plugins-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/wrapper" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/open-api" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/reporting" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/jetty" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/antlr" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/cli" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/code-quality" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/model-groovy" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/internal-testing" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/platform-jvm" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/sonar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/ui" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/internal-integ-testing" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/resources" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/scala" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/platform-native" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/resources-http" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/core" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/build-init" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/plugins" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/dependency-management" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/language-jvm" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/language-native" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/tooling-api" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/messaging" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/launcher" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/diagnostics" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/plugin-development" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/plugin-use" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/model-core" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/build-comparison" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/maven" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/base-services" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/ear" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/base-services-groovy" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/osgi" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/javascript" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/language-java" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/announce" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/cunit" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/ide-native" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/publish" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/signing" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/platform-base" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/ide" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/native" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/ivy" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/language-groovy" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/src/jacoco" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-model-core-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-cli-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/ant-launcher-1.9.3.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/groovy-all-2.3.6.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-open-api-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-native-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-core-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-resources-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-launcher-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-docs-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/ant-1.9.3.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-wrapper-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-tooling-api-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-messaging-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-base-services-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-base-services-groovy-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-ui-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/gradle-model-groovy-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-language-jvm-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-diagnostics-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-antlr-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-language-groovy-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-ide-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-signing-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/ivy-2.2.0.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-announce-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-build-comparison-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-cunit-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-osgi-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-reporting-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-language-native-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-build-init-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-platform-base-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-code-quality-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-dependency-management-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-sonar-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-language-java-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-ide-native-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-platform-native-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-jacoco-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/ant-antlr-1.9.3.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-plugin-use-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-publish-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-javascript-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-plugin-development-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-ear-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-platform-jvm-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-jetty-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-resources-http-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-ivy-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-scala-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-maven-2.2.1.jar" />
+                  <option value="$PROJECT_DIR$/../Idea/gradle-2.2.1/lib/plugins/gradle-plugins-2.2.1.jar" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/java" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/groovy" />
                 </list>
@@ -25436,7 +25422,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai/build.gradle" />
         <option value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/build.gradle" />
         <option value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_store/developer/bitdubai/version_1/WalletStoreModulePluginRoot.java" />
         <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai/build.gradle" />
@@ -25487,6 +25472,7 @@
         <option value="$PROJECT_DIR$/settings.gradle" />
         <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/FermatActivity.java" />
         <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" />
       </list>
     </option>
   </component>
@@ -25505,9 +25491,9 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="53" />
+    <option name="x" value="65" />
     <option name="y" value="24" />
-    <option name="width" value="1867" />
+    <option name="width" value="1855" />
     <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -25533,19 +25519,8 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="Scope" />
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -25561,6 +25536,58 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat_core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -25700,6 +25727,17 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -26147,41 +26185,41 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="53" y="24" width="1867" height="1056" extended-state="6" />
-    <editor active="false" />
+    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31725615" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3681592" sideWeight="0.50621116" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10182208" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.9163987" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3681592" sideWeight="0.50621116" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31725615" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34895834" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30514097" sideWeight="0.4937888" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.11498065" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30532673" sideWeight="0.4937888" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17916666" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.65520835" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17916666" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.65520835" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -26234,14 +26272,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/FermatActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46563193">
@@ -26358,7 +26388,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="59" column="2" selection-start-line="59" selection-start-column="2" selection-end-line="59" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -26546,7 +26575,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="59" column="2" selection-start-line="59" selection-start-column="2" selection-end-line="59" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -26575,7 +26603,7 @@
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="329" column="0" selection-start-line="329" selection-start-column="0" selection-end-line="329" selection-end-column="0" />
+          <caret line="332" column="0" selection-start-line="332" selection-start-column="0" selection-end-line="332" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -26590,8 +26618,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="23.608696">
-          <caret line="62" column="5" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.59386975">
+          <caret line="134" column="7" selection-start-line="0" selection-start-column="0" selection-end-line="1646" selection-end-column="1" />
           <folding />
         </state>
       </provider>

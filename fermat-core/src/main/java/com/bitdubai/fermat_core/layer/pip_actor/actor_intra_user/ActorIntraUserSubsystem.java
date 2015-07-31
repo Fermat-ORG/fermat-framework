@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_core.layer.dmp_network_service.money;
+package com.bitdubai.fermat_core.layer.pip_actor.actor_intra_user;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkSubsystem;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.money_transmission.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.ActorSubsystem;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.CantStartSubsystemException;
 
 /**
- * Created by loui on 20/02/15.
+ * Created by natalia on 31/07/15.
  */
-public class MoneySubsystem implements NetworkSubsystem {
+public class ActorIntraUserSubsystem implements ActorSubsystem {
 
     Plugin plugin;
 
@@ -27,7 +27,9 @@ public class MoneySubsystem implements NetworkSubsystem {
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();
         }

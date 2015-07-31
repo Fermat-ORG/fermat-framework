@@ -53,7 +53,7 @@ dependencies {
 // DMP Projects (Plugins)
 
     compile project(':fermat-dmp-plugin-actor-extra-user-bitdubai')
-
+    compile project(':fermat-dmp-plugin-actor-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-identity-intra-user-bitdubai')
 
 /*
@@ -87,7 +87,7 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
 
     compile project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')
-    compile project(':fermat-dmp-plugin-network-service-money-bitdubai')
+    compile project(':fermat-dmp-plugin-network-service-money-transmission-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-money-request-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-community-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-resources-bitdubai')
