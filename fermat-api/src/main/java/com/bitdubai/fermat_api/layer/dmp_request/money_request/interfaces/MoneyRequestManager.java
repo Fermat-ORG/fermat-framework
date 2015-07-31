@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_request.money_request.exceptions.Crypto
 import com.bitdubai.fermat_api.layer.dmp_request.money_request.exceptions.FailedToRejectTheRequestException;
 import com.bitdubai.fermat_api.layer.dmp_request.money_request.exceptions.FiatRequestUnexpectedErrorException;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -15,10 +16,19 @@ import java.util.UUID;
  */
 public interface MoneyRequestManager {
 
+    List<CryptoRequestInformation> getCryptoRequestSent(String walletPublicKey);
+
+    List<CryptoRequestInformation> getReceivedCryptoRequest(String walletPublicKey);
+
+    List<MoneyRequestInformation> getMoneyRequestSent(String walletPublicKey);
+
+    List<MoneyRequestInformation> getReceivedMoneyRequest(String walletPublicKey);
+
     /**
      * The method <code>sendCryptoRequest</code> send a crypto request for payment to the user with
      * public key requestDestinationPublicKey.
      *
+     * @param walletPublicKey             The public key of the wallet we are sending the request from
      * @param requestSenderPublicKey      The public key of the sender
      * @param requestDestinationPublicKey The public key of the destination of the request
      * @param requestDescription          A text describing the payment request (what is it paying?)
@@ -27,7 +37,8 @@ public interface MoneyRequestManager {
      * @return an identifier of the request
      * @throws CryptoRequestUnexpectedErrorException
      */
-    public UUID sendCryptoRequest(String requestSenderPublicKey,
+    public UUID sendCryptoRequest(String walletPublicKey,
+                                  String requestSenderPublicKey,
                                   String requestDestinationPublicKey,
                                   String requestDescription,
                                   CryptoAddress addressToSendThePayment,
@@ -38,6 +49,7 @@ public interface MoneyRequestManager {
      * The method <code>sendMoneyRequest</code> send a money request for payment to the user with
      * public key requestDestinationPublicKey.
      *
+     * @param walletPublicKey             The public key of the wallet we are sending the request from
      * @param requestSenderPublicKey      The public key of the sender
      * @param requestDestinationPublicKey The public key of the destination of the request
      * @param requestDescription          A text describing the payment request (what is it paying?)
@@ -47,7 +59,8 @@ public interface MoneyRequestManager {
      * @return an identifier of the request
      * @throws FiatRequestUnexpectedErrorException
      */
-    public UUID sendMoneyRequest(String requestSenderPublicKey,
+    public UUID sendMoneyRequest(String walletPublicKey,
+                                 String requestSenderPublicKey,
                                  String requestDestinationPublicKey,
                                  String requestDescription,
                                  CryptoAddress addressToSendThePayment,
