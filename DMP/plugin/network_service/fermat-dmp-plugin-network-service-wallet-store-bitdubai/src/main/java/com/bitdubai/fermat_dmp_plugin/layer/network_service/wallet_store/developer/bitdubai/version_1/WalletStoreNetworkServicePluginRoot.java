@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -487,13 +488,23 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skin.setPresentationImage(presentationImage);
         skin.setUrl(new URL("http://example.com/pages/"));
         skin.setSkinSizeInBytes(100);
-        //todo esto está mal. no tengo que guardar el designerId si no esl Designer
-        skin.setSkinDesignerId(UUID.randomUUID());
         skin.setFinalWalletVersion(new Version(1, 0, 0));
         skin.setHasVideoPreview(false);
         skin.setInitialWalletVersion(new Version("1.0.0"));
         skin.setVersion(new Version(1, 0, 0));
         skin.setWalletId(walletId);
+        skin.setId(UUID.randomUUID());
+        skin.setName("Mi skin");
+        skin.setIsDefault(true);
+
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;
+        designer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
+        designer.setiD(UUID.randomUUID());
+        designer.setName("Diseñador");
+        designer.setPublicKey("DFSDFKSDFPSDFJSDFsdkfjskdf");
+
+        skin.setDesigner(designer);
 
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem detailedCatalogItem;
@@ -506,13 +517,26 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language language = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language();
         language.setUrl(new URL("http://example.com/pages/"));
         language.setWalletId(walletId);
+        language.setId(UUID.randomUUID());
         language.setInitialWalletVersion(new Version("1.0.0"));
-        //todo esto esta mal, tiene que guardar el translator
-        language.setTranslatorId(UUID.randomUUID());
         language.setFinalWalletVersion(new Version("1.0.0"));
         language.setLanguageLabel("Espaól");
         language.setIsDefault(true);
         language.setVersion(new Version("1.0.0"));
+        language.setLanguageName(Languages.SPANISH);
+        language.setLanguagePackageSizeInBytes(100);
+
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translator;
+        translator = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
+
+        translator.setId(UUID.randomUUID());
+        translator.setName("Traductor");
+        translator.setPublicKey("SDSDFSDFskdmfskdjfsdkjf");
+        language.setTranslator(translator);
+
+
+
 
         detailedCatalogItem.setLanguage(language);
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
