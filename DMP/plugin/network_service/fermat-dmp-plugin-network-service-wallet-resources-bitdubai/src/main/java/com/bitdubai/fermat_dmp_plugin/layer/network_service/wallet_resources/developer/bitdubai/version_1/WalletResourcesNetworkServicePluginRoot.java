@@ -8,7 +8,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletNavigationStructure;
@@ -113,7 +115,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
     //String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/";https://github.com/bitDubai/fermat-wallet-resources
-    String REPOSITORY_LINK = "https://github.com/bitDubai/fermat-wallet-resources/";
+    String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/";
+
 
     /**
      * Service Interface implementation.
@@ -223,7 +226,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String repoManifest ="";
         try{
             //connect to repo and get manifest file
-            repoManifest = getRepositoryStringFile(repoName, "manifest.xml");
+            repoManifest = getRepositoryStringFile(repoName, "skin.xml");
+
+            Skin skin = new Skin();
+            skin=(Skin)XMLParser.parseXML(repoManifest,skin);
         }
         catch(MalformedURLException|FileNotFoundException e){
 
@@ -446,7 +452,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         //String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
         //String link = REPOSITORY_LINK + repoSource + fileName;
 
-        String new_link="https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/reference_wallet/bitcoin_wallet/skins/bitDubai_version_1/medium/manifest.xml";
+        String new_link="https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/reference_wallet/bitcoin_wallet/BitDubai/skins/basic_wallet_default/medium/skin.xml";
 
         URL url = new URL(new_link);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
