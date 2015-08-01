@@ -24,6 +24,7 @@ public enum Plugins {
     BITDUBAI_WALLET_MANAGER_MODULE("Wallet Manager Module", Developers.BITDUBAI),
     BITDUBAI_WALLET_FACTORY_MODULE("Wallet Factory Module", Developers.BITDUBAI),
     BITDUBAI_BITCOIN_CRYPTO_VAULT("Bitcoin Crypto Vault", Developers.BITDUBAI),
+    BITDUBAI_INTRA_USER_FACTORY_MODULE("IntraUser Factory Module", Developers.BITDUBAI),
     BITDUBAI_BANK_NOTES_WALLET_NICHE_WALLET_TYPE("Bank Notes Wallet Niche Wallet Type", Developers.BITDUBAI),
     BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE("Crypto Loss Protected Wallet Niche Wallet Type", Developers.BITDUBAI),
     BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE("Crypto Wallet Niche Wallet Type", Developers.BITDUBAI),
