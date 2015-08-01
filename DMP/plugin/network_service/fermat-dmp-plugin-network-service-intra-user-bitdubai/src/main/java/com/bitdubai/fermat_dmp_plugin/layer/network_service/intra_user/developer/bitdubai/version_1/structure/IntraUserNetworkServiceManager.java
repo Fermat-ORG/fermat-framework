@@ -10,8 +10,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUser;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorInIntraUserSearchException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -293,9 +296,20 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
 
     }
 
+
     /*
      * IntraUserManager Interface method implementation
      */
+    @Override
+    public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
+        return null;
+    }
+
+    @Override
+    public List<IntraUser> getIntraUsersSuggestions() throws ErrorSearchingSuggestionsException {
+        return null;
+    }
+
     @Override
     public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) {
 
@@ -317,17 +331,12 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
     }
 
     @Override
-    public List<IntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) {
+    public IntraUserNotification getNotifications(String intraUserLogedInPublicKey) {
         return null;
     }
 
     @Override
-    public List<IntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) {
-        return null;
-    }
+    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) {
 
-    @Override
-    public List<IntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) {
-        return null;
     }
 }

@@ -1,4 +1,8 @@
-package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user;
+package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces;
+
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorDeletingIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorInIntraUserSearchException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
 
 import java.util.List;
 
@@ -6,6 +10,24 @@ import java.util.List;
  * Created by loui on 18/02/15.
  */
 public interface IntraUserManager {
+
+    /**
+     * The method <code>searchIntraUserByName</code> searches for the intra users that matches the alias
+     *
+     * @param intraUserAlias the alias to search for
+     * @return
+     * @throws ErrorInIntraUserSearchException
+     */
+    public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
+
+    /**
+     * The method <code>getIntraUsersSuggestions</code> returns a list of intra users that the logged in
+     * intra user may want to add as connections.
+     *
+     * @return The list of suggestions
+     * @throws ErrorSearchingSuggestionsException
+     */
+    public List<IntraUser> getIntraUsersSuggestions() throws ErrorSearchingSuggestionsException;
 
     /**
      * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.
@@ -38,13 +60,11 @@ public interface IntraUserManager {
      *
      * @param intraUserLoggedInPublicKey The public key of the intra user deleting the connection
      * @param intraUserToRemovePublicKey The public key of the user to delete
+     * @throws ErrorDeletingIntraUserException
      */
-    void deleteIntraUSer(String intraUserLoggedInPublicKey, String intraUserToRemovePublicKey);
+    void deleteIntraUSer(String intraUserLoggedInPublicKey, String intraUserToRemovePublicKey) throws ErrorDeletingIntraUserException;
 
-    List<IntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey);
 
-    List<IntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey);
-
-    List<IntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey);
-
+    public IntraUserNotification getNotifications(String intraUserLogedInPublicKey);
+    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey);
 }

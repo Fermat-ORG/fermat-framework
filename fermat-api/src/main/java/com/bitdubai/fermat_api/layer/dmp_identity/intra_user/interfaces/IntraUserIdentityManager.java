@@ -6,19 +6,21 @@ import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantGetU
 import java.util.List;
 
 /**
- * Created by eze on 2015.07.27..
+ * The interface <code>com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager</code>
+ * provides the methods to create and obtain intra users associated to a Device User.
  */
-public interface IntraUserManager {
+public interface IntraUserIdentityManager {
+
     /**
-     * This method will give us a list of all the intra users associated to the actual Device User logged in
+     * The method <code>getIntraUsersFromCurrentDeviceUser</code> will give us a list of all the intra users associated to the actual Device User logged in
      *
      * @return the list of intra users associated to the current logged in Device User.
      * @throws CantGetUserIntraUserIdentitiesException
      */
-    List<IntraUserIdentity> getDevelopersFromCurrentDeviceUser() throws CantGetUserIntraUserIdentitiesException;
+    List<IntraUserIdentity> getIntraUsersFromCurrentDeviceUser() throws CantGetUserIntraUserIdentitiesException;
 
     /**
-     * This method creates a new Developer Identity for the logged in Device User and returns the
+     * The method <code>createNewIntraUser</code> creates a new Developer Identity for the logged in Device User and returns the
      * associated public key
      *
      * @param alias        the alias that the user choose as intra user identity
@@ -26,7 +28,7 @@ public interface IntraUserManager {
      * @return the intra user created
      * @throws CantCreateNewIntraUserException
      */
-    IntraUserIdentity createNewDeveloper(String alias, byte[] profileImage) throws CantCreateNewIntraUserException;
+    IntraUserIdentity createNewIntraUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserException;
 
 
 
