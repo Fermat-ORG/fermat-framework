@@ -36,5 +36,6 @@
     <orderEntry type="library" exported="" scope="TEST" name="fest-util-1.2.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockito-core-1.9.5" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="objenesis-1.0" level="project" />
+    <orderEntry type="library" exported="" name="fermat-dmp-plugin-network-service-wallet-resources-bitdubai.fermat-dmp-plugin-network-service-wallet-resources-bitdubai-1.0" level="project" />
   </component>
 </module>

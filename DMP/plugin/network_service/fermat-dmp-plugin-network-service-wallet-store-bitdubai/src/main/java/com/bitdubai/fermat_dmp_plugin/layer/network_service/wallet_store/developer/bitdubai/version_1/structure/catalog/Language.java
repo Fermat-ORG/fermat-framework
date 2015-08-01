@@ -19,7 +19,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
     Version version;
     Version initialWalletVersion;
     Version finalWalletVersion;
-    UUID translatorId;
+    Translator translator;
     boolean isDefault;
 
     /**
@@ -39,9 +39,9 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
      * @param version
      * @param initialWalletVersion
      * @param finalWalletVersion
-     * @param translatorId
+     * @param translator
      */
-    public Language(UUID id, UUID walletId, Languages languageName, String languageLabel, int languagePackageSizeInBytes, URL url, Version version, Version initialWalletVersion, Version finalWalletVersion, UUID translatorId, boolean isDefault) {
+    public Language(UUID id, UUID walletId, Languages languageName, String languageLabel, int languagePackageSizeInBytes, URL url, Version version, Version initialWalletVersion, Version finalWalletVersion, Translator translator, boolean isDefault) {
         this.id = id;
         this.walletId = walletId;
         this.languageName = languageName;
@@ -51,7 +51,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         this.version = version;
         this.initialWalletVersion = initialWalletVersion;
         this.finalWalletVersion = finalWalletVersion;
-        this.translatorId = translatorId;
+        this.translator = translator;
         this.isDefault = isDefault;
     }
 
@@ -101,8 +101,8 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
     }
 
     @Override
-    public UUID getTranslatorId() {
-        return translatorId;
+    public Translator getTranslator() {
+        return translator;
     }
 
     @Override
@@ -146,8 +146,8 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         this.finalWalletVersion = finalWalletVersion;
     }
 
-    public void setTranslatorId(UUID translatorId) {
-        this.translatorId = translatorId;
+    public void setTranslator(Translator translator) {
+        this.translator = translator;
     }
 
     public void setIsDefault(boolean isDefault){
