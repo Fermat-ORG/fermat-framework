@@ -21,11 +21,12 @@ public interface IntraUserManager {
      * This method creates a new Developer Identity for the logged in Device User and returns the
      * associated public key
      *
-     * @param alias the alias that the user choose as intra user identity
+     * @param alias        the alias that the user choose as intra user identity
+     * @param profileImage the profile image to identify this identity
      * @return the intra user created
      * @throws CantCreateNewIntraUserException
      */
-    IntraUserIdentity createNewDeveloper(String alias) throws CantCreateNewIntraUserException;
+    IntraUserIdentity createNewDeveloper(String alias, byte[] profileImage) throws CantCreateNewIntraUserException;
 
 
 

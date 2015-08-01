@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSingIntraUserMessageException;
 
 /**
@@ -20,6 +22,21 @@ public interface IntraUserIdentity {
      * @return the public key of the represented intra user
      */
     String getPublicKey();
+
+    /**
+     * The method <code>getProfileImage</code> gives us the profile image of the represented intra user
+     * @return the profile image of the represented intra user
+     * @throws CantShowProfileImageException
+     */
+    byte[] getProfileImage() throws CantShowProfileImageException;
+
+    /**
+     * The method <code>setNewProfileImage</code> let the user set a new profile image
+     *
+     * @param newProfileImage the new profile image to set
+     * @throws CantSetNewProfileImageException
+     */
+    public void setNewProfileImage(byte[] newProfileImage) throws CantSetNewProfileImageException;
 
     /**
      * This method let an intra user sign a message with his unique private key

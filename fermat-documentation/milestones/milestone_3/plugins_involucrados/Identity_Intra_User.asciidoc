@@ -12,7 +12,8 @@ En principio, un intra user consta de cuatro datos:
 * Una clave pública para el intra user
 * Una clave privada para el intra user
 * Un nombre o alias
-* Una clave pública correspondiente al device user asociado.
+* La clave pública correspondiente al device user asociado.
+* Una imagen de perfil
 
 De estos cuatro sólo se entrega la información de dos: la clave pública y el alias. No se informa el
 Device User por una cuestión de seguridad y además por ser algo implícito. La clave privada tampoco
