@@ -37,7 +37,7 @@ public interface Language {
     /**
      * Translator information
      */
-    public UUID getTranslatorId();
+    public Translator getTranslator();
 
     public boolean isDefault();
 

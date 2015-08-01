@@ -47,7 +47,7 @@ public interface Skin {
     /**
      * Skin designer information
      */
-    public UUID getSkinDesignerId();
+    public Designer getDesigner();
 
     public boolean isDefault();
 

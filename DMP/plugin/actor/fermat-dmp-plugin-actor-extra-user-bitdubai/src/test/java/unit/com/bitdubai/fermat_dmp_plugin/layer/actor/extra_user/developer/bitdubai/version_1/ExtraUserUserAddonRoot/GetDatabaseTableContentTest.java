@@ -31,14 +31,7 @@ import static org.mockito.Mockito.when;
 public class GetDatabaseTableContentTest {
 
     ExtraUserUserAddonRoot extraUserUserAddonRoot = new ExtraUserUserAddonRoot();
-    @Mock
-    DeveloperObjectFactory testDeveloperObjectFactory;
-    @Mock
-    DeveloperDatabase testDeveloperDatabase;
-    @Mock
-    DeveloperDatabaseTable testDeveloperDatabaseTable;
-    @Mock
-    DeveloperDatabaseTableRecord testDeveloperDatabaseTableRecord;
+    MockErrorManager mockErrorManager=new MockErrorManager();
     @Mock
     PluginDatabaseSystem mockPluginDatabaseSystem;
     @Mock
@@ -49,10 +42,17 @@ public class GetDatabaseTableContentTest {
     DatabaseTableRecord testDatabaseTableRecord;
     @Mock
     DatabaseRecord testDatabaseRecord;
-    MockErrorManager mockErrorManager=new MockErrorManager();
+    @Mock
+    DeveloperObjectFactory testDeveloperObjectFactory;
+    @Mock
+    DeveloperDatabase testDeveloperDatabase;
+    @Mock
+    DeveloperDatabaseTable testDeveloperDatabaseTable;
+    @Mock
+    DeveloperDatabaseTableRecord testDeveloperDatabaseTableRecord;
+
     String testId="ExtraUser";
     String testName="Extra User";
-    String testDatabaseName="database";
     UUID testPluginId=UUID.randomUUID();
 
     @Test
@@ -61,13 +61,9 @@ public class GetDatabaseTableContentTest {
         /**
          * Creating a fake DeveloperDatabase, mocking some interfaces, we can test the DatabaseList return
          */
-        //List<String> testFieldNames= Arrays.asList("F0", "F1", "F2");
-        //List<String> testColumnNames= Arrays.asList("Id","Name","TimeStamp");
-        //List<String> testValues= Arrays.asList("V0","V1","V2");
         List<DeveloperDatabaseTableRecord> resultDatabaseContentList;
         when(testDatabaseRecord.getValue()).thenReturn("V0");
         when(testDatabaseTableRecord.getValues()).thenReturn(Arrays.asList(testDatabaseRecord));
-
         when(testDeveloperDatabaseTable.getName()).thenReturn(testName);
         when(testDeveloperObjectFactory.getNewDeveloperDatabaseTableRecord(Arrays.asList("V0"))).thenReturn(testDeveloperDatabaseTableRecord);
         when(testDatabase.getTable(testName)).thenReturn(testDatabaseTable);

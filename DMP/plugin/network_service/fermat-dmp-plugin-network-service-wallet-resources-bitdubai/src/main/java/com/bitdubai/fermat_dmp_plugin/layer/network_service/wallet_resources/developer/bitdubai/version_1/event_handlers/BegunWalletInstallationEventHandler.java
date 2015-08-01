@@ -26,18 +26,19 @@ public class BegunWalletInstallationEventHandler implements EventHandler {
 
         if (((Service) this.walletResourcesManager).getStatus() == ServiceStatus.STARTED) {
 
-            try
-            {
-                this.walletResourcesManager.checkResources();
-            }
-            catch (CantCheckResourcesException cantCheckResourcesException)
-            {
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-
-                throw cantCheckResourcesException;
-            }
+            //TODO: por ahora comentado, testeando mati
+//            try
+//            {
+//                this.walletResourcesManager.checkResources();
+//            }
+//            catch (CantCheckResourcesException cantCheckResourcesException)
+//            {
+//                /**
+//                 * The main module could not handle this exception. Me neither. Will throw it again.
+//                 */
+//
+//                throw cantCheckResourcesException;
+//            }
         }
         else
         {

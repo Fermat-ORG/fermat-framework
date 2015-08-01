@@ -1,11 +1,10 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatResource;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatSkin;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -15,98 +14,120 @@ import java.util.UUID;
  * implements the functionality of a Fermat Skin.
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/07/15.
+ * Created by Leon Acosta and Matias Furszyfer
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class Skin implements FermatSkin {
 
-    /**
-     * Skin Class private attributes
-     */
+public class Skin implements Serializable {//implements FermatSkin {
+
     private UUID id;
 
     private String name;
 
-    private Map<UUID, FermatResource> resources = new HashMap<>();
-
     private Version version;
 
+    private ScreenSize screenSize;
 
-    /**
-     * Skin Class Constructors
-     */
-    public Skin() {
-    }
+    private List<Resource> lstPortraitResources;
 
-    public Skin(String name, Version version) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.version = version;
-    }
+    private List<Resource> lstLandscapeResources;
 
-    public Skin(UUID id, String name, Map<UUID, FermatResource> resources, Version version) {
+    private List<Layout> lstPortraitLayouts;
+
+    private List<Layout> lstLandscapeLayouts;
+
+
+    public Skin(UUID id, String name, Version version, ScreenSize screenSize, List<Resource> lstPortraitResources, List<Resource> lstLandscapeResources, List<Layout> lstPortraitLayouts, List<Layout> lstLandscapeLayouts) {
         this.id = id;
         this.name = name;
-        this.resources = resources;
         this.version = version;
+        this.screenSize = screenSize;
+        this.lstPortraitResources = lstPortraitResources;
+        this.lstLandscapeResources = lstLandscapeResources;
+        this.lstPortraitLayouts = lstPortraitLayouts;
+        this.lstLandscapeLayouts = lstLandscapeLayouts;
     }
 
-    /**
-     * FermatSkin interface implementation
-     */
+    public Skin() {
 
-    @Override
-    public void addResource(FermatResource fermatResource) {
-        resources.put(fermatResource.getId(), fermatResource);
     }
 
-    @Override
-    public void deleteResource(FermatResource fermatResource) {
-        resources.remove(fermatResource.getId());
-    }
-
-    /**
-     * Skin Class getters
-     */
-
-    @Override
     public UUID getId() {
         return id;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-
-    public Map<UUID, FermatResource> getResources() {
-        return resources;
-    }
-
-
-    @Override
-    public Version getVersion() {
-        return version;
-    }
-
-    /**
-     * Skin Class setters
-     */
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setResources(Map<UUID, FermatResource> resources) {
-        this.resources = resources;
+    public Version getVersion() {
+        return version;
     }
 
     public void setVersion(Version version) {
         this.version = version;
+    }
+
+    public ScreenSize getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(ScreenSize screenSize) {
+        this.screenSize = screenSize;
+    }
+
+    public List<Resource> getLstPortraitResources() {
+        return lstPortraitResources;
+    }
+
+    public void setLstPortraitResources(List<Resource> lstPortraitResources) {
+        this.lstPortraitResources = lstPortraitResources;
+    }
+
+    public List<Resource> getLstLandscapeResources() {
+        return lstLandscapeResources;
+    }
+
+    public void setLstLandscapeResources(List<Resource> lstLandscapeResources) {
+        this.lstLandscapeResources = lstLandscapeResources;
+    }
+
+    public List<Layout> getLstPortraitLayouts() {
+        return lstPortraitLayouts;
+    }
+
+    public void setLstPortraitLayouts(List<Layout> lstPortraitLayouts) {
+        this.lstPortraitLayouts = lstPortraitLayouts;
+    }
+
+    public List<Layout> getLstLandscapeLayouts() {
+        return lstLandscapeLayouts;
+    }
+
+    public void setLstLandscapeLayouts(List<Layout> lstLandscapeLayouts) {
+        this.lstLandscapeLayouts = lstLandscapeLayouts;
+    }
+
+    @Override
+    public String toString() {
+        return "Skin{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", version=" + version +
+                ", screenSize=" + screenSize +
+                ", lstPortraitResources=" + lstPortraitResources +
+                ", lstLandscapeResources=" + lstLandscapeResources +
+                ", lstPortraitLayouts=" + lstPortraitLayouts +
+                ", lstLandscapeLayouts=" + lstLandscapeLayouts +
+                '}';
     }
 }
