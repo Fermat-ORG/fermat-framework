@@ -134,6 +134,10 @@ project(':fermat-dmp-plugin-actor-extra-user-bitdubai').projectDir = new File('D
 include ':fermat-dmp-plugin-actor-intra-user-bitdubai'
 project(':fermat-dmp-plugin-actor-intra-user-bitdubai').projectDir = new File('DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai')
 
+
+include ':fermat-dmp-plugin-module-intra-user-bitdubai'
+project(':fermat-dmp-plugin-module-intra-user-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai')
+
 /*
 
 World layer projects on the pipeline:

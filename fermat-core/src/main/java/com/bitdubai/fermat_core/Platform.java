@@ -886,7 +886,7 @@ public class Platform  {
             Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getmActorExtraUser();
             injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_USER_EXTRA_USER);
 
-                          /*
+            /*
              * Plugin Intra User
              * -------------------------------
              */
@@ -1298,6 +1298,14 @@ public class Platform  {
              */
             //  Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
             //  injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
+
+
+             /*
+             * Plugin Intra User Module
+             * -----------------------------
+             */
+             Plugin intraUserModule =  ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getIntraUser();
+              injectPluginReferencesAndStart(intraUserModule, Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
 
             /*
              * Plugin Wallet Manager
