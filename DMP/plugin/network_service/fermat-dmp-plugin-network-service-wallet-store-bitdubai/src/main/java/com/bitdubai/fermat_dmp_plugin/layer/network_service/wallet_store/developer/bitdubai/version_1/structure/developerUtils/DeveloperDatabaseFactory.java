@@ -124,9 +124,6 @@ public class DeveloperDatabaseFactory {
         walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME);
 
 
-
-
-
         /**
          * walletLanguage table
          */
@@ -149,13 +146,11 @@ public class DeveloperDatabaseFactory {
         walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME);
         walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME);
 
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME);
-
 
         /**
          * walletSkin table
          */
-        DeveloperDatabaseTable  walletSkinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME, walletLanguageTableColumns);
+        DeveloperDatabaseTable  walletSkinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME, walletSkinTableColumns);
         tables.add(walletSkinTable);
 
         return tables;
@@ -192,7 +187,7 @@ public class DeveloperDatabaseFactory {
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

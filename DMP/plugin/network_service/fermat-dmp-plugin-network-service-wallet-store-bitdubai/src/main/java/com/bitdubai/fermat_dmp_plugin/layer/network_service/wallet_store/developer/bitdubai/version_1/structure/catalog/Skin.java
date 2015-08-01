@@ -25,7 +25,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     List<URL> videoPreviews;
     URL url;
     int skinSizeInBytes;
-    UUID skinDesignerId;
+    Designer designer;
     boolean isDefault;
 
     /**
@@ -48,9 +48,9 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
      * @param videoPreviews
      * @param url
      * @param skinSizeInBytes
-     * @param skinDesignerId
+     * @param designer
      */
-    public Skin(UUID id, String name, UUID walletId, Version version, Version initialWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL url, int skinSizeInBytes, UUID skinDesignerId) {
+    public Skin(UUID id, String name, UUID walletId, Version version, Version initialWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL url, int skinSizeInBytes, Designer designer) {
         this.id = id;
         this.name = name;
         this.walletId = walletId;
@@ -63,7 +63,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         this.videoPreviews = videoPreviews;
         this.url = url;
         this.skinSizeInBytes = skinSizeInBytes;
-        this.skinDesignerId = skinDesignerId;
+        this.designer = designer;
     }
 
     @Override
@@ -128,8 +128,8 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     }
 
     @Override
-    public UUID getSkinDesignerId() {
-        return skinDesignerId;
+    public Designer getDesigner() {
+        return designer;
     }
 
     @Override
@@ -185,8 +185,8 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         this.skinSizeInBytes = skinSizeInBytes;
     }
 
-    public void setSkinDesignerId(UUID skinDesignerId) {
-        this.skinDesignerId = skinDesignerId;
+    public void setDesigner(Designer designer) {
+        this.designer = designer;
     }
 
     public void setIsDefault(boolean isDefault) {
