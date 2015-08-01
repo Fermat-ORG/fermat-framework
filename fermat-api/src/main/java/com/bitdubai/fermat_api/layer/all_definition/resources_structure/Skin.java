@@ -49,6 +49,10 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.lstLandscapeLayouts = lstLandscapeLayouts;
     }
 
+    public Skin() {
+
+    }
+
     public UUID getId() {
         return id;
     }
@@ -111,5 +115,19 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     public void setLstLandscapeLayouts(List<Layout> lstLandscapeLayouts) {
         this.lstLandscapeLayouts = lstLandscapeLayouts;
+    }
+
+    @Override
+    public String toString() {
+        return "Skin{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", version=" + version +
+                ", screenSize=" + screenSize +
+                ", lstPortraitResources=" + lstPortraitResources +
+                ", lstLandscapeResources=" + lstLandscapeResources +
+                ", lstPortraitLayouts=" + lstPortraitLayouts +
+                ", lstLandscapeLayouts=" + lstLandscapeLayouts +
+                '}';
     }
 }

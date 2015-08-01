@@ -1095,6 +1095,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
+        //walletResourcesManger.installResources(null,null,null,null,null,null);
+
         try{
             /**
              * Esto es hasta que tengamos las cosas andando y conectadas
