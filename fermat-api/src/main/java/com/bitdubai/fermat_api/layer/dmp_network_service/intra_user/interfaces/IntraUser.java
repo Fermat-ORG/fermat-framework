@@ -4,8 +4,10 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user;
+package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces;
 
+
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserStatus;
 
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.network_service.intra_user.Template</code>

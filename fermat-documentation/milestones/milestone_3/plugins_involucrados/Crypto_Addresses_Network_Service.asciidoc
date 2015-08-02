@@ -1,0 +1,24 @@
+= Crypto Addresses Network Service
+
+Cuando un intra user quiere agregar como contacto a otro envía una solicitud de contacto junto con una
+direcicón a la que le deberían enviar dinero cuando lo agreguen. Adjunta a la dirección se envían datos
+descriptivis de la wallet que envía la solicitud para analizar la compatibilidad de las wallets del
+otro usuario. +
+Cuando una solicitud llega el plugin calcula la lista de wallets que pueden atenderla y lanza un evento
+que informa a la interfaz gráfica, así el usuario seleccionará la wallet desde la cual agendar el
+contacto. Por el momento sólo permitiremos que selecciones una wallet para aceptar la solicitud. +
+
+Cuando se acepte o rechace una solicitud de contactó desaparecerá de la lista de pendientes.
+
+El wallet contact debería llamar al método getCurrentExchangeState y cuando sea apropiado a getReceivedAddress
+para mantener actualizada su información.
+
+El wallet manager debería consultar el método getPendingRequests periódicamente.
+
+= Eventos
+
+* Lanza el que informa la nueva solicitud a la interfaz gráfica que contiene un elemento de tipo
+  PendingContactRequest
+* Evento que notifica la aceptación de solicitud de otro usuario
+* Evento que notifica el rechazo de solicitud de otro usuario
+
