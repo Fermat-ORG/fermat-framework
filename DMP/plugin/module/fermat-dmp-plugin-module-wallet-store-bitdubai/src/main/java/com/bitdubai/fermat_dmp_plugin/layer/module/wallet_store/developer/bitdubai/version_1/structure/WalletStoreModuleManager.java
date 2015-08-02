@@ -203,16 +203,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
             }
 
             @Override
-            public String getSkinDesignerName() throws CantGetDesignerException {
-                return skin.getDesigner().getName();
-            }
-
-            @Override
-            public String getSkinDesignerPublicKey() throws CantGetDesignerException {
-                return skin.getDesigner().getPublicKey();
-            }
-
-            @Override
             public UUID getSkinId() {
                 return skin.getSkinId();
             }
@@ -295,16 +285,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
             }
 
             @Override
-            public String getTranslatorName() throws CantGetTranslatorException {
-                return language.getTranslator().getName();
-            }
-
-            @Override
-            public String getTranslatorPublicKey() throws CantGetTranslatorException {
-                return language.getTranslator().getPublicKey();
-            }
-
-            @Override
             public UUID getLanguageId() {
                 return language.getLanguageId();
             }
@@ -365,26 +345,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
     private WalletStoreDetailedCatalogItem getWalletStoreDetailedCatalogItem (final DetailedCatalogItem detailedCatalogItem) throws CantGetDeveloperException {
 
         WalletStoreDetailedCatalogItem walletStoreDetailedCatalogItem = new WalletStoreDetailedCatalogItem() {
-            @Override
-            public String getDeveloperName() throws CantGetDeveloperException {
-                return detailedCatalogItem.getDeveloper().getName();
-            }
-
-            @Override
-            public String getDeveloperPublicKey() throws CantGetDeveloperException {
-                return detailedCatalogItem.getDeveloper().getPublicKey();
-            }
-
-            @Override
-            public WalletStoreSkin getSkin(UUID skinId) throws CantGetSkinException, CantGetItemInformationException {
-                return getWalletStoreSkin(walletStoreManagerNetworkService.getSkin(skinId), getSkinInstallationStatus(skinId));
-            }
-
-            @Override
-            public WalletStoreLanguage getLanguage(UUID languageId) throws CantGetWalletLanguageException, CantGetItemInformationException {
-                return getWalletStoreLanguage(walletStoreManagerNetworkService.getLanguage(languageId), getLanguageInstallationStatus(languageId));
-            }
-
             @Override
             public Language getDefaultLanguage() throws CantGetLanguageException {
                 return detailedCatalogItem.getDefaultLanguage();
