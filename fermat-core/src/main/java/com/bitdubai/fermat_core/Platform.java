@@ -34,7 +34,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.DealsWithWalletStatisticsNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
@@ -101,7 +101,6 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1039,7 +1038,7 @@ public class Platform  {
             }
 
             if (plugin instanceof DealsWithWalletResources) {
-                ((DealsWithWalletResources) plugin).setWalletResourcesManager((WalletResourcesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+                ((DealsWithWalletResources) plugin).setWalletResourcesManager((WalletResourcesInstalationManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
             }
 
             if (plugin instanceof DealsWithWalletStatisticsNetworkService) {

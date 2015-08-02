@@ -2,19 +2,32 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetManifestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletResourcesException;
 
 import java.util.UUID;
 
 /**
- * This interface let the client access to the resources of a wallet
  *
- * @author Ezequiel Postan
- */
-public interface WalletResources {
+ *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
+ *     that define the methods to retrieve wallets resource files.
+ *
+ *
+ *  @author  Loui
+ *  @version 1.0.0
+ *  @since   18/02/15.
+ * */
+public interface WalletResourcesProviderManager {
+
+
+
+    public void checkResources(String repoName) throws CantCheckResourcesException;
+
 
     /**
      * This method returns the resourcesId
@@ -50,7 +63,7 @@ public interface WalletResources {
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName,ScreenOrientation orientation) throws CantGetResourcesException;
+    public byte[] getImageResource(String imageName,ScreenOrientation orientation,UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a video referenced by a name
@@ -87,4 +100,7 @@ public interface WalletResources {
      * @throws CantGetResourcesException
      */
     public String getLayoutResource(String layoutName) throws CantGetResourcesException;
+
+
+
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 /**
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesManager/code> is a interface
+ *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
  *     that define the methods to retrieve wallets resource files.
  *
  *
@@ -18,7 +18,7 @@ import java.util.UUID;
  *  @version 1.0.0
  *  @since   18/02/15.
  * */
-public interface  WalletResourcesManager {
+public interface WalletResourcesInstalationManager {
 
 /*
     Esto venía de un prototipo/prueba de concepto
@@ -46,7 +46,7 @@ public interface  WalletResourcesManager {
     public WalletNavigationStructure getWalletNavigationStructure(UUID walletNavigationStructureId) throws CantGetWalletNavigationStructureException;
 
 
-    public void installResources(String walletCategory, String walletType,String screenSize,String screenDensity,String skinName,String languageName);
+    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName);
 
 
 

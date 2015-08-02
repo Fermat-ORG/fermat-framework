@@ -1,36 +1,36 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetManifestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 
 import java.util.UUID;
 
 /**
- * Created by mati on 2015.07.31..
+ * Created by Matias Furszyfer on 2015.07.31..
  */
 public class WalletResources implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResources {
 
-    private String publicKey;
+    private UUID id;
 
     private Version version;
+
+    private Skin skin;
 
 
     @Override
     public UUID getResourcesId() {
-        return null;
+        return id;
     }
 
-    @Override
-    public String getManifest() throws CantGetManifestException {
-        return null;
-    }
 
     @Override
-    public String getSkinFile(String fileName) throws CantGetSkinFileException {
-        return null;
+    public Skin getSkinFile(String fileName) throws CantGetSkinFileException {
+        return skin;
     }
 
     @Override
@@ -39,7 +39,15 @@ public class WalletResources implements com.bitdubai.fermat_api.layer.dmp_networ
     }
 
     @Override
-    public byte[] getImageResource(String imageName) throws CantGetResourcesException {
+    public byte[] getImageResource(String imageName,ScreenOrientation orientation) throws CantGetResourcesException {
+        switch (orientation){
+            case PORTRAIT:
+                Resource resource= skin.getLstPortraitResources().get(imageName);
+
+                break;
+            case LANDSCAPE:
+                break;
+        }
         return new byte[0];
     }
 
