@@ -13,12 +13,13 @@ Cuando se acepte o rechace una solicitud de contactó desaparecerá de la lista 
 El wallet contact debería llamar al método getCurrentExchangeState y cuando sea apropiado a getReceivedAddress
 para mantener actualizada su información.
 
-El wallet manager debería consultar el método getPendingRequests periódicamente.
+El wallet manager debería consultar el método getPendingRequests periódicamente. Informando sobre las
+solicitudes a los distintos intra users asociados al Device User.
 
-= Eventos
+== Eventos
 
 * Lanza el que informa la nueva solicitud a la interfaz gráfica que contiene un elemento de tipo
-  PendingContactRequest
+PendingContactRequest
 * Evento que notifica la aceptación de solicitud de otro usuario
 * Evento que notifica el rechazo de solicitud de otro usuario
 
