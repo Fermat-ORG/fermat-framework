@@ -13,7 +13,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/classes/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/test" />
     <exclude-output />
@@ -28,9 +28,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="bcprov-jdk15on-1.52" level="project" />
-    <orderEntry type="library" exported="" name="commons-collections-3.2" level="project" />
-    <orderEntry type="library" exported="" name="istack-commons-runtime-2.22" level="project" />
-    <orderEntry type="library" exported="" name="ae-jaxb-2.2.5" level="project" />
+    <orderEntry type="library" exported="" name="xstream-1.4.7" level="project" />
+    <orderEntry type="library" exported="" name="xpp3_min-1.1.4c" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.11" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="fest-assert-core-2.0M10" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="catch-exception-1.2.0" level="project" />
