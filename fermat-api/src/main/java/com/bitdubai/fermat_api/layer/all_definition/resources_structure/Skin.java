@@ -2,9 +2,11 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -27,21 +29,24 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private Version version;
 
+    private VersionCompatibility navigationStructureCompatibility;
+
     private ScreenSize screenSize;
 
-    private List<Resource> lstPortraitResources;
+    private Map<String,Resource> lstPortraitResources;
 
-    private List<Resource> lstLandscapeResources;
+    private Map<String,Resource> lstLandscapeResources;
 
-    private List<Layout> lstPortraitLayouts;
+    private Map<String,Layout> lstPortraitLayouts;
 
-    private List<Layout> lstLandscapeLayouts;
+    private Map<String,Layout> lstLandscapeLayouts;
 
 
-    public Skin(UUID id, String name, Version version, ScreenSize screenSize, List<Resource> lstPortraitResources, List<Resource> lstLandscapeResources, List<Layout> lstPortraitLayouts, List<Layout> lstLandscapeLayouts) {
+    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, ScreenSize screenSize, Map<String, Resource> lstPortraitResources, Map<String, Resource> lstLandscapeResources, Map<String, Layout> lstPortraitLayouts, Map<String, Layout> lstLandscapeLayouts) {
         this.id = id;
         this.name = name;
         this.version = version;
+        this.navigationStructureCompatibility = navigationStructureCompatibility;
         this.screenSize = screenSize;
         this.lstPortraitResources = lstPortraitResources;
         this.lstLandscapeResources = lstLandscapeResources;
@@ -85,35 +90,43 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.screenSize = screenSize;
     }
 
-    public List<Resource> getLstPortraitResources() {
+    public VersionCompatibility getNavigationStructureCompatibility() {
+        return navigationStructureCompatibility;
+    }
+
+    public void setNavigationStructureCompatibility(VersionCompatibility navigationStructureCompatibility) {
+        this.navigationStructureCompatibility = navigationStructureCompatibility;
+    }
+
+    public Map<String, Resource> getLstPortraitResources() {
         return lstPortraitResources;
     }
 
-    public void setLstPortraitResources(List<Resource> lstPortraitResources) {
+    public void setLstPortraitResources(Map<String, Resource> lstPortraitResources) {
         this.lstPortraitResources = lstPortraitResources;
     }
 
-    public List<Resource> getLstLandscapeResources() {
+    public Map<String, Resource> getLstLandscapeResources() {
         return lstLandscapeResources;
     }
 
-    public void setLstLandscapeResources(List<Resource> lstLandscapeResources) {
+    public void setLstLandscapeResources(Map<String, Resource> lstLandscapeResources) {
         this.lstLandscapeResources = lstLandscapeResources;
     }
 
-    public List<Layout> getLstPortraitLayouts() {
+    public Map<String, Layout> getLstPortraitLayouts() {
         return lstPortraitLayouts;
     }
 
-    public void setLstPortraitLayouts(List<Layout> lstPortraitLayouts) {
+    public void setLstPortraitLayouts(Map<String, Layout> lstPortraitLayouts) {
         this.lstPortraitLayouts = lstPortraitLayouts;
     }
 
-    public List<Layout> getLstLandscapeLayouts() {
+    public Map<String, Layout> getLstLandscapeLayouts() {
         return lstLandscapeLayouts;
     }
 
-    public void setLstLandscapeLayouts(List<Layout> lstLandscapeLayouts) {
+    public void setLstLandscapeLayouts(Map<String, Layout> lstLandscapeLayouts) {
         this.lstLandscapeLayouts = lstLandscapeLayouts;
     }
 
@@ -123,6 +136,7 @@ public class Skin implements Serializable {//implements FermatSkin {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", version=" + version +
+                ", navigationStructureCompatibility=" + navigationStructureCompatibility +
                 ", screenSize=" + screenSize +
                 ", lstPortraitResources=" + lstPortraitResources +
                 ", lstLandscapeResources=" + lstLandscapeResources +

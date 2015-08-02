@@ -19,20 +19,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.XML;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -123,7 +116,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     /**
      * DealsWithWalletResources
      */
-    private WalletResourcesManager walletResourcesManger;
+    private WalletResourcesInstalationManager walletResourcesManger;
 
 
     /**
@@ -1095,7 +1088,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        //walletResourcesManger.installResources(null,null,null,null,null,null);
+        walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","basic_wallet_default","en");
+
+
 
         try{
             /**
@@ -1313,7 +1308,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
     @Override
-    public void setWalletResourcesManager(WalletResourcesManager walletResources) {
+    public void setWalletResourcesManager(WalletResourcesInstalationManager walletResources) {
         this.walletResourcesManger=walletResources;
     }
 }
