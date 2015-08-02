@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.Installat
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.ImageNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.UrlNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 
 import java.net.URL;

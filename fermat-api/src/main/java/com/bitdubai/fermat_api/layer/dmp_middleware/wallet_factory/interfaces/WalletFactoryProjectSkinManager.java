@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletFactoryProjectSkinManager</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletFactoryProjectSkinManager</code>
  * indicates the functionality of a WalletFactoryProjectSkinManager
  * <p/>
  *

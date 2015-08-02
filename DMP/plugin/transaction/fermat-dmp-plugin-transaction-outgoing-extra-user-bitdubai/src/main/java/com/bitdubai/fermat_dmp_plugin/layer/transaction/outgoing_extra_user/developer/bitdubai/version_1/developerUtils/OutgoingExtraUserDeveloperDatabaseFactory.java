@@ -93,6 +93,7 @@ public class OutgoingExtraUserDeveloperDatabaseFactory {
             return returnedRecords;
         }
 
+
         List<DatabaseTableRecord> records = selectedTable.getRecords();
         for (DatabaseTableRecord row: records){
             /**

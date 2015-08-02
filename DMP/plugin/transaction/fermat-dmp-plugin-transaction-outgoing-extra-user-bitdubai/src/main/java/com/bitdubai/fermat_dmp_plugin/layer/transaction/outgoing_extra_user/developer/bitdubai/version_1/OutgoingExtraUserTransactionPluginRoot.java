@@ -116,6 +116,10 @@ public class OutgoingExtraUserTransactionPluginRoot implements DatabaseManagerFo
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
+        catch (Exception exception) {
+            FermatException e = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + developerDatabase.getName(),"Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
     }
@@ -135,7 +139,9 @@ public class OutgoingExtraUserTransactionPluginRoot implements DatabaseManagerFo
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
             throw new CantStartPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
         }
-
+        catch (Exception exception){
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
         this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent();
         this.transactionProcessorAgent.setBitcoinWalletManager(this.bitcoinWalletManager);
         this.transactionProcessorAgent.setCryptoVaultManager(this.cryptoVaultManager);
