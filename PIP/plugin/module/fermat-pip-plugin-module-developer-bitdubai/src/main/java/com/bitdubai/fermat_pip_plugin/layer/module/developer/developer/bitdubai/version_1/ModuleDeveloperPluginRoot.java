@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DeveloperModulePluginRoot implements DeveloperModuleManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class ModuleDeveloperPluginRoot implements DeveloperModuleManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
 
     /**
@@ -122,7 +122,7 @@ public class DeveloperModulePluginRoot implements DeveloperModuleManager, DealsW
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.DeveloperModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.ModuleDeveloperPluginRoot");
 
         /**
          * I return the values.
@@ -141,11 +141,11 @@ public class DeveloperModulePluginRoot implements DeveloperModuleManager, DealsW
                 /**
                  * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
                  */
-                if (DeveloperModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    DeveloperModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    DeveloperModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (ModuleDeveloperPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    ModuleDeveloperPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    ModuleDeveloperPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    DeveloperModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    ModuleDeveloperPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
         } catch (Exception exception) {
@@ -156,7 +156,7 @@ public class DeveloperModulePluginRoot implements DeveloperModuleManager, DealsW
     public static LogLevel getLogLevelByClass(String className) {
         try {
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return DeveloperModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return ModuleDeveloperPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception exception) {
             System.err.println("CantGetLogLevelByClass: " + exception.getMessage());
             return LogLevel.MODERATE_LOGGING;
