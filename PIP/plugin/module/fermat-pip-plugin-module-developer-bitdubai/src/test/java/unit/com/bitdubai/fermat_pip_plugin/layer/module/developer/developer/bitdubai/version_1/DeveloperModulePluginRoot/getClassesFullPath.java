@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.DeveloperModulePluginRoot;
 
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.DeveloperModulePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.ModuleDeveloperPluginRoot;
 
 import org.junit.Test;
 
@@ -23,9 +23,9 @@ public class getClassesFullPath {
     @Test
     public void generateClassesTree() throws ClassNotFoundException {
 
-        String scannedPackage = DeveloperModulePluginRoot.class.getPackage().getName();
-        List<Class<?>> classes = find(DeveloperModulePluginRoot.class.getPackage().getName());
-        DeveloperModulePluginRoot root = new DeveloperModulePluginRoot();
+        String scannedPackage = ModuleDeveloperPluginRoot.class.getPackage().getName();
+        List<Class<?>> classes = find(ModuleDeveloperPluginRoot.class.getPackage().getName());
+        ModuleDeveloperPluginRoot root = new ModuleDeveloperPluginRoot();
 
 
         for (String myClass : root.getClassesFullPath()) {

@@ -16,6 +16,4 @@ import java.util.UUID;
  */
 public interface WalletStoreSkin extends Skin{
     public InstallationStatus getInstallationStatus();
-    public String getSkinDesignerName() throws CantGetDesignerException;
-    public String getSkinDesignerPublicKey() throws CantGetDesignerException;
 }

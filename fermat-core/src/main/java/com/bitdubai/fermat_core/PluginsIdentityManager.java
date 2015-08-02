@@ -33,7 +33,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.multi_account_wall
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesInstalationNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.CloudClientCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.CloudServerCommunicationPluginRoot;
@@ -393,8 +393,8 @@ public class PluginsIdentityManager {
 
         if (pluginIndex == 0) {
             try {
-                WalletResourcesNetworkServicePluginRoot tryType;
-                tryType = (WalletResourcesNetworkServicePluginRoot) plugin;
+                WalletResourcesInstalationNetworkServicePluginRoot tryType;
+                tryType = (WalletResourcesInstalationNetworkServicePluginRoot) plugin;
                 pluginIndex = 14;
             } catch (Exception e) {
                 /**
