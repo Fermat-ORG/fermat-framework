@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_community.WalletCommunityManager;
@@ -20,7 +21,7 @@ public class FinishedWalletInstallationEventHandler implements EventHandler {
     
     
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         EventSource eventSource = platformEvent.getSource();
         if (eventSource == EventSource.MIDDLEWARE_WALLET_PLUGIN) {
 

@@ -216,14 +216,16 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
     private DatabaseTableRecord getSkinRecord(Skin skin){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, skin.getSkinId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, skin.getSkinId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME, skin.getSkinName());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME, skin.getVersion().toString());
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, skin.getWalletId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, skin.getWalletId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, skin.getInitialWalletVersion().toString());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, skin.getFinalWalletVersion().toString());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME, skin.getSkinURL().toString());
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, skin.getDesigner().getId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, skin.getDesigner().getId());
+        record.setLongValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME, skin.getSkinSizeInBytes());
+        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME, String.valueOf(skin.isDefault()));
 
         return record;
     }
@@ -283,15 +285,16 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
     private DatabaseTableRecord getLanguageInDatabaseTableRecord(Language language){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, language.getLanguageId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, language.getLanguageId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME, language.getLanguageName().value());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME, language.getLanguageLabel());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME, language.getVersion().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME, language.getWalletId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME, language.getInitialWalletVersion().toString());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME, language.getFinalWalletVersion().toString());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME, language.getFileURL().toString());
         record.setIntegerValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME, language.getLanguagePackageSizeInBytes());
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, language.getTranslator().getId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, language.getTranslator().getId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME, String.valueOf(language.isDefault()));
 
         return record;

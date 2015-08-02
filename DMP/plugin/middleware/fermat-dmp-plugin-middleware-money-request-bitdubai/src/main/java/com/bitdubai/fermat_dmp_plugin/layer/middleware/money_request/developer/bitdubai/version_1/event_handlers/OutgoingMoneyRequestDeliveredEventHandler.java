@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_middleware.money_request.MoneyRequestManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -14,16 +15,16 @@ public class OutgoingMoneyRequestDeliveredEventHandler implements EventHandler {
 
     MoneyRequestManager moneyRequestManager;
 
-    public void setMoneyRequestManager(MoneyRequestManager moneyRequestManager){
+    public void setMoneyRequestManager(MoneyRequestManager moneyRequestManager) {
         this.moneyRequestManager = moneyRequestManager;
 
     }
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
-        if (((Service) this.moneyRequestManager).getStatus() == ServiceStatus.STARTED){
-/*
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+        if (((Service) this.moneyRequestManager).getStatus() == ServiceStatus.STARTED) {
+            /*
             try
             {
                 this.moneyRequestManager.exampleMethod();
@@ -32,16 +33,16 @@ public class OutgoingMoneyRequestDeliveredEventHandler implements EventHandler {
             {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-               // System.err.println("CantCreateCryptoWalletException: "+ exampleException.getMessage());
-               // exampleException.printStackTrace();
+                 *
+                System.err.println("CantCreateCryptoWalletException: "+ exampleException.getMessage());
+                exampleException.printStackTrace();
 
-               // throw  exampleException;
+                throw  exampleException;
             }
         }
         //else
         {
-            //throw new MiddlewareNotStartedException();
+            //throw new MiddlewareNotStartedException();*/
         }
     }
-
+}

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordClosedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
@@ -24,7 +25,7 @@ public class WalletClosedEventHandler implements EventHandler {
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         String publicKey = ((WalletClosedEvent)platformEvent).getPublicKey();
 
 

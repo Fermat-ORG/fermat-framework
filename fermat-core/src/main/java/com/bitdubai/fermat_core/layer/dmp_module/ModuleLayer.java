@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
+import com.bitdubai.fermat_core.layer.dmp_module.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_factory.WalletFactorySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_runtime.WalletRuntimeSubsystem;
@@ -23,6 +24,7 @@ public class ModuleLayer implements PlatformLayer {
     Plugin mWalletRuntime;
     Plugin mWalletManager;
     Plugin mWalletFactory;
+    Plugin mIntraUser;
  /*
     Plugin mWalletPublisher;
     Plugin mWalletStore;
@@ -35,6 +37,10 @@ public class ModuleLayer implements PlatformLayer {
     }
     public Plugin getWalletManager() {
         return mWalletManager;
+    }
+
+    public Plugin getIntraUser() {
+        return mIntraUser;
     }
 /*    
     public Plugin getmWalletPublisher() {
@@ -86,6 +92,20 @@ public class ModuleLayer implements PlatformLayer {
         try {
             walletManagerSubsystem.start();
             mWalletManager = walletManagerSubsystem.getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
+        /**
+         * Let's try to start the intra user subsystem.
+         */
+
+        ModuleSubsystem intraUserSubsystem = new IntraUserSubsystem();
+
+        try {
+            intraUserSubsystem.start();
+            mIntraUser = intraUserSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
