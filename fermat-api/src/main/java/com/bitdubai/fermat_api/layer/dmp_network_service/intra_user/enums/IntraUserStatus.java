@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user;
+package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums;
 
 /**
  * Created by ciencias on 2/13/15.
