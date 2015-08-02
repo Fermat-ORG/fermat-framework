@@ -57,6 +57,8 @@ Cuando tengamos la confirmación de que aceptaron nuestra solicitud (informació
 deriección que usaremos para enviarle dinero a la otra persona) agregaremos al actor address book y
 al wallet address book la dirección que le enviamos a este contacto. +
 
+NOTE: REVISAR, QUIZÁS DEBAMOS AGREGARLO DESDE EL INICIO Y BORRARLO AL SER RECHAZADOS
+
 Si no tenemos agendado el intra user en el plugin DMP Actor Intra User entonces debemos primero agregar
 allí al usuarioc como conexión y posteriormente agregar al usuario como contacto siguiendo el proceso
 antes descripto. La combinación de ambos procesos (agendar como conexción y contacto) debe ser

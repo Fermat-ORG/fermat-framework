@@ -160,8 +160,7 @@ Reference Wallet / Bitcoin --> Existe y hay que modificarlo
 Crypto Router --> Existe y hay que modificarlo
 
 Middleware / Contacts --> Existe y hay que modificarlo
-Al wallet contacts le agregaremos un campo de estado del proceso de incorporación de un contacto el
-cual podrá ser "Solicitud enviada" o "Contacto". Cuando agreguemos Extra Users se marca como "Contacto"
+
 
 Transaction / Outgoing Intra User --> Existe y hay que modificarlo
 Transaction / Incoming Intra User --> Existe y hay que modificarlo
