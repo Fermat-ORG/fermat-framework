@@ -297,8 +297,11 @@ public class Platform  {
         /**
          * Set Actor developer like manager
          */
-        ((DealWithDatabaseManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER)).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
-        ((DealsWithLogManagers)     corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
+        //((DealWithDatabaseManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER)).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
+        //((DealsWithLogManagers)     corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
+
+        ((DealWithDatabaseManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
+        ((DealsWithLogManagers)     corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
 
     }
 

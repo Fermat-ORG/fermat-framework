@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_api.layer.pip_actor.exception;
+package com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception;
 
 import com.bitdubai.fermat_api.FermatException;
 
@@ -11,10 +11,10 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantGetDataBaseTool extends FermatException {
+public class CantGetDataBaseToolException extends FermatException {
     public static final String DEFAULT_MESSAGE = "THE DEVELOPER DATABASETOOL HAS TRIGGERED AN EXCEPTION";
 
-    public CantGetDataBaseTool(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetDataBaseToolException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 

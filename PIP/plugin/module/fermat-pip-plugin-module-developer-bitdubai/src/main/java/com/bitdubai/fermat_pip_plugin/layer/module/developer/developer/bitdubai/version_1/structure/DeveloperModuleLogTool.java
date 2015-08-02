@@ -6,10 +6,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetClasessHierarchyAddons;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetClasessHierarchyPlugins;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetClasessHierarchyAddonsException;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetClasessHierarchyPluginsException;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class DeveloperModuleLogTool implements LogTool {
      * @return
      */
     @Override
-    public List<ClassHierarchyLevels> getClassesHierarchyPlugins(Plugins plugin) throws CantGetClasessHierarchyPlugins{
+    public List<ClassHierarchyLevels> getClassesHierarchyPlugins(Plugins plugin) throws CantGetClasessHierarchyPluginsException{
 
         try
         {
@@ -133,7 +133,7 @@ public class DeveloperModuleLogTool implements LogTool {
         }
         catch(Exception e)
         {
-            throw new CantGetClasessHierarchyPlugins(CantGetClasessHierarchyPlugins.DEFAULT_MESSAGE,e,"Error to get from the plugin the list of classes with their full paths","");
+            throw new CantGetClasessHierarchyPluginsException(CantGetClasessHierarchyPluginsException.DEFAULT_MESSAGE,e,"Error to get from the plugin the list of classes with their full paths","");
 
         }
 
@@ -144,7 +144,7 @@ public class DeveloperModuleLogTool implements LogTool {
         Created by matias, used in fragment to get loglevels
      */
     @Override
-    public List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon) throws CantGetClasessHierarchyAddons {
+    public List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon) throws CantGetClasessHierarchyAddonsException {
         try
         {
             /**
@@ -217,7 +217,7 @@ public class DeveloperModuleLogTool implements LogTool {
         }
         catch(Exception e)
         {
-            throw new CantGetClasessHierarchyAddons(CantGetClasessHierarchyPlugins.DEFAULT_MESSAGE,e,"Error to get from the plugin the list of classes with their full paths","");
+            throw new CantGetClasessHierarchyAddonsException(CantGetClasessHierarchyAddonsException.DEFAULT_MESSAGE,e,"Error to get from the plugin the list of classes with their full paths","");
 
         }
     }

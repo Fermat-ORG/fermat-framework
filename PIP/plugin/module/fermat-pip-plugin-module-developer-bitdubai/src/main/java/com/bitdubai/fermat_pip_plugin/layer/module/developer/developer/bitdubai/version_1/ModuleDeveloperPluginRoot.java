@@ -1,19 +1,36 @@
 package com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDatabaseTool;
+import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.structure.DeveloperModuleLogTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,13 +50,23 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ModuleDeveloperPluginRoot implements DeveloperModuleManager, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class ModuleDeveloperPluginRoot implements DealWithDatabaseManagers, DealsWithLogManagers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, ToolManager, Service, Plugin {
 
 
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
+
+    /**
+     * DealsWithPlatformDatabaseSystem Interface member variables.
+     */
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithPlatformFileSystem Interface member variables.
+     */
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithLogger interface member variable
@@ -57,6 +84,12 @@ public class ModuleDeveloperPluginRoot implements DeveloperModuleManager, DealsW
      * ServiceStatus Interface member variables
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+    //Esto seria lo nuevo
+    private Map<Plugins,Plugin> databaseManagersOnPlugins;
+    private Map<Plugins,Plugin> logManagersOnPlugins;
+    private Map<Addons,Addon> databaseManagersOnAddons;
+    private Map<Addons,Addon> logManagersOnAddons;
 
     /**
      * Service Interface implementation.
@@ -106,53 +139,6 @@ public class ModuleDeveloperPluginRoot implements DeveloperModuleManager, DealsW
         this.errorManager = errorManager;
     }
 
-    /**
-     * DealsWithLogger Interface implementation.
-     */
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * LogManagerForDevelopers Interface implementation.
-     */
-
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.ModuleDeveloperPluginRoot");
-
-        /**
-         * I return the values.
-         */
-        return returnedClasses;
-    }
-
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * I will check the current values and update the LogLevel in those which is different
-         */
-        try {
-            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                /**
-                 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-                 */
-                if (ModuleDeveloperPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    ModuleDeveloperPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    ModuleDeveloperPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                } else {
-                    ModuleDeveloperPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                }
-            }
-        } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
-    }
-
     public static LogLevel getLogLevelByClass(String className) {
         try {
             String[] correctedClass = className.split((Pattern.quote("$")));
@@ -160,6 +146,47 @@ public class ModuleDeveloperPluginRoot implements DeveloperModuleManager, DealsW
         } catch (Exception exception) {
             System.err.println("CantGetLogLevelByClass: " + exception.getMessage());
             return LogLevel.MODERATE_LOGGING;
+        }
+    }
+
+    @Override
+    public void setDatabaseManagers(Map<Plugins, Plugin> databaseManagersOnPlugins, Map<Addons, Addon> databaseManagersOnAddons) {
+        this.databaseManagersOnPlugins = databaseManagersOnPlugins;
+        this.databaseManagersOnAddons = databaseManagersOnAddons;
+    }
+
+    @Override
+    public void setLogManagers(Map<Plugins, Plugin> logManagersOnPlugins, Map<Addons, Addon> logManagersOnAddons) {
+        this.logManagersOnPlugins = logManagersOnPlugins;
+        this.logManagersOnAddons = logManagersOnAddons;
+    }
+
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem=pluginDatabaseSystem;
+    }
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem=pluginFileSystem;
+    }
+
+    @Override
+    public DatabaseTool getDatabaseTool() throws CantGetDataBaseToolException {
+        try {
+            return new DeveloperModuleDatabaseTool(this.databaseManagersOnPlugins,this.databaseManagersOnAddons);
+        } catch (Exception e) {
+            throw new CantGetDataBaseToolException(CantGetDataBaseToolException.DEFAULT_MESSAGE ,e, " Error get DeveloperActorDatabaseTool object","");
+        }
+    }
+
+    @Override
+    public LogTool getLogTool() throws CantGetLogToolException {
+        try {
+            return new DeveloperModuleLogTool(logManagersOnPlugins,logManagersOnAddons);
+        } catch(Exception e) {
+            throw new CantGetLogToolException(CantGetLogToolException.DEFAULT_MESSAGE ,e, " Error get DeveloperActorLogTool object","");
+
         }
     }
 }
