@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -21,7 +22,7 @@ public class BegunSubAppInstallationEventHandler implements EventHandler {
     }
     
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
 
 
 

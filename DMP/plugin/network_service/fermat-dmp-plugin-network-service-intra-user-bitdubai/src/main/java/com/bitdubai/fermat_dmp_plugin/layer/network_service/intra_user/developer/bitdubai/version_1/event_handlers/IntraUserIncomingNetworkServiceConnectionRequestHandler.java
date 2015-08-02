@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -47,7 +48,7 @@ public class IntraUserIncomingNetworkServiceConnectionRequestHandler implements 
      * @throws Exception
      */
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
 
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {
 

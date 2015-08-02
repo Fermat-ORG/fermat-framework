@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleNotRunningException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
@@ -24,7 +25,7 @@ public class UserCreatedEventHandler  implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception{
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException{
 
         String deviceUserPublicKey = ((DeviceUserCreatedEvent) platformEvent).getPublicKey();
 
