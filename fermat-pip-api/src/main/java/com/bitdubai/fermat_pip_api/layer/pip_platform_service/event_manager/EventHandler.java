@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 
 /**
@@ -7,6 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
  */
 public interface EventHandler {
 
-    public void handleEvent(PlatformEvent platformEvent) throws Exception;
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException;
 
 }

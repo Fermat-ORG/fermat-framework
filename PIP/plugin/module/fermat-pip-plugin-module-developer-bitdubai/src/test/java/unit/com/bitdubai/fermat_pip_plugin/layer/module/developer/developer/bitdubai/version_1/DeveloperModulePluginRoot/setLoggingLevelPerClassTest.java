@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.DeveloperModulePluginRoot;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.DeveloperModulePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.ModuleDeveloperPluginRoot;
 
 import org.junit.Test;
 
@@ -20,18 +20,18 @@ public class setLoggingLevelPerClassTest {
 
     @Test
     public void testMethod(){
-        DeveloperModulePluginRoot root = new DeveloperModulePluginRoot();
+        ModuleDeveloperPluginRoot root = new ModuleDeveloperPluginRoot();
         Map<String, LogLevel> data = new HashMap<String, LogLevel>();
         data.put(CLASS, LOG_LEVEL);
         root.setLoggingLevelPerClass(data);
 
-        assertEquals(DeveloperModulePluginRoot.getLogLevelByClass(CLASS), LOG_LEVEL);
+        assertEquals(ModuleDeveloperPluginRoot.getLogLevelByClass(CLASS), LOG_LEVEL);
 
         data.clear();
         LogLevel logLevel = LogLevel.AGGRESSIVE_LOGGING;
         data.put(CLASS, logLevel);
         root.setLoggingLevelPerClass(data);
 
-        assertEquals(DeveloperModulePluginRoot.getLogLevelByClass(CLASS), logLevel);
+        assertEquals(ModuleDeveloperPluginRoot.getLogLevelByClass(CLASS), logLevel);
     }
 }
