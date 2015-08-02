@@ -13,6 +13,4 @@ import java.util.UUID;
 public interface WalletStoreLanguage extends Language{
 
     public InstallationStatus getInstallationStatus();
-    public String getTranslatorName() throws CantGetTranslatorException;
-    public String getTranslatorPublicKey() throws CantGetTranslatorException;
 }

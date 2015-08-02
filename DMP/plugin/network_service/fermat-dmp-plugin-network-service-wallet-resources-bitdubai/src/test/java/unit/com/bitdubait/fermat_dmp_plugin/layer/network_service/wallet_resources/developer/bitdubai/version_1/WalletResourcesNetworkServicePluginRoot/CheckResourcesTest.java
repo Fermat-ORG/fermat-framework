@@ -3,9 +3,9 @@ package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resour
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesInstalationNetworkServicePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
 import junit.framework.TestCase;
 
@@ -51,11 +51,11 @@ public class CheckResourcesTest extends TestCase {
 
 
 
-    WalletResourcesNetworkServicePluginRoot walletResourcePluginRoot;
+    WalletResourcesInstalationNetworkServicePluginRoot walletResourcePluginRoot;
 
     @Before
     public void setUp() throws Exception {
-        walletResourcePluginRoot = new WalletResourcesNetworkServicePluginRoot();
+        walletResourcePluginRoot = new WalletResourcesInstalationNetworkServicePluginRoot();
         walletResourcePluginRoot.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
         walletResourcePluginRoot.setPluginFileSystem(pluginFileSystem);
         walletResourcePluginRoot.setEventManager(eventManager);

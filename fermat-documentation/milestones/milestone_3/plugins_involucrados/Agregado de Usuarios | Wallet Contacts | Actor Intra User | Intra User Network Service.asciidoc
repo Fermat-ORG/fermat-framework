@@ -7,21 +7,39 @@ En un análisis más profundo, un contacto representa una relación más general
 identificaciones para enviar y recibir dinero. La plataforma puede brindar servicios más amplios como
 podría ser un simple servicio de chat entre usuarios. +
 Por ende crearemos una sub app para manejar a los intra users la cual nos permitirá buscar, agregar,
-eliminar usuarios que tomaremos como contactos. El componente que administrará estos intra users será
-el intra user de la capa Actor. Además, desde cada wallet podremos relacionar a estos intra users como
-contactos de la wallet agregando registros al wallet contacts. +
+eliminar usuarios que tomaremos como conexiones, reservamos el uso de la palabra contacto para usuarios
+que agregamos a wallets. El componente que administrará estos intra users será el intra user de la
+capa Actor. Además, desde cada wallet podremos relacionar a estos intra users como contactos de la
+wallet agregando registros al wallet contacts. +
+Analicemos en detalle el proceso de agregar una conexión y un contacto.
 
-== Actor Intra User y Middleware Contacts
+== Agregado de conexiones
 
-En el plugin DMP Actor Intra User (Intra user de la capa actor) tendremos almacenados el public key,
-nombre del intra user, fecha en que agendamos al contacto foto de perfil, un estado que indicará si
-han aceptado o no nuestra solicitud de contacto ("Solicitud enviada", "Contacto").
+Tras encontrar al usuarios que deseamos agregar como conexión iniciamos a través del plugin Intra User
+de la capa module el proceso de agendarlo. Esto involucra por un lad incorporar un registro en el
+plugin Actor Intra User (plugin Intra User de la capa Actor) que almacene los datos del usuario como
+la public key, nombre del intra user, fecha en que agendamos al contacto, foto de perfil entro otros
+junto con un estado que mencione que la solicitud fue enviada. Por otro lado involucra invocar al
+plugin Intra User Network Service para que efectivamente envíe esta solicitud adjuntando los mismos
+datos que agendamos nosotros en nuestros registros pero detallando nuestra información de la identidad
+de intra user que estemos utilizando para agendar la conexión. +
+Desde el otro extremo (el receptor de nuestra solicitud) eventualmente aceptará o rechazará nuestra
+solicitud. Si la acepta, se comunicará la decisión a través del Intra User Network Service y cambiaremos
+el estado que colocamos en el registro del Actor Intra User a "Conexión". +
+Si rechaza nuestra solicitud, también se nos informará y se quitará el registro que habíamos agregado
+al plugin Actor Intra User para ese usuario. +
+
+== Agregando contactos
+
+Como mencionamos arriba, en el plugin DMP Actor Intra User tendremos almacenados la public key,
+nombre del intra user, fecha en que agendamos al contacto, foto de perfil, un estado que indicará si
+han aceptado o no nuestra solicitud de contacto ("Solicitud enviada", "Conexión").
 
 Cuando incorporamos un usuario como contacto de una wallet tendremos dos situaciones:
 
-Si ya hemos agregado al instra user en el módulo de Actor Intra User. +
+Si ya hemos agregado al instra user en el módulo de Actor Intra User como conexión. +
 
-En este caso simplemente agregamos al wallet contact la siguiente informacion:
+En este caso simplemente agregamos al wallet contacts la siguiente informacion:
 
 * Contact Id: será un UUID.
 * La public key del actor (tendremos que cambiar el UUID que tienen los extra users por un public key
@@ -31,52 +49,26 @@ para mantener uniformidad, los device users e intra users ya usan public keys)
 * El tipo de actor (Device, extra o intra user)
 * La dirección crypto que nos dan para enviar dinero debería ser almacenada aquí. En principio no
 tendremos este dato hasta que el otro usuario acepte nuestra solicitud para agendarlo. Cuando el usuario
-nos acepte como contacto nos enviará la dirección que se almacenará aquí a través del intra user network
-service.
+nos acepte como contacto nos enviará la dirección que se almacenará aquí a través del crypto addresses
+network service.
 * Un estado que indique si el otro usuario ya nos envió una dirección para poder enviarle crypto.
 
 Cuando tengamos la confirmación de que aceptaron nuestra solicitud (información que vendrá con la
 deriección que usaremos para enviarle dinero a la otra persona) agregaremos al actor address book y
 al wallet address book la dirección que le enviamos a este contacto. +
 
+NOTE: REVISAR, QUIZÁS DEBAMOS AGREGARLO DESDE EL INICIO Y BORRARLO AL SER RECHAZADOS
+
 Si no tenemos agendado el intra user en el plugin DMP Actor Intra User entonces debemos primero agregar
-allí el contacto y posteriormente agregar la información en el wallet contacts, actor address book y
-wallet address book.
+allí al usuarioc como conexión y posteriormente agregar al usuario como contacto siguiendo el proceso
+antes descripto. La combinación de ambos procesos (agendar como conexción y contacto) debe ser
+transparente al usuario final.
 
 // COMENTARIO RECORDATORIO - IGNORAR - ASCIIDOC NO RENDERIZA ESTOS COMENTARIOS
 //
 // Contacts -> La dir que me dio para que le mande
 // ActorAddBook ->  La que le di para que me mande
 // Extra User -> Id y nombre
-
-== Nerwork Service Intra User
-
-Veamos el proceso para agregar un contacto desde la sub app Contacts (posible nombre para la Intra User). +
-
-Supongamos que nosotros logueados con la identidad de Intra User A deseamos agregar al Intra User B.
-Podemos buscar a B desde diversas sub apps, en este milestone podría ser desde un tab de una wallet
-o desde la sub app de contactos. +
-En ambos casos lo primero que hacemos es agendar al usuario en el plugin Actor Intra User por lo que
-debemos almacenar sus datos allí y enviar la solicitud de contacto con nuestros datos. Para esta tarea
-necesitamos que el Network Service Intra User nos de una lista de contactos sobra la que podramos
-elegir agregar por defecto (como la típica sugerencia de ¿conoces a...?) y además formas de buscar un
-contacto en particular siguiendo filtros como el nombre del usuario. +
-Cuando encontramos al usuario a agendar y accionamos el inicio del proceso de agendar al usuario (lo
-cual podría ser presionar un botón), agregamos un campo en el Actor Intra User con estado "Solicitud
-Enviada". El network service envía un mensaje a su par en B con los datos de A solicitando aceptación,
-el usuario podrá entonces aceptar o rechazar la solicitud.
-
-* Si es rechazada el network service de B comunica la decisión a su par en A para que este envíe un
-evento informativo y se elimine el registro del Actor Intra User.
-* Si es aceptada el network service de B comunica la decisión a su par en A para que este marque en
-estado del usuario en el Actor Intra User el valor "Contacto". +
-
-Hasta no ser un contacto aceptado no podrán darse ciertos servicios a A que involucren a B, como enviar
-mensajes y hasta no ser aceptado como contacto de alguna wallet no se podrán usar servicios aún más
-específicos como enviar dinero, solicitudes de pago, etc. +
-Estas restricciones deben registrarse principalmente en los network services del dispositivo de B.
-Es decir, que los network services controlaran los contactos agendados antes de aceptar ciertos
-mensajes de otros network services pares. +
 
 
 == Network Service Crypto Addresses - Agendar contactos en wallet - Intercambio de direcciones

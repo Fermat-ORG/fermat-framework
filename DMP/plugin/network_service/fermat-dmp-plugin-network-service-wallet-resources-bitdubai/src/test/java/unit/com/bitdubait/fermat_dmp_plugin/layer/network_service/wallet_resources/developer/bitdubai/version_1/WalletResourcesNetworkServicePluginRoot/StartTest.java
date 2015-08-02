@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesInstalationNetworkServicePluginRoot;
 
 import junit.framework.TestCase;
 
@@ -49,11 +49,11 @@ public class StartTest extends TestCase {
     @Mock
     private EventListener mockEventListener;
 
-    private WalletResourcesNetworkServicePluginRoot testWalletResourcePluginRoot;
+    private WalletResourcesInstalationNetworkServicePluginRoot testWalletResourcePluginRoot;
 
     @Before
     public void setUp() throws Exception {
-        testWalletResourcePluginRoot = new WalletResourcesNetworkServicePluginRoot();
+        testWalletResourcePluginRoot = new WalletResourcesInstalationNetworkServicePluginRoot();
         testWalletResourcePluginRoot.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
         testWalletResourcePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testWalletResourcePluginRoot.setEventManager(mockEventManager);

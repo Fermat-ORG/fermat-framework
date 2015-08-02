@@ -48,9 +48,21 @@ informamos a través del Intra User Network Service esta decisión al usuario qu
 Este método borra el registro de un intra user e informa a través del Intra User Network Service al
 intra user que se está borrando para que también nos borre de su lista.
 
-== Events Handlers
+== Inicialización
+
+Al iniciar/hacer cambio de login debe consultar al Network Service las notificaciones pendientes y
+actualizar la información de los registros.
+
+== Eventos
+
+=== Events Handlers
 
 * Cuando nos aceptan una solicitud debemos pasar el ContactStatus de PENDING_HIS_ACCEPTANCE a CONTACT. +
 * Cuando rechazan una solicitud se borra del registro del plugin
 * Cuando nos borra un intra user se debe borrar al intra user de nuestro registro. Considerar que
 probablemente se deban borrar registros del wallet contacts, Actor Address Book y Wallet Address Book. +
+
+=== Eventos que lanza
+
+Tras actualizar cuando alguien nos aceptó una solicitud debería lanzar un evento a la interfaz gráfica
+tras actualizar los registros correspondientes

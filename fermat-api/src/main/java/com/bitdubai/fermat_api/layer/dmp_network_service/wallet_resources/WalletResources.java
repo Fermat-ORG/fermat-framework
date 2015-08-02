@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetManifestException;
@@ -21,13 +23,6 @@ public interface WalletResources {
      */
     public UUID getResourcesId();
 
-    /**
-     * This method gives us the manifest file of the resources
-     *
-     * @return string that contains the resources manifest (a file describing the resources)
-     * @throws CantGetManifestException
-     */
-    public String getManifest() throws CantGetManifestException;
 
     /**
      * This method let us get an skin file referenced by its name
@@ -36,7 +31,7 @@ public interface WalletResources {
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    public String getSkinFile(String fileName) throws CantGetSkinFileException;
+    public Skin getSkinFile(String fileName) throws CantGetSkinFileException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -55,7 +50,7 @@ public interface WalletResources {
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName) throws CantGetResourcesException;
+    public byte[] getImageResource(String imageName,ScreenOrientation orientation) throws CantGetResourcesException;
 
     /**
      * This method let us get a video referenced by a name
