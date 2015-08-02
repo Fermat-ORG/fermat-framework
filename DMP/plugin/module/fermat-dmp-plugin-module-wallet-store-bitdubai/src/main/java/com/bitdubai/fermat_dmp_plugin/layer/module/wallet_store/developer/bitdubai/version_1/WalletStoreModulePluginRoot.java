@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsFromCatalogueException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartInstallationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartLanguageInstallationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartSkinInstallationException;
@@ -116,7 +117,10 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
                         e.printStackTrace();
                     }
                     WalletStoreCatalogue walletStoreCatalogue = walletStoreModuleManager.getCatalogue();
+                    System.out.println("Testing: wallet catalog Id: " + walletStoreCatalogue.getWalletCatalogue(0, 0).get(0).getId().toString());
                 } catch (CantGetRefinedCatalogException e) {
+                    e.printStackTrace();
+                } catch (CantGetWalletsFromCatalogueException e) {
                     e.printStackTrace();
                 }
 
