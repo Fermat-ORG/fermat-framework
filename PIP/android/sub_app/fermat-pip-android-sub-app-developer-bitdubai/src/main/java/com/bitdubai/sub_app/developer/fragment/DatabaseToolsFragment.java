@@ -23,13 +23,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DatabaseTool;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
@@ -87,7 +88,7 @@ public class DatabaseToolsFragment extends Fragment{
 
             ToolManager toolManager = developerSubAppSession.getToolManager();
             databaseTools = toolManager.getDatabaseTool();
-        } catch (CantGetDataBaseTool e) {
+        } catch (CantGetDataBaseToolException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
