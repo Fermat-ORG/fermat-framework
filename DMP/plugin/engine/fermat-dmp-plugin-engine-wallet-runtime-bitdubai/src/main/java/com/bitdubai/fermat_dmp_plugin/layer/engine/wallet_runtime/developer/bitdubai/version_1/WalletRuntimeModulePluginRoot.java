@@ -1088,7 +1088,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","basic_wallet_default","en");
+        //walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","basic_wallet_default","en");
 
 
 
