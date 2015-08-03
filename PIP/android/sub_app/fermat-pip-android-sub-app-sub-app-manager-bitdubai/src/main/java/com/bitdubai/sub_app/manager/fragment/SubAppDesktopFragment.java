@@ -184,7 +184,7 @@ public class SubAppDesktopFragment extends Fragment {
             switch (item.picture)
             {
                 case "developer_sub_app":
-                    holder.imageView.setImageResource(R.drawable.developer_sub_app);
+                    holder.imageView.setImageResource(R.drawable.developer_sub_app_1);
                   holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -198,7 +198,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "wallet_factory":
-                    holder.imageView.setImageResource(R.drawable.factory);
+                    holder.imageView.setImageResource(R.drawable.factory_1);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +211,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_publisher":
-                    holder.imageView.setImageResource(R.drawable.publisher);
+                    holder.imageView.setImageResource(R.drawable.publisher_1);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +225,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_store":
-                    holder.imageView.setImageResource(R.drawable.store);
+                    holder.imageView.setImageResource(R.drawable.walet_store_1);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {

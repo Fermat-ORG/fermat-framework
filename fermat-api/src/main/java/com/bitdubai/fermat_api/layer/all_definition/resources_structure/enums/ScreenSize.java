@@ -5,9 +5,11 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums;
  */
 public enum ScreenSize {
 
+    WATCH("watch"),
     SMALL ("small"),
-    MEDIUM ("medium"),
-    HIGH ("high");
+    NORMAL ("normal"),
+    LARGE ("large"),
+    XLARGE ("xlarge");
 
     private final String code;
 
@@ -20,14 +22,34 @@ public enum ScreenSize {
     public static ScreenSize getByCode(String code) {
 
         switch (code) {
-            case "DUS": return ScreenSize.SMALL;
-            case "IUS": return ScreenSize.MEDIUM;
-            case "EUS": return ScreenSize.HIGH;
+            case "watch": return ScreenSize.WATCH;
+            case "small": return ScreenSize.SMALL;
+            case "normal": return ScreenSize.NORMAL;
+            case "large": return ScreenSize.LARGE;
+            case "xlarge": return ScreenSize.XLARGE;
         }
 
         /**
          * Return by default.
          */
-        return ScreenSize.MEDIUM;
+        return ScreenSize.NORMAL;
     }
+
+//    public static ScreenSize getBySyze(int weight.int height) {
+//
+//        switch (code) {
+//            case "watch": return ScreenSize.WATCH;
+//            case "small": return ScreenSize.SMALL;
+//            case "normal": return ScreenSize.NORMAL;
+//            case "large": return ScreenSize.LARGE;
+//            case "xlarge": return ScreenSize.XLARGE;
+//        }
+//
+//        /**
+//         * Return by default.
+//         */
+//        return ScreenSize.NORMAL;
+//    }
+
+
 }

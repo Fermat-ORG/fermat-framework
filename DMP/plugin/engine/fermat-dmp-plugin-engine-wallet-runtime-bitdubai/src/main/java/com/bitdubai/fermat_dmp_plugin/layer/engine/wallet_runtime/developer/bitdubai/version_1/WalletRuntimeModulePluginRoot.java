@@ -38,6 +38,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletClosedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletInstalledEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletNavigationStructureDownloadedHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletUnnInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
@@ -161,6 +162,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             eventManager.addListener(eventListener);
             listenersAdded.add(eventListener);
 
+            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            eventHandler = new WalletNavigationStructureDownloadedHandler();
+            ((WalletUnnInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
+
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
              * functionality based on wallets downloaded by users this wont be an option.
@@ -222,9 +230,29 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      */
 
     @Override
-    public void recordNavigationStructure(String publicKey) {
+    public void recordNavigationStructure(String xmlText,String linkToRepo,String name,UUID skinId) {
         //TODO: pido el navigationStrucutre del network service que sea y lo mando ahí
         //setNavigationStructureXml(walletNavigationStructure);
+
+        PluginTextFile layoutFile = null;
+
+        String filename= skinId.toString()+"_"+name;
+
+//        try{
+//            layoutFile = pluginFileSystem.createTextFile(pluginId, linkToRepo, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+//
+//        } catch (CantCreateFileException cantPersistFileException) {
+//            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " +filename, "");
+//        }
+//
+//        layoutFile.setContent(xml);
+//        try{
+//            layoutFile.persistToMedia();
+//        }
+//        catch(CantPersistFileException cantPersistFileException){
+//            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " + filename, "");
+//
+//        }
     }
 
     @Override
