@@ -218,6 +218,11 @@ project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai').projectD
 include ':fermat-dmp-plugin-network-service-money-transmission-bitdubai'
 project(':fermat-dmp-plugin-network-service-money-transmission-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-transmission-bitdubai')
 
+
+include ':fermat-dmp-plugin-network-service-crypto-transmission-bitdubai'
+project(':fermat-dmp-plugin-network-service-crypto-transmission-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-transmission-bitdubai')
+
+
 include ':fermat-dmp-plugin-network-service-intra-user-bitdubai'
 project(':fermat-dmp-plugin-network-service-intra-user-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai')
 
