@@ -80,9 +80,9 @@ public enum Plugins {
         this.developer = developer;
     }
 
-    public String getCode()   { return this.code; }
+    public String getKey()   { return this.code; }
 
-    public static Plugins getByCode(String code) throws InvalidParameterException {
+    public static Plugins getByKey(String code) throws InvalidParameterException {
         switch(code){
             case "BLICM":
                 return Plugins.BITDUBAI_LICENSE_MANAGER;

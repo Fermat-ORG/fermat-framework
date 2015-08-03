@@ -14,9 +14,9 @@ public enum Languages {
 
     private String code;
 
-    public String getCode() { return this.code; }
+    public String value() { return this.code; }
 
-    public static Languages getByCode(String code) throws InvalidParameterException{
+    public static Languages fromValue(String code){
         switch(code){
             case "ENGLISH":
                 return ENGLISH ;
@@ -29,8 +29,8 @@ public enum Languages {
             case "LATIN_AMERICAN_SPANISH":
                 return LATIN_AMERICAN_SPANISH;
             //Modified by Manuel Perez on 03/08/2015
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Languages enum");
-
+            //default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Languages enum");
+            default: return Languages.ENGLISH;
         }
     }
 

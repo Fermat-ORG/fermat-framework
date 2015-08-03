@@ -17,7 +17,7 @@ public enum Actors {
 
 	public String getCode() { return this.code ; }
 
-	public static Actors getByCode(String code)throws InvalidParameterException {
+	public static Actors getByCode(String code)/*throws InvalidParameterException*/ {
 
 		switch (code) {
 			case "DUS": return Actors.DEVICE_USER;
@@ -25,12 +25,12 @@ public enum Actors {
 			case "EUS": return Actors.EXTRA_USER;
 			case "SHP": return Actors.SHOP;
             //Modified by Manuel Perez on 03/08/2015
-			default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Actors enum");
+			//default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Actors enum");
 		}
 
 		/**
 		 * Return by default.
 		 */
-		//return Actors.DEVICE_USER;
+		return Actors.DEVICE_USER;
 	}
 }

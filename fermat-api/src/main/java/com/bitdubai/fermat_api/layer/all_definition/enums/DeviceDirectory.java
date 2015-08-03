@@ -16,7 +16,7 @@ public enum DeviceDirectory {
         this.code = code;
     }
 
-    public String getCode ()   { return this.code; }
+    public String getName ()   { return this.code; }
 
     //Modified by Manuel Perez on 03/08/2015
     public static DeviceDirectory getByCode(String code) throws InvalidParameterException{

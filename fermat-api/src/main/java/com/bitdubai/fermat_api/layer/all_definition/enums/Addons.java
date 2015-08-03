@@ -28,7 +28,7 @@ public enum Addons {
 
     public String getCode()   { return this.code; }
 
-    public static Addons getByCode(String code) throws InvalidParameterException {
+    public static Addons getByKey(String code) throws InvalidParameterException {
         switch(code){
             case "Error Manager":
                 return Addons.ERROR_MANAGER ;
