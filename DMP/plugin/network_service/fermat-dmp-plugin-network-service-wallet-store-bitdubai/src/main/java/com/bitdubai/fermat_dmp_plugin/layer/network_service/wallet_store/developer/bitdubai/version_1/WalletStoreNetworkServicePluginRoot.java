@@ -86,7 +86,7 @@ import java.util.UUID;
  * * * * * 
  */
 
-public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, WalletStoreManager, Service, NetworkService, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
+public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,WalletStoreManager, Service, NetworkService, LogManagerForDevelopers,Plugin {
     /**
      * WalletStoreNetworkServicePluginRoot member variables
      */
