@@ -22,11 +22,11 @@ public interface MoneyRequestNetworkServiceManager {
      * The method <code>getPendingReceivedCryptoRequests</code> gives us the crypto requests pending
      * to be notified to the user
      *
-     * @param identityPublicKey the public key of the identity we are asking about
+     * @param walletPublicKey the public key of the wallet we are asking requests about
      * @return the list of crypto requests.
      * @throws CantGetPendingCryptoRequestsException
      */
-    public List<CryptoRequest> getPendingReceivedCryptoRequests(String identityPublicKey) throws CantGetPendingCryptoRequestsException;
+    public List<CryptoRequest> getPendingReceivedCryptoRequests(String walletPublicKey) throws CantGetPendingCryptoRequestsException;
 
     /**
      * The method <code>getSentRequestState</code> gives us the information about the comunication of
@@ -50,6 +50,7 @@ public interface MoneyRequestNetworkServiceManager {
      * The method <code>requestCrypto</code> sends a crypto request to another user
      *
      * @param requestId                       The request identifier
+     * @param receptorWalletPublicKey         The public key of the wallet we are sending the crypto to.
      * @param addressToSendThePayment         The address to send the payment if accepted
      * @param cryptoAmount                    The amount of crypto to send
      * @param loggedInIntraUserPublicKey      The public key of the sender of the request
@@ -58,6 +59,7 @@ public interface MoneyRequestNetworkServiceManager {
      * @throws CantSendCryptoRequestException
      */
     public void requestCrypto(UUID requestId,
+                              String receptorWalletPublicKey,
                               CryptoAddress addressToSendThePayment,
                               long cryptoAmount,
                               String loggedInIntraUserPublicKey,
@@ -67,6 +69,7 @@ public interface MoneyRequestNetworkServiceManager {
     /**
      * The method <code>requestMoney</code> sends a money request to another user
      *
+     * @param receptorWalletPublicKey     The public key of the wallet we are sending the crypto to.
      * @param requestSenderPublicKey      The public key of the sender of the request
      * @param requestDestinationPublicKey The public key of the destination of the request
      * @param requestDescription          A description of the request (what is the request paying?)
@@ -75,7 +78,8 @@ public interface MoneyRequestNetworkServiceManager {
      * @param fiatAmount                  The amount of fiat currency to pay
      * @throws CantSendMoneyRequestException
      */
-    public void requestMoney(String requestSenderPublicKey,
+    public void requestMoney(String receptorWalletPublicKey,
+                             String requestSenderPublicKey,
                              String requestDestinationPublicKey,
                              String requestDescription,
                              CryptoAddress addressToSendThePayment,
