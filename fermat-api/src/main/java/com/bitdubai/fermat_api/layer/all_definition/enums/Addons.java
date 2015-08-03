@@ -6,21 +6,30 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by ciencias on 2/13/15.
  */
 public enum Addons {
-    ERROR_MANAGER ("Error Manager"),
-    EVENT_MANAGER ("Event Manager"),
+    ERROR_MANAGER ("ERRM"),
+    EVENT_MANAGER ("EVNTM"),
     OS ("Os"),
-    LOCAL_DEVICE("Local Device"),
-    REMOTE_DEVICE("Remote Device"),
-    DEVICE_USER ("Device user"),
-    LICENSE_MANAGER ("License Manager"),
-    INTRA_USER("Intra User"),
-    EXTRA_USER("Extra User"),
-    DEVICE_CONNECTIVITY("Device Connectivity"),
-    PLATFORM_INFO("Platform Info"),
-    LOG_MANAGER("Log Manager");
+    LOCAL_DEVICE("LOCD"),
+    REMOTE_DEVICE("REMD"),
+    DEVICE_USER ("DEVU"),
+    LICENSE_MANAGER ("LICM"),
+    INTRA_USER("INTU"),
+    EXTRA_USER("EXTU"),
+    DEVICE_CONNECTIVITY("DEVC"),
+    PLATFORM_INFO("PLATINF"),
+    LOG_MANAGER("LOGM");
 
-    public static Addons getByKey(String key) throws InvalidParameterException {
-        switch(key){
+
+    private final String key;
+
+    Addons(String key) {
+        this.key = key;
+    }
+
+    public String getCode()   { return this.key; }
+
+    public static Addons getByCode(String code) throws InvalidParameterException {
+        switch(code){
             case "Error Manager":
                 return Addons.ERROR_MANAGER ;
             case "Event Manager":
@@ -46,16 +55,10 @@ public enum Addons {
             case "Log Manager":
                 return Addons.LOG_MANAGER;
             //Modified by Manuel Perez
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + key, "This Code Is Not Valid for the Addons enum");
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
 
         }
     }
 
-    private final String key;
 
-    Addons(String key) {
-        this.key = key;
-    }
-
-    public String getKey()   { return this.key; }
 }
