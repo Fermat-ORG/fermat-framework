@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantAddResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCloseWalletSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCopyWalletSkinException;
@@ -34,7 +35,14 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.Walle
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -90,10 +98,13 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
      */
     LogManager logManager;
 
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
 
     private WalletSkinMiddlewareDao walletSkinMiddlewareDao;
+
+    private static final String WALLET_SKINS_PATH = "wallet_skins";
+    private static final String SKIN_MANIFEST_FILE_NAME = "manifest.xml";
 
     /**
      * Service Interface member variables.
@@ -139,7 +150,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         try {
             return walletSkinMiddlewareDao.findAllSkinsByDesigner(designerPublicKey);
         } catch (CantListWalletSkinsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
     }
@@ -149,7 +160,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         try {
             return walletSkinMiddlewareDao.findSkinBySkinIdAndVersion(skinId, version);
         } catch (CantGetWalletSkinException|SkinNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
     }
@@ -159,7 +170,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         try {
             return walletSkinMiddlewareDao.findSkinById(id);
         } catch (CantGetWalletSkinException|SkinNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
     }
@@ -169,7 +180,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         try {
             return walletSkinMiddlewareDao.findAllSkinsBySkinId(skinId);
         } catch (CantListWalletSkinsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
     }
@@ -191,32 +202,112 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
 
     @Override
     public void closeSkin(WalletSkin walletSkin) throws CantCloseWalletSkinException, SkinNotFoundException {
-
+        // TODO to do...
     }
 
     @Override
     public void deleteSkin(WalletSkin walletSkin) throws CantDeleteWalletSkinException, SkinNotFoundException {
-
+        try {
+            String skinManifestPath = getSkinManifestPath(walletSkin);
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, skinManifestPath, SKIN_MANIFEST_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.delete();
+            // TODO delete skin structure and resources too
+            try {
+                walletSkinMiddlewareDao.deleteSkin(walletSkin.getId());
+            } catch (CantDeleteWalletSkinException | SkinNotFoundException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw e;
+            }
+        } catch (CantCreateFileException e){
+            throw new CantDeleteWalletSkinException(CantDeleteWalletSkinException.DEFAULT_MESSAGE, e, "Cant delete skin file", "");
+        } catch (FileNotFoundException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDeleteWalletSkinException(CantDeleteWalletSkinException.DEFAULT_MESSAGE, e, "skin not found", "");
+        }
     }
 
     @Override
-    public Skin getSkinStructure(WalletSkin walletSkin) throws CantGetWalletSkinStructureException {
-        return null;
+    public Skin getSkinStructure(WalletSkin walletSkin) throws CantGetWalletSkinStructureException, SkinNotFoundException {
+        if (walletSkin != null) {
+            try {
+                String skinManifestPath = getSkinManifestPath(walletSkin);
+                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, skinManifestPath, SKIN_MANIFEST_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.loadFromMedia();
+                String xml = pluginTextFile.getContent();
+                Skin skin = new Skin();
+                skin = (Skin) XMLParser.parseXML(xml, skin);
+                return skin;
+            } catch (CantCreateFileException | CantLoadFileException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetWalletSkinStructureException(CantGetWalletSkinStructureException.DEFAULT_MESSAGE, e, "Cant get Skin", "");
+            } catch (FileNotFoundException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new SkinNotFoundException(SkinNotFoundException.DEFAULT_MESSAGE, e, "Skin not found.", "");
+            }
+        } else {
+            throw new CantGetWalletSkinStructureException(CantGetWalletSkinStructureException.DEFAULT_MESSAGE, null, "Wallet Skin is null.", "");
+        }
     }
 
     @Override
     public Skin getSkinFromXmlString(String skinStructure) throws CantGetWalletSkinStructureException {
-        return null;
+        try {
+            Skin skin = new Skin();
+            skin = (Skin) XMLParser.parseXML(skinStructure, skin);
+            return skin;
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetWalletSkinStructureException(CantGetWalletSkinStructureException.DEFAULT_MESSAGE, e, "Cant get skin", "");
+        }
     }
 
     @Override
     public String getSkinXmlFromClassStructure(Skin skin) throws CantGetWalletSkinStructureException {
-        return null;
+        try {
+            String xml = null;
+            if (skin != null) {
+                xml = XMLParser.parseObject(skin);
+            }
+            return xml;
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetWalletSkinStructureException(CantGetWalletSkinStructureException.DEFAULT_MESSAGE, e, "Cant get skin", "");
+        }
     }
 
     @Override
     public void saveSkinStructureXml(Skin skin, WalletSkin walletSkin) throws CantSaveWalletSkinStructureException {
+        try {
+            String skinXml = getSkinXmlFromClassStructure(skin);
+            String skinManifestPath = getSkinManifestPath(walletSkin);
+            try {
+                PluginTextFile newFile = pluginFileSystem.getTextFile(pluginId, skinManifestPath, SKIN_MANIFEST_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.loadFromMedia();
+                newFile.setContent(skinXml);
+                newFile.persistToMedia();
 
+            } catch (CantLoadFileException | CantPersistFileException | CantCreateFileException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantSaveWalletSkinStructureException(CantSaveWalletSkinStructureException.DEFAULT_MESSAGE, e, "Can't save skin xml file.", "");
+            } catch (FileNotFoundException fileNotFoundException) {
+                try {
+                    PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, skinManifestPath, SKIN_MANIFEST_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                    newFile.setContent(skinXml);
+                    newFile.persistToMedia();
+                } catch (CantPersistFileException | CantCreateFileException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    throw new CantSaveWalletSkinStructureException(CantSaveWalletSkinStructureException.DEFAULT_MESSAGE, e, "Can't save skin xml file.", "");
+                }
+            }
+        } catch (CantGetWalletSkinStructureException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantSaveWalletSkinStructureException(CantSaveWalletSkinStructureException.DEFAULT_MESSAGE, e, "Can't create skin xml string.", "");
+        }
+    }
+
+    private String getSkinManifestPath(WalletSkin walletSkin) {
+        return WALLET_SKINS_PATH + "/" +
+                walletSkin.getId();
     }
 
     @Override

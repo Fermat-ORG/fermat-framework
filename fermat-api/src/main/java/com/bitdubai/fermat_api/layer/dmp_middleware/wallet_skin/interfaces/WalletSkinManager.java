@@ -128,8 +128,9 @@ public interface WalletSkinManager {
      * @param walletSkin that you're trying to get the structure
      * @return an instance of the class structure of the Skin
      * @throws CantGetWalletSkinStructureException if something goes wrong
+     * @throws SkinNotFoundException if i cant find the skin
      */
-    Skin getSkinStructure(WalletSkin walletSkin) throws CantGetWalletSkinStructureException;
+    Skin getSkinStructure(WalletSkin walletSkin) throws CantGetWalletSkinStructureException, SkinNotFoundException;
 
     /**
      * converts an xml file in a skin structure
