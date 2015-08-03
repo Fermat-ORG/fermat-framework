@@ -701,6 +701,15 @@ public class Platform  {
             Plugin walletStatisticsNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getWalletStatistics();
             injectPluginReferencesAndStart(walletStatisticsNetworkService, Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE);
 
+
+             /*
+             * Plugin Crypto Transmission Network Service
+             * -----------------------------
+             */
+            Plugin cryptoTransmissionNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getCryptoTransmission();
+            injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
+
+
             /*
              * Plugin App Runtime Middleware
              * -------------------------------
