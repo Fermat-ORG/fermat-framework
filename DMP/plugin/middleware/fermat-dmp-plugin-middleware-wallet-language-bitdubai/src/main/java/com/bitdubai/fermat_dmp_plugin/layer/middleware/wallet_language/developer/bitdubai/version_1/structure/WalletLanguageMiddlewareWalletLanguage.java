@@ -25,8 +25,6 @@ public class WalletLanguageMiddlewareWalletLanguage implements WalletLanguage {
 
     String name;
 
-    String alias;
-
     Languages type;
 
     LanguageState state;
@@ -35,19 +33,15 @@ public class WalletLanguageMiddlewareWalletLanguage implements WalletLanguage {
 
     Version version;
 
-    VersionCompatibility versionCompatibility;
 
-
-    public WalletLanguageMiddlewareWalletLanguage(UUID id, UUID languageId, String name, String alias, Languages type, LanguageState state, String translatorPublicKey, Version version, VersionCompatibility versionCompatibility) {
+    public WalletLanguageMiddlewareWalletLanguage(UUID id, UUID languageId, String name, Languages type, LanguageState state, String translatorPublicKey, Version version) {
         this.id = id;
         this.languageId = languageId;
         this.name = name;
-        this.alias = alias;
         this.type = type;
         this.state = state;
         this.translatorPublicKey = translatorPublicKey;
         this.version = version;
-        this.versionCompatibility = versionCompatibility;
     }
 
 
@@ -64,11 +58,6 @@ public class WalletLanguageMiddlewareWalletLanguage implements WalletLanguage {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public String getAlias() {
-        return alias;
     }
 
     @Override
@@ -91,8 +80,4 @@ public class WalletLanguageMiddlewareWalletLanguage implements WalletLanguage {
         return version;
     }
 
-    @Override
-    public VersionCompatibility getVersionCompatibility() {
-        return versionCompatibility;
-    }
 }

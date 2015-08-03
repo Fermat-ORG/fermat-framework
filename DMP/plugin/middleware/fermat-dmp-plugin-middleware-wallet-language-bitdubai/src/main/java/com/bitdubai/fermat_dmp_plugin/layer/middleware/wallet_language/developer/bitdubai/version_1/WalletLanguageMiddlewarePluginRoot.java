@@ -189,13 +189,8 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
         UUID languageId = UUID.randomUUID();
         LanguageState state = LanguageState.DRAFT;
         Version version = new Version("1.0.0");
-        VersionCompatibility versionCompatibility = null;
-        try {
-            versionCompatibility = new VersionCompatibility(version, version);
-        } catch (InvalidParameterException e) {
 
-        }
-        WalletLanguage walletLanguage = new WalletLanguageMiddlewareWalletLanguage(languageId, languageId, name, name, type, state, translatorPublicKey, version, versionCompatibility);
+        WalletLanguage walletLanguage = new WalletLanguageMiddlewareWalletLanguage(languageId, languageId, name, type, state, translatorPublicKey, version);
         try {
             Language language = new Language(name, type, new Version("1.0.0"));
             saveLanguage(language, walletLanguage);
@@ -214,11 +209,11 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
 
 
     @Override
-    public WalletLanguage createNewVersion(String alias, WalletLanguage walletLanguage) throws CantCopyWalletLanguageException {
+    public WalletLanguage createNewVersion(WalletLanguage walletLanguage) throws CantCopyWalletLanguageException {
         UUID id = UUID.randomUUID();
         LanguageState state = LanguageState.DRAFT;
 
-        WalletLanguage newWalletLanguage = new WalletLanguageMiddlewareWalletLanguage(id, walletLanguage.getLanguageId(), walletLanguage.getName(), alias, walletLanguage.getType(), state, walletLanguage.getTranslatorPublicKey(), walletLanguage.getVersion(), walletLanguage.getVersionCompatibility());
+        WalletLanguage newWalletLanguage = new WalletLanguageMiddlewareWalletLanguage(id, walletLanguage.getLanguageId(), walletLanguage.getName(), walletLanguage.getType(), state, walletLanguage.getTranslatorPublicKey(), walletLanguage.getVersion());
         try {
             Language language = getLanguage(walletLanguage);
             saveLanguage(language, newWalletLanguage);
@@ -254,13 +249,8 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
         UUID id = UUID.randomUUID();
         LanguageState state = LanguageState.DRAFT;
         Version version = new Version("1.0.0");
-        VersionCompatibility versionCompatibility = null;
-        try {
-            versionCompatibility = new VersionCompatibility(version, version);
-        } catch (InvalidParameterException e) {
 
-        }
-        WalletLanguage newWalletLanguage = new WalletLanguageMiddlewareWalletLanguage(id, id, newName, newName, walletLanguage.getType(), state, translatorPublicKey, version, versionCompatibility);
+        WalletLanguage newWalletLanguage = new WalletLanguageMiddlewareWalletLanguage(id, id, newName,  walletLanguage.getType(), state, translatorPublicKey, version);
         try {
             Language language = getLanguage(walletLanguage);
             saveLanguage(language, newWalletLanguage);

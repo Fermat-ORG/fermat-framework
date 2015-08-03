@@ -60,13 +60,12 @@ public interface WalletLanguageManager {
      * you can identify it throw the alias
      * this language has to keep the language id of the old one
      *
-     * @param alias of the new wallet language
      * @param walletLanguage you want to clone
      * @return a new instance of the WalletLanguage you just create
      * @throws CantCopyWalletLanguageException if something goes wrong
      * @throws LanguageNotFoundException if you cannot find the project that you're trying to copy
      */
-    WalletLanguage createNewVersion(String alias, WalletLanguage walletLanguage) throws CantCopyWalletLanguageException;
+    WalletLanguage createNewVersion(WalletLanguage walletLanguage) throws CantCopyWalletLanguageException;
 
     /**
      * throw this method you can clone an existent WalletLanguage with a new name
