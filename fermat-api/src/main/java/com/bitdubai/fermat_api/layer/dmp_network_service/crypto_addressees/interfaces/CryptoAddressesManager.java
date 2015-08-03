@@ -1,14 +1,13 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.enums.AddressExchangeState;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantAcceptAddressExchangeException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCryptoAddessException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCurrentStateException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestsListException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRegisterNewWalletException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRegisterCompatibleListException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRejectAddressExchangeException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantStartAddressExchangeException;
 
@@ -72,16 +71,14 @@ public interface CryptoAddressesManager {
                                       String intraUserRejectingTheRequest) throws CantRejectAddressExchangeException;
 
     /**
-     * The method <code>registerInstalledWallet</code> registers in the plugin database the informacion
-     * of a new wallet in the system
+     * The method <code>setCompatibleWallets</code> registers in the plugin database the information
+     * of a the compatible wallets for a particular request.
      *
-     * @param walletPublicKey    The public key of the new wallet to register
-     * @param walletName         The name of the wallet to register
-     * @param walletCategory     The category of the wallet to register
-     * @param platformIdentifier The platform identifier of the wallet to register
-     * @throws CantRegisterNewWalletException
+     * @param requestId         The identifier of the request.
+     * @param compatibleWallets The list of compatible wallets of the request identified with the parameter requsetId
+     * @throws CantRegisterCompatibleListException
      */
-    public void registerInstalledWallet(String walletPublicKey, String walletName, WalletCategory walletCategory, String platformIdentifier) throws CantRegisterNewWalletException;
+    public void setCompatibleWallets(UUID requestId, List<RequestHandlerWallet> compatibleWallets) throws CantRegisterCompatibleListException;
 
     /**
      * The method <code>getPendingRequests</code> return the list of requests

@@ -5,4 +5,7 @@ package com.bitdubai.fermat_api.layer.dmp_request.money_request.interfaces;
  * provides the methods to access the information of a money request
  */
 public interface MoneyRequestInformation {
+    /*
+     * TODO: This is part of Milestone 4
+     */
 }

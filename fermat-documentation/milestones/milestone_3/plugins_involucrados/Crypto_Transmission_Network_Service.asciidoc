@@ -1,0 +1,11 @@
+= Crypto Transmission - Network Service Layer
+
+Este plugin envía y recibe la metainformación de las transacciones crypto entre intra users. Como es
+parte del ciclo transaccional implementará el protocolo de traspaso de transacciones cuando reciba
+una transacción. Además tendrá un método para chequear el envío de un mensaje con la metainformación.
+
+Al igual que diversos network services deberá prohibir enviar transacciones a usuarios que no son
+nuestros contactos.
+
+NOTE: Podríamos enviar el public key de la walelt acá si lo intercambiamos en el crypto addresses al
+agendar contactos.

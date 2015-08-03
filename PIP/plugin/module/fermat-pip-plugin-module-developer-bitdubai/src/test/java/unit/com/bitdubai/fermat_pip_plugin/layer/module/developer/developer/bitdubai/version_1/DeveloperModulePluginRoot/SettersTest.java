@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Created by Nerio on 18/07/15.
@@ -18,6 +19,8 @@ import static org.mockito.Mockito.verify;
 public class SettersTest {
 
     UUID testPluginId;
+
+    //TODO WE NEED TO IMPLEMENT AN ASSERTION STRATEGY HERE
 
     @Before
     public void setUp() throws Exception {
@@ -29,13 +32,6 @@ public class SettersTest {
         ModuleDeveloperPluginRoot root  = new ModuleDeveloperPluginRoot();
         ErrorManager errorManager = mock(ErrorManager.class);
         root.setErrorManager(errorManager);
-    }
-
-    @Test
-    public void testSetLogManager(){
-        ModuleDeveloperPluginRoot root  = new ModuleDeveloperPluginRoot();
-        LogManager logManager= mock(LogManager.class);
-        root.setLogManager(logManager);
     }
 
     @Test

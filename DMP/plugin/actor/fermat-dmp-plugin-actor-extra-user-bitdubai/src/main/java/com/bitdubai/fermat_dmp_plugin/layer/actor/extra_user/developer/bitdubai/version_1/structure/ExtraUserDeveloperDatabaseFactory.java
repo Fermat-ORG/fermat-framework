@@ -106,20 +106,20 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
                 /**
                  * The database cannot be created. I can not handle this situation.
                  */
-                throw new CantInitializeExtraUserRegistryException();
+                throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, cantCreateDatabaseException);
             } catch(Exception exception){
 
                 throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
 
             }
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch(CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
 
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
 
-            throw new CantInitializeExtraUserRegistryException();
+            throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, cantOpenDatabaseException);
         }catch(Exception exception){
 
             throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);

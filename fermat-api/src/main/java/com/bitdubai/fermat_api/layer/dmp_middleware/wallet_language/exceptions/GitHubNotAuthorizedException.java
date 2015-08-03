@@ -1,11 +1,19 @@
-package com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.08.02..
+ * The Exception <code>com.bitdubai.fermat_api.layer.middleware.wallet_language.GitHubNotAuthorizedException</code>
+ * is thrown when a we cannot add a language string.
+ * <p/>
+ *
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/08/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class CantRegisterNewWalletException extends FermatException {
+public class GitHubNotAuthorizedException extends FermatException {
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +22,7 @@ public class CantRegisterNewWalletException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantRegisterNewWalletException(String message, Exception cause, String context, String possibleReason) {
+    public GitHubNotAuthorizedException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

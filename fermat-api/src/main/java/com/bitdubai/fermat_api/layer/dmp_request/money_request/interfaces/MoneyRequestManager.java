@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_request.money_request.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_request.money_request.exceptions.CantGetRequestInformationListException;
 import com.bitdubai.fermat_api.layer.dmp_request.money_request.exceptions.CryptoRequestUnexpectedErrorException;
 import com.bitdubai.fermat_api.layer.dmp_request.money_request.exceptions.FailedToRejectTheRequestException;
 import com.bitdubai.fermat_api.layer.dmp_request.money_request.exceptions.FiatRequestUnexpectedErrorException;
@@ -16,19 +17,47 @@ import java.util.UUID;
  */
 public interface MoneyRequestManager {
 
-    List<CryptoRequestInformation> getCryptoRequestSent(String walletPublicKey);
+    /**
+     * The method <code>getCryptoRequestSent</code> returns the request sent by the wallet identified as parameter
+     *
+     * @param walletPublicKey The public key of the wallet we are consulting about
+     * @return the list of requests
+     * @throws CantGetRequestInformationListException
+     */
+    List<CryptoRequestInformation> getCryptoRequestSent(String walletPublicKey) throws CantGetRequestInformationListException;
 
-    List<CryptoRequestInformation> getReceivedCryptoRequest(String walletPublicKey);
+    /**
+     * The method <code>getReceivedCryptoRequest</code> returns the request sent to the wallet identified as parameter
+     *
+     * @param walletPublicKey The public key of the wallet we are consulting about
+     * @return the list of requests
+     * @throws CantGetRequestInformationListException
+     */
+    List<CryptoRequestInformation> getReceivedCryptoRequest(String walletPublicKey) throws CantGetRequestInformationListException;
 
-    List<MoneyRequestInformation> getMoneyRequestSent(String walletPublicKey);
+    /**
+     * The method <code>getMoneyRequestSent</code> returns the request sent by the wallet identified as parameter
+     *
+     * @param walletPublicKey The public key of the wallet we are consulting about
+     * @return the list of requests
+     * @throws CantGetRequestInformationListException
+     */
+    List<MoneyRequestInformation> getMoneyRequestSent(String walletPublicKey) throws CantGetRequestInformationListException;
 
-    List<MoneyRequestInformation> getReceivedMoneyRequest(String walletPublicKey);
+    /**
+     * The method <code>getReceivedMoneyRequest</code> returns the request sent to the wallet identified as parameter
+     *
+     * @param walletPublicKey The public key of the wallet we are consulting about
+     * @return the list of requests
+     * @throws CantGetRequestInformationListException
+     */
+    List<MoneyRequestInformation> getReceivedMoneyRequest(String walletPublicKey) throws CantGetRequestInformationListException;
 
     /**
      * The method <code>sendCryptoRequest</code> send a crypto request for payment to the user with
      * public key requestDestinationPublicKey.
      *
-     * @param walletPublicKey             The public key of the wallet we are sending the request from
+     * @param senderWalletPublicKey       The public key of the wallet we are sending the request from
      * @param requestSenderPublicKey      The public key of the sender
      * @param requestDestinationPublicKey The public key of the destination of the request
      * @param requestDescription          A text describing the payment request (what is it paying?)
@@ -37,7 +66,7 @@ public interface MoneyRequestManager {
      * @return an identifier of the request
      * @throws CryptoRequestUnexpectedErrorException
      */
-    public UUID sendCryptoRequest(String walletPublicKey,
+    public UUID sendCryptoRequest(String senderWalletPublicKey,
                                   String requestSenderPublicKey,
                                   String requestDestinationPublicKey,
                                   String requestDescription,
@@ -49,7 +78,7 @@ public interface MoneyRequestManager {
      * The method <code>sendMoneyRequest</code> send a money request for payment to the user with
      * public key requestDestinationPublicKey.
      *
-     * @param walletPublicKey             The public key of the wallet we are sending the request from
+     * @param senderWalletPublicKey       The public key of the wallet we are sending the request from
      * @param requestSenderPublicKey      The public key of the sender
      * @param requestDestinationPublicKey The public key of the destination of the request
      * @param requestDescription          A text describing the payment request (what is it paying?)
@@ -59,7 +88,7 @@ public interface MoneyRequestManager {
      * @return an identifier of the request
      * @throws FiatRequestUnexpectedErrorException
      */
-    public UUID sendMoneyRequest(String walletPublicKey,
+    public UUID sendMoneyRequest(String senderWalletPublicKey,
                                  String requestSenderPublicKey,
                                  String requestDestinationPublicKey,
                                  String requestDescription,
@@ -70,7 +99,7 @@ public interface MoneyRequestManager {
 
     /**
      * The method <code>rejectRequest</code> informs the rejection of a request to its creator.
-     * @param requestId                            The identifier of the request to reject
+     * @param requestId  The identifier of the request to reject
      * @throws FailedToRejectTheRequestException
      */
     public void rejectRequest(UUID requestId) throws FailedToRejectTheRequestException;

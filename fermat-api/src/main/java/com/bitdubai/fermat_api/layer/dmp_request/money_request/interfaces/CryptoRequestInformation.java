@@ -7,10 +7,56 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
  * provides the methods to access the information of a crypto request
  */
 public interface CryptoRequestInformation {
-    String getWalletPublicKey();
+
+    /**
+     * The method <code>getSenderWalletPublicKey</code> returns the public key of the wallet sending
+     * the request
+     *
+     * @return the said public key
+     */
+    String getSenderWalletPublicKey();
+
+    /**
+     * The method <code>getReceptorWalletPublicKey</code> returns the public key of the wallet that is
+     * destination of the request
+     *
+     * @return the said public key
+     */
+    String getReceptorWalletPublicKey();
+
+    /**
+     * The method <code>getRequestSenderPublicKey</code> returns the public key of the identity that sent of the request
+     *
+     * @return the public key
+     */
     String getRequestSenderPublicKey();
+
+    /**
+     * The method <code>getRequestDestinationPublicKey</code> returns the public key of the identity that sent of the request
+     *
+     * @return the public key
+     */
     String getRequestDestinationPublicKey();
+
+    /**
+     * The method <code>getRequestDescription</code> returns the description of the request
+     *
+     * @return the description of the request
+     */
     String getRequestDescription();
+
+    /**
+     * The method <code>getAddressToSendThePayment</code> gives us the crypto address to send the
+     * payment to if the request is accepted
+     *
+     * @return the crypto address to send the payment to
+     */
     CryptoAddress getAddressToSendThePayment();
+
+    /**
+     * The method <code>getCryptoAmount</code> returns the crypto amount associated to the request
+     *
+     * @return the said amount
+     */
     long getCryptoAmount();
 }
