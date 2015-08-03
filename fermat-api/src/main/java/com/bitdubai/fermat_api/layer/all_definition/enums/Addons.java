@@ -20,13 +20,13 @@ public enum Addons {
     LOG_MANAGER("LOGM");
 
 
-    private final String key;
+    private final String code;
 
-    Addons(String key) {
-        this.key = key;
+    Addons(String code) {
+        this.code = code;
     }
 
-    public String getCode()   { return this.key; }
+    public String getCode()   { return this.code; }
 
     public static Addons getByCode(String code) throws InvalidParameterException {
         switch(code){
@@ -54,7 +54,7 @@ public enum Addons {
                 return Addons.PLATFORM_INFO;
             case "Log Manager":
                 return Addons.LOG_MANAGER;
-            //Modified by Manuel Perez
+            //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
 
         }

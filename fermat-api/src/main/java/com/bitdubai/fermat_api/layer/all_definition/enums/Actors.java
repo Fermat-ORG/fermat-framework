@@ -24,7 +24,7 @@ public enum Actors {
 			case "IUS": return Actors.INTRA_USER;
 			case "EUS": return Actors.EXTRA_USER;
 			case "SHP": return Actors.SHOP;
-			//Modified by Manuel Perez
+            //Modified by Manuel Perez on 03/08/2015
 			default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Actors enum");
 		}
 

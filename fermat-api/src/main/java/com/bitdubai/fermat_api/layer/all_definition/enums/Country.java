@@ -13,27 +13,24 @@ public enum Country {
     private final String mCode;
     private final String mDisplayName;
 
-    private Country (String Code, String DisplayName) {
+    /*private*/ Country (String Code, String DisplayName) {
         this.mCode = Code;
         this.mDisplayName = DisplayName;
     }
 
     public String getCode()   { return mCode; }
 
-    public static String getByCode(String code) throws InvalidParameterException{
+    public static Country getByCode(String code) throws InvalidParameterException{
 
-        Country country;
         switch (code){
 
             case "US":
-                country=Country.UNITED_STATES_OF_AMERICA;
-                return country.mDisplayName;
+                return Country.UNITED_STATES_OF_AMERICA;
             case "CA":
-                country=Country.CANADA;
-                return country.mDisplayName;
+                return Country.CANADA;
             case "AR":
-                country=Country.ARGENTINA;
-                return country.mDisplayName;
+                return Country.ARGENTINA;
+            //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Country enum");
 
         }
