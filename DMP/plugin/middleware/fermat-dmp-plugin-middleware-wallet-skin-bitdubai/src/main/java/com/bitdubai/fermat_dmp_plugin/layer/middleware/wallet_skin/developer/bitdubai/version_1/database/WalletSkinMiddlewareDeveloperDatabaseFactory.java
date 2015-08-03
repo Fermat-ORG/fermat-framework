@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,24 +15,24 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.exceptions.CantInitializeWalletLanguageMiddlewareDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.exceptions.CantInitializeWalletSkinMiddlewareDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.database.WalletLanguageMiddlewareDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database.WalletSkinMiddlewareDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/07/15.
+ *
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/08/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 
-public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class WalletSkinMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -50,10 +50,10 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
     /**
      * Constructor
      *
-     * @param pluginDatabaseSystem plugin database system instance
-     * @param pluginId plugin id
+     * @param pluginDatabaseSystem
+     * @param pluginId
      */
-    public WalletLanguageMiddlewareDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public WalletSkinMiddlewareDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -61,9 +61,9 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeWalletLanguageMiddlewareDatabaseException
+     * @throws CantInitializeWalletSkinMiddlewareDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeWalletLanguageMiddlewareDatabaseException {
+    public void initializeDatabase() throws CantInitializeWalletSkinMiddlewareDatabaseException {
         try {
 
              /*
@@ -71,31 +71,31 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
-        } catch (CantOpenDatabaseException e) {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeWalletLanguageMiddlewareDatabaseException(CantInitializeWalletLanguageMiddlewareDatabaseException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantInitializeWalletSkinMiddlewareDatabaseException(CantInitializeWalletSkinMiddlewareDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
 
-        } catch (DatabaseNotFoundException databaseNotFoundException) {
+        } catch (DatabaseNotFoundException e) {
 
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            WalletLanguageMiddlewareDatabaseFactory walletLanguageMiddlewareDatabaseFactory = new WalletLanguageMiddlewareDatabaseFactory(pluginDatabaseSystem);
+            WalletSkinMiddlewareDatabaseFactory walletSkinMiddlewareDatabaseFactory = new WalletSkinMiddlewareDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = walletLanguageMiddlewareDatabaseFactory.createDatabase(pluginId, pluginId.toString());
-            } catch (CantCreateDatabaseException e) {
+                database = walletSkinMiddlewareDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeWalletLanguageMiddlewareDatabaseException(CantInitializeWalletLanguageMiddlewareDatabaseException.DEFAULT_MESSAGE, e, "Error creating database.", "");
+                throw new CantInitializeWalletSkinMiddlewareDatabaseException(CantInitializeWalletSkinMiddlewareDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot create the database.");
             }
         }
     }
@@ -106,7 +106,7 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Language", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Skin", this.pluginId.toString()));
         return databases;
     }
 
@@ -115,22 +115,25 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
         List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
         /**
-         * Table Wallet Language columns.
+         * Table Wallet Skin columns.
          */
-        List<String> walletLanguageColumns = new ArrayList<>();
+        List<String> walletSkinColumns = new ArrayList<>();
 
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ID_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_ID_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_NAME_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ALIAS_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_STATE_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_VERSION_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME);
+        walletSkinColumns.add(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME);
         /**
-         * Table Wallet Language addition.
+         * Table Wallet Skin addition.
          */
-        DeveloperDatabaseTable walletLanguageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME, walletLanguageColumns);
-        tables.add(walletLanguageTable);
+        DeveloperDatabaseTable walletSkinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_TABLE_NAME, walletSkinColumns);
+        tables.add(walletSkinTable);
+
 
 
         return tables;

@@ -18,16 +18,4 @@ public class CantInitializeWalletLanguageMiddlewareDatabaseException extends Fer
     public CantInitializeWalletLanguageMiddlewareDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-    public CantInitializeWalletLanguageMiddlewareDatabaseException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantInitializeWalletLanguageMiddlewareDatabaseException(final String message) {
-        this(message, null);
-    }
-
-    public CantInitializeWalletLanguageMiddlewareDatabaseException() {
-        this(DEFAULT_MESSAGE);
-    }
 }
