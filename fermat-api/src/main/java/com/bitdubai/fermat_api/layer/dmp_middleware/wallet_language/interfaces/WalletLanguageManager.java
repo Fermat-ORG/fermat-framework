@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCloseWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantUpdateLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCopyWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCreateEmptyWalletLanguageException;
@@ -46,6 +47,11 @@ public interface WalletLanguageManager {
     WalletLanguage getLanguageById(UUID id) throws CantGetWalletLanguageException, LanguageNotFoundException;
 
     /**
+     * TODO importFromRepository (methods in plugin Wallet Language utils/RepositoryManager)
+     * TODO exportToRepository (methods in plugin Wallet Language utils/RepositoryManager)
+     */
+
+    /**
      * throw this method you can create a new empty WalletLanguage
      *
      * @param name of the new WalletLanguage
@@ -60,13 +66,12 @@ public interface WalletLanguageManager {
      * you can identify it throw the alias
      * this language has to keep the language id of the old one
      *
-     * @param alias of the new wallet language
      * @param walletLanguage you want to clone
      * @return a new instance of the WalletLanguage you just create
      * @throws CantCopyWalletLanguageException if something goes wrong
      * @throws LanguageNotFoundException if you cannot find the project that you're trying to copy
      */
-    WalletLanguage createNewVersion(String alias, WalletLanguage walletLanguage) throws CantCopyWalletLanguageException;
+    WalletLanguage createNewVersion(WalletLanguage walletLanguage) throws CantCopyWalletLanguageException;
 
     /**
      * throw this method you can clone an existent WalletLanguage with a new name
@@ -97,6 +102,15 @@ public interface WalletLanguageManager {
      * @throws LanguageNotFoundException if you can't find the language
      */
     void deleteLanguage(WalletLanguage walletLanguage) throws CantDeleteWalletLanguageException, LanguageNotFoundException;
+
+    /**
+     * close an existent language so it can be published
+     *
+     * @param walletLanguage
+     * @throws CantCloseWalletLanguageException
+     * @throws LanguageNotFoundException
+     */
+    void closeLanguage(WalletLanguage walletLanguage) throws CantCloseWalletLanguageException, LanguageNotFoundException;
 
     /**
      * converts an xml file in a language
