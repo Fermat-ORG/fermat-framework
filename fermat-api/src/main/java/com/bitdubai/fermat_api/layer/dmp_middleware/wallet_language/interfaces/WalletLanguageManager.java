@@ -46,6 +46,11 @@ public interface WalletLanguageManager {
     WalletLanguage getLanguageById(UUID id) throws CantGetWalletLanguageException, LanguageNotFoundException;
 
     /**
+     * TODO importFromRepository (methods in plugin Wallet Language utils/RepositoryManager)
+     * TODO exportToRepository (methods in plugin Wallet Language utils/RepositoryManager)
+     */
+
+    /**
      * throw this method you can create a new empty WalletLanguage
      *
      * @param name of the new WalletLanguage
