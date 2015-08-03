@@ -20,8 +20,14 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.Wallet
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
@@ -31,12 +37,17 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkServicesWalletResourcesDAO;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkserviceswalletresourcesDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkserviceswalletresourcesDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletResourcesInstalledEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -78,7 +89,7 @@ import java.util.UUID;
  * * * * * * * 
  */
 
-public class WalletResourcesInstalationNetworkServicePluginRoot implements Service, NetworkService,WalletResourcesInstalationManager,WalletResourcesProviderManager, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
+public class WalletResourcesNetworkServicePluginRoot implements Service, NetworkService,WalletResourcesInstalationManager,WalletResourcesProviderManager,DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
 
 
     /**
@@ -110,19 +121,32 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
     PluginFileSystem pluginFileSystem;
 
     /**
+     * DatabaseSystem interface member variables
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
      * DealsWithPluginIdentity Interface member variables.
      */
     UUID pluginId;
+
+
+    /**
+     * Database
+     */
+    private Database database;
 
     /**
      * Installed skins repositories
      *
      * SkinId, repository link
      */
-    Map<UUID,String> skinRepositoriesName;
+    private Map<UUID,Repository> repositoriesName;
 
 
-    String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/";
+    private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/";
+
+
 
 
     /**
@@ -131,26 +155,36 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
 
     @Override
     public void start() throws CantStartPluginException{
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-        setUp();
-        EventListener eventListener;
-        EventHandler eventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
-        eventHandler = new BegunWalletInstallationEventHandler();
-        ((BegunWalletInstallationEventHandler) eventHandler).setWalletResourcesInstalationManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        try {
+            /**
+             * I will initialize the handling of com.bitdubai.platform events.
+             */
+            setUp();
+            EventListener eventListener;
+            EventHandler eventHandler;
+
+            eventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
+            eventHandler = new BegunWalletInstallationEventHandler();
+            ((BegunWalletInstallationEventHandler) eventHandler).setWalletResourcesInstalationManager(this);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
+
+            /**
+             * Database
+             */
+            NetworkserviceswalletresourcesDatabaseFactory networkserviceswalletresourcesDatabaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(pluginDatabaseSystem);
+            database = networkserviceswalletresourcesDatabaseFactory.createDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
 
 
-        this.serviceStatus = ServiceStatus.STARTED;
-
+                    this.serviceStatus = ServiceStatus.STARTED;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
     private void setUp(){
-        skinRepositoriesName=new HashMap<UUID,String>();
+        repositoriesName =new HashMap<UUID,Repository>();
     }
 
     @Override
@@ -199,6 +233,15 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
     }
 
     /**
+     * Dealing with plugin database system
+     */
+
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem=pluginDatabaseSystem;
+    }
+
+    /**
      * WalletResourcesInstalationManager Implementation
      */
 
@@ -214,7 +257,7 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
     //el xml de las skin debe estar pegado a una estructura de navegacion
 
     @Override
-    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName) {
+    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName,String navigationStructureVersion) {
         String linkToRepo=REPOSITORY_LINK+walletCategory+"/"+walletType+"/"+developer+"/";
 
 
@@ -224,9 +267,36 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
         Skin skin=null;
         try {
 
-           skin= checkSkinResources(linkToResources);
+           skin = checkSkinResources(linkToResources);
 
-           skinRepositoriesName.put(skin.getId(),linkToResources);
+
+           Repository repository = new Repository(skinName,navigationStructureVersion,linkToRepo);
+
+            /**
+             *  Save repository in memory for use
+             */
+           repositoriesName.put(skin.getId(),repository);
+
+            /**
+            *  Create repository in database
+            */
+
+           NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(database);
+
+           networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
+
+
+
+           /**
+           *  download navigation structure
+           */
+
+           String linkToNavigationStructure = linkToRepo+"/navigationStructure/";
+           donwloadNavigationStructure(linkToNavigationStructure,navigationStructureVersion, skin.getId());
+
+           /**
+           *  download resources
+           */
 
            downloadResources(linkToResources,skin,screenDensity);
 
@@ -235,6 +305,8 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
         } catch (CantCheckResourcesException e) {
             e.printStackTrace();
         } catch (CantPersistFileException e) {
+            e.printStackTrace();
+        } catch (CantCreateRepositoryException e) {
             e.printStackTrace();
         }
 
@@ -271,11 +343,6 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
         String linkToLandscapeLayouts = linkToResources+"landscape/resources/"+screenDensity+"/layouts/";
         donwloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId());
 
-        /**
-         *  download navigation structure
-         */
-        String linkToNavigationStructure = linkToResources+"portrait/resources/"+screenDensity+"/navigationStructure/";
-        //donwloadNavigationStructure(linkToNavigationStructure, skin.getLstLandscapeLayouts(), skin.getId());
 
 
         // fire event Wallet resource installed
@@ -348,18 +415,33 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
             e.printStackTrace();
         }
     }
-    private void donwloadNavigationStructure(String link,Map<String,Layout> resourceMap,UUID skinId){
+    private void donwloadNavigationStructure(String link,String navigationStructureVersion,UUID skinId){
+        link+=navigationStructureVersion+"/"+navigationStructureVersion+"/";
         try{
-            for (Map.Entry<String, Layout> entry : resourceMap.entrySet()) {
-
-                String layoutXML = getRepositoryStringFile(link,entry.getValue().getFilename());
 
 
-                PlatformEvent walletResourcesInstalledEvent = new WalletResourcesInstalledEvent(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-                walletResourcesInstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
-                eventManager.raiseEvent(walletResourcesInstalledEvent);
+            /**
+             *  Download portrait navigation structure
+             */
+            String navigationStructureXML = getRepositoryStringFile(link,"portrait_navigation_structure.xml");
 
-            }
+
+            PlatformEvent walletNavigationStructureDownloadedEvent = new WalletNavigationStructureDownloadedEvent(navigationStructureXML,link,"portrait_navigation_structure.xml",skinId);
+            walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+            eventManager.raiseEvent(walletNavigationStructureDownloadedEvent);
+
+            /**
+             *  Download landscape navigation structure
+             */
+            navigationStructureXML = getRepositoryStringFile(link,"landscape_navigation_structure.xml");
+
+
+            walletNavigationStructureDownloadedEvent = new WalletNavigationStructureDownloadedEvent(navigationStructureXML,link,"landscape_navigation_structure.xml",skinId);
+            walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+            eventManager.raiseEvent(walletNavigationStructureDownloadedEvent);
+
+
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -470,10 +552,13 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
         String content = "";
         try {
             //get repo name
-            String reponame= skinRepositoriesName.get(skinId);//= Repositories.getValueFromType(walletType);
+            Repository repository= repositoriesName.get(skinId);//= Repositories.getValueFromType(walletType);
             //get image from disk
             PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            String path = repository.getPath()+"/skins/"+repository.getSkinName()+"/";
+
+            layoutFile = pluginFileSystem.getTextFile(pluginId, path, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
         }
@@ -511,15 +596,16 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
 
     @Override
     public byte[] getImageResource(String imageName,UUID skinId) throws CantGetResourcesException {
-        String repoName= skinRepositoriesName.get(skinId);
+        Repository repository= repositoriesName.get(skinId);
 
         PluginBinaryFile imageFile = null;
 
         String filename= skinId.toString()+"_"+imageName;
 
+        String path = repository.getPath()+"/skins/"+repository.getSkinName()+"/";
 
         try {
-            imageFile = pluginFileSystem.getBinaryFile(pluginId, repoName, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+            imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -737,7 +823,7 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesInstalationNetworkServicePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot");
               /**
          * I return the values.
          */
@@ -755,16 +841,15 @@ public class WalletResourcesInstalationNetworkServicePluginRoot implements Servi
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (WalletResourcesInstalationNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                WalletResourcesInstalationNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                WalletResourcesInstalationNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (WalletResourcesNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                WalletResourcesNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                WalletResourcesNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                WalletResourcesInstalationNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                WalletResourcesNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
     }
-
 
 
 

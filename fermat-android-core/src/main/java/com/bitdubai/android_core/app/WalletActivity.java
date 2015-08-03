@@ -157,7 +157,7 @@ public class WalletActivity extends FermatActivity{
             Intent intent = new Intent(this, SubAppActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            overridePendingTransition(R.anim.slid_in, R.anim.slide_out);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         }else{
             super.onBackPressed();

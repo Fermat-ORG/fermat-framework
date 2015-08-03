@@ -173,6 +173,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
              * functionality based on wallets downloaded by users this wont be an option.
              * * *
+             *
              */
         try{
             //factoryReset();
@@ -1116,7 +1117,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        //walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","basic_wallet_default","en");
+        walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","basic_wallet_default","en","1.0.0");
 
 
 

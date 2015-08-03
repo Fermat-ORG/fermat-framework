@@ -29,7 +29,7 @@ public interface WalletResourcesInstalationManager {
     public WalletResources getWalletResources(String resourceName,String publicKey,Version version) throws CantGetWalletResourcesException;
 
 
-    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName);
+    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName,String navigationStructureVersion);
 
 
 
