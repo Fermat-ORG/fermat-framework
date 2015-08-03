@@ -7,14 +7,15 @@ dispositivo. Cuando se crea una nueva identidad se debe pedir este dato al Devic
 quién asociar la nueva identidad. +
 Cuando se pide la lista de intra users a este plugin nuevamente se consulta el Device User logueado
 para saber qué intra users retirnar. +
-En principio, un intra user consta de cuatro datos:
+En principio, un intra user consta de cinco datos:
 
 * Una clave pública para el intra user
 * Una clave privada para el intra user
 * Un nombre o alias
-* Una clave pública correspondiente al device user asociado.
+* La clave pública correspondiente al device user asociado.
+* Una imagen de perfil
 
-De estos cuatro sólo se entrega la información de dos: la clave pública y el alias. No se informa el
-Device User por una cuestión de seguridad y además por ser algo implícito. La clave privada tampoco
-se informa por cuestiones de seguridad. +
+De estos cinco sólo se entrega la información de tres: la clave pública, la imagen de perfil y el alias.
+No se informa el Device User por una cuestión de seguridad y además por ser algo implícito. La clave
+privada tampoco se informa por cuestiones de seguridad. +
 

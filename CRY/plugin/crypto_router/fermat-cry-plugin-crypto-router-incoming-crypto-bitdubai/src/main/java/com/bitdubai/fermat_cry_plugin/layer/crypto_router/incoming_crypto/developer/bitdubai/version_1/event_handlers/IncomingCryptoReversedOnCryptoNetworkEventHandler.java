@@ -28,7 +28,7 @@ public class IncomingCryptoReversedOnCryptoNetworkEventHandler implements EventH
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         if (this.incomingCryptoEventRecorderService.getStatus() == ServiceStatus.STARTED){
 
             try

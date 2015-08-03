@@ -169,7 +169,7 @@ import java.util.List;
                 if(activity.getType()== Activities.CWP_SUP_APP_ALL_DEVELOPER){
                      subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
                             (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
-                             platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+                             platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE));
                 }else if (activity.getType()== Activities.CWP_WALLET_FACTORY_MAIN){
                      subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_WALLET_FACTORY,
                             (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
