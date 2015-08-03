@@ -13,10 +13,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.enums.LanguageState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantUpdateLanguageException;
@@ -102,7 +100,7 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
      */
     LogManager logManager;
 
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
 
     private static final String WALLET_LANGUAGES_PATH = "wallet_languages";
@@ -180,8 +178,8 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
      *
      * @param name of the new WalletLanguage
      * @param type of the new WalletLanguage
-     * @param translatorPublicKey
-     * @return
+     * @param translatorPublicKey like the name says
+     * @return WalletLanguage instance
      * @throws CantCreateEmptyWalletLanguageException
      */
     @Override
@@ -239,8 +237,8 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
      *
      * @param newName of the walletFactoryProjectLanguage
      * @param walletLanguage you want to clone
-     * @param translatorPublicKey
-     * @return
+     * @param translatorPublicKey like the name says
+     * @return WalletLanguage instance
      * @throws CantCopyWalletLanguageException
      * @throws LanguageNotFoundException
      */
@@ -311,7 +309,7 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
     @Override
     public Language getLanguageFromXmlString(String languageStructure) throws CantGetLanguageException {
         try {
-            Language language = null;
+            Language language = new Language();
             language = (Language) XMLParser.parseXML(languageStructure, language);
             return language;
         } catch (Exception e) {
@@ -338,7 +336,7 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
      * i get the path and name of the file and i load it
      *
      * @param walletLanguage of the language you're trying to get
-     * @return
+     * @return language class structure
      * @throws CantGetLanguageException
      * @throws LanguageNotFoundException
      */
@@ -350,7 +348,7 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
                 PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, WALLET_LANGUAGES_PATH, languageFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.loadFromMedia();
                 String xml = pluginTextFile.getContent();
-                Language language = null;
+                Language language = new Language();
                 language = (Language) XMLParser.parseXML(xml, language);
                 return language;
             } catch (CantCreateFileException | CantLoadFileException e) {
@@ -381,7 +379,6 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
             try {
                 PluginTextFile newFile = pluginFileSystem.getTextFile(pluginId, WALLET_LANGUAGES_PATH, languageFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 newFile.loadFromMedia();
-                ;
                 newFile.setContent(languageXml);
                 newFile.persistToMedia();
 
@@ -445,7 +442,7 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
 
     @Override
     public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
+        List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.WalletSkinMiddlewarePluginRoot");
         /**
          * I return the values.
