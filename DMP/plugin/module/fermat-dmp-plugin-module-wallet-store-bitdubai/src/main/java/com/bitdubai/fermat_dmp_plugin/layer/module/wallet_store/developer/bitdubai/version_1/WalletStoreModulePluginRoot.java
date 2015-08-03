@@ -106,28 +106,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
      */
 
     @Override
-    public void start() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    try {
-                        Thread.sleep(20000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    WalletStoreCatalogue walletStoreCatalogue = walletStoreModuleManager.getCatalogue();
-                    System.out.println("Testing: wallet catalog Id: " + walletStoreCatalogue.getWalletCatalogue(0, 0).get(0).getId().toString());
-                } catch (CantGetRefinedCatalogException e) {
-                    e.printStackTrace();
-                } catch (CantGetWalletsFromCatalogueException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
-
-
+    public void start() {     
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
