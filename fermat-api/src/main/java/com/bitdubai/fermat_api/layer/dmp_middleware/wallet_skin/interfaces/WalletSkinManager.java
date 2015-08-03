@@ -2,7 +2,9 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantAddResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCloseWalletSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCopyWalletSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCreateEmptyWalletSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantDeleteResourceException;
@@ -40,6 +42,17 @@ public interface WalletSkinManager {
     List<WalletSkin> listSkins(String designerPublicKey) throws CantListWalletSkinsException;
 
     /**
+     * get skin by skinid and version
+     *
+     * @param skinId of the skin
+     * @param version of the skin
+     * @return an instance of the WalletSkin
+     * @throws CantGetWalletSkinException if something goes wrong
+     * @throws SkinNotFoundException if i cant find the skin
+     */
+    WalletSkin getSkinBySkinIdAndVersion(UUID skinId, Version version) throws CantGetWalletSkinException, SkinNotFoundException;
+
+    /**
      * get skin by id
      *
      * @param id of the skin
@@ -48,6 +61,15 @@ public interface WalletSkinManager {
      * @throws SkinNotFoundException if i cant find the skin
      */
     WalletSkin getSkinById(UUID id) throws CantGetWalletSkinException, SkinNotFoundException;
+
+    /**
+     * get skins by id
+     *
+     * @param skinId of the skins
+     * @return a list of instances of the WalletSkin related to this id
+     * @throws CantListWalletSkinsException if something goes wrong
+     */
+    List<WalletSkin> getSkinsBySkinId(UUID skinId) throws CantListWalletSkinsException;
 
     /**
      * create a new empty skin with the given name
@@ -81,6 +103,15 @@ public interface WalletSkinManager {
      * @throws CantCopyWalletSkinException
      */
     WalletSkin createNewVersion(String alias, WalletSkin walletSkin) throws CantCopyWalletSkinException;
+
+    /**
+     * close an existent skin so it can be published
+     *
+     * @param walletSkin you're trying to delete
+     * @throws CantDeleteWalletSkinException if something goes wrong
+     * @throws SkinNotFoundException if i cant find the skin
+     */
+    void closeSkin(WalletSkin walletSkin) throws CantCloseWalletSkinException, SkinNotFoundException;
 
     /**
      * delete an existent skin

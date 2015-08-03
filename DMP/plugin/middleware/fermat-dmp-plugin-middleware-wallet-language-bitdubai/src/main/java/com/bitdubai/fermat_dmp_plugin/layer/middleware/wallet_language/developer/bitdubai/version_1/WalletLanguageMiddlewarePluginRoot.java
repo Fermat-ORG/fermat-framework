@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.enums.LanguageState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCloseWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantUpdateLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCopyWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCreateEmptyWalletLanguageException;
@@ -305,6 +306,11 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, e, "Language not found", "");
         }
+    }
+
+    @Override
+    public void closeLanguage(WalletLanguage walletLanguage) throws CantCloseWalletLanguageException, LanguageNotFoundException {
+        //TODO to do..
     }
 
     @Override

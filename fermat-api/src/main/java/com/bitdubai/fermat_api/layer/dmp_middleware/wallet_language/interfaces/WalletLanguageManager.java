@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCloseWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantUpdateLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCopyWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantCreateEmptyWalletLanguageException;
@@ -101,6 +102,15 @@ public interface WalletLanguageManager {
      * @throws LanguageNotFoundException if you can't find the language
      */
     void deleteLanguage(WalletLanguage walletLanguage) throws CantDeleteWalletLanguageException, LanguageNotFoundException;
+
+    /**
+     * close an existent language so it can be published
+     *
+     * @param walletLanguage
+     * @throws CantCloseWalletLanguageException
+     * @throws LanguageNotFoundException
+     */
+    void closeLanguage(WalletLanguage walletLanguage) throws CantCloseWalletLanguageException, LanguageNotFoundException;
 
     /**
      * converts an xml file in a language
