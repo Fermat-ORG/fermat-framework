@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.enums.CryptoRequestState;
 
 import java.util.UUID;
 
@@ -56,4 +57,11 @@ public interface CryptoRequest {
      * @return the description
      */
     String getDescription();
+
+    /**
+     * The methos <code>getRequestState</code> gives us the state of the request
+     *
+     * @return the state of the request mesage sent by the network service
+     */
+    public CryptoRequestState getRequestState();
 }
