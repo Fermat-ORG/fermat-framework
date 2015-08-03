@@ -391,6 +391,10 @@ project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('P
 include ':fermat-pip-plugin-network-service-subapp-resources-bitdubai'
 project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')
 
+
+include ':fermat-dmp-plugin-request-money-request-bitdubai'
+project(':fermat-dmp-plugin-request-money-request-bitdubai').projectDir = new File('DMP/plugin/request/fermat-dmp-plugin-request-money-request-bitdubai')
+
 // FUNCTIONAL TEST PROJECT
 //include ':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
 //project(':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')
