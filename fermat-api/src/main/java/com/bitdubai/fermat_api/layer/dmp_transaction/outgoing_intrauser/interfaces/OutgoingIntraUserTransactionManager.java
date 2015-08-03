@@ -7,61 +7,74 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserCantSendFundsExceptions;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserInsufficientFundsException;
 
+import java.util.UUID;
+
 /**
- * Created by eze on 2015.07.30..
+ * The interface <code>com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces-OutgoingIntraUserTransactionManager</code>
+ * provides the method to create crypto and money payments to other users.
+ *
+ * @author Ezequiel Postan
  */
 public interface OutgoingIntraUserTransactionManager {
 
     /**
+     * The method <code>payCryptoRequest</code> sends the payment of a request.
+     *
+     * @param requestId                 The request identifier
+     * @param destinationAddress        The crypto address of the user to send the money to
+     * @param cryptoAmount              The amount of crypto currency to be sent
+     * @param description               A note to register in the wallet balance to describe the transaction
+     * @param senderPublicKey           The public key of the actor sending the transaction
+     * @param receptorPublicKey         The public key of the actor that we are sending the transaction to
+     * @throws OutgoingIntraUserCantSendFundsExceptions
+     * @throws OutgoingIntraUserInsufficientFundsException
+     */
+    public void payCryptoRequest(UUID requestId,
+                                 CryptoAddress destinationAddress,
+                                 long cryptoAmount,
+                                 String description,
+                                 String senderPublicKey,
+                                 String receptorPublicKey) throws OutgoingIntraUserCantSendFundsExceptions,
+                                                                  OutgoingIntraUserInsufficientFundsException;
+
+    /**
      * The method <code>sendCrypto</code> is used to send crypto currency to another intra user
      *
-     * @param referenceWallet           the reference wallet associated to the wallet sending the money.
-     * @param walletPublicKey           the public key of the wallet sending the funds
      * @param destinationAddress        the crypto address of the user to send the money to
      * @param cryptoAmount              the amount of crypto currency to be sent
-     * @param notes                     a note to register in the wallet balance to describe the transaction
-     * @param deliveredByActorPublicKey the public key of the actor sending the transaction
-     * @param deliveredByActorType      the type of the actor sending the transaction
-     * @param deliveredToActorPublicKey the public key of the actor that we are sending the transaction to
-     * @param deliveredToActorType      the public key of the actor that we are sending the transaction to
+     * @param description               a note to register in the wallet balance to describe the transaction
+     * @param senderPublicKey           the public key of the actor sending the transaction
+     * @param receptorPublicKey         the public key of the actor that we are sending the transaction to
+     * @throws OutgoingIntraUserCantSendFundsExceptions
+     * @throws OutgoingIntraUserInsufficientFundsException
      */
-    public void sendCrypto(ReferenceWallet referenceWallet,
-                           String walletPublicKey,
-                           CryptoAddress destinationAddress,
+    public void sendCrypto(CryptoAddress destinationAddress,
                            long cryptoAmount,
-                           String notes,
-                           String deliveredByActorPublicKey,
-                           Actors deliveredByActorType,
-                           String deliveredToActorPublicKey,
-                           Actors deliveredToActorType) throws OutgoingIntraUserCantSendFundsExceptions,
+                           String description,
+                           String senderPublicKey,
+                           String receptorPublicKey) throws OutgoingIntraUserCantSendFundsExceptions,
                                                                OutgoingIntraUserInsufficientFundsException;
 
 
     /**
      * The method <code>sendMFiat</code> is used to send fiat currency to another intra user.
      *
-     * @param referenceWallet           the reference wallet associated to the wallet sending the money.
-     * @param walletPublicKey           the public key of the wallet sending the funds
      * @param destinationAddress        the crypto address of the user to send the money to
      * @param cryptoAmount              the amount of crypto currency to be sent
      * @param fiatCurrency              the type of fiat currency
      * @param fiatAmount                the amount of fiat to be sent
-     * @param notes                     a note to register in the wallet balance to describe the transaction
-     * @param deliveredByActorPublicKey the public key of the actor sending the transaction
-     * @param deliveredByActorType      the type of the actor sending the transaction
-     * @param deliveredToActorPublicKey the public key of the actor that we are sending the transaction to
-     * @param deliveredToActorType      the public key of the actor that we are sending the transaction to
+     * @param description               a note to register in the wallet balance to describe the transaction
+     * @param senderPublicKey           the public key of the actor sending the transaction
+     * @param receptorPublicKey         the public key of the actor that we are sending the transaction to
+     * @throws OutgoingIntraUserCantSendFundsExceptions
+     * @throws OutgoingIntraUserInsufficientFundsException
      */
-    public void sendMFiat(ReferenceWallet referenceWallet,
-                          String walletPublicKey,
-                          CryptoAddress destinationAddress,
+    public void sendMFiat(CryptoAddress destinationAddress,
                           long cryptoAmount,
                           FiatCurrency fiatCurrency,
                           long fiatAmount,
-                          String notes,
-                          String deliveredByActorPublicKey,
-                          Actors deliveredByActorType,
-                          String deliveredToActorPublicKey,
-                          Actors deliveredToActorType) throws OutgoingIntraUserCantSendFundsExceptions,
+                          String description,
+                          String senderPublicKey,
+                          String receptorPublicKey) throws OutgoingIntraUserCantSendFundsExceptions,
                                                               OutgoingIntraUserInsufficientFundsException;
 }
