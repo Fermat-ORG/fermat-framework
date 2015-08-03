@@ -9,7 +9,7 @@ public enum Actors {
 	EXTRA_USER ("EUS"),
 	SHOP ("SHP");
 
-	private final String code;
+	private String code;
 
 	Actors(String code) {
 		this.code = code;

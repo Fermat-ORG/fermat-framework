@@ -10,7 +10,7 @@ public enum Developers {
     //Modified by Manuel Perez on 03/08/2015
     BITDUBAI("BitDubai");
 
-    private final String code;
+    private String code;
 
     Developers(String code) {
         this.code = code;

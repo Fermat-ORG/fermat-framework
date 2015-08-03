@@ -10,7 +10,7 @@ public enum DeviceDirectory {
     LOCAL_USERS   ("localusers"),
     LOCAL_WALLETS   ("localwallets");
 
-    private final String code;
+    private String code;
 
     DeviceDirectory(String code) {
         this.code = code;

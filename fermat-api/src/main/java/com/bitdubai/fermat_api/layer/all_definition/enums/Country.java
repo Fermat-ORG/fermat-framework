@@ -10,15 +10,15 @@ public enum Country {
     CANADA   ("CA", "Canada"),
     ARGENTINA   ("AR","Argentina");
 
-    private final String mCode;
-    private final String mDisplayName;
+    private String code;
+    private String mDisplayName;
 
-    /*private*/ Country (String Code, String DisplayName) {
-        this.mCode = Code;
+    Country (String code, String DisplayName) {
+        this.code = code;
         this.mDisplayName = DisplayName;
     }
 
-    public String getCode()   { return mCode; }
+    public String getCode()   { return code; }
 
     public static Country getByCode(String code) throws InvalidParameterException{
 

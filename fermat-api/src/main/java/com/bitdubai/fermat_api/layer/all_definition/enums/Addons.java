@@ -20,7 +20,7 @@ public enum Addons {
     LOG_MANAGER("LOGM");
 
 
-    private final String code;
+    private String code;
 
     Addons(String code) {
         this.code = code;

@@ -12,8 +12,8 @@ public enum FiatCurrency {
     CANADIAN_DOLLAR   ("CAD", Country.CANADA),
     ARGENTINE_PESO   ("ARS", Country.ARGENTINA);
 
-    private final String code;
-    private final Country country;
+    private String code;
+    private Country country;
   
 
     FiatCurrency(String code, Country country) {

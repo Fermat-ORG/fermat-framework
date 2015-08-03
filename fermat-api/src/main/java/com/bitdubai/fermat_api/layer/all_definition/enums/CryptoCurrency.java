@@ -9,7 +9,7 @@ public enum CryptoCurrency {
     BITCOIN("BTC"),
     LITECOIN("LTC");
 
-    private final String code;
+    private String code;
 
     CryptoCurrency(String code) {
         this.code = code;
