@@ -36,7 +36,6 @@ public enum Country {
                 return country.mDisplayName;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Country enum");
 
-
         }
 
     }
