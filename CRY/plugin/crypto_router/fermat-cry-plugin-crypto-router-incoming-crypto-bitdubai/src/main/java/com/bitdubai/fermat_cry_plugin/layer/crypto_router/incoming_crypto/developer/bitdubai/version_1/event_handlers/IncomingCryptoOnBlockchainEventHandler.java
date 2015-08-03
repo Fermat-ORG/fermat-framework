@@ -29,7 +29,7 @@ public class IncomingCryptoOnBlockchainEventHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         if (this.incomingCryptoEventRecorderService.getStatus() == ServiceStatus.STARTED){
 
             try

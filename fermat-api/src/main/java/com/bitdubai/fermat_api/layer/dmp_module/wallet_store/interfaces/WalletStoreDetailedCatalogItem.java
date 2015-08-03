@@ -19,10 +19,4 @@ import java.util.UUID;
  */
 public interface WalletStoreDetailedCatalogItem extends DetailedCatalogItem{
 
-    public String getDeveloperName() throws CantGetDeveloperException;
-    public String getDeveloperPublicKey() throws CantGetDeveloperException;
-    public WalletStoreSkin getSkin(UUID skinId) throws CantGetSkinException, CantGetItemInformationException;
-    public WalletStoreLanguage getLanguage (UUID languageId) throws CantGetWalletLanguageException, CantGetItemInformationException;
-
-
 }

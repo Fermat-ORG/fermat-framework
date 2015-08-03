@@ -2,10 +2,14 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfac
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.enums.CryptoRequestState;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantDeleteFromPendingCryptoRequestsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantGetPendingCryptoRequestsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantRejectRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantSendCryptoRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantSendMoneyRequestException;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -13,6 +17,34 @@ import java.util.UUID;
  * provides the methods to send crypto and fiat requests to other users and reject requests from other users.
  */
 public interface MoneyRequestNetworkServiceManager {
+
+    /**
+     * The method <code>getPendingReceivedCryptoRequests</code> gives us the crypto requests pending
+     * to be notified to the user
+     *
+     * @param identityPublicKey the public key of the identity we are asking about
+     * @return the list of crypto requests.
+     * @throws CantGetPendingCryptoRequestsException
+     */
+    public List<CryptoRequest> getPendingReceivedCryptoRequests(String identityPublicKey) throws CantGetPendingCryptoRequestsException;
+
+    /**
+     * The method <code>getSentRequestState</code> gives us the information about the comunication of
+     * the request
+     *
+     * @param requestId the identifier of the request
+     * @return the state of the request
+     */
+    public CryptoRequestState getSentRequestState(UUID requestId);
+
+    /**
+     * The method <code>deleteFromPendingReceivedCryptoRequests</code> remove a request from the pending
+     * crypto requests list.
+     *
+     * @param requestId the identifier of the request
+     * @throws CantDeleteFromPendingCryptoRequestsException
+     */
+    public void deleteFromPendingReceivedCryptoRequests(UUID requestId) throws CantDeleteFromPendingCryptoRequestsException;
 
     /**
      * The method <code>requestCrypto</code> sends a crypto request to another user
@@ -44,11 +76,11 @@ public interface MoneyRequestNetworkServiceManager {
      * @throws CantSendMoneyRequestException
      */
     public void requestMoney(String requestSenderPublicKey,
-                                 String requestDestinationPublicKey,
-                                 String requestDescription,
-                                 CryptoAddress addressToSendThePayment,
-                                 FiatCurrency fiatCurrency,
-                                 long fiatAmount) throws CantSendMoneyRequestException;
+                             String requestDestinationPublicKey,
+                             String requestDescription,
+                             CryptoAddress addressToSendThePayment,
+                             FiatCurrency fiatCurrency,
+                             long fiatAmount) throws CantSendMoneyRequestException;
 
     /**
      * The method <code>rejectRequest</code> notifies the rejection of a payment request

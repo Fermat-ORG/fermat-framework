@@ -300,7 +300,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     public void onBackPressed() {
 
-        resetThisActivity();
 
         // get actual fragment on execute
         Fragments frgBackType = null;
