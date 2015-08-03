@@ -25,7 +25,7 @@ public enum Actors {
 			case "EUS": return Actors.EXTRA_USER;
 			case "SHP": return Actors.SHOP;
 			//Modified by Manuel Perez
-			default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the WalletCategory enum");
+			default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Actors enum");
 		}
 
 		/**

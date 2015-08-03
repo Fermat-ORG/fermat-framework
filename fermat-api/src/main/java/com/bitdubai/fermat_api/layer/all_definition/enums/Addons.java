@@ -45,8 +45,10 @@ public enum Addons {
                 return Addons.PLATFORM_INFO;
             case "Log Manager":
                 return Addons.LOG_MANAGER;
+            //Modified by Manuel Perez
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + key, "This Code Is Not Valid for the Addons enum");
+
         }
-        throw new InvalidParameterException(key);
     }
 
     private final String key;
