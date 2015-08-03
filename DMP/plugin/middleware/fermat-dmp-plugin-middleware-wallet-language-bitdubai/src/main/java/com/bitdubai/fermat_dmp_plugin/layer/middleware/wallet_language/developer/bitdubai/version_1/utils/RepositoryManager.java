@@ -1,6 +1,16 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.utils;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.GitHubCredentialsExpectedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.kohsuke.github.GHContent;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,6 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * <p/>
@@ -24,6 +35,87 @@ import java.util.Map;
  * @since Java JDK 1.7
  */
 public class RepositoryManager {
+
+    public GHRepository getRepository(String login, String password, String repository) throws GitHubNotAuthorizedException, GitHubRepositoryNotFoundException, GitHubCredentialsExpectedException {
+
+        if (login == null || password == null)
+            throw new GitHubCredentialsExpectedException(GitHubCredentialsExpectedException.DEFAULT_MESSAGE, null, "Enter the credentials correctly, login or password cannot be null.", "");
+
+        Properties properties = new Properties();
+        properties.setProperty("login", login);
+        properties.setProperty("password", password);
+
+        try {
+            GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
+            return gitHub.getRepository(repository);
+        } catch (java.io.FileNotFoundException e) {
+            throw new GitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException.DEFAULT_MESSAGE, e, "Check the name of the repository.", "");
+        } catch (IOException e) {
+            throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
+        }
+    }
+
+    public void updateGitHubFile(GHRepository ghRepository, String file, String commitContent, String commitComment) {
+        try {
+            GHContent ghContent = ghRepository.getFileContent(file);
+            ghContent.update(commitContent, commitComment);
+        } catch (IOException e) {
+            System.out.println(getJsonMessage(e.getMessage()));
+        }
+    }
+
+    public void createGitHubFile(GHRepository ghRepository, String file, String commitContent, String commitComment) {
+        try {
+            ghRepository.createContent(commitContent,commitComment, file);
+        } catch (IOException e) {
+            System.out.println(getJsonMessage(e.getMessage()));
+        }
+    }
+
+    public void updateGitHubFile(GHRepository ghRepository, String file, byte[] commitContent, String commitComment) {
+        try {
+            GHContent ghContent = ghRepository.getFileContent(file);
+            ghContent.update(commitContent, commitComment);
+        } catch (IOException e) {
+            System.out.println(getJsonMessage(e.getMessage()));
+        }
+    }
+
+    public void createGitHubFile(GHRepository ghRepository, String file, byte[] commitContent, String commitComment) {
+        try {
+            ghRepository.createContent(commitContent,commitComment, file);
+        } catch (IOException e) {
+            System.out.println(getJsonMessage(e.getMessage()));
+        }
+    }
+
+    private String getJsonMessage(String jsonMessage) {
+        try {
+            ObjectMapper m = new ObjectMapper();
+            JsonNode rootNode = m.readTree(jsonMessage);
+            JsonNode nameNode = rootNode.path("message");
+
+            return nameNode.textValue();
+        } catch (IOException e) {
+            return "Unexpected error.";
+        }
+    }
+
+   /* public void uploadFileStructure() {
+        Properties properties = new Properties();
+        properties.setProperty("login", "lnacosta");
+        properties.setProperty("password", "Github91");
+
+        GitHub gitHub;
+
+        try {
+            gitHub = GitHubBuilder.fromProperties(properties).build();
+            GHRepository repository = gitHub.getRepository("fermat");
+            repository.createContent();
+        } catch (Exception e) {
+
+        }
+    }*/
 
     /**
      * <p>This method connects to the repository and download resource file on string
