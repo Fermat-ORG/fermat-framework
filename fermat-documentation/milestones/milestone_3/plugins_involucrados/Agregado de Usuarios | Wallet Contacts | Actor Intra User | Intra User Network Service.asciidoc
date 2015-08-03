@@ -39,7 +39,8 @@ Cuando incorporamos un usuario como contacto de una wallet tendremos dos situaci
 
 Si ya hemos agregado al instra user en el módulo de Actor Intra User como conexión. +
 
-En este caso simplemente agregamos al wallet contacts la siguiente informacion:
+En este caso agregaremos al actor address book y al wallet address book la dirección que le enviamos
+a este contacto y agregamos al wallet contacts la siguiente informacion:
 
 * Contact Id: será un UUID.
 * La public key del actor (tendremos que cambiar el UUID que tienen los extra users por un public key
@@ -54,15 +55,14 @@ network service.
 * Un estado que indique si el otro usuario ya nos envió una dirección para poder enviarle crypto.
 
 Cuando tengamos la confirmación de que aceptaron nuestra solicitud (información que vendrá con la
-deriección que usaremos para enviarle dinero a la otra persona) agregaremos al actor address book y
-al wallet address book la dirección que le enviamos a este contacto. +
-
-NOTE: REVISAR, QUIZÁS DEBAMOS AGREGARLO DESDE EL INICIO Y BORRARLO AL SER RECHAZADOS
+deriección que usaremos para enviarle dinero a la otra persona) actualizamos este dato en el wallet
+contacts+
 
 Si no tenemos agendado el intra user en el plugin DMP Actor Intra User entonces debemos primero agregar
 allí al usuarioc como conexión y posteriormente agregar al usuario como contacto siguiendo el proceso
-antes descripto. La combinación de ambos procesos (agendar como conexción y contacto) debe ser
-transparente al usuario final.
+antes descripto. La combinación de ambos procesos (agendar como conexción y contacto) debería ser
+transparente al usuario final, es decir, se le mostrará que quieren agendarlo y se le dará la opción
+de aceptar o no al contacto de wallet y con eso se dispararán todos lo procesos necesarios.
 
 // COMENTARIO RECORDATORIO - IGNORAR - ASCIIDOC NO RENDERIZA ESTOS COMENTARIOS
 //
