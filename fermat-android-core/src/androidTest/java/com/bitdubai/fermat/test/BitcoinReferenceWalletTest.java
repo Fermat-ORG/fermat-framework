@@ -37,7 +37,7 @@ public class BitcoinReferenceWalletTest extends ActivityInstrumentationTestCase2
 
 
 	public void testRun() {
-        solo.waitForActivity(com.bitdubai.android_core.app.StartActivity.class, 5000);
+        solo.waitForActivity(com.bitdubai.android_core.app.StartActivity.class, 2000);
         assertTrue("com.bitdubai.android_core.app.SubAppActivity is not found!", solo.waitForActivity(com.bitdubai.android_core.app.SubAppActivity.class));
 
 		balanceTest();
