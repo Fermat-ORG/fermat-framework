@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -9,6 +7,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -26,13 +26,56 @@ public class NetworkServicesWalletResourcesDAO {
 
 
     /**
+     *  Represent the Plugin Database.
+     */
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
      * Database connection
      */
     Database database;
 
 
-    public NetworkServicesWalletResourcesDAO(Database database) {
-        this.database = database;
+    public NetworkServicesWalletResourcesDAO(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+
+    /**
+     * This method open or creates the database i'll be working with
+     *
+     * @param ownerId plugin id
+     * @param databaseName database name
+     * @throws
+     */
+    public void initializeDatabase(UUID ownerId, String databaseName) throws CantInitializeNetworkServicesWalletResourcesDatabaseException {
+        try {
+             /*
+              * Open new database connection
+              */
+            database = this.pluginDatabaseSystem.openDatabase(ownerId, databaseName);
+            database.closeDatabase();
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(CantInitializeNetworkServicesWalletResourcesDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+        } catch (DatabaseNotFoundException e) {
+             /*
+              * The database no exist may be the first time the plugin is running on this device,
+              * We need to create the new database
+              */
+            NetworkserviceswalletresourcesDatabaseFactory networkserviceswalletresourcesDatabaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(pluginDatabaseSystem);
+            try {
+                  /*
+                   * We create the new database
+                   */
+                database = networkserviceswalletresourcesDatabaseFactory.createDatabase(ownerId, databaseName);
+                database.closeDatabase();
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                  /*
+                   * The database cannot be created. I can not handle this situation.
+                   */
+                throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(CantInitializeNetworkServicesWalletResourcesDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
+            }
+        }
     }
 
 
