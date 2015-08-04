@@ -214,6 +214,8 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
 
     }
 
+
+
     @Override
     public void rejectRequest(UUID requestId, String intraUserThatSentTheRequestPublicKey) throws CantRejectRequestException {
 

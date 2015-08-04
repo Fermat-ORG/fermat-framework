@@ -60,9 +60,9 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory implements D
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeNetworkserviceswalletresourcesNetworkServicesDatabaseException
+     * @throws CantInitializeNetworkServicesWalletResourcesDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeNetworkserviceswalletresourcesNetworkServicesDatabaseException {
+    public void initializeDatabase() throws CantInitializeNetworkServicesWalletResourcesDatabaseException {
         try {
 
              /*
@@ -75,7 +75,7 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory implements D
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeNetworkserviceswalletresourcesNetworkServicesDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -94,7 +94,7 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory implements D
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeNetworkserviceswalletresourcesNetworkServicesDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
