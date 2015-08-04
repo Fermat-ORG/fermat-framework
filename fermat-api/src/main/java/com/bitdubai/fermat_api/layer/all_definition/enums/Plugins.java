@@ -63,6 +63,7 @@ public enum Plugins {
     BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE("BWPMIDD", Developers.BITDUBAI),
     BITDUBAI_WALLET_SKIN_MIDDLEWARE("BWSMIDD", Developers.BITDUBAI),
     BITDUBAI_WALLET_STORE_MIDDLEWARE("BWSTMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STORE_MODULE("BWSM", Developers.BITDUBAI),
     BITDUBAI_WALLET_SETTINGS_MIDDLEWARE("BWSEMIDD", Developers.BITDUBAI),
     BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("BWSNETSER", Developers.BITDUBAI),
     BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE("BSRNETSER", Developers.BITDUBAI),
@@ -190,6 +191,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_ACTOR_DEVELOPER;
             case "BIDMAN":
                 return Plugins.BITDUBAI_IDENTITY_MANAGER;
+            case "BWSM":
+                return Plugins.BITDUBAI_WALLET_STORE_MODULE;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
