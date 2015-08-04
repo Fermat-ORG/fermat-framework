@@ -2,39 +2,30 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bit
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions.CantRecordClosedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions.CantRecordOpenedWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletClosedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeActivity;
-import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
+import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.structure.*;
-import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.exceptions.*;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Luis on 21.01.15.
@@ -127,7 +118,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             String possibleReason = "Some null definition";
             throw new CantStartPluginException(message, cause, context, possibleReason);
         }
+        catch (Exception exception){
 
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception));
+        }
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -1159,8 +1153,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             throw new CantFactoryReset(message, cause, context, possibleReason);
 
         }
-
-
 
 
     }
