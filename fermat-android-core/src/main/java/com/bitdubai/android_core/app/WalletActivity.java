@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
@@ -214,7 +215,7 @@ public class WalletActivity extends FermatActivity{
         if(getWalletSessionManager().isWalletOpen(installedWallet.getWalletPublicKey())){
             walletSession=getWalletSessionManager().getWalletSession(installedWallet.getWalletPublicKey());
         }else{
-            walletSession=getWalletSessionManager().openWalletSession(installedWallet,getCryptoWalletManager(),getErrorManager());
+            walletSession=getWalletSessionManager().openWalletSession(installedWallet,getCryptoWalletManager(),getWalletResourcesProviderManager(),getErrorManager());
         }
 
         return walletSession;
@@ -222,6 +223,15 @@ public class WalletActivity extends FermatActivity{
 
     public CryptoWalletManager getCryptoWalletManager(){
         return (CryptoWalletManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE);
+    }
+
+    /**
+     *
+     */
+
+    public WalletResourcesProviderManager getWalletResourcesProviderManager(){
+        return (WalletResourcesProviderManager) ((ApplicationSession)getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
+
     }
 
 }

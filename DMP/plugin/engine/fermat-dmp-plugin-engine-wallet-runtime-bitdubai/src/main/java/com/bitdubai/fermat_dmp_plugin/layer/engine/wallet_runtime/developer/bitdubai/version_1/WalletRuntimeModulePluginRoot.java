@@ -164,7 +164,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
             eventHandler = new WalletNavigationStructureDownloadedHandler();
-            ((WalletUnnInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
+            ((WalletNavigationStructureDownloadedHandler) eventHandler).setWalletRuntimeManager(this);
             eventListener.setEventHandler(eventHandler);
             eventManager.addListener(eventListener);
             listenersAdded.add(eventListener);
