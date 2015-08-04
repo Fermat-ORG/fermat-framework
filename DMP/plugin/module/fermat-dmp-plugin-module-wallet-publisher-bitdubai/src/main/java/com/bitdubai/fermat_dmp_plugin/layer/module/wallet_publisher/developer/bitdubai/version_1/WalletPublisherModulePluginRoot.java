@@ -1,9 +1,23 @@
+/*
+ * @#WalletPublisherModulePluginRoot.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedWalletsInformationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublishedInformation;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -13,8 +27,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,43 +35,70 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot</code> is
+ * the responsible to communicate the user interface whit the middleware layer.
+ * <p/>
+ *
  * Created by loui on 05/02/15.
+ * Update by Roberto Requena - (rart3001@gmail.com) on 04/08/2015
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithLogger,DealsWithPluginFileSystem,LogManagerForDevelopers, Plugin {
-
-
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+public class WalletPublisherModulePluginRoot implements Service, DealsWithWalletPublisher, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherManager {
 
     /**
-     * PlatformService Interface member variables.
+     * Represent the logManager
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    private LogManager logManager;
 
     /**
-     * UsesFileSystem Interface member variables.
+     * Represent the newLoggingLevel
      */
-    PluginFileSystem pluginFileSystem;
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+
+    /**
+     * Represent the errorManager
+     */
+    private ErrorManager errorManager;
 
     /**
      * DealWithEvents Interface member variables.
      */
-    EventManager eventManager;
+    private EventManager eventManager;
 
     /**
-     * Plugin Interface member variables.
+     * Represent the plugin id
      */
-    UUID pluginId;
+    private UUID pluginId;
 
     /**
-     * PlatformService Interface implementation.
+     * Represent the status of the service
      */
+    private ServiceStatus serviceStatus;
 
+    /**
+     * Represent the listenersAdded
+     */
+    private List<EventListener>  listenersAdded;
+
+    /**
+     * Represent the walletPublisherManager
+     */
+    private WalletPublisherManager walletPublisherManager;
+
+    /**
+     * Constructor
+     */
+    public WalletPublisherModulePluginRoot() {
+        serviceStatus = ServiceStatus.CREATED;
+        listenersAdded = new ArrayList<>();
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see Service#start()
+     */
     @Override
     public void start() {
         /**
@@ -73,6 +112,10 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Service#pause()
+     */
     @Override
     public void pause() {
 
@@ -80,6 +123,10 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Service#resume()
+     */
     @Override
     public void resume() {
 
@@ -87,6 +134,10 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Service#stop()
+     */
     @Override
     public void stop() {
 
@@ -103,18 +154,15 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Service#getStatus()
+     */
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
 
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
 
     /**
      * DealWithEvents Interface implementation.
@@ -126,7 +174,8 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
     }
 
     /**
-     *DealWithErrors Interface implementation.
+     * (non-Javadoc)
+     * @see DealsWithErrors#setErrorManager(ErrorManager)
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -134,9 +183,9 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
     }
 
     /**
-     * DealsWithPluginIdentity methods implementation.
+     * (non-Javadoc)
+     * @see Plugin#setId(UUID)
      */
-
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -144,18 +193,18 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
 
 
     /**
-     * DealsWithLogger Interface implementation.
+     * (non-Javadoc)
+     * @see DealsWithLogger#setLogManager(LogManager)
      */
-
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
     /**
-     * LogManagerForDevelopers Interface implementation.
+     * (non-Javadoc)
+     * @see LogManagerForDevelopers#getClassesFullPath()
      */
-
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
@@ -167,7 +216,10 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
         return returnedClasses;
     }
 
-
+    /**
+     * (non-Javadoc)
+     * @see LogManagerForDevelopers#setLoggingLevelPerClass(Map<String, LogLevel>)
+     */
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         /**
@@ -188,5 +240,58 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithEvents
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#showPublishedWallets()
+     */
+    @Override
+    public Map<String, List<WalletPublishedInformation>> showPublishedWallets() throws CantGetPublishedWalletsInformationException {
+        return null;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#canBePublished(WalletFactoryProjectProposal)
+     */
+    @Override
+    public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCheckPublicationException {
+        return false;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProjectProposal)
+     */
+    @Override
+    public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
+
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#publishSkin(WalletFactoryProjectProposal)
+     */
+    @Override
+    public void publishSkin(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
+
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#publishLanguage(WalletFactoryProjectProposal)
+     */
+    @Override
+    public void publishLanguage(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
+
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see DealsWithWalletPublisher#setWalletPublisherManager(WalletPublisherManager)
+     */
+    @Override
+    public void setWalletPublisherManager(WalletPublisherManager walletPublisherManager) {
+        this.walletPublisherManager = walletPublisherManager;
+    }
 }
 
