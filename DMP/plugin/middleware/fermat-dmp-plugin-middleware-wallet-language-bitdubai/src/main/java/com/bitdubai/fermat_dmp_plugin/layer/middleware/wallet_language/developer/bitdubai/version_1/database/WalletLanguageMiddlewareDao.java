@@ -118,7 +118,6 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
             DatabaseTable projectLanguageTable = database.getTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME);
             projectLanguageTable.setStringFilter(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, translatorPublicKey, DatabaseFilterType.EQUAL);
             projectLanguageTable.setFilterOrder(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
-            projectLanguageTable.setFilterOrder(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             projectLanguageTable.loadToMemory();
 
             List<DatabaseTableRecord> records = projectLanguageTable.getRecords();
@@ -127,20 +126,11 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
                 UUID id = record.getUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME);
                 UUID languageId = record.getUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
                 String name = record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME);
-                String alias = record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME);
                 Languages type = Languages.fromValue(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME));
                 LanguageState state = LanguageState.getByCode(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME));
                 Version version = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME));
-                Version initialVersion = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME));
-                Version finalVersion = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME));
-                VersionCompatibility versionCompatibility;
-                try {
-                    versionCompatibility = new VersionCompatibility(initialVersion, finalVersion);
-                } catch (InvalidParameterException e) {
-                    throw new CantGetWalletLanguagesException(CantGetWalletLanguagesException.DEFAULT_MESSAGE, e, "Cannot instance Version Compatibility", "");
-                }
 
-                WalletLanguageMiddlewareWalletLanguage walletFactoryProjectLanguage = new WalletLanguageMiddlewareWalletLanguage(id, languageId, name, alias, type, state, translatorPublicKey, version, versionCompatibility);
+                WalletLanguageMiddlewareWalletLanguage walletFactoryProjectLanguage = new WalletLanguageMiddlewareWalletLanguage(id, languageId, name, type, state, translatorPublicKey, version);
 
                 walletFactoryProjectLanguages.add(walletFactoryProjectLanguage);
             }
@@ -170,22 +160,13 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
 
                 UUID languageId = record.getUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
                 String name = record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME);
-                String alias = record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME);
                 Languages type = Languages.fromValue(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME));
                 LanguageState state = LanguageState.getByCode(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME));
                 String translatorPublicKey = record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
                 Version version = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME));
-                Version initialVersion = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME));
-                Version finalVersion = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME));
-                VersionCompatibility versionCompatibility;
-                try {
-                    versionCompatibility = new VersionCompatibility(initialVersion, finalVersion);
-                } catch (InvalidParameterException e) {
-                    throw new CantGetWalletLanguageException(CantGetWalletLanguageException.DEFAULT_MESSAGE, e, "Cannot instance Version Compatibility", "");
-                }
 
                 database.closeDatabase();
-                return new WalletLanguageMiddlewareWalletLanguage(id, languageId, name, alias, type, state, translatorPublicKey, version, versionCompatibility);
+                return new WalletLanguageMiddlewareWalletLanguage(id, languageId, name, type, state, translatorPublicKey, version);
             } else {
                 database.closeDatabase();
                 throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet language with this name.");
@@ -210,13 +191,10 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
             record.setUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME, walletLanguage.getId());
             record.setUUIDValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME, walletLanguage.getLanguageId());
             record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME, walletLanguage.getName());
-            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME, walletLanguage.getAlias());
             record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, walletLanguage.getType().value());
             record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME, walletLanguage.getState().getCode());
             record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, walletLanguage.getTranslatorPublicKey().toString());
             record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME, walletLanguage.getVersion().toString());
-            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME, walletLanguage.getVersionCompatibility().getInitialVersion().toString());
-            record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME, walletLanguage.getVersionCompatibility().getFinalVersion().toString());
 
             try {
                 projectLanguageTable.insertRecord(record);
@@ -250,10 +228,6 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
                 if (!name.equals(walletLanguage.getName()))
                     record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME, walletLanguage.getName());
 
-                String alias = record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME);
-                if (!alias.equals(walletLanguage.getAlias()))
-                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME, walletLanguage.getAlias());
-
                 Languages type = Languages.fromValue(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME));
                 if (!type.value().equals(walletLanguage.getType().value()))
                     record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, walletLanguage.getType().value());
@@ -265,14 +239,6 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
                 Version version = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME));
                 if (!version.equals(walletLanguage.getVersion()))
                     record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME, walletLanguage.getVersion().toString());
-
-                Version initialVersion = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME));
-                if (!initialVersion.equals(walletLanguage.getVersionCompatibility().getInitialVersion()))
-                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME, walletLanguage.getVersionCompatibility().getInitialVersion().toString());
-
-                Version finalVersion = new Version(record.getStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME));
-                if (!finalVersion.equals(walletLanguage.getVersionCompatibility().getFinalVersion()))
-                    record.setStringValue(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME, walletLanguage.getVersionCompatibility().getFinalVersion().toString());
 
                 try {
                     projectLanguageTable.updateRecord(record);
@@ -327,80 +293,6 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantDeleteWalletLanguageException(CantDeleteWalletLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
-/*
-    public void createLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage, WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCreateEmptyWalletFactoryProjectLanguageException {
-
-        if (walletFactoryProjectLanguage == null &&
-                walletFactoryProjectLanguage.getId() != null &&
-                walletFactoryProjectLanguage.getTranslatorPublicKey() != null &&
-                walletFactoryProjectLanguage.getName() != null &&
-                walletFactoryProjectLanguage.getVersion() != null &&
-                walletFactoryProjectLanguage.getPath() != null) {
-            throw new CantCreateEmptyWalletFactoryProjectLanguageException(CantCreateEmptyWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, alias, state and get proposal id.");
-        }
-
-        try {
-            database.openDatabase();
-            DatabaseTable projectLanguageTable = database.getTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME);
-            DatabaseTableRecord entityRecord = projectLanguageTable.getEmptyRecord();
-
-            entityRecord.setUUIDValue(WalletLanguageMiddlewareDatabaseConstants.PROJECT_LANGUAGE_ID_COLUMN_NAME, walletFactoryProjectLanguage.getId());
-            entityRecord.setStringValue(WalletLanguageMiddlewareDatabaseConstants.PROJECT_LANGUAGE_NAME_COLUMN_NAME, walletFactoryProjectLanguage.getName());
-            entityRecord.setStringValue(WalletLanguageMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, walletFactoryProjectLanguage.getTranslatorPublicKey());
-            entityRecord.setStringValue(WalletLanguageMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, walletFactoryProjectLanguage.getType().value());
-            entityRecord.setStringValue(WalletLanguageMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME, walletFactoryProjectLanguage.getVersion().toString());
-            entityRecord.setStringValue(WalletLanguageMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PATH_COLUMN_NAME, walletFactoryProjectLanguage.getPath());
-            entityRecord.setUUIDValue(WalletLanguageMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME, walletFactoryProjectProposal.getId());
-
-            DatabaseTransaction transaction = database.newTransaction();
-            transaction.addRecordToInsert(projectLanguageTable, entityRecord);
-            database.executeTransaction(transaction);
-            database.closeDatabase();
-        } catch (DatabaseTransactionFailedException e) {
-            // Register the failure.
-            database.closeDatabase();
-            throw new CantCreateEmptyWalletFactoryProjectLanguageException(CantCreateEmptyWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw new CantCreateEmptyWalletFactoryProjectLanguageException(CantCreateEmptyWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
-        }
-    }
-
-    public void deleteLanguage(UUID id) throws CantDeleteWalletFactoryProjectLanguageException, LanguageNotFoundException {
-
-        if (id == null) {
-            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, null, "", "The id is required, can not be null");
-        }
-
-        try {
-            database.openDatabase();
-            DatabaseTable projectLanguageTable = database.getTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME);
-            projectLanguageTable.setUUIDFilter(WalletLanguageMiddlewareDatabaseConstants.PROJECT_LANGUAGE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            projectLanguageTable.loadToMemory();
-            List<DatabaseTableRecord> databaseTableRecordList = projectLanguageTable.getRecords();
-
-            if (!databaseTableRecordList.isEmpty()) {
-                DatabaseTableRecord record = databaseTableRecordList.get(0);
-
-                projectLanguageTable.deleteRecord(record);
-            } else {
-                database.closeDatabase();
-                throw new LanguageNotFoundException(LanguageNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project language with that id");
-            }
-            database.closeDatabase();
-        } catch (CantDeleteRecordException e) {
-            // Register the failure.
-            database.closeDatabase();
-            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
-
-        } catch (CantLoadTableToMemoryException e) {
-            // Register the failure.
-            database.closeDatabase();
-            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw new CantDeleteWalletFactoryProjectLanguageException(CantDeleteWalletFactoryProjectLanguageException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
-        }
-    }
-*/
 
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.

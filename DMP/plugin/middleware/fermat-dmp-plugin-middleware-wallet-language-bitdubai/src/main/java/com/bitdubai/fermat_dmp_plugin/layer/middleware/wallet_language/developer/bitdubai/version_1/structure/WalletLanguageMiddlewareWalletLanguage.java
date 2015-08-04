@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.enums.LanguageState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguage;
 
@@ -25,8 +24,6 @@ public class WalletLanguageMiddlewareWalletLanguage implements WalletLanguage {
 
     String name;
 
-    String alias;
-
     Languages type;
 
     LanguageState state;
@@ -35,19 +32,15 @@ public class WalletLanguageMiddlewareWalletLanguage implements WalletLanguage {
 
     Version version;
 
-    VersionCompatibility versionCompatibility;
 
-
-    public WalletLanguageMiddlewareWalletLanguage(UUID id, UUID languageId, String name, String alias, Languages type, LanguageState state, String translatorPublicKey, Version version, VersionCompatibility versionCompatibility) {
+    public WalletLanguageMiddlewareWalletLanguage(UUID id, UUID languageId, String name, Languages type, LanguageState state, String translatorPublicKey, Version version) {
         this.id = id;
         this.languageId = languageId;
         this.name = name;
-        this.alias = alias;
         this.type = type;
         this.state = state;
         this.translatorPublicKey = translatorPublicKey;
         this.version = version;
-        this.versionCompatibility = versionCompatibility;
     }
 
 
@@ -64,11 +57,6 @@ public class WalletLanguageMiddlewareWalletLanguage implements WalletLanguage {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public String getAlias() {
-        return alias;
     }
 
     @Override
@@ -91,8 +79,4 @@ public class WalletLanguageMiddlewareWalletLanguage implements WalletLanguage {
         return version;
     }
 
-    @Override
-    public VersionCompatibility getVersionCompatibility() {
-        return versionCompatibility;
-    }
 }

@@ -56,15 +56,13 @@ public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPlugi
      * @throws CantCreateDatabaseException
      */
     public Database createDatabase(UUID pluginId) throws CantCreateDatabaseException {
-        //TODO Manuel este meotod tambien tiene que gestionar las excepciones genericas
-        Database database;
-
         /**
          * I will create the database where I am going to store the information of this User.
          */
         try {
 
-            database = this.pluginDatabaseSystem.createDatabase(pluginId, "ExtraUser");
+            Database database = this.pluginDatabaseSystem.createDatabase(pluginId, "ExtraUser");
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
             /**
              * Modified by Manuel Perez on 27/07/2015
              * */
@@ -72,19 +70,20 @@ public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPlugi
              * Next, I will add the needed tables.
              */
 
-            DatabaseTableFactory table;
+            ;
 
             /**
              * First the Extra User table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
-            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
-            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
-            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
-            table.addIndex(ExtraUserDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUMN);
+            DatabaseTableFactory extraUserTable = databaseFactory.newTableFactory(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            extraUserTable.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
+            extraUserTable.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+            extraUserTable.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+            extraUserTable.addIndex(ExtraUserDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUMN);
 
-            ((DatabaseFactory) database).createTable(table);
+            databaseFactory.createTable(extraUserTable);
 
+            return database;
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
             /**
@@ -123,6 +122,5 @@ public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPlugi
 
         }
 
-        return database;
     }
 }

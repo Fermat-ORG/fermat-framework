@@ -77,13 +77,10 @@ public class WalletLanguageMiddlewareDatabaseFactory implements DealsWithPluginD
             table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 25, Boolean.FALSE);
             table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME, DatabaseDataType.STRING, 25, Boolean.FALSE);
             table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_FIRST_KEY_COLUMN);
 

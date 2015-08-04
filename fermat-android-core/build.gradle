@@ -14,6 +14,8 @@ android {
         exclude 'LICENSE.txt'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 
     defaultConfig {
@@ -34,9 +36,17 @@ android {
         }
     }
     buildTypes {
+
         release {
-            apply plugin: 'idea'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+
+        }
+        debug {
+            debuggable true
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
     }
 

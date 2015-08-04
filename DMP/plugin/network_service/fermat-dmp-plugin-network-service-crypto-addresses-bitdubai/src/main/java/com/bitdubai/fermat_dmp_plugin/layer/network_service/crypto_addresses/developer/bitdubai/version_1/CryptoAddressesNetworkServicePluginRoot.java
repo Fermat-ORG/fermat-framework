@@ -11,11 +11,12 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.excep
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCryptoAddessException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCurrentStateException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestsListException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRegisterNewWalletException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRegisterCompatibleListException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRejectAddressExchangeException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.PendingContactRequest;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.RequestHandlerWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -177,7 +178,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
-    public void registerInstalledWallet(String walletPublicKey, String walletName, WalletCategory walletCategory, String platformIdentifier) throws CantRegisterNewWalletException {
+    public void setCompatibleWallets(UUID requestId, List<RequestHandlerWallet> compatibleWallets) throws CantRegisterCompatibleListException {
 
     }
 
