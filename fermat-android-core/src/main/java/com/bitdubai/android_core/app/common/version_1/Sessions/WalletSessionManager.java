@@ -3,6 +3,7 @@ package com.bitdubai.android_core.app.common.version_1.Sessions;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -29,11 +30,11 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
 
 
     @Override
-    public WalletSession openWalletSession(InstalledWallet installedWallet,CryptoWalletManager cryptoWalletManager,ErrorManager errorManager) {
+    public WalletSession openWalletSession(InstalledWallet installedWallet,CryptoWalletManager cryptoWalletManager,WalletResourcesProviderManager walletResourcesProviderManager,ErrorManager errorManager) {
 
         switch (installedWallet.getWalletCategory()){
             case REFERENCE_WALLET:
-                WalletSession walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,errorManager);
+                WalletSession walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletResourcesProviderManager,errorManager);
                 lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
                 return walletSession;
             case NICHE_WALLET:

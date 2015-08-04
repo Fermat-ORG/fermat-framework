@@ -130,6 +130,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case WALLET_UNINSTALLED:
                 return new WalletUninstalledEventListener(eventType, this.eventMonitor);
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                return new WalletNavigationStructureDownloadedEventListener(eventType,this.eventMonitor);
 
             case BEGUN_WALLET_INSTALLATION:
                 return new BegunWalletInstallationEventListener(eventType, this.eventMonitor);

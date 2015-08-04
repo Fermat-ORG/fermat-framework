@@ -7,193 +7,199 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Plugins {
 
-    BITDUBAI_LICENSE_MANAGER("license Manager", Developers.BITDUBAI),
-    BITDUBAI_BLOCKCHAIN_INFO_WORLD("Blockchain Info World", Developers.BITDUBAI),
-    BITDUBAI_SHAPE_SHIFT_WORLD("Shape Shift World", Developers.BITDUBAI),
-    BITDUBAI_COINAPULT_WORLD("Coinapult World", Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_INDEX("Crypto Index World", Developers.BITDUBAI),
-    BITDUBAI_BITCOIN_CRYPTO_NETWORK("Bitcoin Crypto Network", Developers.BITDUBAI),
-    BITDUBAI_CLOUD_CHANNEL("Cloud Channel", Developers.BITDUBAI),
-    BITDUBAI_CLOUD_SERVER_COMMUNICATION("cloud Server Communication", Developers.BITDUBAI),
-    BITDUBAI_USER_NETWORK_SERVICE("User NetWork Service", Developers.BITDUBAI),
-    BITDUBAI_TEMPLATE_NETWORK_SERVICE("Template NetWork Service", Developers.BITDUBAI),
-    BITDUBAI_INTRAUSER_NETWORK_SERVICE("Intra User NetWork Service", Developers.BITDUBAI),
-    BITDUBAI_APP_RUNTIME_MIDDLEWARE("App Runtime Middleware", Developers.BITDUBAI),
-    BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET("Discount Wallet Basic Wallet", Developers.BITDUBAI),
-    BITDUBAI_WALLET_RUNTIME_MODULE("Wallet runtime Module", Developers.BITDUBAI),
-    BITDUBAI_WALLET_MANAGER_MODULE("Wallet Manager Module", Developers.BITDUBAI),
-    BITDUBAI_WALLET_FACTORY_MODULE("Wallet Factory Module", Developers.BITDUBAI),
-    BITDUBAI_BITCOIN_CRYPTO_VAULT("Bitcoin Crypto Vault", Developers.BITDUBAI),
-    BITDUBAI_INTRA_USER_FACTORY_MODULE("IntraUser Factory Module", Developers.BITDUBAI),
-    BITDUBAI_BANK_NOTES_WALLET_NICHE_WALLET_TYPE("Bank Notes Wallet Niche Wallet Type", Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE("Crypto Loss Protected Wallet Niche Wallet Type", Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE("Crypto Wallet Niche Wallet Type", Developers.BITDUBAI),
-    BITDUBAI_DISCOUNT_WALLET_NICHE_WALLET_TYPE("Discount Wallet Niche Wallet Type", Developers.BITDUBAI),
-    BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE("Fiat Over Crypto Loss Protected Wallet Niche Wallet Type", Developers.BITDUBAI),
-    BITDUBAI_FIAT_OVER_CRYPTO_WALLET_NICHE_WALLET_TYPE("Fiat Over Crypto Wallet Niche Wallet Type", Developers.BITDUBAI),
-    BITDUBAI_MULTI_ACCOUNT_WALLET_NICHE_WALLET_TYPE("Multi Account Wallet Niche Wallet Type", Developers.BITDUBAI),
-    BITDUBAI_INCOMING_INTRA_USER_TRANSACTION("Incoming Intra User Transaction", Developers.BITDUBAI),
-    BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION("Outgoing Intra User Transaction", Developers.BITDUBAI),
-    BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION("Incoming Device User Transaction", Developers.BITDUBAI),
-    BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION("Outgoing Device User Transaction", Developers.BITDUBAI),
-    BITDUBAI_INTER_WALLET_TRANSACTION("Inter Wallet Transaction", Developers.BITDUBAI),
-    BITDUBAI_BANK_NOTES_MIDDLEWARE("Bank Notes Middleware", Developers.BITDUBAI),
-    BITDUBAI_BANK_NOTES_NETWORK_SERVICE("Bank Notes Network Service", Developers.BITDUBAI),
-    BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE("Wallet Resources Network Service", Developers.BITDUBAI),
-    BITDUBAI_WALLET_STORE_NETWORK_SERVICE("Wallet Store Network Service", Developers.BITDUBAI),
-    BITDUBAI_WALLET_CONTACTS_MIDDLEWARE("Wallet Contacts Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE("Wallet Community Network Service", Developers.BITDUBAI),
-    BITDUBAI_USER_ADDRESS_BOOK_CRYPTO("User Address Book Crypto", Developers.BITDUBAI),
-    BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO("Wallet Address Book Crypto", Developers.BITDUBAI),
-    BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION("Outgoing Extra User Transaction", Developers.BITDUBAI),
-    BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION("Incoming Extra User Transaction", Developers.BITDUBAI),
-    BITDUBAI_INCOMING_CRYPTO_TRANSACTION("Incoming Crypto Transaction", Developers.BITDUBAI),
-    BITDUBAI_USER_DEVICE_USER("User Device User", Developers.BITDUBAI),
-    BITDUBAI_USER_EXTRA_USER("User Extra User", Developers.BITDUBAI),
-    BITDUBAI_USER_INTRA_USER("User Intra User", Developers.BITDUBAI),
-    BITDUBAI_COINBASE_WORLD("Coinbase World", Developers.BITDUBAI),
-    BITDUBAI_BITCOIN_WALLET_BASIC_WALLET("Bitcoin Wallet Basic Wallet", Developers.BITDUBAI ),
-    BITDUBAI_DEVICE_CONNECTIVITY("Bitcoin Device Connectivity", Developers.BITDUBAI ),
-    BITDUBAI_LOCATION_WORLD("Location World", Developers.BITDUBAI),
-    BITDUBAI_ACTOR_DEVELOPER("Actor Developer", Developers.BITDUBAI),
-    BITDUBAI_WALLET_FACTORY_MIDDLEWARE("Wallet Factory Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE("Wallet Language Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_MANAGER_MIDDLEWARE("Wallet Manager Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE("Wallet Publisher Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_SKIN_MIDDLEWARE("Wallet Skin Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_STORE_MIDDLEWARE("Wallet Store Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_SETTINGS_MIDDLEWARE("Wallet Settings Middleware", Developers.BITDUBAI),
-    BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("Wallet Statistics Network Service", Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE("Crypto Transmission Network Service", Developers.BITDUBAI),
-    BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE("SubApp Resources Network Service", Developers.BITDUBAI),
-    BITDUBAI_REQUEST_MONEY_REQUEST("Request Money", Developers.BITDUBAI),
-    BITDUBAI_DEVELOPER_IDENTITY("Developer Identity", Developers.BITDUBAI),
-    BITDUBAI_IDENTITY_MANAGER("Identity Managers", Developers.BITDUBAI),
-    BITDUBAI_DEVELOPER_MODULE("Developer Module", Developers.BITDUBAI);
+    //Modified by Manuel Perez on 03/08/2015
+    BITDUBAI_LICENSE_MANAGER("BLICM", Developers.BITDUBAI),
+    BITDUBAI_BLOCKCHAIN_INFO_WORLD("BBLOCKIW", Developers.BITDUBAI),
+    BITDUBAI_SHAPE_SHIFT_WORLD("BSHAPESW", Developers.BITDUBAI),
+    BITDUBAI_COINAPULT_WORLD("BCOINAW", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_INDEX("BCRYPTOINW", Developers.BITDUBAI),
+    BITDUBAI_BITCOIN_CRYPTO_NETWORK("BBTCCNET", Developers.BITDUBAI),
+    BITDUBAI_CLOUD_CHANNEL("BCLOUDC", Developers.BITDUBAI),
+    BITDUBAI_CLOUD_SERVER_COMMUNICATION("BCLOUSC", Developers.BITDUBAI),
+    BITDUBAI_USER_NETWORK_SERVICE("BUSERNETS", Developers.BITDUBAI),
+    BITDUBAI_TEMPLATE_NETWORK_SERVICE("BTEMNETS", Developers.BITDUBAI),
+    BITDUBAI_INTRAUSER_NETWORK_SERVICE("BINUSERNS", Developers.BITDUBAI),
+    BITDUBAI_APP_RUNTIME_MIDDLEWARE("BAPPRUNM", Developers.BITDUBAI),
+    BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET("BDWALLBW", Developers.BITDUBAI),
+    BITDUBAI_WALLET_RUNTIME_MODULE("BWALLRUNM", Developers.BITDUBAI),
+    BITDUBAI_WALLET_MANAGER_MODULE("BWALLMANM", Developers.BITDUBAI),
+    BITDUBAI_WALLET_FACTORY_MODULE("BWALLFACM", Developers.BITDUBAI),
+    BITDUBAI_BITCOIN_CRYPTO_VAULT("BBTCCRYV", Developers.BITDUBAI),
+    BITDUBAI_INTRA_USER_FACTORY_MODULE("BINUSFACM", Developers.BITDUBAI),
+    BITDUBAI_BANK_NOTES_WALLET_NICHE_WALLET_TYPE("BBNWNWT", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE("BCLPWNWT", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE("BCWNWT", Developers.BITDUBAI),
+    BITDUBAI_DISCOUNT_WALLET_NICHE_WALLET_TYPE("BDWNWT", Developers.BITDUBAI),
+    BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE("BFOCLPWNWT", Developers.BITDUBAI),
+    BITDUBAI_FIAT_OVER_CRYPTO_WALLET_NICHE_WALLET_TYPE("BFOCWNWT", Developers.BITDUBAI),
+    BITDUBAI_MULTI_ACCOUNT_WALLET_NICHE_WALLET_TYPE("BMAWNWT", Developers.BITDUBAI),
+    BITDUBAI_INCOMING_INTRA_USER_TRANSACTION("BININUST", Developers.BITDUBAI),
+    BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION("BOUINUST", Developers.BITDUBAI),
+    BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION("BINDEVUT", Developers.BITDUBAI),
+    BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION("BODEVUST", Developers.BITDUBAI),
+    BITDUBAI_INTER_WALLET_TRANSACTION("BINWALLT", Developers.BITDUBAI),
+    BITDUBAI_BANK_NOTES_MIDDLEWARE("BBNMIDD", Developers.BITDUBAI),
+    BITDUBAI_BANK_NOTES_NETWORK_SERVICE("BBNNETSER", Developers.BITDUBAI),
+    BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE("BWRNETSER", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STORE_NETWORK_SERVICE("BWSNETSER", Developers.BITDUBAI),
+    BITDUBAI_WALLET_CONTACTS_MIDDLEWARE("BWALLCMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE("BWCNETSER", Developers.BITDUBAI),
+    BITDUBAI_USER_ADDRESS_BOOK_CRYPTO("BUADDBCRY", Developers.BITDUBAI),
+    BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO("BWADDBCRY", Developers.BITDUBAI),
+    BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION("BOUEXUT", Developers.BITDUBAI),
+    BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION("BINEXUT", Developers.BITDUBAI),
+    BITDUBAI_INCOMING_CRYPTO_TRANSACTION("BINCRYT", Developers.BITDUBAI),
+    BITDUBAI_USER_DEVICE_USER("BUDEVU", Developers.BITDUBAI),
+    BITDUBAI_USER_EXTRA_USER("BUEXU", Developers.BITDUBAI),
+    BITDUBAI_USER_INTRA_USER("BUINU", Developers.BITDUBAI),
+    BITDUBAI_COINBASE_WORLD("BCOINW", Developers.BITDUBAI),
+    BITDUBAI_BITCOIN_WALLET_BASIC_WALLET("BBTCWBW", Developers.BITDUBAI ),
+    BITDUBAI_DEVICE_CONNECTIVITY("BBTCDEVC", Developers.BITDUBAI ),
+    BITDUBAI_LOCATION_WORLD("BLOCW", Developers.BITDUBAI),
+    BITDUBAI_ACTOR_DEVELOPER("BACTORD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_FACTORY_MIDDLEWARE("BWFMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE("BWLMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_MANAGER_MIDDLEWARE("BWMMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE("BWPMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_SKIN_MIDDLEWARE("BWSMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STORE_MIDDLEWARE("BWSTMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STORE_MODULE("BWSM", Developers.BITDUBAI),
+    BITDUBAI_WALLET_SETTINGS_MIDDLEWARE("BWSEMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("BWSNETSER", Developers.BITDUBAI),
+    BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE("BSRNETSER", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE("BCTNSER", Developers.BITDUBAI),
+    BITDUBAI_REQUEST_MONEY_REQUEST("BRMR", Developers.BITDUBAI),
+
+    BITDUBAI_DEVELOPER_IDENTITY("BDEVID", Developers.BITDUBAI),
+    BITDUBAI_TRANSLATOR_IDENTITY("BDTRAID", Developers.BITDUBAI),
+    BITDUBAI_IDENTITY_MANAGER("BIDMAN", Developers.BITDUBAI),
+    BITDUBAI_DEVELOPER_MODULE("BDEVMOD", Developers.BITDUBAI);
 
 
-    private final String key;
-    private final Developers developer;
+    private String code;
+    private Developers developer;
 
-    Plugins(String key, Developers developer) {
-        this.key = key;
+    Plugins(String code, Developers developer) {
+        this.code = code;
         this.developer = developer;
     }
 
-    public static Plugins getByKey(String key) throws InvalidParameterException {
-        switch(key){
-            case "license Manager":
+    public String getKey()   { return this.code; }
+
+    public static Plugins getByKey(String code) throws InvalidParameterException {
+        switch(code){
+            case "BLICM":
                 return Plugins.BITDUBAI_LICENSE_MANAGER;
-            case "Blockchain Info World":
+            case "BBLOCKIW":
                 return Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD;
-            case "Shape Shift World":
+            case "BSHAPESW":
                 return Plugins.BITDUBAI_SHAPE_SHIFT_WORLD;
-            case "Coinapult World":
+            case "BCOINAW":
                 return Plugins.BITDUBAI_COINAPULT_WORLD;
-            case "Crypto Index World":
+            case "BCRYPTOINW":
                 return Plugins.BITDUBAI_CRYPTO_INDEX;
-            case "Bitcoin Crypto Network":
+            case "BBTCCNET":
                 return Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK;
-            case "Cloud Channel":
+            case "BCLOUDC":
                 return Plugins.BITDUBAI_CLOUD_CHANNEL;
-            case "cloud Server Communication":
+            case "BCLOUSC":
                 return Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION;
-            case "user NetWork Service":
+            case "BUSERNETS":
                 return Plugins.BITDUBAI_USER_NETWORK_SERVICE;
-            case "App Runtime Middleware":
+            case "BAPPRUNM":
                 return Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE;
-            case "Discount Wallet Basic Wallet":
+            case "BDWALLBW":
                 return Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET;
-            case "Wallet runtime Module":
+            case "BWALLRUNM":
                 return Plugins.BITDUBAI_WALLET_RUNTIME_MODULE;
-            case "Wallet Manager Module":
+            case "BWALLMANM":
                 return Plugins.BITDUBAI_WALLET_MANAGER_MODULE;
-            case "Wallet Factory Module":
+            case "BWALLFACM":
                 return Plugins.BITDUBAI_WALLET_FACTORY_MODULE;
-            case "Bitcoin Crypto Vault":
+            case "BBTCCRYV":
                 return Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT;
-            case "Bank Notes Wallet Niche Wallet Type":
+            case "BBNWNWT":
                 return Plugins.BITDUBAI_BANK_NOTES_WALLET_NICHE_WALLET_TYPE;
-            case "Crypto Loss Protected Wallet Niche Wallet Type":
+            case "BCLPWNWT":
                 return Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE;
-            case "Crypto Wallet Niche Wallet Type":
+            case "BCWNWT":
                 return Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE;
-            case "Discount Wallet Niche Wallet Type":
+            case "BDWNWT":
                 return Plugins.BITDUBAI_DISCOUNT_WALLET_NICHE_WALLET_TYPE;
-            case "Fiat Over Crypto Loss Protected Wallet Niche Wallet Type":
+            case "BFOCLPWNWT":
                 return Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE;
-            case "Fiat Over Crypto Wallet Niche Wallet Type":
+            case "BFOCWNWT":
                 return Plugins.BITDUBAI_FIAT_OVER_CRYPTO_WALLET_NICHE_WALLET_TYPE;
-            case "Multi Account Wallet Niche Wallet Type":
+            case "BMAWNWT":
                 return Plugins.BITDUBAI_MULTI_ACCOUNT_WALLET_NICHE_WALLET_TYPE;
-            case "Incoming Intra User Transaction":
+            case "BININUST":
                 return Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION;
-            case "Outgoing Intra User Transaction":
+            case "BOUINUST":
                 return Plugins.BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION;
-            case "Incoming Device User Transaction":
+            case "BINDEVUT":
                 return Plugins.BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION;
-            case "Outgoing Device User Transaction":
+            case "BODEVUST":
                 return Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION;
-            case "Inter Wallet Transaction":
+            case "BINWALLT":
                 return Plugins.BITDUBAI_INTER_WALLET_TRANSACTION;
-            case "Bank Notes Middleware":
+            case "BBNMIDD":
                 return Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE;
-            case "Bank Notes Network Service":
+            case "BBNNETSER":
                 return Plugins.BITDUBAI_BANK_NOTES_NETWORK_SERVICE;
-            case "Wallet Resources Network Service":
+            case "BWRNETSER":
                 return Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE;
-            case "Wallet Store Network Service":
+            case "BWSNETSER":
                 return Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE;
-            case "Wallet Store Middleware":
+            case "BWSMIDD":
                 return Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE;
-            case "Wallet Factory Middleware":
+            case "BWFMIDD":
                 return Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE;
-            case "Wallet Language Middleware":
+            case "BWLMIDD":
                 return Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE;
-            case "Wallet Skin Middleware":
+            case "BWSTMIDD":
                 return Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE;
-            case "Wallet Manager Middleware":
+            case "BWMMIDD":
                 return Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE;
-            case "Wallet Publisher Middleware":
+            case "BWPMIDD":
                 return Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE;
-            case "Wallet Contacts Middleware":
+            case "BWALLCMIDD":
                 return Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE;
-            case "Wallet Community Network Service":
+            case "BWCNETSER":
                 return Plugins.BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE;
-            case "User Address Book Crypto":
+            case "BUADDBCRY":
                 return Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO;
-            case "Wallet Address Book Crypto":
+            case "BWADDBCRY":
                 return Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO;
-            case "Outgoing Extra User Transaction":
+            case "BOUEXUT":
                 return Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION;
-            case "Incoming Extra User Transaction":
+            case "BINEXUT":
                 return Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION;
-            case "Incoming Crypto Transaction":
+            case "BINCRYT":
                 return Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION;
-            case "User Device User":
+            case "BUDEVU":
                 return Plugins.BITDUBAI_USER_DEVICE_USER;
-            case "User Extra User":
+            case "BUEXU":
                 return Plugins.BITDUBAI_USER_EXTRA_USER;
-            case "User Intra User":
+            case "BUINU":
                 return Plugins.BITDUBAI_USER_INTRA_USER;
-            case "Coinbase World":
+            case "BCOINW":
                 return Plugins.BITDUBAI_COINBASE_WORLD;
-            case "Bitcoin Wallet Basic Wallet":
+            case "BBTCWBW":
                 return Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET;
-            case "Bitcoin Device Connectivity":
+            case "BBTCDEVC":
                 return Plugins.BITDUBAI_DEVICE_CONNECTIVITY;
-            case "Location World":
+            case "BLOCW":
                 return Plugins.BITDUBAI_LOCATION_WORLD;
-            case "Actor Developer":
+            case "BACTORD":
                 return Plugins.BITDUBAI_ACTOR_DEVELOPER;
-            case "Identity Managers":
+            case "BIDMAN":
                 return Plugins.BITDUBAI_IDENTITY_MANAGER;
+            case "BWSM":
+                return Plugins.BITDUBAI_WALLET_STORE_MODULE;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
-
-        throw new InvalidParameterException(key);
     }
-
-    public String getKey()   { return this.key; }
 
     public Developers getDeveloper()   { return this.developer; }
 

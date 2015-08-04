@@ -270,12 +270,15 @@ public enum EventType {
                 return EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER;
             case"ICROBWTEU":
                 return EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER;
+            //Modified by Manuel Perez on 03/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
+
         }
 
         /**
          * If we try to cpmvert am invalid string.
          */
-        throw new InvalidParameterException(code);
+        //throw new InvalidParameterException(code);
     };
 
     /**

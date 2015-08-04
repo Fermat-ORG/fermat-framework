@@ -162,15 +162,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             eventManager.addListener(eventListener);
             listenersAdded.add(eventListener);
 
-            /*
-             * TODO Maty aqui esta reventando
-             */
-//            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-//            eventHandler = new WalletNavigationStructureDownloadedHandler();
-//            ((WalletUnnInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
-//            eventListener.setEventHandler(eventHandler);
-//            eventManager.addListener(eventListener);
-//            listenersAdded.add(eventListener);
+            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            eventHandler = new WalletNavigationStructureDownloadedHandler();
+            ((WalletNavigationStructureDownloadedHandler) eventHandler).setWalletRuntimeManager(this);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
 
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -1120,7 +1117,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        //walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","basic_wallet_default","en","1.0.0");
+        walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","basic_wallet_default","en","1.0.0");
 
 
 

@@ -195,7 +195,7 @@ public class LogToolsFragment extends Fragment {
                     Loggers log = new Loggers();
                     log.type = Loggers.TYPE_ADDON;
                     log.picture = "addon";
-                    log.pluginKey=addon.getKey();
+                    log.pluginKey=addon.getCode();
                     log.classHierarchyLevels=classes;
                     lstLoggers.add(log);
                 }

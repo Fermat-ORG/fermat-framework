@@ -12,8 +12,13 @@ import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 ;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -22,7 +27,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.NetworkService;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppNavigationStructure;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResources;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesInstalationManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -71,7 +77,7 @@ import java.util.UUID;
  * * * * * * * 
  */
 
-public class SubAppResourcesNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin,SubAppResourcesManager {
+public class SubAppResourcesInstalationNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin,SubAppResourcesInstalationManager,SubAppResourcesProviderManager {
 
 
     /**
@@ -185,21 +191,145 @@ public class SubAppResourcesNetworkServicePluginRoot implements Service, Network
         return this.pluginId;
     }
 
+
+
     /**
-     * SubAppResourcesManager Implementation
+     * SubAppResourcesInstalationManager Implementation
      */
 
 
 
+    /**
+     * @param walletCategory
+     * @param walletType
+     * @param developer
+     * @param screenSize
+     * @param screenDensity
+     * @param skinName
+     * @param languageName
+     * @param navigationStructureVersion
+     */
     @Override
-    public SubAppResources getSubAppResources(UUID resourcesId) {
-        return new SubAppResourcesNetworkService(resourcesId);
+    public void installResources(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) {
+
     }
 
+    /**
+     * @param walletPath
+     * @param skinId
+     * @param navigationStructureVersion
+     */
     @Override
-    public SubAppNavigationStructure getSubAppNavigationStructure(UUID subAppNavigationStructureId) {
-        return new SubAppNavigationStructureNetworkService(subAppNavigationStructureId);
+    public void unninstallResources(String walletPath, UUID skinId, String navigationStructureVersion) {
+
     }
+
+
+    /**
+     * SubAppResourcesProvider Implementation
+     */
+
+
+    /**
+     * This method returns the resourcesId
+     *
+     * @return the Id of resources being represented
+     */
+    @Override
+    public UUID getResourcesId() {
+        return null;
+    }
+
+    /**
+     * This method let us get an skin file referenced by its name
+     *
+     * @param fileName the name of the Skin file (without the path structure).
+     * @param skinId
+     * @return The content of the file
+     * @throws CantGetSkinFileException
+     */
+    @Override
+    public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
+        return null;
+    }
+
+    /**
+     * This method let us get a language file referenced by a name
+     *
+     * @param fileName the name of the Language file (without the path structure).
+     * @return The content of the file
+     * @throws CantGetLanguageFileException
+     */
+    @Override
+    public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
+        return null;
+    }
+
+    /**
+     * This method let us get an image referenced by a name
+     *
+     * @param imageName the name of the image resource found in the skin file
+     * @param skinId
+     * @return the image represented as a byte array
+     * @throws CantGetResourcesException
+     */
+    @Override
+    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetResourcesException {
+        return new byte[0];
+    }
+
+    /**
+     * This method let us get a video referenced by a name
+     *
+     * @param videoName the name of the video resource found in the skin file
+     * @param skinId
+     * @return the video represented as a byte array
+     * @throws CantGetResourcesException
+     */
+    @Override
+    public byte[] getVideoResource(String videoName, UUID skinId) throws CantGetResourcesException {
+        return new byte[0];
+    }
+
+    /**
+     * This method let us get a sound referenced by a name
+     *
+     * @param soundName the name of the sound resource found in the skin file
+     * @param skinId
+     * @return the sound represented as a byte array
+     * @throws CantGetResourcesException
+     */
+    @Override
+    public byte[] getSoundResource(String soundName, UUID skinId) throws CantGetResourcesException {
+        return new byte[0];
+    }
+
+    /**
+     * This method let us get a font style referenced by a name
+     *
+     * @param styleName the name of the font style resource found in the skin file
+     * @param skinId
+     * @return the font style represented as the content of a ttf file
+     * @throws CantGetResourcesException
+     */
+    @Override
+    public String getFontStyle(String styleName, UUID skinId) {
+        return null;
+    }
+
+    /**
+     * This method let us get a layout referenced by a name
+     *
+     * @param layoutName  the name of the layout resource found in the skin file
+     * @param orientation
+     * @param skinId      @return the layiut represented as String
+     * @throws CantGetResourcesException
+     */
+    @Override
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
+        return null;
+    }
+
 
 
 
@@ -359,7 +489,7 @@ public class SubAppResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstalationNetworkServicePluginRoot");
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.SubAppResourcesNetworkService");
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.SubAppNavigationStructureNetworkService");
 
@@ -381,11 +511,11 @@ public class SubAppResourcesNetworkServicePluginRoot implements Service, Network
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (SubAppResourcesNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                SubAppResourcesNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                SubAppResourcesNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (SubAppResourcesInstalationNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                SubAppResourcesInstalationNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                SubAppResourcesInstalationNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                SubAppResourcesNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                SubAppResourcesInstalationNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
