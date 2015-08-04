@@ -30,20 +30,22 @@ public class WalletInstalledEventHandler implements EventHandler {
         
         
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
+
+            //TODO: Hablar con luis que más quiere que haga cuando se instala la wallet
             
-            try {
-                this.walletRuntimeManager.recordNavigationStructure(publicKey);
-            }
-            catch (CantRecordInstalledWalletNavigationStructureException cantRecordInstalledWalletNavigationStructureException){
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-                System.err.println("CantRecordInstalledWalletNavigationStructureException: " + cantRecordInstalledWalletNavigationStructureException.getMessage());
-                cantRecordInstalledWalletNavigationStructureException.printStackTrace();
-
-                throw cantRecordInstalledWalletNavigationStructureException;
-
-            }
+//            try {
+//                this.walletRuntimeManager.recordNavigationStructure(publicKey);
+//            }
+//            catch (CantRecordInstalledWalletNavigationStructureException cantRecordInstalledWalletNavigationStructureException){
+//                /**
+//                 * The main module could not handle this exception. Me neither. Will throw it again.
+//                 */
+//                System.err.println("CantRecordInstalledWalletNavigationStructureException: " + cantRecordInstalledWalletNavigationStructureException.getMessage());
+//                cantRecordInstalledWalletNavigationStructureException.printStackTrace();
+//
+//                throw cantRecordInstalledWalletNavigationStructureException;
+//
+//            }
             
         } 
     }

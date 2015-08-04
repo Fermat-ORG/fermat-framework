@@ -20,21 +20,6 @@ import java.util.UUID;
  * */
 public interface WalletResourcesInstalationManager {
 
-/*
-    Esto venía de un prototipo/prueba de concepto
-    // DEPRECATED - NO USAR - SE ANALIZAR SI SE ELIMINARÁ
-    */
-    public void checkResources(String repoName) throws CantCheckResourcesException;
-/*
-    // DEPRECATED - NO USAR - SE DEBE LIMPIAR
-    public byte[] getImageResource(String imageName) throws CantGetResourcesException;
-
-    // DEPRECATED - NO USAR - SE DEBE LIMPIAR
-    public String getLayoutResource(String layoutName) throws CantGetResourcesException;
-
-    // DEPRECATED - NO USAR - SE DEBE LIMPIAR
-    public void setwalletType(Wallets type);
-*/
 
     /**
      * This method will give us the resources associated to the resourcesId
@@ -43,10 +28,8 @@ public interface WalletResourcesInstalationManager {
      */
     public WalletResources getWalletResources(String resourceName,String publicKey,Version version) throws CantGetWalletResourcesException;
 
-    public WalletNavigationStructure getWalletNavigationStructure(UUID walletNavigationStructureId) throws CantGetWalletNavigationStructureException;
 
-
-    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName);
+    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName,String navigationStructureVersion);
 
 
 
