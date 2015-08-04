@@ -32,7 +32,9 @@ public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implement
      */
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws FermatException{
-
+        /**
+         * Modified by Franklin Marcano, 03/08/2015
+         */
         if (this.incomingCryptoEventRecorderService.getStatus() == ServiceStatus.STARTED){
 
             try
@@ -49,6 +51,10 @@ public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implement
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
                 throw  new CantSaveEvent("classCastException found", FermatException.wrapException(classCastException),"","");
+            }
+            catch (Exception e)
+            {
+                throw  new CantSaveEvent("Exception unchecked", FermatException.wrapException(e),"","");
             }
         }
         else
