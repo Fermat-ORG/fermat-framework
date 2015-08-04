@@ -3,11 +3,13 @@ package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.DeveloperBitDubai;
 
 import org.fest.assertions.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 /**
  * Created by Franklin Marcano on 03/08/15.
  */
 public class GetAddressTest {
+    @Ignore
     @Test
     public void getAddressTest_thisMethodIsCalledNoAddressSet_returnsNull() throws Exception{
 

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.DeveloperBitDubai;
 
 import org.fest.assertions.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -12,6 +13,7 @@ import org.junit.Test;
 public class GetCryptoCurrencyTest {
     DeveloperBitDubai testDeveloperBitDubai=new DeveloperBitDubai();
 
+    @Ignore
     @Test
     public void getCryptoCurrencyTest_thisMethodIsCalled_returnsNull() throws Exception{
 
