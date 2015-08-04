@@ -10,6 +10,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.IncomingMessageDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.OutgoingMessageDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -56,14 +59,14 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
     private ErrorManager errorManager;
 
     /**
-     * Represent the incomingMessageDataAccessObject
+     * Represent the incomingMessageDao
      */
-    private IncomingMessageDataAccessObject incomingMessageDataAccessObject;
+    private IncomingMessageDao incomingMessageDao;
 
     /**
-     * Represent the outgoingMessageDataAccessObject
+     * Represent the outgoingMessageDao
      */
-    private OutgoingMessageDataAccessObject outgoingMessageDataAccessObject;
+    private OutgoingMessageDao outgoingMessageDao;
 
     /**
      * Represent is the tread is running
@@ -97,10 +100,10 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
      * @param remoteNetworkServicePublicKey the public key
      * @param serviceToServiceOnlineConnection  the serviceToServiceOnlineConnection instance
      * @param errorManager  instance
-     * @param incomingMessageDataAccessObject instance
-     * @param outgoingMessageDataAccessObject instance
+     * @param incomingMessageDao instance
+     * @param outgoingMessageDao instance
      */
-    public TemplateNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, String remoteNetworkServicePublicKey, ServiceToServiceOnlineConnection serviceToServiceOnlineConnection, ErrorManager errorManager, IncomingMessageDataAccessObject incomingMessageDataAccessObject, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
+    public TemplateNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, String remoteNetworkServicePublicKey, ServiceToServiceOnlineConnection serviceToServiceOnlineConnection, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
         this.eccKeyPair                       = eccKeyPair;
@@ -108,8 +111,8 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
         this.serviceToServiceOnlineConnection = serviceToServiceOnlineConnection;
         this.errorManager                     = errorManager;
         this.running                          = Boolean.FALSE;
-        this.incomingMessageDataAccessObject  = incomingMessageDataAccessObject;
-        this.outgoingMessageDataAccessObject  = outgoingMessageDataAccessObject;
+        this.incomingMessageDao = incomingMessageDao;
+        this.outgoingMessageDao = outgoingMessageDao;
 
 
         //Create a thread to receive the messages
@@ -220,7 +223,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Save to the data base table
                      */
-                    incomingMessageDataAccessObject.create(incomingTemplateNetworkServiceMessage);
+                    incomingMessageDao.create(incomingTemplateNetworkServiceMessage);
 
                     /*
                      * Remove the message from the queue
@@ -263,7 +266,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Read all pending message from database
                      */
-                    List<OutgoingTemplateNetworkServiceMessage> messages = outgoingMessageDataAccessObject.findAll(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME,
+                    List<OutgoingTemplateNetworkServiceMessage> messages = outgoingMessageDao.findAll(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME,
                                                                                                                   MessagesStatus.PENDING_TO_SEND.getCode());
                     /*
                      * For each message
@@ -289,7 +292,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                          * Change the message and update in the data base
                          */
                         message.setStatus(MessagesStatus.SENT);
-                        outgoingMessageDataAccessObject.update(message);
+                        outgoingMessageDao.update(message);
                     }
 
 
