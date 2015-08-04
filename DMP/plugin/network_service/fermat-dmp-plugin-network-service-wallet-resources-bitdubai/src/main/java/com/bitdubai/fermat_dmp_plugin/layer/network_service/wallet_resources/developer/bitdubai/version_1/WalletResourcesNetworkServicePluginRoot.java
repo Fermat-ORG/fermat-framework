@@ -174,8 +174,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              * Database
              */
-            NetworkserviceswalletresourcesDatabaseFactory networkserviceswalletresourcesDatabaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(pluginDatabaseSystem);
-            database = networkserviceswalletresourcesDatabaseFactory.createDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
+//            NetworkserviceswalletresourcesDatabaseFactory networkserviceswalletresourcesDatabaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(pluginDatabaseSystem);
+//            database = networkserviceswalletresourcesDatabaseFactory.createDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
 
 
                     this.serviceStatus = ServiceStatus.STARTED;
