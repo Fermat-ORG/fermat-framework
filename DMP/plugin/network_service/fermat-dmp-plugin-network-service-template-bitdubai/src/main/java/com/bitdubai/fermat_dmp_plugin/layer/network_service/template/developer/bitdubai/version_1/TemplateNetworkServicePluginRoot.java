@@ -25,8 +25,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateEstablishedRequestedNetworkServiceConnectionHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateIncomingNetworkServiceConnectionRequestHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInitializeNetworkTemplateDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -199,7 +199,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Service Interface implementation.
+     * (non-Javadoc)
+     * @see Service#start()
      */
     @Override
     public void start() throws CantStartPluginException {
@@ -437,7 +438,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * @param pluginClientId the plugin client id
      * @return TemplateNetworkServiceManager the intra user network service manager
      */
-    public TemplateNetworkServiceManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
+    public TemplateNetworkServiceManager templateNetworkServiceManagerFactory(UUID pluginClientId){
 
         /*
          * Create a new instance
@@ -462,12 +463,12 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Return a previously created instances of the intra user network service manager
+     * Return a previously created instances of the template network service manager
      *
      * @param pluginClientId
      * @return TemplateNetworkServiceManager
      */
-    public TemplateNetworkServiceManager getIntraUserNetworkServiceManager(UUID pluginClientId){
+    public TemplateNetworkServiceManager getTemplateNetworkServiceManager(UUID pluginClientId){
 
         return  templateNetworkServiceManagersCache.get(pluginClientId);
     }

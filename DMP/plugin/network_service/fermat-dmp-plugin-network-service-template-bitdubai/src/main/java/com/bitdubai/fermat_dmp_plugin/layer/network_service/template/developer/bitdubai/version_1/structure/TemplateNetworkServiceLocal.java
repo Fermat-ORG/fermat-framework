@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.OutgoingMessageDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -52,22 +53,22 @@ public class TemplateNetworkServiceLocal implements Observer{
     private EventManager eventManager;
 
     /**
-     * Represent the outgoingMessageDataAccessObject
+     * Represent the outgoingMessageDao
      */
-    private OutgoingMessageDataAccessObject outgoingMessageDataAccessObject;
+    private OutgoingMessageDao outgoingMessageDao;
 
     /**
      * Constructor with parameters
      *
      * @param remoteNetworkServicePublicKey
      * @param errorManager instance
-     * @param outgoingMessageDataAccessObject instance
+     * @param outgoingMessageDao instance
      */
-    public TemplateNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
+    public TemplateNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
         this.remoteNetworkServicePublicKey   = remoteNetworkServicePublicKey;
         this.errorManager                    = errorManager;
         this.eventManager                    = eventManager;
-        this.outgoingMessageDataAccessObject = outgoingMessageDataAccessObject;
+        this.outgoingMessageDao = outgoingMessageDao;
     }
 
 
@@ -94,7 +95,7 @@ public class TemplateNetworkServiceLocal implements Observer{
             /*
              * Save to the data base table
              */
-            outgoingMessageDataAccessObject.create(outgoingIntraUserNetworkServiceMessage);
+            outgoingMessageDao.create(outgoingIntraUserNetworkServiceMessage);
 
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));

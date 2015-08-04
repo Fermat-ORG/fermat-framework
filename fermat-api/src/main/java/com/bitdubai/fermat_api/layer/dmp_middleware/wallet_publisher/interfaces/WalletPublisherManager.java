@@ -1,3 +1,9 @@
+/*
+ * @#WalletPublisherManager.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
@@ -14,6 +20,8 @@ import java.util.Map;
  * <p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
+ * Update by Roberto Requena - (rart3001@gmail.com) on 04/08/2015
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -45,4 +53,22 @@ public interface WalletPublisherManager {
      * @throws CantPublishWalletException
      */
     public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException;
+
+    /**
+     * This method publishes the wallet factory project <code>walletFactoryProjectVersion</code> with the skin information in
+     * the wallet store and register relevant information of this process (publication timestamp).
+     *
+     * @param walletFactoryProjectProposal the wallet factory project to publish
+     * @throws CantPublishWalletException
+     */
+    public void publishSkin(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException;
+
+    /**
+     * This method publishes the wallet factory project <code>walletFactoryProjectVersion</code> with the language information in
+     * the wallet store and register relevant information of this process (publication timestamp).
+     *
+     * @param walletFactoryProjectProposal the wallet factory project to publish
+     * @throws CantPublishWalletException
+     */
+    public void publishLanguage(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException;
 }
