@@ -288,7 +288,7 @@ public class NavigationDrawerFragment extends Fragment {
                 mCallbacks.onNavigationDrawerItemSelected(position);
             }
             //test mati
-            if (((FermatActivity)(getActivity())).getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getType().getKey() == "DesktopActivity") {
+            if (((FermatActivity)(getActivity())).getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getType().getCode() == "DesktopActivity") {
 
 
                 //wallet store
