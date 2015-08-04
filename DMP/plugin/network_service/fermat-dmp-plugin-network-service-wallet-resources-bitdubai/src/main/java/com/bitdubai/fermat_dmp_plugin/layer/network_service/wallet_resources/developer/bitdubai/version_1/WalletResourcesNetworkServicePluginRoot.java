@@ -5,29 +5,21 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
@@ -39,7 +31,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkServicesWalletResourcesDAO;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkserviceswalletresourcesDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkserviceswalletresourcesDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -47,8 +38,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletResourcesInstalledEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
@@ -78,18 +67,18 @@ import java.util.UUID;
  */
 
 /**
- * This plugin is designed to look up for the resources needed by a newly installed wallet. We are talking about the 
+ * This plugin is designed to look up for the resources needed by a newly installed wallet. We are talking about the
  * navigation structure, plus the images needed by the wallet to be able to run.
- *
- * It will try to gather those resources from other peers or a centralized location provided by the wallet developer 
+ * <p>
+ * It will try to gather those resources from other peers or a centralized location provided by the wallet developer
  * if it is not possible.
- *
+ * <p>
  * It will also serve other peers with these resources when needed.
- *
- * * * * * * * 
+ * <p>
+ * * * * * * *
  */
 
-public class WalletResourcesNetworkServicePluginRoot implements Service, NetworkService,WalletResourcesInstalationManager,WalletResourcesProviderManager,DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
+public class WalletResourcesNetworkServicePluginRoot implements Service, NetworkService, WalletResourcesInstalationManager, WalletResourcesProviderManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin {
 
 
     /**
@@ -131,31 +120,30 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     UUID pluginId;
 
     /**
-     *  Dealing with the repository database
+     * Dealing with the repository database
      */
     NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO;
 
     /**
      * Installed skins repositories
-     *
+     * <p>
      * SkinId, repository link
      */
-    private Map<UUID,Repository> repositoriesName;
+    private Map<UUID, Repository> repositoriesName;
 
 
     private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/";
 
 
-
     //para testear
-    private Map<String,byte[]> imagenes;
+    private Map<String, byte[]> imagenes;
 
     /**
      * Service Interface implementation.
      */
 
     @Override
-    public void start() throws CantStartPluginException{
+    public void start() throws CantStartPluginException {
 
         try {
             /**
@@ -179,16 +167,17 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             networkServicesWalletResourcesDAO.initializeDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
 
 
-                    this.serviceStatus = ServiceStatus.STARTED;
-        }catch (Exception e){
+            this.serviceStatus = ServiceStatus.STARTED;
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void setUp(){
-        repositoriesName =new HashMap<UUID,Repository>();
+
+    private void setUp() {
+        repositoriesName = new HashMap<UUID, Repository>();
 
         //for testing purpose
-        imagenes= new HashMap<String,byte[]>();
+        imagenes = new HashMap<String, byte[]>();
     }
 
     @Override
@@ -242,7 +231,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     /**
@@ -250,51 +239,46 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
 
-
     //el xml de las skin debe estar pegado a una estructura de navegacion
-
     @Override
-    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName,String navigationStructureVersion) {
-        String linkToRepo=REPOSITORY_LINK+walletCategory+"/"+walletType+"/"+developer+"/";
+    public void installResources(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) {
+        String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
 
-        String linkToResources = linkToRepo+"skins/"+skinName+"/"+screenSize+"/";
+        String linkToResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
 
 
-        Skin skin=null;
+        Skin skin = null;
         try {
 
-           skin = checkSkinResources(linkToResources);
+            skin = checkSkinResources(linkToResources);
 
 
-           Repository repository = new Repository(skinName,navigationStructureVersion,linkToRepo);
+            Repository repository = new Repository(skinName, navigationStructureVersion, linkToRepo);
 
             /**
              *  Save repository in memory for use
              */
-           repositoriesName.put(skin.getId(),repository);
+            repositoriesName.put(skin.getId(), repository);
 
 
+            //NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(database);
 
-           //NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(database);
-
-           //networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
-
+            //networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
 
 
-           /**
-           *  download navigation structure
-           */
+            /**
+             *  download navigation structure
+             */
 
-           String linkToNavigationStructure = linkToRepo+"/versions/"+skin.getNavigationStructureCompatibility()+"/";
-           donwloadNavigationStructure(linkToNavigationStructure, skin.getId());
+            String linkToNavigationStructure = linkToRepo + "/versions/" + skin.getNavigationStructureCompatibility() + "/";
+            donwloadNavigationStructure(linkToNavigationStructure, skin.getId());
 
-           /**
-           *  download resources
-           */
+            /**
+             *  download resources
+             */
 
-           downloadResources(linkToResources,skin,screenDensity);
-
+            downloadResources(linkToResources, skin, screenDensity);
 
 
         } catch (CantCheckResourcesException e) {
@@ -309,37 +293,38 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public void unninstallResources(String walletPath, UUID skinId, String navigationStructureVersion) {
         //TODO: para desistalar la wallet lo que hago es eliminar todos los archivos del path de la wallet del sistema y enviar un evento para que borre el navigationStructure de la wallet del wallet runtime
+        //TODO: si lo que estoy eliminando no es la ultima wallet de ese tipo lo que hago es borrar solo el navigation structure
     }
 
-    private void recordNavigationStructure(){
+    private void recordNavigationStructure() {
 
     }
 
-    private void downloadResources(String linkToResources,Skin skin,String screenDensity){
+    private void downloadResources(String linkToResources, Skin skin, String screenDensity) {
 
         /**
          * download portrait resources
          */
-        String linkToPortraitResources = linkToResources+"portrait/resources/"+screenDensity+"/drawables/";
-        downloadResources(linkToPortraitResources,skin.getLstPortraitResources(),skin.getId());
+        String linkToPortraitResources = linkToResources + "portrait/resources/" + screenDensity + "/drawables/";
+        downloadResources(linkToPortraitResources, skin.getLstPortraitResources(), skin.getId());
 
         /**
          * download landscape resources
          */
-        String linkToLandscapeResources = linkToResources+"landscape/resources/"+screenDensity+"/drawables/";
-        downloadResources(linkToLandscapeResources,skin.getLstLandscapeResources(),skin.getId());
+        String linkToLandscapeResources = linkToResources + "landscape/resources/" + screenDensity + "/drawables/";
+        downloadResources(linkToLandscapeResources, skin.getLstLandscapeResources(), skin.getId());
 
         /**
          * download portrait layouts
          */
-        String linkToPortraitLayouts = linkToResources+"portrait/resources/"+screenDensity+"/layouts/";
-        donwloadLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId());
+        String linkToPortraitLayouts = linkToResources + "portrait/resources/" + screenDensity + "/layouts/";
+        downloadLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId());
 
         /**
          * download landscape layouts
          */
-        String linkToLandscapeLayouts = linkToResources+"landscape/resources/"+screenDensity+"/layouts/";
-        donwloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId());
+        String linkToLandscapeLayouts = linkToResources + "landscape/resources/" + screenDensity + "/layouts/";
+        downloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId());
 
 
         //TODO: raise a event
@@ -354,8 +339,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     //TODO: preguntar a jorge si se guarda los sonidos y los videos como byte array
 
-    private void downloadResources(String link,Map<String,Resource> resourceMap,UUID skinId){
-        try{
+    private void downloadResources(String link, Map<String, Resource> resourceMap, UUID skinId) {
+        try {
             for (Map.Entry<String, Resource> entry : resourceMap.entrySet()) {
 
 
@@ -365,16 +350,16 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                         byte[] image = getRepositoryImageFile(link, entry.getValue().getFileName());
 
                         //testing purpose
-                        imagenes.put(entry.getValue().getName(),image);
-//                        try {
-//                            //TODO: despues guardarlo en memoria
-//                            //recordImageResource(image,entry.getKey(),skinId,link);
-//
-//                        } catch (CantCheckResourcesException e) {
-//                            e.printStackTrace();
-//                        } catch (CantPersistFileException e) {
-//                            e.printStackTrace();
-//                        }
+                        imagenes.put(entry.getValue().getName(), image);
+                        try {
+                            //TODO: despues guardarlo en memoria
+                            recordImageResource(image, entry.getKey(), skinId, link);
+
+                        } catch (CantCheckResourcesException e) {
+                            e.printStackTrace();
+                        } catch (CantPersistFileException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     case SOUND:
 
@@ -392,11 +377,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         }
     }
-    private void donwloadLayouts(String link,Map<String,Layout> resourceMap,UUID skinId){
-        try{
+
+    private void downloadLayouts(String link, Map<String, Layout> resourceMap, UUID skinId) {
+        try {
             for (Map.Entry<String, Layout> entry : resourceMap.entrySet()) {
 
-                String layoutXML = getRepositoryStringFile(link,entry.getValue().getFilename());
+                String layoutXML = getRepositoryStringFile(link, entry.getValue().getFilename());
 
                 try {
 
@@ -417,14 +403,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         }
     }
-    private void donwloadNavigationStructure(String link,UUID skinId){
-        try{
+
+    private void donwloadNavigationStructure(String link, UUID skinId) {
+        try {
 
 
             /**
              *  Download portrait navigation structure
              */
-            String navigationStructureXML = getRepositoryStringFile(link,"navigation_structure_portrait.xml");
+            String navigationStructureXML = getRepositoryStringFile(link, "navigation_structure_portrait.xml");
 
 
             //TODO: lanzar eventos
@@ -436,7 +423,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              *  Download landscape navigation structure
              */
-            navigationStructureXML = getRepositoryStringFile(link,"navigation_structure_landscape.xml");
+            navigationStructureXML = getRepositoryStringFile(link, "navigation_structure_landscape.xml");
 
             //TODO: lanzar eventos
             /*
@@ -455,64 +442,78 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
     }
 
-    private void recordImageResource(byte[] image,String name,UUID skinId,String reponame) throws CantCheckResourcesException,CantPersistFileException {
+    private void recordImageResource(byte[] image, String name, UUID skinId, String reponame) throws CantCheckResourcesException, CantPersistFileException {
 
         PluginBinaryFile imageFile = null;
 
-        String filename= skinId.toString()+"_"+name;
+        String filename = skinId.toString() + "_" + name;
 
-        try{
-            imageFile = pluginFileSystem.createBinaryFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
-        }
-        catch(CantCreateFileException cantPersistFileException){
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " +filename, "");
-        }
-        imageFile.setContent(image);
-        try{
-            imageFile.persistToMedia();
-        }
-        catch(CantPersistFileException cantPersistFileException){
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " + filename, "");
+        try {
 
+            imageFile = pluginFileSystem.getBinaryFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+        } catch (CantCreateFileException cantPersistFileException) {
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+        } catch (FileNotFoundException e) {
+
+            try {
+                imageFile = pluginFileSystem.createBinaryFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                imageFile.setContent(image);
+                try {
+                    imageFile.persistToMedia();
+                } catch (CantPersistFileException cantPersistFileException) {
+                    throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+
+                }
+            } catch (CantCreateFileException cantPersistFileException) {
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+            }
         }
+        //aca deberia fijarme que hago si ya existe el archivo
+
 
     }
-    private void recordXML(String xml, String name, UUID skinId, String reponame)throws CantCheckResourcesException,CantPersistFileException{
+
+    private void recordXML(String xml, String name, UUID skinId, String reponame) throws CantCheckResourcesException, CantPersistFileException {
 
         PluginTextFile layoutFile = null;
 
-        String filename= skinId.toString()+"_"+name;
+        String filename = skinId.toString() + "_" + name;
 
-        try{
-            layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+        try {
+            
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
-        } catch (CantCreateFileException cantPersistFileException) {
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " +filename, "");
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            try {
+
+                layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                layoutFile.setContent(xml);
+                layoutFile.persistToMedia();
+
+            } catch (CantCreateFileException cantPersistFileException) {
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+            }
         }
 
-        layoutFile.setContent(xml);
-        try{
-            layoutFile.persistToMedia();
-        }
-        catch(CantPersistFileException cantPersistFileException){
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " + filename, "");
+        //acá deberia fijarme que hago si ya existe el archivo
 
-        }
 
     }
 
     private Skin checkSkinResources(String linkToSkin) throws CantCheckResourcesException, CantPersistFileException {
-        String repoManifest ="";
-        String skinFilename="/skin.xml";
-        try{
+        String repoManifest = "";
+        String skinFilename = "/skin.xml";
+        try {
             //connect to repo and get manifest file
-            repoManifest = getRepositoryStringFile(linkToSkin,skinFilename);
-
+            repoManifest = getRepositoryStringFile(linkToSkin, skinFilename);
 
 
             Skin skin = new Skin();
-            skin=(Skin)XMLParser.parseXML(repoManifest,skin);
+            skin = (Skin) XMLParser.parseXML(repoManifest, skin);
 
             /**
              *  Skin record
@@ -521,14 +522,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             return skin;
 
-        }
-        catch(MalformedURLException|FileNotFoundException e){
+        } catch (MalformedURLException | FileNotFoundException e) {
 
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Http error in connection with the repository to load manifest file", "");
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", e, "Http error in connection with the repository to load manifest file", "");
 
-        }catch(IOException e){
+        } catch (IOException e) {
 
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error load manifest file ","Repository not exist or manifest file not exist");
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", e, "Error load manifest file ", "Repository not exist or manifest file not exist");
 
         }
     }
@@ -542,45 +542,40 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
 
-
-
-
-
     @Override
     public UUID getResourcesId() {
         return null;
     }
 
     @Override
-    public Skin getSkinFile(String fileName,UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
+    public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
         String content = "";
         try {
             //get repo name
-            Repository repository= repositoriesName.get(skinId);//= Repositories.getValueFromType(walletType);
+            Repository repository = repositoriesName.get(skinId);//= Repositories.getValueFromType(walletType);
             //get image from disk
             PluginTextFile layoutFile;
 
-            String path = repository.getPath()+"/skins/"+repository.getSkinName()+"/";
+            String path = repository.getPath() + "/skins/" + repository.getSkinName() + "/";
 
             layoutFile = pluginFileSystem.getTextFile(pluginId, path, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
-        }
-        catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:",e,"Error write layout file resource  " , "");
+            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:", e, "Error write layout file resource  ", "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:",e,"Error created image file resource " , "");
+            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:", e, "Error created image file resource ", "");
 
         }
 
-        return (Skin) XMLParser.parseXML(content,new Skin());
+        return (Skin) XMLParser.parseXML(content, new Skin());
     }
 
     @Override
@@ -599,7 +594,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
     @Override
-    public byte[] getImageResource(String imageName,UUID skinId) throws CantGetResourcesException {
+    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetResourcesException {
 
         // Testing purpose
         return imagenes.get(imageName);
@@ -653,29 +648,28 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @throws CantGetResourcesException
      */
     @Override
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation,UUID skinId) throws CantGetResourcesException {
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
 
         String content = "";
         try {
             //get repo name
-            String reponame="";//= Repositories.getValueFromType(walletType);
+            String reponame = "";//= Repositories.getValueFromType(walletType);
             //get image from disk
             PluginTextFile layoutFile;
             layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, layoutName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
-        }
-        catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:",e,"Error write layout file resource  " , "");
+            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:", e, "Error write layout file resource  ", "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:",e,"Error created image file resource " , "");
+            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:", e, "Error created image file resource ", "");
 
         }
 
@@ -692,7 +686,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @throws IOException
      * @throws FileNotFoundException
      */
-    private String getRepositoryStringFile(String link,String filename) throws MalformedURLException, IOException, FileNotFoundException {
+    private String getRepositoryStringFile(String link, String filename) throws MalformedURLException, IOException, FileNotFoundException {
 
         String reporSource = REPOSITORY_LINK + link + filename;
 
@@ -714,7 +708,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         InputStream crunchifyStream = http.getInputStream();
         String response = getStringFromStream(crunchifyStream);
 
-        return  response;
+        return response;
 
     }
 
@@ -722,14 +716,14 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * <p>This method connects to the repository and download resource image file for wallet on byte
      *
      * @param repoResource name of repository where wallet files resources are stored
-     * @param fileName Name of resource file
+     * @param fileName     Name of resource file
      * @return byte image object
      * @throws MalformedURLException
      * @throws IOException
      * @throws FileNotFoundException
      */
 
-    private byte[] getRepositoryImageFile(String repoResource ,String fileName) throws MalformedURLException, IOException, FileNotFoundException {
+    private byte[] getRepositoryImageFile(String repoResource, String fileName) throws MalformedURLException, IOException, FileNotFoundException {
 
         String link = REPOSITORY_LINK + repoResource + fileName;
 
@@ -755,7 +749,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @throws IOException
      */
 
-    private  String getStringFromStream(InputStream stream) throws IOException {
+    private String getStringFromStream(InputStream stream) throws IOException {
         if (stream != null) {
             Writer writer = new StringWriter();
 
@@ -774,7 +768,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             return "No Contents";
         }
     }
-
 
 
     /**
@@ -797,14 +790,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager =errorManager;
+        this.errorManager = errorManager;
     }
 
 
@@ -835,7 +827,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot");
-              /**
+        /**
          * I return the values.
          */
         return returnedClasses;
@@ -861,7 +853,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
 
     }
-
 
 
 }
