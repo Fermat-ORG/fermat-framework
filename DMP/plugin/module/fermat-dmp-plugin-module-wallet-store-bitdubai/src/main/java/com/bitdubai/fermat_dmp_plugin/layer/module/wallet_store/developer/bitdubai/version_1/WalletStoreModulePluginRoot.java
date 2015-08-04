@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartInstallationException;
@@ -104,6 +106,8 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     @Override
     public void start() {
         try {
+            //this.walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, UUID.fromString("967f0de2-f384-4c49-ae0a-60f5fa59db7f"), InstallationStatus.INSTALL_AVAILABLE);
+
             walletStoreModuleManager = new com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
             WalletStoreCatalogue walletStoreCatalogue = this.getCatalogue();
             WalletStoreCatalogueItem walletStoreCatalogueItem = walletStoreCatalogue.getWalletCatalogue(0, 0).get(0);

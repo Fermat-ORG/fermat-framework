@@ -419,6 +419,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
             catalogItem.setCategory(WalletCategory.valueOf(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME)));
             catalogItem.setDescription(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME));
             catalogItem.setDefaultSizeInBytes(record.getIntegerValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_SIZE_COLUMN_NAME));
+            catalogItem.setId(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME));
+            
 
             catalogItems.add(catalogItem);
         }
