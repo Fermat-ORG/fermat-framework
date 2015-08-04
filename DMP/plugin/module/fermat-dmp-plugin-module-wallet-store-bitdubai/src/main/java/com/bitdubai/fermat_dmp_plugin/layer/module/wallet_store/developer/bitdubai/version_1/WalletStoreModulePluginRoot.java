@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStar
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
@@ -102,6 +103,15 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     @Override
     public void start() {
+        try {
+            walletStoreModuleManager = new com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
+            WalletStoreCatalogue walletStoreCatalogue = this.getCatalogue();
+            WalletStoreCatalogueItem walletStoreCatalogueItem = walletStoreCatalogue.getWalletCatalogue(0, 0).get(0);
+            System.out.println("WalletStore Catalog item: " + walletStoreCatalogueItem.getId());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.serviceStatus = ServiceStatus.STARTED;
     }
 

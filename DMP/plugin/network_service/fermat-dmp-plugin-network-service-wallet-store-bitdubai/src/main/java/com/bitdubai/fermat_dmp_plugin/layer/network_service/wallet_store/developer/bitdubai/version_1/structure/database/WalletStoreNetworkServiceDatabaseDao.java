@@ -342,6 +342,21 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         return recordList;
     }
 
+    private List<DatabaseTableRecord> getAllRecordsFromDatabase (String tableName) throws CantExecuteDatabaseOperationException, InvalidResultReturnedByDatabaseException {
+        DatabaseTable table = getDatabaseTable(tableName);
+        try {
+            table.loadToMemory();
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemoryException) {
+            throw new CantExecuteDatabaseOperationException(cantLoadTableToMemoryException, null, "Error in database plugin.");
+        }
+
+        List<DatabaseTableRecord> recordList = table.getRecords();
+        if (recordList.size() ==  0)
+            throw new InvalidResultReturnedByDatabaseException(null, " number of records: " + recordList.size(), "database inconsistency");
+
+        return recordList;
+    }
+
     private CatalogItem getCatalogItemFromDatabase (final UUID id) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
         DatabaseTableFilter tableFilter = new DatabaseTableFilter() {
             @Override
@@ -395,38 +410,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
     private List<CatalogItem> getAllCatalogItemsFromDatabase() throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException{
         List<CatalogItem> catalogItems = new ArrayList<CatalogItem>();
 
-        DatabaseTableFilter tableFilter = new DatabaseTableFilter() {
-            @Override
-            public void setColumn(String column) {
 
-            }
-
-            @Override
-            public void setType(DatabaseFilterType type) {
-
-            }
-
-            @Override
-            public void setValue(String value) {
-
-            }
-
-            @Override
-            public String getColumn() {
-                return WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME;
-            }
-
-            @Override
-            public String getValue() {
-                return "";
-            }
-
-            @Override
-            public DatabaseFilterType getType() {
-                return DatabaseFilterType.LIKE;
-            }
-        };
-        List<DatabaseTableRecord> records = getRecordsFromDatabase(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME, tableFilter);
+        List<DatabaseTableRecord> records = getAllRecordsFromDatabase(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
 
         for (DatabaseTableRecord record : records){
             CatalogItem catalogItem = new CatalogItem();
