@@ -9,10 +9,13 @@ package com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.int
  * @version 1.0
  * @since Java JDK 1.7
  */
+
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+
 /**
  * Created by natalia on 29/07/15.
  */
 public interface PlatformInfo {
 
-    public String getVersion();
+    public Version getVersion();
 }

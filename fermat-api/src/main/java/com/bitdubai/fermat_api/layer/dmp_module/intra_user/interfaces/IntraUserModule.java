@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSolveRequestLaterException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
@@ -21,10 +22,11 @@ public interface IntraUserModule {
      * The method <code>createIntraUser</code> is used to create a new intra user
      *
      * @param intraUserName the name of the intra user to create
-     * @return the public key generated for the said intra user.
+     * @param profileImage  the profile image of the intra user to create
+     * @return the login identity generated for the said intra user.
      * @throws CouldNotCreateIntraUserException
      */
-    public String createIntraUser(String intraUserName) throws CouldNotCreateIntraUserException;
+    public IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws CouldNotCreateIntraUserException;
 
     /**
      * The method <code>setProfileImage</code> let the current logged in intra user set its profile
@@ -32,7 +34,16 @@ public interface IntraUserModule {
      * @param image the profile picture to set
      * @throws CouldSaveProfileImageException
      */
-    public void setProfileImage(byte[] image) throws CouldSaveProfileImageException;
+    public void setNewProfileImage(byte[] image) throws CouldSaveProfileImageException;
+
+    /**
+     * The method <code>showAvailableLoginIdentities</code> lists the login identities that can be used
+     * to log in as an Intra User for the current Device User.
+     *
+     * @return the list of identities the current Device User can use to log in
+     * @throws CantShowLoginIdentitiesException
+     */
+    public List<IntraUserLoginIdentity> showAvailableLoginIdentities() throws CantShowLoginIdentitiesException;
 
     /**
      * The method <code>login</code> let an intra user log in

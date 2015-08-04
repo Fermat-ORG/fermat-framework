@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordInstalledWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
@@ -24,23 +25,23 @@ public class WalletOpenedEventHandler implements EventHandler {
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         String walletId = ((WalletOpenedEvent)platformEvent).getWalletPublicKey();
         
         
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
             
-            try
-            {
-                this.walletRuntimeManager.recordNavigationStructure(walletId);
-            }
-            catch (CantRecordInstalledWalletNavigationStructureException cantRecordOpenedWalletException) {
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-                throw cantRecordOpenedWalletException;
-
-            }
+//            try
+//            {
+//                this.walletRuntimeManager.recordNavigationStructure(walletId);
+//            }
+//            catch (CantRecordInstalledWalletNavigationStructureException cantRecordOpenedWalletException) {
+//                /**
+//                 * The main module could not handle this exception. Me neither. Will throw it again.
+//                 */
+//                throw cantRecordOpenedWalletException;
+//
+//            }
             
         } 
     }

@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
@@ -43,6 +44,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -57,12 +60,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 
-
-import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -88,7 +86,7 @@ import java.util.UUID;
  * * * * * 
  */
 
-public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, WalletStoreManager, Service, NetworkService, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
+public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,WalletStoreManager, Service, NetworkService, LogManagerForDevelopers,Plugin {
     /**
      * WalletStoreNetworkServicePluginRoot member variables
      */
@@ -292,14 +290,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         }
 
 
-        /**
-         * I will initialize the handling of platform events.
-         */
-        EventListener eventListener;
-        EventHandler eventHandler;
-
-
-        //todo borrar!
+        //todo borrar este testing.
         try {
             TestPublishWallet();
         } catch (MalformedURLException e) {
@@ -307,6 +298,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         } catch (CantPublishWalletInCatalogException e) {
             e.printStackTrace();
         }
+
+        /**
+         * I will initialize the handling of platform events.
+         */
+        EventListener eventListener;
+        EventHandler eventHandler;
 
         this.serviceStatus = ServiceStatus.STARTED;
 
@@ -462,12 +459,9 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                 WalletStoreNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-
     }
 
-
-
-    //todo delete
+    //todo delete - TESTING
     private void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException {
         UUID walletId = UUID.randomUUID();
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem catalogItem;

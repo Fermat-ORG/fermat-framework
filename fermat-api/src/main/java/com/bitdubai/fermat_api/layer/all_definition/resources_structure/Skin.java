@@ -29,6 +29,8 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private Version version;
 
+    // agregar
+
     private VersionCompatibility navigationStructureCompatibility;
 
     private ScreenSize screenSize;

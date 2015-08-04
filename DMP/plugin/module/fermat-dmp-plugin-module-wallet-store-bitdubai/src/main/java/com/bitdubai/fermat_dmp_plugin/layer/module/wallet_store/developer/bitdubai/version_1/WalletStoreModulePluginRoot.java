@@ -268,4 +268,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
         return walletStoreModuleManager.getCatalogItemDetails(walletCatalogId);
     }
+
+
+
 }

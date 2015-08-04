@@ -25,7 +25,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.database.WalletLanguageMiddlewareDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/07/15.
  *
  * @version 1.0
@@ -50,8 +50,8 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
     /**
      * Constructor
      *
-     * @param pluginDatabaseSystem
-     * @param pluginId
+     * @param pluginDatabaseSystem plugin database system instance
+     * @param pluginId plugin id
      */
     public WalletLanguageMiddlewareDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -71,14 +71,14 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException e) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeWalletLanguageMiddlewareDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeWalletLanguageMiddlewareDatabaseException(CantInitializeWalletLanguageMiddlewareDatabaseException.DEFAULT_MESSAGE, e, "", "");
 
-        } catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
 
              /*
               * The database no exist may be the first time the plugin is running on this device,
@@ -91,11 +91,11 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
                    * We create the new database
                    */
                 database = walletLanguageMiddlewareDatabaseFactory.createDatabase(pluginId, pluginId.toString());
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            } catch (CantCreateDatabaseException e) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeWalletLanguageMiddlewareDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeWalletLanguageMiddlewareDatabaseException(CantInitializeWalletLanguageMiddlewareDatabaseException.DEFAULT_MESSAGE, e, "Error creating database.", "");
             }
         }
     }
@@ -105,36 +105,32 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
         /**
          * I only have one database on my plugin. I will return its name.
          */
-        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
+        List<DeveloperDatabase> databases = new ArrayList<>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Language", this.pluginId.toString()));
         return databases;
     }
 
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
-        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
+        List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
         /**
          * Table Wallet Language columns.
          */
-        List<String> walletLanguageColumns = new ArrayList<String>();
+        List<String> walletLanguageColumns = new ArrayList<>();
 
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ID_COLUMN_NAME);
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_NAME_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_ALIAS_COLUMN_NAME);
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME);
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_LANGUAGE_STATE_COLUMN_NAME);
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
         walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_INITIAL_COLUMN_NAME);
-        walletLanguageColumns.add(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_VERSION_COMPATIBILTY_FINAL_COLUMN_NAME);
         /**
          * Table Wallet Language addition.
          */
         DeveloperDatabaseTable walletLanguageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME, walletLanguageColumns);
         tables.add(walletLanguageTable);
-
 
 
         return tables;
@@ -145,7 +141,7 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
         /**
          * Will get the records for the given table
          */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
+        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 
 
         /**
@@ -162,7 +158,7 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
+        List<String> developerRow = new ArrayList<>();
         for (DatabaseTableRecord row : records) {
             /**
              * for each row in the table list
@@ -171,7 +167,7 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

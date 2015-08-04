@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_middleware.money_request.MoneyRequestManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -21,9 +22,9 @@ public class IncomingMoneyRequestRejectedEventHandler implements EventHandler {
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         if (((Service) this.moneyRequestManager).getStatus() == ServiceStatus.STARTED){
-/*
+            /*
             try
             {
                 this.moneyRequestManager.exampleMethod();
@@ -32,8 +33,8 @@ public class IncomingMoneyRequestRejectedEventHandler implements EventHandler {
             {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-         /*       System.err.println("CantCreateCryptoWalletException: "+ exampleException.getMessage());
+                 *
+                System.err.println("CantCreateCryptoWalletException: "+ exampleException.getMessage());
                 exampleException.printStackTrace();
 
                 throw  exampleException;
@@ -41,7 +42,7 @@ public class IncomingMoneyRequestRejectedEventHandler implements EventHandler {
         }
         else
         {
-            throw new MiddlewareNotStartedException();
-        */}
+            throw new MiddlewareNotStartedException();*/
+        }
     }
 }

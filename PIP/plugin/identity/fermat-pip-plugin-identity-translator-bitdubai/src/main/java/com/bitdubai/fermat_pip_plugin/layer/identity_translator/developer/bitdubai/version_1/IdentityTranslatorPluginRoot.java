@@ -5,14 +5,14 @@ package com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdu
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
@@ -23,17 +23,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
+import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.exceptions.CantCreateNewTranslatorException;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.exceptions.CantGetUserTranslatorIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.interfaces.Translator;
@@ -43,6 +38,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.developerUtils.IdentityTranslatorDeveloperDataBaseFactory;
@@ -50,9 +46,6 @@ import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdub
 import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.estructure.IdentityTranslatorDao;
 import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.estructure.IdentityTranslatorTranslator;
 import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
-import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.exceptions.CantGetTranslatorIdentityPrivateKeyException;
-import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,13 +67,12 @@ import java.util.UUID;
  * * * * * * *
  */
 
-public class IdentityTranslatorPluginRoot implements DatabaseManagerForDevelopers,DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithErrors,DealsWithLogger, LogManagerForDevelopers,Plugin,TranslatorManager {
+public class IdentityTranslatorPluginRoot implements DatabaseManagerForDevelopers,DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithErrors,DealsWithLogger, LogManagerForDevelopers,Plugin,Service,TranslatorManager {
 
     /**
      * PlugIn Interface member variables.
      */
 
-    private String TRANSLATOR_IDENTITY_PRIVATE_KEYS_FILE_NAME = "translatorIdentityPrivateKeys";
 
     IdentityTranslatorDao identityTranslatorDao;
 
@@ -103,16 +95,18 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
     PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
+     * FileSystem Interface member variables.
+     */
+    PluginFileSystem pluginFileSystem;
+
+
+    /**
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    /**
-     * UsesFileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
@@ -189,11 +183,13 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
 
     }
 
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem  = pluginFileSystem;
 
     }
 
@@ -216,6 +212,7 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.IdentityTranslatorPluginRoot");
         returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.estructure.IdentityTranslatorTranslator");
+        returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.estructure.IdentityTranslatorDao");
         returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.database.IdentityTranslatorDatabaseFactory");
         returnedClasses.add("com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.database.IdentityTranslatorDatabaseConstants");
 
@@ -247,6 +244,7 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
 
     }
 
+    @Override
     public void start() throws CantStartPluginException {
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -254,7 +252,7 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
         /**
          * I created instance of IdentityTranslatorDao
          */
-        this.identityTranslatorDao = new IdentityTranslatorDao(errorManager,pluginDatabaseSystem,pluginId);
+        this.identityTranslatorDao = new IdentityTranslatorDao(errorManager,pluginDatabaseSystem,pluginId, this.pluginFileSystem);
 
 
         try {
@@ -267,70 +265,76 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
 
     }
 
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return null;
+    }
+
     /**
      * Translator Manager Interface implementation
      */
     @Override
     public List<Translator> getTranslatorsFromCurrentDeviceUser() throws CantGetUserTranslatorIdentitiesException {
-        return null;
+
+        try {
+
+            return this.identityTranslatorDao.getDevelopersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
+
+        }
+        catch (CantGetLoggedInDeviceUserException e) {
+
+            throw new CantGetUserTranslatorIdentitiesException("CAN'T GET TRANSLATORS LIST", e, "Translator Identity", ".");
+        }
+        catch (CantGetUserDeveloperIdentitiesException e)
+        {
+            throw new CantGetUserTranslatorIdentitiesException ("CAN'T GET TRANSLATORS LIST", e, "Translator Identity", "");
+        }
+
     }
 
     @Override
     public Translator createNewTranslator(String alias) throws CantCreateNewTranslatorException {
 
-        return new IdentityTranslatorTranslator(null,null,null);
-    }
-
-    /**
-     * Puligin private methods
-     */
-
-    private void  persistNewUserPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
+        // Create the new developer.
         try {
-            PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    TRANSLATOR_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
 
-            file.setContent(privateKey);
+            ECCKeyPair keyPair= new ECCKeyPair();
 
-            file.persistToMedia();
-        } catch (CantPersistFileException e) {
-            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
+            identityTranslatorDao.createNewTranslator(alias, keyPair, deviceUserManager.getLoggedInDeviceUser());
 
-        } catch (CantCreateFileException e) {
-            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
+
+            return new IdentityTranslatorTranslator(alias,keyPair.getPublicKey(), keyPair.getPrivateKey());
+
+        } catch (CantGetLoggedInDeviceUserException e) {
+
+           throw new CantCreateNewTranslatorException ("CAN'T CREATE TRANSLATOR IDENTITY", e, "Translator Identity", ".");
+
+        } catch (CantCreateNewDeveloperException e) {
+
+            throw new CantCreateNewTranslatorException ("CAN'T CREATE TRANSLATOR IDENTITY", e, "Translator Identity", "");
+
         }
+
     }
 
 
-    public String getDeveloperIdentiyPrivateKey(String publicKey) throws CantGetTranslatorIdentityPrivateKeyException {
-        String privateKey = "";
-        try {
-            PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    TRANSLATOR_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
 
 
-            file.loadFromMedia();
-
-            privateKey = file.getContent();
-
-        } catch (CantLoadFileException e) {
-            throw new CantGetTranslatorIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
-
-        }
-        catch (FileNotFoundException |CantCreateFileException e) {
-            throw new CantGetTranslatorIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
-        }
-
-        return privateKey;
-    }
 
 
 }

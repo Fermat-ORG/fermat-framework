@@ -62,12 +62,15 @@ public enum Plugins {
     BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE("Wallet Publisher Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_SKIN_MIDDLEWARE("Wallet Skin Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_STORE_MIDDLEWARE("Wallet Store Middleware", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STORE_MODULE("Wallet Store Module", Developers.BITDUBAI),
     BITDUBAI_WALLET_SETTINGS_MIDDLEWARE("Wallet Settings Middleware", Developers.BITDUBAI),
     BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("Wallet Statistics Network Service", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE("Crypto Transmission Network Service", Developers.BITDUBAI),
     BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE("SubApp Resources Network Service", Developers.BITDUBAI),
-
+    BITDUBAI_REQUEST_MONEY_REQUEST("Request Money", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_IDENTITY("Developer Identity", Developers.BITDUBAI),
-    BITDUBAI_IDENTITY_MANAGER("Identity Managers", Developers.BITDUBAI),
+    BITDUBAI_IDENTITY_MANAGER("Translator Identity", Developers.BITDUBAI),
+    BITDUBAI_TRANSLATOR_IDENTITY("Tr", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_MODULE("Developer Module", Developers.BITDUBAI);
 
 

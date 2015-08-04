@@ -7,6 +7,15 @@ import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.interfaces.Tran
 /**
  * Created by natalia on 31/07/15.
  */
+
+/**
+ * The class <code>com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.estructure.IdentityTranslatorTranslator</code>
+ * represents a translator identity record.
+ *
+ * Created by  natalia on 31/07/15
+ *
+ * @version 1.0
+ */
 public class IdentityTranslatorTranslator implements Translator {
 
     private String alias;

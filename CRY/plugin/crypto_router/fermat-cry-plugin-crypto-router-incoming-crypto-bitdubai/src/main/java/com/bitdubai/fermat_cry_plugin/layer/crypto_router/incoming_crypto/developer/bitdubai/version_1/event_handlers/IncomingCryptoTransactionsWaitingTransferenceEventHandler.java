@@ -31,7 +31,7 @@ public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implement
      * EventHandler interface implementation
      */
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException{
 
         if (this.incomingCryptoEventRecorderService.getStatus() == ServiceStatus.STARTED){
 

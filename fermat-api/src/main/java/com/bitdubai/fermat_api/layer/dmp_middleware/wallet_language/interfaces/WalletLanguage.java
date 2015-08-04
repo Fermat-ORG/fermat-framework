@@ -35,11 +35,6 @@ public interface WalletLanguage {
     String getName();
 
     /**
-     * @return the alias of the language
-     */
-    String getAlias();
-
-    /**
      * @return the type of the language
      */
     Languages getType();
@@ -58,10 +53,5 @@ public interface WalletLanguage {
      * @return the version of the language
      */
     Version getVersion();
-
-    /**
-     * @return the version compatibility of the language
-     */
-    VersionCompatibility getVersionCompatibility();
 
 }

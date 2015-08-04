@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
@@ -24,25 +25,27 @@ public class WalletInstalledEventHandler implements EventHandler {
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         String publicKey = ((WalletInstalledEvent)platformEvent).getPublicKey();
         
         
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
+
+            //TODO: Hablar con luis que más quiere que haga cuando se instala la wallet
             
-            try {
-                this.walletRuntimeManager.recordNavigationStructure(publicKey);
-            }
-            catch (CantRecordInstalledWalletNavigationStructureException cantRecordInstalledWalletNavigationStructureException){
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-                System.err.println("CantRecordInstalledWalletNavigationStructureException: " + cantRecordInstalledWalletNavigationStructureException.getMessage());
-                cantRecordInstalledWalletNavigationStructureException.printStackTrace();
-
-                throw cantRecordInstalledWalletNavigationStructureException;
-
-            }
+//            try {
+//                this.walletRuntimeManager.recordNavigationStructure(publicKey);
+//            }
+//            catch (CantRecordInstalledWalletNavigationStructureException cantRecordInstalledWalletNavigationStructureException){
+//                /**
+//                 * The main module could not handle this exception. Me neither. Will throw it again.
+//                 */
+//                System.err.println("CantRecordInstalledWalletNavigationStructureException: " + cantRecordInstalledWalletNavigationStructureException.getMessage());
+//                cantRecordInstalledWalletNavigationStructureException.printStackTrace();
+//
+//                throw cantRecordInstalledWalletNavigationStructureException;
+//
+//            }
             
         } 
     }
