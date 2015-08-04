@@ -3,6 +3,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -20,5 +21,6 @@ public interface WalletSession {
     public ErrorManager getErrorManager();
     public String getBalanceTypeSelected();
     public void setBalanceTypeSelected(BalanceType balanceTypeSelected);
+    public WalletResourcesProviderManager getWalletResourcesProviderManager();
 
 }

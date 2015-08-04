@@ -12,6 +12,9 @@ repositories {
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
+
+    compile 'org.kohsuke:github-api:1.69'
+
     testCompile 'junit:junit:4.11'
     compile 'org.jdom:jdom:2.0.2'
 }

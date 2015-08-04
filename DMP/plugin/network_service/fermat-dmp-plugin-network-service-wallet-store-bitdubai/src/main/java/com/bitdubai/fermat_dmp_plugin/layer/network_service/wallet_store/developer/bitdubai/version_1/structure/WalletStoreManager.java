@@ -298,7 +298,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
     public WalletCatalog getWalletCatalogue() throws CantGetWalletsCatalogException {
         WalletCatalog walletCatalog = new WalletCatalog();
         try {
-            List<CatalogItem> catalogItemList =getDatabaseDAO().getCatalogItems();
+            List<CatalogItem> catalogItemList = getDatabaseDAO().getCatalogItems();
             walletCatalog.setCatalogItems(catalogItemList);
             walletCatalog.setCatalogSize(catalogItemList.size());
         } catch (Exception e) {

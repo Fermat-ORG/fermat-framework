@@ -30,7 +30,7 @@ class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSystem {
     /**
      * IncomingCryptoDataBaseFactory methods.
      */
-    Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
         DatabaseTableFactory table;
         HashMap<String, List<IncomingCryptoDataBaseConstants.ColumnDefinition>> tablesDefinitions = new HashMap<>();

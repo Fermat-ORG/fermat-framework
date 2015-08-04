@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.CantCheckResourcesException;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesInstalationManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 
 
@@ -15,10 +15,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
  * Created by loui on 17/02/15.
  */
 public class BegunSubAppInstallationEventHandler implements EventHandler {
-    SubAppResourcesManager subappResourcesManager;
+    SubAppResourcesInstalationManager subappResourcesInstalationManager;
     
-    public void setSubAppResourcesManager(SubAppResourcesManager subappResourcesManager){
-        this.subappResourcesManager = subappResourcesManager;
+    public void setSubAppResourcesManager(SubAppResourcesInstalationManager subappResourcesInstalationManager){
+        this.subappResourcesInstalationManager = subappResourcesInstalationManager;
     }
     
     @Override
@@ -27,11 +27,11 @@ public class BegunSubAppInstallationEventHandler implements EventHandler {
 
 
 
-        if (((Service) this.subappResourcesManager).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.subappResourcesInstalationManager).getStatus() == ServiceStatus.STARTED) {
 
          //   try
          //   {
-               // this.subappResourcesManager.checkResources();
+               // this.subappResourcesInstalationManager.checkResources();
         //    }
         //    catch (CantCheckResourcesException cantCheckResourcesException)
         //    {

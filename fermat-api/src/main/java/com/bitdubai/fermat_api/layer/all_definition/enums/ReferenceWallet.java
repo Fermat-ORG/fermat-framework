@@ -18,7 +18,7 @@ public enum ReferenceWallet {
     COMPOSITE_WALLET_MULTI_ACCOUNT("CWMA");
 
 
-    private final String code;
+    private String code;
 
     ReferenceWallet(String code) {
         this.code = code;
@@ -34,7 +34,10 @@ public enum ReferenceWallet {
             case "BWFW": return ReferenceWallet.BASIC_WALLET_FIAT_WALLET;
             case "BWLP": return ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET;
             case "CWMA": return ReferenceWallet.COMPOSITE_WALLET_MULTI_ACCOUNT;
-            default: throw new InvalidParameterException();
+            default:
+                //Modified by Manuel Perez on 03/08/2015
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ReferenceWallet enum");
+
         }
     }
 }

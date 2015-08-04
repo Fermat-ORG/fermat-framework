@@ -129,7 +129,7 @@ public class DatabaseToolsFragment extends Fragment{
                 Resource item = new Resource();
 
                 item.picture = "addon";
-                item.resource = addons.get(i).getKey();
+                item.resource = addons.get(i).getCode();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
                 //}

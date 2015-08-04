@@ -20,9 +20,9 @@ public interface WalletCatalog {
      * @throws CantGetWalletsCatalogException
      */
     public List<CatalogItem> getWalletCatalog (int offset, int top) throws CantGetWalletsCatalogException;
-    public int getCatalogSize();
+    public int getCatalogSize() throws CantGetWalletsCatalogException;
 
 
     public void setCatalogSize(int catalogSize);
-
+    public void setCatalogItems(List<? extends CatalogItem> catalogItemList);
 }

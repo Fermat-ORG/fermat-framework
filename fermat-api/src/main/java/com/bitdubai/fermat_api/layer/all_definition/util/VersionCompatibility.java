@@ -68,4 +68,9 @@ public class VersionCompatibility implements Serializable {
     public boolean isValidInVersion(Version version){
         return version.isBetween(this.initialVersion, this.finalVersion);
     }
+
+    @Override
+    public String toString() {
+        return finalVersion.toString();
+    }
 }
