@@ -7,7 +7,7 @@ public enum ScreenSize {
 
     XSMALL("xsmall"),
     SMALL ("small"),
-    NORMAL ("normal"),
+    MEDIUM ("medium"),
     LARGE ("large"),
     XLARGE ("xlarge");
 
@@ -24,7 +24,7 @@ public enum ScreenSize {
         switch (code) {
             case "xsmall": return ScreenSize.XSMALL;
             case "small": return ScreenSize.SMALL;
-            case "normal": return ScreenSize.NORMAL;
+            case "normal": return ScreenSize.MEDIUM;
             case "large": return ScreenSize.LARGE;
             case "xlarge": return ScreenSize.XLARGE;
         }
@@ -32,7 +32,7 @@ public enum ScreenSize {
         /**
          * Return by default.
          */
-        return ScreenSize.NORMAL;
+        return ScreenSize.MEDIUM;
     }
 
 }

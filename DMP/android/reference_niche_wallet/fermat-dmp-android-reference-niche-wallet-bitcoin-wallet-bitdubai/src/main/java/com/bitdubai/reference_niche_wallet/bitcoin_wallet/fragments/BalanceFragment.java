@@ -171,12 +171,13 @@ public class BalanceFragment extends Fragment {
         // Loading a setting textView Balance amount
         txtViewBalance = ((TextView) rootView.findViewById(R.id.txtViewBalance));
         txtViewBalance.setTypeface(tf);
-        //txtViewBalance.setText(formatBalanceString(balanceAvailable, ShowMoneyType.BITCOIN.getCode()));
-        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        txtViewBalance.setText(formatBalanceString(balanceAvailable, ShowMoneyType.BITCOIN.getCode()));
+        /*DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
 
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         txtViewBalance.setText("widht:"+dpWidth+"/ height"+dpHeight);
+        */
         txtViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

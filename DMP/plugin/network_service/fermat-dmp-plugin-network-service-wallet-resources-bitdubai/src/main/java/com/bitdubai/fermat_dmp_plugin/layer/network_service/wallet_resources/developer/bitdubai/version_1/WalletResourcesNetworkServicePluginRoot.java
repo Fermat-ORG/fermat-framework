@@ -130,11 +130,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
     UUID pluginId;
 
-
     /**
-     * Database
+     *  Dealing with the repository database
      */
-    private Database database;
+    NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO;
 
     /**
      * Installed skins repositories
@@ -148,6 +147,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
 
+    //para testear
+    private Map<String,byte[]> imagenes;
 
     /**
      * Service Interface implementation.
@@ -172,10 +173,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             listenersAdded.add(eventListener);
 
             /**
-             * Database
+             *  Create repository in database
              */
-//            NetworkserviceswalletresourcesDatabaseFactory networkserviceswalletresourcesDatabaseFactory = new NetworkserviceswalletresourcesDatabaseFactory(pluginDatabaseSystem);
-//            database = networkserviceswalletresourcesDatabaseFactory.createDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
+            networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
+            networkServicesWalletResourcesDAO.initializeDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
 
 
                     this.serviceStatus = ServiceStatus.STARTED;
@@ -185,6 +186,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
     private void setUp(){
         repositoriesName =new HashMap<UUID,Repository>();
+
+        //for testing purpose
+        imagenes= new HashMap<String,byte[]>();
     }
 
     @Override
@@ -246,13 +250,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
 
-    @Override
-    public WalletResources getWalletResources(String resourceName,String publicKey,Version version) {
-        //pluginFileSystem.getBinaryFile(pluginId,RESOURCES_PATH_LOCATION,)
-        return null;
-    }
-
-
 
     //el xml de las skin debe estar pegado a una estructura de navegacion
 
@@ -277,13 +274,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
            repositoriesName.put(skin.getId(),repository);
 
-            /**
-            *  Create repository in database
-            */
 
-           NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(database);
 
-           networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
+           //NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(database);
+
+           //networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
 
 
 
@@ -291,8 +286,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
            *  download navigation structure
            */
 
-           String linkToNavigationStructure = linkToRepo+"/navigationStructure/";
-           donwloadNavigationStructure(linkToNavigationStructure,navigationStructureVersion, skin.getId());
+           String linkToNavigationStructure = linkToRepo+"/versions/"+skin.getNavigationStructureCompatibility()+"/";
+           donwloadNavigationStructure(linkToNavigationStructure, skin.getId());
 
            /**
            *  download resources
@@ -306,11 +301,14 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         } catch (CantPersistFileException e) {
             e.printStackTrace();
-        } catch (CantCreateRepositoryException e) {
-            e.printStackTrace();
         }
 
         //installSkinResource("null");
+    }
+
+    @Override
+    public void unninstallResources(String walletPath, UUID skinId, String navigationStructureVersion) {
+        //TODO: para desistalar la wallet lo que hago es eliminar todos los archivos del path de la wallet del sistema y enviar un evento para que borre el navigationStructure de la wallet del wallet runtime
     }
 
     private void recordNavigationStructure(){
@@ -344,12 +342,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         donwloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId());
 
 
-
+        //TODO: raise a event
         // fire event Wallet resource installed
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
+        /*PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
         ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
         eventManager.raiseEvent(platformEvent);
-
+        */
 
 
     }
@@ -365,14 +363,18 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                     case IMAGE:
 
                         byte[] image = getRepositoryImageFile(link, entry.getValue().getFileName());
-                        try {
-                            recordImageResource(image,entry.getKey(),skinId,link);
 
-                        } catch (CantCheckResourcesException e) {
-                            e.printStackTrace();
-                        } catch (CantPersistFileException e) {
-                            e.printStackTrace();
-                        }
+                        //testing purpose
+                        imagenes.put(entry.getValue().getName(),image);
+//                        try {
+//                            //TODO: despues guardarlo en memoria
+//                            //recordImageResource(image,entry.getKey(),skinId,link);
+//
+//                        } catch (CantCheckResourcesException e) {
+//                            e.printStackTrace();
+//                        } catch (CantPersistFileException e) {
+//                            e.printStackTrace();
+//                        }
                         break;
                     case SOUND:
 
@@ -415,31 +417,33 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         }
     }
-    private void donwloadNavigationStructure(String link,String navigationStructureVersion,UUID skinId){
-        link+=navigationStructureVersion+"/"+navigationStructureVersion+"/";
+    private void donwloadNavigationStructure(String link,UUID skinId){
         try{
 
 
             /**
              *  Download portrait navigation structure
              */
-            String navigationStructureXML = getRepositoryStringFile(link,"portrait_navigation_structure.xml");
+            String navigationStructureXML = getRepositoryStringFile(link,"navigation_structure_portrait.xml");
 
 
+            //TODO: lanzar eventos
+            /*
             PlatformEvent walletNavigationStructureDownloadedEvent = new WalletNavigationStructureDownloadedEvent(navigationStructureXML,link,"portrait_navigation_structure.xml",skinId);
             walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
             eventManager.raiseEvent(walletNavigationStructureDownloadedEvent);
-
+            */
             /**
              *  Download landscape navigation structure
              */
-            navigationStructureXML = getRepositoryStringFile(link,"landscape_navigation_structure.xml");
+            navigationStructureXML = getRepositoryStringFile(link,"navigation_structure_landscape.xml");
 
-
+            //TODO: lanzar eventos
+            /*
             walletNavigationStructureDownloadedEvent = new WalletNavigationStructureDownloadedEvent(navigationStructureXML,link,"landscape_navigation_structure.xml",skinId);
             walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
             eventManager.raiseEvent(walletNavigationStructureDownloadedEvent);
-
+            */
 
 
         } catch (MalformedURLException e) {
@@ -513,7 +517,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              *  Skin record
              */
-            recordXML(repoManifest, skin.getName(), skin.getId(), linkToSkin);
+            //recordXML(repoManifest, skin.getName(), skin.getId(), linkToSkin);
 
             return skin;
 
@@ -596,6 +600,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public byte[] getImageResource(String imageName,UUID skinId) throws CantGetResourcesException {
+
+        // Testing purpose
+        return imagenes.get(imageName);
+
+        //TODO: despues tengo que ir a buscar a la bd
+        /*
         Repository repository= repositoriesName.get(skinId);
 
         PluginBinaryFile imageFile = null;
@@ -616,6 +626,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
         return imageFile.getContent();
+        */
     }
 
     @Override
