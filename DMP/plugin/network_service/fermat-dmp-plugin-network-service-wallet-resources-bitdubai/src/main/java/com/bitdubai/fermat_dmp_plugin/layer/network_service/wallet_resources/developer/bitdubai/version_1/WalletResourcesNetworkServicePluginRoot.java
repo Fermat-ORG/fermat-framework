@@ -482,7 +482,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String filename = skinId.toString() + "_" + name;
 
         try {
-            
+
             layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
         } catch (CantCreateFileException e) {
