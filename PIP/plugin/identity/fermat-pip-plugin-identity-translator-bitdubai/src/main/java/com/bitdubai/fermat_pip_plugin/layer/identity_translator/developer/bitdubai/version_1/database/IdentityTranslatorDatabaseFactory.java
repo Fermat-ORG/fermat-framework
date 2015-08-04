@@ -15,8 +15,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.database.IdentityTranslatorDatabaseFactory</code> have
- * <p/>methods to manage the plugin database
+ * The Class <code>com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.database.IdentityTranslatorDatabaseFactory</code>
+ * <p/>is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  * Created by Natalia on 31/07/2015
  *
@@ -81,9 +81,9 @@ public class IdentityTranslatorDatabaseFactory implements DealsWithErrors, Deals
              * First the Extra User table.
              */
             table = ((DatabaseFactory) database).newTableFactory(IdentityTranslatorDatabaseConstants.TRANSLATOR_TABLE_NAME);
-            table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
-            table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVELOPER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
-            table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+            table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, true);
+            table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVELOPER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+            table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
             table.addIndex(IdentityTranslatorDatabaseConstants.TRANSLATOR_FIRST_KEY_COLUMN);
 
             ((DatabaseFactory) database).createTable(table);
@@ -97,8 +97,8 @@ public class IdentityTranslatorDatabaseFactory implements DealsWithErrors, Deals
 
             String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = cantCreateDatabaseException.getCause();
-            String context = "Extra User DataBase Factory: " + cantCreateDatabaseException.getContext();
-            String possibleReason = "The exception is thrown the Create Database ExtraUser 'this.platformDatabaseSystem.createDatabase(\"ExtraUser\")'" + cantCreateDatabaseException.getPossibleReason();
+            String context = "Translator Identity DataBase Factory: " + cantCreateDatabaseException.getContext();
+            String possibleReason = "The exception is thrown the Create Database ExtraUser 'this.platformDatabaseSystem.createDatabase(\"TranslatorIdentity\")'" + cantCreateDatabaseException.getPossibleReason();
 
 
             throw new CantCreateDatabaseException(message, cause, context, possibleReason);
@@ -106,8 +106,8 @@ public class IdentityTranslatorDatabaseFactory implements DealsWithErrors, Deals
 
             String message = CantCreateTableException.DEFAULT_MESSAGE;
             FermatException cause = cantCreateTableException.getCause();
-            String context = "Create Table Extra User" + cantCreateTableException.getContext();
-            String possibleReason = "The exception is generated when creating the table Extra User  ((DatabaseFactory) database).createTable(table) " + cantCreateTableException.getPossibleReason();
+            String context = "Create Table Translator Identity" + cantCreateTableException.getContext();
+            String possibleReason = "The exception is generated when creating the table Translator Identity  ((DatabaseFactory) database).createTable(table) " + cantCreateTableException.getPossibleReason();
 
             throw new CantCreateDatabaseException(message, cause, context, possibleReason);
         } catch(Exception exception){

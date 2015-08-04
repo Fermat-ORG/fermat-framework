@@ -33,6 +33,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.DealsWithWalletStoreModule;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.DealsWithWalletStatisticsNetworkService;
@@ -57,6 +59,11 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DealsWithToolManage
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DealsWithDeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.DealsWithTranslator;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.exceptions.CantCreateNewTranslatorException;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.exceptions.CantGetUserTranslatorIdentitiesException;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.interfaces.Translator;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.interfaces.TranslatorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -100,6 +107,8 @@ import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWith
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -620,8 +629,8 @@ public class Platform  {
              * Plugin Developer Identity
              * -----------------------------
              */
-            //  Plugin developerIdentity = ((IdentityLayer) mIdentityLayer).getMdeveloperIdentity();
-            //   injectPluginReferencesAndStart(developerIdentity, Plugins.BITDUBAI_DEVELOPER_IDENTITY);
+              Plugin developerIdentity = ((IdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_IDENTITY_LAYER)).getMdeveloperIdentity();
+               injectPluginReferencesAndStart(developerIdentity, Plugins.BITDUBAI_DEVELOPER_IDENTITY);
 
             /*
              * Plugin Developer Module
@@ -630,6 +639,15 @@ public class Platform  {
             Plugin developerModule = ((com.bitdubai.fermat_core.layer.pip_module.ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_MODULE_LAYER)).getmDeveloperModule();
             injectPluginReferencesAndStart(developerModule, Plugins.BITDUBAI_DEVELOPER_MODULE);
 
+
+             /*
+             * Plugin Translator Identity
+             * -----------------------------
+             */
+            Plugin translatorIdentity = ((IdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_IDENTITY_LAYER)).gettranslatorentity();
+            injectPluginReferencesAndStart(translatorIdentity, Plugins.BITDUBAI_TRANSLATOR_IDENTITY);
+
+
             /*
              * Plugin Extra User
              * -------------------------------
@@ -637,7 +655,7 @@ public class Platform  {
             Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getmActorExtraUser();
             injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_USER_EXTRA_USER);
 
-                          /*
+             /*
              * Plugin Intra User
              * -------------------------------
              */
@@ -777,6 +795,16 @@ public class Platform  {
 
             Plugin walletStoreMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getmWalletStorePlugin();
             injectPluginReferencesAndStart(walletStoreMiddleware, Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE);
+
+
+            /*
+             * Plugin Wallet Store Module
+             * ----------------------------------
+             */
+
+            Plugin walletStoreModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletStore();
+            injectPluginReferencesAndStart(walletStoreModule, Plugins.BITDUBAI_WALLET_STORE_MODULE);
+
 
             /*
              * Plugin Bitcoin Crypto Vault
@@ -1003,6 +1031,10 @@ public class Platform  {
                 ((DealsWithDeveloperModule) plugin).setDeveloperModuleManager((DeveloperModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE));
             }
 
+            if (plugin instanceof DealsWithTranslator) {
+                ((DealsWithTranslator) plugin).setTranslatorIdentityManager((TranslatorManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_TRANSLATOR_IDENTITY));
+            }
+
             if (plugin instanceof DealsWithErrors) {
                 ((DealsWithErrors) plugin).setErrorManager(errorManager);
             }
@@ -1077,6 +1109,12 @@ public class Platform  {
 
             if (plugin instanceof DealsWithIncomingCrypto) {
                 ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION));
+            }
+            if (plugin instanceof DealsWithDeviceUser) {
+                ((DealsWithDeviceUser) plugin).setDeviceUserManager((DeviceUserManager) corePlatformContext.getAddon(Addons.DEVICE_USER));
+            }
+            if (plugin instanceof DealsWithWalletStoreModule) {
+                ((DealsWithWalletStoreModule) plugin).setWalletStoreModuleManager((WalletStoreModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_STORE_MODULE));
             }
 
             /*
