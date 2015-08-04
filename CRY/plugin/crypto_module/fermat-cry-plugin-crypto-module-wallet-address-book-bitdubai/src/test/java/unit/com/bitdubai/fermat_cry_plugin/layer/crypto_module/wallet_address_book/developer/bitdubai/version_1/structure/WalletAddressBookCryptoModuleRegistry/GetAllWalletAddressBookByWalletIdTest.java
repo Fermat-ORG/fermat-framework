@@ -1,10 +1,13 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleRegistry;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDatabaseConstants;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.WalletAddressBookNotFoundException;
@@ -66,7 +69,8 @@ public class GetAllWalletAddressBookByWalletIdTest extends TestCase {
 
     @Test
     public void testGetAllWalletAddressBookByWalletId_NotNull() throws Exception {
-        when(databaseTableRecord.getStringValue(anyString())).thenReturn("BWBW");
+        when(databaseTableRecord.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE)).thenReturn(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET.getCode());
+        when(databaseTableRecord.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY)).thenReturn(CryptoCurrency.BITCOIN.getCode());
         List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
         databaseTableRecordList.add(databaseTableRecord);
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
