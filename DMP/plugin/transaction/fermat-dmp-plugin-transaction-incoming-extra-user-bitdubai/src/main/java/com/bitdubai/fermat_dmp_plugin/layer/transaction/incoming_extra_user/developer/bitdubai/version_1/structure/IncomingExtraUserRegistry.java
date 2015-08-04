@@ -256,7 +256,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     }
 
     // Retorna las que están en (A,TBN)
-    protected List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() {//throws CantGetTransactionsException
+    protected List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantGetTransactionsException
         List<Transaction<CryptoTransaction>> tbaList = new ArrayList<>();
         try{
             database.openDatabase();
@@ -330,7 +330,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
     // Used by Relay Agent
     // Retorna las (R,TBA)
-    protected List<Transaction<CryptoTransaction>> getResponsibleTBATransactions() {
+    protected List<Transaction<CryptoTransaction>> getResponsibleTBATransactions() throws InvalidParameterException {
         return getAllTransactionsInState(TransactionStatus.RESPONSIBLE,ProtocolStatus.TO_BE_APPLIED);
     }
 
@@ -389,7 +389,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
     }
 
-    private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord){
+    private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord) throws InvalidParameterException {
         CryptoAddress cryptoAddressFrom = new CryptoAddress();
         cryptoAddressFrom.setAddress(databaseTableRecord.getStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName));
         cryptoAddressFrom.setCryptoCurrency(CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)));
@@ -454,7 +454,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         }
     }
 
-    private List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) {
+    private List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws InvalidParameterException {
 
         List<Transaction<CryptoTransaction>> returnList = new ArrayList<>();
         try{
