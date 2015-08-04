@@ -20,7 +20,7 @@ import java.util.UUID;
 public interface WalletRuntimeManager {
 
 
-    public void recordNavigationStructure(String publicKey) throws CantRecordInstalledWalletNavigationStructureException;
+    public void recordNavigationStructure(String xmlText,String linkToRepo,String name,UUID skinId) throws CantRecordInstalledWalletNavigationStructureException;
 
     public boolean removeNavigationStructure(String publicKey) throws CantRemoveWalletNavigationStructureException;
 
