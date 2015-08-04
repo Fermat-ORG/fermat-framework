@@ -69,8 +69,9 @@ public enum Plugins {
     BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE("SubApp Resources Network Service", Developers.BITDUBAI),
     BITDUBAI_REQUEST_MONEY_REQUEST("Request Money", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_IDENTITY("Developer Identity", Developers.BITDUBAI),
-    BITDUBAI_IDENTITY_MANAGER("Translator Identity", Developers.BITDUBAI),
-    BITDUBAI_TRANSLATOR_IDENTITY("Tr", Developers.BITDUBAI),
+    BITDUBAI_IDENTITY_MANAGER("Identity Manger", Developers.BITDUBAI),
+    BITDUBAI_TRANSLATOR_IDENTITY("Translator Identity", Developers.BITDUBAI),
+    BITDUBAI_DESIGNER_IDENTITY("Designer Identity", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_MODULE("Developer Module", Developers.BITDUBAI);
 
 
