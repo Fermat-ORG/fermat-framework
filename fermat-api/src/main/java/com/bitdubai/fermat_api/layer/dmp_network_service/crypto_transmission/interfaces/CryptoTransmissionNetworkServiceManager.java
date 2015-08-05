@@ -4,6 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TransactionMetadataState;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantSetToCreditedInWalletException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantSetToSeenByCryptoVaultException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 
 import java.util.UUID;
@@ -15,12 +18,32 @@ import java.util.UUID;
 public interface CryptoTransmissionNetworkServiceManager extends TransactionProtocolManager<FermatCryptoTransaction> {
 
     /**
+     * The method <code>informTransactionCreditedInWallet</code> informs the peer network service
+     * that sent the transaction that the said transaction has been credited in its destination wallet.
+     *
+     * @param identifier an identifier of the transmission, it could be the requestId or a transmissionId
+     * @throws CantSetToCreditedInWalletException
+     */
+    public void informTransactionCreditedInWallet(UUID identifier) throws CantSetToCreditedInWalletException;
+
+    /**
+     * The method <code>informTransactionSeenByVault</code> informs the peer network service that sent
+     * the identified transaction that the transaction has been registered by the crypto vault in
+     * this device
+     *
+     * @param identifier an identifier of the transmission, it could be the requestId or a transmissionId
+     * @throws CantSetToSeenByCryptoVaultException
+     */
+    public void informTransactionSeenByVault(UUID identifier) throws CantSetToSeenByCryptoVaultException;
+
+    /**
      * The method <code>getState</code> returns the status of the transmission sent.
      *
      * @param identifier an identifier of the transmission, it could be the requestId or a transmissionId
      * @return the status of the transmission
+     * @throws CantGetTransactionStateException
      */
-    public TransactionMetadataState getState(UUID identifier);
+    public TransactionMetadataState getState(UUID identifier) throws CantGetTransactionStateException;
 
     /**
      * The method <code>acceptCryptoRequest</code> sends the meta information associated to a crypto

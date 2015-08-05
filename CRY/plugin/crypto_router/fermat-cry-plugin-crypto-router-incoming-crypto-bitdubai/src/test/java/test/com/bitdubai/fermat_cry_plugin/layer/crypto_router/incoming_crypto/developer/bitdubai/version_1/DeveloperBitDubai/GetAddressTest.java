@@ -16,7 +16,7 @@ public class GetAddressTest {
         DeveloperBitDubai testDeveloperBitDubai=new DeveloperBitDubai();
         String address=testDeveloperBitDubai.getAddress();
         Assertions.assertThat(address)
-                .isNull();
-
+                //.isEqualTo("13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");
+                .isNotNull();
     }
 }

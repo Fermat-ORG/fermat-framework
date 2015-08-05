@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * Created by ciencias on 3/24/15.
  */
@@ -18,18 +20,21 @@ public enum AccountStatus  {
 
     public String getCode()   { return this.code ; }
 
-    public static AccountStatus getByCode(String code) {
+    public static AccountStatus getByCode(String code)throws InvalidParameterException {
 
         switch (code) {
             case "CRE": return AccountStatus.CREATED;
             case "OPN": return AccountStatus.OPEN;
             case "CLO": return AccountStatus.CLOSED;
             case "DEL": return AccountStatus.DELETED;
+            //Modified by Manuel Perez on 05/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the AccountStatus enum");
+
         }
 
         /**
          * Return by default.
          */
-        return AccountStatus.CREATED;
+        //return AccountStatus.CREATED;
     }
 }

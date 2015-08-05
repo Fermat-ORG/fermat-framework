@@ -30,11 +30,14 @@ public enum ProtocolStatus {
             case "RND": return ProtocolStatus.RECEPTION_NOTIFIED;
             case "TBA": return ProtocolStatus.TO_BE_APPLIED;
             case "APP": return ProtocolStatus.APPLIED;
+            //Modified by Manuel Perez on 04/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ProtocolStatus enum");
+
         }
 
         /**
          * If we try to cpmvert am invalid string.
          */
-        throw new InvalidParameterException(code);
+        //throw new InvalidParameterException(code);
     }
 }

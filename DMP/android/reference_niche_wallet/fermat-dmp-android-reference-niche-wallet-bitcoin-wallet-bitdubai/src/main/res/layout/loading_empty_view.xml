@@ -6,26 +6,27 @@
      >
   
     <ProgressBar
+        style="@android:style/Widget.Holo.ProgressBar.Large"
+        android:id="@+id/loading_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@android:style/Widget.ProgressBar.Inverse"  
-        android:layout_gravity="center"  
-        android:id="@+id/loading_view"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:visibility="gone"
-        android:layout_centerInParent="true"   
         />
 
     
     <TextView
+        android:id="@+id/empty_view"
+        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:id="@+id/empty_view"
-        android:visibility="gone"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/empty_list_msg"
-        android:gravity="center"
         android:padding="15dp"
+        android:text="@string/empty_list_msg"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/color_black_light"
+        android:visibility="gone"
         />
     
 </RelativeLayout>

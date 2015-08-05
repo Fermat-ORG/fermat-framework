@@ -143,6 +143,33 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
          }
     }
 
+    @Override
+    public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+        try {
+            //execute AndroidPluginTextFile constructor
+            AndroidPluginTextFile newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            newFile.delete();
+        }
+        catch (Exception e){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause");
+        }
+
+    }
+
+    @Override
+    public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException{
+        try {
+            //execute AndroidPluginTextFile constructor
+            AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            newFile.delete();
+        }
+        catch (Exception e){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause");
+        }
+    }
+
+
+
     /**
      *<p>This method set the os context
      *

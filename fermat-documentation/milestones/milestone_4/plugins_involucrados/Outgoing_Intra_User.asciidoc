@@ -42,12 +42,13 @@ con lo que haría el agente de fiat cuando lo consideremos necesario. +
 que tenemos fondos disponibles para aplicarlas. +
 * Luego pedimos a la Crypto Vault que nos genere el hash de la transaccion y la dirección de origen que
 va a usar para enviar la crypto currency. Con estos datos descontamos del Available Balance de la
-wallet la cantidad que se envía y marcamos a la transacción con estado PERSISTED_IN_AVAILABLE en la
-tabla que lleva este plugin con Transaction Metadata State (TMS) NOT_IN_NETWORK_SERVICE_YET. +
-* Luego tomamos las transacciones en estado PERSISTED_IN_AVAILABLE y pasamos a enviar
-la metadata a través del network service correspondiente. En el caso de un envío de crypto será a
-través del Crypto Transmission y en el caso de una transacción fiat será a través del Money Transmission.
-Al realizar este envío pasamos la transacción al estado METADATA_SENT y TMS PROCESSING.
+wallet la cantidad que se envía y marcamos a la transacción con TransactionStatus PERSISTED_IN_AVAILABLE
+en la tabla que lleva este plugin con Transaction Metadata State (TMS) NOT_IN_NETWORK_SERVICE_YET. +
+* Luego tomamos las transacciones en estado PERSISTED_IN_AVAILABLE y pasamos a enviar la metadata a
+través del network service correspondiente. En el caso de un envío de crypto será a través del Crypto
+Transmission y en el caso de una transacción fiat será a través del Money Transmission. Al realizar
+este envío pasamos la transacción al TransactionStatus METADATA_SENT y TMS PROCESSING. Dentro del
+mensaje que se envía como metadata debe colocarse el hash de la transacción crypto asociada.
 * En el siguiente paso tomamos todas las transacciones en METADATA_SENT y enviamos la transacción
 a la Crypto Vault marcando el estado SENT_TO_CRYPTO_VAULT. +
 * Finalemente realizamos el seguimiento para la actualización del balance de la misma forma en que lo

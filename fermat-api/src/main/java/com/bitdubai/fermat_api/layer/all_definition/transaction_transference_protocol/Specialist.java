@@ -28,11 +28,14 @@ public enum Specialist {
             case "DVU": return Specialist.DEVICE_USER_SPECIALIST;
             case "INU": return Specialist.INTRA_USER_SPECIALIST;
             case "UNK": return Specialist.UNKNOWN_SPECIALIST;
+            //Modified by Manuel Perez on 04/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Specialist enum");
+
         }
 
         /**
          * If we try to cpmvert am invalid string.
          */
-        throw new InvalidParameterException(code);
+       // throw new InvalidParameterException(code);
     }
 }
