@@ -1,5 +1,6 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -47,7 +48,7 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
@@ -55,17 +56,12 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
-        }
+
 
         /**
          * Next, I will add the needed tables.
          */
-        try {
+
             DatabaseTableFactory table;
 
             /**
@@ -85,6 +81,9 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
 
             table.addIndex(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_FIRST_KEY_COLUMN);
 
+            //Create the table
+            ((DatabaseFactory) database).createTable(ownerId, table);
+
             /**
              * Create Wallet Manager Skins Table table.
              */
@@ -97,11 +96,13 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_FIRST_KEY_COLUMN);
+            //Create the table
+            ((DatabaseFactory) database).createTable(ownerId, table);
 
             /**
              * Create Wallet Manager Languages Table table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME);
+            table = ((DatabaseFactory) database).newTableFactory(ownerId,WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME);
 
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -110,19 +111,31 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_FIRST_KEY_COLUMN);
-
-            try {
                 //Create the table
-                ((DatabaseFactory) database).createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
+            ((DatabaseFactory) database).createTable(ownerId, table);
+
+        } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            /**
+             * I can not handle this situation.
+             */
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+
+        } catch (Exception e) {
+            /**
+             * This shouldn't happen here because I was the one who gave the owner id to the database file system,
+             * but anyway, if this happens, I can not continue.
+             */
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+
         }
         return database;
     }
