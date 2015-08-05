@@ -105,17 +105,6 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     @Override
     public void start() {
-        try {
-            //this.walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, UUID.fromString("967f0de2-f384-4c49-ae0a-60f5fa59db7f"), InstallationStatus.INSTALL_AVAILABLE);
-
-            walletStoreModuleManager = new com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
-            WalletStoreCatalogue walletStoreCatalogue = this.getCatalogue();
-            WalletStoreCatalogueItem walletStoreCatalogueItem = walletStoreCatalogue.getWalletCatalogue(0, 0).get(0);
-            System.out.println("WalletStore Catalog item: " + walletStoreCatalogueItem.getId());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
