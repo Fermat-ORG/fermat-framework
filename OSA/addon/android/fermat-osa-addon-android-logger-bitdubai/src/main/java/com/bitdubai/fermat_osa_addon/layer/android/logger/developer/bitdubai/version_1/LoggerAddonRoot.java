@@ -2,6 +2,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.ve
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -24,7 +25,8 @@ public class LoggerAddonRoot implements Addon, LoggerSystemOs, Service {
      */
 
     LoggerManager loggerManager;
-    ServiceStatus serviceStatus = ServiceStatus.STOPPED;
+    //ServiceStatus serviceStatus = ServiceStatus.STOPPED;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -32,7 +34,11 @@ public class LoggerAddonRoot implements Addon, LoggerSystemOs, Service {
          * I initialize the logger Manager
          */
         loggerManager = new LoggerManager();
-        this.serviceStatus = ServiceStatus.STARTED;
+        try {
+            this.serviceStatus = ServiceStatus.STARTED;
+    } catch (Exception exception) {
+        throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+    }
 
     }
 
