@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedWalletsInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisherMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublishedInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
@@ -45,7 +46,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherModulePluginRoot implements Service, DealsWithWalletPublisher, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherManager {
+public class WalletPublisherModulePluginRoot implements Service, DealsWithWalletPublisherMiddleware, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherManager {
 
     /**
      * Represent the logManager
@@ -83,9 +84,9 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
     private List<EventListener>  listenersAdded;
 
     /**
-     * Represent the walletPublisherManager
+     * Represent the walletPublisherMiddlewareManager
      */
-    private WalletPublisherManager walletPublisherManager;
+    private WalletPublisherMiddlewareManager walletPublisherMiddlewareManager;
 
     /**
      * Constructor
@@ -246,7 +247,7 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
      */
     @Override
     public Map<String, List<WalletPublishedInformation>> showPublishedWallets() throws CantGetPublishedWalletsInformationException {
-        return null;
+        return walletPublisherMiddlewareManager.showPublishedWallets();
     }
 
     /**
@@ -255,7 +256,7 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
      */
     @Override
     public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCheckPublicationException {
-        return false;
+        return walletPublisherMiddlewareManager.canBePublished(walletFactoryProjectProposal);
     }
 
     /**
@@ -287,11 +288,11 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
 
     /**
      * (non-Javadoc)
-     * @see DealsWithWalletPublisher#setWalletPublisherManager(WalletPublisherManager)
+     * @see DealsWithWalletPublisherMiddleware#setWalletPublisherMiddlewareManager(WalletPublisherMiddlewareManager)
      */
     @Override
-    public void setWalletPublisherManager(WalletPublisherManager walletPublisherManager) {
-        this.walletPublisherManager = walletPublisherManager;
+    public void setWalletPublisherMiddlewareManager(WalletPublisherMiddlewareManager walletPublisherMiddlewareManager) {
+        this.walletPublisherMiddlewareManager = walletPublisherMiddlewareManager;
     }
 }
 
