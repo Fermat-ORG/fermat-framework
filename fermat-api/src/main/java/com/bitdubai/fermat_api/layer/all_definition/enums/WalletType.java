@@ -23,7 +23,8 @@ public enum WalletType {
         switch (code){
             case "NICHE": return WalletType.NICHE;
             case "REFER": return WalletType.REFERENCE;
-            default: throw new InvalidParameterException();
+            //Modified by Manuel Perez on 03/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the WalletType enum");
         }
     }
 }

@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.excep
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestsListException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRegisterCompatibleListException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRejectAddressExchangeException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantStartAddressExchangeException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.PendingContactRequest;
@@ -159,9 +160,15 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
     }
 
 
+
     /*
      * CryptoAddressesManager interface method implementation
      */
+    @Override
+    public void exchangeAddressesAndAddContact(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressSent, String intraUserToContactPublicKey, String intraUserAskingAddressPublicKey, String intraUserAskingAddressName, byte[] intraUserAskingAddressProfileImage) throws CantStartAddressExchangeException {
+
+    }
+
     @Override
     public void exchangeAddresses(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressSent, String intraUserToContactPublicKey, String intraUserAskingAddressName) {
 

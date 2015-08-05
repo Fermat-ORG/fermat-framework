@@ -26,11 +26,14 @@ public enum TransactionStatus {
             case "RES": return TransactionStatus.RESPONSIBLE;
             case "DLV": return TransactionStatus.DELIVERED;
             case "APP": return TransactionStatus.APPLIED;
+            //Modified by Manuel Perez on 04/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionStatus enum");
+
         }
 
         /**
          * If we try to cpmvert am invalid string.
          */
-        throw new InvalidParameterException(code);
+        //throw new InvalidParameterException(code);
     }
 }

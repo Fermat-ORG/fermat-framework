@@ -25,10 +25,6 @@ import java.util.UUID;
 public interface WalletResourcesProviderManager {
 
 
-
-    public void checkResources(String repoName) throws CantCheckResourcesException;
-
-
     /**
      * This method returns the resourcesId
      *
@@ -44,7 +40,7 @@ public interface WalletResourcesProviderManager {
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    public Skin getSkinFile(String fileName) throws CantGetSkinFileException;
+    public Skin getSkinFile(String fileName,UUID skinId) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -63,7 +59,7 @@ public interface WalletResourcesProviderManager {
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName,ScreenOrientation orientation,UUID skinId) throws CantGetResourcesException;
+    public byte[] getImageResource(String imageName,UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a video referenced by a name
@@ -72,7 +68,7 @@ public interface WalletResourcesProviderManager {
      * @return the video represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getVideoResource(String videoName) throws CantGetResourcesException;
+    public byte[] getVideoResource(String videoName,UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a sound referenced by a name
@@ -81,7 +77,7 @@ public interface WalletResourcesProviderManager {
      * @return the sound represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getSoundResource(String soundName) throws CantGetResourcesException;
+    public byte[] getSoundResource(String soundName,UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a font style referenced by a name
@@ -90,7 +86,7 @@ public interface WalletResourcesProviderManager {
      * @return the font style represented as the content of a ttf file
      * @throws CantGetResourcesException
      */
-    public String getFontStyle(String styleName);
+    public String getFontStyle(String styleName,UUID skinId);
 
     /**
      * This method let us get a layout referenced by a name
@@ -99,7 +95,7 @@ public interface WalletResourcesProviderManager {
      * @return the layiut represented as String
      * @throws CantGetResourcesException
      */
-    public String getLayoutResource(String layoutName) throws CantGetResourcesException;
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation,UUID skinId) throws CantGetResourcesException;
 
 
 

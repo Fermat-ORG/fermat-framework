@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
@@ -140,6 +141,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        } catch(InvalidParameterException exception){
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
 
@@ -188,6 +191,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             database.closeDatabase();
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        } catch(InvalidParameterException exception){
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
@@ -359,6 +364,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        } catch(InvalidParameterException exception){
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
         return walletContactRecord;
     }
@@ -410,6 +417,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             database.closeDatabase();
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        } catch(InvalidParameterException exception){
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }

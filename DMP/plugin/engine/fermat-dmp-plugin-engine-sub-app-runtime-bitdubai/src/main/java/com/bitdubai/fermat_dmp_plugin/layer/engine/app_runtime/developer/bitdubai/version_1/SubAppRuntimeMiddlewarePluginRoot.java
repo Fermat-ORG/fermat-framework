@@ -325,7 +325,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             //acá estoy seteando los colores y toda la vaina esa
             runtimeActivity= new Activity();
-            runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+            runtimeActivity.setType(Activities.CWP_SUB_APP_ALL_DEVELOPER);
             runtimeActivity.setColor("#b46a54");
             //runtimeActivity.setStatusBarColor();
 

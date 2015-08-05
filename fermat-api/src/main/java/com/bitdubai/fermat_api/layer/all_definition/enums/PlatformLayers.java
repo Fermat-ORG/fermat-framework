@@ -23,34 +23,35 @@ public enum PlatformLayers {
     /**
      *  Definitions types
      */
-    BITDUBAI_COMMUNICATION_LAYER         ("Communication Layer",       Developers.BITDUBAI),
-    BITDUBAI_DEFINITION_LAYER            ("Definition Layer",          Developers.BITDUBAI),
-    BITDUBAI_PLATFORM_SERVICE_LAYER      ("Platform Service Layer",    Developers.BITDUBAI),
-    BITDUBAI_OS_LAYER                    ("Operating System Layer",    Developers.BITDUBAI),
-    BITDUBAI_HARDWARE_LAYER              ("Hardware Layer",            Developers.BITDUBAI),
-    BITDUBAI_USER_LAYER                  ("User Layer",                Developers.BITDUBAI),
-    BITDUBAI_LICENSE_LAYER               ("License Layer",             Developers.BITDUBAI),
-    BITDUBAI_WORLD_LAYER                 ("World Layer",               Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_LAYER                ("Crypto Layer",              Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_NETWORK_LAYER        ("Crypto Network Layer",      Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_VAULT_LAYER          ("Crypto Vault Layer",        Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_ROUTER_LAYER         ("Crypto Router Layer",       Developers.BITDUBAI),
-    BITDUBAI_NETWORK_SERVICE_LAYER       ("Network Service Layer",     Developers.BITDUBAI),
-    BITDUBAI_TRANSACTION_LAYER           ("Transaction Layer",         Developers.BITDUBAI),
-    BITDUBAI_MIDDLEWARE_LAYER            ("Middleware Layer",          Developers.BITDUBAI),
-    BITDUBAI_MODULE_LAYER                ("Module Layer",              Developers.BITDUBAI),
-    BITDUBAI_AGENT_LAYER                 ("Agent Layer",               Developers.BITDUBAI),
-    BITDUBAI_BASIC_WALLET_LAYER          ("Basic Wallet Layer",        Developers.BITDUBAI),
-    BITDUBAI_NICHE_WALLET_TYPE_LAYER     ("Niche Wallet Type Layer",   Developers.BITDUBAI),
-    BITDUBAI_ACTOR_LAYER                 ("Actor Layer",               Developers.BITDUBAI),
-    BITDUBAI_IDENTITY_LAYER              ("Identity Layer",            Developers.BITDUBAI),
-    BITDUBAI_PIP_MODULE_LAYER            ("PIP Module Layer",          Developers.BITDUBAI),
-    BITDUBAI_PIP_NETWORK_SERVICE_LAYER   ("PIP Network Service Layer", Developers.BITDUBAI);
+    BITDUBAI_COMMUNICATION_LAYER         ("BCOMML",       Developers.BITDUBAI),
+    BITDUBAI_DEFINITION_LAYER            ("BDEFL",          Developers.BITDUBAI),
+    BITDUBAI_PLATFORM_SERVICE_LAYER      ("BPSL",    Developers.BITDUBAI),
+    BITDUBAI_OS_LAYER                    ("BOSL",    Developers.BITDUBAI),
+    BITDUBAI_HARDWARE_LAYER              ("BHARDWL",            Developers.BITDUBAI),
+    BITDUBAI_USER_LAYER                  ("BUSERL",                Developers.BITDUBAI),
+    BITDUBAI_LICENSE_LAYER               ("BLICL",             Developers.BITDUBAI),
+    BITDUBAI_WORLD_LAYER                 ("BWORLDL",               Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_LAYER                ("BCRYPTL",              Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_NETWORK_LAYER        ("BCRYPTNL",      Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_VAULT_LAYER          ("BCRYPTVL",        Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_ROUTER_LAYER         ("BCRYPTRL",       Developers.BITDUBAI),
+    BITDUBAI_NETWORK_SERVICE_LAYER       ("BNETSL",     Developers.BITDUBAI),
+    BITDUBAI_TRANSACTION_LAYER           ("BTRANSL",         Developers.BITDUBAI),
+    BITDUBAI_MIDDLEWARE_LAYER            ("BMIDDL",          Developers.BITDUBAI),
+    BITDUBAI_MODULE_LAYER                ("BMODL",              Developers.BITDUBAI),
+    BITDUBAI_AGENT_LAYER                 ("BAGL",               Developers.BITDUBAI),
+    BITDUBAI_BASIC_WALLET_LAYER          ("BWALL",        Developers.BITDUBAI),
+    BITDUBAI_NICHE_WALLET_TYPE_LAYER     ("BNWALTL",   Developers.BITDUBAI),
+    BITDUBAI_ACTOR_LAYER                 ("BACTL",               Developers.BITDUBAI),
+    BITDUBAI_IDENTITY_LAYER              ("BIDL",            Developers.BITDUBAI),
+    BITDUBAI_PIP_MODULE_LAYER            ("BPIPML",          Developers.BITDUBAI),
+    BITDUBAI_REQUEST_LAYER               ("BRL",             Developers.BITDUBAI),
+    BITDUBAI_PIP_NETWORK_SERVICE_LAYER   ("BPIPNSL", Developers.BITDUBAI);
 
     /**
      * Represent the key
      */
-    private final String key;
+    private String code;
 
     /**
      * Represent the developer
@@ -60,11 +61,11 @@ public enum PlatformLayers {
     /**
      * Constructor
      *
-     * @param key
+     * @param code
      * @param developer
      */
-    PlatformLayers(String key, Developers developer) {
-        this.key = key;
+    PlatformLayers(String code, Developers developer) {
+        this.code = code;
         this.developer = developer;
     }
 
@@ -73,7 +74,7 @@ public enum PlatformLayers {
      *
      * @return String
      */
-    public String getKey()   { return this.key; }
+    public String getCode()   { return this.code; }
 
     /**
      * Get the developer
@@ -85,86 +86,88 @@ public enum PlatformLayers {
     /**
      * Get the plataform layer representation from key
      *
-     * @param key
+     * @param code
      * @return PlatformLayers
      * @throws InvalidParameterException
      */
-    public static PlatformLayers getByKey(String key) throws InvalidParameterException {
-        switch(key){
+    public static PlatformLayers getByCode(String code) throws InvalidParameterException {
+        switch(code){
 
-            case "Communication Layer":
+            case "BCOML":
                 return PlatformLayers.BITDUBAI_COMMUNICATION_LAYER;
 
-            case "Definition Layer":
+            case "BDEFL":
                 return PlatformLayers.BITDUBAI_DEFINITION_LAYER;
 
-            case "Platform Service Layer":
+            case "BPSL":
                 return PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER;
 
-            case "Operating System Layer":
+            case "BOSL":
                 return PlatformLayers.BITDUBAI_OS_LAYER;
 
-            case "Hardware Layer":
+            case "BHARDWL":
                 return PlatformLayers.BITDUBAI_HARDWARE_LAYER;
 
-            case "User Layer":
+            case "BUSERL":
                 return PlatformLayers.BITDUBAI_USER_LAYER;
 
-            case "License Layer":
+            case "BLICL":
                 return PlatformLayers.BITDUBAI_LICENSE_LAYER;
 
-            case "World Layer":
+            case "BWORLDL":
                 return PlatformLayers.BITDUBAI_WORLD_LAYER;
 
-            case "Crypto Layer":
+            case "BCRYPTL":
                 return PlatformLayers.BITDUBAI_CRYPTO_LAYER;
 
-            case "Crypto Network Layer":
+            case "BCRYPTNL":
                 return PlatformLayers.BITDUBAI_CRYPTO_NETWORK_LAYER;
 
-            case "Crypto Vault Layer":
+            case "BCRYPTVL":
                 return PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER;
 
-            case "Crypto Router Layer":
+            case "BCRYPTRL":
                 return PlatformLayers.BITDUBAI_CRYPTO_ROUTER_LAYER;
 
-            case "Network Service Layer":
+            case "BNETSL":
                 return PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER;
 
-            case "Transaction Layer":
+            case "BTRANSL":
                 return PlatformLayers.BITDUBAI_TRANSACTION_LAYER;
 
-            case "Middleware Layer":
+            case "BMIDDL":
                 return PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER;
 
-            case "Module Layer":
+            case "BMODL":
                 return PlatformLayers.BITDUBAI_MODULE_LAYER;
 
-            case "Agent Layer":
+            case "BAGL":
                 return PlatformLayers.BITDUBAI_AGENT_LAYER;
 
-            case "Basic Wallet Layer":
+            case "BWALL":
                 return PlatformLayers.BITDUBAI_BASIC_WALLET_LAYER;
 
-            case "Niche Wallet Type Layer":
+            case "BNWALTL":
                 return PlatformLayers.BITDUBAI_NICHE_WALLET_TYPE_LAYER;
 
-            case "Actor Layer":
+            case "BACTL":
                 return PlatformLayers.BITDUBAI_ACTOR_LAYER;
 
-            case "Identity Layer":
+            case "BIDL":
                 return PlatformLayers.BITDUBAI_IDENTITY_LAYER;
 
-            case "PIP Module Layer":
+            case "BPIPML":
                 return PlatformLayers.BITDUBAI_PIP_MODULE_LAYER;
 
-            case "PIP Network Service Layer":
+            case "BRL":
+                return PlatformLayers.BITDUBAI_REQUEST_LAYER;
+
+            case "BPIPNSL":
                 return PlatformLayers.BITDUBAI_PIP_NETWORK_SERVICE_LAYER;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");
+
         }
-
-
-
-        throw new InvalidParameterException(key);
     }
 
 }

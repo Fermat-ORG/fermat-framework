@@ -21,6 +21,29 @@ import java.util.UUID;
 public interface CryptoAddressesManager {
 
     /**
+     * The method <code>exchangeAddressesAndAddContact</code> send a request of exchange of addresses to the intra
+     * user to add as contact
+     *
+     * @param walletPublicKey                    The public key of the wallet sending the request
+     * @param referenceWallet                    The type of reference wallet the wallet sending the request is associated to
+     * @param cryptoAddressSent                  The crypto address sent by the sender of the request
+     * @param intraUserToContactPublicKey        The public key of the intra user to ask for an addresses exchange
+     * @param intraUserAskingAddressPublicKey    The public key of the intra user sending the request
+     * @param intraUserAskingAddressName         The name of the intra user sending the request
+     * @param intraUserAskingAddressProfileImage The profile image of the intra user sending the request
+     * @throws CantStartAddressExchangeException
+     */
+    public void exchangeAddressesAndAddContact(String walletPublicKey,
+                                               ReferenceWallet referenceWallet,
+                                               CryptoAddress cryptoAddressSent,
+                                               String intraUserToContactPublicKey,
+                                               String intraUserAskingAddressPublicKey,
+                                               String intraUserAskingAddressName,
+                                               byte[] intraUserAskingAddressProfileImage) throws CantStartAddressExchangeException;
+
+
+
+    /**
      * The method <code>exchangeAddresses</code> send a request of exchange of addresses to the intra
      * user to add as contact
      *

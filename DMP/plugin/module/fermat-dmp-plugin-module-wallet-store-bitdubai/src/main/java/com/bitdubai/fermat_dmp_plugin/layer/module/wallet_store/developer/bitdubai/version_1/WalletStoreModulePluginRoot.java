@@ -3,14 +3,14 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdu
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsFromCatalogueException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartInstallationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartLanguageInstallationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartSkinInstallationException;
@@ -18,10 +18,10 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStar
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -33,8 +33,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,27 +105,6 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     @Override
     public void start() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    try {
-                        Thread.sleep(20000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    WalletStoreCatalogue walletStoreCatalogue = walletStoreModuleManager.getCatalogue();
-                    System.out.println("Testing: wallet catalog Id: " + walletStoreCatalogue.getWalletCatalogue(0, 0).get(0).getId().toString());
-                } catch (CantGetRefinedCatalogException e) {
-                    e.printStackTrace();
-                } catch (CantGetWalletsFromCatalogueException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
-
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 

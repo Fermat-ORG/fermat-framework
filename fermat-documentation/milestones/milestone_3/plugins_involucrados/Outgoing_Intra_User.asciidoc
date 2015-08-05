@@ -1,0 +1,3 @@
+= Outgoing Intra User
+
+Ver la documentación en "Outgoing_Intra_User.asciidoc" del Milestone 4. +
