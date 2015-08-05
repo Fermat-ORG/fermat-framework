@@ -5,17 +5,21 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -29,9 +33,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.CantDeleteRepositoryException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkServicesWalletResourcesDAO;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkserviceswalletresourcesDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.RepositoryNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -43,6 +49,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.event_handlers.BegunWalletInstallationEventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletUninstalledEvent;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -262,9 +269,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             repositoriesName.put(skin.getId(), repository);
 
 
-            //NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(database);
+            NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
 
-            //networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
+            try {
+
+                networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
+
+            } catch (CantCreateRepositoryException e) {
+                e.printStackTrace();
+            }
 
 
             /**
@@ -291,14 +304,109 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
-    public void unninstallResources(String walletPath, UUID skinId, String navigationStructureVersion) {
-        //TODO: para desistalar la wallet lo que hago es eliminar todos los archivos del path de la wallet del sistema y enviar un evento para que borre el navigationStructure de la wallet del wallet runtime
-        //TODO: si lo que estoy eliminando no es la ultima wallet de ese tipo lo que hago es borrar solo el navigation structure
+    public void unninstallResources(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String screenDensity,String navigationStructureVersion,boolean isLastWallet) {
+
+        if(isLastWallet){
+
+            UnninstallWallet( walletCategory, walletType, developer, skinName, skinId,  screenSize, screenDensity, navigationStructureVersion, isLastWallet);
+
+        }
+
+        /**
+         *  Fire event Wallet resource installed
+         */
+
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_UNINSTALLED);
+        WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) platformEvent;
+        walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+
+    }
+    private void UnninstallWallet(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String screenDensity,String navigationStructureVersion,boolean isLastWallet){
+        String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
+
+
+        String linkToResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
+
+
+        Skin skin = null;
+        try {
+
+
+            skin = checkSkinResources(linkToResources);
+
+
+            /**
+             *  Save repository in memory for use
+             */
+            repositoriesName.remove(skin.getId());
+
+
+            NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
+
+            try {
+
+                networkServicesWalletResourcesDAO.delete(skin.getId(), linkToRepo);
+
+            } catch (CantDeleteRepositoryException e) {
+                e.printStackTrace();
+            } catch (ProjectNotFoundException e) {
+                e.printStackTrace();
+            } catch (RepositoryNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            String linkToNavigationStructure = linkToRepo + "/versions/" + skin.getNavigationStructureCompatibility() + "/";
+
+            /**
+             *  delete navigation structure portrait
+             */
+
+            String navigationStructureName="navigation_structure_portrait.xml";
+            deleteXML(navigationStructureName,skinId,linkToNavigationStructure);
+
+            /**
+             *  delete navigation structure landscape
+             */
+            navigationStructureName="navigation_structure_landscape.xml";
+            deleteXML(navigationStructureName,skinId,linkToNavigationStructure);
+
+            /**
+             *  delete resources
+             */
+            /**
+             * delete portrait resources
+             */
+            String linkToPortraitResources = linkToResources + "portrait/resources/" + screenDensity + "/drawables/";
+            deleteResources(linkToPortraitResources, skin.getLstPortraitResources(), skin.getId());
+
+            /**
+             * delete landscape resources
+             */
+            String linkToLandscapeResources = linkToResources + "landscape/resources/" + screenDensity + "/drawables/";
+            deleteResources(linkToLandscapeResources, skin.getLstLandscapeResources(), skin.getId());
+
+            /**
+             * delete portrait layouts
+             */
+            String linkToPortraitLayouts = linkToResources + "portrait/resources/" + screenDensity + "/layouts/";
+            deleteLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId());
+
+            /**
+             * delete landscape layouts
+             */
+            String linkToLandscapeLayouts = linkToResources + "landscape/resources/" + screenDensity + "/layouts/";
+            deleteLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId());
+
+
+        } catch (CantCheckResourcesException e) {
+            e.printStackTrace();
+        } catch (CantPersistFileException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void recordNavigationStructure() {
 
-    }
 
     private void downloadResources(String linkToResources, Skin skin, String screenDensity) {
 
@@ -377,6 +485,30 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         }
     }
+    private void deleteResources(String link, Map<String, Resource> resourceMap, UUID skinId) {
+        try {
+            for (Map.Entry<String, Resource> entry : resourceMap.entrySet()) {
+
+
+                switch (entry.getValue().getResourceType()) {
+                    case IMAGE:
+                        //testing purpose
+                        deleteResource(entry.getKey(), skinId, link);
+                        break;
+                    case SOUND:
+
+                        break;
+                    case VIDEO:
+                        break;
+                }
+
+            }
+        } catch (CantCheckResourcesException e) {
+            e.printStackTrace();
+        } catch (CantPersistFileException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void downloadLayouts(String link, Map<String, Layout> resourceMap, UUID skinId) {
         try {
@@ -404,6 +536,23 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
     }
 
+    private void deleteLayouts(String link, Map<String, Layout> resourceMap, UUID skinId) {
+        try {
+            for (Map.Entry<String, Layout> entry : resourceMap.entrySet()) {
+
+                    deleteResource(entry.getKey(), skinId, link);
+
+            }
+
+        } catch (CantCheckResourcesException e) {
+            e.printStackTrace();
+        } catch (CantPersistFileException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     private void donwloadNavigationStructure(String link, UUID skinId) {
         try {
 
@@ -411,8 +560,17 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              *  Download portrait navigation structure
              */
-            String navigationStructureXML = getRepositoryStringFile(link, "navigation_structure_portrait.xml");
+            String navigationStructureName="navigation_structure_portrait.xml";
+            String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
+            try {
 
+                recordXML(navigationStructureXML,navigationStructureName,skinId,link);
+
+            } catch (CantCheckResourcesException e) {
+                e.printStackTrace();
+            } catch (CantPersistFileException e) {
+                e.printStackTrace();
+            }
 
             //TODO: lanzar eventos
             /*
@@ -423,7 +581,17 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              *  Download landscape navigation structure
              */
-            navigationStructureXML = getRepositoryStringFile(link, "navigation_structure_landscape.xml");
+            navigationStructureName="navigation_structure_landscape.xml";
+            navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
+            try {
+
+                recordXML(navigationStructureXML,navigationStructureName,skinId,link);
+
+            } catch (CantCheckResourcesException e) {
+                e.printStackTrace();
+            } catch (CantPersistFileException e) {
+                e.printStackTrace();
+            }
 
             //TODO: lanzar eventos
             /*
@@ -499,10 +667,42 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             }
         }
 
-        //acá deberia fijarme que hago si ya existe el archivo
 
 
     }
+    private void deleteXML( String name, UUID skinId, String reponame) throws CantCheckResourcesException, CantPersistFileException {
+
+        String filename = skinId.toString() + "_" + name;
+
+        try {
+
+            pluginFileSystem.deleteTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void deleteResource(String name, UUID skinId, String reponame) throws CantCheckResourcesException, CantPersistFileException {
+
+        String filename = skinId.toString() + "_" + name;
+
+        try {
+
+            pluginFileSystem.deleteTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     private Skin checkSkinResources(String linkToSkin) throws CantCheckResourcesException, CantPersistFileException {
         String repoManifest = "";
@@ -518,7 +718,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              *  Skin record
              */
-            //recordXML(repoManifest, skin.getName(), skin.getId(), linkToSkin);
+            recordXML(repoManifest, skin.getName(), skin.getId(), linkToSkin);
 
             return skin;
 

@@ -305,7 +305,17 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         Fragments frgBackType = null;
         try {
             SubAppRuntimeManager subAppRuntimeManager = getAppRuntimeMiddleware();
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment();
+
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment=null;
+
+            try{
+
+                fragment  = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment();
+
+            }catch (NullPointerException nullPointerException){
+                fragment=null;
+            }
+
 
 
             //get setting fragment to back
