@@ -20,8 +20,8 @@ public enum ResourceType implements Serializable {
     FONT_STYLE("font_style"),
     LAYOUT("layout");
 
-    public static ResourceType fromValue(String key) throws InvalidParameterException {
-        switch(key){
+    public static ResourceType getByCode(String code) throws InvalidParameterException {
+        switch(code){
             case "video":
                 return ResourceType.VIDEO ;
             case "sound":
@@ -32,15 +32,21 @@ public enum ResourceType implements Serializable {
                 return ResourceType.FONT_STYLE;
             case "layout":
                 return ResourceType.LAYOUT;
+            //Modified by Manuel Perez on 04/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ResourceType enum");
+
         }
-        throw new InvalidParameterException(key);
+
     }
 
-    private final String key;
+    private final String code;
 
-    ResourceType(String key) {
-        this.key = key;
+    ResourceType(String code) {
+        this.code = code;
     }
 
-    public String value() { return this.key; }
+    /**
+     * Método no modificado ya que se usa en com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_factory/developer/bitdubai/version_1/structure/WalletFactoryMiddlewareProjectSkinManager.java
+     * */
+    public String value() { return this.code; }
 }
