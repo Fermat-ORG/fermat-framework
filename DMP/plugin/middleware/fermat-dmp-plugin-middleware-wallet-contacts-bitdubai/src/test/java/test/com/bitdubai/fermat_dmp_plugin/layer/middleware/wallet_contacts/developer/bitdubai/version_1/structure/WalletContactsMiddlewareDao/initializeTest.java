@@ -79,26 +79,4 @@ public class initializeTest {
         doThrow(new CantCreateDatabaseException()).when(mockPluginDatabaseSystem).createDatabase(any(UUID.class), anyString());
         when(walletContactsMiddlewareDatabaseFactory.createDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
     }
-
-    @Ignore
-    @Test
-    public void findByActorId_NotNull() throws Exception {
-        //testInitialize_NotNull();
-        //testPluginId = UUID.randomUUID();
-        //walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem);
-        //Assert.assertNull(walletContactsMiddlewareDao.findByActorId(testPluginId));
-        //when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
-        // walletContactsMiddlewareDao.initializeDatabase(testPluginId, testPluginId.toString());
-        //  walletContactsMiddlewareDao.setPluginDatabaseSystem(mockPluginDatabaseSystem);
-        //when(walletContactsMiddlewareDao.findByActorId(testPluginId)).thenReturn(mockDatabase);
-        //doThrow(new CantGetWalletContactException()).when(walletContactsMiddlewareDao.findByActorId(testPluginId));
-       // walletContactsMiddlewareDao.findByActorId(testPluginId);
-
-        doThrow(new CantGetWalletContactException()).when(walletContactsMiddlewareDao.findByActorId(testPluginId));
-        walletContactsMiddlewareDao.findByActorId(testPluginId);
-
-
-    }
-
-
 }

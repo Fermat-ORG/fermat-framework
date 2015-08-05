@@ -6,15 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,10 +25,10 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by Nerio on 26/07/15.
+ * Created by Nerio on 04/08/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class initializeTest {
+public class listWalletContactsTest {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -39,6 +36,10 @@ public class initializeTest {
     private ErrorManager mockErrorManager;
     @Mock
     private Database mockDatabase;
+    @Mock
+    private DatabaseTable mockDatabaseTable;
+    @Mock
+    private DatabaseTableRecord mockDatabaseTableRecord;
 
     private UUID testPluginId;
 
@@ -56,8 +57,28 @@ public class initializeTest {
     }
 
     @Test
-    public void testInitialize_NotNull() throws Exception {
+    public void listWalletContacts_findAll_WalletContactRecord() throws Exception {
         when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
+        when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
+        List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
+        databaseTableRecordList.add(mockDatabaseTableRecord);
+        when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
+        walletContactsMiddlewareRegistry.listWalletContacts(testPluginId);
+    }
+
+    @Test
+    public void listWalletContactsScrolling_findAllScrolling_WalletContactRecord() throws Exception {
+        when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
+        when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
+        List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
+        databaseTableRecordList.add(mockDatabaseTableRecord);
+        when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
+        walletContactsMiddlewareRegistry.initialize();
+        walletContactsMiddlewareRegistry.listWalletContactsScrolling(testPluginId, 1, 0);
     }
 }

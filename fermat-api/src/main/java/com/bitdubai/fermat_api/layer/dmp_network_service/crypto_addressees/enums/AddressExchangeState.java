@@ -26,7 +26,10 @@ public enum AddressExchangeState {
             case "SNT": return AddressExchangeState.ADDRESS_SENT;
             case "BPC": return AddressExchangeState.BEING_PROCESSED;
             case "ESS": return AddressExchangeState.EXCHANGED_SUCCESSFUL;
-            default: throw new InvalidParameterException();
+            //Modified by Manuel Perez 05/08/2015
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the AddressExchangeState enum");
+
         }
     }
 }
