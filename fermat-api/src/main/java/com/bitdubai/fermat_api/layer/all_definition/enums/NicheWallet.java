@@ -33,7 +33,10 @@ public enum NicheWallet {
         switch (code) {
             case "NONE" : throw  new CallToGetByCodeOnNONEException("method getByCode called by a NONE wallet",null,"","");
             case "UNKW" : return NicheWallet.UNKNOWN_WALLET;
-            default: throw new InvalidParameterException();
+            //Modified by Manuel Perez on 03/08/2015
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NicheWallet enum");
+
         }
     }
 }

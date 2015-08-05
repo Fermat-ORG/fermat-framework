@@ -18,6 +18,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
@@ -33,6 +35,7 @@ import java.util.List;
 public class WalletDesktopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
+    private static final String CWP_WALLET_BASIC_ALL_MAIN = Activities.CWP_WALLET_BASIC_ALL_MAIN.getCode();
 
     Typeface tf;
 
@@ -168,7 +171,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                             ((FermatScreenSwapper) getActivity()).selectWallet("WalletBitcoinActivity", installedWallet);
+                             ((FermatScreenSwapper) getActivity()).selectWallet(CWP_WALLET_BASIC_ALL_MAIN, installedWallet);
 
                         }
                     });
@@ -178,7 +181,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet("WalletBitcoinActivity", installedWallet);
+                            ((FermatScreenSwapper) getActivity()).selectWallet(CWP_WALLET_BASIC_ALL_MAIN, installedWallet);
 
                         }
                     });

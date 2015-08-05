@@ -488,6 +488,7 @@ public class FermatActivity extends FragmentActivity{
 
                     // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
+                    window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/home3.png"), null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -507,6 +508,7 @@ public class FermatActivity extends FragmentActivity{
 
                     // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
+                    window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/home3.png"), null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");

@@ -1,0 +1,16 @@
+= Incoming Intra User
+
+Al recibir un pago desde un intra user tenemos que coordinar la información que llega a través de la
+red crypto más la metadata de la transacción. El Crypto Router nos envía la información de las
+transacciones crypto. Por otro lado y diversos network services especializados nos enviarán la información
+de la metadata. +
+
+Siguiendo como ejemplo el Incoming Extra User tendremos que agregar un monitor agent por cada tipo
+de metadata. Por ejemplo, un CryptoMonitorAgent y un FiatMonitorAgent para que traigan la metadata de
+las transacciones crypto y fiat de los network services Crypto Transmission y Money Transmission
+respectivamente. +
+
+El relay agent deberá controlar ahora no sólo los eventos lanzados por el Incoming Crypto sino también
+que la metadata haya llegado para poder aplicarla en algún balance. +
+
+
