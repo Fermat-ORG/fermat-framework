@@ -1,14 +1,12 @@
-package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
+package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -22,18 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//import test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.mocks.MockDatabaseTable;
-
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by Nerio on 25/07/15.
+ * Created by root on 04/08/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class findTest {
+public class getWalletContactTest {
+
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
     @Mock
@@ -47,80 +42,63 @@ public class findTest {
 
     private UUID testPluginId;
 
-    private DatabaseTableRecord mockBalanceRecord;
-
-    private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
+    WalletContactsMiddlewareDao walletContactsMiddlewareDao;
     WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
-
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         testPluginId = UUID.randomUUID();
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem);
+        walletContactsMiddlewareRegistry = new WalletContactsMiddlewareRegistry();
+        walletContactsMiddlewareRegistry.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        walletContactsMiddlewareRegistry.setPluginId(testPluginId);
+        walletContactsMiddlewareRegistry.setErrorManager(mockErrorManager);
     }
 
     @Test
-    public void findAll_setValid_WalletContactRecord() throws Exception{
+    public void getWalletContactByNameAndWalletId_setContactNull_walletContactRecord() throws Exception {
         when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
-        walletContactsMiddlewareDao.initializeDatabase(testPluginId, testPluginId.toString());
+        when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
+        walletContactsMiddlewareRegistry.initialize();
+        walletContactsMiddlewareRegistry.getWalletContactByNameAndWalletId(testPluginId.toString(), testPluginId);
+    }
+
+    @Test
+    public void getWalletContactByNameAndWalletId_findContactValid_walletContactRecord() throws Exception {
+        when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
         when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
         List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findAll(testPluginId);
+        walletContactsMiddlewareRegistry.initialize();
+        walletContactsMiddlewareRegistry.getWalletContactByNameAndWalletId(testPluginId.toString(), testPluginId);
     }
 
     @Test
-    public void findAllScrolling_setValid_WalletContactRecord() throws Exception{
+    public void getWalletContactByNameContainsAndWalletId_findContactValid_walletContactRecord() throws Exception {
         when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
-        walletContactsMiddlewareDao.initializeDatabase(testPluginId, testPluginId.toString());
         when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
         List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findAllScrolling(testPluginId, 1, 0);
+        walletContactsMiddlewareRegistry.initialize();
+        walletContactsMiddlewareRegistry.getWalletContactByNameContainsAndWalletId(testPluginId.toString(), testPluginId);
     }
 
     @Test
-    public void findByActorId_setValid_WalletContactRecord() throws Exception{
+    public void getWalletContactByActorId_findContactValid_walletContactRecord() throws Exception {
         when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
-        walletContactsMiddlewareDao.initializeDatabase(testPluginId, testPluginId.toString());
         when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
         List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findByActorId(testPluginId);
-    }
-
-    @Test
-    public void findByNameContainsAndWalletId_setValid_WalletContactRecord() throws Exception{
-        when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
-        walletContactsMiddlewareDao.initializeDatabase(testPluginId, testPluginId.toString());
-        when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
-        List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
-        databaseTableRecordList.add(mockDatabaseTableRecord);
-        when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
-        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
-        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findByNameContainsAndWalletId(testPluginId.toString(), testPluginId);
-    }
-
-    @Test
-    public void findByNameAndWalletId_setValid_WalletContactRecord() throws Exception{
-        when(mockPluginDatabaseSystem.openDatabase(testPluginId, testPluginId.toString())).thenReturn(mockDatabase);
-        walletContactsMiddlewareDao.initializeDatabase(testPluginId, testPluginId.toString());
-        when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
-        List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
-        databaseTableRecordList.add(mockDatabaseTableRecord);
-        when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
-        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
-        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findByNameAndWalletId(testPluginId.toString(),testPluginId);
+        walletContactsMiddlewareRegistry.initialize();
+        walletContactsMiddlewareRegistry.getWalletContactByActorId(testPluginId);
     }
 }
