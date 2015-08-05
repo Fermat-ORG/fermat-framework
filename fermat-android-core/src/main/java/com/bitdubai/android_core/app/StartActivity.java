@@ -85,7 +85,7 @@ public class StartActivity extends FragmentActivity {
         Intent intent = new Intent(this, SubAppActivity.class);
         intent.putExtra(START_ACTIVITY_INIT, "init");
         startActivity(intent);
-        overridePendingTransition(R.anim.slid_in, R.anim.slide_out);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         return true;
     }
 
