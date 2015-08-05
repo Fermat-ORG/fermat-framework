@@ -123,6 +123,16 @@ public class createBlockChainTest {
         }
 
         @Override
+        public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
+        public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
         public void setContext(Object context) {
 
         }
@@ -177,6 +187,16 @@ public class createBlockChainTest {
         }
 
         @Override
+        public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
+        public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
         public void setContext(Object context) {
 
         }
@@ -228,6 +248,16 @@ public class createBlockChainTest {
         @Override
         public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
             return null;
+        }
+
+        @Override
+        public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
+        public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
         }
 
         @Override
