@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantCreateNewIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
 
 import java.util.List;
 
@@ -31,5 +32,12 @@ public interface IntraUserIdentityManager {
     IntraUserIdentity createNewIntraUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserException;
 
 
+    /**
+     * The method <code>setNewProfileImage</code> let the user set a new profile image
+     *
+     * @param newProfileImage the new profile image to set
+     * @throws CantSetNewProfileImageException
+     */
+    void setNewProfileImage(byte[] newProfileImage, String intraUserPublicKey) throws CantSetNewProfileImageException;
 
 }
