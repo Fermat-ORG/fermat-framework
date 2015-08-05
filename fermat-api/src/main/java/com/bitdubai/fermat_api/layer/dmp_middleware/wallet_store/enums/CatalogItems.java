@@ -25,8 +25,10 @@ public enum CatalogItems {
             case "WLT": return CatalogItems.WALLET;
             case "LNG": return CatalogItems.LANGUAGE;
             case "SKN": return CatalogItems.SKIN;
+            //Modified by Manuel Perez on 05/08/2015
             default:
-                throw new InvalidParameterException(code);
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the CatalogItems enum");
+
         }
     }
 }

@@ -30,11 +30,12 @@ public enum TransactionState {
             case "STCV": return TransactionState.SENT_TO_CRYPTO_VOULT;
             case "SS": return TransactionState.SUCCESSFUL_SENT;
             case "RCV": return TransactionState.RECEIVED;
-            default:
                 /**
-                 * If we try to cpmvert am invalid string.
+                 * If we try to convert am invalid string.
                  */
-                throw new InvalidParameterException(code);
+                //Modified by Manuel Perez on 05/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionState enum");
+
         }
     }
 }

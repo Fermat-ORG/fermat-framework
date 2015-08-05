@@ -1,28 +1,61 @@
 package com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * Created by ciencias on 3/24/15.
  */
 public enum TransferFailedReasons {
 
-    ACCOUNT_FROM_ALREADY_LOCKED ("Account from already locked"),
-    ACCOUNT_TO_ALREADY_LOCKED ("Account to already locked"),
-    ACCOUNT_FROM_DOES_NOT_BELONG_TO_THIS_WALLET ("Account from does not belong to this wallet"),
-    ACCOUNT_TO_DOES_NOT_BELONG_TO_THIS_WALLET ("Account to does not belong to this wallet"),
-    ACCOUNT_FROM_NOT_OPEN ("Account from not open"),
-    ACCOUNT_TO_NOT_OPEN ("Account to not open"),
-    NOT_ENOUGH_FUNDS ("Not enough funds"),
-    CANT_SAVE_TRANSACTION("Cant save transaction"),
-    DATABASE_UNAVAILABLE("Database Unavailable"),
-    FIAT_CURRENCY_FROM_AND_FIAT_CURRENCY_TO_DONT_MATCH("Fiat currency from and fiat currency to do not match");
+    //Modified by Manuel Perez on 05/08/2015
+    ACCOUNT_FROM_ALREADY_LOCKED ("AFAL"),
+    ACCOUNT_TO_ALREADY_LOCKED ("ATAL"),
+    ACCOUNT_FROM_DOES_NOT_BELONG_TO_THIS_WALLET ("AFDNBTTW"),
+    ACCOUNT_TO_DOES_NOT_BELONG_TO_THIS_WALLET ("ATDNBTTW"),
+    ACCOUNT_FROM_NOT_OPEN ("AFNO"),
+    ACCOUNT_TO_NOT_OPEN ("ATNO"),
+    NOT_ENOUGH_FUNDS ("NEF"),
+    CANT_SAVE_TRANSACTION("CST"),
+    DATABASE_UNAVAILABLE("DATAAVA"),
+    FIAT_CURRENCY_FROM_AND_FIAT_CURRENCY_TO_DONT_MATCH("FCFAFCTDM");
 
-    private String reasonText;
+    private String code;
     
-    TransferFailedReasons (String reasonText) {
-        this.reasonText = reasonText;
+    TransferFailedReasons (String code) {
+        this.code = code;
     }
     
-    public String getReasonText(){
-        return this.reasonText;
+    public String getCode(){
+        return this.code;
+    }
+
+    public static TransferFailedReasons getByCode(String code)throws InvalidParameterException{
+
+        switch (code){
+
+            case "AFAL":
+                return TransferFailedReasons.ACCOUNT_FROM_ALREADY_LOCKED;
+            case "ATAL":
+                return TransferFailedReasons.ACCOUNT_TO_ALREADY_LOCKED;
+            case "AFDNBTTW":
+                return TransferFailedReasons.ACCOUNT_FROM_DOES_NOT_BELONG_TO_THIS_WALLET;
+            case "ATDNBTTW":
+                return TransferFailedReasons.ACCOUNT_TO_DOES_NOT_BELONG_TO_THIS_WALLET;
+            case "AFNO":
+                return TransferFailedReasons.ACCOUNT_FROM_NOT_OPEN;
+            case "ATNO":
+                return TransferFailedReasons.ACCOUNT_TO_NOT_OPEN;
+            case "NEF":
+                return TransferFailedReasons.NOT_ENOUGH_FUNDS;
+            case "CST":
+                return TransferFailedReasons.CANT_SAVE_TRANSACTION;
+            case "DATAAVA":
+                return TransferFailedReasons.DATABASE_UNAVAILABLE;
+            case "FCFAFCTDM":
+                return TransferFailedReasons.FIAT_CURRENCY_FROM_AND_FIAT_CURRENCY_TO_DONT_MATCH;
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransferFailedReasons enum");
+
+        }
+
     }
 }
