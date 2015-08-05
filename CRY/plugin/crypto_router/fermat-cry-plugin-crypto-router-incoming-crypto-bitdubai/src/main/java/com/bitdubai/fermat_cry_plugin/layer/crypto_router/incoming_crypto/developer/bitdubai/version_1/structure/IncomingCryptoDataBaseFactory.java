@@ -32,7 +32,7 @@ public class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSys
      */
     public Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        DatabaseTableFactory table;
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
         HashMap<String, List<IncomingCryptoDataBaseConstants.ColumnDefinition>> tablesDefinitions = new HashMap<>();
 
         /**
@@ -66,21 +66,17 @@ public class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSys
 
         try {
             for(Map.Entry<String, List<IncomingCryptoDataBaseConstants.ColumnDefinition>> tableDefinition: tablesDefinitions.entrySet()){
-                table = ((DatabaseFactory) database).newTableFactory(ownerId, tableDefinition.getKey());
-                //System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
+                DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, tableDefinition.getKey());
                 for(IncomingCryptoDataBaseConstants.ColumnDefinition columnDefinition: tableDefinition.getValue()){
                     table.addColumn(columnDefinition.columnName, columnDefinition.columnDataType, columnDefinition.columnDataTypeSize, columnDefinition.columnIsPrimaryKey);
-                    //System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
                 }
-                ((DatabaseFactory) database).createTable(table);
+                databaseFactory.createTable(table);
             }
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
-            //System.out.println("InvalidOwnerIdException: " + invalidOwnerId.getMessage());
             invalidOwnerId.printStackTrace();
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, null, "We are passing the wrong OwnerId to the new TableFactory object");
         } catch (CantCreateTableException e) {
-            //System.out.println("InvalidOwnerIdException: CantCreateTableException " + e.getMessage());
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, null, "The table must have been improperly setup, check the context of the cause for the specification of the table");
         }
         return database;

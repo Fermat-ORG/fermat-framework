@@ -126,9 +126,8 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
     @Override
     public void stop() {
-        
-        this.agentThread.interrupt();
-        
+        //this.agentThread.interrupt();
+        monitorAgent.stop();
     }
 
 
@@ -142,6 +141,10 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         /**
          * DealsWithCryptoVault Interface member variables.
          */
+        public void stop(){
+            running.set(false);
+        }
+
         public boolean isRunning(){
             return running.get();
         }
