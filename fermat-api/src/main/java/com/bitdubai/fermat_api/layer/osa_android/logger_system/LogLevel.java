@@ -1,25 +1,50 @@
 package com.bitdubai.fermat_api.layer.osa_android.logger_system;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
+import sun.rmi.runtime.Log;
+
 /**
  * Created by ciencias on 6/25/15.
  */
 public enum LogLevel {
 
-    NOT_LOGGING ("NOT_LOGGING", "Logging not defined"),
-    MINIMAL_LOGGING   ("MINIMAL_LOGGING", "Logging with minimum information"),
-    MODERATE_LOGGING   ("MODERATE_LOGGING","Logging with medium information"),
-    AGGRESSIVE_LOGGING ("AGGRESSIVE_LOGGING","Logging with maximum information");
+    NOT_LOGGING ("NOTLOG", "Logging not defined"),
+    MINIMAL_LOGGING   ("MINLOG", "Logging with minimum information"),
+    MODERATE_LOGGING   ("MODLOG","Logging with medium information"),
+    AGGRESSIVE_LOGGING ("AGGLOG","Logging with maximum information");
 
 
-    private final String mCode;
+    private String code;
     private final String mDisplayName;
 
-    private LogLevel (String Code, String DisplayName) {
-        this.mCode = Code;
+    LogLevel (String code, String DisplayName) {
+        this.code = code;
         this.mDisplayName = DisplayName;
     }
 
-    public String getCode()   { return mCode; }
+    public String getCode()   { return code; }
+
+    public static LogLevel getByCode(String code)throws InvalidParameterException{
+
+        switch (code){
+
+            case "NOTLOG":
+                return LogLevel.NOT_LOGGING;
+            case "MINLOG":
+                return LogLevel.MINIMAL_LOGGING;
+            case "MODLOG":
+                return LogLevel.MODERATE_LOGGING;
+            case "AGGLOG":
+                return LogLevel.AGGRESSIVE_LOGGING;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the logLevel enum");
+
+
+        }
+
+    }
+
     public String getDisplayName() { return mDisplayName; }
 
 
