@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.enums.FactoryProjectState</code>
  * enumerates type of Resources.
@@ -29,11 +27,12 @@ public enum FactoryProjectState {
         return null;
     }
 
-    private final String key;
+    //Modified by Manuel perez on 05/08/2015
+    private String code;
 
-    FactoryProjectState(String key) {
-        this.key = key;
+    FactoryProjectState(String code) {
+        this.code = code;
     }
 
-    public String value() { return this.key; }
+    public String value() { return this.code; }
 }

@@ -26,7 +26,7 @@ public enum CryptoRequestState {
             case "PCS": return CryptoRequestState.PROCESSING;
             case "RBD": return CryptoRequestState.RECEIVED_BY_DESTINATION;
             case "SNT": return CryptoRequestState.SENT;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,null,"The code read was: "+ code,"Missing branch in switch statement");
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,null,"Code Received: " + code, "This Code Is Not Valid for the CryptoRequestState enum");
         }
     }
 }
