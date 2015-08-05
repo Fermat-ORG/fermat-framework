@@ -17,7 +17,8 @@ public class GetCryptoCurrencyTest {
 
         CryptoCurrency cryptoCurrency=testDeveloperBitDubai.getCryptoCurrency();
         Assertions.assertThat(cryptoCurrency)
-                .isNull();
+                //.isNull();
+                .isNotNull();
 
     }
 }
