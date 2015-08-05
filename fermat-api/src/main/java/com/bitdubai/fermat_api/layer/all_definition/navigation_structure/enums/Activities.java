@@ -48,7 +48,7 @@ public enum Activities {
     CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT( "CWRAADD"),
     CWP_WALLET_ADULTS_ALL_WEEKLY_DISCOUNT( "CWRAAWD"),
     CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT( "CWRAAMD"),
-    CWP_SUP_APP_ALL_DEVELOPER ("CSAAD"),
+    CWP_SUB_APP_ALL_DEVELOPER("CSAAD"),
     CWP_WALLET_FACTORY_MAIN ("CWFM"),
     CWP_WALLET_PUBLISHER_MAIN ("CWPM");
 
@@ -155,7 +155,7 @@ public enum Activities {
             case "CWRAAMD":
                 return Activities.CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT;
             case "CSAAD":
-                return Activities.CWP_SUP_APP_ALL_DEVELOPER;
+                return Activities.CWP_SUB_APP_ALL_DEVELOPER;
             case "CWFM":
                 return Activities.CWP_WALLET_FACTORY_MAIN;
             case "CWPM":

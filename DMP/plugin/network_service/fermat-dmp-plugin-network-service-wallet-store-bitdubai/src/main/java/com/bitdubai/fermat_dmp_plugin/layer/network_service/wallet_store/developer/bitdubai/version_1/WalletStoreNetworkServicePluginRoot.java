@@ -290,15 +290,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         }
 
 
-        //todo borrar este testing.
-        try {
-            TestPublishWallet();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (CantPublishWalletInCatalogException e) {
-            e.printStackTrace();
-        }
-
         /**
          * I will initialize the handling of platform events.
          */
@@ -464,6 +455,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     //todo delete - TESTING
     private void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException {
         UUID walletId = UUID.randomUUID();
+        System.out.println("Id to install: " + walletId.toString());
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem catalogItem;
         catalogItem = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem();
         catalogItem.setId(walletId);

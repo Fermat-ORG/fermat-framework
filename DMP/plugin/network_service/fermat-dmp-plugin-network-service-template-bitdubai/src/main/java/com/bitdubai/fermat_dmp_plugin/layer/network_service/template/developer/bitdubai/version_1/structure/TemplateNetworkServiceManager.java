@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.IncomingMessageDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.OutgoingMessageDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
@@ -61,14 +63,14 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     private Map<String, TemplateNetworkServiceRemoteAgent> templateNetworkServiceRemoteAgentsCache;
 
     /**
-     * Represent the incomingMessageDataAccessObject
+     * Represent the incomingMessageDao
      */
-    private IncomingMessageDataAccessObject incomingMessageDataAccessObject;
+    private IncomingMessageDao incomingMessageDao;
 
     /**
-     * Represent the outgoingMessageDataAccessObject
+     * Represent the outgoingMessageDao
      */
-    private OutgoingMessageDataAccessObject outgoingMessageDataAccessObject;
+    private OutgoingMessageDao outgoingMessageDao;
 
     /**
      * Represent the eccKeyPair
@@ -88,8 +90,8 @@ public class TemplateNetworkServiceManager implements TemplateManager {
         this.communicationLayerManager                = communicationLayerManager;
         this.errorManager                             = errorManager;
         this.eventManager                             = eventManager;
-        this.incomingMessageDataAccessObject          = new IncomingMessageDataAccessObject(dataBase);
-        this.outgoingMessageDataAccessObject          = new OutgoingMessageDataAccessObject(dataBase);
+        this.incomingMessageDao = new IncomingMessageDao(dataBase);
+        this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
         this.templateNetworkServiceLocalsCache = new HashMap<>();
         this.templateNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
@@ -169,12 +171,12 @@ public class TemplateNetworkServiceManager implements TemplateManager {
                 /*
                  * Instantiate the local reference
                  */
-                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, eventManager, outgoingMessageDataAccessObject);
+                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, remoteNetworkServicePublicKey, serviceToServiceOnlineConnection, errorManager, incomingMessageDataAccessObject, outgoingMessageDataAccessObject);
+                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, remoteNetworkServicePublicKey, serviceToServiceOnlineConnection, errorManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -223,12 +225,12 @@ public class TemplateNetworkServiceManager implements TemplateManager {
                  /*
                  * Instantiate the local reference
                  */
-                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, eventManager, outgoingMessageDataAccessObject);
+                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, remoteNetworkServicePublicKey, serviceToServiceOnlineConnection, errorManager, incomingMessageDataAccessObject, outgoingMessageDataAccessObject);
+                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, remoteNetworkServicePublicKey, serviceToServiceOnlineConnection, errorManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
