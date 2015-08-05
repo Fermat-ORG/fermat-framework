@@ -117,6 +117,16 @@ public class StartAgentTest {
         }
 
         @Override
+        public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
+        public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
         public void setContext(Object context) {
 
         }
