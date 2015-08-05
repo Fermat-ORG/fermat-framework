@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * Created by Arturo Vallone on 25/04/15
  */
-class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSystem {
+public class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -78,10 +78,10 @@ class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSystem {
         } catch (InvalidOwnerIdException invalidOwnerId) {
             //System.out.println("InvalidOwnerIdException: " + invalidOwnerId.getMessage());
             invalidOwnerId.printStackTrace();
-            throw new CantCreateDatabaseException();
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, null, "We are passing the wrong OwnerId to the new TableFactory object");
         } catch (CantCreateTableException e) {
             //System.out.println("InvalidOwnerIdException: CantCreateTableException " + e.getMessage());
-            throw new CantCreateDatabaseException();
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, null, "The table must have been improperly setup, check the context of the cause for the specification of the table");
         }
         return database;
     }

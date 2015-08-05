@@ -22,6 +22,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by ciencias on 3/30/15.
@@ -140,9 +141,17 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
     }
 
 
+    public boolean isRunning(){
+        return this.relayAgent.isRunning();
+    }
 
     private static class RelayAgent implements DealsWithActorAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , Runnable  {
 
+        private AtomicBoolean running = new AtomicBoolean(false);
+
+        public boolean isRunning(){
+            return running.get();
+        }
         /**
          * DealsWithActorAddressBook Interface member variables.
          */
@@ -228,6 +237,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             /**
              * Infinite loop.
              */
+            running.set(true);
             while (true) {
 
                 /**
