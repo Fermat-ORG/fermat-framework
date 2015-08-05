@@ -9,7 +9,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
@@ -24,8 +30,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.Wall
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublisherMiddlewareManagerImpl;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DealsWithDeveloperIdentity;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +55,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherMiddlewarePluginRoot implements DealsWithWalletFactory, DealsWithWalletStoreMiddleware, DealsWithErrors,DealsWithLogger,LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewareManager {
+public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperIdentity, DealsWithWalletFactory, DealsWithWalletStoreMiddleware, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewareManager, DatabaseManagerForDevelopers {
 
     /**
      * Represent the logManager
@@ -72,6 +83,11 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithWalletFacto
     private WalletStoreManager walletStoreManager;
 
     /**
+     * Represent the developerIdentityManager
+     */
+    private DeveloperIdentityManager developerIdentityManager;
+
+    /**
      * Represent the plugin id
      */
     private UUID pluginId;
@@ -82,6 +98,16 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithWalletFacto
     private ServiceStatus serviceStatus;
 
     /**
+     * Represent the status of the walletPublisherMiddlewareManagerImpl
+     */
+    private WalletPublisherMiddlewareManagerImpl walletPublisherMiddlewareManagerImpl;
+
+    /**
+     * Represent the status of the walletPublisherMiddlewareDeveloperDatabaseFactory
+     */
+    private WalletPublisherMiddlewareDeveloperDatabaseFactory walletPublisherMiddlewareDeveloperDatabaseFactory;
+
+    /**s
      * Constructor
      */
     public WalletPublisherMiddlewarePluginRoot(){
@@ -90,11 +116,66 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithWalletFacto
     }
 
     /**
+     * This method validate is all required resource are injected into
+     * the plugin root by the platform
+     *
+     * @throws CantStartPluginException
+     */
+    private void validateInjectedResources() throws CantStartPluginException {
+
+        /*
+         * Validate If all resources are not null
+         */
+        if (logManager                               == null ||
+                errorManager                         == null ||
+                    errorManager                     == null ||
+                        walletFactoryManager         == null ||
+                            developerIdentityManager == null) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("logManager: " + logManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("walletFactoryManager: " + walletFactoryManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("walletStoreManager: " + walletStoreManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("walletStoreManager: " + walletStoreManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("developerIdentityManager: " + developerIdentityManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "No all required resource are injected";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+        }
+
+    }
+
+    /**
      * (non-Javadoc)
      * @see Service#start()
      */
     @Override
     public void start() throws CantStartPluginException {
+
+
+        /*
+         * Validate required resources
+         */
+        validateInjectedResources();
+
+
+
+
+
+
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -178,12 +259,13 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithWalletFacto
      */
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
+
+        /*
          * I will check the current values and update the LogLevel in those which is different
          */
-
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
+
+            /*
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
             if (WalletPublisherMiddlewarePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
@@ -212,6 +294,15 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithWalletFacto
     @Override
     public void setWalletStoreManager(WalletStoreManager walletStoreManager) {
         this.walletStoreManager = walletStoreManager;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see DealsWithDeveloperIdentity#setDeveloperIdentityManager(DeveloperIdentityManager)
+     */
+    @Override
+    public void setDeveloperIdentityManager(DeveloperIdentityManager developerIdentityManager) {
+        this.developerIdentityManager = developerIdentityManager;
     }
 
 
@@ -258,5 +349,32 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithWalletFacto
     @Override
     public void publishLanguage(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
 
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see DatabaseManagerForDevelopers#getDatabaseList(DeveloperObjectFactory)
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return walletPublisherMiddlewareDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see DatabaseManagerForDevelopers#getDatabaseTableList(DeveloperObjectFactory, DeveloperDatabase)
+     */
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return walletPublisherMiddlewareDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see DatabaseManagerForDevelopers#getDatabaseTableContent(DeveloperObjectFactory, DeveloperDatabase, DeveloperDatabaseTable)
+     */
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return walletPublisherMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 }
