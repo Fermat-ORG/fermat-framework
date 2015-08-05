@@ -32,11 +32,9 @@ public interface WalletResourcesInstalationManager {
 
     /**
      *
-     * @param walletPath
-     * @param skinId
      * @param navigationStructureVersion
      */
-    public void unninstallResources(String walletPath,UUID skinId,String navigationStructureVersion);
+    public void unninstallResources(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String screenDensity,String navigationStructureVersion,boolean isLastWallet);
 
 
 }

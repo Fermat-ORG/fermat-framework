@@ -130,6 +130,7 @@
     <string name="fragment_send_account_number_hint">Address (*)</string>
     <string name="fragment_send_amount_hint">Amount (bits) (*)</string>
     <string name="fragment_send_notes_hint">Notes (optional)</string>
+    <string name="clear_text_button">Clear</string>
 
 
 </resources>

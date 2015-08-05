@@ -87,7 +87,7 @@ public class TabbedDialogFragment extends DialogFragment {
 	public class ContactPagerAdapter extends PagerAdapter implements PagerSlidingTabStrip.IconTabProvider {
 
 		private final int[] ICONS = { R.drawable.icono_retailer_1, R.drawable.icono_club_2,
-				R.drawable.icono_club_1, R.drawable.icono_banco_2, R.drawable.icono_banco_1, R.drawable.icon_add};
+				R.drawable.icono_club_1, R.drawable.icono_banco_2, R.drawable.icono_banco_1, R.drawable.ic_action_add_grey};
 
 		public ContactPagerAdapter() {
 			super();
