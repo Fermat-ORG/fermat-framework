@@ -18,13 +18,13 @@ import java.util.UUID;
 public interface CryptoTransmissionNetworkServiceManager extends TransactionProtocolManager<FermatCryptoTransaction> {
 
     /**
-     * The method <code>informTransactionRegisteredInWallet</code> informs the peer network service
+     * The method <code>informTransactionCreditedInWallet</code> informs the peer network service
      * that sent the transaction that the said transaction has been credited in its destination wallet.
      *
      * @param identifier an identifier of the transmission, it could be the requestId or a transmissionId
      * @throws CantSetToCreditedInWalletException
      */
-    public void informTransactionRegisteredInWallet(UUID identifier) throws CantSetToCreditedInWalletException;
+    public void informTransactionCreditedInWallet(UUID identifier) throws CantSetToCreditedInWalletException;
 
     /**
      * The method <code>informTransactionSeenByVault</code> informs the peer network service that sent
