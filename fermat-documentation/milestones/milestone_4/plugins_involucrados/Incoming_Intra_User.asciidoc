@@ -11,8 +11,8 @@ o tiene un conocimiento del protocolo de traspaso de transacciones del sistema.
 == Documentación
 
 Al recibir un pago desde un intra user tenemos que coordinar la información que llega a través de la
-red crypto más la metadata de la transacción. El Crypto Router nos envía la información de las
-transacciones crypto. Por otro lado y diversos network services especializados nos enviarán la
+red crypto con la metadata de la transacción. El Crypto Router nos envía la información de las
+transacciones crypto. Por otro lado, diversos network services especializados nos enviarán la
 información de la metadata. +
 Para este Milestone, esta metadata puede ser metadata de crypto (se da cuando un Intra User nos envía
 una transacción crypto) o de fiat (se da cuando un Intra User nos envía una transacción de Fiat over
@@ -37,7 +37,7 @@ que guardar la información en tablas diferentes. Es decir, en nuestra base de d
 para guardar la metadata de las transacciones crypto y otra para la metadata de las transacciones fiat.
 A estas dos tablas se le suman la de eventos y la de transacciones de la red crypto. +
 Para cada monitor agent deberá haber un método que consulte la tabla de eventos trayendo el siguiente
-evento pendiente para el agente particular que consulta, es decir que si consulta el CryptoMonitorAgent
+evento pendiente para el agente particular que consulta; es decir que si consulta el CryptoMonitorAgent
 entonces se le debe dar un evento con source Crypto Transmission Network Service; si consulta el
 FiatMonitorAgent entonces se le debe dar un evento con source Money Transmission Network Service; y
 si consulta el MonitorAgent entonces se le debe dar un evento con source Incoming Crypto.
@@ -46,22 +46,31 @@ Para administrar el ciclo de vida de la transacción sólo requerimos de la info
 red crypto a través del Incoming Crypto, la espera de la metadata es necesaria para poder aplicar las
 actualizaciones del balance. +
 Lo que haremos será que el método que llama el relay agent que consulta las transacciones en estado
-(RESPONSIBLE, TO_BE_APPLIED), es decir el método getResponsibleTBATransactions retornará sólo las
+(RESPONSIBLE, TO_BE_APPLIED), es decir el método getResponsibleTBATransactions, retornará sólo las
 transacciones en ese estado que además tengan la metadata sincronizada. De esta manera el problema
-queda reducido al problema que hemos resuelto en la lógica del Incoming Extra User.
+queda reducido al problema que hemos resuelto en la lógica del Incoming Extra User. +
+
+NOTE: Un posible defecto de esta estrategia nace si la comunicación entre network services requiere
+que ambos usuarios esten conectados para intercambiar un mensaje. En principio asumiremos que no
+tenemos este problema; pero si nuestro sistema de comunicación no nos garantiza que podamos enviar
+un mensaje a un usuario desconectado para poder desentendernos de la responsabilidad de envío del
+mismo entonces tendremos que analizar esta estrategia.
+Dicho en otras palabras, nos basamos en que si un usuario A envía un mensaje a otro usuario B a través
+de un network service N cuando B está desconectado, entonces si A se desconecta y luego B se conecta,
+el mensaje enviado le llegará sin que A deba realizar ningún tipo de reenvío.
 
 Para obtener la información eficientemente podemos colocar una tabla que relaciona la tabla que almacena
 las transacciones crypto con el tipo de metadata que se detectó asociada a esa transacción. Visto con
 más detalle, cuando llega un mensaje con metadata de un transacción fiat registramos en esta tabla el
-par (hash de la transacción crypto asociada, FIAT_TRANSACTION) y si llega una la metainformación de lo
+campo (hash de la transacción crypto asociada, FIAT_TRANSACTION) y si llega una la metainformación de lo
 que sería una transacción crypto entre intra users colocaremos un registro (hash de la transacción crypto
-asociada, CRYPTO_TRANSACTION). +
+asociada, CRYPTO_TRANSACTION). Definiremos un enum TransactionType para representar estos valores. +
 La manera de utilizar esta tabla será que cuando se piden las transacciones de las que uno es responsable
 se consultará qué transacciones en estado (RESPONSIBLE, TO_BE_APPLIED) tinen su hash asociado en esta
 tabla. +
-Requeriremos un método para saber si una transacción es FIAT_TRANSACTION o CRYPTO_TRANSACTION (u otro
-tipo futuro) para que a la hora de aplicar las transacciones pidamos la metadata asociada y podamos
-trabajarla. +
+Además requeriremos un método para saber si una transacción es FIAT_TRANSACTION o CRYPTO_TRANSACTION
+(u otro tipo futuro) para que a la hora de aplicar las transacciones pidamos la metadata asociada y
+podamos trabajarla. +
 
 Como un agregado, este plugin deberá llamar a los métodos `informTransactionSeenByVault` e
 `informTransactionCreditedInWallet` del network service MoneyTransmission cuando se trate
