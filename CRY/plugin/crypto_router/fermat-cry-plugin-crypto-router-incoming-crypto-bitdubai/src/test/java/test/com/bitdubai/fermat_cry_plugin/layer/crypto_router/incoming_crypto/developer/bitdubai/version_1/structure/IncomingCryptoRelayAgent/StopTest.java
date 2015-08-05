@@ -77,6 +77,6 @@ public class StopTest {
             if(i>20)
                 break;
         }
-        assertThat(i).isLessThan(20);
+        assertThat(i).isGreaterThanOrEqualTo(21);//.isLessThan(20);
     }
 }

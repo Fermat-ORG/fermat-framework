@@ -9,6 +9,7 @@ import java.util.UUID;
 /**
  * Created by Franklin Marcano 04/08/15.
  */
+
 public class MockDatabaseTableRecord implements DatabaseTableRecord {
 
     @Override

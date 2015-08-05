@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
+@RunWith(MockitoJUnitRunner.class)
 public class StartTest {
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
