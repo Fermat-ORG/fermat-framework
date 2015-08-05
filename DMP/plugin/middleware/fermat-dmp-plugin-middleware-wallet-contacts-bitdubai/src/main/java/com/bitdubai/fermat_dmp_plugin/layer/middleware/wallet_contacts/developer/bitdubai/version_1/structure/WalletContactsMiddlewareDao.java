@@ -177,6 +177,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
                 String receivedCurrency = record.getStringValue(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
                 CryptoAddress receivedCryptoAddress = new CryptoAddress();
                 receivedCryptoAddress.setAddress(receivedAddress);
+                System.out.println(receivedCurrency);
+
                 receivedCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(receivedCurrency));
 
                 WalletContactsMiddlewareRecord walletContact = new WalletContactsMiddlewareRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);

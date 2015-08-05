@@ -1,6 +1,7 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -70,6 +71,7 @@ public class getWalletContactTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
         walletContactsMiddlewareRegistry.getWalletContactByNameAndWalletId(testPluginId.toString(), testPluginId);
     }
@@ -82,6 +84,7 @@ public class getWalletContactTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
         walletContactsMiddlewareRegistry.getWalletContactByNameContainsAndWalletId(testPluginId.toString(), testPluginId);
     }
@@ -94,6 +97,7 @@ public class getWalletContactTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
         walletContactsMiddlewareRegistry.getWalletContactByActorId(testPluginId);
     }

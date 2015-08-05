@@ -1,6 +1,7 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -67,6 +68,7 @@ public class findTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareDao.findAll(testPluginId);
     }
 
@@ -79,6 +81,7 @@ public class findTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareDao.findAllScrolling(testPluginId, 1, 0);
     }
 
@@ -91,6 +94,7 @@ public class findTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareDao.findByActorId(testPluginId);
     }
 
@@ -103,6 +107,7 @@ public class findTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareDao.findByNameContainsAndWalletId(testPluginId.toString(), testPluginId);
     }
 
@@ -115,6 +120,7 @@ public class findTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareDao.findByNameAndWalletId(testPluginId.toString(),testPluginId);
     }
 }

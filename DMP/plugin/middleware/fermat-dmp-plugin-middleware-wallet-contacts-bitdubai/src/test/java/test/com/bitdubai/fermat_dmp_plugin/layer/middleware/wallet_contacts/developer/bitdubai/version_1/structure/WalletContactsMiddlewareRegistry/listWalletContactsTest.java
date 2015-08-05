@@ -64,6 +64,7 @@ public class listWalletContactsTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
         walletContactsMiddlewareRegistry.listWalletContacts(testPluginId);
     }
@@ -76,6 +77,7 @@ public class listWalletContactsTest {
         databaseTableRecordList.add(mockDatabaseTableRecord);
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
         walletContactsMiddlewareRegistry.listWalletContactsScrolling(testPluginId, 1, 0);
     }
