@@ -43,6 +43,7 @@
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-plugin-actor-developer-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-plugin-identity-developer-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-plugin-identity-translator-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-plugin-module-developer-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-plugin-network-service-subapp-resources-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
@@ -50,6 +51,8 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-actor-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-actor-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-identity-intra-user-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-crypto-transmission-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-request-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" exported="" />
