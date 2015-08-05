@@ -2,6 +2,11 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +20,7 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -22,155 +28,225 @@ import java.util.Locale;
 // Customized adaptor to populate data in PinnedHeaderListView
 public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener, IPinnedHeader, Filterable {
 
-	private static final int TYPE_ITEM = 0;
-	private static final int TYPE_SECTION = 1;
-	private static final int TYPE_MAX_COUNT = TYPE_SECTION + 1;
-	private final FermatListViewFragment contactsFragment;
+    private static final int TYPE_ITEM = 0;
+    private static final int TYPE_SECTION = 1;
+    private static final int TYPE_MAX_COUNT = TYPE_SECTION + 1;
+    private static final int TOTAL_CONTACTS_SECTION_POSITION = 0;
+    private final FermatListViewFragment contactsFragment;
 
-	LayoutInflater mLayoutInflater;
-	int mCurrentSectionPosition = 0, mNextSectionPostion = 0;
+    private String constrainStr = null;
 
-	// array list to store section positions
-	ArrayList<Integer> mListSectionPos;
+    LayoutInflater mLayoutInflater;
+    int mCurrentSectionPosition = 0, mNextSectionPosition = 0;
 
-	// array list to store list view data
-	ArrayList<String> mListItems;
+    // array list to store section positions
+    ArrayList<Integer> mListSectionPos;
 
-	// context object
-	Context mContext;
+    // array list to store list view data
+    ArrayList<String> mListItems;
 
-	public PinnedHeaderAdapter(Context context, ArrayList<String> listItems,ArrayList<Integer> listSectionPos,FermatListViewFragment contactsFragment) {
-		this.mContext = context;
-		this.mListItems = listItems;
-		this.mListSectionPos = listSectionPos;
-		this.contactsFragment= contactsFragment;
+    // context object
+    Context mContext;
 
-		mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
+    /**
+     * @param context          Context
+     * @param listItems        List of Items
+     * @param listSectionPos   List of section positions
+     * @param constrainStr     The string that is being searching
+     * @param contactsFragment ContactsFragment who is calling
+     */
+    public PinnedHeaderAdapter(Context context, ArrayList<String> listItems, ArrayList<Integer> listSectionPos,
+                               String constrainStr, FermatListViewFragment contactsFragment) {
+        this.mContext = context;
+        this.mListItems = listItems;
+        this.mListSectionPos = listSectionPos;
+        this.contactsFragment = contactsFragment;
 
-	@Override
-	public int getCount() {
-		return mListItems.size();
-	}
+        if (constrainStr != null) {
+            if (!constrainStr.isEmpty()) {
+                this.constrainStr = constrainStr;
+            }
+        }
 
-	@Override
-	public boolean areAllItemsEnabled() {
-		return false;
-	}
 
-	@Override
-	public boolean isEnabled(int position) {
-		return !mListSectionPos.contains(position);
-	}
+        mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
-	@Override
-	public int getViewTypeCount() {
-		return TYPE_MAX_COUNT;
-	}
+    @Override
+    public int getCount() {
+        return mListItems.size();
+    }
 
-	@Override
-	public int getItemViewType(int position) {
-		return mListSectionPos.contains(position) ? TYPE_SECTION : TYPE_ITEM;
-	}
 
-	@Override
-	public Object getItem(int position) {
-		return mListItems.get(position);
-	}
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return mListItems.get(position).hashCode();
-	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder = null;
+    @Override
+    public boolean isEnabled(int position) {
+        return !mListSectionPos.contains(position);
+    }
 
-		if (convertView == null) {
-			holder = new ViewHolder();
-			int type = getItemViewType(position);
 
-			switch (type) {
-			case TYPE_ITEM:
-				convertView = mLayoutInflater.inflate(R.layout.row_view, null);
+    @Override
+    public int getViewTypeCount() {
+        return TYPE_MAX_COUNT;
+    }
 
-				break;
-			case TYPE_SECTION:
-				convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
-				break;
-			}
-			holder.textView = (TextView) convertView.findViewById(R.id.row_title);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
 
-		holder.textView.setText(mListItems.get(position).toString());
-		return convertView;
-	}
+    @Override
+    public Object getItem(int position) {
+        return mListItems.get(position);
+    }
 
-	@Override
-	public int getPinnedHeaderState(int position) {
-		// hide pinned header when items count is zero OR position is less than
-		// zero OR
-		// there is already a header in list view
-		if (getCount() == 0 || position < 0 || mListSectionPos.indexOf(position) != -1) {
-			return PINNED_HEADER_GONE;
-		}
 
-		// the header should get pushed up if the top item shown
-		// is the last item in a section for a particular letter.
-		mCurrentSectionPosition = getCurrentSectionPosition(position);
-		mNextSectionPostion = getNextSectionPosition(mCurrentSectionPosition);
-		if (mNextSectionPostion != -1 && position == mNextSectionPostion - 1) {
-			return PINNED_HEADER_PUSHED_UP;
-		}
+    @Override
+    public long getItemId(int position) {
+        return mListItems.get(position).hashCode();
+    }
 
-		return PINNED_HEADER_VISIBLE;
-	}
 
-	public int getCurrentSectionPosition(int position) {
-		String listChar = mListItems.get(position).toString().substring(0, 1).toUpperCase(Locale.getDefault());
-		return mListItems.indexOf(listChar);
-	}
+    @Override
+    public int getItemViewType(int position) {
+        return mListSectionPos.contains(position) ? TYPE_SECTION : TYPE_ITEM;
+    }
 
-	public int getNextSectionPosition(int currentSectionPosition) {
-		int index = mListSectionPos.indexOf(currentSectionPosition);
-		if ((index + 1) < mListSectionPos.size()) {
-			return mListSectionPos.get(index + 1);
-		}
-		return mListSectionPos.get(index);
-	}
 
-	@Override
-	public void configurePinnedHeader(View v, int position) {
-		// set text in pinned header
-		TextView header = (TextView) v;
-		mCurrentSectionPosition = getCurrentSectionPosition(position);
-		header.setText(mListItems.get(mCurrentSectionPosition));
-	}
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
 
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,int visibleItemCount, int totalItemCount) {
-		if (view instanceof PinnedHeaderListView) {
-			((PinnedHeaderListView) view).configureHeaderView(firstVisibleItem);
-		}
-	}
+        int type = getItemViewType(position);
+        if (convertView == null) {
+            holder = new ViewHolder();
 
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO Auto-generated method stub
-	}
+            switch (type) {
+                case TYPE_ITEM:
+                    convertView = mLayoutInflater.inflate(R.layout.row_view, null);
+                    break;
+                case TYPE_SECTION:
+                    convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
+                    break;
+            }
 
-	@Override
-	public Filter getFilter() {
-		return contactsFragment.instanceOfListFilter(); //(/*(MainActivity)*/ mContext).new ListFilter();
-		//return ;
-	}
+            holder.textView = (TextView) convertView.findViewById(R.id.row_title);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
-	public static class ViewHolder {
-		public TextView textView;
-		public ImageView imageView;
-	}
+        final String text = mListItems.get(position);
+        final SpannableString textToShow = getSpannedText(text, constrainStr, type);
+        holder.textView.setText(textToShow);
+
+        return convertView;
+    }
+
+
+    @Override
+    public int getPinnedHeaderState(int position) {
+        // hide pinned header when items count is zero OR position is less than zero OR there is already a header in list view
+        if (getCount() == 0 || position < 0 || mListSectionPos.indexOf(position) != -1) {
+            return PINNED_HEADER_GONE;
+        }
+
+        // the header should get pushed up if the top item shown is the last item in a section for a particular letter.
+        mCurrentSectionPosition = getCurrentSectionPosition(position);
+        mNextSectionPosition = getNextSectionPosition(mCurrentSectionPosition);
+        if (mNextSectionPosition != -1 && position == mNextSectionPosition - 1) {
+            return PINNED_HEADER_PUSHED_UP;
+        }
+
+        return PINNED_HEADER_VISIBLE;
+    }
+
+
+    @Override
+    public void configurePinnedHeader(View v, int position) {
+        // set text in pinned header
+        TextView header = (TextView) v;
+        mCurrentSectionPosition = getCurrentSectionPosition(position);
+        header.setText(mListItems.get(mCurrentSectionPosition));
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (view instanceof PinnedHeaderListView) {
+            ((PinnedHeaderListView) view).configureHeaderView(firstVisibleItem);
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public Filter getFilter() {
+        return contactsFragment.instanceOfListFilter();
+    }
+
+    /**
+     * Return a spanned string based on a substring (the substring is spanned)
+     *
+     * @param text      the string with all the text
+     * @param substring te substring that is going to be spanned
+     * @return the spanned string
+     */
+    private SpannableString getSpannedText(String text, String substring, int type) {
+        final SpannableString textToShow = new SpannableString(text);
+
+        if (substring != null && type == TYPE_ITEM) {
+            final String substringLowerCase = substring.toLowerCase(Locale.getDefault());
+            final String textLowerCase = text.toLowerCase(Locale.getDefault());
+
+            final int start = textLowerCase.indexOf(substringLowerCase);
+            final int end = start + substringLowerCase.length();
+
+            final int color = mContext.getResources().getColor(R.color.green);
+            final ForegroundColorSpan span = new ForegroundColorSpan(color);
+
+            textToShow.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return textToShow;
+    }
+
+
+    public int getCurrentSectionPosition(int position) {
+        final boolean searchMode = constrainStr != null;
+
+        if (searchMode) {
+            return TOTAL_CONTACTS_SECTION_POSITION;
+        }
+
+        String listChar = mListItems.get(position).substring(0, 1).toUpperCase(Locale.getDefault());
+
+        if (listChar.matches(HeaderTypes.LETTER.getRegex())) {
+            return mListItems.indexOf(listChar);
+        }
+
+        if (listChar.matches(HeaderTypes.NUMBER.getRegex())) {
+            return mListItems.indexOf(HeaderTypes.NUMBER.getCode());
+        }
+
+        return mListItems.indexOf(HeaderTypes.SYMBOL.getCode());
+    }
+
+
+    public int getNextSectionPosition(int currentSectionPosition) {
+        int index = mListSectionPos.indexOf(currentSectionPosition);
+        if ((index + 1) < mListSectionPos.size()) {
+            return mListSectionPos.get(index + 1);
+        }
+        return mListSectionPos.get(index);
+    }
+
+
+    public static class ViewHolder {
+        public TextView textView;
+        public ImageView imageView;
+    }
 }

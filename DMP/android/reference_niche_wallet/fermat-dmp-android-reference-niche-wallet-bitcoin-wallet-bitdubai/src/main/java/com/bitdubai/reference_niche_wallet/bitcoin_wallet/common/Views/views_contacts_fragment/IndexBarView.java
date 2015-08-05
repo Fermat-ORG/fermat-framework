@@ -9,23 +9,24 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.ContactIndexStrucs;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 // Represents right side index bar view with unique first latter of list view row text 
 public class IndexBarView extends View {
 
+    // table to indicate where is every section of the index bar
+    private static LinkedHashMap<String, Integer> contactIndexTable;
+
     // index bar margin
     float mIndexbarMargin;
-
-    // user touched Y axis coordinate value
-    float mSideIndexY;
+    static float mMaxMeasuredHeight = Float.MIN_VALUE;
 
     // flag used in touch events manipulations
     boolean mIsIndexing = false;
 
-    // holds current section position selected by user
-    int mCurrentSectionPosition = -1;
 
     // array list to store section positions
     public ArrayList<Integer> mListSections;
@@ -43,29 +44,44 @@ public class IndexBarView extends View {
     // filtering list view content on touch event
     IIndexBarFilter mIndexBarFilter;
 
-    
+
     public IndexBarView(Context context) {
         super(context);
         this.mContext = context;
     }
 
-    
+
     public IndexBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
     }
-    
+
 
     public IndexBarView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.mContext = context;
     }
-    
 
-    public void setData(PinnedHeaderListView listView, ArrayList<String> listItems,ArrayList<Integer> listSections) {
+
+    private static void updateIndexTable(ArrayList<String> listItems, ArrayList<Integer> listSections) {
+        if (contactIndexTable == null) {
+            contactIndexTable = new LinkedHashMap<String, Integer>(ContactIndexStrucs.getContactIndexTable());
+        } else {
+            contactIndexTable.putAll(ContactIndexStrucs.getContactIndexTable());
+        }
+
+        for (int secIndex : listSections) {
+            String section = listItems.get(secIndex);
+            contactIndexTable.put(section, secIndex);
+        }
+    }
+
+
+    public void setData(PinnedHeaderListView listView, ArrayList<String> listItems, ArrayList<Integer> listSections) {
         this.mListItems = listItems;
         this.mListSections = listSections;
-        
+        updateIndexTable(listItems, listSections);
+
         // list view implements mIndexBarFilter interface
         mIndexBarFilter = listView;
 
@@ -80,108 +96,85 @@ public class IndexBarView extends View {
     }
 
 
-    private static int indWidth = 20;
-    private float scaledWidth;
-    private float sx;
-    private int indexSize;
-
     // draw view content on canvas using paint
     @Override
     protected void onDraw(Canvas canvas) {
+
         if (mListSections != null && mListSections.size() > 1) {
-            float sectionHeight = (getMeasuredHeight() - 2 * mIndexbarMargin)/ mListSections.size();
+            final String[] sections = ContactIndexStrucs.ALPHABET_INDEX;
+            final int length = sections.length;
+
+            if(mMaxMeasuredHeight < getMeasuredHeight()) {
+                mMaxMeasuredHeight = getMeasuredHeight();
+            }
+
+            float sectionHeight = (mMaxMeasuredHeight - 2 * mIndexbarMargin) / sections.length;
             float paddingTop = (sectionHeight - (mIndexPaint.descent() - mIndexPaint.ascent())) / 2;
 
-            for (int i = 0; i < mListSections.size(); i++) {
-                float paddingLeft = (getMeasuredWidth() - mIndexPaint.measureText(getSectionText(mListSections.get(i)))) / 2;
+            for (int index = 0; index < length; index++) {
+                String section = sections[index];
 
+                final float xPos = (getMeasuredWidth() - mIndexPaint.measureText(section)) / 2;
+                final float yPos = mIndexbarMargin + (sectionHeight * index) + paddingTop + mIndexPaint.descent();
 
-                /*Paint p = new Paint();
-                p.setColor(Color.WHITE);
-                p.setAlpha(100);
-
-
-                canvas.drawRoundRect(6,6,6,6,paddingLeft,
-                        mIndexbarMargin + (sectionHeight * i) + paddingTop + mIndexPaint.descent(),p);
-
-                */
-
-                canvas.drawText(getSectionText(mListSections.get(i)),
-                        paddingLeft,
-                        mIndexbarMargin + (sectionHeight * i) + paddingTop + mIndexPaint.descent(),
-                        mIndexPaint);
-
+                canvas.drawText(section, xPos, yPos, mIndexPaint);
             }
         }
         super.onDraw(canvas);
     }
 
-    
-    public String getSectionText(int sectionPosition) {
-        return mListItems.get(sectionPosition);
-    }
 
-    
     boolean contains(float x, float y) {
         // Determine if the point is in index bar region, which includes the
         // right margin of the bar
         return (x >= getLeft() && y >= getTop() && y <= getTop() + getMeasuredHeight());
     }
 
-    
-    void filterListItem(float sideIndexY) {
-        mSideIndexY = sideIndexY;
 
-        // filter list items and get touched section position with in index bar
-        mCurrentSectionPosition = (int) (((mSideIndexY) - getTop() - mIndexbarMargin) /
-                                    ((getMeasuredHeight() - (2 * mIndexbarMargin)) / mListSections.size()));
+    private void filterListItem(float sideIndexY) {
+        final String[] sections = ContactIndexStrucs.ALPHABET_INDEX;
 
-        if (mCurrentSectionPosition >= 0 && mCurrentSectionPosition < mListSections.size()) {
-            int position = mListSections.get(mCurrentSectionPosition);
-            String previewText = mListItems.get(position);
-            mIndexBarFilter.filterList(mSideIndexY, position, previewText);
+        //filter list items and get touched section position with in index bar
+        int mCurrentSectionPosition = (int) (((sideIndexY) - getTop() - mIndexbarMargin) /
+                ((mMaxMeasuredHeight - (2 * mIndexbarMargin)) / sections.length));
+
+        if (mCurrentSectionPosition >= 0 && mCurrentSectionPosition < sections.length) {
+            String section = sections[mCurrentSectionPosition];
+            int position = contactIndexTable.get(section);
+            if (position >= 0)
+                mIndexBarFilter.filterList(position, section);
         }
     }
 
-    
+
+    @Override
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
-            
+
             case MotionEvent.ACTION_DOWN:
                 // If down event occurs inside index bar region, start indexing
                 if (contains(ev.getX(), ev.getY())) {
-                    // It demonstrates that the motion event started from index
-                    // bar
+                    // It demonstrates that the motion event started from index bar
                     mIsIndexing = true;
-                    // Determine which section the point is in, and move the
-                    // list to
-                    // that section
+                    // Determine which section the point is in, and move the list to that section
                     filterListItem(ev.getY());
                     return true;
                 }
-                else {
-                    mCurrentSectionPosition = -1;
-                    return false;
-                }
+                return false;
+
             case MotionEvent.ACTION_MOVE:
                 if (mIsIndexing) {
                     // If this event moves inside index bar
                     if (contains(ev.getX(), ev.getY())) {
-                        // Determine which section the point is in, and move the
-                        // list to that section
+                        // Determine which section the point is in, and move the list to that section
                         filterListItem(ev.getY());
                         return true;
                     }
-                    else {
-                        mCurrentSectionPosition = -1;
-                        return false;
-                    }
+                    return false;
                 }
-                break;
             case MotionEvent.ACTION_UP:
                 if (mIsIndexing) {
                     mIsIndexing = false;
-                    mCurrentSectionPosition = -1;
                 }
                 break;
         }
