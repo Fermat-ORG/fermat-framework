@@ -214,7 +214,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
                     FileLifeSpan.PERMANENT
             );
 
-            file.setContent(this.walletName + ";" + this.nicheWalletType.getTypeName());
+            file.setContent(this.walletName + ";" + this.nicheWalletType.getCode());
 
             try {
                 file.persistToMedia();
