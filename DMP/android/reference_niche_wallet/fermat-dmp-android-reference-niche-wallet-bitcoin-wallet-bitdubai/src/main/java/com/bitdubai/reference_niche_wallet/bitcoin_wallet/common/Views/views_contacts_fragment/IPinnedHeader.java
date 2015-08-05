@@ -53,7 +53,6 @@ public interface IPinnedHeader {
      *
      * @param header pinned header view.
      * @param position position of the first visible list item.
-     * @param alpha fading of the header view, between 0 and 255.
      */
     void configurePinnedHeader(View header, int position);
 }
