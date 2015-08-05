@@ -182,7 +182,7 @@ public class DeveloperActorLogTool implements LogTool {
             for (String myClass : classes) {
                 String[] packages = myClass.split(Pattern.quote("."));
                 ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                classesAndPackages.setLevel0(addon.getKey());
+                classesAndPackages.setLevel0(addon.getCode());
                 classesAndPackages.setFullPath(myClass);
                 if (packages.length == minPackages) {
                     /**

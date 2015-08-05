@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -22,11 +23,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateEstablishedRequestedNetworkServiceConnectionHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateIncomingNetworkServiceConnectionRequestHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInitializeNetworkTemplateDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -45,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 
 /**
@@ -52,17 +57,21 @@ import java.util.logging.Logger;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by loui on 12/02/15.
- * Update by Roberto Requena - (rrequena) on 21/07/15.
+ * Created by Roberto Requena - (rrequena) on 21/07/15.
  *
  * @version 1.0
  */
-public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, Plugin {
+public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin {
 
     /**
-     * Represent the logger
+     * Represent the logManager
      */
-    public static Logger LOG = Logger.getGlobal();
+    private LogManager logManager;
+
+    /**
+     * Represent the newLoggingLevel
+     */
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
@@ -128,6 +137,48 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         this.templateNetworkServiceManagersCache = new HashMap<>();
     }
 
+
+    /**
+     * This method validate is all required resource are injected into
+     * the plugin root by the platform
+     *
+     * @throws CantStartPluginException
+     */
+    private void validateInjectedResources() throws CantStartPluginException {
+
+         /*
+         * If all resources are inject
+         */
+        if (communicationLayerManager != null ||
+                pluginDatabaseSystem  != null ||
+                    errorManager      != null ||
+                        eventManager  != null) {
+
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationLayerManager: " + communicationLayerManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "No all required resource are injected";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+
+
+
+        }
+
+    }
+
     /**
      * Initialize the event listener and configure
      */
@@ -156,6 +207,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * @throws CantInitializeNetworkTemplateDataBaseException
      */
     private void initializeDb() throws CantInitializeNetworkTemplateDataBaseException {
+
         try {
             /*
              * Open new database connection
@@ -199,82 +251,61 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Service Interface implementation.
+     * (non-Javadoc)
+     * @see Service#start()
      */
     @Override
     public void start() throws CantStartPluginException {
 
-        LOG.info("TemplateNetworkServicePluginRoot - starting  ");
+        logManager.log(TemplateNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "Starting", "Starting", "Starting");
 
         /*
-         * If all resources are inject
+         * Validate required resources
          */
-        if (communicationLayerManager != null && pluginDatabaseSystem != null && errorManager != null && eventManager  != null) {
+        validateInjectedResources();
 
-            try {
+        try {
 
-                /*
-                 * Create a new key pair for this execution
-                 */
-                eccKeyPair = new ECCKeyPair();
+            /*
+             * Create a new key pair for this execution
+             */
+            eccKeyPair = new ECCKeyPair();
 
-                /*
-                 * Initialize the data base
-                 */
-                initializeDb();
+            /*
+             * Initialize the data base
+             */
+            initializeDb();
 
-                /*
-                 * Register this network service whit the communicationLayerManager
-                 */
-                communicationLayerManager.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
-
-
-                /*
-                 * Its all ok, set the new status
-                */
-                this.serviceStatus = ServiceStatus.STARTED;
+            /*
+             * Register this network service whit the communicationLayerManager
+             */
+            communicationLayerManager.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
 
 
-            } catch (CommunicationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
-                throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+            /*
+             * Its all ok, set the new status
+            */
+            this.serviceStatus = ServiceStatus.STARTED;
 
-            } catch (CantInitializeNetworkTemplateDataBaseException exception) {
 
-                StringBuffer contextBuffer = new StringBuffer();
-                contextBuffer.append("Plugin ID: " + pluginId);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+        } catch (CommunicationException e) {
 
-                String context = contextBuffer.toString();
-                String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
-                CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
+            throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
 
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-                throw pluginStartException;
-            }
-
-        } else {
+        } catch (CantInitializeNetworkTemplateDataBaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("communicationLayerManager: " + communicationLayerManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
+            contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
-            String possibleCause = "No all required resource are injected";
-            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
-
-
         }
 
     }
@@ -413,6 +444,79 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return TemplateNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see DealsWithLogger#setLogManager(LogManager)
+     */
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see LogManagerForDevelopers#getClassesFullPath()
+     */
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.IncomingTemplateNetworkServiceMessage");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.OutgoingTemplateNetworkServiceMessage");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceLocal");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceMessage");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceRemoteAgent");
+        return returnedClasses;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see LogManagerForDevelopers#setLoggingLevelPerClass(Map<String, LogLevel>)
+     */
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+
+        /*
+         * I will check the current values and update the LogLevel in those which is different
+         */
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+
+            /*
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (TemplateNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                TemplateNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                TemplateNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                TemplateNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+
+    }
+
     /**
      * (non-Javadoc)
      * @see NetworkService#getId()
@@ -437,7 +541,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * @param pluginClientId the plugin client id
      * @return TemplateNetworkServiceManager the intra user network service manager
      */
-    public TemplateNetworkServiceManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
+    public TemplateNetworkServiceManager templateNetworkServiceManagerFactory(UUID pluginClientId){
 
         /*
          * Create a new instance
@@ -462,12 +566,12 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Return a previously created instances of the intra user network service manager
+     * Return a previously created instances of the template network service manager
      *
      * @param pluginClientId
      * @return TemplateNetworkServiceManager
      */
-    public TemplateNetworkServiceManager getIntraUserNetworkServiceManager(UUID pluginClientId){
+    public TemplateNetworkServiceManager getTemplateNetworkServiceManager(UUID pluginClientId){
 
         return  templateNetworkServiceManagersCache.get(pluginClientId);
     }

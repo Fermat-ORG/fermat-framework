@@ -497,8 +497,10 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
     public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException {
         try {
             final List<WalletStoreCatalogueItem> walletStoreCatalogueItemList = new ArrayList<WalletStoreCatalogueItem>();
-            WalletCatalog walletCatalog = walletStoreManagerNetworkService.getWalletCatalogue();
-            for (CatalogItem catalogItem : walletCatalog.getWalletCatalog(0, 0)){
+            WalletCatalog walletCatalog =  walletStoreManagerNetworkService.getWalletCatalogue();
+
+
+            for (CatalogItem catalogItem :  walletCatalog.getWalletCatalog(0,0)){
                 InstallationStatus installationStatus = getWalletInstallationStatus(catalogItem);
                 WalletStoreCatalogueItem walletStoreCatalogueItem = getWalletCatalogueItem(catalogItem, installationStatus);
                 walletStoreCatalogueItemList.add(walletStoreCatalogueItem);

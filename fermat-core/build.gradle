@@ -39,7 +39,8 @@ dependencies {
     compile project(':fermat-pip-plugin-actor-developer-bitdubai')
 
     compile project(':fermat-pip-plugin-identity-developer-bitdubai')
-
+    compile project(':fermat-pip-plugin-identity-translator-bitdubai')
+    compile project(':fermat-pip-plugin-identity-designer-bitdubai')
     compile project(':fermat-pip-plugin-module-developer-bitdubai')
     compile project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai')
 

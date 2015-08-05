@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.osa_android.file_system;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
 /**
  *
@@ -22,4 +23,6 @@ public interface PluginBinaryFile {
     public void persistToMedia() throws CantPersistFileException;
 
     public void loadFromMedia() throws CantLoadFileException;
+
+    public void delete() throws FileNotFoundException;
 }

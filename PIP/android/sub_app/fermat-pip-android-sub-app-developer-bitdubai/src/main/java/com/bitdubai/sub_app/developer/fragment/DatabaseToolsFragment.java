@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
@@ -49,7 +50,7 @@ import java.util.List;
 public class DatabaseToolsFragment extends Fragment{
 
 
-    public static final String TAG_DATABASE_TOOLS_FRAGMENT= "DatabaseToolsFragment";
+    private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES.getKey();
     private ErrorManager errorManager;
 
     /**
@@ -129,7 +130,7 @@ public class DatabaseToolsFragment extends Fragment{
                 Resource item = new Resource();
 
                 item.picture = "addon";
-                item.resource = addons.get(i).getKey();
+                item.resource = addons.get(i).getCode();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
                 //}
@@ -198,7 +199,7 @@ public class DatabaseToolsFragment extends Fragment{
                         //set the next fragment and params
                         Object[] params = new Object[1];
                         params[0] = item;
-                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperDatabaseFragment",params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES,params);
 
                     }
                 });

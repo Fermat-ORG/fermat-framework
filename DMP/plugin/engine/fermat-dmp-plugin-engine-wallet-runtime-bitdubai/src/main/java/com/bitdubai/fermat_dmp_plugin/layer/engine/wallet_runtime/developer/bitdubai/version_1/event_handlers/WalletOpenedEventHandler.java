@@ -31,17 +31,17 @@ public class WalletOpenedEventHandler implements EventHandler {
         
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
             
-            try
-            {
-                this.walletRuntimeManager.recordNavigationStructure(walletId);
-            }
-            catch (CantRecordInstalledWalletNavigationStructureException cantRecordOpenedWalletException) {
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-                throw cantRecordOpenedWalletException;
-
-            }
+//            try
+//            {
+//                this.walletRuntimeManager.recordNavigationStructure(walletId);
+//            }
+//            catch (CantRecordInstalledWalletNavigationStructureException cantRecordOpenedWalletException) {
+//                /**
+//                 * The main module could not handle this exception. Me neither. Will throw it again.
+//                 */
+//                throw cantRecordOpenedWalletException;
+//
+//            }
             
         } 
     }
