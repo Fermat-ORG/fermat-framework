@@ -196,7 +196,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             storedBlockChain.setErrorManager(errorManager);
             storedBlockChain.createBlockChain();
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateBlockStoreFileException(CantCreateBlockStoreFileException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }

@@ -129,8 +129,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     }
 
     private void processException(final String source, final String severity, final Exception exception){
-        if(exception instanceof FermatException && serviceStatus.equals(ServiceStatus.STARTED))
-            printErrorReport(source, severity, (FermatException) exception);
+        printErrorReport(source, severity, FermatException.wrapException(exception));
     }
 
     private void printErrorReport(final String source, final String severity, final FermatException exception){
