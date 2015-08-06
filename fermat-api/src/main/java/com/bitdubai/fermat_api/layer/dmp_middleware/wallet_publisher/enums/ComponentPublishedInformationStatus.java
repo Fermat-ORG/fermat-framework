@@ -73,4 +73,13 @@ public enum ComponentPublishedInformationStatus {
         }
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getCode();
+    }
+
 }

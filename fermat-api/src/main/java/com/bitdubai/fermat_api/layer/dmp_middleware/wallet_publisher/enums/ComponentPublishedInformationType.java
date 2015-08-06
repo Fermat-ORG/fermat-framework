@@ -1,5 +1,5 @@
 /*
- * @#ComponentPublishedInformationTypes.java - 2015
+ * @#ComponentPublishedInformationType.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -9,7 +9,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationTypes</code> define
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationType</code> define
  * all the types have a Wallet Published Information
  * <p/>
  *
@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum ComponentPublishedInformationTypes {
+public enum ComponentPublishedInformationType {
 
     /**
      *  Definitions types
@@ -37,7 +37,7 @@ public enum ComponentPublishedInformationTypes {
      *
      * @param code
      */
-    ComponentPublishedInformationTypes(String code) {
+    ComponentPublishedInformationType(String code) {
         this.code = code;
     }
 
@@ -49,13 +49,13 @@ public enum ComponentPublishedInformationTypes {
     public String getCode()   { return this.code; }
 
     /**
-     * Get the ComponentPublishedInformationTypes representation from code
+     * Get the ComponentPublishedInformationType representation from code
      *
      * @param code
-     * @return ComponentPublishedInformationTypes
+     * @return ComponentPublishedInformationType
      * @throws InvalidParameterException
      */
-    public static ComponentPublishedInformationTypes getByCode(String code) throws InvalidParameterException {
+    public static ComponentPublishedInformationType getByCode(String code) throws InvalidParameterException {
 
         switch(code) {
             case"W":
@@ -65,9 +65,17 @@ public enum ComponentPublishedInformationTypes {
             case"L":
                 return LANGUAGE;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ComponentPublishedInformationTypes enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ComponentPublishedInformationType enum");
 
         }
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getCode();
+    }
 }
