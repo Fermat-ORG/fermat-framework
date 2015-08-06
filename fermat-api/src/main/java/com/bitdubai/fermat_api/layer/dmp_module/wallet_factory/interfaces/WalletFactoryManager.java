@@ -20,9 +20,8 @@ import java.util.UUID;
  * indicates the functionality of a WalletFactoryManager
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 31/07/15.
- * @version 1.0
- * @since Java JDK 1.7
+ *  Matias Furszyfer
+ *
  */
 public interface WalletFactoryManager {
 
