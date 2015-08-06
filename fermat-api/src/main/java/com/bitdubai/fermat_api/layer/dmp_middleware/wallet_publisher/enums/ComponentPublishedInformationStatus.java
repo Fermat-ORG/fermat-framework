@@ -23,6 +23,7 @@ public enum ComponentPublishedInformationStatus {
     /**
      *  Definitions of status
      */
+    NO_PUBLISHED   ("NP"),
     REQUESTED      ("RQ"),
     UNDER_REVISION ("UR"),
     PUBLISHED      ("PB"),
@@ -59,6 +60,8 @@ public enum ComponentPublishedInformationStatus {
     public static ComponentPublishedInformationStatus getByCode(String code) throws InvalidParameterException {
 
         switch(code) {
+            case"NP":
+                return NO_PUBLISHED;
             case"RQ":
                 return REQUESTED;
             case"UR":
