@@ -23,6 +23,16 @@ public class WalletManagerMiddlewareInstalledLanguage implements InstalledLangua
     private String label;
     private Version version;
 
+    /**
+     * Constructor
+     */
+
+    public WalletManagerMiddlewareInstalledLanguage(UUID id,Languages languages, String label,Version version){
+        this.id = id;
+        this.languages = languages;
+        this.label = label;
+        this.version = version;
+    }
 
     /**
      * InstalledLanguage Interface implementation.

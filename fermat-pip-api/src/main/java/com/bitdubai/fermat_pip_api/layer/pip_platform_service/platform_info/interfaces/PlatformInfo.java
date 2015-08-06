@@ -23,4 +23,7 @@ public interface PlatformInfo {
     public ScreenSize getScreenSize();
 
     public void setScreenSize(ScreenSize screenSize);
+
+    public String getJdk();
+
 }

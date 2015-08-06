@@ -21,6 +21,16 @@ public class WalletManagerMiddlewareInstalledSkin implements InstalledSkin {
     private UUID id;
     private Version version;
 
+    /**
+     * Constructor
+     */
+
+    public WalletManagerMiddlewareInstalledSkin(UUID id,String alias,String preview, Version version){
+        this.alias = alias;
+        this.preview = preview;
+        this.id = id;
+        this.version = version;
+    }
 
     /**
      * InstalledSkin Interface implementation.
