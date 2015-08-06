@@ -120,4 +120,6 @@ public class AcknowledgeTransactionsTest {
         catchException(mockRegistry).acknowledgeTransactions(testTransactionList);
         assertThat(caughtException()).isNotNull();//isInstanceOf(CantGetRecordException.class);
     }
+
+
 }
