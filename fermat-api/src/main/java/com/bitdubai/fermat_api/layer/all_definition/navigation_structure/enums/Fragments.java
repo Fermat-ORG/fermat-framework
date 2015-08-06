@@ -6,13 +6,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
  * Created by rodrigo on 2015.07.20..
  */
 public enum Fragments implements FermatFragments {
-    CWP_SHELL_LOGIN ("LoginFragment"),
-    CWP_WALLET_MANAGER_MAIN ("DesktopFragment"),
-    CWP_SUB_APP_DEVELOPER ("SubAppDesktopFragment"),
-    CWP_WALLET_MANAGER_SHOP ("LoginFragment"),
-    CWP_SHOP_MANAGER_MAIN ("ShopFragment"),
-    CWP_SHOP_MANAGER_FREE("ShopFreeFragment") ,
-    CWP_SHOP_MANAGER_PAID ("ShopPaidFragment"),
+    CWP_SHELL_LOGIN("LoginFragment"),
+    CWP_WALLET_MANAGER_MAIN("DesktopFragment"),
+    CWP_SUB_APP_DEVELOPER("SubAppDesktopFragment"),
+    CWP_WALLET_MANAGER_SHOP("LoginFragment"),
+    CWP_SHOP_MANAGER_MAIN("ShopFragment"),
+    CWP_SHOP_MANAGER_FREE("ShopFreeFragment"),
+    CWP_SHOP_MANAGER_PAID("ShopPaidFragment"),
     CWP_SHOP_MANAGER_ACCEPTED_NEARBY("ShopNearbyFragment"),
 
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND("BitcoinSendFragment"),
@@ -68,7 +68,7 @@ public enum Fragments implements FermatFragments {
     CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS("DeveloperLogLevel2Fragment"),
     CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS("DeveloperLogLevel3Fragment"),
 
-    CWP_WALLET_STORE_MAIN ("StoreFragment"),
+    CWP_WALLET_STORE_MAIN("StoreFragment"),
 
     CWP_WALLET_PUBLISHER_MAIN("PublisherFragment"),
 
@@ -76,9 +76,11 @@ public enum Fragments implements FermatFragments {
     /**
      * WAllet factory
      */
-    CWP_WALLET_FACTORY_MAIN ("FactoryFragment"),
-    CWP_WALLET_FACTORY_MANAGER ("ManagerFragment"),
-    CWP_WALLET_FACTORY_ESTRUCTURE ("EstructureFragment");
+    CWP_WALLET_FACTORY_MANAGER("ManagerFragment"),
+    CWP_WALLET_FACTORY_PROJECTS("EstructureFragment"),
+
+    CWP_WALLET_FACTORY_WIZARD_CREATE_STEP_1("CreateWalletFragment"),
+    CWP_WALLET_FACTORY_WIZARD_CREATE_STEP_2("SetupNavigationFragment");
 
 
 
@@ -88,11 +90,12 @@ public enum Fragments implements FermatFragments {
         this.key = key;
     }
 
-    public String getKey()   { return this.key; }
+    public String getKey() {
+        return this.key;
+    }
 
 
-
-    public String toString(){
+    public String toString() {
         return key;
     }
 
