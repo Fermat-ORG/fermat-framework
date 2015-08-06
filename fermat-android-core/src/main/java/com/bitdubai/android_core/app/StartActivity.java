@@ -120,12 +120,6 @@ public class StartActivity extends FragmentActivity {
             platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
 
-            //PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.LOCAL_DEVICE);
-            //setPlatformDeviceInfo(platformInfoManager);
-
-
-            ErrorManager errorManager = (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
-
             //set Os Addons in platform
             fileSystemOs = new AndroidOsFileSystem();
             fileSystemOs.setContext(context);
@@ -144,7 +138,7 @@ public class StartActivity extends FragmentActivity {
                 ((Service) loggerSystemOs).start();
                 platform.setLoggerSystemOs(loggerSystemOs);
             } catch (Exception e) {
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                e.printStackTrace();
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             }
 
@@ -154,7 +148,7 @@ public class StartActivity extends FragmentActivity {
                     platform.start();
 
             } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                e.printStackTrace();
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             }
 
@@ -166,6 +160,8 @@ public class StartActivity extends FragmentActivity {
             platformContext = platform.getCorePlatformContext();
 
 
+            PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
+            setPlatformDeviceInfo(platformInfoManager);
 
             return true;
         }
