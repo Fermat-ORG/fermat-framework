@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRe
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordInstalledWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 
 import java.util.UUID;
 
@@ -42,7 +43,7 @@ public interface WalletRuntimeManager {
      *
      * @return  The installed Wallet
      */
-    public WalletNavigationStructure getWallet(String publicKey);
+    public WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions;
 
 
 }
