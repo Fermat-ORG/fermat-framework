@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
@@ -27,6 +28,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     int skinSizeInBytes;
     Designer designer;
     boolean isDefault;
+    ScreenSize screenSize;
 
     /**
      * default constructor
@@ -50,7 +52,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
      * @param skinSizeInBytes
      * @param designer
      */
-    public Skin(UUID id, String name, UUID walletId, Version version, Version initialWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL url, int skinSizeInBytes, Designer designer) {
+    public Skin(UUID id, String name, UUID walletId, Version version, Version initialWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL url, int skinSizeInBytes, Designer designer, ScreenSize screenSize) {
         this.id = id;
         this.name = name;
         this.walletId = walletId;
@@ -64,6 +66,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         this.url = url;
         this.skinSizeInBytes = skinSizeInBytes;
         this.designer = designer;
+        this.screenSize=screenSize;
     }
 
     @Override
@@ -132,6 +135,8 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         return designer;
     }
 
+    public ScreenSize getScreenSize() { return this.screenSize; }
+
     @Override
     public boolean isDefault() {
         return this.isDefault;
@@ -193,6 +198,12 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         this.isDefault = isDefault;
     }
 
+    public void setScreenSize(ScreenSize screenSize){
+
+        this.screenSize=screenSize;
+
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Id: ");
@@ -206,6 +217,8 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         stringBuilder.append(System.lineSeparator());
         stringBuilder.append("IsDefault: ");
         stringBuilder.append(this.isDefault);
+        stringBuilder.append("ScreenSize");
+        stringBuilder.append(this.screenSize);
         return stringBuilder.toString();
     }
 }
