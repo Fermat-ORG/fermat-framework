@@ -94,10 +94,12 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
             /**
              * Send wallet info to Wallet Resource
              */
-            walletResources.installResources(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, screenDensity, skinName, language.value(), navigationStructureVersion);
+
+            walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, screenDensity, skinName, language.value(), navigationStructureVersion);
+
 
             /**
-             * Persist wallet infoto database
+             * Persist wallet info in database
              */
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
 

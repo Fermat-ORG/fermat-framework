@@ -135,21 +135,21 @@ los demás usuarios de la plataforma.
 
 == Transacciones
 
-En este milestone continuamos con "simple" envío y recepión de crypto currencies, no agregamos
-funcionalidades como enviar fiat sobre crypto. Lo que cambia al realizar transacciones entre Intra
-Users es que además de tener la red crypto como bitcoin para enviar crypto currency también tendremos
-la red de comunicacionesd e Fermat para transmitir otros datos. +
+En este milestone continuamos con un "simple" envío y recepión de crypto currencies, no agregamos
+funcionalidades como enviar fiat sobre crypto.
+Lo que cambia al realizar transacciones entre Intra Users es que además de tener la red crypto como bitcoin
+para enviar crypto currency, también tendremos la red de comunicaciones de Fermat para transmitir datos. +
 En este caso los datos incluirán simples descripciones de la transacción como por ejemplo un texto
 que explica lo que la transacción está pagando. +
 Por ende un envío de crypto a otro intra user generará una transacción a nivel de la red crypto y
 otra a nivel de metadata que se transmitirá a través de la red de comunicaciones del sistema. El
-plugin transaccional Outgoing Extra User deberá garantizar que ambas transmisiones se realicen (la
+plugin transaccional Outgoing Intra User deberá garantizar que ambas transmisiones se realicen (la
 que va por la red crypto y la que va por la red Fermat). A sy vez el Incoming Intra User deberá
 modificar los balances en función también a ambos canales de información, lo cual implica sincronizar
-los daos que llegan y reaccionar adecuadamente a reversiones. +
+los datos que llegan y reaccionar adecuadamente a reversiones. +
 
 En las descripciones de los plugins Money Request, Incoming Intra User, Incoming Crypto y Outgoing
-Intra User describiremos con mayor detalle estos ciclos de envío y recepción de crypto currency. +k
+Intra User describiremos con mayor detalle estos ciclos de envío y recepción de crypto currency. +
 
 == Plugins Involucrados
 
