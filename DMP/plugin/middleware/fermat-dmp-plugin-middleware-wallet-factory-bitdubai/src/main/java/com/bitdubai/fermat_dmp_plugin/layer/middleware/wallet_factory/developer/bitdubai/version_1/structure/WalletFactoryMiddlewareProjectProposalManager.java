@@ -94,6 +94,17 @@ public class WalletFactoryMiddlewareProjectProposalManager implements DealsWithE
         }
     }
 
+    /**
+     * throw this method you can get closed proposals related to a project to publish
+     *
+     * @return list of proposals
+     * @throws CantGetWalletFactoryProjectProposalsException if something goes wrong
+     */
+    @Override
+    public List<WalletFactoryProjectProposal> getClosedProposals() throws CantGetWalletFactoryProjectProposalsException {
+        return null;
+    }
+
     @Override
     public WalletFactoryProjectProposal getProposalByName(String proposal) throws CantGetWalletFactoryProjectProposalException, ProposalNotFoundException {
         try {
