@@ -57,6 +57,12 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
         WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME);
         WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME);
         WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_VERSION_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_DENSITY_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME);
+
         /**
          * Wallets table
          */

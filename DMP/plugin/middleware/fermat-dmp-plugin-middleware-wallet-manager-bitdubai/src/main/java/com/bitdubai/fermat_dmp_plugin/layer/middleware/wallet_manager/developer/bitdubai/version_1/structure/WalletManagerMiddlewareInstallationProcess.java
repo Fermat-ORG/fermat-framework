@@ -83,7 +83,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                                   Version languageVersion,
                                   Languages language,
                                   String languageLabel,
-                                  String developer,
+                                  String developerName,
                                   String navigationStructureVersion) throws CantInstallWalletException {
         try {
             /**
@@ -94,14 +94,14 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
             /**
              * Send wallet info to Wallet Resource
              */
-            walletResources.installResources(walletCategory.getCode(), walletType.getCode(), developer, screenSize, screenDensity, skinName, language.value(), navigationStructureVersion);
+            walletResources.installResources(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, screenDensity, skinName, language.value(), navigationStructureVersion);
 
             /**
              * Persist wallet infoto database
              */
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
 
-            walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey, walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion);
+            walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey, walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion,developerName);
 
             walletManagerDao.persistWalletSkin(walletCatalogueId,skinId,skinName,skinPreview, skinVersion);
 
