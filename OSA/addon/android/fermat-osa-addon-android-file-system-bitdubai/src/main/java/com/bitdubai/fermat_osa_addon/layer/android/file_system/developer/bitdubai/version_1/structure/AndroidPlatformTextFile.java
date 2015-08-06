@@ -156,7 +156,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
             OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(this.content.getBytes(Charset.forName(CHARSET_NAME)));
             outputStream.close();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             String message = CantPersistFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
             String context = "File Path: " + file.getPath();
@@ -207,7 +207,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
             this.content = builder.toString();
             inputStream.close();
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             String message = CantLoadFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
             String context = "File Path: " + file.getPath();

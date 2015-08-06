@@ -149,9 +149,10 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     }
 
     @Override
-    public void stop() {
+    public void stop()  {
         if(isRunning())
             this.relayAgent.stop();
+
     }
 
 
@@ -212,7 +213,8 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
                  */
                 try {
                     Thread.sleep(SLEEP_TIME);
-                } catch (InterruptedException interruptedException) {
+                } catch (InterruptedException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
                     break;
                 }
 

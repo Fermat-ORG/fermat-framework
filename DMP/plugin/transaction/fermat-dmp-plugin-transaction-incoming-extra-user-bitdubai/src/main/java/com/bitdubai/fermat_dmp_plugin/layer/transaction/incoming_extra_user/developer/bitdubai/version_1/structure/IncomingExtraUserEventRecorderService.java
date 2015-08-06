@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.*;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnBlockchainNetworkWaitingTransferenceExtraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventHandler;
@@ -94,6 +93,7 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
+        try{
         EventListener onBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
         EventListener onCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
         EventListener reversedOnBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
@@ -115,6 +115,9 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
         listenersAdded.add(reversedOnCryptoNetworkEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
+        }catch (Exception e){
+            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, e,null,"Check the cause of this error");
+        }
         
     }
 
@@ -124,6 +127,7 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
         /**
          * I will remove all the event listeners registered with the event manager.
          */
+
         for (EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }

@@ -131,9 +131,11 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
     }
 
     @Override
-    public void stop() {
+    public void stop(){
         //this.agentThread.interrupt();
-        this.monitorAgent.stop();
+
+           this.monitorAgent.stop();
+
     }
 
     public boolean isRunning(){
