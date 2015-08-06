@@ -30,7 +30,9 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisherMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.DealsWithWalletStoreModule;
@@ -1116,7 +1118,7 @@ public class Platform  {
             }
 
             if (plugin instanceof DealsWithWalletPublisher) {
-                ((DealsWithWalletPublisher) plugin).setWalletPublisherManager((WalletPublisherManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE));
+                ((DealsWithWalletPublisher) plugin).setWalletPublisherManager((WalletPublisherManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE));
             }
 
             if (plugin instanceof DealsWithWalletResources) {
@@ -1150,6 +1152,10 @@ public class Platform  {
 
             if (plugin instanceof DealsWithPlatformInfo) {
                 ((DealsWithPlatformInfo) plugin).setPlatformInfoManager((PlatformInfoManager) corePlatformContext.getAddon(Addons.PLATFORM_INFO));
+            }
+
+            if (plugin instanceof DealsWithWalletPublisherMiddleware) {
+                ((DealsWithWalletPublisherMiddleware) plugin).setWalletPublisherMiddlewareManager((WalletPublisherMiddlewareManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE));
             }
 
             /*
