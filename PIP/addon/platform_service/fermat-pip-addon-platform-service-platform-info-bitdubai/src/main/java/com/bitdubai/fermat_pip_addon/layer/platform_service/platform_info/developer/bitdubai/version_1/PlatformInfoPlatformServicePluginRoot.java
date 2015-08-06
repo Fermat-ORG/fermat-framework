@@ -6,6 +6,11 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformService;
@@ -13,6 +18,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,9 +29,23 @@ import java.util.UUID;
 /**
  * Created by natalia on 29/07/15.
  */
-public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithErrors, LogManagerForDevelopers,PlatformInfoManager,Service {
+public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithErrors, DealsWithPlatformFileSystem, LogManagerForDevelopers,PlatformInfoManager,Service {
+    PlatformInfoPlatformService platformInfoPlatformService;
 
+    /**
+     * DealsWithErrors interface variable
+     */
     private ErrorManager errorManager;
+
+    /**
+     * * DealsWithPlatformFileSystem interface member variables
+     */
+    PlatformFileSystem platformFileSystem;
+
+    @Override
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+        this.platformFileSystem = platformFileSystem;
+    }
 
     ;
     /**
@@ -85,10 +105,27 @@ public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithEr
      * PlaformInfoManager Interface implementation.
      */
     @Override
-    public PlatformInfo getPlatformInfo() {
-        return new PlatformInfoPlatformService();
+    public PlatformInfo getPlatformInfo() throws CantLoadPlatformInformationException {
+        if (platformInfoPlatformService == null) {
+            platformInfoPlatformService = new PlatformInfoPlatformService();
+            platformInfoPlatformService.setPlatformFileSystem(this.platformFileSystem);
+        }
+        return platformInfoPlatformService.getPlatformInfo();
     }
 
+    /**
+     * persist the changes sent
+     * @param platformInfo
+     * @throws CantLoadPlatformInformationException
+     */
+    @Override
+    public void setPlatformInfo(PlatformInfo platformInfo) throws CantLoadPlatformInformationException {
+        if (platformInfoPlatformService == null) {
+            platformInfoPlatformService = new PlatformInfoPlatformService();
+            platformInfoPlatformService.setPlatformFileSystem(this.platformFileSystem);
+        }
+         platformInfoPlatformService.setPlatformInfo((com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfo) platformInfo);
+    }
 
     /**
      * LogManagerForDevelopers Interface implementation.

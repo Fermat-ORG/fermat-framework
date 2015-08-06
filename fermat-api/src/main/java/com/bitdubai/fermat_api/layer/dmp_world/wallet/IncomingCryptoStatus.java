@@ -39,7 +39,7 @@ public enum IncomingCryptoStatus {
             case "ANNFAIL":
                 return IncomingCryptoStatus.ANNOUNCING_FAILED;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TIncomingCryptoStatus enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the IncomingCryptoStatus enum");
 
 
         }
