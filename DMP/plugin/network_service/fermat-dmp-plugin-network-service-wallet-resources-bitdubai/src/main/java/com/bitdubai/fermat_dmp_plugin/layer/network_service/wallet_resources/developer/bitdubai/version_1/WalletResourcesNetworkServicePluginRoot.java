@@ -622,7 +622,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             imageFile = pluginFileSystem.getBinaryFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
         } catch (CantCreateFileException cantPersistFileException) {
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
         } catch (FileNotFoundException e) {
 
             try {
@@ -631,11 +631,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 try {
                     imageFile.persistToMedia();
                 } catch (CantPersistFileException cantPersistFileException) {
-                    throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+                    throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
 
                 }
             } catch (CantCreateFileException cantPersistFileException) {
-                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+                throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
             }
         }
         //aca deberia fijarme que hago si ya existe el archivo
@@ -663,7 +663,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 layoutFile.persistToMedia();
 
             } catch (CantCreateFileException cantPersistFileException) {
-                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+                throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
             }
         }
 
@@ -724,11 +724,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         } catch (MalformedURLException | FileNotFoundException e) {
 
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", e, "Http error in connection with the repository to load manifest file", "");
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Http error in connection with the repository to load manifest file", "");
 
         } catch (IOException e) {
 
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES", e, "Error load manifest file ", "Repository not exist or manifest file not exist");
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Repository not exist or manifest file not exist");
 
         }
     }
@@ -765,13 +765,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:", e, "Error write layout file resource  ", "");
+            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error write layout file resource  ", "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:", e, "Error created image file resource ", "");
+            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error created image file resource ", "");
 
         }
 
@@ -863,13 +863,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:", e, "Error write layout file resource  ", "");
+            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error write layout file resource  ", "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:", e, "Error created image file resource ", "");
+            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error created image file resource ", "");
 
         }
 

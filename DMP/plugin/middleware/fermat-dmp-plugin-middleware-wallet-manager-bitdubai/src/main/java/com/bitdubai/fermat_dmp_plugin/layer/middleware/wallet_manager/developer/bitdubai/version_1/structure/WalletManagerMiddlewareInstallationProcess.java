@@ -114,26 +114,26 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
         catch (CantExecuteDatabaseOperationException ex)
         {
 
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Wallet to install "+ walletPublicKey, "");
+            throw new CantInstallWalletException("ERROR INSTALLING REQUESTED",ex, "Wallet to install "+ walletPublicKey, "");
         }
         catch (CantPersistWalletSkinException ex)
         {
 
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
+            throw new CantInstallWalletException("ERROR INSTALLING REQUESTED",ex, "Error Save Skin on DB ", "");
         }
         catch (CantPersistWalletLanguageException ex)
         {
 
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex," Error Save language on DB ", "");
+            throw new CantInstallWalletException("ERROR INSTALLING REQUESTED",ex," Error Save language on DB ", "");
         }
         catch (CantPersistWalletException ex)
         {
 
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Error Save wallet on DB", "");
+            throw new CantInstallWalletException("ERROR INSTALLING REQUESTED",ex, "Error Save wallet on DB", "");
         }
         catch (Exception e)
         {
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET", e, "Wallet to install " + walletPublicKey, "");
+            throw new CantInstallWalletException("ERROR INSTALLING REQUESTED", e, "Wallet to install " + walletPublicKey, "");
         }
     }
 

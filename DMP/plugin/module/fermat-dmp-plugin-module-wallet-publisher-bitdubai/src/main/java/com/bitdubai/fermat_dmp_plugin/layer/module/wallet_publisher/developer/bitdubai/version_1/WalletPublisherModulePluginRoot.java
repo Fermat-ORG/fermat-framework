@@ -6,17 +6,18 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedWalletsInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishWalletException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisherMiddleware;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublishedInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
@@ -96,15 +98,53 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
         listenersAdded = new ArrayList<>();
     }
 
+
+    /**
+     * This method validate is all required resource are injected into
+     * the plugin root by the platform
+     *
+     * @throws CantStartPluginException
+     */
+    private void validateInjectedResources() throws CantStartPluginException {
+
+        /*
+         * Validate If all resources are not null
+         */
+        if (logManager                                   == null ||
+                errorManager                             == null ||
+                    errorManager                         == null ||
+                        walletPublisherMiddlewareManager == null ) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("logManager: " + logManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("walletPublisherMiddlewareManager: " + walletPublisherMiddlewareManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "No all required resource are injected";
+            CantStartPluginException pluginStartException = new CantStartPluginException("CAN'T START MODULE", null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+        }
+
+    }
+
     /**
      * (non-Javadoc)
      * @see Service#start()
      */
     @Override
-    public void start() {
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
+    public void start() throws CantStartPluginException {
+
+        /*
+         * Validate required resources
          */
+        validateInjectedResources();
 
         EventListener eventListener;
         EventHandler eventHandler;
@@ -246,7 +286,7 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
      * @see WalletPublisherMiddlewareManager#showPublishedWallets()
      */
     @Override
-    public Map<String, List<WalletPublishedInformation>> showPublishedWallets() throws CantGetPublishedWalletsInformationException {
+    public Map<String, List<ComponentPublishedInformation>> showPublishedWallets() throws CantGetPublishedWalletsInformationException {
         return walletPublisherMiddlewareManager.showPublishedWallets();
     }
 
@@ -265,7 +305,7 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
      */
     @Override
     public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
-
+        walletPublisherMiddlewareManager.publishWallet(walletFactoryProjectProposal);
     }
 
     /**
@@ -274,7 +314,7 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
      */
     @Override
     public void publishSkin(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
-
+        walletPublisherMiddlewareManager.publishSkin(walletFactoryProjectProposal);
     }
 
     /**
@@ -283,7 +323,7 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
      */
     @Override
     public void publishLanguage(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
-
+        walletPublisherMiddlewareManager.publishLanguage(walletFactoryProjectProposal);
     }
 
     /**

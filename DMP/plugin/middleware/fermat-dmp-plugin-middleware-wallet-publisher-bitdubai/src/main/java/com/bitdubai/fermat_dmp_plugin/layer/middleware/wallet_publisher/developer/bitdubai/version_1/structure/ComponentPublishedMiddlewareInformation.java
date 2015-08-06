@@ -6,19 +6,19 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublishedInformation;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
 
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublishedMiddlewareInformation</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ComponentPublishedMiddlewareInformation</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/08/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublishedMiddlewareInformation implements WalletPublishedInformation {
+public class ComponentPublishedMiddlewareInformation implements ComponentPublishedInformation {
 
     @Override
     public String getVersion() {

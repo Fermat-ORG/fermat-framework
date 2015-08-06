@@ -28,7 +28,7 @@ public class WalletCreatedEventHandler implements EventHandler {
     @Override
     public  void handleEvent(PlatformEvent platformEvent) throws FermatException {
 
-        // TODO USABA LA WALLETID DE LA WALLET CREADA PARA CARGAR LAS BILLETERAS DEL USUARIO?
+        // TODO USABA LA WALLETID DE LA REQUESTED CREADA PARA CARGAR LAS BILLETERAS DEL USUARIO?
         UUID walletId = ((WalletCreatedEvent) platformEvent).getWalletId();
         EventSource eventSource = platformEvent.getSource();
         if (eventSource == EventSource.MIDDLEWARE_WALLET_PLUGIN) {
@@ -37,7 +37,7 @@ public class WalletCreatedEventHandler implements EventHandler {
             if (((Service) this.walletManager).getStatus() == ServiceStatus.STARTED) {
 
                 try {
-                    // TODO USABA LA WALLETID DE LA WALLET CREADA PARA CARGAR LAS BILLETERAS DEL USUARIO?
+                    // TODO USABA LA WALLETID DE LA REQUESTED CREADA PARA CARGAR LAS BILLETERAS DEL USUARIO?
                     this.walletManager.loadUserWallets("");
                 } catch (CantLoadWalletsException cantLoadWalletsException) {
                     /**

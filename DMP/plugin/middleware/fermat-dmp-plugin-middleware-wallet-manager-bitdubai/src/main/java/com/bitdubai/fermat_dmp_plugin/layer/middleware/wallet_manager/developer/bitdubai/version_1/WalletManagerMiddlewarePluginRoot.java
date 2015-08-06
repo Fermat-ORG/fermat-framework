@@ -344,13 +344,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             installedWallets = walletDao.getInstalletWallets();
         }
         catch (CantGetInstalledWalletsException e){
-            throw new CantListWalletsException("CAN'T INSTALL WALLET Language",e, null, null);
+            throw new CantListWalletsException("CAN'T INSTALL REQUESTED Language",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantListWalletsException("CAN'T INSTALL WALLET Language",e, null, null);
+            throw new CantListWalletsException("CAN'T INSTALL REQUESTED Language",e, null, null);
         }
         catch (Exception exception){
-            throw new CantListWalletsException("CAN'T INSTALL WALLET Language",FermatException.wrapException(exception), null, null);
+            throw new CantListWalletsException("CAN'T INSTALL REQUESTED Language",FermatException.wrapException(exception), null, null);
         }
         //Voy a harcodear esto para tener la reference wallet instalada
         //return installedWallets;
@@ -387,13 +387,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             walletDao.persistWalletLanguage(walletCatalogueId, languageId, language, label, version);
         }
         catch (CantPersistWalletLanguageException e){
-            throw new CantInstallLanguageException("CAN'T INSTALL WALLET Language",e, null, null);
+            throw new CantInstallLanguageException("CAN'T INSTALL REQUESTED Language",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantInstallLanguageException("CAN'T INSTALL WALLET Language",e, null, null);
+            throw new CantInstallLanguageException("CAN'T INSTALL REQUESTED Language",e, null, null);
         }
         catch (Exception exception){
-            throw new CantInstallLanguageException("CAN'T INSTALL WALLET Language",FermatException.wrapException(exception), null, null);
+            throw new CantInstallLanguageException("CAN'T INSTALL REQUESTED Language",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -415,13 +415,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             walletDao.persistWalletSkin(walletCatalogueId, skinId, alias, Preview, version);
         }
         catch (CantPersistWalletSkinException e){
-            throw new CantInstallSkinException("CAN'T INSTALL WALLET SKIN",e, null, null);
+            throw new CantInstallSkinException("CAN'T INSTALL REQUESTED ON_REVISION",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantInstallSkinException("CAN'T INSTALL WALLET SKIN",e, null, null);
+            throw new CantInstallSkinException("CAN'T INSTALL REQUESTED ON_REVISION",e, null, null);
         }
         catch (Exception exception){
-            throw new CantInstallSkinException("CAN'T INSTALL WALLET SKIN",FermatException.wrapException(exception), null, null);
+            throw new CantInstallSkinException("CAN'T INSTALL REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
         }
      }
 
@@ -459,13 +459,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             walletDao.deleteWalletLanguage(walletCatalogueId, languageId);
 
         } catch (CantDeleteWalletLanguageException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL WALLET LANGUAGE",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL WALLET LANGUAGE",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",e, null, null);
         }
         catch (Exception exception){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL WALLET LANGUAGE",FermatException.wrapException(exception), null, null);
+            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -483,13 +483,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             walletDao.deleteWalletSkin(walletCatalogueId, skinId);
 
         } catch (CantDeleteWalletSkinException e){
-            throw new CantUninstallSkinException("CAN'T UNISTALL WALLET SKIN",e, null, null);
+            throw new CantUninstallSkinException("CAN'T UNISTALL REQUESTED ON_REVISION",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantUninstallSkinException("CAN'T UNISTALL WALLET SKIN",e, null, null);
+            throw new CantUninstallSkinException("CAN'T UNISTALL REQUESTED ON_REVISION",e, null, null);
         }
         catch (Exception exception){
-            throw new CantUninstallSkinException("CAN'T UNISTALL WALLET SKIN",FermatException.wrapException(exception), null, null);
+            throw new CantUninstallSkinException("CAN'T UNISTALL REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -518,13 +518,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             walletDao.deleteWallet(walletIdInTheDevice);
 
         } catch (CantDeleteWalletSkinException e){
-            throw new CantRemoveWalletException("CAN'T REMOVE WALLET",e, null, null);
+            throw new CantRemoveWalletException("CAN'T REMOVE REQUESTED",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantRemoveWalletException("CAN'T REMOVE WALLET ",e, null, null);
+            throw new CantRemoveWalletException("CAN'T REMOVE REQUESTED ",e, null, null);
         }
         catch (Exception exception){
-            throw new CantRemoveWalletException("CAN'T REMOVE WALLET ",FermatException.wrapException(exception), null, null);
+            throw new CantRemoveWalletException("CAN'T REMOVE REQUESTED ",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -543,13 +543,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             walletDao.changeWalletName(walletIdInTheDevice, newName);
 
         } catch (CantUpdateWalletNameException e){
-            throw new CantRenameWalletException("CAN'T RENAME WALLET ALIAS",e, null, null);
+            throw new CantRenameWalletException("CAN'T RENAME REQUESTED ALIAS",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantRenameWalletException("CAN'T RENAME WALLET ALIAS",e, null, null);
+            throw new CantRenameWalletException("CAN'T RENAME REQUESTED ALIAS",e, null, null);
         }
         catch (Exception exception){
-            throw new CantRenameWalletException("CAN'T RENAME WALLET ALIAS",FermatException.wrapException(exception), null, null);
+            throw new CantRenameWalletException("CAN'T RENAME REQUESTED ALIAS",FermatException.wrapException(exception), null, null);
         }
 
     }

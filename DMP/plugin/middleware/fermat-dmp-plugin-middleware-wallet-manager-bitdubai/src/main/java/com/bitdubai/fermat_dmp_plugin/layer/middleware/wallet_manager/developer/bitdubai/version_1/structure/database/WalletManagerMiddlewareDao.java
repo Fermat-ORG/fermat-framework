@@ -142,10 +142,10 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantInsertRecordException e){
-            throw new CantPersistWalletException("ERROR PERSISTING WALLET SKIN",e, null, null);
+            throw new CantPersistWalletException("ERROR PERSISTING REQUESTED ON_REVISION",e, null, null);
         }
         catch (Exception exception){
-            throw new CantPersistWalletException("ERROR PERSISTING WALLET SKIN",FermatException.wrapException(exception), null, null);
+            throw new CantPersistWalletException("ERROR PERSISTING REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -165,10 +165,10 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantInsertRecordException e){
-            throw new CantPersistWalletSkinException("ERROR PERSISTING WALLET SKIN",e, null, null);
+            throw new CantPersistWalletSkinException("ERROR PERSISTING REQUESTED ON_REVISION",e, null, null);
         }
         catch (Exception exception){
-            throw new CantPersistWalletSkinException("ERROR PERSISTING WALLET SKIN",FermatException.wrapException(exception), null, null);
+            throw new CantPersistWalletSkinException("ERROR PERSISTING REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -188,10 +188,10 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantInsertRecordException e){
-            throw new CantPersistWalletLanguageException("ERROR PERSISTING WALLET LANGUAGE",e, null, null);
+            throw new CantPersistWalletLanguageException("ERROR PERSISTING REQUESTED PUBLISHED",e, null, null);
         }
         catch (Exception exception){
-            throw new CantPersistWalletLanguageException("ERROR PERSISTING WALLET LANGUAGE", FermatException.wrapException(exception), null, null);
+            throw new CantPersistWalletLanguageException("ERROR PERSISTING REQUESTED PUBLISHED", FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -211,13 +211,13 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",e, null, null);
+            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",e, null, null);
+            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",FermatException.wrapException(exception), null, null);
+            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -237,13 +237,13 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",e, null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",e, null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",FermatException.wrapException(exception), null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -268,19 +268,19 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",e, null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",e, null, null);
         }
         catch (CantDeleteWalletSkinException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",e, null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",e, null, null);
         }
         catch (CantDeleteWalletLanguageException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",e, null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",e, null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",FermatException.wrapException(exception), null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -302,13 +302,13 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantUpdateWalletNameException("ERROR CHANGING WALLET NAME ON TABLE",e, null, null);
+            throw new CantUpdateWalletNameException("ERROR CHANGING REQUESTED NAME ON TABLE",e, null, null);
         }
         catch (CantUpdateRecordException e){
-            throw new CantUpdateWalletNameException("ERROR CHANGING WALLET NAME ON TABLE",e, null, null);
+            throw new CantUpdateWalletNameException("ERROR CHANGING REQUESTED NAME ON TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantUpdateWalletNameException("ERROR CHANGING WALLET NAME ON TABLE",FermatException.wrapException(exception), null, null);
+            throw new CantUpdateWalletNameException("ERROR CHANGING REQUESTED NAME ON TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -398,13 +398,13 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",e, null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",e, null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",FermatException.wrapException(exception), null, null);
+            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -423,13 +423,13 @@ public class WalletManagerMiddlewareDao {
 
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",e, null, null);
+            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",e, null, null);
+            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",FermatException.wrapException(exception), null, null);
+            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 }

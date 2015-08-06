@@ -23,7 +23,7 @@ public class CantPublishWalletException extends FermatException {
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CAN'T PUBLISH WALLET";
+    public static final String DEFAULT_MESSAGE = "CAN'T PUBLISH REQUESTED";
 
     /**
      * Constructor with parameters

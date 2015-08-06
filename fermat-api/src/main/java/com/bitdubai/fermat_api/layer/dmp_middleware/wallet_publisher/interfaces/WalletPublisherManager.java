@@ -33,7 +33,7 @@ public interface WalletPublisherManager {
      * @return A map where each entry corresponds to a wallet name and the list of versions published with their information
      * @throws CantGetPublishedWalletsInformationException
      */
-    public Map<String,List<WalletPublishedInformation>> showPublishedWallets() throws CantGetPublishedWalletsInformationException;
+    public Map<String,List<ComponentPublishedInformation>> showPublishedWallets() throws CantGetPublishedWalletsInformationException;
 
     /**
      * This method tells us if the given wallet factory project can be published in the wallet store.
