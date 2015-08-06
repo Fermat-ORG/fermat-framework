@@ -120,8 +120,8 @@ public class StartActivity extends FragmentActivity {
             platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
 
-            PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.LOCAL_DEVICE);
-            setPlatformDeviceInfo(platformInfoManager);
+            //PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.LOCAL_DEVICE);
+            //setPlatformDeviceInfo(platformInfoManager);
 
 
             ErrorManager errorManager = (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
