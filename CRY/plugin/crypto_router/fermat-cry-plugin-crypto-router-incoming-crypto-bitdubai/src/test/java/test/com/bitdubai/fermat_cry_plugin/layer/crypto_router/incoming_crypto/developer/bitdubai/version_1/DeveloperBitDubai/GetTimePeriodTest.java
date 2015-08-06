@@ -19,7 +19,8 @@ public class GetTimePeriodTest {
 
         TimeFrequency timeFrequency=testDeveloperBitDubai.getTimePeriod();
         Assertions.assertThat(timeFrequency)
-                .isNull();
+                //.isNull();
+                .isNotNull();
 
     }
 }

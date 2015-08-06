@@ -1,17 +1,19 @@
 package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * Created by ciencias on 2/14/15.
  */
 public enum SubApps {
 
-    CWP_WALLET_MANAGER("Manager"),
-    CWP_WALLET_RUNTIME("Runtime"),
-    CWP_WALLET_STORE ("WalletStore"),
-    CWP_WALLET_FACTORY ("WalletFactory"),
-    CWP_DEVELOPER_APP ("DeveloperSubApp"),
-    CWP_WALLET_PUBLISHER("WalletPublisher"),
-    CWP_SHELL("CWP_SHELL");
+    CWP_WALLET_MANAGER("CWM"),
+    CWP_WALLET_RUNTIME("CWR"),
+    CWP_WALLET_STORE ("CWS"),
+    CWP_WALLET_FACTORY ("CWF"),
+    CWP_DEVELOPER_APP ("CDA"),
+    CWP_WALLET_PUBLISHER("CWP"),
+    CWP_SHELL("CS");
 
 
     private final String code;
@@ -22,20 +24,25 @@ public enum SubApps {
 
     public String getCode() { return this.code ; }
 
-    public static SubApps getByCode(String code) {
+    public static SubApps getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "Manager": return SubApps.CWP_WALLET_MANAGER;
-            case "Runtime": return SubApps.CWP_WALLET_RUNTIME;
-            case "WalletStore": return SubApps.CWP_WALLET_STORE;
-            case "WalletFactory": return SubApps.CWP_WALLET_FACTORY;
-            case "DeveloperSubApp": return SubApps.CWP_DEVELOPER_APP;
-            case "WalletPublisher": return SubApps.CWP_WALLET_PUBLISHER;
+            case "CWM": return SubApps.CWP_WALLET_MANAGER;
+            case "CWR": return SubApps.CWP_WALLET_RUNTIME;
+            case "CWS": return SubApps.CWP_WALLET_STORE;
+            case "CWF": return SubApps.CWP_WALLET_FACTORY;
+            case "CDA": return SubApps.CWP_DEVELOPER_APP;
+            case "CWP": return SubApps.CWP_WALLET_PUBLISHER;
+            //Modified by Manuel Perez on 05/08/2015
+            case "CS": return SubApps.CWP_SHELL;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
+
         }
 
         /**
          * Return by default.
          */
-        return null;
+        //return null;
     }
 }
