@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantEnableWalletException;
@@ -13,7 +14,7 @@ import java.util.UUID;
  */
 public interface WalletManager {
 
-    List<InstalledWallet> getUserWallets();
+    List<InstalledWallet> getUserWallets() throws CantGetUserWalletException;
 
     void loadUserWallets (String deviceUserPublicKey) throws CantLoadWalletsException;
 

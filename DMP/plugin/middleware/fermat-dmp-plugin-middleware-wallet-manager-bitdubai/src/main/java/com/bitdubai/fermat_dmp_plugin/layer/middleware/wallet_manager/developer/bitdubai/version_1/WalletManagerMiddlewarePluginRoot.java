@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallLanguageException;
@@ -84,12 +85,13 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithDeviceUser,DealsWithErrors,DealsWithEvents,DealsWithLogger,DealsWithWalletResources,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletManagerManager {
+public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithErrors,DealsWithEvents,DealsWithLogger,DealsWithWalletResources,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletManagerManager {
 
     /**
      * DealsWithDeviceUser member variables
      */
     DeviceUserManager deviceUserManager;
+
 
     /**
      * WalletManagerMiddlewarePluginRoot member variables
@@ -135,13 +137,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
     UUID pluginId;
 
 
-    /**
-     * DealsWithDeviceUser Interface member variables.
-     */
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-            this.deviceUserManager = deviceUserManager;
-    }
+
 
     /*
      * DatabaseManagerForDevelopers interface methods implementation
@@ -321,10 +317,42 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
     /**
      * This method let the client create a new wallet of a type already intalled by the user.
+     * Clone Wallet
      *
      */
     public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException{
 
+        /**
+         * I'll first get de installed wallet with walletIdInTheDevice params
+         */
+
+        /**
+         * Call the wallet resource to install new wallet
+         */
+
+        /**
+         * I create a new clone wallet on database
+         */
+
+    }
+
+    /**
+     * This method let the device user create a default wallet .
+     *
+     */
+    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException
+    {
+        /**
+         * I'll first set default values
+         */
+
+        /**
+         * Call the wallet resource to install new wallet
+         */
+
+        /**
+         * I create a new clone wallet on database
+         */
     }
 
     /**

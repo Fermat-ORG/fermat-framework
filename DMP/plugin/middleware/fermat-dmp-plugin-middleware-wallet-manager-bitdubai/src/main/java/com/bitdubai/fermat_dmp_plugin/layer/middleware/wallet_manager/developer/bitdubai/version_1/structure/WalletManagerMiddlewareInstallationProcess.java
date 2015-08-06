@@ -71,6 +71,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                                   String walletName,
                                   String walletPublicKey,
                                   String walletPrivateKey,
+                                  String deviceUserPublicKey,
                                   String walletIconName,
                                   UUID walletCatalogueId,
                                   Version walletVersion,
@@ -106,7 +107,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
              */
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
 
-            walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey, walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion,developerName);
+            walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey,deviceUserPublicKey,walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion,developerName);
 
             walletManagerDao.persistWalletSkin(walletCatalogueId,skinId,skinName,skinPreview, skinVersion);
 
