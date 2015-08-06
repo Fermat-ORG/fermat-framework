@@ -22,21 +22,20 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
     String pluginId;
     List<String> walletsIds;
 
-    public WalletManagerMiddlewareDeveloperDatabaseFactory (String pluginId, List<String> walletsIds){
+    public WalletManagerMiddlewareDeveloperDatabaseFactory (String pluginId){
         this.pluginId = pluginId;
-        this.walletsIds = walletsIds;
+
     }
 
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
-         * We have one database for each walletId, so we will return all their names.
-         * Remember that a database name in this plug-in is the internal wallet id.
+         * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        for(String databaseName : this.walletsIds)
-            databases.add(developerObjectFactory.getNewDeveloperDatabase(databaseName, this.pluginId));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE, pluginId));
         return databases;
+
 
     }
 

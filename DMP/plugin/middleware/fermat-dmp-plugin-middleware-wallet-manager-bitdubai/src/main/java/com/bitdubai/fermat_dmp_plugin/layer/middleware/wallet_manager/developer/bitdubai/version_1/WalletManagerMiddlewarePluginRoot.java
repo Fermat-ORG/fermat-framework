@@ -148,13 +148,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
 
-        List<String> databasesNames = new ArrayList<>();
-
-
-        for(InstalledWallet id : this.installedWallets)
-            databasesNames.add(id.getWalletPublicKey());
-
-        WalletManagerMiddlewareDeveloperDatabaseFactory dbFactory = new WalletManagerMiddlewareDeveloperDatabaseFactory(pluginId.toString(), databasesNames);
+        WalletManagerMiddlewareDeveloperDatabaseFactory dbFactory = new WalletManagerMiddlewareDeveloperDatabaseFactory(pluginId.toString());
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
