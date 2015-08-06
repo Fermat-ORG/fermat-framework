@@ -7,9 +7,12 @@
 
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationTypes;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationType;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -26,51 +29,129 @@ import java.util.UUID;
 public interface ComponentPublishedInformation {
 
     /**
-     * This method gives us the version of the represented wallet
+     * Get the id
      *
-     * @return the wallet version represented as a String
+     * @return UUID
      */
-    public String getVersion();
+    public UUID getId();
 
     /**
-     * This method gives us the associated wallet factory project Id
+     * Get the Wallet Factory Project Id
      *
-     * @return the associated wallet factory project id
+     * @return UUID
      */
     public UUID getWalletFactoryProjectId();
 
     /**
-     * This method gives us the associated wallet factory project name
+     * Get the Wallet Factory Project Name
      *
-     * @return the associated wallet factory project name
+     * @return String
      */
     public String getWalletFactoryProjectName();
 
     /**
-     * This method gives us the id of the wallet version published in the catalogue
+     * Get the Wallet Id
      *
-     * @return the identifier of the version of the wallet used in the wallet catalogue of the wallet store
+     * @return UUID
      */
     public UUID getWalletId();
 
     /**
-     * This method gives us the timestamp of the publication of the first version of the wallet
+     * Get the Catalog Id
      *
-     * @return the timestamp represented as the result of System.currentTimeMillis()
+     * @return UUID
      */
-    public long getPublicationTimestamp();
+    public UUID getCatalogId();
 
     /**
-     * This method gives us the timestamp of the publication of the version of wallet
+     * Get the Store Id
      *
-     * @return the timestamp represented as the result of System.currentTimeMillis()
+     * @return UUID
      */
-    public long getVersionTimestamp();
+    public UUID getStoreId();
 
+    /**
+     * Get the Screen Size
+     *
+     * @return ScreenSize
+     */
+    public ScreenSize getScreenSize();
 
+    /**
+     * Get the Initial Wallet Version Supported
+     *
+     * @return Version
+     */
+    public Version getInitialWalletVersion();
 
-    public ComponentPublishedInformationTypes getType();
+    /**
+     * Get the Final Wallet Version Supported
+     *
+     * @return Version
+     */
+    public Version getFinalWalletVersion();
 
+    /**
+     * Get the Initial Platform Version Supported
+     *
+     * @return Version
+     */
+    public Version getInitialPlatformVersion();
 
+    /**
+     * Get the Final Platform Version Supported
+     *
+     * @return Version
+     */
+    public Version getFinalPlatformVersion();
+
+    /**
+     * Get the Type
+     *
+     * @return ComponentPublishedInformationType
+     */
+    public ComponentPublishedInformationType getType();
+
+    /**
+     * Get the Version
+     *
+     * @return Version
+     */
+    public Version getVersion();
+
+    /**
+     * Get the Version Timestamp
+     *
+     * @return Timestamp
+     */
+    public Timestamp getVersionTimestamp();
+
+    /**
+     * Get the Status
+     *
+     * @return ComponentPublishedInformationStatus
+     */
     public ComponentPublishedInformationStatus getStatus();
+
+    /**
+     * Get the Status Timestamp
+     *
+     * @return Timestamp
+     */
+    public Timestamp getStatusTimestamp();
+
+    /**
+     * Get the Publication Timestamp
+     *
+     * @return Timestamp
+     */
+    public Timestamp getPublicationTimestamp();
+
+    /**
+     * Get the Publisher Id
+     *
+     * @return UUID
+     */
+    public UUID getPublisherId();
+
 }
