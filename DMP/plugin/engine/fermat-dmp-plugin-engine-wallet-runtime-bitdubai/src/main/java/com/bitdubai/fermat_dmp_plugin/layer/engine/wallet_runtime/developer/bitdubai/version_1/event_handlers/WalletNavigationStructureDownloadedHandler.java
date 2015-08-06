@@ -16,10 +16,10 @@ import java.util.UUID;
  */
 public class WalletNavigationStructureDownloadedHandler implements EventHandler {
 
-    WalletRuntimeManager walletRuntimeManager;
+    private final WalletRuntimeManager walletRuntimeManager;
 
-    public void setWalletRuntimeManager(WalletRuntimeManager walletRuntimeManager) {
-        this.walletRuntimeManager = walletRuntimeManager;
+    public WalletNavigationStructureDownloadedHandler(final WalletRuntimeManager runtimeManager){
+        this.walletRuntimeManager = runtimeManager;
     }
 
 

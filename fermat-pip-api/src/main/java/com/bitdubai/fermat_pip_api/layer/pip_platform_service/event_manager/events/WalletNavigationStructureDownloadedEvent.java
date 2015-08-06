@@ -19,12 +19,8 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractPlatformEv
     private String filename;
 
 
-    public WalletNavigationStructureDownloadedEvent(String xmlText,String linkToRepo,String filename,UUID skinId) {
+    public WalletNavigationStructureDownloadedEvent() {
         super(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-        this.xmlText=xmlText;
-        this.skinId=skinId;
-        this.linkToRepo=linkToRepo;
-        this.filename=filename;
     }
 
     public UUID getSkinId() {
@@ -42,5 +38,21 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractPlatformEv
 
     public String getFilename() {
         return filename;
+    }
+
+    public void setXmlText(String xmlText) {
+        this.xmlText = xmlText;
+    }
+
+    public void setSkinId(UUID skinId) {
+        this.skinId = skinId;
+    }
+
+    public void setLinkToRepo(String linkToRepo) {
+        this.linkToRepo = linkToRepo;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

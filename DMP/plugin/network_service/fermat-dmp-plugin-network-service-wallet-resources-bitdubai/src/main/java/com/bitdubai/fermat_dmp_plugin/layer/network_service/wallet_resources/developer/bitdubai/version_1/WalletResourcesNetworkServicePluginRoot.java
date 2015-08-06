@@ -664,9 +664,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             //TODO: lanzar eventos
 
-            PlatformEvent walletNavigationStructureDownloadedEvent = new WalletNavigationStructureDownloadedEvent(navigationStructureXML,link,"portrait_navigation_structure.xml",skinId);
+            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent=  (WalletNavigationStructureDownloadedEvent) platformEvent;
             walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
-            eventManager.raiseEvent(walletNavigationStructureDownloadedEvent);
+            walletNavigationStructureDownloadedEvent.setFilename("portrait_navigation_structure.xml");
+            walletNavigationStructureDownloadedEvent.setSkinId(skinId);
+            walletNavigationStructureDownloadedEvent.setXmlText(navigationStructureXML);
+            walletNavigationStructureDownloadedEvent.setLinkToRepo(localStoragePath);
+            eventManager.raiseEvent(platformEvent);
+
 
             /**
              *  Download landscape navigation structure
