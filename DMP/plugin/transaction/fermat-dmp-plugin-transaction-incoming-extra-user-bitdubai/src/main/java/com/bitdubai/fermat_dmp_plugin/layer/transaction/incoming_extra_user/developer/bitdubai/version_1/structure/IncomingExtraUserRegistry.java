@@ -133,15 +133,6 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         }
 
     }
-    public void openRegistry(){
-        try{
-            database.openDatabase();
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){database.closeDatabase();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        } catch(Exception exception){database.closeDatabase();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
-    }
 
     // Used by the Monitor Agent
     // Las coloca en (A,TBN)
@@ -169,7 +160,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
                 } catch (CantInsertRecordException cantInsertRecord) {
                     throw new CantAcknowledgeTransactionException(CantAcknowledgeTransactionException.DEFAULT_MESSAGE, cantInsertRecord, "Table : " + registryTable.toString(), "This is a database level issue, check the cause to see the reason");
                 }catch (Exception e) {
-                    throw new CantAcknowledgeTransactionException(CantAcknowledgeTransactionException.DEFAULT_MESSAGE, e,null, "check the cause to see the reason");
+                    throw new CantAcknowledgeTransactionException(CantAcknowledgeTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "check the cause to see the reason");
                 }
             }
 

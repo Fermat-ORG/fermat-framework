@@ -221,7 +221,6 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
                 /**
                  * Now I do the main task.
                  */
-                registry.openRegistry();
                 doTheMainTask();
 
                 /**
