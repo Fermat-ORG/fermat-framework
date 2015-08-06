@@ -131,9 +131,11 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
     }
 
     @Override
-    public void stop() {
+    public void stop(){
         //this.agentThread.interrupt();
-        this.monitorAgent.stop();
+
+           this.monitorAgent.stop();
+
     }
 
     public boolean isRunning(){
@@ -235,7 +237,6 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 /**
                  * Now I do the main task.
                  */
-                registry.openRegistry();
                 doTheMainTask();
 
                 /**
@@ -291,7 +292,13 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 // Remember that this list can be more extensive than the one we saved, this is
                 // because the system could have shut down in this step of the protocol making old
                 // transactions to be stored but not precessed.
-                List<Transaction<CryptoTransaction>> acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
+                List<Transaction<CryptoTransaction>> acknowledgedTransactions = null;
+                try {
+                    acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
+                } catch (InvalidParameterException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    return;
+                }
 
 
                 // An finally, for each transaction we confirm it and then register responsibility.

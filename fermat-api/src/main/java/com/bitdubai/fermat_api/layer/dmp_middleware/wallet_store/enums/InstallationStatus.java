@@ -33,8 +33,10 @@ public enum InstallationStatus {
             case "INSA": return InstallationStatus.INSTALL_AVAILABLE;
             case "UPGA": return InstallationStatus.UPGRADE_AVAILABLE;
             case "UPGING": return InstallationStatus.UPGRADING;
+            //Modified by Manuel Perez 05/08/2015
             default:
-                throw new InvalidParameterException(code);
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the InstalationStatus enum");
+
         }
     }
 }

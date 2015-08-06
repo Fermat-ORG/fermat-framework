@@ -80,11 +80,14 @@ public enum EventSource {
                 return EventSource.CRYPTO_ROUTER;
             case "CCV":
                 return EventSource.CRYPTO_VAULT;
+            //Modified by Manuel Perez on 03/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
+
         }
 
         /**
          * If we try to cpmvert am invalid string.
          */
-        throw new InvalidParameterException(code);
+        //throw new InvalidParameterException(code);
     }
 }

@@ -28,7 +28,8 @@ public enum ContactState {
             case "BCK": return ContactState.BLOCKED;
             case "CTC": return ContactState.CONTACT;
             case "PHA": return ContactState.PENDING_HIS_ACCEPTANCE;
-            default: throw new InvalidParameterException();
+            //Modified by Manuel Perez on 05/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }
 }

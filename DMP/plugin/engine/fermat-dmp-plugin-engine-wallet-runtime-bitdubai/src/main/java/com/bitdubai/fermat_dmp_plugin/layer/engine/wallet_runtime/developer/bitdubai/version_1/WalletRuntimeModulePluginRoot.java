@@ -23,8 +23,10 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.XML;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -162,12 +164,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             eventManager.addListener(eventListener);
             listenersAdded.add(eventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-            eventHandler = new WalletNavigationStructureDownloadedHandler();
-            ((WalletNavigationStructureDownloadedHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            EventListener eventListenerStructureDownloaded = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            EventHandler eventHandlerStructureDownloaded = new WalletNavigationStructureDownloadedHandler(this);
+            eventListenerStructureDownloaded.setEventHandler(eventHandlerStructureDownloaded);
+            eventManager.addListener(eventListenerStructureDownloaded);
+            listenersAdded.add(eventListenerStructureDownloaded);
 
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -235,9 +236,25 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         //TODO: pido el navigationStrucutre del network service que sea y lo mando ahí
         //setNavigationStructureXml(walletNavigationStructure);
 
+
+        // For testing purpose
+
+        WalletNavigationStructure walletNavigationStructure = new WalletNavigationStructure();
+
+        this.walletNavigationStructureOpen=(WalletNavigationStructure)XMLParser.parseXML(xmlText,walletNavigationStructure);
+
+
+        //ver esto
+        String publicKey="reference_wallet";
+          if(walletNavigationStructure==null){
+               setNavigationStructureXml(startWalletNavigationStructure());
+               walletNavigationStructure= getNavigationStructure(publicKey);
+          }
+
         PluginTextFile layoutFile = null;
 
         String filename= skinId.toString()+"_"+name;
+
 
 //        try{
 //            layoutFile = pluginFileSystem.createTextFile(pluginId, linkToRepo, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
@@ -311,10 +328,15 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
     @Override
-    public WalletNavigationStructure getWallet(String publicKey) {
+    public WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions {
         //TODO: acá hay que poner una excepcion si no encuentra la wallet
-        walletNavigationStructureOpen=getNavigationStructure(publicKey);
-        return walletNavigationStructureOpen;
+        try{
+            walletNavigationStructureOpen=getNavigationStructure(publicKey);
+            return walletNavigationStructureOpen;
+        }catch (Exception e){
+            throw new WalletRuntimeExceptions("WALLET RUNTIME GET WALLET",e,"wallet runtime not found the navigation structure for: "+publicKey,"");
+        }
+
     }
 
     /**
@@ -1117,30 +1139,33 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","default","en","1.0.0");
-
-
-
-        try{
-            /**
-             * Esto es hasta que tengamos las cosas andando y conectadas
-             */
-            String publicKey="reference_wallet";
-            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
-            if(walletNavigationStructure==null){
-                setNavigationStructureXml(startWalletNavigationStructure());
-                walletNavigationStructure= getNavigationStructure(publicKey);
-            }
-            //listWallets.put(publicKey, walletNavigationStructure);
-            walletNavigationStructureOpen=walletNavigationStructure;
-        }catch(Exception e){
-            String message = CantFactoryReset.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(e);
-            String context = "Error on method Factory Reset, setting the structure of the apps";
-            String possibleReason = "some null definition";
-            throw new CantFactoryReset(message, cause, context, possibleReason);
-
+        try {
+            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "BitDubai", "medium", "mdpi", "default", "en", "1.0.0");
+        } catch (WalletResourcesInstalationException e) {
+            e.printStackTrace();
         }
+
+
+//        try{
+//            /**
+//             * Esto es hasta que tengamos las cosas andando y conectadas
+//             */
+//            String publicKey="reference_wallet";
+//            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+//            if(walletNavigationStructure==null){
+//                setNavigationStructureXml(startWalletNavigationStructure());
+//                walletNavigationStructure= getNavigationStructure(publicKey);
+//            }
+//            //listWallets.put(publicKey, walletNavigationStructure);
+//            walletNavigationStructureOpen=walletNavigationStructure;
+//        }catch(Exception e){
+//            String message = CantFactoryReset.DEFAULT_MESSAGE;
+//            FermatException cause = FermatException.wrapException(e);
+//            String context = "Error on method Factory Reset, setting the structure of the apps";
+//            String possibleReason = "some null definition";
+//            throw new CantFactoryReset(message, cause, context, possibleReason);
+//
+//        }
     }
 
     private void removeNavigationStructureXml(String publicKey){

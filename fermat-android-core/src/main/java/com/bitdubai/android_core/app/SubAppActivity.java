@@ -385,11 +385,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 switch (activityType){
 
 
-                    case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
+                    case CWP_SUB_APP_ALL_DEVELOPER: //Developer manager
 
 
                         getAppRuntimeMiddleware().getSubApp(SubApps.CWP_DEVELOPER_APP);
-                        getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+                        getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
 
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

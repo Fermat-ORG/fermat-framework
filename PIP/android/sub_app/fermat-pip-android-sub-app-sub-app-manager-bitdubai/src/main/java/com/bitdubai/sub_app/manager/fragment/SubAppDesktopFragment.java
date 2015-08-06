@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.manager.R;
 
@@ -32,6 +33,12 @@ import android.support.v4.app.Fragment;
 public class SubAppDesktopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
+    private static final String CWP_SUB_APP_ALL_DEVELOPER = Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode();
+    private static final String CWP_WALLET_BASIC_ALL_MAIN = Activities.CWP_WALLET_BASIC_ALL_MAIN.getCode();
+    private static final String CWP_WALLET_FACTORY_MAIN = Activities.CWP_WALLET_FACTORY_MAIN.getCode();
+    private static final String CWP_WALLET_PUBLISHER_MAIN = Activities.CWP_WALLET_PUBLISHER_MAIN.getCode();
+    private static final String CWP_WALLET_RUNTIME_STORE_MAIN = Activities.CWP_WALLET_RUNTIME_STORE_MAIN.getCode();
+
     private ArrayList<App> mlist;
     private static int tabId;
 
@@ -192,7 +199,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen("DevelopersActivity",null);
+                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_SUB_APP_ALL_DEVELOPER,null);
 
                         }
                     });
@@ -205,7 +212,7 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen("FactoryActivity",null);
+                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_FACTORY_MAIN,null);
                         }
                     });
                     break;
@@ -219,7 +226,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen("PublisherActivity",null);
+                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_PUBLISHER_MAIN,null);
                         }
                     });
                     break;
@@ -233,7 +240,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
           //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen("StoreFrontActivity",null);
+                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_RUNTIME_STORE_MAIN,null);
                         }
                     });
                     break;

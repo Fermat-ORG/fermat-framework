@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
@@ -60,6 +61,8 @@ import java.util.Map;
  * @version 1.0
  */
 public class LogToolsFragmentLevel1 extends Fragment {
+
+    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS.getKey();
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
 
@@ -258,7 +261,7 @@ public class LogToolsFragmentLevel1 extends Fragment {
                         params[0] = lst;
                         params[1] = level;
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperLogLevel2Fragment",params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS,params);
 
 
                     }

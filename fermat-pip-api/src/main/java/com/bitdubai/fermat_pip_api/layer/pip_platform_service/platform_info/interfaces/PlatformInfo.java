@@ -10,6 +10,7 @@ package com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.int
  * @since Java JDK 1.7
  */
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 /**
@@ -18,4 +19,11 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 public interface PlatformInfo {
 
     public Version getVersion();
+
+    public ScreenSize getScreenSize();
+
+    public void setScreenSize(ScreenSize screenSize);
+
+    public String getJdk();
+
 }

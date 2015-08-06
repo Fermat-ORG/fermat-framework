@@ -12,4 +12,6 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces;
  */
 public interface DealsWithWalletManager {
     void setWalletManagerManager(WalletManagerManager walletManagerManager);
+
+
 }
