@@ -261,7 +261,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
         /*
          * Validate required resources
          */
-        validateInjectedResources();
+      //TODO: DESCOMENTAR LA VALIDACION validateInjectedResources();
 
         try {
 
