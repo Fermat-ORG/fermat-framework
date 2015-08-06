@@ -46,6 +46,14 @@ public interface WalletFactoryProjectProposalManager {
     List<WalletFactoryProjectProposal> getProposals()  throws CantGetWalletFactoryProjectProposalsException;
 
     /**
+     * throw this method you can get closed proposals related to a project to publish
+     *
+     * @return list of proposals
+     * @throws CantGetWalletFactoryProjectProposalsException if something goes wrong
+     */
+    List<WalletFactoryProjectProposal> getClosedProposals()  throws CantGetWalletFactoryProjectProposalsException;
+
+    /**
      * this method returns an instance of a wallet factory proposal having in count the project you're working with and the name of the proposal
      *
      * @param proposal name
