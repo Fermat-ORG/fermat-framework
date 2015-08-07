@@ -88,6 +88,9 @@ import java.util.UUID;
  * * * * * * *
  */
 
+
+//TODO: Rodri hay que cambiar los links al repo de recursos que se encuentran apuntando al viejo por el nuevo path que se cambió hoy. el lunes si queres lo hago yo. ahora no llego con el tiempo.
+
 public class WalletResourcesNetworkServicePluginRoot implements Service, NetworkService, WalletResourcesInstalationManager, WalletResourcesProviderManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin {
 
 
