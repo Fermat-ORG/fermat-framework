@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.dev
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.*;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -240,9 +239,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
             return bitcoinWalletWallet.getAvailableBalance().getBalance();
-        } catch (CantLoadWalletException e) {
+        } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
-        }  catch (CantCalculateBalanceException e) {
+        }  catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCalculateBalanceException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
         } catch(Exception e){
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -254,9 +253,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
             return bitcoinWalletWallet.getBookBalance().getBalance();
-        } catch (CantLoadWalletException e) {
+        } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
-        } catch (CantCalculateBalanceException e) {
+        } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCalculateBalanceException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
         } catch (Exception e){
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -275,7 +274,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
             }
 
             return cryptoWalletTransactionList;
-        } catch (CantLoadWalletException|com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException e) {
+        } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException | com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException e) {
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e);
         } catch(Exception e){
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
