@@ -13,8 +13,12 @@ import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
@@ -57,7 +61,7 @@ import java.util.UUID;
  * Created by ciencias on 21.01.15.
  */
 
-public class WalletManagerModulePluginRoot implements Service, WalletManager, DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin {
+public class WalletManagerModulePluginRoot implements Service, WalletManager, DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin {
 
 
     /**
@@ -112,6 +116,11 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
      */
     ErrorManager errorManager;
 
+
+    /**
+     * DealsWithWalletManager Interface member variables.
+     */
+    WalletManagerManager walletMiddlewareManager;
 
     /**
      * Plugin Interface member variables.
@@ -257,10 +266,6 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     }
 
 
-    public void enableWallet() {
-
-
-    }
 
 
     private void finishedWalletInstallation() {
@@ -273,24 +278,55 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     /**
      * WalletManager Interface implementation.
      */
-
-    public List<InstalledWallet> getUserWallets() {
-        // Harcoded para testear el circuito más arriba
-        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "reference_wallet_icon",
-                "Bitcoin Reference Wallet",
-                "reference_wallet",
-                "wallet_platform_identifier",
-                new Version(1,0,0)
-        );
-
+    @Override
+    public List<InstalledWallet> getUserWallets() throws CantGetUserWalletException {
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
-        lstInstalledWallet.add(installedWallet);
+
+        try
+        {
+
+            walletMiddlewareManager.getInstalledWallets();
+            for (InstalledWallet wallet : lstInstalledWallet){
+
+                InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),
+                        wallet.getSkinsId(),
+                        wallet.getLanguagesId(),
+                        wallet.getWalletIcon(),
+                        wallet.getWalletName(),
+                        wallet.getWalletPublicKey(),
+                        wallet.getWalletPlatformIdentifier(),
+                        wallet.getWalletVersion()
+                );
+
+                lstInstalledWallet.add(installedWallet);
+            }
+
+         /*   TEST
+         InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "reference_wallet_icon",
+                    "Bitcoin Reference Wallet",
+                    "reference_wallet",
+                    "wallet_platform_identifier",
+                    new Version(1,0,0)
+            );
+
+            lstInstalledWallet.add(installedWallet);*/
+
+
+        }
+        catch (CantListWalletsException e) {
+            throw  new CantGetUserWalletException("CAN'T GET THE INSTALLED WALLETS",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new CantGetUserWalletException("CAN'T GET THE INSTALLED WALLETS",e,"","");
+        }
+
         return lstInstalledWallet;
     }
-
+    @Override
     public void loadUserWallets(String deviceUserPublicKey) throws CantLoadWalletsException {
 
         this.deviceUserPublicKey = deviceUserPublicKey;
@@ -394,6 +430,43 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
         }
     }
 
+
+    @Override
+    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException {
+
+        /**
+         * By now I will create only a new wallet, In the future there will be more than one default wallets.
+         */
+        try
+        {
+            walletMiddlewareManager.createDefaultWallets(deviceUserPublicKey);
+        }
+        catch(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateDefaultWalletsException e)
+        {
+            throw  new CantCreateDefaultWalletsException("CAN'T CREATE DEFAULT DEVICE WALLET",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new CantCreateDefaultWalletsException("CAN'T CREATE DEFAULT DEVICE WALLET",e,"","");
+        }
+    }
+
+
+    @Override
+    public void enableWallet() {
+
+
+    }
+    /**
+     * DealsWithBitcoinWallet Interface implementation.
+     */
+
+    @Override
+    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
+        this.bitcoinWalletManager = bitcoinWalletManager;
+    }
+
+
     public void persistWallet(UUID walletId) throws CantPersistWalletException {
         /**
          * Now I will add this wallet to the list of wallets managed by the plugin.
@@ -444,44 +517,6 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
     }
 
-    @Override
-    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException {
-
-        /**
-         * By now I will create only a new wallet, In the future there will be more than one default wallets.
-         */
-
-        Wallet wallet = new WalletManagerWallet();
-
-        ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
-        ((DealsWithEvents) wallet).setEventManager(eventManager);
-        ((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
-
-        //try {
-            //aquí al crear la wallet se le deben pasar todos los parametros de esta
-            //wallet.createWallet("public_key_hardcoded");
-        //} catch (CantCreateWalletException cantCreateWalletException) {
-            /**
-             * Well, if it is not possible to create a wallet, then we have a problem that I can not handle...
-             */
-        //    System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
-        //    cantCreateWalletException.printStackTrace();
-
-        //    throw new CantCreateDefaultWalletsException();
-        //}
-
-    }
-
-    /**
-     * DealsWithBitcoinWallet Interface implementation.
-     */
-
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
@@ -530,6 +565,13 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     }
 
 
+    /**
+     * DealsWithWalletManager methods implementation.
+     */
+    @Override
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager){
+        this.walletMiddlewareManager = walletManagerManager;
+    }
     /**
      * DealsWithLogger Interface implementation.
      */
