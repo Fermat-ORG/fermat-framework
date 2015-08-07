@@ -512,18 +512,23 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
         try{
 
-            WalletManagerMiddlewareDao walletDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao walletMangerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
             /**
              * Get installed wallet info
              */
+            InstalledWallet installedWallet = walletMangerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
 
+            /**
+             * Get language information
+             */
+            InstalledLanguage installedLanguage =  walletMangerDao.getInstalledLanguage(languageId.toString());
 
             /**
              * Call Wallet Resource to uninstall Skin
              */
-          //  walletResources.unninstallLanguageForWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, boolean isLastWallet);
+         //  walletResources.unninstallLanguageForWalletString( installedWallet.getWalletCategory().toString(), installedWallet.getWalletType().toString(), installedWallet.getWalletDeveloper(), String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, boolean isLastWallet);
 
-            walletDao.deleteWalletLanguage(walletCatalogueId, languageId);
+            walletMangerDao.deleteWalletLanguage(walletCatalogueId, languageId);
 
         } catch (CantDeleteWalletLanguageException e){
             throw new CantUninstallLanguageException("CAN'T UNISTALL WALLET LANGUAGE",e, null, null);
@@ -554,13 +559,21 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             InstalledWallet installedWallet = walletMangerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
 
             /**
+             * Get skin information
+             */
+            InstalledSkin installedSkin =  walletMangerDao.getInstalledSkin(skinId.toString());
+
+            /**
              * Conected with Wallet Resource to unistalld resources
              */
-          //  walletResources.unninstallSkinForWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, true);
 
-            WalletManagerMiddlewareDao walletDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+        //TODO: Este metodo del wallet resource no retorna exceptions
+           walletResources.unninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloper(), installedSkin.getAlias(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletScreenDensity(), installedWallet.getWalletNavigationStructureVersion(), true);
 
-            walletDao.deleteWalletSkin(walletCatalogueId, skinId);
+            /**
+             * I delete skin from database
+             */
+            walletMangerDao.deleteWalletSkin(walletCatalogueId, skinId);
 
 
 

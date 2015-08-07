@@ -97,8 +97,8 @@ public class WalletManagerMiddlewareDao {
             for (DatabaseTableRecord record : records){
 
                 InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME)),
-                        getInstalletSkin(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
-                        getInstalletLanguage(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalledSkins(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalledLanguages(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME),
@@ -146,8 +146,8 @@ public class WalletManagerMiddlewareDao {
             for (DatabaseTableRecord record : records){
 
                 installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME)),
-                        getInstalletSkin(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
-                        getInstalletLanguage(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalledSkins(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalledLanguages(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME),
@@ -192,8 +192,8 @@ public class WalletManagerMiddlewareDao {
             for (DatabaseTableRecord record : records){
 
                 installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME)),
-                        getInstalletSkin(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
-                        getInstalletLanguage(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalledSkins(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalledLanguages(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME),
@@ -426,7 +426,7 @@ public class WalletManagerMiddlewareDao {
 
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             for (DatabaseTableRecord record : records){
-                record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME,newName);
+                record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME, newName);
 
                 databaseTable.updateRecord(record);
             }
@@ -448,12 +448,81 @@ public class WalletManagerMiddlewareDao {
         }
     }
 
+    public  InstalledSkin getInstalledSkin(String skinId) throws CantGetInstalledWalletsException {
+        InstalledSkin installedSkin= null;
+        try
+        {
+            database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
+            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            for (DatabaseTableRecord record : records){
+
+                installedSkin= new WalletManagerMiddlewareInstalledSkin(record.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_NAME_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_PREVIEW_IMAGE_COLUMN_NAME),
+                        new Version(1,0,0)
+                );
+
+            }
+
+            database.closeDatabase();
+        }
+        catch (CantLoadTableToMemoryException e){
+            database.closeDatabase();
+            throw new CantGetInstalledWalletsException("ERROR GET SKINS FROM DATABASE",e, null, null);
+        }
+        catch (Exception exception){
+            database.closeDatabase();
+            throw new CantGetInstalledWalletsException("ERROR GET SKINS FROM DATABASE",FermatException.wrapException(exception), null, null);
+        }
+
+        return installedSkin;
+    }
+
+    public  InstalledLanguage  getInstalledLanguage(String languageId) throws CantGetInstalledWalletsException {
+       InstalledLanguage installedLanguage = null;
+        try{
+            database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
+            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, languageId, DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            for (DatabaseTableRecord record : records){
+
+                installedLanguage= new WalletManagerMiddlewareInstalledLanguage(record.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME),
+                        Languages.valueOf(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_ID_COLUMN_NAME)),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_LABEL_COLUMN_NAME),
+                        new Version(1,0,0)
+                );
+
+            }
+
+            database.closeDatabase();
+        }
+        catch (CantLoadTableToMemoryException e){
+            database.closeDatabase();
+            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd SKINS FROM DATABASE",e, null, null);
+        }
+        catch (Exception exception){
+            database.closeDatabase();
+            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd SKINS FROM DATABASE",FermatException.wrapException(exception), null, null);
+        }
+
+        return installedLanguage;
+    }
+
     /**
      * Private methods
      *
      */
 
-    private  List<InstalledSkin>  getInstalletSkin(String walletCatalogId) throws CantGetInstalledWalletsException {
+    private  List<InstalledSkin>  getInstalledSkins(String walletCatalogId) throws CantGetInstalledWalletsException {
         List<InstalledSkin> lstInstalledSkin = new ArrayList<InstalledSkin>();
         try{
             database = openDatabase();
@@ -490,7 +559,7 @@ public class WalletManagerMiddlewareDao {
         return lstInstalledSkin;
     }
 
-    private  List<InstalledLanguage>  getInstalletLanguage(String walletCatalogId) throws CantGetInstalledWalletsException {
+    private  List<InstalledLanguage>  getInstalledLanguages(String walletCatalogId) throws CantGetInstalledWalletsException {
         List<InstalledLanguage> lstInstalledLaguage = new ArrayList<InstalledLanguage>();
         try{
             database = openDatabase();

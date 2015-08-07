@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
@@ -55,7 +56,17 @@ import java.util.UUID;
 /**
  * Created by ciencias on 21.01.15.
  */
-
+/**
+ * This plug serves as an interface between the SubApp and WalletManager Middleware.
+ * It allows you to retrieve information from the wallets installed and create clones.
+ *
+ *
+ * Created by ciencias on 21.01.15.
+ * Modified by Natalia on 04/08/2015
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
+ */
 public class WalletManagerModulePluginRoot implements Service, WalletManagerModule, DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin {
 
 
@@ -285,7 +296,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
         }
         catch(Exception e)
         {
-            throw  new NewWalletCreationFailedException("CAN'T CREATE NEW WALLET",e,"","");
+            throw  new NewWalletCreationFailedException("CAN'T CREATE NEW WALLET",FermatException.wrapException(e),"","");
         }
     }
 
@@ -337,7 +348,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
         }
         catch(Exception e)
         {
-            throw  new WalletsListFailedToLoadException("CAN'T GET THE INSTALLED WALLETS",e,"","");
+            throw  new WalletsListFailedToLoadException("CAN'T GET THE INSTALLED WALLETS", FermatException.wrapException(e),"","");
         }
 
         return lstInstalledWallet;
@@ -362,7 +373,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
         }
         catch(Exception e)
         {
-            throw  new WalletRemovalFailedException("CAN'T CREATE NEW WALLET",e,"","");
+            throw  new WalletRemovalFailedException("CAN'T CREATE NEW WALLET",FermatException.wrapException(e),"","");
         }
     }
 
@@ -385,7 +396,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
         }
         catch(Exception e)
         {
-            throw  new WalletRenameFailedException("CAN'T RENAME WALLET",e,"","");
+            throw  new WalletRenameFailedException("CAN'T RENAME WALLET",FermatException.wrapException(e),"","");
         }
     }
 
