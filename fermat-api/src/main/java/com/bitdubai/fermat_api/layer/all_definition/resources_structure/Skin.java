@@ -29,29 +29,20 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private Version version;
 
-    // agregar
-
     private VersionCompatibility navigationStructureCompatibility;
 
-    private ScreenSize screenSize;
-
-    private Map<String,Resource> lstPortraitResources;
-
-    private Map<String,Resource> lstLandscapeResources;
+    private Map<String,Resource> lstResources;
 
     private Map<String,Layout> lstPortraitLayouts;
 
     private Map<String,Layout> lstLandscapeLayouts;
 
 
-    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, ScreenSize screenSize, Map<String, Resource> lstPortraitResources, Map<String, Resource> lstLandscapeResources, Map<String, Layout> lstPortraitLayouts, Map<String, Layout> lstLandscapeLayouts) {
+    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, Map<String, Resource> lstResources, Map<String, Layout> lstPortraitLayouts, Map<String, Layout> lstLandscapeLayouts) {
         this.id = id;
         this.name = name;
         this.version = version;
         this.navigationStructureCompatibility = navigationStructureCompatibility;
-        this.screenSize = screenSize;
-        this.lstPortraitResources = lstPortraitResources;
-        this.lstLandscapeResources = lstLandscapeResources;
         this.lstPortraitLayouts = lstPortraitLayouts;
         this.lstLandscapeLayouts = lstLandscapeLayouts;
     }
@@ -84,13 +75,6 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.version = version;
     }
 
-    public ScreenSize getScreenSize() {
-        return screenSize;
-    }
-
-    public void setScreenSize(ScreenSize screenSize) {
-        this.screenSize = screenSize;
-    }
 
     public VersionCompatibility getNavigationStructureCompatibility() {
         return navigationStructureCompatibility;
@@ -100,20 +84,12 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.navigationStructureCompatibility = navigationStructureCompatibility;
     }
 
-    public Map<String, Resource> getLstPortraitResources() {
-        return lstPortraitResources;
+    public Map<String, Resource> getLstResources() {
+        return lstResources;
     }
 
-    public void setLstPortraitResources(Map<String, Resource> lstPortraitResources) {
-        this.lstPortraitResources = lstPortraitResources;
-    }
-
-    public Map<String, Resource> getLstLandscapeResources() {
-        return lstLandscapeResources;
-    }
-
-    public void setLstLandscapeResources(Map<String, Resource> lstLandscapeResources) {
-        this.lstLandscapeResources = lstLandscapeResources;
+    public void setLstResources(Map<String, Resource> lstResources) {
+        this.lstResources = lstResources;
     }
 
     public Map<String, Layout> getLstPortraitLayouts() {
@@ -139,9 +115,7 @@ public class Skin implements Serializable {//implements FermatSkin {
                 ", name='" + name + '\'' +
                 ", version=" + version +
                 ", navigationStructureCompatibility=" + navigationStructureCompatibility +
-                ", screenSize=" + screenSize +
-                ", lstPortraitResources=" + lstPortraitResources +
-                ", lstLandscapeResources=" + lstLandscapeResources +
+                ", lstResources=" + lstResources +
                 ", lstPortraitLayouts=" + lstPortraitLayouts +
                 ", lstLandscapeLayouts=" + lstLandscapeLayouts +
                 '}';

@@ -468,13 +468,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              * delete portrait resources
              */
             String linkToPortraitResources = linkToResources + "portrait/resources/" + screenDensity + "/drawables/";
-            deleteResources(linkToPortraitResources, skin.getLstPortraitResources(), skin.getId());
+            deleteResources(linkToPortraitResources, skin.getLstResources(), skin.getId());
 
             /**
-             * delete landscape resources
-             */
-            String linkToLandscapeResources = linkToResources + "landscape/resources/" + screenDensity + "/drawables/";
-            deleteResources(linkToLandscapeResources, skin.getLstLandscapeResources(), skin.getId());
 
             /**
              * delete portrait layouts
@@ -504,13 +500,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          * download portrait resources
          */
         String linkToPortraitResources = linkToResources + "portrait/resources/" + screenDensity + "/drawables/";
-        downloadResourcesFromRepo(linkToPortraitResources, skin.getLstPortraitResources(), skin.getId(),localStoragePath);
-
-        /**
-         * download landscape resources
-         */
-        String linkToLandscapeResources = linkToResources + "landscape/resources/" + screenDensity + "/drawables/";
-        downloadResourcesFromRepo(linkToLandscapeResources, skin.getLstLandscapeResources(), skin.getId(),localStoragePath);
+        downloadResourcesFromRepo(linkToPortraitResources, skin.getLstResources(), skin.getId(),localStoragePath);
 
         /**
          * download portrait layouts

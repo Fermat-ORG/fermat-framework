@@ -42,7 +42,7 @@ public class WalletResources implements com.bitdubai.fermat_api.layer.dmp_networ
     public byte[] getImageResource(String imageName,ScreenOrientation orientation) throws CantGetResourcesException {
         switch (orientation){
             case PORTRAIT:
-                Resource resource= skin.getLstPortraitResources().get(imageName);
+                //Resource resource= skin.getLstPortraitResources().get(imageName);
 
                 break;
             case LANDSCAPE:
