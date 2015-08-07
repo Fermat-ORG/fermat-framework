@@ -4,6 +4,25 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantRemoveWalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableDevelopersException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableProjectsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.FactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryDeveloper;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -23,9 +42,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by loui on 26/04/15.
+ * Created by Matias Furszyfer on 07/08/15.
  */
-public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin {
+public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin,WalletFactoryManager {
 
 
     /**
@@ -191,4 +210,57 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
 
     }
 
+    @Override
+    public WalletFactoryDeveloper getLoggedDeveloper() {
+        return null;
+    }
+
+    @Override
+    public List<WalletFactoryDeveloper> getAvailableDevelopers() throws CantGetAvailableDevelopersException {
+        return null;
+    }
+
+    @Override
+    public List<FactoryProject> getAvailableProjects() throws CantGetAvailableProjectsException {
+        return null;
+    }
+
+    @Override
+    public FactoryProject createEmptyProject(String name, WalletCategory walletCategory, WalletType walletType) throws CantCreateWalletFactoryProjectException {
+        return null;
+    }
+
+
+    @Override
+    public void saveProject(FactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
+
+    }
+
+    @Override
+    public void removeyProject(FactoryProject walletFactoryProject) throws CantRemoveWalletFactoryProject {
+
+    }
+
+
+
+    @Override
+    public void importProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException {
+
+    }
+
+    @Override
+    public FactoryProject getProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
+        return null;
+    }
+
+
+    @Override
+    public Skin getSkin(UUID skinId) throws CantGetSkinException {
+        return null;
+    }
+
+    @Override
+    public Language getLanguage(UUID languageId) throws CantGetLanguageException {
+        return null;
+    }
 }

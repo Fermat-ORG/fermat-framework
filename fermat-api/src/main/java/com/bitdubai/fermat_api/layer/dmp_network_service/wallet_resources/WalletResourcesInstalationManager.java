@@ -69,7 +69,9 @@ public interface WalletResourcesInstalationManager {
      * @param isLastWallet
      */
 
+
     //TODO: la wallet puede tener mas de un lenguage y skin, este metodo va a recibir el array de skins y language?
+
     public void unninstallCompleteWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet)throws WalletResourcesUnninstallException;
 
 
@@ -94,7 +96,9 @@ public interface WalletResourcesInstalationManager {
      * @param developer
      * @param isLastWallet
      */
+
 //TODO: No deberia recibir el id del lenguage que va a desinstalar?
+
     public void unninstallLanguageForWallet(String walletCategory, String walletType, String developer,String walletName, boolean isLastWallet) throws WalletResourcesUnninstallException;
 
 

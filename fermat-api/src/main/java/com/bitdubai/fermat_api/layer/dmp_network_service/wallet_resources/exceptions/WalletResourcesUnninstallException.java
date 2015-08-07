@@ -1,11 +1,12 @@
-package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
+package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by Matias Furzyfer on 2015.08.06..
  */
-public class WalletResourcesInstalationException extends FermatException {
+
+public class WalletResourcesUnninstallException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +15,7 @@ public class WalletResourcesInstalationException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public WalletResourcesInstalationException(String message, Exception cause, String context, String possibleReason) {
+    public WalletResourcesUnninstallException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

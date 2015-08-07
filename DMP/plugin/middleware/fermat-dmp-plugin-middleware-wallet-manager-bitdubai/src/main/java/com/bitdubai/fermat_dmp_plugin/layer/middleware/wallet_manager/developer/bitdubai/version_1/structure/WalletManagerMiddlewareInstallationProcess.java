@@ -97,7 +97,9 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
              */
 
         //TODO: Validar que la wallet no este ya instalada
+
         // TODO: Le tendria que pasar la wallet public key
+
             walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion);
 
 

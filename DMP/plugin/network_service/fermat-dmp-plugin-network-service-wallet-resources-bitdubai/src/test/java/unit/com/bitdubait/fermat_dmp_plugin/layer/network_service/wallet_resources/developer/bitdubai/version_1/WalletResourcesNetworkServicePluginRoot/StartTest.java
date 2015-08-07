@@ -9,6 +9,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+import com.googlecode.catchexception.CatchException;
 
 import junit.framework.TestCase;
 
@@ -54,7 +55,6 @@ public class StartTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         testWalletResourcePluginRoot = new WalletResourcesNetworkServicePluginRoot();
-        testWalletResourcePluginRoot.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
         testWalletResourcePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testWalletResourcePluginRoot.setEventManager(mockEventManager);
         testWalletResourcePluginRoot.setErrorManager(mockErrorManager);
@@ -64,7 +64,7 @@ public class StartTest extends TestCase {
     public void teststart_ThePlugInHasStartedOk_ThrowsCantStartPluginException() throws Exception {
         when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockEventListener);
         catchException(testWalletResourcePluginRoot).start();
-        assertThat(caughtException()).isNull();
+        assertThat(CatchException.<Exception>caughtException()).isNull();
         assertThat(testWalletResourcePluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
     }
 
