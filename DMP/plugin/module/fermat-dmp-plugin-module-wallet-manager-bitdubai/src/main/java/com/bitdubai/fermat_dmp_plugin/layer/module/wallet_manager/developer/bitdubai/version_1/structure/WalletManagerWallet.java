@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.NicheWalletType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletStatus;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantPersistWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.OpenFailedException;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
@@ -102,7 +102,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
      * This method is to be used to load a saved wallet and to put it online.
      */
 
-    public void loadWallet (UUID pluginId) throws CantLoadWalletException {
+    public void loadWallet (UUID pluginId) throws CantGetUserWalletException {
 
         this.pluginId = pluginId;
 
@@ -110,14 +110,10 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
             load();
             this.changeToOnlineStatus();
         }
-        catch (CantLoadWalletException cantLoadWalletException)
+        catch (CantGetUserWalletException cantLoadWalletException)
         {
-            /**
-             * This is bad, but lets handle it...
-             */
-            System.err.println("CantLoadWalletException: " + cantLoadWalletException.getMessage());
-            cantLoadWalletException.printStackTrace();
-            throw new CantLoadWalletException();
+
+            throw new CantGetUserWalletException("",cantLoadWalletException,"","");
         }
 
     }
@@ -243,7 +239,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
 
     }
 
-    private void load() throws CantLoadWalletException {
+    private void load() throws CantGetUserWalletException {
 /*
         try {
 
@@ -271,7 +267,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
   /*
             System.err.println("FileNotFoundException or CantLoadFileException: " + ex.getMessage());
             ex.printStackTrace();
-            throw new CantLoadWalletException();
+            throw new CantGetUserWalletException();
         }
 */
     }

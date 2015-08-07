@@ -1,12 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Matias Furszyfer on 2015.08.03..
+ * Created by eze on 2015.06.17..
  */
-public class RepositoryNotFoundException extends FermatException {
-
+public class CantRegisterDebitException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -15,7 +14,7 @@ public class RepositoryNotFoundException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public RepositoryNotFoundException(String message, Exception cause, String context, String possibleReason) {
+    public CantRegisterDebitException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

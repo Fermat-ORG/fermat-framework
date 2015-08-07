@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.06.17..
+ * Created by natalia on 06/08/15.
  */
-public class CantCreateWalletException extends FermatException {
+public class CantCreateDefaultWalletsException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantCreateWalletException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateWalletException(String message, Exception cause, String context, String possibleReason) {
+    public CantCreateDefaultWalletsException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
