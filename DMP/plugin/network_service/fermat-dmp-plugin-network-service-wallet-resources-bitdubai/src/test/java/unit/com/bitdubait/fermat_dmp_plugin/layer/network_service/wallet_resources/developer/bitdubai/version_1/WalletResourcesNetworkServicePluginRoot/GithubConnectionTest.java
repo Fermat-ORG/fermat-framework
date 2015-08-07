@@ -4,13 +4,17 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHu
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Properties;
 
 /**
@@ -40,10 +44,10 @@ public class GithubConnectionTest {
     }
 
     @Test
-    public void testForkRepo() throws Exception {
+    public void testDownloadFilesFromRepo() throws Exception {
         Properties properties = new Properties();
         properties.setProperty("login", "furszy");
-        properties.setProperty("password", "sausages1");
+        properties.setProperty("password", "");
 
 
         GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
@@ -52,11 +56,19 @@ public class GithubConnectionTest {
 
         GHUser hub=ghRepository.getOwner();
 
-        //ghRepository.getFileContent()
-        //GHRepository ghRepository=hub.getRepository("fermat");
-        ghRepository.createIssue("Mati testing github api").body("Estoy creando un issue desde mi celular").assignee(hub).label("bug").create();
-        //GHRepository r=hub.getOrganizations("bitDubai")getRepository("fermat");
-        //GHRepository r=hub.createRepository("github-api-test","a test repository","http://github-api.kohsuke.org/",true);
+        GHContent ghContent= ghRepository.getFileContent("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/1.0.0/navigation_structure.xml");
+
+        InputStream inputStream = ghContent.read();
+
+        StringWriter writer = new StringWriter();
+        IOUtils.copy(inputStream, writer, "UTF-8");
+        String theString = writer.toString();
+
+        System.out.println(theString);
 
     }
+
+
+
+
 }
