@@ -62,12 +62,16 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
          * Next, I will add the needed tables.
          */
 
-            DatabaseTableFactory table;
+            //DatabaseTableFactory table;
 
             /**
              * Create Wallet Manager Wallets Table table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
+            DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+            table = databaseFactory.newTableFactory(ownerId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
 
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.TRUE);
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PRIVATE_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
@@ -82,12 +86,14 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
             table.addIndex(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_FIRST_KEY_COLUMN);
 
             //Create the table
-            ((DatabaseFactory) database).createTable(ownerId, table);
+            databaseFactory.createTable(ownerId, table);
+//            ((DatabaseFactory) database).createTable(ownerId, table);
 
             /**
              * Create Wallet Manager Skins Table table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
 
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -97,12 +103,14 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
 
             table.addIndex(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_FIRST_KEY_COLUMN);
             //Create the table
-            ((DatabaseFactory) database).createTable(ownerId, table);
+            databaseFactory.createTable(ownerId, table);
+//            ((DatabaseFactory) database).createTable(ownerId, table);
 
             /**
              * Create Wallet Manager Languages Table table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId,WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId,WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME);
 
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -112,7 +120,8 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
 
             table.addIndex(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_FIRST_KEY_COLUMN);
                 //Create the table
-            ((DatabaseFactory) database).createTable(ownerId, table);
+            databaseFactory.createTable(ownerId, table);
+//            ((DatabaseFactory) database).createTable(ownerId, table);
 
         } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");

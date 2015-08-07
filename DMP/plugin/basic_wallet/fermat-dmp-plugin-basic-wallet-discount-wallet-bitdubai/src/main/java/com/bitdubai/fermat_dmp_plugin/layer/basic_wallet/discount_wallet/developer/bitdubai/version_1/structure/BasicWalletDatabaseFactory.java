@@ -54,13 +54,17 @@ class BasicWalletDatabaseFactory implements DealsWithPluginDatabaseSystem{
          */
         try {
 
-            DatabaseTableFactory table;
+//            DatabaseTableFactory table;
 
 
             /**
              * Then the value chunks table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, BasicWalletDatabaseConstants.VALUE_CHUNKS_TABLE_NAME);
+            DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+            table = databaseFactory.newTableFactory(ownerId, BasicWalletDatabaseConstants.VALUE_CHUNKS_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, BasicWalletDatabaseConstants.VALUE_CHUNKS_TABLE_NAME);
             table.addColumn(BasicWalletDatabaseConstants.VALUE_CHUNKS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
             table.addColumn(BasicWalletDatabaseConstants.VALUE_CHUNKS_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 3,false);
             table.addColumn(BasicWalletDatabaseConstants.VALUE_CHUNKS_TABLE_ID_PARENT_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
@@ -75,7 +79,8 @@ class BasicWalletDatabaseFactory implements DealsWithPluginDatabaseSystem{
             //table.addColumn(BasicWalletDatabaseConstants.VALUE_CHUNKS_TABLE_ID_TRANSFER_COLUMN_NAME, DatabaseDataType.STRING, 36);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
@@ -86,7 +91,8 @@ class BasicWalletDatabaseFactory implements DealsWithPluginDatabaseSystem{
             /**
              * Then the debits table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, BasicWalletDatabaseConstants.DEBITS_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, BasicWalletDatabaseConstants.DEBITS_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, BasicWalletDatabaseConstants.DEBITS_TABLE_NAME);
             table.addColumn(BasicWalletDatabaseConstants.DEBITS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
             //table.addColumn(BasicWalletDatabaseConstants.DEBITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(BasicWalletDatabaseConstants.DEBITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
@@ -94,7 +100,8 @@ class BasicWalletDatabaseFactory implements DealsWithPluginDatabaseSystem{
             table.addColumn(BasicWalletDatabaseConstants.DEBITS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
@@ -105,7 +112,8 @@ class BasicWalletDatabaseFactory implements DealsWithPluginDatabaseSystem{
             /**
              * Then the credits table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, BasicWalletDatabaseConstants.CREDITS_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, BasicWalletDatabaseConstants.CREDITS_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, BasicWalletDatabaseConstants.CREDITS_TABLE_NAME);
             table.addColumn(BasicWalletDatabaseConstants.CREDITS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
             //table.addColumn(BasicWalletDatabaseConstants.CREDITS_TABLE_ID_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(BasicWalletDatabaseConstants.CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
@@ -113,7 +121,8 @@ class BasicWalletDatabaseFactory implements DealsWithPluginDatabaseSystem{
             table.addColumn(BasicWalletDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());

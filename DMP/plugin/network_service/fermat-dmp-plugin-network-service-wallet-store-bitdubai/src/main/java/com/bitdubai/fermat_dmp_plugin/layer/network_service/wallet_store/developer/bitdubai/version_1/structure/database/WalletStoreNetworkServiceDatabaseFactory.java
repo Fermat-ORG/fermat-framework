@@ -192,12 +192,16 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
      * @param ownerId
      */
     private void createDeveloperDatabaseTable(Database database, UUID ownerId) throws InvalidOwnerIdException, CantCreateTableException {
-        DatabaseTableFactory table;
+        //DatabaseTableFactory table;
 
         /**
          * Create Wallet Contact Address Book table.
          */
-        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME);
+        DatabaseTableFactory table;
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+        table = databaseFactory.newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME);
+//        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME);
 
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -206,7 +210,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_FIRST_KEY_COLUMN);
 
         //Create the table
-        ((DatabaseFactory) database).createTable(ownerId, table);
+        databaseFactory.createTable(ownerId, table);
+//        ((DatabaseFactory) database).createTable(ownerId, table);
     }
 
     /**
@@ -215,12 +220,16 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
      * @param ownerId
      */
     private void createItemDatabaseTable(Database database, UUID ownerId) throws InvalidOwnerIdException, CantCreateTableException {
-        DatabaseTableFactory table;
+        //DatabaseTableFactory table;
 
         /**
          * Create Wallet Contact Address Book table.
          */
-        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
+        DatabaseTableFactory table;
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+        table = databaseFactory.newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
+//        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
 
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.ITEM_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -235,7 +244,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.ITEM_FIRST_KEY_COLUMN);
 
         //Create the table
-        ((DatabaseFactory) database).createTable(ownerId, table);
+        databaseFactory.createTable(ownerId, table);
+//        ((DatabaseFactory) database).createTable(ownerId, table);
     }
 
     /**
@@ -244,12 +254,16 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
      * @param ownerId
      */
     private void createTranslatorDatabaseTable(Database database, UUID ownerId) throws InvalidOwnerIdException, CantCreateTableException {
-        DatabaseTableFactory table;
+       // DatabaseTableFactory table;
 
         /**
          * Create Wallet Contact Address Book table.
          */
-        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME);
+        DatabaseTableFactory table;
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+        table = databaseFactory.newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME);
+//        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME);
 
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -258,7 +272,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_FIRST_KEY_COLUMN);
 
         //Create the table
-        ((DatabaseFactory) database).createTable(ownerId, table);
+        databaseFactory.createTable(ownerId, table);
+//        ((DatabaseFactory) database).createTable(ownerId, table);
     }
 
     /**
@@ -269,12 +284,16 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
      * @throws CantCreateTableException
      */
     private void createWalletLanguageDatabaseTable(Database database, UUID ownerId) throws InvalidOwnerIdException, CantCreateTableException {
-        DatabaseTableFactory table;
+       // DatabaseTableFactory table;
 
         /**
          * Create Wallet Contact Address Book table.
          */
-        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
+        DatabaseTableFactory table;
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+        table = databaseFactory.newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
+//        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
 
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -291,7 +310,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FIRST_KEY_COLUMN);
 
         //Create the table
-        ((DatabaseFactory) database).createTable(ownerId, table);
+        databaseFactory.createTable(ownerId, table);
+//        ((DatabaseFactory) database).createTable(ownerId, table);
     }
 
     /**
@@ -302,12 +322,16 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
      * @throws CantCreateTableException
      */
     private void createDesignerDatabaseTable(Database database, UUID ownerId) throws InvalidOwnerIdException, CantCreateTableException {
-        DatabaseTableFactory table;
+        //DatabaseTableFactory table;
 
         /**
          * Create Wallet Contact Address Book table.
          */
-        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME);
+        DatabaseTableFactory table;
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+        table = databaseFactory.newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME);
+//        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME);
 
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -316,7 +340,8 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_FIRST_KEY_COLUMN);
 
         //Create the table
-        ((DatabaseFactory) database).createTable(ownerId, table);
+        databaseFactory.createTable(ownerId, table);
+//        ((DatabaseFactory) database).createTable(ownerId, table);
     }
 
     /**
@@ -327,12 +352,16 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
      * @throws CantCreateTableException
      */
     private void createWalletSkinDatabaseTable(Database database, UUID ownerId) throws InvalidOwnerIdException, CantCreateTableException {
-        DatabaseTableFactory table;
+        //DatabaseTableFactory table;
 
         /**
          * Create Wallet Contact Address Book table.
          */
-        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME);
+        DatabaseTableFactory table;
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+        table = databaseFactory.newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME);
+//        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME);
 
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -348,6 +377,7 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithErrors
         table.addIndex(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_FIRST_KEY_COLUMN);
 
         //Create the table
-        ((DatabaseFactory) database).createTable(ownerId, table);
+        databaseFactory.createTable(ownerId, table);
+//        ((DatabaseFactory) database).createTable(ownerId, table);
     }
 }
