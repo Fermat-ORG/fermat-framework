@@ -62,7 +62,7 @@ public interface WalletFactoryManager {
      * Exports a Wallet Factory Project to an external repository.
      * This method upload an XML file with the Wallet Factory Project information.
      */
-    void exportWalletFactoryProjectToRepository(String name, String repository, WalletFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException, CantCreateFileException;
+    void exportWalletFactoryProjectToRepository(String name, String repository, WalletFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException;
 
     /**
      * This method returns all the Wallet Factory Projects that exists in the device for the current logged developer user
