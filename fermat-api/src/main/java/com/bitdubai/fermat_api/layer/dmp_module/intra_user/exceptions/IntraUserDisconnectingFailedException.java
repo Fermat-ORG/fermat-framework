@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.29..
+ * Created by eze on 2015.07.30..
  */
-public class CantDeleteIntraUserException extends FermatException {
+public class IntraUserDisconnectingFailedException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantDeleteIntraUserException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantDeleteIntraUserException(String message, Exception cause, String context, String possibleReason) {
+    public IntraUserDisconnectingFailedException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
