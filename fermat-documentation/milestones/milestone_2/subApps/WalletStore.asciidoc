@@ -60,8 +60,8 @@ la versión de la wallet (se usará para indexar los skins y lenguajes cuando se
 de una wallet)
 ** Por otro lado necesitamos que podamos pedir los skins y la lista de lenguajes.
 
-* Para pubulcar una versión nueva de una wallet, su código y recursos deben estar sometidos ya a bitdubai.
+* Para publicar una versión nueva de una wallet, su código y recursos deben estar sometidos ya a bitdubai.
 Por tanto el procedimiento para realizar cualquier tipo de actualización es idéntico al de creación
 de una nueva wallet. +
-El problema entonces de la publicaación de versionaes está en administrar lo que figura en el catálogo
+El problema entonces de la publicación de versiones está en administrar lo que figura en el catálogo
 que mostramos en el wallet store

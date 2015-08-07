@@ -1,11 +1,13 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTabStrip;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 /**
@@ -13,6 +15,11 @@ import java.util.List;
  */
 
 public class TabStrip implements FermatTabStrip {
+
+    /**
+     * WIZARD
+     */
+    Map<WizardTypes, Wizard> wizards;
 
     /**
      * TabStrip class member variables
@@ -172,5 +179,27 @@ public class TabStrip implements FermatTabStrip {
 
     public void setTabs(List<Tab> tabs) {
         this.tabs = tabs;
+    }
+
+    /**
+     * Add wizard to attach to this Tab
+     *
+     * @param type   Wizard type enumerable
+     * @param wizard Wizard runtime
+     * @throws Exception
+     */
+    public void addWizard(WizardTypes type, Wizard wizard) throws Exception {
+        if (wizards == null)
+            wizards = new HashMap<>();
+        if (wizard == null || type == null)
+            throw new NullPointerException("arguments cannot be null");
+        if (wizards.get(type) != null) {
+            throw new Exception(String.format("Type %s is already registered.", type.getKey()));
+        }
+        wizards.put(type, wizard);
+    }
+
+    public Map<WizardTypes, Wizard> getWizards() {
+        return wizards;
     }
 }

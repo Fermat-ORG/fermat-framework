@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
@@ -102,18 +103,28 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME),
-                        new Version(1,0,0)
+                        new Version(1,0,0),
+                        WalletType.valueOf(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME)),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_DENSITY_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME)
                 );
 
 
                 lstInstalledWallet.add(installedWallet);
 
             }
+
+            database.closeDatabase();
         }
         catch (CantLoadTableToMemoryException e){
+            database.closeDatabase();
             throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",e, null, null);
         }
         catch (Exception exception){
+            database.closeDatabase();
             throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",FermatException.wrapException(exception), null, null);
         }
 
@@ -121,31 +132,127 @@ public class WalletManagerMiddlewareDao {
     }
 
 
+    public  InstalledWallet  getInstalletWallet(UUID walletIdInThisDevice) throws CantGetInstalledWalletsException {
 
-    public void persistWallet (String walletPublicKey,String walletPrivateKey,WalletCategory walletCategory,String walletName, String walletIconName, String walletIdentifier,  UUID walletCatalogueId, Version walletVersion) throws CantPersistWalletException {
+        InstalledWallet installedWallet = null;
+        try{
+            database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
+            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletIdInThisDevice.toString(), DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            for (DatabaseTableRecord record : records){
+
+                installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME)),
+                        getInstalletSkin(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalletLanguage(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME),
+                        new Version(1,0,0),
+                        WalletType.valueOf(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME)),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_DENSITY_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME)
+                );
+
+
+            }
+
+            database.closeDatabase();
+        }
+        catch (CantLoadTableToMemoryException e){
+            database.closeDatabase();
+            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",e, null, null);
+        }
+        catch (Exception exception){
+            database.closeDatabase();
+            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",FermatException.wrapException(exception), null, null);
+        }
+
+        return installedWallet;
+    }
+
+    public  InstalledWallet  getInstalletWalletByCatalogueId(UUID walletCatalogueId) throws CantGetInstalledWalletsException {
+
+        InstalledWallet installedWallet = null;
+        try{
+            database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
+            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            for (DatabaseTableRecord record : records){
+
+                installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME)),
+                        getInstalletSkin(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalletLanguage(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME),
+                        new Version(1,0,0),
+                        WalletType.valueOf(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME)),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_DENSITY_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME)
+                );
+
+
+            }
+
+            database.closeDatabase();
+        }
+        catch (CantLoadTableToMemoryException e){
+            database.closeDatabase();
+            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",e, null, null);
+        }
+        catch (Exception exception){
+            database.closeDatabase();
+            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",FermatException.wrapException(exception), null, null);
+        }
+
+        return installedWallet;
+    }
+
+
+    public void persistWallet (String walletPublicKey,String walletPrivateKey,String deviceUserPublicKey,WalletCategory walletCategory,String walletName, String walletIconName, String walletIdentifier,  UUID walletCatalogueId, Version walletVersion, String developerName) throws CantPersistWalletException {
         try{
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME,walletPublicKey);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PRIVATE_KEY_COLUMN_NAME, walletPrivateKey);
-            record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, "");
+            record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUserPublicKey);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString());
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME, walletCategory.getCode());
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME, walletName);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME, walletIdentifier);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME, walletIconName);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_VERSION_COLUMN_NAME, String.valueOf(walletVersion.getMajor()));
-
+            record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME, developerName);
 
             databaseTable.insertRecord(record);
 
+            database.closeDatabase();
+
         }
         catch (CantInsertRecordException e){
-            throw new CantPersistWalletException("ERROR PERSISTING REQUESTED ON_REVISION",e, null, null);
+            database.closeDatabase();
+            throw new CantPersistWalletException("ERROR PERSISTING WALLET SKIN",e, null, null);
         }
         catch (Exception exception){
-            throw new CantPersistWalletException("ERROR PERSISTING REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantPersistWalletException("ERROR PERSISTING WALLET SKIN",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -163,12 +270,16 @@ public class WalletManagerMiddlewareDao {
 
             databaseTable.insertRecord(record);
 
+            database.closeDatabase();
+
         }
         catch (CantInsertRecordException e){
-            throw new CantPersistWalletSkinException("ERROR PERSISTING REQUESTED ON_REVISION",e, null, null);
+            database.closeDatabase();
+            throw new CantPersistWalletSkinException("ERROR PERSISTING WALLET SKIN",e, null, null);
         }
         catch (Exception exception){
-            throw new CantPersistWalletSkinException("ERROR PERSISTING REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantPersistWalletSkinException("ERROR PERSISTING WALLET SKIN",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -186,12 +297,16 @@ public class WalletManagerMiddlewareDao {
 
             databaseTable.insertRecord(record);
 
+            database.closeDatabase();
+
         }
         catch (CantInsertRecordException e){
-            throw new CantPersistWalletLanguageException("ERROR PERSISTING REQUESTED PUBLISHED",e, null, null);
+            database.closeDatabase();
+            throw new CantPersistWalletLanguageException("ERROR PERSISTING WALLET LANGUAGE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantPersistWalletLanguageException("ERROR PERSISTING REQUESTED PUBLISHED", FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantPersistWalletLanguageException("ERROR PERSISTING WALLET LANGUAGE", FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -209,15 +324,20 @@ public class WalletManagerMiddlewareDao {
                 databaseTable.deleteRecord(record);
             }
 
+            database.closeDatabase();
+
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -234,16 +354,20 @@ public class WalletManagerMiddlewareDao {
             for (DatabaseTableRecord record : records){
                 databaseTable.deleteRecord(record);
             }
+            database.closeDatabase();
 
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -266,23 +390,30 @@ public class WalletManagerMiddlewareDao {
 
             }
 
+            database.closeDatabase();
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",e, null, null);
         }
         catch (CantDeleteWalletSkinException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",e, null, null);
         }
         catch (CantDeleteWalletLanguageException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED OFF TABLE",FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
+
 
 
     public void changeWalletName (UUID walletIdInTheDevice, String newName) throws CantUpdateWalletNameException {
@@ -300,15 +431,20 @@ public class WalletManagerMiddlewareDao {
                 databaseTable.updateRecord(record);
             }
 
+            database.closeDatabase();
+
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantUpdateWalletNameException("ERROR CHANGING REQUESTED NAME ON TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantUpdateWalletNameException("ERROR CHANGING WALLET NAME ON TABLE",e, null, null);
         }
         catch (CantUpdateRecordException e){
-            throw new CantUpdateWalletNameException("ERROR CHANGING REQUESTED NAME ON TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantUpdateWalletNameException("ERROR CHANGING WALLET NAME ON TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantUpdateWalletNameException("ERROR CHANGING REQUESTED NAME ON TABLE",FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantUpdateWalletNameException("ERROR CHANGING WALLET NAME ON TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -339,11 +475,15 @@ public class WalletManagerMiddlewareDao {
                 lstInstalledSkin.add(installedSkin);
 
             }
+
+            database.closeDatabase();
         }
         catch (CantLoadTableToMemoryException e){
+            database.closeDatabase();
             throw new CantGetInstalledWalletsException("ERROR GET INTALLEd SKINS FROM DATABASE",e, null, null);
         }
         catch (Exception exception){
+            database.closeDatabase();
             throw new CantGetInstalledWalletsException("ERROR GET INTALLEd SKINS FROM DATABASE",FermatException.wrapException(exception), null, null);
         }
 
@@ -372,11 +512,15 @@ public class WalletManagerMiddlewareDao {
                 lstInstalledLaguage.add(installedLanguage);
 
             }
+
+            database.closeDatabase();
         }
         catch (CantLoadTableToMemoryException e){
+            database.closeDatabase();
             throw new CantGetInstalledWalletsException("ERROR GET INTALLEd SKINS FROM DATABASE",e, null, null);
         }
         catch (Exception exception){
+            database.closeDatabase();
             throw new CantGetInstalledWalletsException("ERROR GET INTALLEd SKINS FROM DATABASE",FermatException.wrapException(exception), null, null);
         }
 
@@ -396,15 +540,19 @@ public class WalletManagerMiddlewareDao {
                 databaseTable.deleteRecord(record);
             }
 
+            database.closeDatabase();
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletSkinException("ERROR DELETING REQUESTED ON_REVISION OFF TABLE",FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletSkinException("ERROR DELETING WALLET SKIN OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -421,15 +569,19 @@ public class WalletManagerMiddlewareDao {
                 databaseTable.deleteRecord(record);
             }
 
+            database.closeDatabase();
         }
         catch (CantLoadTableToMemoryException e){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",e, null, null);
         }
         catch (CantDeleteRecordException e){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",e, null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",e, null, null);
         }
         catch (Exception exception){
-            throw new CantDeleteWalletLanguageException("ERROR DELETING REQUESTED PUBLISHED OFF TABLE",FermatException.wrapException(exception), null, null);
+            database.closeDatabase();
+            throw new CantDeleteWalletLanguageException("ERROR DELETING WALLET LANGUAGE OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
 }

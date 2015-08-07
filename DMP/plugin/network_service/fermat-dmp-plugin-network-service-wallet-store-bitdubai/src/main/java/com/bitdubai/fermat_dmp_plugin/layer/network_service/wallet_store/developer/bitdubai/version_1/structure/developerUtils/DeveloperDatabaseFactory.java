@@ -145,6 +145,9 @@ public class DeveloperDatabaseFactory {
         walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME);
         walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME);
         walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME);
+        //New column on 06/08/2015
+        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SCREEN_SIZE);
+
 
 
         /**
