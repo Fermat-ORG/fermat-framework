@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
@@ -23,7 +24,11 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -159,6 +164,16 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
     @Override
     public void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException {
         // TODO LOOK FOR A WAY TO TO THIS
+    }
+
+    @Override
+    public void exportWalletFactoryProjectToRepository(String name, String repository, WalletFactoryProject walletFactoryProject) throws CantCreateFileException {
+
+        //TODO Manuel
+        String xlm=XMLParser.parseObject(walletFactoryProject);
+        PluginTextFile pluginTextFile=pluginFileSystem.createTextFile(pluginId, walletFactoryProject.getPath(), walletFactoryProject.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        //Subir al repositorio
+
     }
 
     @Override

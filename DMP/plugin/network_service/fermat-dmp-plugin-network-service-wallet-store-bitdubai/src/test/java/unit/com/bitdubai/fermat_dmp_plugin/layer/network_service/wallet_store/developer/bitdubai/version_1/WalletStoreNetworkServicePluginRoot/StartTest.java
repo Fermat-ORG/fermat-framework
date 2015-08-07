@@ -17,10 +17,5 @@ import java.net.MalformedURLException;
 
 public class StartTest {
 
-    public void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException, CantOpenDatabaseException, DatabaseNotFoundException {
-
-        WalletStoreNetworkServicePluginRoot walletStoreNetworkServicePluginRoot=new WalletStoreNetworkServicePluginRoot();
-        walletStoreNetworkServicePluginRoot.TestPublishWallet();
-    }
 
 }

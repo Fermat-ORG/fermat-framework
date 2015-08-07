@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 
 import java.util.List;
 import java.util.UUID;
@@ -61,7 +62,7 @@ public interface WalletFactoryManager {
      * Exports a Wallet Factory Project to an external repository.
      * This method upload an XML file with the Wallet Factory Project information.
      */
-    void exportWalletFactoryProjectToRepository(String name, String repository) throws CantExportWalletFactoryProjectException;
+    void exportWalletFactoryProjectToRepository(String name, String repository, WalletFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException, CantCreateFileException;
 
     /**
      * This method returns all the Wallet Factory Projects that exists in the device for the current logged developer user
