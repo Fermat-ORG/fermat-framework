@@ -121,7 +121,7 @@ public class DatabaseToolsFragment extends Fragment{
                 Resource item = new Resource();
 
                 item.picture = "plugin";
-                item.resource = plugins.get(i).getKey();
+                item.resource = plugins.get(i).toString().toLowerCase().replace("_", " ");
                 item.type=Resource.TYPE_PLUGIN;
                 mlist.add(item);
                 //}

@@ -2,7 +2,6 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
 
 import android.content.Context;
 import android.os.Environment;
-
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -10,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.UUID;
 
 /**
  * The Plugin File System is the implementation of the file system that is handled to external plugins.
@@ -188,21 +185,21 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
             this.content =buffer.toByteArray();
 
         } catch (Exception e) {
-            throw new CantLoadFileException(e.getMessage());
+            throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause");
             
         } finally {
         	try {
         		if (binaryStream != null)
-        		binaryStream.close();	
+        		binaryStream.close();
         	} catch (Exception e) {
-        		e.printStackTrace();
+                throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, e, "", "Check the cause");
         	}
         	
         }
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if(!(o instanceof AndroidPlatformBinaryFile))
             return false;
 

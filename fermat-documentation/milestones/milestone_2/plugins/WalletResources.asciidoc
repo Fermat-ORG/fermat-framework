@@ -25,9 +25,12 @@ de distintos tipos de wallets, elminando la dependencia de un punto central.
 originalmente.
 
 .A nivel de Estructura de Navegación
-* Le da servicio al Wallet Manager cuando necesita la estructura de navegación de un tipo determinado de wallet durante su proceso de instalación.
-* Al igual que los recursos, mantiene la estructura de navegación de los distintos tipos de wallets instalados, garantizando de que los tendrá localmente mientras ese tipo de wallet tenga al menos una instancia instalada.
-* Mantiene la estructura de navegación de wallets no instaladas para servirlas a otros peers corriendo el mismo network service, habilitando de esta manera la decentralización de este tipo de información.
+* Le da servicio al Wallet Manager cuando necesita la estructura de navegación de un tipo determinado
+de wallet durante su proceso de instalación.
+* Al igual que los recursos, mantiene la estructura de navegación de los distintos tipos de wallets
+instalados, garantizando de que los tendrá localmente mientras ese tipo de wallet tenga al menos una instancia instalada.
+* Mantiene la estructura de navegación de wallets no instaladas para servirlas a otros
+peers corriendo el mismo network service, habilitando de esta manera la decentralización de este tipo de información.
 * Sabe como localizar la Estructura de Navegación del repositorio centralizado desde donde nace ese tipo de wallet.
 
 
@@ -49,8 +52,8 @@ a través de rutas (paths) o valores puntuales que puedan cambiar. Por ejemplo. 
 un mensaje en un botón no querríamos escribir directamente el string que va a mostrarse en el código del
 botón dado que esto haría que al cambiar de idioma debamos retocar el código. Lo que buscamos es que la
 aplicación pida el texto que va en el botón cuando se está corriendo y se saque este texto del wallet
-resoutces. Así, el botón dirá que tiene referencia a al texto llamado "botón1Text" y el archivo de strings
-será quién indique a qué string corresponde la clabe "botón1Text". +
+resources. Así, el botón dirá que tiene referencia al texto llamado "botón1Text" y el archivo de strings
+será quién indique a qué string corresponde la clave "botón1Text". +
 Esta misma idea la usaremos con los demás recursos.
 
 Nos preguntamos entonces cómo representar esta información que relaciona las claves con los valores que

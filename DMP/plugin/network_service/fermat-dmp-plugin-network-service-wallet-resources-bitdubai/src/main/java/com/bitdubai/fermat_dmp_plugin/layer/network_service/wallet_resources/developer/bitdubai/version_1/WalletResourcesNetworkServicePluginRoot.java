@@ -12,14 +12,15 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.WalletInstalationProgress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -33,11 +34,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.CantDeleteRepositoryException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkServicesWalletResourcesDAO;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.NetworkserviceswalletresourcesDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkServicesWalletResourcesDAO;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.RepositoryNotFoundException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -49,6 +50,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.event_handlers.BegunWalletInstallationEventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletUninstalledEvent;
 
 import java.io.BufferedInputStream;
@@ -142,6 +144,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/";
 
 
+    /**
+     *  Wallet instalation progress
+     */
+    private WalletInstalationProgress walletInstalationProgress;;
+
     //para testear
     private Map<String, byte[]> imagenes;
 
@@ -172,6 +179,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
             networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
             networkServicesWalletResourcesDAO.initializeDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
+
 
 
             this.serviceStatus = ServiceStatus.STARTED;
@@ -245,10 +253,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * WalletResourcesInstalationManager Implementation
      */
 
-
     //el xml de las skin debe estar pegado a una estructura de navegacion
     @Override
-    public void installResources(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) {
+    public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
         String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
 
@@ -256,9 +263,16 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
         Skin skin = null;
+
+        /**
+         * add progress
+         */
+        addProgress(WalletInstalationProgress.INSTALATION_START);
+
         try {
 
-            skin = checkSkinResources(linkToResources);
+            skin = checkAndInstallSkinResources(linkToResources);
+
 
 
             Repository repository = new Repository(skinName, navigationStructureVersion, linkToRepo);
@@ -269,7 +283,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             repositoriesName.put(skin.getId(), repository);
 
 
-            NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
+            /*NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
 
             try {
 
@@ -278,6 +292,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             } catch (CantCreateRepositoryException e) {
                 e.printStackTrace();
             }
+            */
 
 
             /**
@@ -287,6 +302,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             String linkToNavigationStructure = linkToRepo + "/versions/" + skin.getNavigationStructureCompatibility() + "/";
             donwloadNavigationStructure(linkToNavigationStructure, skin.getId());
 
+
             /**
              *  download resources
              */
@@ -294,17 +310,49 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             downloadResources(linkToResources, skin, screenDensity);
 
 
-        } catch (CantCheckResourcesException e) {
-            e.printStackTrace();
-        } catch (CantPersistFileException e) {
-            e.printStackTrace();
+        } catch (CantCheckResourcesException cantCheckResourcesException) {
+            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
+        } catch (CantPersistFileException cantPersistFileException) {
+            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantPersistFileException,"Error persisting file","");
         }
 
         //installSkinResource("null");
     }
 
+    /**
+     * @param walletCategory
+     * @param walletType
+     * @param developer
+     * @param screenSize
+     * @param screenDensity
+     * @param skinName
+     * @param languageName
+     * @param navigationStructureVersion
+     * @throws WalletResourcesInstalationException
+     */
     @Override
-    public void unninstallResources(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String screenDensity,String navigationStructureVersion,boolean isLastWallet) {
+    public void installSkinForWallet(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
+
+    }
+
+    /**
+     * @param walletCategory
+     * @param walletType
+     * @param developer
+     * @param screenSize
+     * @param screenDensity
+     * @param skinName
+     * @param languageName
+     * @param navigationStructureVersion
+     * @throws WalletResourcesInstalationException
+     */
+    @Override
+    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
+
+    }
+
+    @Override
+    public void unninstallCompleteWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, boolean isLastWallet) {
 
         if(isLastWallet){
 
@@ -322,6 +370,43 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         eventManager.raiseEvent(platformEvent);
 
     }
+
+    /**
+     * @param walletCategory
+     * @param walletType
+     * @param developer
+     * @param skinName
+     * @param skinId
+     * @param screenSize
+     * @param screenDensity
+     * @param navigationStructureVersion
+     * @param isLastWallet
+     */
+    @Override
+    public void unninstallSkinForWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, boolean isLastWallet) {
+
+    }
+
+    /**
+     * @param walletCategory
+     * @param walletType
+     * @param developer
+     * @param skinName
+     * @param skinId
+     * @param screenSize
+     * @param screenDensity
+     * @param navigationStructureVersion
+     * @param isLastWallet
+     */
+    @Override
+    public void unninstallLanguageForWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, boolean isLastWallet) {
+
+    }
+
+    @Override
+    public WalletInstalationProgress getWalletInstalationProgress(){
+        return  walletInstalationProgress;
+    }
     private void UnninstallWallet(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String screenDensity,String navigationStructureVersion,boolean isLastWallet){
         String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
@@ -333,7 +418,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         try {
 
 
-            skin = checkSkinResources(linkToResources);
+            skin = checkAndInstallSkinResources(linkToResources);
 
 
             /**
@@ -573,11 +658,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             }
 
             //TODO: lanzar eventos
-            /*
+
             PlatformEvent walletNavigationStructureDownloadedEvent = new WalletNavigationStructureDownloadedEvent(navigationStructureXML,link,"portrait_navigation_structure.xml",skinId);
             walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
             eventManager.raiseEvent(walletNavigationStructureDownloadedEvent);
-            */
+
             /**
              *  Download landscape navigation structure
              */
@@ -704,7 +789,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
 
-    private Skin checkSkinResources(String linkToSkin) throws CantCheckResourcesException, CantPersistFileException {
+    private Skin checkAndInstallSkinResources(String linkToSkin) throws CantCheckResourcesException, CantPersistFileException {
         String repoManifest = "";
         String skinFilename = "/skin.xml";
         try {
@@ -1052,6 +1137,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             }
         }
 
+    }
+
+    private void addProgress(WalletInstalationProgress walletInstalationProgress){
+        this.walletInstalationProgress=walletInstalationProgress;
     }
 
 

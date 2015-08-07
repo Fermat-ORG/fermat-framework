@@ -11,5 +11,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces;
  * @since Java JDK 1.7
  */
 public interface DealsWithWalletManager {
-    void setWalletManagerManager(WalletManagerManager walletManagerManager);
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager);
+
+
 }

@@ -37,6 +37,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersWalletResourcesInstalledEvent = new ArrayList<>();
     private List<EventListener> listenersWalletOpenedEvent = new ArrayList<>();
     private List<EventListener> listenersWalletClosedEvent = new ArrayList<>();
+    //test
+    private List<EventListener> listenersWalletNavigationStructureDownloaded = new ArrayList<>();
     private List<EventListener> listenersNavigationStructureUpdatedEvent = new ArrayList<>();
     private List<EventListener> listenersFinishedWalletInstallationEvent = new ArrayList<>();
     private List<EventListener> listenersIntraUserContactCreatedEvent = new ArrayList<>();
@@ -64,6 +66,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersIncomingMoneyRequestRejectedEvent = new ArrayList<>();
     private List<EventListener> listenersOutgoingMoneyRequestApprovedEvent = new ArrayList<>();
     private List<EventListener> listenersOutgoingMoneyRequestRejectedEvent = new ArrayList<>();
+
 
     private List<EventListener> listenersTransactopnWaitingTransferenceEvent = new ArrayList<>();
     private List<EventListener> listenersTransactopnWaitingTransferenceExtraUserEvent = new ArrayList<>();
@@ -862,7 +865,9 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case WALLET_UNINSTALLED:
                 listeners = listenersWalletUninstalledEvent;
                 break;
-
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                listeners = listenersWalletNavigationStructureDownloaded;
+                break;
             case BEGUN_WALLET_INSTALLATION:
                 listeners = listenersBegunWalletInstallationEvent;
                 break;

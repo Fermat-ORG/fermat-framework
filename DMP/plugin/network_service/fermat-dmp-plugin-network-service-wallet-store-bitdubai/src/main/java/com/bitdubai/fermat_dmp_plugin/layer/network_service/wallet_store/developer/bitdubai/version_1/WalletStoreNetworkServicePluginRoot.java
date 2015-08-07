@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
@@ -60,6 +61,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.DealsWithPlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -86,12 +91,21 @@ import java.util.UUID;
  * * * * * 
  */
 
-public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,WalletStoreManager, Service, NetworkService, LogManagerForDevelopers,Plugin {
+public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, DealsWithPlatformInfo, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,WalletStoreManager, Service, NetworkService, LogManagerForDevelopers,Plugin {
     /**
      * WalletStoreNetworkServicePluginRoot member variables
      */
     Database database;
     WalletStoreNetworkServiceMonitoringAgent agent;
+
+    /**
+     * DealsWithPlaformInfo interface variables and implementation
+     */
+    PlatformInfoManager platformInfoManager;
+    @Override
+    public void setPlatformInfoManager(PlatformInfoManager platformInfoManager) {
+        this.platformInfoManager = platformInfoManager;
+    }
 
     /**
      * Service Interface member variables.
@@ -296,6 +310,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         EventListener eventListener;
         EventHandler eventHandler;
 
+
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -482,6 +497,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skin.setId(UUID.randomUUID());
         skin.setName("Mi skin");
         skin.setIsDefault(true);
+        //New set. Sets the ScreenSize
+        skin.setScreenSize(ScreenSize.MEDIUM);
 
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;

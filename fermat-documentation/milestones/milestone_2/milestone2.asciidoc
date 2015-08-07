@@ -216,30 +216,46 @@ instalación. El componente encargado de almacenar los recursos y estrcutura de 
 es el Network Service Wallet Resources, el cuál administra los recursos de las wallets instaladas y
 publicadas. +
 
-NOTE: Podrían ponerse restricciones a lo que se puede publicar, pero como el desarrollador tendrá acceso a modificar todo el código que desee en su nodo no veo mucho sentido a estas acciones.
+NOTE: Podrían ponerse restricciones a lo que se puede publicar, pero como el desarrollador tendrá
+acceso a modificar todo el código que desee en su nodo no veo mucho sentido a estas acciones.
 
-Tras almacenar esta información, el Wallet Publisher pasa a informarle al Network Service DMP Wallet Store que registre que posee la wallet a publicar (adicionalmente debemos resolver qué metainformación de la wallet agregaremos). +
-En principio este network service registra que él posee nuestra wallet en su catálogo e informa a otros dispositivos (determinados bajo algún criterio a definir) la información de la wallet. 
+Tras almacenar esta información, el Wallet Publisher pasa a informarle al Network Service DMP Wallet Store
+que registre que posee la wallet a publicar (adicionalmente debemos resolver qué metainformación de la wallet agregaremos). +
+En principio este network service registra que él posee nuestra wallet en su catálogo e informa a
+otros dispositivos (determinados bajo algún criterio a definir) la información de la wallet.
 
 NOTE: esto debe refinarse.
 
-Para monitorear la cantidad de instalaciones utiliza el Network Service DMP Wallet Comunity, quien basicamente lleva el tracking de los Usuarios por Niche Wallet como una DAPP. 
+Para monitorear la cantidad de instalaciones utiliza el Network Service DMP Wallet Comunity,
+quien basicamente lleva el tracking de los Usuarios por Niche Wallet como una DAPP.
 
 === Wallet Store
 
-La Wallet Store es dentro del sistema fermat una DAPP (Distributed Application). Es decir que es una aplicación formada por un número indeterminado de nodos que colaboran entre si para manejar la funcionalidad de la DAPP a nivel del sistema completo. +
-Su función es mostrarle al usuario wallets que pueden serle de interés y si el usuario decide instalar una wallet comunica la acción al Wallet Manager. +
-La Wallet Store debe manejar además de la identidad de la Wallet y del Developer que la publica. Además debe almacenar el Hash de la información correspondiente a la estructura de navegación y por otro lado el hash correspondiente a los recursos que esa wallet utiliza. +
+La Wallet Store es dentro del sistema fermat una DAPP (Distributed Application).
+Es decir que es una aplicación formada por un número indeterminado de nodos que colaboran entre si
+para manejar la funcionalidad de la DAPP a nivel del sistema completo. +
+Su función es mostrarle al usuario wallets que pueden serle de interés y si el usuario decide
+instalar una wallet comunica la acción al Wallet Manager. +
+La Wallet Store debe manejar además de la identidad de la Wallet y del Developer que la publica.
+Además debe almacenar el Hash de la información correspondiente a la estructura de navegación y
+por otro lado el hash correspondiente a los recursos que esa wallet utiliza. +
 
 NOTE: Quizás no sea necesario lo de almacenamiento de arriba
 
-Luego el Wallet Manager en el dispositivo del usuario que finalmente instala la nueva wallet, se encargará de validar que la estructura de navegación obtenida de algún peer, tenga el mismo hash. Lo mismo con los recursos.
+Luego el Wallet Manager en el dispositivo del usuario que finalmente instala la nueva wallet,
+se encargará de validar que la estructura de navegación obtenida de algún peer, tenga el mismo hash.
+Lo mismo con los recursos.
 
 ==== Catálogo Distribuído
 
-Cada nodo de la Wallet Store mantiene una parte del catálogo distribuído de wallets disponibles. En principio querríamos que estos nodos muestren información relevante al usuario. La información que da este network service debe poder contrastarse con la versión de la plataforma que tenemos instalada  (plug-ins instalados) para poder comunicarle al usuario qué cosas puede instalar sin actualizar la plataforma y qué cosas podría instalar de hacer un upgrade.
+Cada nodo de la Wallet Store mantiene una parte del catálogo distribuído de wallets disponibles.
+En principio querríamos que estos nodos muestren información relevante al usuario.
+La información que da este network service debe poder contrastarse con la versión de la plataforma
+que tenemos instalada  (plug-ins instalados) para poder comunicarle al usuario qué cosas
+puede instalar sin actualizar la plataforma y qué cosas podría instalar de hacer un upgrade.
 
-Criterios para determinar relevancia de una wallet para un usuario: localización del usuario, rango de acción, tipo de compras, etc. 
+Criterios para determinar relevancia de una wallet para un usuario: localización del usuario,
+rango de acción, tipo de compras, etc.
 
 *Problemas a tratar*
 
@@ -251,9 +267,15 @@ Para pensar (escrito por Luis):
 
 === Wallet Manager
 
-La instalación final la produce el Wallet Manager en el dispositivo del usuario que descarga la wallet. Este módulo es responsable de unir todas las partes para que la nueva wallet esté disponible para ser usada. +
+La instalación final la produce el Wallet Manager en el dispositivo del usuario que descarga la wallet.
+Este módulo es responsable de unir todas las partes para que la nueva wallet esté disponible para ser usada. +
 
-Los fragmentos ya están instalados em el dispositivo, de manera que lo que falta es la WFP de la wallet. Para esto el Wallet Manager los obtiene a través del Network Service Wallet Resources. Del WFP se extrae la estructura de navegación, el Wallet Manager le inyecta la estructura al Wallet Runtime para que esté disponible a la hora que el usuario navegue la nueva wallet dentro de la aplicación. El proceso de instalación consiste en algunos pasos más que discutiremos en detalle en la documentación del Wallet Manager junto con el resto de su funcionalidad. + 
+Los fragmentos ya están instalados em el dispositivo, de manera que lo que falta es la WFP de la wallet.
+Para esto el Wallet Manager los obtiene a través del Network Service Wallet Resources.
+Del WFP se extrae la estructura de navegación, el Wallet Manager le inyecta la estructura al
+Wallet Runtime para que esté disponible a la hora que el usuario navegue la nueva wallet dentro
+de la aplicación. El proceso de instalación consiste en algunos pasos más que discutiremos en
+detalle en la documentación del Wallet Manager junto con el resto de su funcionalidad. +
 
 == Lista de Plug-ins y subApps a Crear/Editar
 
