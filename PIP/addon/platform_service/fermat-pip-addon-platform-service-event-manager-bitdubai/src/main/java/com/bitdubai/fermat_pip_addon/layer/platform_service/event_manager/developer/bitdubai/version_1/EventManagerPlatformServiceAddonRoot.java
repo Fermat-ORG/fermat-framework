@@ -307,7 +307,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case NAVIGATION_STRUCTURE_UPDATED:
                 return new NavigationStructureUpdatedEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-            
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                return new WalletNavigationStructureDownloadedEvent();
             case FINISHED_WALLET_INSTALLATION:
                 return new FinishedWalletInstallationEvent(EventType.FINISHED_WALLET_INSTALLATION);
             
@@ -465,7 +466,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case WALLET_UNINSTALLED:
                 listenersWalletUninstalledEvent.add(listener);
                 break;
-            
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                listenersWalletNavigationStructureDownloaded.add(listener);
             case BEGUN_WALLET_INSTALLATION:
                 listenersBegunWalletInstallationEvent.add(listener);
                 break;
@@ -665,7 +667,11 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case WALLET_RESOURCES_INSTALLED:
                 listeners = listenersWalletResourcesInstalledEvent;
                 break;
-            
+
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                listeners = listenersWalletNavigationStructureDownloaded;
+                break;
+
             case NAVIGATION_STRUCTURE_UPDATED:
                 listeners = listenersNavigationStructureUpdatedEvent;
                 break;
