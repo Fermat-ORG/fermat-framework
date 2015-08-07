@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatWizards;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,7 +36,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     StatusBar statusBar;
 
-    Map<FermatWizards, Wizard<Fragment>> wizards;
+    Map<WizardTypes, Wizard> wizards;
 
     public Activity() {
     }
@@ -55,12 +55,6 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void addFragment(FermatFragments fermatFragments, Fragment fragment) {
         fragments.put(fermatFragments, fragment);
-    }
-
-    public void addWizard(FermatWizards wizardType, Wizard<Fragment> wizard) {
-        if (wizards == null)
-            wizards = new HashMap<>();
-        wizards.put(wizardType, wizard);
     }
 
     public void setTitleBar(TitleBar titleBar) {
@@ -145,10 +139,25 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         return null;
     }
 
-    public Map<FermatWizards, Wizard<Fragment>> getWizards() {
-        return wizards;
+    /**
+     * Add runtime Wizard to this Activity
+     *
+     * @param wizardType WizardType enumerable
+     * @param wizard     runtime wizard object to attach to this activity
+     */
+    public void addWizard(WizardTypes wizardType, Wizard wizard) {
+        if (wizards == null)
+            wizards = new HashMap<>();
+        wizards.put(wizardType, wizard);
     }
 
-
+    /***
+     * Get Wizards attached to this Activity
+     *
+     * @return HasMap Wizards
+     */
+    public Map<WizardTypes, Wizard> getWizards() {
+        return wizards;
+    }
 }
 

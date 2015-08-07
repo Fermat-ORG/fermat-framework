@@ -1,27 +1,18 @@
 package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
 
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatWizards;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
-import java.util.List;
 import java.util.UUID;
 
 
@@ -57,7 +48,7 @@ public class ProjectsFragment extends FermatFragment {
         rootView.findViewById(R.id.text_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startWizard(FermatWizards.CWP_WALLET_FACTORY_WIZARD_CREATE_FROM_SCRATCH);
+                startWizard(WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT);
             }
         });
         return rootView;

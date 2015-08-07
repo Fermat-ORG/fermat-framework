@@ -2,7 +2,6 @@ package com.bitdubai.android_core.app.common.version_1.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -12,13 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 
-import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.WizardPageAdapter;
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.CreateWalletFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.SetupNavigationFragment;
 
@@ -42,7 +39,7 @@ public class WizardFragment extends DialogFragment {
     /**
      * DATA
      */
-    private Wizard<Fragment> wizard;
+    private Wizard wizard;
     private List<android.support.v4.app.Fragment> fragments = new ArrayList<>();
     private int position = -1;
     /**
@@ -56,7 +53,7 @@ public class WizardFragment extends DialogFragment {
      *
      * @param wizard
      */
-    public void setWizard(Wizard<Fragment> wizard) {
+    public void setWizard(Wizard wizard) {
         this.wizard = wizard;
     }
 
@@ -115,12 +112,12 @@ public class WizardFragment extends DialogFragment {
 
     private void setupFragments() {
         if (wizard != null) {
-            for (Fragment page : wizard.getPages()) {
+            for (WizardPage page : wizard.getPages()) {
                 switch (page.getType()) {
-                    case CWP_WALLET_FACTORY_WIZARD_CREATE_STEP_1:
+                    case CWP_WALLET_FACTORY_CREATE_STEP_1:
                         fragments.add(new CreateWalletFragment());
                         break;
-                    case CWP_WALLET_FACTORY_WIZARD_CREATE_STEP_2:
+                    case CWP_WALLET_FACTORY_CREATE_STEP_2:
                         fragments.add(new SetupNavigationFragment());
                         break;
                     default:
