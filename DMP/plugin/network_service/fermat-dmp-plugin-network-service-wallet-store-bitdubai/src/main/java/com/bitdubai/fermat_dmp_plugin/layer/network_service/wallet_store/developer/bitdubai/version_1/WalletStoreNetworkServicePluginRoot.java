@@ -497,6 +497,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skin.setId(UUID.randomUUID());
         skin.setName("Mi skin");
         skin.setIsDefault(true);
+        //New set. Sets the ScreenSize
+        skin.setScreenSize(ScreenSize.MEDIUM);
 
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;

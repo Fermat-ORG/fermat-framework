@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallLanguageException;
@@ -41,6 +42,13 @@ public interface WalletManagerManager {
      */
     public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException;
 
+    /**
+     *This method let the device user create a default wallet .
+     *
+     * @param deviceUserPublicKey
+     * @throws CantCreateDefaultWalletsException
+     */
+    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException;
     /**
      * This method returns the list of installed wallets in the device
      *
