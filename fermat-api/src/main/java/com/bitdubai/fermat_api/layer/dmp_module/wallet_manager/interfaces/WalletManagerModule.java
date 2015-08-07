@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
+
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletRemovalFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletRenameFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;

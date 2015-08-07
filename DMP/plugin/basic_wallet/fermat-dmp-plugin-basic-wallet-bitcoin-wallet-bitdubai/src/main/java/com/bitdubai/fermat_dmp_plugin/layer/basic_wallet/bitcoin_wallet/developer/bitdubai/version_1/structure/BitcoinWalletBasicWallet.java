@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 
@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
 /**
@@ -73,6 +73,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
      * DealsWithPluginIdentityInterface member variables.
      */
     private UUID pluginId;
+
 
     /**
      * Constructor.
@@ -142,9 +143,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     }
 
     @Override
-    public UUID getWalletId() {
-        return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
-    }
+    public String getWalletPublicKey() {return "Complete";}
 
     @Override
     public List<BitcoinWalletTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {

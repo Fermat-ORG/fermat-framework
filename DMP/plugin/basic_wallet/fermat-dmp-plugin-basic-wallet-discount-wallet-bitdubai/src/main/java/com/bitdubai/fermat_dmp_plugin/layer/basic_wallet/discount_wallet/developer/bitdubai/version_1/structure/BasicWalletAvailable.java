@@ -93,7 +93,7 @@ class BasicWalletAvailable implements DealsWithCryptoIndex, DealsWithErrors {
         // we also need the actual index
         try {
 
-            currentIndex = this.cryptoIndexManager.getMarketPrice(this.fiatCurrency, this.cryptoCurrency);
+            currentIndex = this.cryptoIndexManager.getMarketPrice(this.fiatCurrency, this.cryptoCurrency,System.currentTimeMillis());
 
         } catch (CryptoCurrencyNotSupportedException e) {
             /*
