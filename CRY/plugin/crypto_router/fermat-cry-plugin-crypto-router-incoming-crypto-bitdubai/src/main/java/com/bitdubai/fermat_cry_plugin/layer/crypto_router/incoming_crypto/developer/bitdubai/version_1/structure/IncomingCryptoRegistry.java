@@ -256,7 +256,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
 
     // Used by the Monitor Agent
-
     // Las coloca en (A,TBN)
     public void acknowledgeTransactions(List<Transaction<CryptoTransaction>> transactionList) { // throws CantAcknowledgeTransactionException
         try {
@@ -268,9 +267,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 // the sender and the sender sent it again.
                 registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
-
-                    registryTable.loadToMemory();
-
+                registryTable.loadToMemory();
 
                 List<DatabaseTableRecord> records = registryTable.getRecords();
                 if (records.isEmpty()) {
@@ -282,7 +279,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                         registryTable.insertRecord(transactionRecord);
                     } catch (CantInsertRecordException cantInsertRecord) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInsertRecord);
-                        // TODO: MANAGE EXCEPTION.
                     }
                 }
 
@@ -292,7 +288,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             }
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            //TODO: MANAGE EXCEPTION
         }catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
