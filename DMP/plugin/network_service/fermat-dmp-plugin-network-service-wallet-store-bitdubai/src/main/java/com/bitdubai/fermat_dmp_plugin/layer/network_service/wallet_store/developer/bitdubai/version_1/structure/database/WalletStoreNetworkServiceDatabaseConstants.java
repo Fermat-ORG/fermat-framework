@@ -25,6 +25,10 @@ public class WalletStoreNetworkServiceDatabaseConstants {
     public static final String WALLETSKIN_SIZE_COLUMN_NAME = "size";
     public static final String WALLETSKIN_DESIGNERID_COLUMN_NAME = "designerId";
     public static final String WALLETSKIN_ISDEFAULT_COLUMN_NAME = "isDefault";
+    /**
+     * New field on WalletSkin table Screen Size information
+     */
+    public static final String WALLETSKIN_SCREEN_SIZE="screenSize";
 
     static final String WALLETSKIN_FIRST_KEY_COLUMN = "id";
 
@@ -97,7 +101,6 @@ public class WalletStoreNetworkServiceDatabaseConstants {
     public static final String DEVELOPER_PUBLICKEY_COLUMN_NAME = "publicKey";
 
     static final String DEVELOPER_FIRST_KEY_COLUMN = "id";
-
 
 
 }
