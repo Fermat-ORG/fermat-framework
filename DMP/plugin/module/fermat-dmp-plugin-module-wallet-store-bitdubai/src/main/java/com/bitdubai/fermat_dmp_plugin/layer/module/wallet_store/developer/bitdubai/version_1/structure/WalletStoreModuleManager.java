@@ -3,8 +3,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdu
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationProcess;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetItemInformationException;
@@ -58,7 +63,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/29/15.
  */
-public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService{
+public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogger, DealsWithWalletManager, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService{
 
     /**
      * DealsWithErrors interface member variables
@@ -75,6 +80,16 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
      * DealsWithWalletStoreMiddleware interface member variable
      */
     WalletStoreManager walletStoreManagerMiddleware;
+
+    /**
+     * DealsWithWalletManager interface variable and implementation
+     */
+    WalletManagerManager walletManagerManager;
+
+    @Override
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
+        this.walletManagerManager = walletManagerManager;
+    }
 
     /**
      * DealsWithWalletStoreNetworkService interface member variable
@@ -439,6 +454,12 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
     public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
+            CatalogItem catalogItem = walletStoreManagerNetworkService.getCatalogItem(walletCatalogueId);
+            DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
+            WalletInstallationProcess walletInstallationProcess;
+            walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
+            //todo completar walletInstallationProcess.startInstallation(WalletType.NICHE,catalogItem.getName(), catalogItem.get);
+
         } catch (Exception exception) {
             throw new CantStartInstallationException(CantStartInstallationException.DEFAULT_MESSAGE, exception, null, null);
         }

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -8,17 +8,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.Network services wallet resourcesNetworkServicesDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.Network services wallet resourcesNetworkServicesDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Matias Furszyfer - (matiasfurszyfer@gmail.com) on 03/08/15.
  *
  * @version 1.0
@@ -72,18 +70,18 @@ public class NetworkserviceswalletresourcesDatabaseFactory implements DealsWithP
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
-           /**
-            * Create Repositories table.
-            */
-           table = databaseFactory.newTableFactory(ownerId, NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME);
+            /**
+             * Create Repositories table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME);
 
             table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-             table.addIndex(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_FIRST_KEY_COLUMN);
+            table.addIndex(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -91,7 +89,7 @@ public class NetworkserviceswalletresourcesDatabaseFactory implements DealsWithP
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
-} catch (InvalidOwnerIdException invalidOwnerId) {
+        } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.

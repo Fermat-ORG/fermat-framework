@@ -224,15 +224,15 @@ public class WalletManagerMiddlewareDao {
         return installedWallet;
     }
 
-    //TODO: Falta el device public key
-    public void persistWallet (String walletPublicKey,String walletPrivateKey,WalletCategory walletCategory,String walletName, String walletIconName, String walletIdentifier,  UUID walletCatalogueId, Version walletVersion, String developerName) throws CantPersistWalletException {
+
+    public void persistWallet (String walletPublicKey,String walletPrivateKey,String deviceUserPublicKey,WalletCategory walletCategory,String walletName, String walletIconName, String walletIdentifier,  UUID walletCatalogueId, Version walletVersion, String developerName) throws CantPersistWalletException {
         try{
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME,walletPublicKey);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PRIVATE_KEY_COLUMN_NAME, walletPrivateKey);
-            record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, "");
+            record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUserPublicKey);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString());
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME, walletCategory.getCode());
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME, walletName);
@@ -413,6 +413,7 @@ public class WalletManagerMiddlewareDao {
             throw new CantDeleteWalletSkinException("ERROR DELETING WALLET OFF TABLE",FermatException.wrapException(exception), null, null);
         }
     }
+
 
 
     public void changeWalletName (UUID walletIdInTheDevice, String newName) throws CantUpdateWalletNameException {
