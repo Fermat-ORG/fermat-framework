@@ -94,7 +94,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
             /**
              * Send wallet info to Wallet Resource
              */
-            walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developer, screenSize, screenDensity, skinName, language.value(), navigationStructureVersion);
+            walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developer, screenSize, skinName, language.value(), navigationStructureVersion);
 
             /**
              * Persist wallet infoto database

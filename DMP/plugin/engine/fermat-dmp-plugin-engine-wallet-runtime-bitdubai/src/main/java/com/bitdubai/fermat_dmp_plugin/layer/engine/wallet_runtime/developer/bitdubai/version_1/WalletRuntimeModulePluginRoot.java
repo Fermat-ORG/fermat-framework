@@ -26,7 +26,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRe
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -1139,33 +1139,33 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        try {
-            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "BitDubai", "medium", "mdpi", "default", "en", "1.0.0");
-        } catch (WalletResourcesInstalationException e) {
-            e.printStackTrace();
-        }
-
-
-//        try{
-//            /**
-//             * Esto es hasta que tengamos las cosas andando y conectadas
-//             */
-//            String publicKey="reference_wallet";
-//            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
-//            if(walletNavigationStructure==null){
-//                setNavigationStructureXml(startWalletNavigationStructure());
-//                walletNavigationStructure= getNavigationStructure(publicKey);
-//            }
-//            //listWallets.put(publicKey, walletNavigationStructure);
-//            walletNavigationStructureOpen=walletNavigationStructure;
-//        }catch(Exception e){
-//            String message = CantFactoryReset.DEFAULT_MESSAGE;
-//            FermatException cause = FermatException.wrapException(e);
-//            String context = "Error on method Factory Reset, setting the structure of the apps";
-//            String possibleReason = "some null definition";
-//            throw new CantFactoryReset(message, cause, context, possibleReason);
-//
+//        try {
+//            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "BitDubai", "medium", "default", "en", "1.0.0");
+//        } catch (WalletResourcesInstalationException e) {
+//            e.printStackTrace();
 //        }
+
+
+        try{
+            /**
+             * Esto es hasta que tengamos las cosas andando y conectadas
+             */
+            String publicKey="reference_wallet";
+            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+            if(walletNavigationStructure==null){
+                setNavigationStructureXml(startWalletNavigationStructure());
+                walletNavigationStructure= getNavigationStructure(publicKey);
+            }
+            //listWallets.put(publicKey, walletNavigationStructure);
+            walletNavigationStructureOpen=walletNavigationStructure;
+        }catch(Exception e){
+            String message = CantFactoryReset.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Error on method Factory Reset, setting the structure of the apps";
+            String possibleReason = "some null definition";
+            throw new CantFactoryReset(message, cause, context, possibleReason);
+
+        }
     }
 
     private void removeNavigationStructureXml(String publicKey){

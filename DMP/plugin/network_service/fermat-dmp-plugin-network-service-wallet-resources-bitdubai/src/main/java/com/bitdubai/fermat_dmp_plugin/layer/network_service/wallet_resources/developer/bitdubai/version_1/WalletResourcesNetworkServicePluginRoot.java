@@ -17,12 +17,13 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -258,7 +259,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     //el xml de las skin debe estar pegado a una estructura de navegacion
     @Override
-    public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
+    public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
         String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
 
@@ -312,7 +313,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, screenDensity, localStoragePath);
+            downloadResourcesFromRepo(linkToResources, skin, localStoragePath);
 
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
@@ -329,14 +330,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @param walletType
      * @param developer
      * @param screenSize
-     * @param screenDensity
      * @param skinName
-     * @param languageName
      * @param navigationStructureVersion
      * @throws WalletResourcesInstalationException
      */
     @Override
-    public void installSkinForWallet(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
+    public void installSkinForWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String navigationStructureVersion) throws WalletResourcesInstalationException {
 
     }
 
@@ -345,23 +344,22 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @param walletType
      * @param developer
      * @param screenSize
-     * @param screenDensity
      * @param skinName
      * @param languageName
-     * @param navigationStructureVersion
      * @throws WalletResourcesInstalationException
      */
     @Override
-    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
+    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName) throws WalletResourcesInstalationException {
 
     }
 
+
     @Override
-    public void unninstallCompleteWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, boolean isLastWallet) {
+    public void unninstallCompleteWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet) {
 
         if(isLastWallet){
 
-            UnninstallWallet( walletCategory, walletType, developer, skinName, skinId,  screenSize, screenDensity, navigationStructureVersion, isLastWallet);
+            UnninstallWallet( walletCategory, walletType, developer, skinName, skinId,  screenSize, navigationStructureVersion, isLastWallet);
 
         }
 
@@ -380,15 +378,14 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @param walletCategory
      * @param walletType
      * @param developer
-     * @param skinName
+     * @param walletName
      * @param skinId
      * @param screenSize
-     * @param screenDensity
      * @param navigationStructureVersion
      * @param isLastWallet
      */
     @Override
-    public void unninstallSkinForWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, boolean isLastWallet) {
+    public void unninstallSkinForWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet) throws WalletResourcesUnninstallException {
 
     }
 
@@ -396,23 +393,20 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @param walletCategory
      * @param walletType
      * @param developer
-     * @param skinName
-     * @param skinId
-     * @param screenSize
-     * @param screenDensity
-     * @param navigationStructureVersion
+     * @param walletName
      * @param isLastWallet
      */
     @Override
-    public void unninstallLanguageForWallet(String walletCategory, String walletType, String developer, String skinName, UUID skinId, String screenSize, String screenDensity, String navigationStructureVersion, boolean isLastWallet) {
+    public void unninstallLanguageForWallet(String walletCategory, String walletType, String developer, String walletName, boolean isLastWallet) throws WalletResourcesUnninstallException {
 
     }
+
 
     @Override
     public WalletInstalationProgress getWalletInstalationProgress(){
         return  walletInstalationProgress;
     }
-    private void UnninstallWallet(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String screenDensity,String navigationStructureVersion,boolean isLastWallet){
+    private void UnninstallWallet(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String navigationStructureVersion,boolean isLastWallet){
         String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
 
@@ -459,30 +453,27 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  delete navigation structure landscape
              */
             navigationStructureName="navigation_structure_landscape.xml";
-            deleteXML(navigationStructureName,skinId,linkToNavigationStructure);
+            deleteXML(navigationStructureName, skinId, linkToNavigationStructure);
 
             /**
              *  delete resources
              */
+
             /**
              * delete portrait resources
              */
-            String linkToPortraitResources = linkToResources + "portrait/resources/" + screenDensity + "/drawables/";
+            String linkToPortraitResources = linkToResources + "portrait/resources/";
             deleteResources(linkToPortraitResources, skin.getLstResources(), skin.getId());
 
             /**
 
             /**
-             * delete portrait layouts
+             * delete layouts
              */
-            String linkToPortraitLayouts = linkToResources + "portrait/resources/" + screenDensity + "/layouts/";
+            String linkToPortraitLayouts = linkToResources + "/layouts";
             deleteLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId());
 
-            /**
-             * delete landscape layouts
-             */
-            String linkToLandscapeLayouts = linkToResources + "landscape/resources/" + screenDensity + "/layouts/";
-            deleteLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId());
+
 
 
         } catch (CantCheckResourcesException e) {
@@ -494,24 +485,24 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
 
-    private void downloadResourcesFromRepo(String linkToResources, Skin skin, String screenDensity, String localStoragePath) {
+    private void downloadResourcesFromRepo(String linkToResources, Skin skin, String localStoragePath) {
 
         /**
          * download portrait resources
          */
-        String linkToPortraitResources = linkToResources + "portrait/resources/" + screenDensity + "/drawables/";
+        String linkToPortraitResources = linkToResources + "/resources/" + "/drawables/";
         downloadResourcesFromRepo(linkToPortraitResources, skin.getLstResources(), skin.getId(),localStoragePath);
 
         /**
          * download portrait layouts
          */
-        String linkToPortraitLayouts = linkToResources + "portrait/resources/" + screenDensity + "/layouts/";
+        String linkToPortraitLayouts = linkToResources + "portrait/resources/" + "/layouts/";
         downloadLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId(),localStoragePath);
 
         /**
          * download landscape layouts
          */
-        String linkToLandscapeLayouts = linkToResources + "landscape/resources/" + screenDensity + "/layouts/";
+        String linkToLandscapeLayouts = linkToResources + "landscape/resources/" + "/layouts/";
         downloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId(),localStoragePath);
 
 
@@ -525,7 +516,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
-    //TODO: preguntar a jorge si se guarda los sonidos y los videos como byte array
 
     private void downloadResourcesFromRepo(String link, Map<String, Resource> resourceMap, UUID skinId,String localStoragePath) {
         try {
@@ -540,7 +530,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                         //testing purpose
                         imagenes.put(entry.getValue().getName(), image);
                         try {
-                            //TODO: despues guardarlo en memoria
                             recordImageResource(image, entry.getKey(), skinId, localStoragePath);
 
                         } catch (CantCheckResourcesException e) {
@@ -652,7 +641,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 e.printStackTrace();
             }
 
-            //TODO: lanzar eventos
 
             PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
             WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent=  (WalletNavigationStructureDownloadedEvent) platformEvent;
@@ -663,28 +651,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             walletNavigationStructureDownloadedEvent.setLinkToRepo(localStoragePath);
             eventManager.raiseEvent(platformEvent);
 
-
-            /**
-             *  Download landscape navigation structure
-             */
-            navigationStructureName="navigation_structure_landscape.xml";
-            navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
-            try {
-
-                recordXML(navigationStructureXML,navigationStructureName,skinId,link);
-
-            } catch (CantCheckResourcesException e) {
-                e.printStackTrace();
-            } catch (CantPersistFileException e) {
-                e.printStackTrace();
-            }
-
-            //TODO: lanzar eventos
-            /*
-            walletNavigationStructureDownloadedEvent = new WalletNavigationStructureDownloadedEvent(navigationStructureXML,link,"landscape_navigation_structure.xml",skinId);
-            walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
-            eventManager.raiseEvent(walletNavigationStructureDownloadedEvent);
-            */
 
 
         } catch (MalformedURLException e) {
@@ -885,7 +851,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         // Testing purpose
         return imagenes.get(imageName);
 
-        //TODO: despues tengo que ir a buscar a la bd
+        //TODO: despues tengo que ir a buscar al archivo, esto está así por tema de testeo, abajo está el codigo que lo hace
         /*
         Repository repository= repositoriesName.get(skinId);
 
