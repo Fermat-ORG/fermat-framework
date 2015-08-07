@@ -3,12 +3,9 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatWizards;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity;
-import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 
 /**
  * Created by Matias Furszyfer on 2015.07.21..
@@ -35,7 +32,7 @@ public class FermatFragment extends Fragment {
         }
     }
 
-    protected void startWizard(FermatWizards key) {
+    protected void startWizard(WizardTypes key) {
         if (context != null && isAttached) {
             context.showWizard(key);
         }

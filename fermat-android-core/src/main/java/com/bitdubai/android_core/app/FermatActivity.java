@@ -50,7 +50,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatWizards;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
@@ -62,6 +62,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragm
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -72,6 +73,7 @@ import java.util.Vector;
 
 public class FermatActivity extends FragmentActivity implements WizardConfiguration {
 
+    private static final String TAG = "fermat-core";
 
     /**
      * Navigation menu
@@ -84,9 +86,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     private TabsPagerAdapter adapter;
     private ScreenPagerAdapter screenPagerAdapter;
     /**
-     * Wizards
+     * WizardTypes
      */
-    private Map<FermatWizards, Wizard<Fragment>> wizards;
+    private Map<WizardTypes, Wizard> wizards;
     private WizardFragment wizardFragment;
 
     /**
@@ -222,9 +224,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
              */
             paintTitleBar(titleBar, activity);
             /**
-             * Wizard
+             * Setting up Wizards...
              */
-            setWizards(activity.getWizards());
+            if (tabs != null && tabs.getWizards() != null)
+                setWizards(tabs.getWizards());
+
+            if (activity.getWizards() != null)
+                setWizards(activity.getWizards());
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -705,8 +711,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      *
      * @param wizards
      */
-    public void setWizards(Map<FermatWizards, Wizard<Fragment>> wizards) {
-        this.wizards = wizards;
+    public void setWizards(Map<WizardTypes, Wizard> wizards) {
+        if (wizards != null && wizards.size() > 0) {
+            if (this.wizards == null)
+                this.wizards = new HashMap<>();
+            this.wizards.putAll(wizards);
+        }
     }
 
     /**
@@ -715,16 +725,18 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * @param key Name of FermatWizard Enum
      */
     @Override
-    public void showWizard(FermatWizards key) {
+    public void showWizard(WizardTypes key) {
         if (wizards == null)
             throw new NullPointerException("the wizard is null");
-        Wizard<Fragment> wizard = wizards.get(key);
+        Wizard wizard = wizards.get(key);
         if (wizard != null) {
             dismissWizard();
             wizardFragment = new WizardFragment();
             wizardFragment.setWizard(wizard);
             wizardFragment.setCancelable(true);
             wizardFragment.show(getSupportFragmentManager(), WizardFragment.class.getName());
+        } else {
+            Log.e(TAG, "Wizard not found...");
         }
     }
 
@@ -739,4 +751,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        wizards = null;
+    }
 }

@@ -10,12 +10,12 @@ import java.util.ArrayList;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class Wizard<T extends Fragment> implements FermatWizard<T> {
+public class Wizard implements FermatWizard {
 
-    protected ArrayList<T> pages;
+    protected ArrayList<WizardPage> pages;
 
     @Override
-    public void addPage(T page) {
+    public void addPage(WizardPage page) {
         if (page == null)
             throw new NullPointerException("page cannot be null");
         if (pages == null)
@@ -24,12 +24,12 @@ public class Wizard<T extends Fragment> implements FermatWizard<T> {
     }
 
     @Override
-    public ArrayList<T> getPages() {
-        return pages == null ? new ArrayList<T>() : pages;
+    public ArrayList<WizardPage> getPages() {
+        return pages == null ? new ArrayList<WizardPage>() : pages;
     }
 
     @Override
-    public T getPageAt(int index) {
+    public WizardPage getPageAt(int index) {
         return pages.get(index);
     }
 }
