@@ -336,24 +336,6 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
     }
 
-    /**
-     * This method let the device user create a default wallet .
-     *
-     */
-    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException
-    {
-        /**
-         * I'll first set default values
-         */
-
-        /**
-         * Call the wallet resource to install new wallet
-         */
-
-        /**
-         * I create a new clone wallet on database
-         */
-    }
 
     /**
      * This method returns the list of installed wallets in the device

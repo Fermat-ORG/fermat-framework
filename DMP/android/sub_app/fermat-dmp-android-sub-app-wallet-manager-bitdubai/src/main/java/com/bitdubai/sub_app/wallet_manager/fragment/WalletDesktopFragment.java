@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
@@ -55,39 +56,52 @@ public class WalletDesktopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-        setHasOptionsMenu(true);
-
-        if(walletManager!=null) lstInstalledWallet=walletManager.getUserWallets();
-
-
         GridView gridView = new GridView(getActivity());
+            try
+            {
+                tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+                setHasOptionsMenu(true);
 
-        Configuration config = getResources().getConfiguration();
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridView.setNumColumns(6);
-        } else {
-            gridView.setNumColumns(4);
-        }
-
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
-        _adpatrer.notifyDataSetChanged();
-        gridView.setAdapter(_adpatrer);
+                if(walletManager!=null) lstInstalledWallet=walletManager.getUserWallets();
 
 
-     /*    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Intent intent;
-                intent = new Intent(getActivity(), WalletActivity.class);
-                startActivity(intent);
 
-                return ;
+
+                Configuration config = getResources().getConfiguration();
+                if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    gridView.setNumColumns(6);
+                } else {
+                    gridView.setNumColumns(4);
+                }
+
+                AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
+                _adpatrer.notifyDataSetChanged();
+                gridView.setAdapter(_adpatrer);
+
+
+                 /*    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        public void onItemClick(AdapterView<?> parent, View v,
+                                                int position, long id) {
+                            Intent intent;
+                            intent = new Intent(getActivity(), WalletActivity.class);
+                            startActivity(intent);
+
+                            return ;
+                        }
+                    });*/
+
+
             }
-        });*/
+            catch (CantGetUserWalletException e)
+            {
 
+            }
+            catch (Exception e)
+            {
 
+            }
         return gridView;
+
     }
 
 
