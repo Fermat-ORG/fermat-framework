@@ -80,13 +80,18 @@ public class IdentityDesignerDatabaseFactory implements DealsWithErrors, DealsWi
             /**
              * First the Extra User table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(IdentityDesignerDatabaseConstants.DESIGNER_TABLE_NAME);
+            //DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+            table = databaseFactory.newTableFactory(IdentityDesignerDatabaseConstants.DESIGNER_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(IdentityDesignerDatabaseConstants.DESIGNER_TABLE_NAME);
             table.addColumn(IdentityDesignerDatabaseConstants.DESIGNER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, true);
             table.addColumn(IdentityDesignerDatabaseConstants.DESIGNER_DEVELOPER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
             table.addColumn(IdentityDesignerDatabaseConstants.DESIGNER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
             table.addIndex(IdentityDesignerDatabaseConstants.DESIGNER_FIRST_KEY_COLUMN);
 
-            ((DatabaseFactory) database).createTable(table);
+            databaseFactory.createTable(table);
+//            ((DatabaseFactory) database).createTable(table);
 
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 

@@ -58,12 +58,16 @@ public class BlockchainInfoDatabaseFactory implements DealsWithPluginDatabaseSys
          */
         try {
 
-            DatabaseTableFactory table;
+            //DatabaseTableFactory table;
 
             /**
              * First the incoming crypto table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_NAME);
+            DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_NAME);
+
             table.addColumn(BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
             table.addColumn(BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
             table.addColumn(BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_CRYPTO_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
@@ -73,7 +77,8 @@ public class BlockchainInfoDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_PREVIOUS_CONFIRMATIONS_COLUMN_NAME, DatabaseDataType.INTEGER, 0,false);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                //((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
@@ -84,13 +89,15 @@ public class BlockchainInfoDatabaseFactory implements DealsWithPluginDatabaseSys
             /**
              * Then the OUTGOING_CRYPTO table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, BlockchainInfoDatabaseConstants.OUTGOING_CRYPTO_TABLE_NAME);
+           // table = ((DatabaseFactory) database).newTableFactory(ownerId, BlockchainInfoDatabaseConstants.OUTGOING_CRYPTO_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, BlockchainInfoDatabaseConstants.OUTGOING_CRYPTO_TABLE_NAME);
             table.addColumn(BlockchainInfoDatabaseConstants.OUTGOING_CRYPTO_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
             table.addColumn(BlockchainInfoDatabaseConstants.OUTGOING_CRYPTO_TABLE_TRX_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
             table.addColumn(BlockchainInfoDatabaseConstants.OUTGOING_CRYPTO_TABLE_WALLET_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                //((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
@@ -101,7 +108,8 @@ public class BlockchainInfoDatabaseFactory implements DealsWithPluginDatabaseSys
             /**
              * Then the Crypto Address table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, BlockchainInfoDatabaseConstants.CRYPTO_ADDRESSES_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, BlockchainInfoDatabaseConstants.CRYPTO_ADDRESSES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, BlockchainInfoDatabaseConstants.CRYPTO_ADDRESSES_TABLE_NAME);
             table.addColumn(BlockchainInfoDatabaseConstants.CRYPTO_ADDRESSES_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
             table.addColumn(BlockchainInfoDatabaseConstants.CRYPTO_ADDRESSES_TABLE_WALLET_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
             table.addColumn(BlockchainInfoDatabaseConstants.CRYPTO_ADDRESSES_TABLE_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
@@ -109,7 +117,8 @@ public class BlockchainInfoDatabaseFactory implements DealsWithPluginDatabaseSys
 
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                //((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
