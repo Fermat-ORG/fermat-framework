@@ -81,6 +81,9 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
         } catch(WalletAddressBookNotFoundException exception){
             //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
             throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
+        }catch(Exception exception){
+            //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
+            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
         }
 
     }
