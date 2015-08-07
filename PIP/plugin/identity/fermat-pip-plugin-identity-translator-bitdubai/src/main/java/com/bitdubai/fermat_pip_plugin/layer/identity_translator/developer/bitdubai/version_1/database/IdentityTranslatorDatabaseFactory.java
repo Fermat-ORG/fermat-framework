@@ -80,13 +80,17 @@ public class IdentityTranslatorDatabaseFactory implements DealsWithErrors, Deals
             /**
              * First the Extra User table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(IdentityTranslatorDatabaseConstants.TRANSLATOR_TABLE_NAME);
+            //DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+            table = databaseFactory.newTableFactory(IdentityTranslatorDatabaseConstants.TRANSLATOR_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(IdentityTranslatorDatabaseConstants.TRANSLATOR_TABLE_NAME);
             table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, true);
             table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVELOPER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
             table.addColumn(IdentityTranslatorDatabaseConstants.TRANSLATOR_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
             table.addIndex(IdentityTranslatorDatabaseConstants.TRANSLATOR_FIRST_KEY_COLUMN);
 
-            ((DatabaseFactory) database).createTable(table);
+            databaseFactory.createTable(table);
+//            ((DatabaseFactory) database).createTable(table);
 
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 

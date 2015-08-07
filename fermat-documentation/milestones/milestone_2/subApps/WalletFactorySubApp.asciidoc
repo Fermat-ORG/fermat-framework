@@ -28,7 +28,7 @@ botón o al entrar a un fragmento, etc.).
 
 Para correr la wallet, esta subApp deberá hacer algo similar a lo que actualmente hace la clase
 FragmentActivity, pero en vez de pedir la estructura de navegación al Wallet Runtime se la pediría
-al plugin Wallwt Factory de la capa Module. Los recursos deberán dejar de estar hardcodeados como
+al plugin Wallet Factory de la capa Module. Los recursos deberán dejar de estar hardcodeados como
 están hoy en las mencionadas clases y deberán buscarse los recursos también desde las referencias
 de la estrcutura de navegación. Dada la referencia, la clase que implemente el entorno de ejecución
 deberá pedirle también al Wallet Factory los recursos que necesita cargar.
@@ -57,7 +57,7 @@ serialización de las clases de la estructura de navegación junto con los recur
 
 == Notas sobre Wallet Factory Project
 
-* Un WFT tiene como información asociada:
+* Un WFP tiene como información asociada:
 ** Una reference wallet
 ** Un nombre dado por el desarrollador
 ** Un enum que identifica la nueva niche wallet

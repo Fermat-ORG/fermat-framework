@@ -23,12 +23,17 @@ public class WalletManagerMiddlewareDatabaseConstants {
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_PRIVATE_KEY_COLUMN_NAME = "wallet_private_key";
     public static final String WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
+    public static final String WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME = "device_user_public_key";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME = "wallet_catalog_id";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME = "wallet_category";
+    public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME = "wallet_type";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME = "wallet_name";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME = "wallet_platform_identifier";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME = "wallet_icon_name";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_VERSION_COLUMN_NAME = "wallet_version";
+    public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME = "wallet_screenSize";
+    public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_DENSITY_COLUMN_NAME = "wallet_screenDensity";
+    public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME = "wallet_navigation_structure_version";
 
     public static final String WALLET_MANAGER_WALLETS_TABLE_FIRST_KEY_COLUMN = "wallet_public_key";
 

@@ -33,8 +33,12 @@ public class ErrorManagerDatabaseFactory implements DealsWithPlatformDatabaseSys
         /*
         *  The ErrorManagerRegistry related table
         */
-        DatabaseTableFactory table = null;
-        table = ((DatabaseFactory) database).newTableFactory(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME);
+        //DatabaseTableFactory table = null;
+        DatabaseTableFactory table;
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+        table = databaseFactory.newTableFactory(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME);
+//        table = ((DatabaseFactory) database).newTableFactory(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME);
         /*
         * Registry fields
         */
@@ -47,7 +51,8 @@ public class ErrorManagerDatabaseFactory implements DealsWithPlatformDatabaseSys
         table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
 
         try {
-            ((DatabaseFactory) database).createTable(table);
+            databaseFactory.createTable(table);
+//            ((DatabaseFactory) database).createTable(table);
         } catch (CantCreateTableException cantCreateTableException) {
             System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
             cantCreateTableException.printStackTrace();
