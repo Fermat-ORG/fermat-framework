@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.06.17..
+ * Created by eze on 2015.08.06..
  */
-public class CantRegisterCreditException extends FermatException {
+public class CantConnectToInformacionSource extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantRegisterCreditException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantRegisterCreditException(String message, Exception cause, String context, String possibleReason) {
+    public CantConnectToInformacionSource(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

@@ -74,12 +74,16 @@ public class IntraUserNetworkServiceDatabaseFactory {
          */
         try {
 
-            DatabaseTableFactory table;
+            //DatabaseTableFactory table;
 
             /**
              * Configure the Incoming messages table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
+            DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+            table = databaseFactory.newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
 
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          DatabaseDataType.STRING,       100, Boolean.FALSE);
@@ -93,7 +97,8 @@ public class IntraUserNetworkServiceDatabaseFactory {
             try {
 
                 //Create the incoming messages table.
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException();
@@ -102,7 +107,8 @@ public class IntraUserNetworkServiceDatabaseFactory {
             /**
              * Configure the Outgoing messages table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
 
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          DatabaseDataType.STRING,       100, Boolean.FALSE);
@@ -116,7 +122,8 @@ public class IntraUserNetworkServiceDatabaseFactory {
             try {
 
                 //Create the outgoing messages table.
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException();
@@ -125,7 +132,8 @@ public class IntraUserNetworkServiceDatabaseFactory {
             /**
              * Configure the Known Network Intra Users Cache table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.KNOWN_NETWORK_INTRA_USER_CACHE_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.KNOWN_NETWORK_INTRA_USER_CACHE_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.KNOWN_NETWORK_INTRA_USER_CACHE_TABLE_NAME);
 
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.KNOWN_NETWORK_INTRA_USER_CACHE_TABLE_ID_COLUMN_NAME,              DatabaseDataType.STRING,       100, Boolean.TRUE);
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.KNOWN_NETWORK_INTRA_USER_CACHE_TABLE_USER_NAME_COLUMN_NAME,       DatabaseDataType.STRING,       100, Boolean.FALSE);
@@ -138,7 +146,8 @@ public class IntraUserNetworkServiceDatabaseFactory {
             try {
 
                 //Create the Known Network Intra Users Cache table
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException();

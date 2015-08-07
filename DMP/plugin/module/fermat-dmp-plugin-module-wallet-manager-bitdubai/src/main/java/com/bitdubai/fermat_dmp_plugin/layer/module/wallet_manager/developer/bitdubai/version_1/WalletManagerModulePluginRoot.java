@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCreateWalletException;
+
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -171,7 +174,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
 
                     }
 
-                } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException cantCreateWalletException) {
+                } catch (CantCreateWalletException cantCreateWalletException) {
                     throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 
                 }
@@ -298,8 +301,8 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
         try
         {
 
-            walletMiddlewareManager.getInstalledWallets();
-            for (InstalledWallet wallet : lstInstalledWallet){
+            List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> installetMiddlewareWallets = walletMiddlewareManager.getInstalledWallets();
+            for (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet : installetMiddlewareWallets){
 
                 InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),
                         wallet.getSkinsId(),
@@ -314,8 +317,8 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
                 lstInstalledWallet.add(installedWallet);
             }
 
-         /*   TEST
-         InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+         //   TEST
+      /*   InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
                     "reference_wallet_icon",

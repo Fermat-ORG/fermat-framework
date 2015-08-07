@@ -31,8 +31,12 @@ class LocationServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
          * Next, I will add the needed tables.
          */
         try {
+            //DatabaseTableFactory table;
             DatabaseTableFactory table;
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME);
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+            table = databaseFactory.newTableFactory(ownerId, LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME);
             table.addColumn(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_ID_COLUMN, DatabaseDataType.INTEGER, 11, true);
             table.addColumn(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_PROVIDER_COLUMN, DatabaseDataType.STRING, 7, false);
             table.addColumn(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_TIME_COLUMN, DatabaseDataType.LONG_INTEGER, 13, false);
@@ -40,7 +44,9 @@ class LocationServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
             table.addColumn(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_LONGITUDE_COLUMN, DatabaseDataType.REAL, 20, false);
             table.addColumn(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_ALTITUDE_COLUMN, DatabaseDataType.REAL, 10, false);
             table.addColumn(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_ACCURACY_COLUMN, DatabaseDataType.REAL, 10, false);
-            ((DatabaseFactory) database).createTable(ownerId, table);
+
+            databaseFactory.createTable(ownerId, table);
+//            ((DatabaseFactory) database).createTable(ownerId, table);
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.Instal
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class WalletDesktopFragment extends Fragment {
 
     private List<InstalledWallet> lstInstalledWallet;
 
-    public static WalletDesktopFragment newInstance(int position,WalletManager walletManager) {
+    public static WalletDesktopFragment newInstance(int position, WalletManager walletManager) {
         WalletDesktopFragment f = new WalletDesktopFragment();
         f.setWalletManager(walletManager);
         Bundle b = new Bundle();
@@ -56,54 +57,44 @@ public class WalletDesktopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+        setHasOptionsMenu(true);
+
+        if (walletManager != null)
+            try {
+                lstInstalledWallet = walletManager.getUserWallets();
+            } catch (CantGetUserWalletException e) {
+                e.printStackTrace();
+            }
+
+
         GridView gridView = new GridView(getActivity());
-            try
-            {
-                tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-                setHasOptionsMenu(true);
 
-                if(walletManager!=null) lstInstalledWallet=walletManager.getUserWallets();
+        Configuration config = getResources().getConfiguration();
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gridView.setNumColumns(6);
+        } else {
+            gridView.setNumColumns(4);
+        }
 
-
-
-
-                Configuration config = getResources().getConfiguration();
-                if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    gridView.setNumColumns(6);
-                } else {
-                    gridView.setNumColumns(4);
-                }
-
-                AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
-                _adpatrer.notifyDataSetChanged();
-                gridView.setAdapter(_adpatrer);
+        AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
+        adapter.notifyDataSetChanged();
+        gridView.setAdapter(adapter);
 
 
-                 /*    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView<?> parent, View v,
-                                                int position, long id) {
-                            Intent intent;
-                            intent = new Intent(getActivity(), WalletActivity.class);
-                            startActivity(intent);
-
-                            return ;
-                        }
-                    });*/
-
-
+     /*    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Intent intent;
+                intent = new Intent(getActivity(), WalletActivity.class);
+                startActivity(intent);
+                return ;
             }
-            catch (CantGetUserWalletException e)
-            {
+        });*/
 
-            }
-            catch (Exception e)
-            {
 
-            }
         return gridView;
-
     }
-
 
 
     @Override
@@ -115,7 +106,7 @@ public class WalletDesktopFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         //if(id == R.id.action_search){
         //    Toast.makeText(getActivity(), "holaa", Toast.LENGTH_LONG);
@@ -125,15 +116,13 @@ public class WalletDesktopFragment extends Fragment {
     }
 
     /**
-     *  Set Wallet manager plugin
+     * Set Wallet manager plugin
      *
      * @param walletManager
      */
     public void setWalletManager(WalletManager walletManager) {
         this.walletManager = walletManager;
     }
-
-
 
 
     public class AppListAdapter extends ArrayAdapter<InstalledWallet> {
@@ -155,7 +144,6 @@ public class WalletDesktopFragment extends Fragment {
                 holder = new ViewHolder();
 
 
-
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
 
@@ -169,11 +157,10 @@ public class WalletDesktopFragment extends Fragment {
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
 
-            LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);
+            LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.wallet_3);
 
             //Hardcodeado hasta que esté el wallet resources
-            switch (installedWallet.getWalletIcon())
-            {
+            switch (installedWallet.getWalletIcon()) {
 
                 case "reference_wallet_icon":
                     holder.imageView.setImageResource(R.drawable.fermat);
@@ -185,7 +172,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                             ((FermatScreenSwapper) getActivity()).selectWallet(CWP_WALLET_BASIC_ALL_MAIN, installedWallet);
+                            ((FermatScreenSwapper) getActivity()).selectWallet(CWP_WALLET_BASIC_ALL_MAIN, installedWallet);
 
                         }
                     });
@@ -215,7 +202,6 @@ public class WalletDesktopFragment extends Fragment {
         private class ViewHolder {
 
 
-
             public ImageView imageView;
             public TextView companyTextView;
 
@@ -225,7 +211,4 @@ public class WalletDesktopFragment extends Fragment {
     }
 
 
-
-
 }
-

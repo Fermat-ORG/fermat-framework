@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
@@ -95,7 +95,7 @@ public class GetTransactionsTest extends TestCase {
     @Test(expected=CantGetTransactionsException.class)
     public void testGetTransactions_CantGetTransactionsException() throws Exception {
         doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
-        doThrow(new com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException("gasdil", null, null, null))
+        doThrow(new com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException("gasdil", null, null, null))
         .when(bitcoinWalletWallet).getTransactions(anyInt(), anyInt());
 
         nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletId);
