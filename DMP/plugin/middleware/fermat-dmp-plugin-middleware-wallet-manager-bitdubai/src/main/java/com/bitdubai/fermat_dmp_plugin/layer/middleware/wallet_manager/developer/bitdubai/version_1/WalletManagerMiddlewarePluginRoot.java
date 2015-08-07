@@ -34,8 +34,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.In
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -422,7 +422,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Call Wallet Resource to install Language
              */
-            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloper(),installedWallet.getWalletScreenSize(), installedWallet.getWalletScreenDensity(), null,language.value(),installedWallet.getWalletNavigationStructureVersion());
+            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloper(),installedWallet.getWalletScreenSize(), installedWallet.getWalletScreenDensity(), null);
 
 
             /**
@@ -470,7 +470,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Call Wallet Resource to install Skin
              */
-            walletResources.installSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloper(),installedWallet.getWalletScreenSize(), installedWallet.getWalletScreenDensity(), alias,null,installedWallet.getWalletNavigationStructureVersion());
+            walletResources.installSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloper(),installedWallet.getWalletScreenSize(), alias,null);
 
 
             /**
@@ -615,7 +615,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              * Conected with Wallet Resource to unistalld resources
              */
             //TODO: Falta que reciba el Public key de la wallet y la lista de skins y language instalados
-            walletResources.unninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloper(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletScreenDensity(), installedWallet.getWalletNavigationStructureVersion(),true);
+            walletResources.unninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloper(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(),true);
 
             /**
              * Delete wallet for DataBase
