@@ -834,6 +834,14 @@ public class Platform  {
             injectPluginReferencesAndStart(walletStoreModule, Plugins.BITDUBAI_WALLET_STORE_MODULE);
 
 
+              /*
+             * Plugin Wallet Navigation Structure Middleware
+             * ----------------------------------
+             */
+            Plugin walletNavigationStructureMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletNavigationStructurePlugin();
+            injectPluginReferencesAndStart(walletNavigationStructureMiddleware, Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE);
+
+
             /*
              * Plugin Bitcoin Crypto Vault
              * ----------------------------------
