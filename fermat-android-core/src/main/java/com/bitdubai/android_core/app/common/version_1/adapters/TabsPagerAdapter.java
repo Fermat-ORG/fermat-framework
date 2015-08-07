@@ -216,14 +216,10 @@ import java.util.List;
                     case CWP_SUB_APP_DEVELOPER:
                         currentFragment = SubAppDesktopFragment.newInstance(position);
                         break;
-
-                    case CWP_WALLET_FACTORY_MAIN:
-                        currentFragment = MainFragment.newInstance(position,subAppSession);
-                        break;
                     case CWP_WALLET_FACTORY_MANAGER:
                         currentFragment = ManagerFragment.newInstance(position,subAppSession);
                         break;
-                    case CWP_WALLET_FACTORY_ESTRUCTURE:
+                    case CWP_WALLET_FACTORY_PROJECTS:
                         currentFragment = ProjectsFragment.newInstance(position,subAppSession);
                         break;
                     case CWP_WALLET_PUBLISHER_MAIN:

@@ -144,6 +144,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/";
 
 
+    private final String localStoragePath="wallet-resources/";
+
+
     /**
      *  Wallet instalation progress
      */
@@ -262,6 +265,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String linkToResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
 
 
+        String localStoragePath=this.localStoragePath+walletCategory + "/" + walletType + "/" + developer + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+
         Skin skin = null;
 
         /**
@@ -271,11 +276,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         try {
 
-            skin = checkAndInstallSkinResources(linkToResources);
+            skin = checkAndInstallSkinResources(linkToResources,localStoragePath);
 
 
 
-            Repository repository = new Repository(skinName, navigationStructureVersion, linkToRepo);
+            Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
 
             /**
              *  Save repository in memory for use
@@ -299,15 +304,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download navigation structure
              */
 
-            String linkToNavigationStructure = linkToRepo + "/versions/" + skin.getNavigationStructureCompatibility() + "/";
-            donwloadNavigationStructure(linkToNavigationStructure, skin.getId());
+            String linkToNavigationStructure = linkToRepo + "versions/" + skin.getNavigationStructureCompatibility() + "/";
+            donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath);
 
 
             /**
              *  download resources
              */
 
-            downloadResources(linkToResources, skin, screenDensity);
+            downloadResourcesFromRepo(linkToResources, skin, screenDensity, localStoragePath);
 
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
@@ -418,7 +423,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         try {
 
 
-            skin = checkAndInstallSkinResources(linkToResources);
+            skin = checkAndInstallSkinResources(linkToResources,localStoragePath);
 
 
             /**
@@ -463,13 +468,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              * delete portrait resources
              */
             String linkToPortraitResources = linkToResources + "portrait/resources/" + screenDensity + "/drawables/";
-            deleteResources(linkToPortraitResources, skin.getLstPortraitResources(), skin.getId());
+            deleteResources(linkToPortraitResources, skin.getLstResources(), skin.getId());
 
             /**
-             * delete landscape resources
-             */
-            String linkToLandscapeResources = linkToResources + "landscape/resources/" + screenDensity + "/drawables/";
-            deleteResources(linkToLandscapeResources, skin.getLstLandscapeResources(), skin.getId());
 
             /**
              * delete portrait layouts
@@ -493,31 +494,25 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
 
-    private void downloadResources(String linkToResources, Skin skin, String screenDensity) {
+    private void downloadResourcesFromRepo(String linkToResources, Skin skin, String screenDensity, String localStoragePath) {
 
         /**
          * download portrait resources
          */
         String linkToPortraitResources = linkToResources + "portrait/resources/" + screenDensity + "/drawables/";
-        downloadResources(linkToPortraitResources, skin.getLstPortraitResources(), skin.getId());
-
-        /**
-         * download landscape resources
-         */
-        String linkToLandscapeResources = linkToResources + "landscape/resources/" + screenDensity + "/drawables/";
-        downloadResources(linkToLandscapeResources, skin.getLstLandscapeResources(), skin.getId());
+        downloadResourcesFromRepo(linkToPortraitResources, skin.getLstResources(), skin.getId(),localStoragePath);
 
         /**
          * download portrait layouts
          */
         String linkToPortraitLayouts = linkToResources + "portrait/resources/" + screenDensity + "/layouts/";
-        downloadLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId());
+        downloadLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId(),localStoragePath);
 
         /**
          * download landscape layouts
          */
         String linkToLandscapeLayouts = linkToResources + "landscape/resources/" + screenDensity + "/layouts/";
-        downloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId());
+        downloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId(),localStoragePath);
 
 
         //TODO: raise a event
@@ -532,7 +527,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     //TODO: preguntar a jorge si se guarda los sonidos y los videos como byte array
 
-    private void downloadResources(String link, Map<String, Resource> resourceMap, UUID skinId) {
+    private void downloadResourcesFromRepo(String link, Map<String, Resource> resourceMap, UUID skinId,String localStoragePath) {
         try {
             for (Map.Entry<String, Resource> entry : resourceMap.entrySet()) {
 
@@ -546,7 +541,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                         imagenes.put(entry.getValue().getName(), image);
                         try {
                             //TODO: despues guardarlo en memoria
-                            recordImageResource(image, entry.getKey(), skinId, link);
+                            recordImageResource(image, entry.getKey(), skinId, localStoragePath);
 
                         } catch (CantCheckResourcesException e) {
                             e.printStackTrace();
@@ -595,7 +590,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
     }
 
-    private void downloadLayouts(String link, Map<String, Layout> resourceMap, UUID skinId) {
+    private void downloadLayouts(String link, Map<String, Layout> resourceMap, UUID skinId,String localStoragePath) {
         try {
             for (Map.Entry<String, Layout> entry : resourceMap.entrySet()) {
 
@@ -603,7 +598,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
                 try {
 
-                    recordXML(layoutXML, entry.getKey(), skinId, link);
+                    recordXML(layoutXML, entry.getKey(), skinId, localStoragePath);
 
                 } catch (CantCheckResourcesException e) {
                     e.printStackTrace();
@@ -638,7 +633,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    private void donwloadNavigationStructure(String link, UUID skinId) {
+    private void donwloadNavigationStructure(String link, UUID skinId,String localStoragePath) {
         try {
 
 
@@ -649,7 +644,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
             try {
 
-                recordXML(navigationStructureXML,navigationStructureName,skinId,link);
+                recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath);
 
             } catch (CantCheckResourcesException e) {
                 e.printStackTrace();
@@ -659,9 +654,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             //TODO: lanzar eventos
 
-            PlatformEvent walletNavigationStructureDownloadedEvent = new WalletNavigationStructureDownloadedEvent(navigationStructureXML,link,"portrait_navigation_structure.xml",skinId);
+            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent=  (WalletNavigationStructureDownloadedEvent) platformEvent;
             walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
-            eventManager.raiseEvent(walletNavigationStructureDownloadedEvent);
+            walletNavigationStructureDownloadedEvent.setFilename("portrait_navigation_structure.xml");
+            walletNavigationStructureDownloadedEvent.setSkinId(skinId);
+            walletNavigationStructureDownloadedEvent.setXmlText(navigationStructureXML);
+            walletNavigationStructureDownloadedEvent.setLinkToRepo(localStoragePath);
+            eventManager.raiseEvent(platformEvent);
+
 
             /**
              *  Download landscape navigation structure
@@ -789,7 +790,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
 
-    private Skin checkAndInstallSkinResources(String linkToSkin) throws CantCheckResourcesException, CantPersistFileException {
+    private Skin checkAndInstallSkinResources(String linkToSkin,String localStoragePath) throws CantCheckResourcesException, CantPersistFileException {
         String repoManifest = "";
         String skinFilename = "/skin.xml";
         try {
@@ -803,7 +804,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              *  Skin record
              */
-            recordXML(repoManifest, skin.getName(), skin.getId(), linkToSkin);
+            recordXML(repoManifest, skin.getName(), skin.getId(), localStoragePath);
 
             return skin;
 

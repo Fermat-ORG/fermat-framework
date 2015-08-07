@@ -7,13 +7,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragmen
  * Created by rodrigo on 2015.07.20..
  */
 public enum Fragments implements FermatFragments {
-    CWP_SHELL_LOGIN ("CSL"),
-    CWP_WALLET_MANAGER_MAIN ("CWMM"),
-    CWP_SUB_APP_DEVELOPER ("CSAD"),
-    CWP_WALLET_MANAGER_SHOP ("CWMS"),
-    CWP_SHOP_MANAGER_MAIN ("CSMM"),
-    CWP_SHOP_MANAGER_FREE("CSMF") ,
-    CWP_SHOP_MANAGER_PAID ("CSMP"),
+    CWP_SHELL_LOGIN("CSL"),
+    CWP_WALLET_MANAGER_MAIN("CWMM"),
+    CWP_SUB_APP_DEVELOPER("CSAD"),
+    CWP_WALLET_MANAGER_SHOP("CWMS"),
+    CWP_SHOP_MANAGER_MAIN("CSMM"),
+    CWP_SHOP_MANAGER_FREE("CSMF"),
+    CWP_SHOP_MANAGER_PAID("CSMP"),
     CWP_SHOP_MANAGER_ACCEPTED_NEARBY("CSMAN"),
 
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND("CWRWBTCABS"),
@@ -69,7 +69,7 @@ public enum Fragments implements FermatFragments {
     CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS("CSADLL2T"),
     CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS("CSADLL3T"),
 
-    CWP_WALLET_STORE_MAIN ("CWSM"),
+    CWP_WALLET_STORE_MAIN("CWSM"),
 
     CWP_WALLET_PUBLISHER_MAIN("CWPM"),
 
@@ -77,10 +77,11 @@ public enum Fragments implements FermatFragments {
     /**
      * WAllet factory
      */
-    CWP_WALLET_FACTORY_MAIN ("CWFM"),
-    CWP_WALLET_FACTORY_MANAGER ("CWFMG"),
-    CWP_WALLET_FACTORY_ESTRUCTURE ("CWFE");
+    CWP_WALLET_FACTORY_MANAGER("CWFM"),
+    CWP_WALLET_FACTORY_PROJECTS("CWFP"),
 
+    CWP_WALLET_FACTORY_WIZARD_CREATE_STEP_1("CWFWCS1"),
+    CWP_WALLET_FACTORY_WIZARD_CREATE_STEP_2("CWFWCS2");
 
 
     private String code;
@@ -89,11 +90,12 @@ public enum Fragments implements FermatFragments {
         this.code = code;
     }
 
-    public String getKey()   { return this.code; }
+    public String getKey() {
+        return this.code;
+    }
 
 
-
-    public String toString(){
+    public String toString() {
         return code;
     }
 
@@ -103,7 +105,7 @@ public enum Fragments implements FermatFragments {
                 return fragments;
             }
         }*/
-        switch (code){
+        switch (code) {
 
             case "CSL":
                 return Fragments.CWP_SHELL_LOGIN;
@@ -222,14 +224,12 @@ public enum Fragments implements FermatFragments {
             case "CWPM":
                 return Fragments.CWP_WALLET_PUBLISHER_MAIN;
             case "CWFM":
-                return Fragments.CWP_WALLET_FACTORY_MAIN;
-            case "CWFMG":
                 return Fragments.CWP_WALLET_FACTORY_MANAGER;
-            case "CWFE":
-                return Fragments.CWP_WALLET_FACTORY_ESTRUCTURE;
-            
+            case "CWFP":
+                return Fragments.CWP_WALLET_FACTORY_PROJECTS;
+
         }
-        
+
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
         return null;

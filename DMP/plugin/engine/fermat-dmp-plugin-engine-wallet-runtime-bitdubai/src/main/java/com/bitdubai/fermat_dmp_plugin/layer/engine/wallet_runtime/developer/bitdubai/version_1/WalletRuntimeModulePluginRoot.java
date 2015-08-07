@@ -164,12 +164,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             eventManager.addListener(eventListener);
             listenersAdded.add(eventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-            eventHandler = new WalletNavigationStructureDownloadedHandler();
-            ((WalletNavigationStructureDownloadedHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            EventListener eventListenerStructureDownloaded = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            EventHandler eventHandlerStructureDownloaded = new WalletNavigationStructureDownloadedHandler(this);
+            eventListenerStructureDownloaded.setEventHandler(eventHandlerStructureDownloaded);
+            eventManager.addListener(eventListenerStructureDownloaded);
+            listenersAdded.add(eventListenerStructureDownloaded);
 
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -1147,26 +1146,26 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         }
 
 
-        try{
-            /**
-             * Esto es hasta que tengamos las cosas andando y conectadas
-             */
-            String publicKey="reference_wallet";
-            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
-            if(walletNavigationStructure==null){
-                setNavigationStructureXml(startWalletNavigationStructure());
-                walletNavigationStructure= getNavigationStructure(publicKey);
-            }
-            //listWallets.put(publicKey, walletNavigationStructure);
-            walletNavigationStructureOpen=walletNavigationStructure;
-        }catch(Exception e){
-            String message = CantFactoryReset.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(e);
-            String context = "Error on method Factory Reset, setting the structure of the apps";
-            String possibleReason = "some null definition";
-            throw new CantFactoryReset(message, cause, context, possibleReason);
-
-        }
+//        try{
+//            /**
+//             * Esto es hasta que tengamos las cosas andando y conectadas
+//             */
+//            String publicKey="reference_wallet";
+//            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+//            if(walletNavigationStructure==null){
+//                setNavigationStructureXml(startWalletNavigationStructure());
+//                walletNavigationStructure= getNavigationStructure(publicKey);
+//            }
+//            //listWallets.put(publicKey, walletNavigationStructure);
+//            walletNavigationStructureOpen=walletNavigationStructure;
+//        }catch(Exception e){
+//            String message = CantFactoryReset.DEFAULT_MESSAGE;
+//            FermatException cause = FermatException.wrapException(e);
+//            String context = "Error on method Factory Reset, setting the structure of the apps";
+//            String possibleReason = "some null definition";
+//            throw new CantFactoryReset(message, cause, context, possibleReason);
+//
+//        }
     }
 
     private void removeNavigationStructureXml(String publicKey){
