@@ -31,6 +31,14 @@ public interface IntraUserIdentity {
     byte[] getProfileImage() throws CantShowProfileImageException;
 
     /**
+     * The method <code>setNewProfileImage</code> let the user set a new profile image
+     *
+     * @param newProfileImage the new profile image to set
+     * @throws CantSetNewProfileImageException
+     */
+    public void setNewProfileImage(byte[] newProfileImage) throws CantSetNewProfileImageException;
+
+    /**
      * This method let an intra user sign a message with his unique private key
      * @param message the message to sign
      * @return the signature

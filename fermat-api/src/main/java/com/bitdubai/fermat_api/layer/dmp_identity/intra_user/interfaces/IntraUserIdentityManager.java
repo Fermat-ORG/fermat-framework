@@ -31,13 +31,4 @@ public interface IntraUserIdentityManager {
      */
     IntraUserIdentity createNewIntraUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserException;
 
-
-    /**
-     * The method <code>setNewProfileImage</code> let the user set a new profile image
-     *
-     * @param newProfileImage the new profile image to set
-     * @throws CantSetNewProfileImageException
-     */
-    void setNewProfileImage(byte[] newProfileImage, String intraUserPublicKey) throws CantSetNewProfileImageException;
-
 }
