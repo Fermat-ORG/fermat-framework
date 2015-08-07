@@ -74,12 +74,16 @@ public class TemplateNetworkServiceDatabaseFactory {
          */
         try {
 
-            DatabaseTableFactory table;
+            //DatabaseTableFactory table;
 
             /**
              * Configure the Incoming messages table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
+            DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+            table = databaseFactory.newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
 
             table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);
             table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          DatabaseDataType.STRING,       100, Boolean.FALSE);
@@ -93,7 +97,8 @@ public class TemplateNetworkServiceDatabaseFactory {
             try {
 
                 //Create the incoming messages table.
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException();
@@ -102,7 +107,8 @@ public class TemplateNetworkServiceDatabaseFactory {
             /**
              * Configure the Outgoing messages table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
 
             table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);
             table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          DatabaseDataType.STRING,       100, Boolean.FALSE);
@@ -116,7 +122,8 @@ public class TemplateNetworkServiceDatabaseFactory {
             try {
 
                 //Create the outgoing messages table.
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException();
