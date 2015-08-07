@@ -285,7 +285,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
         try
         {
-
+            /*
             walletMiddlewareManager.getInstalledWallets();
             for (InstalledWallet wallet : lstInstalledWallet){
 
@@ -301,8 +301,8 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
                 lstInstalledWallet.add(installedWallet);
             }
-
-         /*   TEST
+        */
+         //   TEST
          InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
@@ -313,12 +313,9 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
                     new Version(1,0,0)
             );
 
-            lstInstalledWallet.add(installedWallet);*/
+            lstInstalledWallet.add(installedWallet);
 
 
-        }
-        catch (CantListWalletsException e) {
-            throw  new CantGetUserWalletException("CAN'T GET THE INSTALLED WALLETS",e,"","");
         }
         catch(Exception e)
         {
