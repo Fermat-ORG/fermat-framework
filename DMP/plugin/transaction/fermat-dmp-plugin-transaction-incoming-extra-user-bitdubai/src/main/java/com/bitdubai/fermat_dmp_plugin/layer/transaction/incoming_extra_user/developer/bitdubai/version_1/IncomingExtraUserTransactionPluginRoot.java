@@ -240,7 +240,7 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
      * Service Interface implementation.
      */
     @Override
-    public void start()  throws CantStartPluginException {
+    public void start()  throws CantStartPluginException{
 
 
         /**

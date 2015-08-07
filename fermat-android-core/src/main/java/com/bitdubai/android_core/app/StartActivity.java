@@ -24,6 +24,8 @@ import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.LoggerAddonRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 
 
 /**
@@ -111,10 +113,14 @@ public class StartActivity extends FragmentActivity {
 
             Context context = getApplicationContext();
 
-
             platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
 
+            /*PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.LOCAL_DEVICE);
+            PlatformInfo platformInfo= platformInfoManager.getPlatformInfo();
+            platformInfo.setScreenSize = [new screen size];
+            platformInfoManager.setPlatformInfo(platformInfo);
+            */
             ErrorManager errorManager = (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
 
             //set Os Addons in platform
