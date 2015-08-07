@@ -23,8 +23,10 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.XML;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -235,9 +237,25 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         //TODO: pido el navigationStrucutre del network service que sea y lo mando ahí
         //setNavigationStructureXml(walletNavigationStructure);
 
+
+        // For testing purpose
+
+        WalletNavigationStructure walletNavigationStructure = new WalletNavigationStructure();
+
+        this.walletNavigationStructureOpen=(WalletNavigationStructure)XMLParser.parseXML(xmlText,walletNavigationStructure);
+
+
+        //ver esto
+        String publicKey="reference_wallet";
+          if(walletNavigationStructure==null){
+               setNavigationStructureXml(startWalletNavigationStructure());
+               walletNavigationStructure= getNavigationStructure(publicKey);
+          }
+
         PluginTextFile layoutFile = null;
 
         String filename= skinId.toString()+"_"+name;
+
 
 //        try{
 //            layoutFile = pluginFileSystem.createTextFile(pluginId, linkToRepo, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
@@ -311,10 +329,15 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
     @Override
-    public WalletNavigationStructure getWallet(String publicKey) {
+    public WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions {
         //TODO: acá hay que poner una excepcion si no encuentra la wallet
-        walletNavigationStructureOpen=getNavigationStructure(publicKey);
-        return walletNavigationStructureOpen;
+        try{
+            walletNavigationStructureOpen=getNavigationStructure(publicKey);
+            return walletNavigationStructureOpen;
+        }catch (Exception e){
+            throw new WalletRuntimeExceptions("WALLET RUNTIME GET WALLET",e,"wallet runtime not found the navigation structure for: "+publicKey,"");
+        }
+
     }
 
     /**
@@ -1117,8 +1140,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        walletResourcesManger.installResources("reference_wallet","bitcoin_wallet","BitDubai","medium","mdpi","default","en","1.0.0");
-
+        try {
+            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "BitDubai", "medium", "mdpi", "default", "en", "1.0.0");
+        } catch (WalletResourcesInstalationException e) {
+            e.printStackTrace();
+        }
 
 
         try{

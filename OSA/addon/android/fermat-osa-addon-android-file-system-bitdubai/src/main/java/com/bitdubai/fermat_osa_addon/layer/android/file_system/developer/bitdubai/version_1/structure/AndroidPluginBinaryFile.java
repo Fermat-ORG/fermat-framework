@@ -17,7 +17,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
@@ -144,7 +143,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             outputStream.write(this.content);
             outputStream.close();
             
-        } catch (IOException e) {
+        } catch (Exception e) {
             String message = CantCreateFileException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
             String context = "File Info: " + toString();
@@ -202,7 +201,6 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         		if (binaryStream != null)
         		binaryStream.close();	
         	} catch (Exception e) {
-        	//	e.printStackTrace();
                 throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Check the cause of this error");
         	}
         	
@@ -213,6 +211,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
+        try {
         String path = "";
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
@@ -220,6 +219,9 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             path = this.context.getFilesDir().toString();
         File file = new File(path +"/"+ this.directoryName, this.fileName);
         file.delete();
+        } catch (Exception e) {
+       throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Check the cause of this error");
+    }
     }
 
     @Override
