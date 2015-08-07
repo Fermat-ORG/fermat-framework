@@ -77,12 +77,16 @@ public class CoinapultDatabaseFactory implements DealsWithPluginDatabaseSystem {
          */
         try {
 
-            DatabaseTableFactory table;
+            //DatabaseTableFactory table;
 
             /**
              * First define the Addresses table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, CoinapultDatabaseConstants.ADDRESSES_TABLE_NAME);
+            DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+
+            table = databaseFactory.newTableFactory(ownerId, CoinapultDatabaseConstants.ADDRESSES_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, CoinapultDatabaseConstants.ADDRESSES_TABLE_NAME);
             table.addColumn(CoinapultDatabaseConstants.ADDRESSES_TABLE_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
             table.addColumn(CoinapultDatabaseConstants.ADDRESSES_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
             table.addColumn(CoinapultDatabaseConstants.ADDRESSES_TABLE_WALLET_ID_COLUMN_NAME, DatabaseDataType.STRING, 50,false);
@@ -91,7 +95,8 @@ public class CoinapultDatabaseFactory implements DealsWithPluginDatabaseSystem {
             try {
 
                 //Create the table
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
@@ -102,7 +107,8 @@ public class CoinapultDatabaseFactory implements DealsWithPluginDatabaseSystem {
             /**
              * Then define the balances history table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, CoinapultDatabaseConstants.BALANCES_HISTORY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CoinapultDatabaseConstants.BALANCES_HISTORY_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, CoinapultDatabaseConstants.BALANCES_HISTORY_TABLE_NAME);
             table.addColumn(CoinapultDatabaseConstants.BALANCES_HISTORY_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.MONEY, 0, true);
             table.addColumn(CoinapultDatabaseConstants.BALANCES_HISTORY_TABLE_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 5,false);
             table.addColumn(CoinapultDatabaseConstants.BALANCES_HISTORY_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 20,false);
@@ -111,7 +117,8 @@ public class CoinapultDatabaseFactory implements DealsWithPluginDatabaseSystem {
             try {
 
                 //Create the table
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
@@ -122,7 +129,8 @@ public class CoinapultDatabaseFactory implements DealsWithPluginDatabaseSystem {
             /**
              * Then define the TRANSACTION history table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, CoinapultDatabaseConstants.TRANSACTION_HISTORY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CoinapultDatabaseConstants.TRANSACTION_HISTORY_TABLE_NAME);
+//            table = ((DatabaseFactory) database).newTableFactory(ownerId, CoinapultDatabaseConstants.TRANSACTION_HISTORY_TABLE_NAME);
             table.addColumn(CoinapultDatabaseConstants.TRANSACTION_HISTORY_TABLE_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100, true);
             table.addColumn(CoinapultDatabaseConstants.TRANSACTION_HISTORY_TABLE_COMPLETE_TIME_NAME, DatabaseDataType.STRING, 20,false);
             table.addColumn(CoinapultDatabaseConstants.TRANSACTION_HISTORY_TABLE_EXPIRATION_NAME, DatabaseDataType.STRING, 20,false);
@@ -141,7 +149,8 @@ public class CoinapultDatabaseFactory implements DealsWithPluginDatabaseSystem {
             table.addColumn(CoinapultDatabaseConstants.TRANSACTION_HISTORY_TABLE_WALLET_ID_COLUMN_NAME, DatabaseDataType.STRING, 50,false);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+//                ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());

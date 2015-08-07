@@ -48,11 +48,15 @@ public class ActorAddressBookCryptoModuleDatabaseFactory implements DealsWithPlu
          * Next, I will add the needed tables.
          */
         try {
-            DatabaseTableFactory table;
+            //DatabaseTableFactory table;
             /**
              * First the Address book table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+            //table = ((DatabaseFactory) database).newTableFactory(ownerId, ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+            DatabaseTableFactory table;
+            DatabaseFactory databaseFactory = database.getDatabaseFactory();
+            table = databaseFactory.newTableFactory(ownerId, ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+
             table.addColumn(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36, true);
             table.addColumn(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_BY_ACTOR_ID, DatabaseDataType.STRING, 36, false);
             table.addColumn(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_DELIVERED_BY_ACTOR_TYPE, DatabaseDataType.STRING, 3, false);
@@ -64,7 +68,9 @@ public class ActorAddressBookCryptoModuleDatabaseFactory implements DealsWithPlu
             table.addIndex(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESSES_FIRST_KEY_COLUMN_NAME);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);
+
+                //((DatabaseFactory) database).createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }

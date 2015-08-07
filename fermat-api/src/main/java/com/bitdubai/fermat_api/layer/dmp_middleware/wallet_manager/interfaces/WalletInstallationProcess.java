@@ -31,6 +31,7 @@ public interface WalletInstallationProcess {
      * @param walletName  the name of the wallet
      * @param walletPublicKey  the public key of the wallet
      * @param walletPrivateKey the private key of wallet
+     * @param deviceUserPublicKey
      * @param walletIconName  the name of the icon of the wallet
      * @param walletCatalogueId  the name of the icon of the wallet
      * @param walletVersion   the wallet version
@@ -52,6 +53,7 @@ public interface WalletInstallationProcess {
                                   String walletName,
                                   String walletPublicKey,
                                   String walletPrivateKey,
+                                  String deviceUserPublicKey,
                                   String walletIconName,
                                   UUID walletCatalogueId,
                                   Version walletVersion,
