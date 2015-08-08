@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.GitHubCantReadFileContent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -172,9 +173,34 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
         // TODO LOOK FOR A WAY TO TO THIS
     }
 
+    /**
+     * Modified by Manuel Perez on 07/06/2015
+     * */
     @Override
-    public void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException {
+    public void importWalletFactoryProjectFromRepository(String user, String password, String repository, String fileRepositoryLink) throws CantImportWalletFactoryProjectException {
         // TODO LOOK FOR A WAY TO TO THIS
+        WalletFactoryProject importedWalletFactoryProject;
+        String repositoryURL;
+
+        try{
+            //Import from repository
+            RepositoryManager repositoryManager=new RepositoryManager();
+            GHRepository ghRepository=repositoryManager.getRepository(user,password,repository);
+            repositoryURL= ghRepository.getHtmlUrl().toString();
+            String xml=repositoryManager.getFileContent(ghRepository, fileRepositoryLink);
+
+        }catch(GitHubNotAuthorizedException| GitHubRepositoryNotFoundException| GitHubCredentialsExpectedException exception){
+
+            throw new CantImportWalletFactoryProjectException(GitHubCredentialsExpectedException.DEFAULT_MESSAGE, exception,"importWalletFactoryProjectFromRepository","Check the cause" );
+
+        }catch(GitHubCantReadFileContent exception){
+
+            throw new CantImportWalletFactoryProjectException(GitHubCantReadFileContent.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause" );
+
+        }
+
+
+
     }
 
     /**

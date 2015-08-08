@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.utils;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.GitHubCantReadFileContent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
@@ -66,7 +67,7 @@ public class RepositoryManager {
 
     public void createGitHubFile(GHRepository ghRepository, String file, String commitContent, String commitComment) {
         try {
-            ghRepository.createContent(commitContent,commitComment, file);
+            ghRepository.createContent(commitContent, commitComment, file);
         } catch (IOException e) {
             System.out.println(getJsonMessage(e.getMessage()));
         }
@@ -83,7 +84,7 @@ public class RepositoryManager {
 
     public void createGitHubFile(GHRepository ghRepository, String file, byte[] commitContent, String commitComment) {
         try {
-            ghRepository.createContent(commitContent,commitComment, file);
+            ghRepository.createContent(commitContent, commitComment, file);
         } catch (IOException e) {
             System.out.println(getJsonMessage(e.getMessage()));
         }
@@ -99,6 +100,32 @@ public class RepositoryManager {
         } catch (IOException e) {
             return "Unexpected error.";
         }
+    }
+
+    /**
+     * Modified by Manuel Perez on 08/08/2015
+     */
+    public String getFileContent(GHRepository ghRepository, String fileRepositoryLink) throws GitHubCantReadFileContent {
+
+        BufferedReader bufferedReader;
+        GHContent ghContent;
+        String line;
+        StringBuilder stringBuilder=new StringBuilder();
+
+        try {
+            ghContent=ghRepository.getFileContent(fileRepositoryLink);
+            bufferedReader=new BufferedReader(new InputStreamReader(ghContent.read()));
+            while((line=bufferedReader.readLine())!=null){
+
+                stringBuilder.append(line);
+
+            }
+            return stringBuilder.toString();
+
+        } catch (IOException e) {
+            throw new GitHubCantReadFileContent(GitHubCantReadFileContent.DEFAULT_MESSAGE,e,"Can't read file content","Check the cause");
+        }
+
     }
 
    /* public void uploadFileStructure() {
