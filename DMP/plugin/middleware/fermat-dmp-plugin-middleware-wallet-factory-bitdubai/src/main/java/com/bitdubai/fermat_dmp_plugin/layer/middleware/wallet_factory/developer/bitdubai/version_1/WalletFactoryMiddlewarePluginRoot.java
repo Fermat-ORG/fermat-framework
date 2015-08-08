@@ -31,7 +31,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposalManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -185,10 +184,6 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
         }
     }
 
-    @Override
-    public WalletFactoryProjectProposalManager getWalletFactoryProjectProposalManager(WalletFactoryProject walletFactoryProject) {
-        return new WalletFactoryMiddlewareProjectProposalManager(errorManager, pluginFileSystem, pluginId, walletFactoryMiddlewareProjectDao, walletFactoryProject);
-    }
 
     /**
      * DatabaseManagerForDevelopers Interface Implementation

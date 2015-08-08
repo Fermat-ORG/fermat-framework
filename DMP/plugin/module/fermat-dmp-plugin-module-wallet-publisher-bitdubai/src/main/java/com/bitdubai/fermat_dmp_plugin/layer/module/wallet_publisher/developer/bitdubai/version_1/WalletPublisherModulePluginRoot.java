@@ -290,16 +290,6 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
         this.walletPublisherMiddlewareManager = walletPublisherMiddlewareManager;
     }
 
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherManager#getWalletFactoryProjectProposalToPublish()
-     */
-    @Override
-    public Map<UUID, List<WalletFactoryProjectProposal>> getWalletFactoryProjectProposalToPublish() {
-        return walletPublisherMiddlewareManager.getWalletFactoryProjectProposalToPublish();
-    }
-
     /**
      * (non-Javadoc)
      * @see WalletPublisherManager#getPublishedComponents()
@@ -334,24 +324,6 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
     @Override
     public Map<String, List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
         return walletPublisherMiddlewareManager.getPublishedLanguages();
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherManager#canBePublished(WalletFactoryProjectProposal)
-     */
-    @Override
-    public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCheckPublicationException {
-        return walletPublisherMiddlewareManager.canBePublished(walletFactoryProjectProposal);
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherManager#publishWallet(WalletFactoryProjectProposal)
-     */
-    @Override
-    public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishComponetException {
-        walletPublisherMiddlewareManager.publishWallet(walletFactoryProjectProposal);
     }
 
     /**

@@ -482,15 +482,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#getWalletFactoryProjectProposalToPublish()
-     */
-    @Override
-    public Map<UUID, List<WalletFactoryProjectProposal>> getWalletFactoryProjectProposalToPublish() {
-        return walletPublisherMiddlewareManagerImpl.getWalletFactoryProjectProposalToPublish();
-    }
-
-    /**
-     * (non-Javadoc)
      * @see WalletPublisherMiddlewareManager#getPublishedComponents()
      */
     @Override
@@ -525,23 +516,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
         return walletPublisherMiddlewareManagerImpl.getPublishedLanguages();
     }
 
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#canBePublished(WalletFactoryProjectProposal)
-     */
-    @Override
-    public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCheckPublicationException {
-        return walletPublisherMiddlewareManagerImpl.canBePublished(walletFactoryProjectProposal);
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProjectProposal)
-     */
-    @Override
-    public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishComponetException {
-        walletPublisherMiddlewareManagerImpl.publishWallet(walletFactoryProjectProposal);
-    }
 
     /**
      * (non-Javadoc)

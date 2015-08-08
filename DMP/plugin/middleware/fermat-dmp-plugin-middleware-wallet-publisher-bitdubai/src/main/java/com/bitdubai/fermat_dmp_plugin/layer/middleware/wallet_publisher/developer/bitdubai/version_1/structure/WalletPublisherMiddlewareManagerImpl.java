@@ -76,57 +76,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         this.logManager = logManager;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#getWalletFactoryProjectProposalToPublish()
-     */
-    @Override
-    public Map<UUID, List<WalletFactoryProjectProposal>> getWalletFactoryProjectProposalToPublish(){
-
-        /*
-         * Initialize the map
-         */
-        Map<UUID, List<WalletFactoryProjectProposal>> resultMap = new HashMap<>();
-
-        try {
-
-            /*
-             * Iterate over the walletFactoryProjects
-             */
-            for (WalletFactoryProject walletFactoryProject :walletFactoryManager.getAllWalletFactoryProjects()) {
-
-                /*
-                 * Get the proposalManager
-                 */
-                WalletFactoryProjectProposalManager proposalManager = walletFactoryManager.getWalletFactoryProjectProposalManager(walletFactoryProject);
-
-                /*
-                 * Get the Closed WalletFactoryProjectProposal
-                 */
-                List<WalletFactoryProjectProposal> closedWalletFactoryProjectProposalList = proposalManager.getClosedProposals();
-
-                /*
-                 * Validate is not empty
-                 */
-                if (closedWalletFactoryProjectProposalList != null && !closedWalletFactoryProjectProposalList.isEmpty()){
-
-                    /*
-                     * Put into the result map
-                     */
-                    resultMap.put(walletFactoryProject.getId(), closedWalletFactoryProjectProposalList);
-                }
-
-            }
-
-
-        } catch (CantGetWalletFactoryProjectsException e) {
-            e.printStackTrace();
-        } catch (CantGetWalletFactoryProjectProposalsException e) {
-            e.printStackTrace();
-        }
-
-        return resultMap;
-    }
 
     /**
      * (non-Javadoc)
@@ -162,24 +111,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
     @Override
     public Map<String, List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
         return null;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#canBePublished(WalletFactoryProjectProposal)
-     */
-    @Override
-    public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCheckPublicationException {
-        return false;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProjectProposal)
-     */
-    @Override
-    public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishComponetException {
-
     }
 
     /**
