@@ -36,7 +36,7 @@ public class WalletFragmentFactory implements FragmentFactory{
         Fragments fragment = Fragments.getValueFromString(code);
         switch (fragment){
             /**
-             * Executing fragments for BITCOIN WALLET.
+             * Executing fragments for BITCOIN REQUESTED.
              */
             case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
                 currentFragment =  BalanceFragment.newInstance(0, walletSession);

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeNetworkServicesWalletResourcesDatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE NETWORK SERVICES WALLET RESOURCES NETWORK SERVICES DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE NETWORK SERVICES REQUESTED RESOURCES NETWORK SERVICES DATABASE EXCEPTION";
 
     public CantInitializeNetworkServicesWalletResourcesDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

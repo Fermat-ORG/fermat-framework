@@ -12,7 +12,7 @@ public class CantFactoryReset extends WalletRuntimeExceptions {
      */
     private static final long serialVersionUID = 4841032427648911456L;
 
-    public static final String DEFAULT_MESSAGE = "CAN'T LOAD WALLET STRUCTURE";
+    public static final String DEFAULT_MESSAGE = "CAN'T LOAD REQUESTED STRUCTURE";
 
     //private final String fileName;
 

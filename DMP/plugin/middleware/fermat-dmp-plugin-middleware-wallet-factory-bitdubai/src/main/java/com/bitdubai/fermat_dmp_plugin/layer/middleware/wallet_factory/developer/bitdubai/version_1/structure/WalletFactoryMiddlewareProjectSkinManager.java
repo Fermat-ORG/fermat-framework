@@ -133,8 +133,8 @@ public class WalletFactoryMiddlewareProjectSkinManager implements DealsWithError
 
     @Override
     public WalletFactoryProjectSkin copySkin(String newName, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantCopyWalletFactoryProjectSkinException, SkinNotFoundException {
-        // TODO SEARCH BY ID EXISTENT SKIN
-        // TODO INSERT A NEW SKIN IN DATABASE
+        // TODO SEARCH BY ID EXISTENT ON_REVISION
+        // TODO INSERT A NEW ON_REVISION IN DATABASE
         // TODO COPY THE STRUCTURE AND FILES
         return null;
     }

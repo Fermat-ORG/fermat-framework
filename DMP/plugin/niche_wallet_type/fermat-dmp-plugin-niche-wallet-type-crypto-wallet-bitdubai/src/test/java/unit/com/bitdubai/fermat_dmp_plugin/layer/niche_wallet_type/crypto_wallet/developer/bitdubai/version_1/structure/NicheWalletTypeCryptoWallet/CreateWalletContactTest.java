@@ -160,7 +160,7 @@ public class CreateWalletContactTest extends TestCase {
         nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
     }
 
-    // CANT GET WALLET CONTACT TO KNOW IF ALREADY EXISTS TEST
+    // CANT GET REQUESTED CONTACT TO KNOW IF ALREADY EXISTS TEST
     @Test(expected=CantCreateWalletContactException.class)
     public void testCreateWalletContact_CantGetWalletContactException() throws Exception {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException("gasdil", null, null, null))
