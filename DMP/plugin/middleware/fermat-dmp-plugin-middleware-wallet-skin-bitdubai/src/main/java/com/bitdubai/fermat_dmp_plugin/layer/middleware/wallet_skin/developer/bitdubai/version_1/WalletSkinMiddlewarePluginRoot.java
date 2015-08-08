@@ -12,10 +12,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.enums.SkinState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantAddResourceException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCloseWalletSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCopyWalletSkinException;
@@ -37,6 +42,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -49,6 +55,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database.WalletSkinMiddlewareDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database.WalletSkinMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.exceptions.CantInitializeWalletSkinMiddlewareDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.structure.WalletSkinMiddlewareWalletSkin;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -64,7 +71,7 @@ import java.util.UUID;
  * <p/>
  * TODO: DETAIL...............................................
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta on 29-07-2015
  *
  * @version 1.0
@@ -91,7 +98,9 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
      * Plugin Interface member variables.
      */
     UUID pluginId;
-
+    Map<String, Resource> lstResources;
+    Map<String, Layout> lstPortraitLayouts;
+    Map<String, Layout> lstLandscapeLayouts;
 
     /**
      * DealsWithLogger interface member variable
@@ -125,17 +134,17 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
     }
 
     @Override
-    public void pause(){
+    public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
-    public void resume(){
+    public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -159,7 +168,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
     public WalletSkin getSkinBySkinIdAndVersion(UUID skinId, Version version) throws CantGetWalletSkinException, SkinNotFoundException {
         try {
             return walletSkinMiddlewareDao.findSkinBySkinIdAndVersion(skinId, version);
-        } catch (CantGetWalletSkinException|SkinNotFoundException e) {
+        } catch (CantGetWalletSkinException | SkinNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
@@ -169,7 +178,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
     public WalletSkin getSkinById(UUID id) throws CantGetWalletSkinException, SkinNotFoundException {
         try {
             return walletSkinMiddlewareDao.findSkinById(id);
-        } catch (CantGetWalletSkinException|SkinNotFoundException e) {
+        } catch (CantGetWalletSkinException | SkinNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
@@ -187,7 +196,28 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
 
     @Override
     public WalletSkin createEmptySkin(String name, String designerPublicKey) throws CantCreateEmptyWalletSkinException {
-        return null;
+        UUID skinId = UUID.randomUUID();
+        SkinState state = SkinState.DRAFT;
+        Version version = new Version("1.0.0");
+
+        try {
+            VersionCompatibility versionCompatibility = new VersionCompatibility(version, version);
+            WalletSkin walletSkin = new WalletSkinMiddlewareWalletSkin(pluginId, skinId, name, "alias", state, designerPublicKey, version, versionCompatibility);
+
+            Skin skin = new Skin(walletSkin.getId(), walletSkin.getName(), walletSkin.getVersion(), walletSkin.getVersionCompatibility(), lstResources, lstPortraitLayouts, lstLandscapeLayouts);
+//            Skin skin = new Skin(name, type, new Version("1.0.0"));
+            saveSkinStructureXml(skin, walletSkin);
+            try {
+                walletSkinMiddlewareDao.createSkin(walletSkin);
+                return walletSkin;
+            } catch (CantCreateEmptyWalletSkinException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw e;
+            }
+        } catch (CantSaveWalletSkinStructureException | InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateEmptyWalletSkinException(CantCreateEmptyWalletSkinException.DEFAULT_MESSAGE, e, "Cant create Skin", "");
+        }
     }
 
     @Override
@@ -218,9 +248,9 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw e;
             }
-        } catch (CantCreateFileException e){
+        } catch (CantCreateFileException e) {
             throw new CantDeleteWalletSkinException(CantDeleteWalletSkinException.DEFAULT_MESSAGE, e, "Cant delete skin file", "");
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDeleteWalletSkinException(CantDeleteWalletSkinException.DEFAULT_MESSAGE, e, "skin not found", "");
         }
@@ -310,9 +340,37 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
                 walletSkin.getId();
     }
 
+    private String createResourcePath(ResourceType resourceType, String path) {
+        return path + "/" + resourceType.value();
+    }
+
     @Override
     public void addResource(Resource resource, byte[] file, WalletSkin walletSkin) throws CantAddResourceException, ResourceAlreadyExistsException {
+        try {
+            Skin skin = getSkinStructure(walletSkin);
+            //skin.addResource(resource);
+            try {
+                // TODO CHECK IF FILE ALREADY EXIST THROW EXCEPTION ResourceAlreadyExistsException
+                String resourcePath = createResourcePath(resource.getResourceType(), SKIN_MANIFEST_FILE_NAME);
 
+                PluginBinaryFile newFile = pluginFileSystem.createBinaryFile(pluginId, resourcePath, resource.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.loadFromMedia();
+                newFile.setContent(file);
+                newFile.persistToMedia();
+                try {
+                    saveSkinStructureXml(skin, walletSkin);
+                } catch (CantSaveWalletSkinStructureException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    throw new CantAddResourceException(CantAddResourceException.DEFAULT_MESSAGE, e, "Can't save xml file", "");
+                }
+            } catch (CantCreateFileException | CantLoadFileException | CantPersistFileException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantAddResourceException(CantAddResourceException.DEFAULT_MESSAGE, e, "Can't Create/Load/Persistit file to the structure.", "");
+            }
+        } catch (CantGetWalletSkinStructureException | SkinNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAddResourceException(CantAddResourceException.DEFAULT_MESSAGE, e, "Can't get Structure Skin xml file", "");
+        }
     }
 
     @Override
@@ -331,19 +389,19 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
      */
 
     @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory){
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         WalletSkinMiddlewareDeveloperDatabaseFactory dbFactory = new WalletSkinMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase){
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         WalletSkinMiddlewareDeveloperDatabaseFactory dbFactory = new WalletSkinMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable){
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
             WalletSkinMiddlewareDeveloperDatabaseFactory dbFactory = new WalletSkinMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             dbFactory.initializeDatabase();
@@ -353,7 +411,6 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             return null;
         }
     }
-
 
 
     /**
@@ -373,7 +430,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.WalletSkinMiddlewarePluginRoot");
-         /**
+        /**
          * I return the values.
          */
         return returnedClasses;
@@ -409,7 +466,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
     @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem){
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -417,7 +474,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
      * DealsWithPluginFileSystem Interface implementation.
      */
     @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem){
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
 
