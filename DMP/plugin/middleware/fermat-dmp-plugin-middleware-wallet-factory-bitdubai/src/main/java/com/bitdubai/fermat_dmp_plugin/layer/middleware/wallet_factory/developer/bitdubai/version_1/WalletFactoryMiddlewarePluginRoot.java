@@ -181,12 +181,10 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
      * Modified by Manuel Perez on 07/06/2015
      * */
     @Override
-    public void exportWalletFactoryProjectToRepository(String name, String repository, WalletFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException {
+    public void exportWalletFactoryProjectToRepository(String name, String password,String repository, WalletFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException {
 
         //TODO: Where can I find the github login information?
-        String user="user";
-        String pass="pass";
-        String repo="repo";
+
         String commitComment="Upload new wallet factory project to fermat repository";
 
         String walletFactoryProjectPath;
@@ -201,7 +199,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
             pluginTextFile.setContent(xml);
             //Upload to Repository
             RepositoryManager repositoryManager=new RepositoryManager();
-            GHRepository ghRepository=repositoryManager.getRepository(user,pass,repo);
+            GHRepository ghRepository=repositoryManager.getRepository(name,password,repository);
             repositoryManager.createGitHubFile(ghRepository, walletFactoryProjectPath, walletFactoryProjectName, commitComment);
 
         }catch(GitHubNotAuthorizedException| GitHubRepositoryNotFoundException| GitHubCredentialsExpectedException exception){
