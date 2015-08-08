@@ -149,10 +149,10 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          /*
          * If all resources are inject
          */
-        if (communicationLayerManager != null ||
-                pluginDatabaseSystem  != null ||
-                    errorManager      != null ||
-                        eventManager  != null) {
+        if (communicationLayerManager == null ||
+                pluginDatabaseSystem  == null ||
+                    errorManager      == null ||
+                        eventManager  == null) {
 
 
             StringBuffer contextBuffer = new StringBuffer();

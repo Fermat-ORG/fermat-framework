@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeWalletSkinMiddlewareDatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE WALLET SKIN MIDDLEWARE DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE REQUESTED ON_REVISION MIDDLEWARE DATABASE EXCEPTION";
 
     public CantInitializeWalletSkinMiddlewareDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

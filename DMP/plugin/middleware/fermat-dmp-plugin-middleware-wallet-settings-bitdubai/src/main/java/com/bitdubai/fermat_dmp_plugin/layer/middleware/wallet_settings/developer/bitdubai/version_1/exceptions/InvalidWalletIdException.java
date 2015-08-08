@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class InvalidWalletIdException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "WALLET ID IS NOT EQUALS TO WALLET ID IN THE XML FILE: ";
+    public static final String DEFAULT_MESSAGE = "REQUESTED ID IS NOT EQUALS TO REQUESTED ID IN THE XML FILE: ";
 
     public InvalidWalletIdException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
