@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.excepti
  */
 public class CantInitializeCryptoWalletManagerException extends CryptoWalletException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CRYPTO WALLET MANAGER EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CRYPTO REQUESTED MANAGER EXCEPTION";
 
     public CantInitializeCryptoWalletManagerException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

@@ -23,7 +23,7 @@ public class CantInitializeWalletPublisherMiddlewareDatabaseException extends Fe
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE WALLET PUBLISHER MIDDLEWARE DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE REQUESTED PUBLISHER MIDDLEWARE DATABASE EXCEPTION";
 
     /**
      * Constructor with parameters

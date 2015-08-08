@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.In
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -35,11 +36,12 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     private Version version;
     private WalletType walletType;
     private String screenSize;
-    private String screenDensity;
+
     private String navigationStructureVersion;
-    private String walletCatalogId;
+    private UUID walletCatalogId;
     private String walletDeveloper;
 
+    private String deviceUserPublicKey;
 
     public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
                                                   List<InstalledSkin> skinsId,
@@ -50,10 +52,10 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
                                                   Version version,
                                                   WalletType walletType,
                                                   String screenSize,
-                                                  String screenDensity,
                                                   String navigationStructureVersion,
-                                                  String walletCatalogId,
-                                                  String walletDeveloper)
+                                                  UUID walletCatalogId,
+                                                  String walletDeveloper,
+                                                  String deviceUserPublicKey)
     {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
@@ -65,10 +67,10 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
         this.version = version;
         this.walletType = walletType;
         this.screenSize = screenSize;
-        this.screenDensity = screenDensity;
         this.navigationStructureVersion = navigationStructureVersion;
         this.walletCatalogId = walletCatalogId;
         this.walletDeveloper =  walletDeveloper;
+        this.deviceUserPublicKey = deviceUserPublicKey;
     }
 
     /**
@@ -120,14 +122,6 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
         return this.screenSize;
     }
 
-    /**
-     * This method gives us the screen Density for this wallet
-     *
-     */
-    @Override
-    public String getWalletScreenDensity(){
-        return this.screenDensity = screenDensity;
-    }
 
     /**
      * This method gives us the navigation structure version for this wallet
@@ -191,13 +185,18 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
      *
      */
     @Override
-    public String getWalletCatalogId() {
+    public UUID getWalletCatalogId() {
         return walletCatalogId;
     }
 
     @Override
-    public String getWalletDeveloper(){
+    public String getWalletDeveloperName(){
         return this.walletDeveloper;
+    }
+
+    @Override
+    public String getWalletDeviceUserPublicKey(){
+        return this.deviceUserPublicKey;
     }
 
 }

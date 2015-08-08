@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.W
  */
 public class CantInitializeWalletContactsDatabaseException extends WalletContactsException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE WALLET CONTACT DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE REQUESTED CONTACT DATABASE EXCEPTION";
 
     public CantInitializeWalletContactsDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

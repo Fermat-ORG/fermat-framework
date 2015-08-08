@@ -11,7 +11,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.excep
  */
 public class CantInitializeWalletAddressBookCryptoModuleException extends WalletAddressBookException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CRYPTO MODULE WALLET ADDRESS BOOK";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CRYPTO MODULE REQUESTED ADDRESS BOOK";
 
     public CantInitializeWalletAddressBookCryptoModuleException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

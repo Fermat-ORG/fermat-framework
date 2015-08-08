@@ -9,7 +9,7 @@ package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.except
  */
 public class CantGetCryptoWalletException extends CryptoWalletException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T GET CRYPTO WALLET EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET CRYPTO REQUESTED EXCEPTION";
 
     public CantGetCryptoWalletException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

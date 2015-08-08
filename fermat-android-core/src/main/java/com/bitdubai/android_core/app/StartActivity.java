@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Toast;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
@@ -18,6 +19,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
@@ -26,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
 
 /**
@@ -116,13 +120,6 @@ public class StartActivity extends FragmentActivity {
             platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
 
-            /*PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.LOCAL_DEVICE);
-            PlatformInfo platformInfo= platformInfoManager.getPlatformInfo();
-            platformInfo.setScreenSize = [new screen size];
-            platformInfoManager.setPlatformInfo(platformInfo);
-            */
-            ErrorManager errorManager = (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER);
-
             //set Os Addons in platform
             fileSystemOs = new AndroidOsFileSystem();
             fileSystemOs.setContext(context);
@@ -141,7 +138,7 @@ public class StartActivity extends FragmentActivity {
                 ((Service) loggerSystemOs).start();
                 platform.setLoggerSystemOs(loggerSystemOs);
             } catch (Exception e) {
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                e.printStackTrace();
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             }
 
@@ -151,7 +148,7 @@ public class StartActivity extends FragmentActivity {
                     platform.start();
 
             } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                e.printStackTrace();
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             }
 
@@ -163,6 +160,8 @@ public class StartActivity extends FragmentActivity {
             platformContext = platform.getCorePlatformContext();
 
 
+            PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
+            setPlatformDeviceInfo(platformInfoManager);
 
             return true;
         }
@@ -177,5 +176,25 @@ public class StartActivity extends FragmentActivity {
             WAS_START_ACTIVITY_LOADED = true;
             fermatInit();
         }
+    }
+
+    private void setPlatformDeviceInfo(PlatformInfoManager platformInfoManager){
+        try {
+            PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
+            platformInfo.setScreenSize(getScreenSize());
+            platformInfoManager.setPlatformInfo(platformInfo);
+        } catch (CantLoadPlatformInformationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ScreenSize getScreenSize(){
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return DeviceInfoUtils.toScreenSize(dpHeight,dpWidth);
+
     }
 }
