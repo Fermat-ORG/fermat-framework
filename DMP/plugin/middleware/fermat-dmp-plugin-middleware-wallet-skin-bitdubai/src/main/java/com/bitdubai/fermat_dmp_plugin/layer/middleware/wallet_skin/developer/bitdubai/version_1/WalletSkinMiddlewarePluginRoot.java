@@ -202,7 +202,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
 
         try {
             VersionCompatibility versionCompatibility = new VersionCompatibility(version, version);
-            WalletSkin walletSkin = new WalletSkinMiddlewareWalletSkin(pluginId, skinId, name, "alias", state, designerPublicKey, version, versionCompatibility);
+            WalletSkin walletSkin = new WalletSkinMiddlewareWalletSkin(pluginId, skinId, name, "alias", WALLET_SKINS_PATH, state, designerPublicKey, version, versionCompatibility);
 
             Skin skin = new Skin(walletSkin.getId(), walletSkin.getName(), walletSkin.getVersion(), walletSkin.getVersionCompatibility(), lstResources, lstPortraitLayouts, lstLandscapeLayouts);
 //            Skin skin = new Skin(name, type, new Version("1.0.0"));
