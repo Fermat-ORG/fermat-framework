@@ -122,7 +122,7 @@ Fermat Principles:
 
 
 * Integrated feedback functionality.
-* Voting over wish-lists.
+* Voting over feature wish-lists concept.
 
 
 ##### 15. Fermat should be the finacially most efficient way to move / spend the end user's money. 
