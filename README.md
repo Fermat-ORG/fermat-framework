@@ -71,7 +71,7 @@ Fermat Principles:
 * Anyone could provide language packs to existing wallets.
 
 
-##### 8. Each developer should be compesatd by their contribution to Fermat.
+##### 8. Each developer should be compesated by their contribution to Fermat.
 
 
 * Micro License concept.
