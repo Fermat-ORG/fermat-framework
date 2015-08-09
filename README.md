@@ -26,7 +26,7 @@ Fermat Principles:
 
 * Point to point encrypted communications.
 * Geofenced P2P network allowing the shortest communication path between peers.
-* Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, etc.).
+* Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, mesh, etc.).
 
 
 ##### 3. Fermat should be secure and resistant to all kind of attacks.
