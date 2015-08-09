@@ -35,7 +35,7 @@ Fermat Principles:
 * No centralized point to be attacked.
 * Multiple identities and roles per user.
 * Device Private Network concept.
-* Pocket Money concept and a multi-signature vault owned by the DPN.
+* Pocket Money concept and a Multi-Signature Vault owned by the DPN concept.
 * Reviews and Reputation concepts. 
 
 
