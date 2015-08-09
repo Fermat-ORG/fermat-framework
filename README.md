@@ -66,7 +66,7 @@ Fermat Principles:
 * Any developer could contribute to the shared infraestructure.
 * Any developer could write code for new Plugins.
 * Any developer could write code for new Niche Wallets.
-* Any developer could fork and existing Niche Wallet to further specialize it.
+* Any developer could fork an existing Niche Wallet to further specialize it.
 * Any graphic / UX designer could provide skins to existing wallets.
 * Anyone could provide language packs to existing wallets.
 
