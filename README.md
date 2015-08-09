@@ -83,17 +83,17 @@ Fermat Principles:
 * Master plan design comcept, wiht no overlaping functionality but shared ownership.
 
 
-##### 9. Fermat should be inclusive with crypto currency industry members. 
+##### 9. Fermat user base should be a shared asset.
+
+
+* Any developer should be able to profit from the growing Fermat user base by writing Plugins this user base could consume via the developers of the wallets they are using.
+ 
+
+##### 10. Fermat should be inclusive with crypto currency industry members. 
 
 
 * Any bitcoin / crypto / blockchain established startup could write their own Plugins and expose their services to both Fermat developers and Fermat user base.
 * Any alt-coin community could write Plugins to enable their crypto currency within the Fermat wallet ecosystem.
-
-
-##### 10. Fermat user base should be a shared asset.
-
-
-* Any developer should be able to profit from the growing Fermat user base by writing Plugins this user base could consume via the developers of the wallets they are using.
 
 
 ##### 11. Fermat should be inclusive with the current financial system.
