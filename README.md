@@ -15,7 +15,7 @@ What makes Fermat different from other wallet platforms or services?
 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [documentation](https://github.com/bitDubai/fermat/fermat-documentation) that we're anxious to add. 
-So take Brackets out for a spin and let us know how we can make it your favorite editor. 
+So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your digital wallet. 
 
 You can see some visualization of Fermat platform and its p2p network at 
 [Fermat.org](https://www.fermat.org).
