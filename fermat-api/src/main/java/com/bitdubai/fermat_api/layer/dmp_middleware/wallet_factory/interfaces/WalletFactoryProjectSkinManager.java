@@ -37,55 +37,55 @@ public interface WalletFactoryProjectSkinManager {
      * @return a list of instances of WalletFactoryProjectSkins
      * @throws CantGetWalletFactoryProjectSkinsException if something goes wrong
      */
-    List<WalletFactoryProjectSkin> getSkins() throws CantGetWalletFactoryProjectSkinsException;
+    List<SkinDescriptorFactoryProject> getSkins() throws CantGetWalletFactoryProjectSkinsException;
 
     /**
      * get skin by id
      *
      * @param id of the skin
-     * @return an instance of the WalletFactoryProjectSkin
+     * @return an instance of the SkinDescriptorFactoryProject
      * @throws CantGetWalletFactoryProjectSkinException if something goes wrong
      * @throws SkinNotFoundException if i cant find the skin
      */
-    WalletFactoryProjectSkin getSkinById(UUID id) throws CantGetWalletFactoryProjectSkinException, SkinNotFoundException;
+    SkinDescriptorFactoryProject getSkinById(UUID id) throws CantGetWalletFactoryProjectSkinException, SkinNotFoundException;
 
     /**
      * create a new empty skin with the given name
      *
      * @param name of the skin
-     * @return an instance WalletFactoryProjectSkin
+     * @return an instance SkinDescriptorFactoryProject
      * @throws CantCreateEmptyWalletFactoryProjectSkinException if something goes wrong
      */
-    WalletFactoryProjectSkin createEmptySkin(String name) throws CantCreateEmptyWalletFactoryProjectSkinException;
+    SkinDescriptorFactoryProject createEmptySkin(String name) throws CantCreateEmptyWalletFactoryProjectSkinException;
 
     /**
      * copies an existent skin and creates a new one
      *
      * @param newName for the skin
-     * @param walletFactoryProjectSkin to copy
-     * @return an instance of the new WalletFactoryProjectSkin
+     * @param skinDescriptorFactoryProject to copy
+     * @return an instance of the new SkinDescriptorFactoryProject
      * @throws CantCopyWalletFactoryProjectSkinException if something goes wrong
      * @throws SkinNotFoundException if i cant find the skin
      */
-    WalletFactoryProjectSkin copySkin(String newName, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantCopyWalletFactoryProjectSkinException, SkinNotFoundException;
+    SkinDescriptorFactoryProject copySkin(String newName, SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantCopyWalletFactoryProjectSkinException, SkinNotFoundException;
 
     /**
      * delete an existent skin
      *
-     * @param walletFactoryProjectSkin you're trying to delete
+     * @param skinDescriptorFactoryProject you're trying to delete
      * @throws CantDeleteWalletFactoryProjectSkinException if something goes wrong
      * @throws SkinNotFoundException if i cant find the skin
      */
-    void deleteSkin(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantDeleteWalletFactoryProjectSkinException, SkinNotFoundException;
+    void deleteSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantDeleteWalletFactoryProjectSkinException, SkinNotFoundException;
 
     /**
      * brings the skin structure of the project skin
      *
-     * @param walletFactoryProjectSkin that you're trying to get the structure
+     * @param skinDescriptorFactoryProject that you're trying to get the structure
      * @return an instance of the class structure of the Skin
      * @throws CantGetWalletFactoryProjectSkinStructureException if something goes wrong
      */
-    Skin getSkinStructure(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantGetWalletFactoryProjectSkinStructureException;
+    Skin getSkinStructure(SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantGetWalletFactoryProjectSkinStructureException;
 
     /**
      * converts an xml file in a skin structure
@@ -109,41 +109,41 @@ public interface WalletFactoryProjectSkinManager {
      * converts the given skin structure in an xml file and saves in the file structure
      *
      * @param skin you're trying to save
-     * @param walletFactoryProjectSkin in which you're trying to save
+     * @param skinDescriptorFactoryProject in which you're trying to save
      * @throws CantSetWalletFactoryProjectSkinStructureException if something goes wrong
      */
-    void setSkinStructureXml(Skin skin, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantSetWalletFactoryProjectSkinStructureException;
+    void setSkinStructureXml(Skin skin, SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantSetWalletFactoryProjectSkinStructureException;
 
     /**
      * add a new resource to a skin
      *
      * @param resource data
      * @param file you'll save
-     * @param walletFactoryProjectSkin in which you re going to save
+     * @param skinDescriptorFactoryProject in which you re going to save
      * @throws CantAddResourceToSkinException if something goes wrong
      * @throws ResourceAlreadyExistsException if i cant find the resource
      */
-    void addResourceToSkin(Resource resource, byte[] file, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantAddResourceToSkinException, ResourceAlreadyExistsException;
+    void addResourceToSkin(Resource resource, byte[] file, SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantAddResourceToSkinException, ResourceAlreadyExistsException;
 
     /**
      * updates the file resource of a skin
      *
      * @param resource data
      * @param file you'll save
-     * @param walletFactoryProjectSkin in which you re going to save
+     * @param skinDescriptorFactoryProject in which you re going to save
      * @throws CantUpdateResourceToSkinException if something goes wrong
      * @throws ResourceNotFoundException if i cant find the resource
      */
-    void updateResourceToSkin(Resource resource, byte[] file, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantUpdateResourceToSkinException, ResourceNotFoundException;
+    void updateResourceToSkin(Resource resource, byte[] file, SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantUpdateResourceToSkinException, ResourceNotFoundException;
 
     /**
      * delete an specific resource in the skin
      *
      * @param resource you're trying to delete
-     * @param walletFactoryProjectSkin in which you re going to delete
+     * @param skinDescriptorFactoryProject in which you re going to delete
      * @throws CantDeleteResourceFromSkinException if something goes wrong
      * @throws ResourceNotFoundException if i cant find the resource
      */
-    void deleteResourceFromSkin(Resource resource, WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantDeleteResourceFromSkinException, ResourceNotFoundException;
+    void deleteResourceFromSkin(Resource resource, SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantDeleteResourceFromSkinException, ResourceNotFoundException;
 
 }

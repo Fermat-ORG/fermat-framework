@@ -28,62 +28,62 @@ import java.util.UUID;
 public interface WalletFactoryProjectLanguageManager {
 
     /**
-     * this method returns all the instances of WalletFactoryProjectLanguage related with the walletProjectProposal we are working with
+     * this method returns all the instances of LanguageDescriptorFactoryProject related with the walletProjectProposal we are working with
      * (when we create an instance of this manager we pass throw parameters the walletProjectProposal).
      *
      * @return a list of the WalletFactoryProjectLanguages
      * @throws CantGetWalletFactoryProjectLanguagesException if something goes wrong
      */
-    List<WalletFactoryProjectLanguage> getLanguages() throws CantGetWalletFactoryProjectLanguagesException;
+    List<LanguageDescriptorFactoryProject> getLanguages() throws CantGetWalletFactoryProjectLanguagesException;
 
     /**
-     * this method return an instance of the WalletFactoryProjectLanguage with the id passed throw parameters
+     * this method return an instance of the LanguageDescriptorFactoryProject with the id passed throw parameters
      *
      * @param id of the language
-     * @return an instance of WalletFactoryProjectLanguage
+     * @return an instance of LanguageDescriptorFactoryProject
      * @throws CantGetWalletFactoryProjectLanguageException if something goes wrong
      * @throws LanguageNotFoundException if we cant find the language
      */
-    WalletFactoryProjectLanguage getLanguageById(UUID id) throws CantGetWalletFactoryProjectLanguageException, LanguageNotFoundException;
+    LanguageDescriptorFactoryProject getLanguageById(UUID id) throws CantGetWalletFactoryProjectLanguageException, LanguageNotFoundException;
 
     /**
-     * throw this method you can create a new empty WalletFactoryProjectLanguage
+     * throw this method you can create a new empty LanguageDescriptorFactoryProject
      *
-     * @param name of the new WalletFactoryProjectLanguage
-     * @param type of the new WalletFactoryProjectLanguage
-     * @return an instance of the new WalletFactoryProjectLanguage
+     * @param name of the new LanguageDescriptorFactoryProject
+     * @param type of the new LanguageDescriptorFactoryProject
+     * @return an instance of the new LanguageDescriptorFactoryProject
      * @throws CantCreateEmptyWalletFactoryProjectLanguageException if something goes wrong
      */
-    WalletFactoryProjectLanguage createEmptyLanguage(String name, Languages type) throws CantCreateEmptyWalletFactoryProjectLanguageException;
+    LanguageDescriptorFactoryProject createEmptyLanguage(String name, Languages type) throws CantCreateEmptyWalletFactoryProjectLanguageException;
 
     /**
-     * throw this method you can clone an existent WalletFactoryProjectLanguage
+     * throw this method you can clone an existent LanguageDescriptorFactoryProject
      *
-     * @param newName of the walletFactoryProjectLanguage
-     * @param walletFactoryProjectLanguage you want to clone
-     * @return a new instance of the WalletFactoryProjectLanguage you just create
+     * @param newName of the languageDescriptorFactoryProject
+     * @param languageDescriptorFactoryProject you want to clone
+     * @return a new instance of the LanguageDescriptorFactoryProject you just create
      * @throws CantCopyWalletFactoryProjectLanguageException if something goes wrong
      * @throws LanguageNotFoundException if you cannot find the project that you're trying to copy
      */
-    WalletFactoryProjectLanguage copyLanguage(String newName, WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantCopyWalletFactoryProjectLanguageException, LanguageNotFoundException;
+    LanguageDescriptorFactoryProject copyLanguage(String newName, LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantCopyWalletFactoryProjectLanguageException, LanguageNotFoundException;
 
     /**
-     * delete an existent walletFactoryProjectLanguage
+     * delete an existent languageDescriptorFactoryProject
      *
-     * @param walletFactoryProjectLanguage that you're trying to delete
+     * @param languageDescriptorFactoryProject that you're trying to delete
      * @throws CantDeleteWalletFactoryProjectLanguageException if something goes wrong
      * @throws LanguageNotFoundException if you can't find the language
      */
-    void deleteLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantDeleteWalletFactoryProjectLanguageException, LanguageNotFoundException;
+    void deleteLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantDeleteWalletFactoryProjectLanguageException, LanguageNotFoundException;
 
     /**
-     * this methods returns the language structure of the xml related with the walletFactoryProjectLanguage
+     * this methods returns the language structure of the xml related with the languageDescriptorFactoryProject
      *
-     * @param walletFactoryProjectLanguage of the language you're trying to get
+     * @param languageDescriptorFactoryProject of the language you're trying to get
      * @return Language structure
      * @throws CantGetLanguageException if something goes wrong
      */
-    Language getLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantGetLanguageException;
+    Language getLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantGetLanguageException;
 
     /**
      * converts an xml file in a language
@@ -107,28 +107,28 @@ public interface WalletFactoryProjectLanguageManager {
      * converts the given skin language in an xml file and saves in the proposal structure
      *
      * @param language class structure that you're trying to save
-     * @param walletFactoryProjectLanguage to wich belongs
+     * @param languageDescriptorFactoryProject to wich belongs
      * @throws CantSetLanguageException if something goes wrong
      */
-    void setLanguageXml(Language language, WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantSetLanguageException;
+    void setLanguageXml(Language language, LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantSetLanguageException;
 
     /**
      * add language strings to a language file
      *
      * @param name of the string
      * @param value of the string
-     * @param walletFactoryProjectLanguage to wich belongs
+     * @param languageDescriptorFactoryProject to wich belongs
      * @throws CantAddLanguageStringException if something goes wrong
      */
-    void addLanguageString(String name, String value, WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantAddLanguageStringException;
+    void addLanguageString(String name, String value, LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantAddLanguageStringException;
 
     /**
      * delete string from a language file
      *
      * @param name of the string you want to delete
-     * @param walletFactoryProjectLanguage to wich belongs
+     * @param languageDescriptorFactoryProject to wich belongs
      * @throws CantDeleteLanguageStringException if something goes wrong
      */
-    void deleteLanguageString(String name, WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantDeleteLanguageStringException;
+    void deleteLanguageString(String name, LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantDeleteLanguageStringException;
 
 }
