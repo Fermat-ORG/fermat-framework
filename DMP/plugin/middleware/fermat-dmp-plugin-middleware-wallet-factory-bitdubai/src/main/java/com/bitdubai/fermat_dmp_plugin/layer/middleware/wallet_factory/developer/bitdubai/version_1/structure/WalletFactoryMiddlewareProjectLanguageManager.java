@@ -128,8 +128,8 @@ public class WalletFactoryMiddlewareProjectLanguageManager implements DealsWithE
 
     @Override
     public WalletFactoryProjectLanguage copyLanguage(String newName, WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantCopyWalletFactoryProjectLanguageException, LanguageNotFoundException {
-        // TODO SEARCH BY ID EXISTENT LANGUAGE
-        // TODO INSERT A NEW LANGUAGE IN DATABASE
+        // TODO SEARCH BY ID EXISTENT PUBLISHED
+        // TODO INSERT A NEW PUBLISHED IN DATABASE
         // TODO COPY THE FILE TO THE NEW NAME
         return null;
     }

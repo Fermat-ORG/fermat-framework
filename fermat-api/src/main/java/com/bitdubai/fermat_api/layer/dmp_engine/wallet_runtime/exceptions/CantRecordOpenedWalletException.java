@@ -9,7 +9,7 @@ public class CantRecordOpenedWalletException extends WalletRuntimeExceptions {
 	 */
 	private static final long serialVersionUID = 3116091246281644240L;
 
-	public static final String DEFAULT_MESSAGE = "CAN'T RECORD OPENED WALLET";
+	public static final String DEFAULT_MESSAGE = "CAN'T RECORD OPENED REQUESTED";
 
 	/**
 	 * This is the constructor that every inherited FermatException must implement

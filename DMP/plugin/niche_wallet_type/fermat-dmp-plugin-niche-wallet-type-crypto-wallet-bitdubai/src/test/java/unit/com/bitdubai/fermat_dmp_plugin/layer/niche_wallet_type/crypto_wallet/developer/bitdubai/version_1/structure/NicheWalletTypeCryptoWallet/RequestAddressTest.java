@@ -120,7 +120,7 @@ public class RequestAddressTest extends TestCase {
         assertNotNull(cryptoAddress);
     }
 
-    // TYPE OF WALLET NOT RECOGNIZED BY THE PLUGIN
+    // TYPE OF REQUESTED NOT RECOGNIZED BY THE PLUGIN
     @Test(expected=CantRequestCryptoAddressException.class)
     public void testRequestAddress_PlatformWalletTypeNotRecognized() throws Exception {
         referenceWallet = ReferenceWallet.BASIC_WALLET_DISCOUNT_WALLET;
@@ -155,7 +155,7 @@ public class RequestAddressTest extends TestCase {
         nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletId);
     }
 
-    // CANT REGISTER WALLET ADDRESS BOOK TEST
+    // CANT REGISTER REQUESTED ADDRESS BOOK TEST
     @Test(expected=CantRequestCryptoAddressException.class)
     public void testRequestAddress_CantRequestOrRegisterCryptoAddressException() throws Exception {
         doThrow(new CantRegisterWalletAddressBookException("gasdil", null, null, null))

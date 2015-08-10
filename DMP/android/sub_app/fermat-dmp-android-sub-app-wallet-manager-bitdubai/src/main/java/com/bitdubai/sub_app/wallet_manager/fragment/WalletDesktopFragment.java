@@ -77,9 +77,9 @@ public class WalletDesktopFragment extends Fragment {
             gridView.setNumColumns(4);
         }
 
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
-        _adpatrer.notifyDataSetChanged();
-        gridView.setAdapter(_adpatrer);
+        AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstInstalledWallet);
+        adapter.notifyDataSetChanged();
+        gridView.setAdapter(adapter);
 
 
      /*    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,7 +88,6 @@ public class WalletDesktopFragment extends Fragment {
                 Intent intent;
                 intent = new Intent(getActivity(), WalletActivity.class);
                 startActivity(intent);
-
                 return ;
             }
         });*/
@@ -213,4 +212,3 @@ public class WalletDesktopFragment extends Fragment {
 
 
 }
-

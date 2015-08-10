@@ -57,4 +57,6 @@ public interface WalletSkin {
      */
     VersionCompatibility getVersionCompatibility();
 
+    String getPath();
+
 }

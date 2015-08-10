@@ -11,7 +11,7 @@ import com.bitdubai.fermat_cry_api.CryptoException;
  */
 public class WalletAddressBookException extends CryptoException {
 
-    public static final String DEFAULT_MESSAGE = "THE WALLET ADDRESS BOOK HAS TRIGGERED AN EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "THE REQUESTED ADDRESS BOOK HAS TRIGGERED AN EXCEPTION";
 
     public WalletAddressBookException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
