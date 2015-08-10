@@ -6,16 +6,28 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposalManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedWalletsInformationException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishWalletException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublishedInformation;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublisherMiddlewareManagerImpl</code> have
@@ -29,47 +41,94 @@ import java.util.Map;
 public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMiddlewareManager {
 
     /**
+     * Represent the logManager
+     */
+    private LogManager logManager;
+
+    /**
+     * Represent the walletPublisherMiddlewareDao
+     */
+    private WalletPublisherMiddlewareDao walletPublisherMiddlewareDao;
+
+    /**
+     * Represent the walletFactoryManager
+     */
+    private WalletFactoryManager walletFactoryManager;
+
+    /**
+     * Represent the walletStoreManager
+     */
+    private WalletStoreManager walletStoreManager;
+
+
+    /**
+     * Constructor whit parameters
+     *
+     * @param dataBase
+     * @param walletStoreManager
+     * @param walletFactoryManager
+     * @param logManager
+     */
+    public WalletPublisherMiddlewareManagerImpl(Database dataBase, WalletStoreManager walletStoreManager,  WalletFactoryManager walletFactoryManager, LogManager logManager) {
+        this.walletStoreManager = walletStoreManager;
+        this.walletPublisherMiddlewareDao = new WalletPublisherMiddlewareDao(dataBase);
+        this.walletFactoryManager = walletFactoryManager;
+        this.logManager = logManager;
+    }
+
+
+    /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#showPublishedWallets()
+     * @see WalletPublisherMiddlewareManager#getPublishedComponents()
      */
     @Override
-    public Map<String, List<WalletPublishedInformation>> showPublishedWallets() throws CantGetPublishedWalletsInformationException {
+    public Map<String, List<ComponentPublishedInformation>> getPublishedComponents() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#canBePublished(WalletFactoryProjectProposal)
+     * @see WalletPublisherMiddlewareManager#getPublishedWallets()
      */
     @Override
-    public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCheckPublicationException {
-        return false;
+    public Map<String, List<ComponentPublishedInformation>> getPublishedWallets() throws CantGetPublishedComponentInformationException {
+        return null;
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#publishWallet(WalletFactoryProjectProposal)
+     * @see WalletPublisherMiddlewareManager#getPublishedSkins()
      */
     @Override
-    public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
+    public Map<String, List<ComponentPublishedInformation>> getPublishedSkins() throws CantGetPublishedComponentInformationException {
+        return null;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#getPublishedLanguages()
+     */
+    @Override
+    public Map<String, List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
+        return null;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#publishSkin(WalletFactoryProjectSkin)
+     */
+    @Override
+    public void publishSkin(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantPublishComponetException {
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#publishSkin(WalletFactoryProjectProposal)
+     * @see WalletPublisherMiddlewareManager#publishLanguage(WalletFactoryProjectLanguage)
      */
     @Override
-    public void publishSkin(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
+    public void publishLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantPublishComponetException {
 
     }
 
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherManager#publishLanguage(WalletFactoryProjectProposal)
-     */
-    @Override
-    public void publishLanguage(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishWalletException {
-
-    }
 }

@@ -26,7 +26,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRe
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -164,12 +164,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             eventManager.addListener(eventListener);
             listenersAdded.add(eventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-            eventHandler = new WalletNavigationStructureDownloadedHandler();
-            ((WalletNavigationStructureDownloadedHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            EventListener eventListenerStructureDownloaded = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            EventHandler eventHandlerStructureDownloaded = new WalletNavigationStructureDownloadedHandler(this);
+            eventListenerStructureDownloaded.setEventHandler(eventHandlerStructureDownloaded);
+            eventManager.addListener(eventListenerStructureDownloaded);
+            listenersAdded.add(eventListenerStructureDownloaded);
 
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -261,7 +260,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 //            layoutFile = pluginFileSystem.createTextFile(pluginId, linkToRepo, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 //
 //        } catch (CantCreateFileException cantPersistFileException) {
-//            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " +filename, "");
+//            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES",cantPersistFileException,"Error persist image file " +filename, "");
 //        }
 //
 //        layoutFile.setContent(xml);
@@ -269,7 +268,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 //            layoutFile.persistToMedia();
 //        }
 //        catch(CantPersistFileException cantPersistFileException){
-//            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " + filename, "");
+//            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES",cantPersistFileException,"Error persist image file " + filename, "");
 //
 //        }
     }
@@ -1140,11 +1139,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        try {
-            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "BitDubai", "medium", "mdpi", "default", "en", "1.0.0");
-        } catch (WalletResourcesInstalationException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "BitDubai", "medium", "default", "en", "1.0.0");
+//        } catch (WalletResourcesInstalationException e) {
+//            e.printStackTrace();
+//        }
 
 
         try{

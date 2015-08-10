@@ -34,11 +34,8 @@ public class LoggerAddonRoot implements Addon, LoggerSystemOs, Service {
          * I initialize the logger Manager
          */
         loggerManager = new LoggerManager();
-        try {
-            this.serviceStatus = ServiceStatus.STARTED;
-    } catch (Exception exception) {
-        throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-    }
+
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 

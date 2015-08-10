@@ -9,7 +9,7 @@ package com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exce
  */
 public class CantGetWalletAddressBookException extends WalletAddressBookException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T GET WALLET ADDRESS BOOK EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET REQUESTED ADDRESS BOOK EXCEPTION";
 
     public CantGetWalletAddressBookException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);

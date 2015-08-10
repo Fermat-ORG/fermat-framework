@@ -36,8 +36,7 @@ public interface WalletInstallationProcess {
      * @param walletCatalogueId  the name of the icon of the wallet
      * @param walletVersion   the wallet version
      * @param screenSize   the screen size
-     * @param screenDensity   the screen density
-     * @param skinId      the skin id
+      * @param skinId      the skin id
      * @param skinVersion   the skin version
      * @param skinName   the skin name
      * @param skinPreview the skin preview image name
@@ -58,7 +57,6 @@ public interface WalletInstallationProcess {
                                   UUID walletCatalogueId,
                                   Version walletVersion,
                                   String screenSize,
-                                  String screenDensity,
                                   UUID skinId,
                                   Version skinVersion,
                                   String skinName,

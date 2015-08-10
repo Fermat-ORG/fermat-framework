@@ -170,4 +170,13 @@ public enum PlatformLayers {
         }
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getCode();
+    }
+
 }
