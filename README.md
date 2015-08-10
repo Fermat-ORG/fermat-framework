@@ -160,16 +160,6 @@ Fermat Principles:
 
 
 
-Fermat Project Values:
-------------------------------------------------
-
-* Open Source
-* Developer Community
-* Reutilization of software components.
-* Right of Privacy
-* Simplicity
-* Collaboration
-
 
 How to install and run Fermat
 -------------------------------
