@@ -198,7 +198,7 @@ you to fix common problems and find extra help if needed.
 
 
 
-------------------------------------------------
+
 Status of the Project:
 ------------------------------------------------
 
