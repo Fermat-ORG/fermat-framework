@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantLoadSettingsFileException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "ERROR READ WALLET SETTINGS XML: ";
+    public static final String DEFAULT_MESSAGE = "ERROR READ REQUESTED SETTINGS XML: ";
 
     public CantLoadSettingsFileException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);

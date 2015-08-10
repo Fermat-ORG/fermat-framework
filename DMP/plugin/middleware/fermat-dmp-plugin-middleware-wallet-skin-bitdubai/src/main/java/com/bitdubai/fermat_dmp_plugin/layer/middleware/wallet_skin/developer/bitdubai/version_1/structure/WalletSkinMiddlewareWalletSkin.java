@@ -35,13 +35,15 @@ public class WalletSkinMiddlewareWalletSkin implements WalletSkin {
 
     private VersionCompatibility versionCompatibility;
 
+    private String path;
 
-    public WalletSkinMiddlewareWalletSkin(UUID id, UUID skinId, String name, String alias, SkinState state, String designerPublicKey, Version version, VersionCompatibility versionCompatibility) {
+    public WalletSkinMiddlewareWalletSkin(UUID id, UUID skinId, String name, String alias, String path, SkinState state, String designerPublicKey, Version version, VersionCompatibility versionCompatibility) {
         this.id = id;
         this.skinId = skinId;
         this.name = name;
         this.alias = alias;
         this.state = state;
+        this.path = path;
         this.designerPublicKey = designerPublicKey;
         this.version = version;
         this.versionCompatibility = versionCompatibility;
@@ -85,5 +87,10 @@ public class WalletSkinMiddlewareWalletSkin implements WalletSkin {
     @Override
     public VersionCompatibility getVersionCompatibility() {
         return versionCompatibility;
+    }
+
+    @Override
+    public String getPath() {
+        return path + name;
     }
 }
