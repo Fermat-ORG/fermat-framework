@@ -112,6 +112,7 @@ public class WalletLanguageMiddlewareDeveloperDatabaseFactory implements DealsWi
 
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
+
         List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
         /**

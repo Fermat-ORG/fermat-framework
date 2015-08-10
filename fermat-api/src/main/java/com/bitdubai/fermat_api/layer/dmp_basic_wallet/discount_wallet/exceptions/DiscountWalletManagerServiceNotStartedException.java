@@ -12,7 +12,7 @@ public class DiscountWalletManagerServiceNotStartedException extends FermatExcep
 	 */
 	private static final long serialVersionUID = 2128561424997846413L;
 
-	private static final String DEFAULT_MESSAGE = "CAN'T CREATE THE WALLET";
+	private static final String DEFAULT_MESSAGE = "CAN'T CREATE THE REQUESTED";
 
 	public DiscountWalletManagerServiceNotStartedException(final String message, final Exception cause, final String context, final String possibleReason){
 		super(DEFAULT_MESSAGE + message, cause, context, possibleReason);
