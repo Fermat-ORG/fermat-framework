@@ -6,17 +6,18 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLo
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSolveRequestLaterException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldSaveProfileImageException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSaveProfileImageException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserCancellingFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserDeletionFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 
 import java.util.List;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModule</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager</code>
  * provides the methods for the Intra Users sub app.
  */
-public interface IntraUserModule {
+public interface IntraUserModuleManager {
 
     /**
      * The method <code>createIntraUser</code> is used to create a new intra user
@@ -32,9 +33,9 @@ public interface IntraUserModule {
      * The method <code>setProfileImage</code> let the current logged in intra user set its profile
      * picture.
      * @param image the profile picture to set
-     * @throws CouldSaveProfileImageException
+     * @throws CantSaveProfileImageException
      */
-    public void setNewProfileImage(byte[] image) throws CouldSaveProfileImageException;
+    public void setNewProfileImage(byte[] image, String intraUserPublicKey) throws CantSaveProfileImageException;
 
     /**
      * The method <code>showAvailableLoginIdentities</code> lists the login identities that can be used
@@ -111,13 +112,20 @@ public interface IntraUserModule {
     public void denyConnection(String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException;
 
     /**
-     * The method <code>deleteIntraUSer</code> deletes an intra user from the list managed by this
+     * The method <code>disconnectIntraUSer</code> disconnect an intra user from the list managed by this
      * plugin
      *
-     * @param intraUserToRemovePublicKey the public key of the intra user to delete
-     * @throws IntraUserDeletionFailedException
+     * @param intraUserToDisconnectPublicKey the public key of the intra user to disconnect
+     * @throws IntraUserDisconnectingFailedException
      */
-    public void deleteIntraUSer(String intraUserToRemovePublicKey) throws IntraUserDeletionFailedException;
+    public void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException;
+
+    /**
+     * The method <code>cancelIntraUser</code> cancels an intra user from the list managed by this
+     * @param intraUserToCancelPublicKey
+     * @throws IntraUserCancellingFailedException
+     */
+    void cancelIntraUser(String intraUserToCancelPublicKey) throws IntraUserCancellingFailedException;
 
     /**
      * The method <code>getAllIntraUsers</code> returns the list of all intra users registered by the
