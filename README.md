@@ -14,7 +14,7 @@ What makes Fermat different from other wallet platforms or services?
 
 * **Fermat segments the world population and brings a custom tailored solution for each segment.** Any developer can create niche wallets for a particular group of people. Brands can easily create their own wallet for their followers.
 
-* **Fermat uses crypto currency networks as public value transport networks.** Fermat users cant choose to move their money arround the world easily and almost for free via these public value transport networks or the legacy financial system as well. 
+* **Fermat uses crypto currency networks as public value transport networks.** Fermat users cant choose to move their money arround the world easily and almost for free via these public value transport networks or the legacy financial system networks as well. 
 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [documentation](https://github.com/bitDubai/fermat/fermat-documentation) that we're anxious to add. 
