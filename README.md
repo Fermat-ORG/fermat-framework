@@ -16,6 +16,8 @@ What makes Fermat different from other wallet platforms or services?
 
 * **Fermat uses crypto currency networks as public value transport networks.** Fermat users cant choose to move their money arround the world easily and almost for free via these public value transport networks or the legacy financial system networks as well. 
 
+* **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. 
+
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [documentation](https://github.com/bitDubai/fermat/fermat-documentation) that we're anxious to add. 
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your digital wallet. 
