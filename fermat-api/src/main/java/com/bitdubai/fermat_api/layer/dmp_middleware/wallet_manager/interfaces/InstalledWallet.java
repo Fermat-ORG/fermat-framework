@@ -48,11 +48,6 @@ public interface InstalledWallet extends Serializable {
      */
     public String getWalletScreenSize();
 
-    /**
-     * This method tell us the Screen Density of the wallet
-     * @return String ScreenDensity
-     */
-    public String getWalletScreenDensity();
 
     /**
      * This method tell us the Navigation Structure Version of the wallet
@@ -103,14 +98,18 @@ public interface InstalledWallet extends Serializable {
      *
      * @return the catalog id of the wallet
      */
-    public String getWalletCatalogId();
+    public UUID getWalletCatalogId();
 
     /**
      * This method gives us the developer name of the wallet
      *
      * @return the catalog id of the wallet
      */
-    public String getWalletDeveloper();
+    public String getWalletDeveloperName();
 
-
+    /**
+     *
+     * @return
+     */
+    public String getWalletDeviceUserPublicKey();
 }

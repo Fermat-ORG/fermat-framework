@@ -76,7 +76,6 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                                   UUID walletCatalogueId,
                                   Version walletVersion,
                                   String screenSize,
-                                  String screenDensity,
                                   UUID skinId,
                                   Version skinVersion,
                                   String skinName,
@@ -98,7 +97,9 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
              */
 
         //TODO: Validar que la wallet no este ya instalada
-        // TODO: Le tengo que pasar la wallet public key
+
+        // TODO: Le tendria que pasar la wallet public key
+
             walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion);
 
 
@@ -107,7 +108,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
              */
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
 
-            walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey,deviceUserPublicKey,walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion,developerName);
+            walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey,deviceUserPublicKey,walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion,developerName,screenSize,navigationStructureVersion);
 
             walletManagerDao.persistWalletSkin(walletCatalogueId,skinId,skinName,skinPreview, skinVersion);
 

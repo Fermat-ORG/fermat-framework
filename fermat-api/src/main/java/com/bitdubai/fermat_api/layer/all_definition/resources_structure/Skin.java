@@ -42,9 +42,10 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.id = id;
         this.name = name;
         this.version = version;
-        this.navigationStructureCompatibility = navigationStructureCompatibility;
-        this.lstPortraitLayouts = lstPortraitLayouts;
-        this.lstLandscapeLayouts = lstLandscapeLayouts;
+        this.setNavigationStructureCompatibility(navigationStructureCompatibility);
+        this.setLstResources(lstResources);
+        this.setLstPortraitLayouts(lstPortraitLayouts);
+        this.setLstLandscapeLayouts(lstLandscapeLayouts);
     }
 
     public Skin() {

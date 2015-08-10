@@ -10,7 +10,7 @@ public class CantGetResourcesException extends FermatException {
 	
 	private static final long serialVersionUID = 4150767203325009811L;
 
-	private static final String DEFAULT_MESSAGE = "CAN'T GET WALLET RESOURCES: ";
+	private static final String DEFAULT_MESSAGE = "CAN'T GET REQUESTED RESOURCES: ";
 
 
 	/**

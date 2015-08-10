@@ -42,14 +42,7 @@ public interface WalletManagerManager {
      */
     public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException;
 
-    /**
-     *This method let the device user create a default wallet .
-     *
-     * @param deviceUserPublicKey
-     * @throws CantCreateDefaultWalletsException
-     */
-    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException;
-    /**
+       /**
      * This method returns the list of installed wallets in the device
      *
      * @return A list with the installed wallets information
