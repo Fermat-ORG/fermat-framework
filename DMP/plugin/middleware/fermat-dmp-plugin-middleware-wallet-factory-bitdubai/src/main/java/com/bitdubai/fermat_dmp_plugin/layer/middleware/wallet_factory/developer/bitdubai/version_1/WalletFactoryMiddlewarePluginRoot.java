@@ -29,6 +29,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -79,7 +81,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryManager {
+public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletSkin, LogManagerForDevelopers, Plugin, Service, WalletFactoryManager {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -120,6 +122,8 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
 
     private final String WALLET_FACTORY_PROJECTS_PATH = "wallet_factory_projects";
     WalletFactoryMiddlewareDao walletFactoryMiddlewareProjectDao;
+
+    private WalletSkinManager walletSkinManager;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -196,18 +200,16 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
             RepositoryManager repositoryManager=new RepositoryManager();
             GHRepository ghRepository=repositoryManager.getRepository(user, password, repository);
             //We get all the versions published of this wallet
-            List<String> directoryPaths=repositoryManager.getDirectoryContent(ghRepository,mainFolderWalletRepository);
+            List<String> directoryPaths=repositoryManager.getDirectoryContent(ghRepository, mainFolderWalletRepository);
             for(String mainFileWalletRepository: directoryPaths){
 
                 xml=repositoryManager.getFileContent(ghRepository, mainFileWalletRepository);
                 //Convert XML read from a repository file, we cast this information to a WalletFactoryProject
                 importedWalletFactoryProject=(WalletFactoryMiddlewareProject)XMLParser.parseXML(xml,importedWalletFactoryProject);
                 //Persists this wallet in the Database
-                //WalletFactoryMiddlewareDao walletFactoryMiddlewareDao = new WalletFactoryMiddlewareDao(this.pluginDatabaseSystem);
                 walletFactoryMiddlewareProjectDao.create(importedWalletFactoryProject);
                 //TODO: Deals with skins
                 //Now, we get the Skins from the repository
-                /*
                 directoryGenericsPaths=repositoryManager.getDirectoryContent(ghRepository,folderRepositoryLink+"/skins");
                 for(String path: directoryGenericsPaths){
 
@@ -217,16 +219,15 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
                     }catch (GitHubCantReadFileContent exception){
                         continue;
                     }
-                    WalletSkinMiddlewarePluginRoot walletSkinMiddlewarePluginRoot=new WalletSkinMiddlewarePluginRoot();
-                    walletSkinMiddlewarePluginRoot.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+                    //WalletSkinMiddlewarePluginRoot walletSkinMiddlewarePluginRoot=new WalletSkinMiddlewarePluginRoot();
+                    //walletSkinMiddlewarePluginRoot.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
                 }
-                */
+
                 //TODO:Deals with languages
-                /*
-                WalletLanguageMiddlewarePluginRoot walletLanguageMiddlewarePluginRoot=new WalletLanguageMiddlewarePluginRoot();
-                walletLanguageMiddlewarePluginRoot.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-                walletLanguageMiddlewarePluginRoot.setId(this.pluginId);
+                //WalletLanguageMiddlewarePluginRoot walletLanguageMiddlewarePluginRoot=new WalletLanguageMiddlewarePluginRoot();
+                //walletLanguageMiddlewarePluginRoot.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+                //walletLanguageMiddlewarePluginRoot.setId(this.pluginId);
                 directoryGenericsPaths=repositoryManager.getDirectoryContent(ghRepository,folderRepositoryLink+"/languages");
                 for(String path: directoryGenericsPaths){
 
@@ -237,14 +238,12 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
                         continue;
                     }
 
-                    Language language=walletLanguageMiddlewarePluginRoot.getLanguageFromXmlString(xmlLanguage);
+                    //Language language=walletLanguageMiddlewarePluginRoot.getLanguageFromXmlString(xmlLanguage);
                     //this.walletFactoryMiddlewareProjectDao.
 
-                }*/
+                }
 
             }
-
-            //TODO: transformar xml a WFP luego persistirlo a la base de datos, leer Skin y languages y asociarlos a WFP
 
 
         }catch(GitHubNotAuthorizedException| GitHubRepositoryNotFoundException| GitHubCredentialsExpectedException exception){
@@ -466,5 +465,12 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public void setWalletSkinManager(WalletSkinManager walletSkinManager) {
+
+        this.walletSkinManager=walletSkinManager;
+
     }
 }
