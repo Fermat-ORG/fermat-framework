@@ -82,12 +82,4 @@ public interface WalletFactoryManager {
      */
     WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
-    /**
-     * This method returns an instance of the WalletFactoryProjectProposalManager, who has the methods to interact with a proposal
-     *
-     * @param walletFactoryProject the walletFactoryProject we're working with
-     * @return the WalletFactoryProjectProposalManager we need to do the right job
-     */
-    WalletFactoryProjectProposalManager getWalletFactoryProjectProposalManager(WalletFactoryProject walletFactoryProject);
-
 }

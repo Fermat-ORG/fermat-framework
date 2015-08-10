@@ -130,57 +130,6 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
         DeveloperDatabaseTable projectTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME, projectColumns);
         tables.add(projectTable);
 
-        /**
-         * Table Project Proposal columns.
-         */
-        List<String> projectProposalColumns = new ArrayList<String>();
-
-        projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ID_COLUMN_NAME);
-        projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ALIAS_COLUMN_NAME);
-        projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME);
-        projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PATH_COLUMN_NAME);
-        projectProposalColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME);
-        /**
-         * Table Project Proposal addition.
-         */
-        DeveloperDatabaseTable projectProposalTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_TABLE_NAME, projectProposalColumns);
-        tables.add(projectProposalTable);
-
-        /**
-         * Table Project Skin columns.
-         */
-        List<String> projectSkinColumns = new ArrayList<String>();
-
-        projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_ID_COLUMN_NAME);
-        projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME);
-        projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME);
-        projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_VERSION_COLUMN_NAME);
-        projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PATH_COLUMN_NAME);
-        projectSkinColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME);
-        /**
-         * Table Project Skin addition.
-         */
-        DeveloperDatabaseTable projectSkinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_TABLE_NAME, projectSkinColumns);
-        tables.add(projectSkinTable);
-
-        /**
-         * Table Project Language columns.
-         */
-        List<String> projectLanguageColumns = new ArrayList<String>();
-
-        projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_ID_COLUMN_NAME);
-        projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_NAME_COLUMN_NAME);
-        projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME);
-        projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME);
-        projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME);
-        projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PATH_COLUMN_NAME);
-        projectLanguageColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME);
-        /**
-         * Table Project Language addition.
-         */
-        DeveloperDatabaseTable projectLanguageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TABLE_NAME, projectLanguageColumns);
-        tables.add(projectLanguageTable);
-
 
 
         return tables;
