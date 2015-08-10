@@ -34,7 +34,7 @@ Fermat Principles:
 
 * No centralized point to be attacked.
 * Multiple identities and roles per user.
-* Device Private Network concept.
+* Device Private Network (DPN) concept.
 * Pocket Money concept and a Multi-Signature Vault owned by the DPN concept.
 * Reviews and Reputation concepts. 
 
@@ -43,14 +43,14 @@ Fermat Principles:
 
 
 * Transaction responsability transmission protocols.
-* Remote technical support by wallet and plugin developers.
+* Remote technical support by wallet and plugins developers.
 
 
 ##### 5. Fermat should be usefull to each segment of the world population.
 
 
-* Niche wallet concept.
-* Branded wallet concept.
+* Niche wallets concept.
+* Branded wallets concept.
 
 
 ##### 6. Fermat should be extensible and open to innovation.
@@ -64,9 +64,9 @@ Fermat Principles:
 
 
 * Any developer could contribute to the shared infraestructure.
-* Any developer could write code for new Plugins.
-* Any developer could write code for new Niche Wallets.
-* Any developer could fork an existing Niche Wallet to further specialize it.
+* Any developer could write code for new plugins.
+* Any developer could write code for new niche wallets.
+* Any developer could fork an existing niche wallet to further specialize it.
 * Any graphic / UX designer could provide skins to existing wallets.
 * Anyone could provide language packs to existing wallets.
 
@@ -74,12 +74,12 @@ Fermat Principles:
 ##### 8. Each developer should be compesated by their contribution to Fermat.
 
 
-* Micro License concept.
-* Micro License Structure concept.
-* Fermat automatically enforcing License Agreements.
+* Micro license concept.
+* Micro license structure concept.
+* Fermat automatically enforcing license agreements.
 * Plugin ownership concept.
-* Niche Wallet ownership concept.
-* Branded Wallet onwnership concept.
+* Niche wallet ownership concept.
+* Branded wallet onwnership concept.
 * Master plan design comcept, wiht no overlaping functionality but shared ownership.
 
 
@@ -92,22 +92,22 @@ Fermat Principles:
 ##### 10. Fermat should be inclusive with crypto currency industry members. 
 
 
-* Any bitcoin / crypto / blockchain established startup could write their own Plugins and expose their services to both Fermat developers and Fermat user base.
+* Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both Fermat developers and the Fermat user base.
 * Any alt-coin community could write Plugins to enable their crypto currency within the Fermat wallet ecosystem.
 
 
 ##### 11. Fermat should be inclusive with the current financial system.
 
 
-* Banks and financial institutions could write plugins to enable Fermat wallets hold funds in Banks and current financial institutions.
+* Banks and financial institutions could write plugins to enable Fermat wallets hold funds in banks and other financial institutions.
 
-* Fermat allows it users to move money both through public value transport networks as crypto currency networks, but also thwough private or legacy financial networks.
+* Fermat allows it users to move money both through public value transport networks as crypto currency networks and also thwough private or legacy financial networks.
 
 
 ##### 12. Fermat should be unbanked-people friendly.
 
 
-* Multiple logins per device (Device User concept)
+* Multiple logins per device (Device user concept)
 * Crypto banking concept.
 
 
@@ -115,7 +115,7 @@ Fermat Principles:
 
 
 * OSA layer concept (Operative System API).
-* OS dependent UI on top of fermat concept.
+* OS dependent UI on top of Fermat concept.
 
 
 ##### 14. Fermat should learn from its user base.
@@ -125,7 +125,7 @@ Fermat Principles:
 * Voting over feature wish-lists concept.
 
 
-##### 15. Fermat should be the finacially most efficient way to move / spend the end user's money. 
+##### 15. Fermat should be the finacially most efficient way to move or spend the end user's money. 
 
 
 * Cryto Vault for multiple wallets concept.
@@ -143,7 +143,7 @@ Fermat Principles:
 
 
 ------------------------------------------------
-Values:
+Fermat Project Values:
 ------------------------------------------------
 
 * Open Source
