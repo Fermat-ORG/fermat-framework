@@ -10,7 +10,7 @@ What makes Fermat different from other wallet platforms or services?
 
 * **Fermat is P2P.** That makes it censorship resistent and difficult to be attacked.
 
-* **Fermat runs on end user devices.** That enables users to hold their own money eliminating the need to trust a third party. 
+* **Fermat runs on end users' devices.** That enables users to hold their own money eliminating the need to trust a third party. 
 * **Fermat segments the world population and brings a custom tailored solution for each segment.** Any developer can create niche wallets for a particular group of people.
 
 * **Fermat uses crypto currency networks as public value transport networks.** Fermat users cant choose to move their money arround the world easily and almost for free via these public value transport networks or the legacy financial system as well. 
