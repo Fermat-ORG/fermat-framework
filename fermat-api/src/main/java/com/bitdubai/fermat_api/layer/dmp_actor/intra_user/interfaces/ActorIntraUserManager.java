@@ -1,9 +1,10 @@
 package com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDecideAcceptanceLaterException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDeleteIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
 
@@ -60,13 +61,21 @@ public interface ActorIntraUserManager {
      */
     void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws CantDenyConnectionException;
 
-    /**
-     * The method <code>deleteIntraUser</code> deletes an intra user from the connections registry
+    /**     
+     * The method <code>disconnectIntraUser</code> disconnect an intra user from the connections registry
      * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
-     * @param intraUserToRemovePublicKey The public key of the intra user to delete as connection
-     * @throws CantDeleteIntraUserException
+     * @param intraUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
+     * @throws CantDisconnectIntraUserException
      */
-    void deleteIntraUser(String intraUserLoggedInPublicKey, String intraUserToRemovePublicKey) throws CantDeleteIntraUserException;
+    void disconnectIntraUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraUserException;
+
+    /**
+     * The method <code>cancelIntraUser</code> cancels an intra user from the connections registry
+     * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+     * @param intraUserToCancelPublicKey The public key of the intra user to cancel as connection
+     * @throws CantCancelIntraUserException
+     */
+    void cancelIntraUser(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws CantCancelIntraUserException;
 
     /**
      * The method <code>getAllIntraUsers</code> shows the list of all intra users that are connections of the logged in one.
