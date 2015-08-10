@@ -25,7 +25,7 @@ Fermat Principles:
 
 
 * Point to point encrypted communications.
-* Geofenced P2P network allowing the shortest communication path between peers.
+* Geofenced P2P network enabling the shortest communication path between peers.
 * Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, mesh, etc.).
 
 
