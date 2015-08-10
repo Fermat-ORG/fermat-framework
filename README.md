@@ -170,15 +170,6 @@ Installers for the latest stable build for Android, Mac, Windows and Linux (Debi
 
 #### Usage
 
-By default, Brackets opens a folder containing some simple "Getting Started" content.
-You can choose a different folder to edit using *File > Open Folder*.
-
-Most of Brackets should be pretty self-explanatory, but for information on how
-to use its unique features, like Quick Edit and Live Preview, please read
-[How to Use Brackets](http://github.com/adobe/brackets/wiki/How-to-Use-Brackets). 
-Also, see the [release notes](http://github.com/adobe/brackets/wiki/Release-Notes)
-for a list of new features and known issues in each build.
-
 In addition to the core features built into Fermat, there is a large and growing
 community of developers building plugins and niche wallets that add all sorts of useful functionality.
 
