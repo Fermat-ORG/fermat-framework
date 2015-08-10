@@ -13,12 +13,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantExportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.GitHubCantGetDirectoryContent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.GitHubCantReadFileContent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
@@ -45,6 +47,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposalManager;
 
 
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.utils.RepositoryManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -177,17 +180,73 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
      * Modified by Manuel Perez on 07/06/2015
      * */
     @Override
-    public void importWalletFactoryProjectFromRepository(String user, String password, String repository, String fileRepositoryLink) throws CantImportWalletFactoryProjectException {
+    public void importWalletFactoryProjectFromRepository(String user, String password, String repository, String folderRepositoryLink) throws CantImportWalletFactoryProjectException {
         // TODO LOOK FOR A WAY TO TO THIS
-        WalletFactoryProject importedWalletFactoryProject;
-        String repositoryURL;
+        WalletFactoryMiddlewareProject importedWalletFactoryProject=null;
+        //String mainFileWalletRepository;
+        String xml;
+        String xmlSkin;
+        String xmlLanguage;
+        String mainFolderWalletRepository=folderRepositoryLink+"/navigation_structure";
+        List<String> directoryGenericsPaths;
+        WalletFactoryMiddlewareProjectSkin walletFactoryMiddlewareProjectSkin=null;
+        //String repositoryURL;
 
         try{
             //Import from repository
             RepositoryManager repositoryManager=new RepositoryManager();
-            GHRepository ghRepository=repositoryManager.getRepository(user,password,repository);
-            repositoryURL= ghRepository.getHtmlUrl().toString();
-            String xml=repositoryManager.getFileContent(ghRepository, fileRepositoryLink);
+            GHRepository ghRepository=repositoryManager.getRepository(user, password, repository);
+            //We get all the versions published of this wallet
+            List<String> directoryPaths=repositoryManager.getDirectoryContent(ghRepository,mainFolderWalletRepository);
+            for(String mainFileWalletRepository: directoryPaths){
+
+                xml=repositoryManager.getFileContent(ghRepository, mainFileWalletRepository);
+                //Convert XML read from a repository file, we cast this information to a WalletFactoryProject
+                importedWalletFactoryProject=(WalletFactoryMiddlewareProject)XMLParser.parseXML(xml,importedWalletFactoryProject);
+                //Persists this wallet in the Database
+                //WalletFactoryMiddlewareDao walletFactoryMiddlewareDao = new WalletFactoryMiddlewareDao(this.pluginDatabaseSystem);
+                walletFactoryMiddlewareProjectDao.create(importedWalletFactoryProject);
+                //TODO: Deals with skins
+                //Now, we get the Skins from the repository
+                /*
+                directoryGenericsPaths=repositoryManager.getDirectoryContent(ghRepository,folderRepositoryLink+"/skins");
+                for(String path: directoryGenericsPaths){
+
+                    try{
+                        xmlSkin=repositoryManager.getFileContent(ghRepository,path);
+
+                    }catch (GitHubCantReadFileContent exception){
+                        continue;
+                    }
+                    WalletSkinMiddlewarePluginRoot walletSkinMiddlewarePluginRoot=new WalletSkinMiddlewarePluginRoot();
+                    walletSkinMiddlewarePluginRoot.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+
+                }
+                */
+                //TODO:Deals with languages
+                /*
+                WalletLanguageMiddlewarePluginRoot walletLanguageMiddlewarePluginRoot=new WalletLanguageMiddlewarePluginRoot();
+                walletLanguageMiddlewarePluginRoot.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+                walletLanguageMiddlewarePluginRoot.setId(this.pluginId);
+                directoryGenericsPaths=repositoryManager.getDirectoryContent(ghRepository,folderRepositoryLink+"/languages");
+                for(String path: directoryGenericsPaths){
+
+                    try{
+                        xmlLanguage=repositoryManager.getFileContent(ghRepository,path);
+
+                    }catch (GitHubCantReadFileContent exception){
+                        continue;
+                    }
+
+                    Language language=walletLanguageMiddlewarePluginRoot.getLanguageFromXmlString(xmlLanguage);
+                    //this.walletFactoryMiddlewareProjectDao.
+
+                }*/
+
+            }
+
+            //TODO: transformar xml a WFP luego persistirlo a la base de datos, leer Skin y languages y asociarlos a WFP
+
 
         }catch(GitHubNotAuthorizedException| GitHubRepositoryNotFoundException| GitHubCredentialsExpectedException exception){
 
@@ -197,7 +256,20 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
 
             throw new CantImportWalletFactoryProjectException(GitHubCantReadFileContent.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause" );
 
-        }
+        }catch(CantCreateWalletFactoryProjectException exception){
+
+            throw new CantImportWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause");
+
+        }catch(GitHubCantGetDirectoryContent exception){
+
+            throw new CantImportWalletFactoryProjectException(GitHubCantGetDirectoryContent.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause");
+
+
+        }/*catch(CantGetLanguageException exception){
+
+            throw new CantImportWalletFactoryProjectException(CantGetLanguageException.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause");
+
+        }*/
 
 
 

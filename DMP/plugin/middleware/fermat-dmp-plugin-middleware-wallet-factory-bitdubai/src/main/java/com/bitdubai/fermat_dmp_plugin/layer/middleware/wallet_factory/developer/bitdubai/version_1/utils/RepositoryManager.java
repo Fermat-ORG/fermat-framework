@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.utils;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.GitHubCantGetDirectoryContent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.GitHubCantReadFileContent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
@@ -24,6 +25,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -124,6 +126,34 @@ public class RepositoryManager {
 
         } catch (IOException e) {
             throw new GitHubCantReadFileContent(GitHubCantReadFileContent.DEFAULT_MESSAGE,e,"Can't read file content","Check the cause");
+        } catch (Exception exception){
+
+            throw new GitHubCantReadFileContent(GitHubCantReadFileContent.DEFAULT_MESSAGE,exception,"Can't read file content","Check the cause");
+
+        }
+
+    }
+
+    public List<String> getDirectoryContent(GHRepository ghRepository, String fileRepositoryLink) throws GitHubCantGetDirectoryContent {
+
+        try {
+            List<GHContent> directoryList=ghRepository.getDirectoryContent(fileRepositoryLink);
+            List<String> directoryPaths=new ArrayList<>();
+
+            for(GHContent path: directoryList){
+
+                directoryPaths.add(path.getGitUrl());
+
+            }
+
+            return directoryPaths;
+
+        } catch (IOException e) {
+            throw new GitHubCantGetDirectoryContent(GitHubCantGetDirectoryContent.DEFAULT_MESSAGE,e,"Can't read file content","Check the cause");
+        }catch (Exception exception){
+
+            throw new GitHubCantGetDirectoryContent(GitHubCantGetDirectoryContent.DEFAULT_MESSAGE,exception,"Can't read file content","Check the cause");
+
         }
 
     }
