@@ -11,19 +11,20 @@ public interface IntraUserLoginIdentity {
      *
      * @return the alias of the intra user
      */
-    public String getAlias();
+    String getAlias();
 
     /**
      * The method  <code>getPublicKey</code> returns the public key of the intra user identity
      *
      * @return the public key of the intra user
      */
-    public String getPublicKey();
+    String getPublicKey();
 
     /**
      * The method <code>getProfileImage</code> returns the profile image of the intra user identity
      *
      * @return the profile image of the intra user
      */
-    public byte[] getProfileImage();
+    byte[] getProfileImage();
+
 }

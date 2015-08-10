@@ -24,47 +24,5 @@ public class WalletFactoryMiddlewareDatabaseConstants {
     static final String PROJECT_WALLET_TYPE_COLUMN_NAME = "wallet_type";
 
     static final String PROJECT_FIRST_KEY_COLUMN = "id";
-
-    /**
-     * Project Proposal database table definition.
-     */
-    static final String PROJECT_PROPOSAL_TABLE_NAME = "project_proposal";
-
-    static final String PROJECT_PROPOSAL_ID_COLUMN_NAME = "id";
-    static final String PROJECT_PROPOSAL_ALIAS_COLUMN_NAME = "alias";
-    static final String PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME = "factory_project_state";
-    static final String PROJECT_PROPOSAL_PATH_COLUMN_NAME = "path";
-    static final String PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME = "project_id";
-
-    static final String PROJECT_PROPOSAL_FIRST_KEY_COLUMN = "id";
-
-    /**
-     * Project Skin database table definition.
-     */
-    static final String PROJECT_SKIN_TABLE_NAME = "project_skin";
-
-    static final String PROJECT_SKIN_ID_COLUMN_NAME = "id";
-    static final String PROJECT_SKIN_NAME_COLUMN_NAME = "name";
-    static final String PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME = "designer_public_key";
-    static final String PROJECT_SKIN_VERSION_COLUMN_NAME = "version";
-    static final String PROJECT_SKIN_PATH_COLUMN_NAME = "path";
-    static final String PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME = "project_proposal_id";
-
-    static final String PROJECT_SKIN_FIRST_KEY_COLUMN = "id";
-
-    /**
-     * Project Language database table definition.
-     */
-    static final String PROJECT_LANGUAGE_TABLE_NAME = "project_language";
-
-    static final String PROJECT_LANGUAGE_ID_COLUMN_NAME = "id";
-    static final String PROJECT_LANGUAGE_NAME_COLUMN_NAME = "name";
-    static final String PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME = "language_type";
-    static final String PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME = "translator_public_key";
-    static final String PROJECT_LANGUAGE_VERSION_COLUMN_NAME = "version";
-    static final String PROJECT_LANGUAGE_PATH_COLUMN_NAME = "path";
-    static final String PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME = "project_proposal_id";
-
-    static final String PROJECT_LANGUAGE_FIRST_KEY_COLUMN = "id";
-
+    
 }
