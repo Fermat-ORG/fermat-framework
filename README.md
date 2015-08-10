@@ -21,14 +21,14 @@ You can see some cool visualizations of the Fermat Platform and its P2P network 
 [Fermat.org](https://www.fermat.org).
 
 
-Mission / Purpose:
+Mission / purpose:
 ------------------------------------------------
 
 
 > Empower every single people in the world with the appropiate tools to hold and move their money in a digital format in an efficient, secure an private way.
 
 
-Fermat Principles:
+Fermat principles:
 ------------------------------------------------
 
 
