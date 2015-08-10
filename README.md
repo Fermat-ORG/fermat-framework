@@ -21,7 +21,6 @@ You can see some cool visualizations of the Fermat Platform and its P2P network 
 [Fermat.org](https://www.fermat.org).
 
 
-------------------------------------------------
 Mission / Purpose:
 ------------------------------------------------
 
@@ -29,7 +28,6 @@ Mission / Purpose:
 > Empower every single people in the world with the appropiate tools to hold and move their money in a digital format in an efficient, secure an private way.
 
 
-------------------------------------------------
 Fermat Principles:
 ------------------------------------------------
 
@@ -162,7 +160,6 @@ Fermat Principles:
 
 
 
-------------------------------------------------
 Fermat Project Values:
 ------------------------------------------------
 
@@ -172,6 +169,42 @@ Fermat Project Values:
 * Right of Privacy
 * Simplicity
 * Collaboration
+
+
+How to install and run Fermat
+-------------------------------
+#### Download
+
+Installers for the latest stable build for Android, Mac, Windows and Linux (Debian/Ubuntu) can be [downloaded here](http://fermat.org/download/).
+
+
+#### Usage
+
+By default, Brackets opens a folder containing some simple "Getting Started" content.
+You can choose a different folder to edit using *File > Open Folder*.
+
+Most of Brackets should be pretty self-explanatory, but for information on how
+to use its unique features, like Quick Edit and Live Preview, please read
+[How to Use Brackets](http://github.com/adobe/brackets/wiki/How-to-Use-Brackets). 
+Also, see the [release notes](http://github.com/adobe/brackets/wiki/Release-Notes)
+for a list of new features and known issues in each build.
+
+In addition to the core features built into Fermat, there is a large and growing
+community of developers building plugins and niche wallets that add all sorts of useful functionality.
+
+See the [Fermat Plugins Registry](https://github.com/bitDubai/fermat/fermat-documentation)
+for a list of available Plugins. 
+
+See the [Fermat Plugins Niche Wallets Registry](https://github.com/bitDubai/fermat/fermat-documentation)
+for a list of Niche Wallets. 
+
+For installation instructions and running from the source code, see the [documentation](https://github.com/bitDubai/fermat/fermat-documentation).
+
+#### Need help?
+
+Having problems compiling or running Fermat the first time, or not sure how to use Fermat?  Please 
+review [Troubleshooting](https://github.com/bitDubai/fermat/fermat-documentation), which helps 
+you to fix common problems and find extra help if needed.
 
 
 
