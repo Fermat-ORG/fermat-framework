@@ -3,18 +3,18 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 
-
 /**
- * Created by rodrigo on 2015.07.17..
+ * Created by rodrigo on 2015.07.17.
  */
 
-public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity{
+public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity {
     /**
      * Activity class member variables
      */
@@ -36,6 +36,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     StatusBar statusBar;
 
+    Map<WizardTypes, Wizard> wizards;
+
     public Activity() {
     }
 
@@ -51,7 +53,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.type = type;
     }
 
-    public void addFragment (FermatFragments fermatFragments ,Fragment fragment){
+    public void addFragment(FermatFragments fermatFragments, Fragment fragment) {
         fragments.put(fermatFragments, fragment);
     }
 
@@ -71,14 +73,14 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.tabStrip = tabStrip;
     }
 
-    public void setStatusBar(StatusBar statusBar){
-        this.statusBar=statusBar;
+    public void setStatusBar(StatusBar statusBar) {
+        this.statusBar = statusBar;
     }
 
     /**
      * Activity  interface implementation.
      */
-    public String getColor()  {
+    public String getColor() {
         return this.color;
     }
 
@@ -129,14 +131,33 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         while (eSubApp.hasNext()) {
             Map.Entry<FermatFragments, Fragment> fragmentEntryEntry = eSubApp.next();
             Fragment subApp = (Fragment) fragmentEntryEntry.getValue();
-            if(subApp.getType().equals(fragment)){
-                lastFragment=fragment;
+            if (subApp.getType().equals(fragment)) {
+                lastFragment = fragment;
                 return subApp;
             }
         }
         return null;
     }
 
+    /**
+     * Add runtime Wizard to this Activity
+     *
+     * @param wizardType WizardType enumerable
+     * @param wizard     runtime wizard object to attach to this activity
+     */
+    public void addWizard(WizardTypes wizardType, Wizard wizard) {
+        if (wizards == null)
+            wizards = new HashMap<>();
+        wizards.put(wizardType, wizard);
+    }
 
+    /***
+     * Get Wizards attached to this Activity
+     *
+     * @return HasMap Wizards
+     */
+    public Map<WizardTypes, Wizard> getWizards() {
+        return wizards;
+    }
 }
 

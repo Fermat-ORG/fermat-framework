@@ -16,10 +16,10 @@ import java.util.UUID;
  */
 public class WalletNavigationStructureDownloadedHandler implements EventHandler {
 
-    WalletRuntimeManager walletRuntimeManager;
+    private final WalletRuntimeManager walletRuntimeManager;
 
-    public void setWalletRuntimeManager(WalletRuntimeManager walletRuntimeManager) {
-        this.walletRuntimeManager = walletRuntimeManager;
+    public WalletNavigationStructureDownloadedHandler(final WalletRuntimeManager runtimeManager){
+        this.walletRuntimeManager = runtimeManager;
     }
 
 
@@ -30,7 +30,7 @@ public class WalletNavigationStructureDownloadedHandler implements EventHandler 
         String link = walletNavigationStructureDownloadedEvent.getLinkToRepo();
         UUID skinId = walletNavigationStructureDownloadedEvent.getSkinId();
         String filename = walletNavigationStructureDownloadedEvent.getFilename();
-
+        System.out.println("JORGEEEEEEEEEEEEEEEEEEEEEEEEEEE HOla");
 
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
 

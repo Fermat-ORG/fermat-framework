@@ -69,6 +69,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.ActorDeveloperPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
 import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.WalletNavigationStructureManagerMiddlewarePluginRoot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 50;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 51;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -824,6 +825,18 @@ public class PluginsIdentityManager {
                 WalletLanguageMiddlewarePluginRoot tryType;
                 tryType = (WalletLanguageMiddlewarePluginRoot) plugin;
                 pluginIndex = 49;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                WalletNavigationStructureManagerMiddlewarePluginRoot tryType;
+                tryType = (WalletNavigationStructureManagerMiddlewarePluginRoot) plugin;
+                pluginIndex = 50;
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.

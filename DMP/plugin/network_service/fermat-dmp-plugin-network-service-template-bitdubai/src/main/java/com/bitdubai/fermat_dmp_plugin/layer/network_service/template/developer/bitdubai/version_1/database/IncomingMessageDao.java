@@ -508,7 +508,7 @@ public class IncomingMessageDao {
     }
 
     /**
-     * Construct a DatabaseTableRecord whit the values of the a intraUserNetworkServiceMessage pass
+     * Construct a DatabaseTableRecord whit the values of the a IncomingTemplateNetworkServiceMessage pass
      * by parameter
      *
      * @param incomingTemplateNetworkServiceMessage the contains the values

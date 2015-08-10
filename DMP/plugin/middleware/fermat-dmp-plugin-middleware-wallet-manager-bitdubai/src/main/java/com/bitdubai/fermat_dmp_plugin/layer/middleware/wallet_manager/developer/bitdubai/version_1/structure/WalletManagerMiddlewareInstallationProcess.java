@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.exceptions.CantPersistWalletException;
@@ -76,7 +76,6 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                                   UUID walletCatalogueId,
                                   Version walletVersion,
                                   String screenSize,
-                                  String screenDensity,
                                   UUID skinId,
                                   Version skinVersion,
                                   String skinName,
@@ -98,8 +97,10 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
              */
 
         //TODO: Validar que la wallet no este ya instalada
-        // TODO: Le tengo que pasar la wallet public key
-            walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, screenDensity, skinName, language.value(), navigationStructureVersion);
+
+        // TODO: Le tendria que pasar la wallet public key
+
+            walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion);
 
 
             /**
@@ -107,7 +108,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
              */
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
 
-            walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey,deviceUserPublicKey,walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion,developerName);
+            walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey,deviceUserPublicKey,walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion,developerName,screenSize,navigationStructureVersion);
 
             walletManagerDao.persistWalletSkin(walletCatalogueId,skinId,skinName,skinPreview, skinVersion);
 
