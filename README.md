@@ -1,6 +1,26 @@
 Readme
 ========= 
 
+Welcome to Fermat! 
+-------------------
+
+Fermat is an open-source P2P digital wallet platform that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+
+What makes Fermat different from other wallet platforms or services?
+
+* **Fermat is P2P.** That makes it censorship resistent and difficult to be attacked.
+
+* **Fermat runs on end user devices.** That enables users to hold their own money eliminating the need to trust a third party. 
+* **Fermat segments the world population and brings a custom tailored solution for each segment.** Any developer can create niche wallets for a particular group of people.
+
+Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
+[documentation](https://github.com/bitDubai/fermat/fermat-documentation) that we're anxious to add. 
+So take Brackets out for a spin and let us know how we can make it your favorite editor. 
+
+You can see some visualization of Fermat platform and its p2p network at 
+[Fermat.org](https://www.fermat.org).
+
+
 ------------------------------------------------
 Mission / Purpose:
 ------------------------------------------------
