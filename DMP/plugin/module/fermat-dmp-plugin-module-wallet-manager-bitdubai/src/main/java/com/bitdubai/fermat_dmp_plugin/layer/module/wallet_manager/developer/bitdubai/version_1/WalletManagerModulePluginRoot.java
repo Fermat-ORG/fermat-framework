@@ -2,19 +2,29 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCreateWalletException;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantEnableWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.NewWalletCreationFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletRemovalFailedException;
@@ -67,7 +77,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerModulePluginRoot implements Service, WalletManagerModule, DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin {
+public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
 
 
     /**
@@ -328,19 +338,6 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
                 lstInstalledWallet.add(installedWallet);
             }
 
-         //   TEST
-      /*   InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
-                    new ArrayList<InstalledSkin>(),
-                    new ArrayList<InstalledLanguage>(),
-                    "reference_wallet_icon",
-                    "Bitcoin Reference Wallet",
-                    "reference_wallet",
-                    "wallet_platform_identifier",
-                    new Version(1,0,0)
-            );
-
-            lstInstalledWallet.add(installedWallet);*/
-
 
         }
         catch (CantListWalletsException e) {
@@ -564,6 +561,69 @@ public class WalletManagerModulePluginRoot implements Service, WalletManagerModu
 
     }
 
+    //TODO: revisar si esta interface Wallet Manager se va a usar (Natalia)
+    /**
+     * WalletManager Interface implementation.
+     */
+
+
+
+    //TODO: Analizar este metodo deberia reemplazarce por el metodo getInstalledWallets de la interface WalletManagerModule que ya esta implementado (Natalia)
+    public List<InstalledWallet> getUserWallets() {
+        // Harcoded para testear el circuito más arriba
+        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "reference_wallet_icon",
+                "Bitcoin Reference Wallet",
+                "reference_wallet",
+                "wallet_platform_identifier",
+                new Version(1,0,0)
+        );
+
+        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+        lstInstalledWallet.add(installedWallet);
+        return lstInstalledWallet;
+    }
+
+    @Override
+    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException {
+
+        /**
+         * By now I will create only a new wallet, In the future there will be more than one default wallets.
+         */
+
+      //  Wallet wallet = new WalletManagerWallet();
+
+      //  ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
+       // ((DealsWithEvents) wallet).setEventManager(eventManager);
+        //((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
+
+        //try {
+        //aquí al crear la wallet se le deben pasar todos los parametros de esta
+        //wallet.createWallet("public_key_hardcoded");
+        //} catch (CantCreateWalletException cantCreateWalletException) {
+        /**
+         * Well, if it is not possible to create a wallet, then we have a problem that I can not handle...
+         */
+        //    System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
+        //    cantCreateWalletException.printStackTrace();
+
+        //    throw new CantCreateDefaultWalletsException();
+        //}
+
+    }
+
+    @Override
+    public void enableWallet() throws CantEnableWalletException{
+
+    }
+    /**
+     *
+     * @param deviceUserPublicKey
+     * @throws CantLoadWalletsException
+     */
+    @Override
     public void loadUserWallets(String deviceUserPublicKey) throws CantLoadWalletsException {
 
         this.deviceUserPublicKey = deviceUserPublicKey;
