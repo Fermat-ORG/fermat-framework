@@ -198,7 +198,7 @@ Status of the Project:
 
 As of August 2015 the state of the project is the following:
 
-State of the code: Under development for 2 months. No realeses yet. 12 full time developers working on it.
+State of the code: Under development for 2 months. No realeses yet. 12 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
 Future path of development: Active (First release with very limited features schedulled for late September 2015).
 
