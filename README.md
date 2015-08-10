@@ -6,7 +6,7 @@ Mission / Purpose:
 ------------------------------------------------
 
 
-> Empower every single people in the world with the appropiate tools to hold and move their money in a digital format in a secure an private way.
+> Empower every single people in the world with the appropiate tools to hold and move their money in a digital format in an efficient, secure an private way.
 
 
 ------------------------------------------------
