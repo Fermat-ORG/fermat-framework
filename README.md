@@ -202,3 +202,12 @@ State of the code: Under development for 2 months. No realeses yet. 12 full time
 
 Future path of development: Active (First release with very limited features schedulled for late September 2015).
 
+
+
+I want to help with the code!
+------------------------------------------------
+
+Awesome! _There are lots of ways you can help._ First read 
+[CONTRIBUTING.md](https://github.com/bitDubai/fermat/CONTRIBUTING.md), 
+then learn how to [pull the repo and hack on Fermat](https://github.com/bitDubai/fermat/fermat-documentation/How-to-Hack-on-Fermat).
+
