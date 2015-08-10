@@ -154,3 +154,14 @@ Fermat Project Values:
 * Collaboration
 
 
+
+------------------------------------------------
+Status of the Project:
+------------------------------------------------
+
+As of August 2015 the state of the project is:
+
+State of the code: Under development for 2 months. No realeses yet. 12 full time developers working on it.
+
+Future path of development: Active (First Release schedulled for late September 2015).
+
