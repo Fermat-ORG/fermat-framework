@@ -217,8 +217,11 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         stringBuilder.append(System.lineSeparator());
         stringBuilder.append("IsDefault: ");
         stringBuilder.append(this.isDefault);
-        stringBuilder.append("ScreenSize");
+        stringBuilder.append(System.lineSeparator());
+        stringBuilder.append("ScreenSize: ");
         stringBuilder.append(this.screenSize);
         return stringBuilder.toString();
     }
+
+
 }

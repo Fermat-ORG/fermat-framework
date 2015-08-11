@@ -260,7 +260,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 //            layoutFile = pluginFileSystem.createTextFile(pluginId, linkToRepo, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 //
 //        } catch (CantCreateFileException cantPersistFileException) {
-//            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " +filename, "");
+//            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES",cantPersistFileException,"Error persist image file " +filename, "");
 //        }
 //
 //        layoutFile.setContent(xml);
@@ -268,7 +268,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 //            layoutFile.persistToMedia();
 //        }
 //        catch(CantPersistFileException cantPersistFileException){
-//            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " + filename, "");
+//            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES",cantPersistFileException,"Error persist image file " + filename, "");
 //
 //        }
     }

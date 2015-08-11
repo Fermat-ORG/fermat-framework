@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPendingPublicationWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.WalletPublicationFailedException;
@@ -23,7 +22,6 @@ public interface WalletPublisherManager {
      * @return The wallet factory project names and associated proposals that
      * @throws CantGetPendingPublicationWalletsException
      */
-    public Map<String,List<WalletFactoryProjectProposal>> getPendingPublicationWallets() throws CantGetPendingPublicationWalletsException;
 
     public Map<String,List<PublishedWallet>> getPublishedWallets() throws CantGetPublishedWalletsException;
 
@@ -34,7 +32,6 @@ public interface WalletPublisherManager {
      * @param walletFactoryProjectProposal the wallet factory project to publish
      * @return true if it can be published, false otherwise.
      */
-    public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal);
 
     /**
      * This method calls the wallet publisher plugin in the middleware layer to publish it in the wallet store.
@@ -42,5 +39,4 @@ public interface WalletPublisherManager {
      * @param walletFactoryProjectProposal the wallet factory project to publish
      * @throws WalletPublicationFailedException
      */
-    public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws WalletPublicationFailedException;
 }

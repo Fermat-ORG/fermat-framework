@@ -124,6 +124,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
                 UUID skinId = record.getUUIDValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_ID_COLUMN_NAME);
                 String name = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_NAME_COLUMN_NAME);
                 String alias = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ALIAS_COLUMN_NAME);
+                String path = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_PATH_COLUMN_NAME);
                 SkinState state = SkinState.getByCode(record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_STATE_COLUMN_NAME));
                 Version version = new Version(record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_VERSION_COLUMN_NAME));
 
@@ -135,7 +136,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
                 } catch (InvalidParameterException e) {
                     throw new CantListWalletSkinsException(CantListWalletSkinsException.DEFAULT_MESSAGE, e, "Cannot instance Version Compatibility", "");
                 }
-                WalletSkinMiddlewareWalletSkin walletSkin = new WalletSkinMiddlewareWalletSkin(id, skinId, name, alias, state, designerPublicKey, version, versionCompatibility);
+                WalletSkinMiddlewareWalletSkin walletSkin = new WalletSkinMiddlewareWalletSkin(id, skinId, name, alias, path, state, designerPublicKey, version, versionCompatibility);
 
                 walletSkins.add(walletSkin);
             }
@@ -167,6 +168,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
                 UUID id = record.getUUIDValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ID_COLUMN_NAME);
                 String name = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_NAME_COLUMN_NAME);
                 String alias = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ALIAS_COLUMN_NAME);
+                String path = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_PATH_COLUMN_NAME);
                 SkinState state = SkinState.getByCode(record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_STATE_COLUMN_NAME));
                 String designerPublicKey = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME);
 
@@ -180,7 +182,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
                 }
 
                 database.closeDatabase();
-                return new WalletSkinMiddlewareWalletSkin(id, skinId, name, alias, state, designerPublicKey, version, versionCompatibility);
+                return new WalletSkinMiddlewareWalletSkin(id, skinId, name, alias, path, state, designerPublicKey, version, versionCompatibility);
             } else {
                 database.closeDatabase();
                 throw new SkinNotFoundException(SkinNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet skin with this name.");
@@ -210,6 +212,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
                 UUID skinId = record.getUUIDValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_ID_COLUMN_NAME);
                 String name = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_NAME_COLUMN_NAME);
                 String alias = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ALIAS_COLUMN_NAME);
+                String path = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_PATH_COLUMN_NAME);
                 SkinState state = SkinState.getByCode(record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_STATE_COLUMN_NAME));
                 String designerPublicKey = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME);
                 Version version = new Version(record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_VERSION_COLUMN_NAME));
@@ -224,7 +227,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
                 }
 
                 database.closeDatabase();
-                return new WalletSkinMiddlewareWalletSkin(id, skinId, name, alias, state, designerPublicKey, version, versionCompatibility);
+                return new WalletSkinMiddlewareWalletSkin(id, skinId, name, alias, path, state, designerPublicKey, version, versionCompatibility);
             } else {
                 database.closeDatabase();
                 throw new SkinNotFoundException(SkinNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet skin with this name.");
@@ -255,6 +258,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
                 UUID id = record.getUUIDValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ID_COLUMN_NAME);
                 String name = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_NAME_COLUMN_NAME);
                 String alias = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ALIAS_COLUMN_NAME);
+                String path = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_PATH_COLUMN_NAME);
                 SkinState state = SkinState.getByCode(record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_STATE_COLUMN_NAME));
                 String designerPublicKey = record.getStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME);
 
@@ -268,7 +272,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
                 } catch (InvalidParameterException e) {
                     throw new CantListWalletSkinsException(CantListWalletSkinsException.DEFAULT_MESSAGE, e, "Cannot instance Version Compatibility", "");
                 }
-                WalletSkinMiddlewareWalletSkin walletSkin = new WalletSkinMiddlewareWalletSkin(id, skinId, name, alias, state, designerPublicKey, version, versionCompatibility);
+                WalletSkinMiddlewareWalletSkin walletSkin = new WalletSkinMiddlewareWalletSkin(id, skinId, name, alias, path, state, designerPublicKey, version, versionCompatibility);
 
                 walletSkins.add(walletSkin);
             }
@@ -294,6 +298,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
             record.setUUIDValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_ID_COLUMN_NAME, walletSkin.getId());
             record.setUUIDValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_ID_COLUMN_NAME, walletSkin.getSkinId());
             record.setStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_NAME_COLUMN_NAME, walletSkin.getName());
+            record.setStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_PATH_COLUMN_NAME, walletSkin.getPath());
             record.setStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_SKIN_STATE_COLUMN_NAME, walletSkin.getState().getCode());
             record.setStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME, walletSkin.getDesignerPublicKey().toString());
             record.setStringValue(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_VERSION_COLUMN_NAME, walletSkin.getVersion().toString());

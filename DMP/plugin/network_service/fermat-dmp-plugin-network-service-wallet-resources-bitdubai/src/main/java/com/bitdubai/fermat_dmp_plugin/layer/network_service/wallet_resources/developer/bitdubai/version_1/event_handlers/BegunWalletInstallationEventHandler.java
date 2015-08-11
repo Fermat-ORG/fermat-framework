@@ -43,7 +43,7 @@ public class BegunWalletInstallationEventHandler implements EventHandler {
         }
         else
         {
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES:",null,"Error intalled wallet resources fields" , "");
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES:",null,"Error intalled wallet resources fields" , "");
         }
 
     }

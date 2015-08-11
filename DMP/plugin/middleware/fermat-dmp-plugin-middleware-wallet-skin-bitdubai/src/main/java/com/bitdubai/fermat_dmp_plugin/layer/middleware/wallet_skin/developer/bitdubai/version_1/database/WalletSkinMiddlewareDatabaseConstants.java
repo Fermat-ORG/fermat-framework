@@ -21,6 +21,7 @@ public class WalletSkinMiddlewareDatabaseConstants {
     static final String WALLET_SKIN_SKIN_ID_COLUMN_NAME = "skin_id";
     static final String WALLET_SKIN_NAME_COLUMN_NAME = "name";
     static final String WALLET_SKIN_ALIAS_COLUMN_NAME = "alias";
+    static final String WALLET_SKIN_PATH_COLUMN_NAME = "path";
     static final String WALLET_SKIN_SKIN_STATE_COLUMN_NAME = "skin_state";
     static final String WALLET_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME = "designer_public_key";
     static final String WALLET_SKIN_VERSION_COLUMN_NAME = "version";

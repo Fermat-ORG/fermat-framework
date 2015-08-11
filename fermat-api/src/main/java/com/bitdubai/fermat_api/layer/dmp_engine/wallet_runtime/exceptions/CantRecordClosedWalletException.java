@@ -10,7 +10,7 @@ public class CantRecordClosedWalletException extends WalletRuntimeExceptions {
 	 */
 	private static final long serialVersionUID = 6359965012408786034L;
 
-	public static final String DEFAULT_MESSAGE = "CAN'T RECORD CLOSE WALLET";
+	public static final String DEFAULT_MESSAGE = "CAN'T RECORD CLOSE REQUESTED";
 
 	/**
 	 * This is the constructor that every inherited FermatException must implement

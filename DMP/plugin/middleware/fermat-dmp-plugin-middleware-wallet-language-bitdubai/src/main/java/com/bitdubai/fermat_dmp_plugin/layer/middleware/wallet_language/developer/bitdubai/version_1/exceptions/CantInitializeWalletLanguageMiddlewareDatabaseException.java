@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeWalletLanguageMiddlewareDatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE WALLET LANGUAGE MIDDLEWARE DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE REQUESTED PUBLISHED MIDDLEWARE DATABASE EXCEPTION";
 
     public CantInitializeWalletLanguageMiddlewareDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

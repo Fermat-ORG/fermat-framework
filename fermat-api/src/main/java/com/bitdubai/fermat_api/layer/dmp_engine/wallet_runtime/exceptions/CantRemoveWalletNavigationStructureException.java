@@ -10,7 +10,7 @@ public class CantRemoveWalletNavigationStructureException extends WalletRuntimeE
 	 */
 	private static final long serialVersionUID = 3116091246281644240L;
 
-	public static final String DEFAULT_MESSAGE = "CAN'T REMOVE NAVIGATION STRUCTURE WALLET";
+	public static final String DEFAULT_MESSAGE = "CAN'T REMOVE NAVIGATION STRUCTURE REQUESTED";
 
 	/**
 	 * This is the constructor that every inherited FermatException must implement

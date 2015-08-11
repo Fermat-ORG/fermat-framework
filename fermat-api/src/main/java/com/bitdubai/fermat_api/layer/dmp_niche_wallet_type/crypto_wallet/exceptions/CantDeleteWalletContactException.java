@@ -11,7 +11,7 @@ package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.except
  */
 public class CantDeleteWalletContactException extends CryptoWalletException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T DELETE WALLET CONTACT EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T DELETE REQUESTED CONTACT EXCEPTION";
 
     public CantDeleteWalletContactException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
