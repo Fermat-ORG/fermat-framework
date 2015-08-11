@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_api.layer.dmp_basic_wallet.fiat_over_crypto_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantStoreMemoException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_basic_wallet.fiat_over_crypto_wallet.interfaces.FiatOverCryptoWalletWallet</code>
@@ -44,4 +47,15 @@ public interface FiatOverCryptoWalletWallet {
      * @throws CantGetTransactionsException
      */
     public List<FiatOverCryptoWalletTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException;
+
+    /**
+     * The method <code>setDescription</code> lets the client set a description of a selected transaction
+     *
+     * @param transactionID The identifier of the transaction to edit its description
+     * @param memo          The new description of the transaction
+     * @throws CantStoreMemoException
+     * @throws CantFindTransactionException
+     */
+    public void setDescription(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException;
+
 }
