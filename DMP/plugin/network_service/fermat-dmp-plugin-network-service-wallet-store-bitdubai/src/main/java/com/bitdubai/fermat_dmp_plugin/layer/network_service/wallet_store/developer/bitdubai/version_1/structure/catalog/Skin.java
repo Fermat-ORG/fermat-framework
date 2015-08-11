@@ -222,4 +222,6 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         stringBuilder.append(this.screenSize);
         return stringBuilder.toString();
     }
+
+
 }

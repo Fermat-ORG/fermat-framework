@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
@@ -59,9 +60,13 @@ public class ProjectsFragment extends FermatFragment {
     }
 
 
-    public class WalletFactoryProject implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject {
+    public class DescriptorFactoryProject implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject {
 
         private String developerPublicKey;
+
+        private String publisherIdentityKey;
+
+        private String description;
 
         private UUID id;
 
@@ -73,7 +78,9 @@ public class ProjectsFragment extends FermatFragment {
 
         private String detail;
 
-        public WalletFactoryProject(String developerPublicKey, UUID id, String name, Wallets type) {
+        private DescriptorFactoryProjectType descriptorFactoryProjectType;
+
+        public DescriptorFactoryProject(String developerPublicKey, UUID id, String name, Wallets type) {
             this.developerPublicKey = developerPublicKey;
             this.id = id;
             this.name = name;
@@ -86,9 +93,23 @@ public class ProjectsFragment extends FermatFragment {
         }
 
         @Override
+        public String getPublisherIdentityKey()  {
+            return null;
+        }
+
+        @Override
+        public DescriptorFactoryProjectType getDescriptorProjectType() {return descriptorFactoryProjectType; }
+
+        @Override
+        public String getDescription() {return description;}
+
+        @Override
         public UUID getId() {
             return null;
         }
+
+        @Override
+        public UUID getWalletsId() {return null;}
 
         @Override
         public String getName() {
@@ -96,7 +117,7 @@ public class ProjectsFragment extends FermatFragment {
         }
 
         @Override
-        public Wallets getType() {
+        public Wallets getWallestType() {
             return null;
         }
 
@@ -112,37 +133,6 @@ public class ProjectsFragment extends FermatFragment {
         public int getIcono() {
             return icono;
         }
-    }
-
-    public class WalletFactoryProjectProposal implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal {
-
-
-        private UUID id;
-        private String alias;
-        private FactoryProjectState state;
-
-
-        @Override
-        public UUID getId() {
-            return null;
-        }
-
-        @Override
-        public String getAlias() {
-            return null;
-        }
-
-        @Override
-        public FactoryProjectState getState() {
-            return null;
-        }
-
-        @Override
-        public String getPath() {
-            return null;
-        }
-
-
     }
 
 }

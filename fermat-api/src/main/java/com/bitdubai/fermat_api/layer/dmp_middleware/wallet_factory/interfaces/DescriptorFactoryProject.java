@@ -2,13 +2,14 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 
 import java.util.UUID;
 
 /**
  * Created by eze on 2015.07.14..
  */
-public interface WalletFactoryProject {
+public interface DescriptorFactoryProject {
 
     /**
      * @return the developerPublicKey of the developer who is working with this project
@@ -16,10 +17,15 @@ public interface WalletFactoryProject {
     String getDeveloperPublicKey();
 
     /**
+     * @return the getPublisherIdentityKey of the developer who is working with this project
+     */
+    String getPublisherIdentityKey();
+
+    /**
      * @return the id of the project
      */
     UUID getId();
-
+    UUID getWalletsId();
     /**
      * @return the name of the project
      */
@@ -28,13 +34,11 @@ public interface WalletFactoryProject {
     /**
      * @return the walletType of the project
      */
-    Wallets getType();
+    Wallets getWallestType();
 
     String getPath();
 
+    DescriptorFactoryProjectType getDescriptorProjectType();
 
-
-
-
-
+    String getDescription();
 }
