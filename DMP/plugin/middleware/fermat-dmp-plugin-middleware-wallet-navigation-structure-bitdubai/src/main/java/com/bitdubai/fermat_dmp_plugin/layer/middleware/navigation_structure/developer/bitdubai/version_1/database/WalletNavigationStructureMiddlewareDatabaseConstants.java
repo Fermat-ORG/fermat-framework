@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.database;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.database.WalletNavigationStructureMiddlewareDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
