@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
@@ -298,6 +299,11 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             @Override
             public boolean isDefault() {
                 return skin.isDefault();
+            }
+
+            @Override
+            public ScreenSize getScreenSize() {
+                return skin.getScreenSize();
             }
         };
 
