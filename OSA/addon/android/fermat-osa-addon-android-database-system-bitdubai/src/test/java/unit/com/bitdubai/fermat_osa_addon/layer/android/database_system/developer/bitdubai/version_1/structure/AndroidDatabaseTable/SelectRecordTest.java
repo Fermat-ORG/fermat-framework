@@ -86,7 +86,7 @@ public class SelectRecordTest {
 
         testDatabaseTable.selectRecord(testTableRecord_2);
 
-        assertThat(testDatabaseTable.getVarialbesResult().get(0).getName()).isEqualTo("@testColumn1");
+        assertThat(testDatabaseTable.getVariablesResult().get(0).getName()).isEqualTo("@testColumn1");
     }
 
     @Test
@@ -102,7 +102,7 @@ public class SelectRecordTest {
 
         testDatabaseTable.selectRecord(testTableRecord_2);
 
-        assertThat(testDatabaseTable.getVarialbesResult().get(0).getValue()).isEqualTo("1");
+        assertThat(testDatabaseTable.getVariablesResult().get(0).getValue()).isEqualTo("1");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class SelectRecordTest {
 
         testDatabaseTable.selectRecord(testTableRecord_2);
 
-        assertThat(testDatabaseTable.getVarialbesResult().get(0).getValue()).isEqualTo("1");
+        assertThat(testDatabaseTable.getVariablesResult().get(0).getValue()).isEqualTo("1");
     }
 
 }
