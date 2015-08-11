@@ -523,8 +523,8 @@ public class Platform  {
              * persistent media.
              */
             Service intraUser = (Service) ((UserLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_USER_LAYER)).getIntraUser();
-            ((DealsWithPlatformFileSystem) intraUser).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
-            ((DealsWithEvents) intraUser).setEventManager((EventManager) eventManager);
+         //   ((DealsWithPlatformFileSystem) intraUser).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
+         //   ((DealsWithEvents) intraUser).setEventManager((EventManager) eventManager);
             corePlatformContext.registerAddon((Addon) intraUser, Addons.INTRA_USER);
 
 
@@ -834,6 +834,14 @@ public class Platform  {
 
             Plugin walletStoreModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletStore();
             injectPluginReferencesAndStart(walletStoreModule, Plugins.BITDUBAI_WALLET_STORE_MODULE);
+
+
+              /*
+             * Plugin Wallet Navigation Structure Middleware
+             * ----------------------------------
+             */
+            Plugin walletNavigationStructureMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletNavigationStructurePlugin();
+            injectPluginReferencesAndStart(walletNavigationStructureMiddleware, Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE);
 
 
             /*

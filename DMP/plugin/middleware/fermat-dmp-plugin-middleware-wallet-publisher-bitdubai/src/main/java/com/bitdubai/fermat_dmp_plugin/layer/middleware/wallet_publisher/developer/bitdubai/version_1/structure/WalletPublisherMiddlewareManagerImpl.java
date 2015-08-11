@@ -6,20 +6,20 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposalManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDao;
@@ -27,7 +27,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublisherMiddlewareManagerImpl</code> have
@@ -76,28 +76,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         this.logManager = logManager;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#getWalletFactoryProjectToPublish()
-     */
-    @Override
-    public List<WalletFactoryProject> getWalletFactoryProjectToPublish(){
-
-        List<WalletFactoryProject> resultList = null;
-
-        try {
-
-            /**
-             * Find all WFP Closed
-             */
-            resultList =  walletFactoryManager.getAllWalletFactoryProjectsClosed();
-
-        } catch (CantGetWalletFactoryProjectsException e) {
-            e.printStackTrace();
-        }
-
-        return  resultList;
-    }
 
     /**
      * (non-Javadoc)
@@ -105,12 +83,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      */
     @Override
     public Map<String, List<ComponentPublishedInformation>> getPublishedComponents() throws CantGetPublishedComponentInformationException {
-
-
-
-
-
-
         return null;
     }
 
@@ -120,12 +92,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      */
     @Override
     public Map<String, List<ComponentPublishedInformation>> getPublishedWallets() throws CantGetPublishedComponentInformationException {
-
-        Map<String, Object> filters = new HashMap<>();
-        filters.put("type", DescriptorFactoryProjectType.WALLET);
-
-
-
         return null;
     }
 
@@ -145,55 +111,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
     @Override
     public Map<String, List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
         return null;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#canBePublished(WalletFactoryProject)
-     */
-    @Override
-    public boolean canBePublished(WalletFactoryProject walletFactoryProject) throws CantCheckPublicationException {
-        return false;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProject)
-     */
-    @Override
-    public void publishWallet(WalletFactoryProject walletFactoryProject) throws CantPublishComponetException {
-
-        /**
-         * Obtain a empty catalogItem
-         */
-        CatalogItem catalogItem = walletStoreManager.constructEmptyCatalogItem();
-
-        try {
-
-            /*
-             * Configure the empty catalogItem
-             */
-
-
-
-            /*
-             * Publish the wallet
-             */
-            walletStoreManager.publishWallet(catalogItem);
-
-
-            /*
-             * Create the published information
-             */
-             ComponentPublishedMiddlewareInformation componentPublishedMiddlewareInformation = new ComponentPublishedMiddlewareInformation();
-             componentPublishedMiddlewareInformation.setCatalogId(catalogItem.getId());
-             componentPublishedMiddlewareInformation.getFinalPlatformVersion();
-
-
-        } catch (CantPublishWalletInCatalogException e) {
-            e.printStackTrace();
-        }
-
     }
 
     /**

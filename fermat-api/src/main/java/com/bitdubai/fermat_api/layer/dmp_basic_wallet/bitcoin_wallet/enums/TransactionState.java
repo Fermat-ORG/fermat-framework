@@ -3,7 +3,8 @@ package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * Created by eze on 2015.06.17..
+ * The enum <code>TransactionState</code> is used to list the states of a transaction when it is in
+ * the process of going out from the system.
  */
 public enum TransactionState {
     NEW("NEW"),

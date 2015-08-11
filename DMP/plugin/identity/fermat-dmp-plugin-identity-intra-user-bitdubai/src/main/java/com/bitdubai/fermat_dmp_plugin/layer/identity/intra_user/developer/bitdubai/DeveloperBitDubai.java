@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdu
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserUserAddonRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
 
 /**
  * Created by loui on 22/02/15.
@@ -31,7 +31,7 @@ public class DeveloperBitDubai implements AddonDeveloper {
          * it is easy to choose.
          */
 
-        addon = new IntraUserUserAddonRoot();
+        addon = new IntraUserIdentityPluginRoot();
 
     }
 

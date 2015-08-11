@@ -54,6 +54,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,12 +66,22 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/29/15.
  */
-public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogger, DealsWithWalletManager, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService{
+public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDeviceUser, DealsWithLogger, DealsWithWalletManager, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService{
 
     /**
      * DealsWithErrors interface member variables
      */
     ErrorManager errorManager;
+
+    /**
+     * DealsWithDeviceUser interface variables and implementation
+     */
+    DeviceUserManager deviceUserManager;
+
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
+    }
 
     /**
      * DealsWithjLogger interface member variable
@@ -458,7 +471,16 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithLogge
             DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
             WalletInstallationProcess walletInstallationProcess;
             walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
-            //todo completar walletInstallationProcess.startInstallation(WalletType.NICHE,catalogItem.getName(), catalogItem.get);
+            DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
+            Skin skin = detailedCatalogItem.getDefaultSkin();
+            Language language = detailedCatalogItem.getDefaultLanguage();
+
+            //walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(), null, null,
+            //       deviceUser.getPublicKey(), null, catalogItem.getId(), detailedCatalogItem.getVersion(),
+            //        null,null, skin.getSkinId(),
+            //        skin.getVersion(), skin.getSkinName(),null,
+            //        language.getLanguageId(), language.getVersion(), language.getLanguageName()
+
 
         } catch (Exception exception) {
             throw new CantStartInstallationException(CantStartInstallationException.DEFAULT_MESSAGE, exception, null, null);

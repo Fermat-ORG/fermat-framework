@@ -2,11 +2,12 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantExportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 
 import java.util.List;
 import java.util.UUID;
@@ -57,21 +58,19 @@ public interface WalletFactoryManager {
     void importWalletFactoryProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException;
 
     /**
+     * Modified by Manuel Perez on 07/08/2015
+     * Exports a Wallet Factory Project to an external repository.
+     * This method upload an XML file with the Wallet Factory Project information.
+     */
+    void exportWalletFactoryProjectToRepository(String user, String password, String repository, WalletFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException;
+
+    /**
      * This method returns all the Wallet Factory Projects that exists in the device for the current logged developer user
      *
      * @return list of wallet factory projects
      * @throws CantGetWalletFactoryProjectsException if something goes wrong
      */
     List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectsException;
-
-
-    /**
-     * This method returns all the Wallet Factory Projects Closed that exists in the device for the current logged developer user
-     *
-     * @return list of wallet factory projects
-     * @throws CantGetWalletFactoryProjectsException if something goes wrong
-     */
-    List<WalletFactoryProject> getAllWalletFactoryProjectsClosed() throws CantGetWalletFactoryProjectsException;
 
     /**
      * This method return a Wallet Factory Project instance looking by name, and the current developer logged in
@@ -82,13 +81,5 @@ public interface WalletFactoryManager {
      * @throws ProjectNotFoundException if the project cannot be found
      */
     WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
-
-    /**
-     * This method returns an instance of the WalletFactoryProjectProposalManager, who has the methods to interact with a proposal
-     *
-     * @param walletFactoryProject the walletFactoryProject we're working with
-     * @return the WalletFactoryProjectProposalManager we need to do the right job
-     */
-    WalletFactoryProjectProposalManager getWalletFactoryProjectProposalManager(WalletFactoryProject walletFactoryProject);
 
 }
