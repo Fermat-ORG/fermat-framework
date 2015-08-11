@@ -103,6 +103,11 @@ public class createBlockChainTest {
                 public void loadFromMedia() throws CantLoadFileException {
 
                 }
+
+                @Override
+                public void delete() {
+
+                }
             };
             return pluginTextFile;
         }
@@ -115,6 +120,16 @@ public class createBlockChainTest {
         @Override
         public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
             return null;
+        }
+
+        @Override
+        public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
+        public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
         }
 
         @Override
@@ -152,6 +167,11 @@ public class createBlockChainTest {
                 public void loadFromMedia() throws CantLoadFileException {
 
                 }
+
+                @Override
+                public void delete() {
+
+                }
             };
             throw new CantCreateFileException("Mocked error");
         }
@@ -164,6 +184,16 @@ public class createBlockChainTest {
         @Override
         public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
             return null;
+        }
+
+        @Override
+        public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
+        public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
         }
 
         @Override
@@ -201,6 +231,11 @@ public class createBlockChainTest {
                 public void loadFromMedia() throws CantLoadFileException {
 
                 }
+
+                @Override
+                public void delete() {
+
+                }
             };
             throw new CantCreateFileException("Mocked error");
         }
@@ -213,6 +248,16 @@ public class createBlockChainTest {
         @Override
         public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
             return null;
+        }
+
+        @Override
+        public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
+        public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
         }
 
         @Override

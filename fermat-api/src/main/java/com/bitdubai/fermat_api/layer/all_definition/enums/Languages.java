@@ -7,14 +7,17 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum Languages {
     ENGLISH("ENGLISH"),
-    AMERICAN_ENGLISH("AMERICAN_ENGLISH"),
-    GREAT_BRITAIN_ENGLISH("GREAT_BRITAIN_ENGLISH"),
+    AMERICAN_ENGLISH("AENGLISH"),
+    GREAT_BRITAIN_ENGLISH("GBENGLISH"),
     SPANISH("SPANISH"),
-    LATIN_AMERICAN_SPANISH("LATIN_AMERICAN_SPANISH");
+    LATIN_AMERICAN_SPANISH("LASPANISH");
 
+    private String code;
 
-    public static Languages fromValue(String key) {
-        switch(key){
+    public String value() { return this.code; }
+
+    public static Languages fromValue(String code){
+        switch(code){
             case "ENGLISH":
                 return ENGLISH ;
             case "AMERICAN_ENGLISH":
@@ -25,15 +28,13 @@ public enum Languages {
                 return SPANISH;
             case "LATIN_AMERICAN_SPANISH":
                 return LATIN_AMERICAN_SPANISH;
+            //Modified by Manuel Perez on 03/08/2015
+            //default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Languages enum");
+            default: return Languages.ENGLISH;
         }
-        return null;
     }
 
-    private final String key;
-
-    Languages(String key) {
-        this.key = key;
+    Languages(String code) {
+        this.code = code;
     }
-
-    public String value() { return this.key; }
 }

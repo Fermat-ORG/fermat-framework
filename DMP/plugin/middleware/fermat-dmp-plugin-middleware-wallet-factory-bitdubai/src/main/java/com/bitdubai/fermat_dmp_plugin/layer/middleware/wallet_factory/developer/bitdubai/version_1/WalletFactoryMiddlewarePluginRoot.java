@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -12,7 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantExportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
@@ -20,10 +23,17 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Pr
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposalManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -31,10 +41,13 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposalManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.utils.RepositoryManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+
+
+import org.kohsuke.github.GHRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -161,6 +174,49 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
         // TODO LOOK FOR A WAY TO TO THIS
     }
 
+    /**
+     * Modified by Manuel Perez on 07/06/2015
+     * */
+    @Override
+    public void exportWalletFactoryProjectToRepository(String name, String password,String repository, WalletFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException {
+
+        //TODO: Where can I find the github login information?
+
+        String commitComment="Upload new wallet factory project to fermat repository";
+
+        String walletFactoryProjectPath;
+        String walletFactoryProjectName;
+
+        try {
+
+            String xml=XMLParser.parseObject(walletFactoryProject);
+            walletFactoryProjectPath=walletFactoryProject.getPath();
+            walletFactoryProjectName=walletFactoryProject.getName();
+            PluginTextFile pluginTextFile=pluginFileSystem.createTextFile(pluginId, walletFactoryProjectPath, walletFactoryProjectName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent(xml);
+            //Upload to Repository
+            RepositoryManager repositoryManager=new RepositoryManager();
+            GHRepository ghRepository=repositoryManager.getRepository(name,password,repository);
+            repositoryManager.createGitHubFile(ghRepository, walletFactoryProjectPath, walletFactoryProjectName, commitComment);
+
+        }catch(GitHubNotAuthorizedException| GitHubRepositoryNotFoundException| GitHubCredentialsExpectedException exception){
+
+            throw new CantExportWalletFactoryProjectException(GitHubCredentialsExpectedException.DEFAULT_MESSAGE, exception,"exportWalletFactoryProjectToRepository","Check the cause" );
+
+        }
+        catch(CantCreateFileException exception){
+
+            throw new CantExportWalletFactoryProjectException(CantCreateFileException.DEFAULT_MESSAGE, exception,"exportWalletFactoryProjectToRepository","Check the cause");
+
+        }
+        catch (Exception exception) {
+
+            throw new CantExportWalletFactoryProjectException(CantExportWalletFactoryProjectException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"exportWalletFactoryProjectToRepository","Check the cause");
+
+        }
+
+    }
+
     @Override
     public List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectsException {
         try {
@@ -185,10 +241,6 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
         }
     }
 
-    @Override
-    public WalletFactoryProjectProposalManager getWalletFactoryProjectProposalManager(WalletFactoryProject walletFactoryProject) {
-        return new WalletFactoryMiddlewareProjectProposalManager(errorManager, pluginFileSystem, pluginId, walletFactoryMiddlewareProjectDao, walletFactoryProject);
-    }
 
     /**
      * DatabaseManagerForDevelopers Interface Implementation

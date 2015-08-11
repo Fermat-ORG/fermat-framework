@@ -24,7 +24,7 @@ public class GetIdTest {
     }
 
     @Test
-    public void setId_setAValidUUIDGetTheId_returnsAUUID() throws Exception{
+    public void setIdTest_setAValidUUIDGetTheId_returnsAUUID() throws Exception{
 
         UUID returnId;
         ExtraUser testExtraUser=new ExtraUser();

@@ -53,7 +53,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	 */
 	public CloudServiceManager(final CommunicationChannelAddress address, final ExecutorService executor, final com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair keyPair) throws IllegalArgumentException{
 		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
-		networkServicesRegistry = new ConcurrentHashMap<NetworkServices, CloudNetworkServiceManager>();
+		networkServicesRegistry = new ConcurrentHashMap<>();
 		networkServicesRegistry.clear();
 	}
 
@@ -205,9 +205,6 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	private void processConnectionRequest(final SelectionKey connection, final FMPPacket fMPPacketReceive) throws FMPException{
 
         System.out.println("CloudServiceManager - Starting method processConnectionRequest");
-        System.out.println("dataPacket received = "+fMPPacketReceive);
-        System.out.println(" ----------------------------------------------------------  ");
-
 
         /**
          * Put the connection into de unregister connections
@@ -223,10 +220,6 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
                                                                                               FMPPacketType.CONNECTION_ACCEPT,
                                                                                               NetworkServices.UNDEFINED,
                                                                                               identity.getPrivateKey());
-
-        System.out.println("responsePacket = "+responsePacket);
-        System.out.println(" ----------------------------------------------------------  ");
-
         /*
          * Put the packet into PendingOutgoingPacketCache
          */
@@ -255,8 +248,6 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	private void processNetworkServiceConnectionRequest(final SelectionKey connection, final FMPPacket fMPPacketReceive) throws FMPException{
 
         System.out.println("CloudServiceManager - Starting method processNetworkServiceConnectionRequest");
-        System.out.println("fMPPacketReceive = "+fMPPacketReceive);
-        System.out.println(" ----------------------------------------------------------  ");
 
         /*
          * Initialize variables
@@ -311,11 +302,6 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
                                                                                         identity.getPrivateKey());
 		}
 
-
-
-        System.out.println("responsePacket = "+responsePacket);
-        System.out.println(" ----------------------------------------------------------  ");
-
         /*
          * Put the packet into PendingOutgoingPacketCache
          */
@@ -341,9 +327,6 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	private void processConnectionRegister(final FMPPacket fMPPacketReceive) throws FMPException{
 
         System.out.println("CloudServiceManager - Starting method processConnectionRegister");
-        System.out.println("fMPPacketReceive = "+fMPPacketReceive);
-        System.out.println(" ----------------------------------------------------------  ");
-
         /*
          * Get and remove the connection from unregistered connections
          */
@@ -363,10 +346,6 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
                                                                                               FMPPacketType.DATA_TRANSMIT,
                                                                                               NetworkServices.UNDEFINED,
                                                                                               identity.getPrivateKey());
-
-
-        System.out.println("responsePacket = "+responsePacket);
-        System.out.println(" ----------------------------------------------------------  ");
 
         /*
          * Put the packet into PendingOutgoingPacketCache

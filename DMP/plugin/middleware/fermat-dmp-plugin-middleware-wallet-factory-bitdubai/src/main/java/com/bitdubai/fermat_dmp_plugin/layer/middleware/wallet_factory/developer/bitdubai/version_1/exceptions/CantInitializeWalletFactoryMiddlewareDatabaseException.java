@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeWalletFactoryMiddlewareDatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE WALLET FACTORY MIDDLEWARE DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE REQUESTED FACTORY MIDDLEWARE DATABASE EXCEPTION";
 
     public CantInitializeWalletFactoryMiddlewareDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

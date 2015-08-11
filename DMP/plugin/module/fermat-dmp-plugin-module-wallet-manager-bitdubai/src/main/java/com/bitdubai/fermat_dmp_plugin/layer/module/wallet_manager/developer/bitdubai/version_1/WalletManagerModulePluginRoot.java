@@ -3,25 +3,36 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCreateWalletException;
+
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantEnableWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletsException;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.NewWalletCreationFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletRemovalFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletRenameFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantPersistWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -44,7 +55,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.*;
-import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,8 +66,18 @@ import java.util.UUID;
 /**
  * Created by ciencias on 21.01.15.
  */
-
-public class WalletManagerModulePluginRoot implements Service, WalletManager, DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin {
+/**
+ * This plug serves as an interface between the SubApp and WalletManager Middleware.
+ * It allows you to retrieve information from the wallets installed and create clones.
+ *
+ *
+ * Created by ciencias on 21.01.15.
+ * Modified by Natalia on 04/08/2015
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
+ */
+public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
 
 
     /**
@@ -114,6 +134,11 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
 
     /**
+     * DealsWithWalletManager Interface member variables.
+     */
+    WalletManagerManager walletMiddlewareManager;
+
+    /**
      * Plugin Interface member variables.
      */
     UUID pluginId;
@@ -136,7 +161,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
          * I will check if wallet if created, if not I execute Bitcoinmanager create
          *
          */
-
+        //TODO: Verificar si este bloque de codigo es necesario que quede aca
         boolean existWallet = false;
         try {
             //load user's wallets ids
@@ -170,13 +195,13 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
                     }
 
-                } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException cantCreateWalletException) {
+                } catch (CantCreateWalletException cantCreateWalletException) {
                     throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 
                 }
             }
 
-        } catch (CantLoadWalletsException cantLoadWalletsException) {
+        } catch (Exception cantLoadWalletsException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
             throw new CantStartPluginException();
         }
@@ -257,23 +282,293 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
     }
 
 
-    public void enableWallet() {
-
-
-    }
-
-
-    private void finishedWalletInstallation() {
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.FINISHED_WALLET_INSTALLATION);
-        platformEvent.setSource(EventSource.MODULE_WALLET_MANAGER_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
-
-    }
 
     /**
      * WalletManager Interface implementation.
      */
 
+    /**
+     * This method let the client create a new wallet of a type already intalled by the user.
+     *
+     * @param walletIdInTheDevice The identifier of the wallet to copy
+     * @param newName the name to give to the wallet
+     * @throws NewWalletCreationFailedException
+     */
+    public void createNewWallet(UUID walletIdInTheDevice, String newName) throws NewWalletCreationFailedException
+    {
+        try
+        {
+            walletMiddlewareManager.createNewWallet(walletIdInTheDevice,newName);
+        }
+        catch(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException e)
+        {
+            throw  new NewWalletCreationFailedException("CAN'T CREATE NEW WALLET",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new NewWalletCreationFailedException("CAN'T CREATE NEW WALLET",FermatException.wrapException(e),"","");
+        }
+    }
+
+    /**
+     * This method returns the list of installed wallets in the device
+     *
+     * @return A list with the installed wallets information
+     * @throws WalletsListFailedToLoadException
+     */
+    public List<InstalledWallet> getInstalledWallets() throws WalletsListFailedToLoadException{
+        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+
+        try
+        {
+
+            List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> installetMiddlewareWallets = walletMiddlewareManager.getInstalledWallets();
+            for (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet : installetMiddlewareWallets){
+
+                InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),
+                        wallet.getSkinsId(),
+                        wallet.getLanguagesId(),
+                        wallet.getWalletIcon(),
+                        wallet.getWalletName(),
+                        wallet.getWalletPublicKey(),
+                        wallet.getWalletPlatformIdentifier(),
+                        wallet.getWalletVersion()
+                );
+
+                lstInstalledWallet.add(installedWallet);
+            }
+
+
+        }
+        catch (CantListWalletsException e) {
+            throw  new WalletsListFailedToLoadException("CAN'T GET THE INSTALLED WALLETS",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new WalletsListFailedToLoadException("CAN'T GET THE INSTALLED WALLETS", FermatException.wrapException(e),"","");
+        }
+
+        return lstInstalledWallet;
+    }
+
+    /**
+     * This method removes a wallet created by a user. <p>
+     * Note that this won't uninstall the wallet type. It is used to delete a copy of a wallet created
+     * using the <code>createWallet</code> method.
+     *
+     * @param walletIdInTheDevice the identifier of the wallet to delete
+     * @throws WalletRemovalFailedException
+     */
+    public void removeWallet(UUID walletIdInTheDevice) throws WalletRemovalFailedException{
+        try
+        {
+            walletMiddlewareManager.removeWallet(walletIdInTheDevice);
+        }
+        catch(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRemoveWalletException e)
+        {
+            throw  new WalletRemovalFailedException("CAN'T CREATE NEW WALLET",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new WalletRemovalFailedException("CAN'T CREATE NEW WALLET",FermatException.wrapException(e),"","");
+        }
+    }
+
+    /**
+     * This method let us change the name (alias) of a given wallet.
+     *
+     * @param walletIdInTheDevice the identifier of the wallet to rename
+     * @param newName the new name for the wallet
+     * @throws WalletRenameFailedException
+     */
+    public void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException
+    {
+        try
+        {
+            walletMiddlewareManager.renameWallet(walletIdInTheDevice, newName);
+        }
+        catch(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRenameWalletException e)
+        {
+            throw  new WalletRenameFailedException("CAN'T RENAME WALLET",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new WalletRenameFailedException("CAN'T RENAME WALLET",FermatException.wrapException(e),"","");
+        }
+    }
+
+
+
+    /**
+     * DealsWithBitcoinWallet Interface implementation.
+     */
+
+    @Override
+    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
+        this.bitcoinWalletManager = bitcoinWalletManager;
+    }
+
+
+    public void persistWallet(UUID walletId) throws CantPersistWalletException {
+        /**
+         * Now I will add this wallet to the list of wallets managed by the plugin.
+         */
+        walletIds.put(deviceUserPublicKey, walletId);
+
+        PluginTextFile walletIdsFile = null;
+
+        try {
+            walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        } catch (CantCreateFileException cantCreateFileException) {
+
+            /**
+             * If I can not save this file, then this plugin shouldn't be running at all.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+
+            throw new CantPersistWalletException();
+        }
+
+        /**
+         * I will generate the file content.
+         */
+        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
+
+        Iterator iterator = walletIds.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) iterator.next();
+            stringBuilder.append(pair.getKey().toString() + "," + pair.getValue().toString() + ";");
+            iterator.remove();
+        }
+
+
+        /**
+         * Now I set the content.
+         */
+        walletIdsFile.setContent(stringBuilder.toString());
+
+        try {
+            walletIdsFile.persistToMedia();
+        } catch (CantPersistFileException cantPersistFileException) {
+            /**
+             * If I can not save the id of the new wallet created, then this method fails.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
+            throw new CantPersistWalletException();
+        }
+
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+
+    @Override
+
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+
+    /**
+     * DealsWithPluginFileSystem Interface implementation.
+     */
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * DealWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPluginIdentity methods implementation.
+     */
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+
+    /**
+     * DealsWithWalletManager methods implementation.
+     */
+    @Override
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager){
+        this.walletMiddlewareManager = walletManagerManager;
+    }
+    /**
+     * DealsWithLogger Interface implementation.
+     */
+
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
+
+    /**
+     * LogManagerForDevelopers Interface implementation.
+     */
+
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
+
+
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
+    }
+
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (WalletManagerModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                WalletManagerModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                WalletManagerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                WalletManagerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+
+    }
+
+    //TODO: revisar si esta interface Wallet Manager se va a usar (Natalia)
+    /**
+     * WalletManager Interface implementation.
+     */
+
+
+
+    //TODO: Analizar este metodo deberia reemplazarce por el metodo getInstalledWallets de la interface WalletManagerModule que ya esta implementado (Natalia)
     public List<InstalledWallet> getUserWallets() {
         // Harcoded para testear el circuito más arriba
         InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -291,6 +586,44 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
         return lstInstalledWallet;
     }
 
+    @Override
+    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException {
+
+        /**
+         * By now I will create only a new wallet, In the future there will be more than one default wallets.
+         */
+
+      //  Wallet wallet = new WalletManagerWallet();
+
+      //  ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
+       // ((DealsWithEvents) wallet).setEventManager(eventManager);
+        //((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
+
+        //try {
+        //aquí al crear la wallet se le deben pasar todos los parametros de esta
+        //wallet.createWallet("public_key_hardcoded");
+        //} catch (CantCreateWalletException cantCreateWalletException) {
+        /**
+         * Well, if it is not possible to create a wallet, then we have a problem that I can not handle...
+         */
+        //    System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
+        //    cantCreateWalletException.printStackTrace();
+
+        //    throw new CantCreateDefaultWalletsException();
+        //}
+
+    }
+
+    @Override
+    public void enableWallet() throws CantEnableWalletException{
+
+    }
+    /**
+     *
+     * @param deviceUserPublicKey
+     * @throws CantLoadWalletsException
+     */
+    @Override
     public void loadUserWallets(String deviceUserPublicKey) throws CantLoadWalletsException {
 
         this.deviceUserPublicKey = deviceUserPublicKey;
@@ -392,189 +725,6 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
                 throw new CantLoadWalletsException();
             }
         }
-    }
-
-    public void persistWallet(UUID walletId) throws CantPersistWalletException {
-        /**
-         * Now I will add this wallet to the list of wallets managed by the plugin.
-         */
-        walletIds.put(deviceUserPublicKey, walletId);
-
-        PluginTextFile walletIdsFile = null;
-
-        try {
-            walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        } catch (CantCreateFileException cantCreateFileException) {
-
-            /**
-             * If I can not save this file, then this plugin shouldn't be running at all.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
-
-            throw new CantPersistWalletException();
-        }
-
-        /**
-         * I will generate the file content.
-         */
-        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
-
-        Iterator iterator = walletIds.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry pair = (Map.Entry) iterator.next();
-            stringBuilder.append(pair.getKey().toString() + "," + pair.getValue().toString() + ";");
-            iterator.remove();
-        }
-
-
-        /**
-         * Now I set the content.
-         */
-        walletIdsFile.setContent(stringBuilder.toString());
-
-        try {
-            walletIdsFile.persistToMedia();
-        } catch (CantPersistFileException cantPersistFileException) {
-            /**
-             * If I can not save the id of the new wallet created, then this method fails.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
-            throw new CantPersistWalletException();
-        }
-
-    }
-
-    @Override
-    public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException {
-
-        /**
-         * By now I will create only a new wallet, In the future there will be more than one default wallets.
-         */
-
-        Wallet wallet = new WalletManagerWallet();
-
-        ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
-        ((DealsWithEvents) wallet).setEventManager(eventManager);
-        ((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
-
-        //try {
-            //aquí al crear la wallet se le deben pasar todos los parametros de esta
-            //wallet.createWallet("public_key_hardcoded");
-        //} catch (CantCreateWalletException cantCreateWalletException) {
-            /**
-             * Well, if it is not possible to create a wallet, then we have a problem that I can not handle...
-             */
-        //    System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
-        //    cantCreateWalletException.printStackTrace();
-
-        //    throw new CantCreateDefaultWalletsException();
-        //}
-
-    }
-
-    /**
-     * DealsWithBitcoinWallet Interface implementation.
-     */
-
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-
-    @Override
-
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
-    /**
-     * DealsWithLogger Interface implementation.
-     */
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * LogManagerForDevelopers Interface implementation.
-     */
-
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
-
-
-        /**
-         * I return the values.
-         */
-        return returnedClasses;
-    }
-
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * I will check the current values and update the LogLevel in those which is different
-         */
-
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (WalletManagerModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                WalletManagerModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                WalletManagerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                WalletManagerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
-
     }
 
 }

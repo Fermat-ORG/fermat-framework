@@ -29,6 +29,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Este agente corre en su propio Thread.
@@ -125,19 +126,29 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
     @Override
     public void stop() {
-        
-        this.agentThread.interrupt();
-        
+        //this.agentThread.interrupt();
+        monitorAgent.stop();
     }
 
 
-
+    public boolean isRunning(){
+        return this.monitorAgent.isRunning();
+    }
 
     private static class MonitorAgent implements DealsWithCryptoVault, DealsWithErrors, DealsWithRegistry, Runnable  {
 
+        private AtomicBoolean running = new AtomicBoolean(false);
         /**
          * DealsWithCryptoVault Interface member variables.
          */
+        public void stop(){
+            running.set(false);
+        }
+
+        public boolean isRunning(){
+            return running.get();
+        }
+
         private CryptoVaultManager cryptoVaultManager;
 
         /**
@@ -202,6 +213,8 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
             /**
              * Infinite loop.
              */
+            running.set(true);
+
             while (true) {
 
                 /**

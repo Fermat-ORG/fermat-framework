@@ -26,17 +26,18 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.LogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
@@ -57,6 +58,7 @@ import java.util.Map;
  */
 public class LogToolsFragment extends Fragment {
 
+    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS.getKey();
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
     //List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
@@ -100,7 +102,7 @@ public class LogToolsFragment extends Fragment {
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
             logTool = toolManager.getLogTool();
-        } catch (CantGetLogTool e) {
+        } catch (CantGetLogToolException e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
                 Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
@@ -195,7 +197,7 @@ public class LogToolsFragment extends Fragment {
                     Loggers log = new Loggers();
                     log.type = Loggers.TYPE_ADDON;
                     log.picture = "addon";
-                    log.pluginKey=addon.getKey();
+                    log.pluginKey=addon.getCode();
                     log.classHierarchyLevels=classes;
                     lstLoggers.add(log);
                 }
@@ -283,7 +285,7 @@ public class LogToolsFragment extends Fragment {
 
                         params[0] = lst;
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen("DeveloperLogLevel1Fragment",params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS,params);
 
 
                     }

@@ -10,7 +10,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorDisconnectingIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorInIntraUserSearchException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -22,6 +28,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -291,4 +298,52 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
 
     }
 
+
+    /*
+     * IntraUserManager Interface method implementation
+     */
+    @Override
+    public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
+        return null;
+    }
+
+    @Override
+    public List<IntraUser> getIntraUsersSuggestions() throws ErrorSearchingSuggestionsException {
+        return null;
+    }
+
+    @Override
+    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) {
+
+    }
+
+    @Override
+    public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) {
+
+    }
+
+    @Override
+    public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) {
+
+    }
+
+    @Override
+    public void disconnectIntraUSer(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws ErrorDisconnectingIntraUserException {
+
+    }
+
+    @Override
+    public void cancelIntraUSer(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws ErrorCancellingIntraUserException {
+
+    }
+
+    @Override
+    public IntraUserNotification getNotifications(String intraUserLogedInPublicKey) {
+        return null;
+    }
+
+    @Override
+    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) {
+
+    }
 }

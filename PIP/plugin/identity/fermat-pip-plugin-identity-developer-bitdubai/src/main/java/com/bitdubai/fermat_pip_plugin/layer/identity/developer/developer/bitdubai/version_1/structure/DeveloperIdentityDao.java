@@ -14,7 +14,8 @@ import java.util.*;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -25,9 +26,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserListException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -35,10 +49,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.exceptions.CantInitializeDeveloperIdentityDatabaseException;
-
+import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.exceptions.*;
 // Packages and classes to import of apache commons.
 import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDao</code>
@@ -58,6 +71,11 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
     // DealsWithPluginDatabaseSystem Interface member variables.
     private PluginDatabaseSystem pluginDatabaseSystem = null;
 
+    /**
+     * DealsWithPlatformFileSystem Interface member variables.
+     */
+    PluginFileSystem pluginFileSystem;
+
     //  Database factory
     private DeveloperIdentityDatabaseFactory databaseFactory = null;
 
@@ -75,6 +93,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
     private static final String _DEFAUL_STRING = "";
 
 
+    final String DEVELOPER_IDENTITY_PRIVATE_KEYS_FILE_NAME = "developerIdentityPrivateKeys";
 
     // Public constructor declarations.
     /**
@@ -98,7 +117,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
      *  @param pluginId
      *
      * */
-    public DeveloperIdentityDao (PluginDatabaseSystem pluginDatabaseSystem, DeveloperIdentityDatabaseFactory databaseFactory, UUID pluginId,LogManager logManager) {
+    public DeveloperIdentityDao  (PluginFileSystem pluginFileSystem,PluginDatabaseSystem pluginDatabaseSystem, DeveloperIdentityDatabaseFactory databaseFactory, UUID pluginId,LogManager logManager) {
 
         // Call to super class.
         super ();
@@ -108,6 +127,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         this.databaseFactory = databaseFactory;
         this.pluginId = pluginId;
         this.logManager = logManager;
+        this.pluginFileSystem = pluginFileSystem;
     }
 
 
@@ -194,6 +214,9 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+
+
+
     /**
      * DealsWithPluginIdentity Interface implementation.
      */
@@ -274,11 +297,11 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
 
         // Check the arguments.
-        if (developerKeyPair == null || isEmpty (alias) || deviceUser == null) {
+      if (developerKeyPair == null || isEmpty (alias) || deviceUser == null) {
 
             // Cancel the process.
             throw new CantCreateNewDeveloperException ("Cant create new developer, arguments are null or empty.", "Plugin Identity", "Cant create database, arguments are null or empty.");
-       }
+      }
 
 
         if (this.dataBase == null) {
@@ -301,19 +324,18 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
                 logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 DatabaseTable        table = this.dataBase.getTable (DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME);
-                DatabaseTableRecord record = table.getEmptyRecord ();
+                DatabaseTableRecord record = table.getEmptyRecord();
 
-
+                String publicKey = developerKeyPair.getPublicKey(); //;
                 logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
-                record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, developerKeyPair.getPublicKey());
-                record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME, developerKeyPair.getPrivateKey());
-                record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
+                record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, publicKey);
+                 record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
                 record.setStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME, alias);//deviceUser.getAlias()
-
 
               //  logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Inserting [Alias=" + deviceUser.getAlias() + ", PK=" + developerKeyPair.getPublicKey() + "] in " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 table.insertRecord(record);
-              //  logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "New developer record created [" + developerKeyPair.getPublicKey() + "]", _DEFAUL_STRING, _DEFAUL_STRING);
+              // Persist private key on a file
+                persistNewUserPrivateKeysFile(publicKey,developerKeyPair.getPrivateKey());
 
             } catch (CantInsertRecordException e){
 
@@ -330,6 +352,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         // Return the new developer.
         return new DeveloperIdentityRecord (alias,developerKeyPair.getPublicKey(),developerKeyPair.getPrivateKey());
     }
+
 
     /**
      * Method that list the developers related to the parametrized device user.
@@ -349,7 +372,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         if (deviceUser == null) {
 
             // Cancel the process.
-              throw new CantGetUserDeveloperIdentitiesException ("Cant get developers from current device, arguments are null or empty.", "Plugin Identity", "Cant get developers from current device, arguments are null or empty.");
+             throw new CantGetUserDeveloperIdentitiesException ("Cant get developers from current device, arguments are null or empty.", "Plugin Identity", "Cant get developers from current device, arguments are null or empty.");
         }
 
         if (this.dataBase == null) {
@@ -365,7 +388,7 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
                 logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting developer list.", _DEFAUL_STRING, _DEFAUL_STRING);
 
                 // 1) Get the table.
-                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+               // logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
                 table = this.dataBase.getTable (DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME);
 
                 if (table == null) {
@@ -376,18 +399,18 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
 
                 // 2) Find the developers.
-                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Applying filter to " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table by developer public key [" + deviceUser.getPublicKey() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
+               logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Applying filter to " + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table by developer public key [" + deviceUser.getPublicKey() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
                 table.setStringFilter(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
                 table.loadToMemory();
 
 
                 // 3) Get developers.
-                logManager.log (DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Developer identity found (" + table.getRecords ().size () + ") by public key [" + deviceUser.getPublicKey () + "].", _DEFAUL_STRING, _DEFAUL_STRING);
+                logManager.log(DeveloperIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Developer identity found (" + table.getRecords().size() + ") by public key [" + deviceUser.getPublicKey() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
                 for (DatabaseTableRecord record : table.getRecords ()) {
 
                     // Add records to list.
                     list.add(new DeveloperIdentityRecord (record.getStringValue(DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME),
-                            record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME),record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME)));
+                            record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME),getDeveloperIdentiyPrivateKey(record.getStringValue (DeveloperIdentityDatabaseConstants.DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME))));
                 }
 
 
@@ -406,4 +429,53 @@ public class DeveloperIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         // Return the list values.
         return list;
     }
+
+    private void  persistNewUserPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
+        try {
+            PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    DEVELOPER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.setContent(privateKey);
+
+                file.persistToMedia();
+        } catch (CantPersistFileException e) {
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
+
+        } catch (CantCreateFileException e) {
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
+        }
+    }
+
+
+    public String getDeveloperIdentiyPrivateKey(String publicKey) throws CantGetDeveloperIdentityPrivateKeyException {
+        String privateKey = "";
+        try {
+            PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    DEVELOPER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+
+                file.loadFromMedia();
+
+            privateKey = file.getContent();
+
+        } catch (CantLoadFileException e) {
+            throw new CantGetDeveloperIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
+
+        }
+        catch (FileNotFoundException|CantCreateFileException e) {
+             throw new CantGetDeveloperIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
+        }
+
+        return privateKey;
+    }
+
+
 }

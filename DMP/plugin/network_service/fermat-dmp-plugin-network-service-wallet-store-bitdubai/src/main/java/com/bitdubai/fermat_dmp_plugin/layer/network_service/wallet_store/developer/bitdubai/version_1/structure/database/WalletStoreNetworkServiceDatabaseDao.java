@@ -79,36 +79,19 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.databaseOwnerId = databaseOwnerId;
         this.databaseName = databaseName;
-
-        openDatabase();
-        closeDatabase();
     }
-
 
     private DatabaseTransaction getDatabaseTransaction()  {
         DatabaseTransaction databaseTransaction = database.newTransaction();
         return databaseTransaction;
     }
-    /**
-     * Opens the database and gets the table
-     * @param tableName
-     * @return
-     * @throws CantOpenDatabaseException
-     * @throws DatabaseNotFoundException
-     */
+
     private DatabaseTable getDatabaseTable(String tableName)  {
         DatabaseTable databaseTable = database.getTable(tableName);
         return databaseTable;
     }
 
-
-    /**
-     * Opens the databases
-     * @return Database
-     * @throws CantOpenDatabaseException
-     * @throws DatabaseNotFoundException
-     */
-    private void openDatabase() throws CantExecuteDatabaseOperationException {
+    private Database openDatabase() throws CantExecuteDatabaseOperationException {
         try {
             if(database == null)
                 database = pluginDatabaseSystem.openDatabase(this.databaseOwnerId, this.databaseName);
@@ -119,16 +102,13 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             throw new CantExecuteDatabaseOperationException(databaseNotFoundException, "Trying to open database " + databaseName, "Error in Database plugin. Database should already exists.");
         }
+        return database;
     }
 
-    /**
-     * closes the database
-     */
     private void closeDatabase(){
         if(database != null)
             database.closeDatabase();
     }
-
 
     private DatabaseTableRecord getDesignerDatabaseTableRecord(Designer designer){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME);
@@ -139,7 +119,6 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
         return record;
     }
-
 
     private DatabaseTransaction addDesignerInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, Designer designer) throws InvalidDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME);
@@ -161,7 +140,6 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
         return transaction;
     }
-
 
     private DatabaseTableRecord getTranslatorDatabaseTableRecord (Translator translator){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME);
@@ -194,7 +172,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         return transaction;
     }
 
-    private DatabaseTableRecord getItemInTransaction(CatalogItem catalogItem) throws CantExecuteDatabaseOperationException {
+    private DatabaseTableRecord getItemInDatabaseTableRecord(CatalogItem catalogItem) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME, catalogItem.getId().toString());
@@ -207,7 +185,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
             record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_VERSION_COLUMN_NAME, catalogItem.getDetailedCatalogItem().getVersion().toString());
             record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME, catalogItem.getDetailedCatalogItem().getPlatformInitialVersion().toString());
             record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME, catalogItem.getDetailedCatalogItem().getPlatformFinalVersion().toString());
-            record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, catalogItem.getDetailedCatalogItem().getDeveloperId().toString());
+            record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, catalogItem.getDetailedCatalogItem().getDeveloper().getId().toString());
         } catch (CantGetWalletDetailsException cantGetWalletDetailsException) {
             throw new CantExecuteDatabaseOperationException(cantGetWalletDetailsException, null, null);
         }
@@ -215,18 +193,18 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
     }
 
     private DatabaseTransaction addCatalogItemInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, CatalogItem catalogItem) throws InvalidDatabaseOperationException, CantExecuteDatabaseOperationException {
-        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
-        DatabaseTableRecord record = getItemInTransaction(catalogItem);
+        DatabaseTable itemDatabaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
+        DatabaseTableRecord itemRecord = getItemInDatabaseTableRecord(catalogItem);
 
         switch (databaseOperation){
             case INSERT:
-                transaction.addRecordToInsert(databaseTable, record);
+                transaction.addRecordToInsert(itemDatabaseTable, itemRecord);
                 break;
             case UPDATE:
-                transaction.addRecordToUpdate(databaseTable, record);
+                transaction.addRecordToUpdate(itemDatabaseTable, itemRecord);
                 break;
             case SELECT:
-                transaction.addRecordToSelect(databaseTable, record);
+                transaction.addRecordToSelect(itemDatabaseTable, itemRecord );
                 break;
             default:
                 throw throwInvalidDatabaseOperationException();
@@ -238,14 +216,17 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
     private DatabaseTableRecord getSkinRecord(Skin skin){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, skin.getSkinId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, skin.getSkinId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME, skin.getSkinName());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME, skin.getVersion().toString());
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, skin.getWalletId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, skin.getWalletId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, skin.getInitialWalletVersion().toString());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, skin.getFinalWalletVersion().toString());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME, skin.getSkinURL().toString());
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, skin.getSkinDesignerId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, skin.getDesigner().getId());
+        record.setLongValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME, skin.getSkinSizeInBytes());
+        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME, String.valueOf(skin.isDefault()));
+        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SCREEN_SIZE, String.valueOf(skin.getScreenSize()));
 
         return record;
     }
@@ -270,8 +251,6 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
         return transaction;
     }
-
-
 
     private DatabaseTableRecord getDeveloperInDatabaseTableRecord(Developer developer){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME);
@@ -307,15 +286,17 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
     private DatabaseTableRecord getLanguageInDatabaseTableRecord(Language language){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, language.getLanguageId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, language.getLanguageId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME, language.getLanguageName().value());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME, language.getLanguageLabel());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME, language.getVersion().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME, language.getWalletId());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME, language.getInitialWalletVersion().toString());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME, language.getFinalWalletVersion().toString());
         record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME, language.getFileURL().toString());
         record.setIntegerValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME, language.getLanguagePackageSizeInBytes());
-        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, language.getTranslatorId().toString());
+        record.setUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, language.getTranslator().getId());
+        record.setStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME, String.valueOf(language.isDefault()));
 
         return record;
     }
@@ -346,7 +327,6 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         return invalidDatabaseOperationException;
     }
 
-
     private List<DatabaseTableRecord> getRecordsFromDatabase (String tableName, DatabaseTableFilter filter) throws CantExecuteDatabaseOperationException, InvalidResultReturnedByDatabaseException {
         DatabaseTable table = getDatabaseTable(tableName);
         table.setUUIDFilter(filter.getColumn(), UUID.fromString(filter.getValue()), filter.getType());
@@ -359,6 +339,21 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         List<DatabaseTableRecord> recordList = table.getRecords();
         if (recordList.size() ==  0)
             throw new InvalidResultReturnedByDatabaseException(null, "Id: " + filter.getValue() + " number of records: " + recordList.size(), "database inconsistency");
+
+        return recordList;
+    }
+
+    private List<DatabaseTableRecord> getAllRecordsFromDatabase (String tableName) throws CantExecuteDatabaseOperationException, InvalidResultReturnedByDatabaseException {
+        DatabaseTable table = getDatabaseTable(tableName);
+        try {
+            table.loadToMemory();
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemoryException) {
+            throw new CantExecuteDatabaseOperationException(cantLoadTableToMemoryException, null, "Error in database plugin.");
+        }
+
+        List<DatabaseTableRecord> recordList = table.getRecords();
+        if (recordList.size() ==  0)
+            throw new InvalidResultReturnedByDatabaseException(null, " number of records: " + recordList.size(), "database inconsistency");
 
         return recordList;
     }
@@ -416,38 +411,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
     private List<CatalogItem> getAllCatalogItemsFromDatabase() throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException{
         List<CatalogItem> catalogItems = new ArrayList<CatalogItem>();
 
-        DatabaseTableFilter tableFilter = new DatabaseTableFilter() {
-            @Override
-            public void setColumn(String column) {
 
-            }
-
-            @Override
-            public void setType(DatabaseFilterType type) {
-
-            }
-
-            @Override
-            public void setValue(String value) {
-
-            }
-
-            @Override
-            public String getColumn() {
-                return WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME;
-            }
-
-            @Override
-            public String getValue() {
-                return "";
-            }
-
-            @Override
-            public DatabaseFilterType getType() {
-                return DatabaseFilterType.LIKE;
-            }
-        };
-        List<DatabaseTableRecord> records = getRecordsFromDatabase(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME, tableFilter);
+        List<DatabaseTableRecord> records = getAllRecordsFromDatabase(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
 
         for (DatabaseTableRecord record : records){
             CatalogItem catalogItem = new CatalogItem();
@@ -455,6 +420,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
             catalogItem.setCategory(WalletCategory.valueOf(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME)));
             catalogItem.setDescription(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME));
             catalogItem.setDefaultSizeInBytes(record.getIntegerValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_SIZE_COLUMN_NAME));
+            catalogItem.setId(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME));
+            
 
             catalogItems.add(catalogItem);
         }
@@ -513,7 +480,8 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
                 detailedCatalogItem.setLanguage(language);
         }
 
-        //todo why this does not work?
+
+        //todo resolver
         //detailedCatalogItem.setLanguages(languages);
 
         /**
@@ -611,10 +579,56 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         detailedCatalogItem.setVersion(new Version(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_VERSION_COLUMN_NAME)));
         detailedCatalogItem.setPlatformInitialVersion(new Version(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME)));
         detailedCatalogItem.setPlatformFinalVersion(new Version(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME)));
-        detailedCatalogItem.setDeveloperId(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME));
+
+        // Gets the developer from database and assign it to the catalog item
+        final UUID developerId = record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME);
+        tableFilter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_ID_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue() {
+                return developerId.toString();
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.EQUAL;
+            }
+        };
+        records = getRecordsFromDatabase(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME, tableFilter);
+
+        if (records.size() != 1)
+            throw new InvalidResultReturnedByDatabaseException(null, "Id: " + tableFilter.getValue() + " number of records: " + records.size(), "database inconsistency");
+
+        DatabaseTableRecord developerRecord = records.get(0);
+
+        Developer developer = new Developer();
+        developer.setid(developerRecord.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
+        developer.setPublicKey(developerRecord.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME));
+        developer.setName(developerRecord.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME));
+        detailedCatalogItem.setDeveloper(developer);
 
         return detailedCatalogItem;
     }
+
 
     /**
      * Gets the Catalog item from the database
@@ -673,7 +687,14 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         return detailedCatalogItem;
     }
 
-    private Skin getSkinFromDatabase(final UUID id) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+    /**
+     * gets the skin from the specified wallet
+     * @param walletId
+     * @return
+     * @throws InvalidResultReturnedByDatabaseException
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Skin getSkinFromDatabase(final UUID walletId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
         DatabaseTableFilter tableFilter = new DatabaseTableFilter() {
             @Override
             public void setColumn(String column) {
@@ -697,7 +718,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
             @Override
             public String getValue() {
-                return id.toString();
+                return walletId.toString();
             }
 
             @Override
@@ -712,13 +733,16 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
         DatabaseTableRecord record = records.get(0);
         Skin skin = new Skin();
-        skin.setId(id);
+        skin.setId(walletId);
         skin.setName(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME));
         skin.setWalletId(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME));
         skin.setInitialWalletVersion(new Version(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME)));
         skin.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME)));
         skin.setVersion(new Version(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME)));
-        skin.setSkinDesignerId(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME));
+
+        Designer designer = getDesigner(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME));
+        skin.setDesigner(designer);
+
         skin.setSkinSizeInBytes(record.getIntegerValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME));
         URL url = null;
         String databaseURL = record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME);
@@ -733,7 +757,14 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         return skin;
     }
 
-    private Language getLanguageFromDatabase(final UUID id) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+    /**
+     * Gets the language of the wallet passed.
+     * @param walletId
+     * @return
+     * @throws InvalidResultReturnedByDatabaseException
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Language getLanguageFromDatabase(final UUID walletId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
         DatabaseTableFilter tableFilter = new DatabaseTableFilter() {
             @Override
             public void setColumn(String column) {
@@ -757,7 +788,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
             @Override
             public String getValue() {
-                return id.toString();
+                return walletId.toString();
             }
 
             @Override
@@ -772,7 +803,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
         DatabaseTableRecord record = records.get(0);
         Language language = new Language();
-        language.setId(id);
+        language.setId(walletId);
         language.setLanguageName(Languages.valueOf(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME)));
         language.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME)));
         language.setInitialWalletVersion(new Version(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME)));
@@ -780,7 +811,9 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         language.setIsDefault(Boolean.getBoolean(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME)));
         language.setLanguageLabel(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME));
         language.setLanguagePackageSizeInBytes(record.getIntegerValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME));
-        language.setTranslatorId(UUID.fromString(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME)));
+
+        Translator translator = getTranslator(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME));
+        language.setTranslator(translator);
 
         String databaseURL = null;
         URL url = null;
@@ -798,7 +831,6 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
 
     }
 
-
     /**
      * Inserts or Update an Item in the catalog Database base.
      * Every other object added will be updated or inserted in the same transaction.
@@ -812,7 +844,7 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
      * @throws CantExecuteDatabaseOperationException
      */
     public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItem  catalogItem, Developer developer, Language language, Translator translator, Skin skin, Designer designer) throws CantExecuteDatabaseOperationException {
-        openDatabase();
+        database = openDatabase();
         DatabaseTransaction transaction = database.newTransaction();
         try{
             if (catalogItem != null)
@@ -835,6 +867,98 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
             throw new CantExecuteDatabaseOperationException(exception, catalogItem.toString(), null);
         }
     }
+
+    /**
+     * Returns the developer from Database with the passed ID
+     * @param developerId
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Developer getDeveloper(UUID developerId) throws CantExecuteDatabaseOperationException {
+        try {
+            DatabaseTableRecord record = getDeveloperRecord(developerId);
+            Developer developer = new Developer();
+            developer.setid(record.getUUIDValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
+            developer.setName(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME));
+            developer.setPublicKey(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME));
+            return developer;
+        } catch (Exception e) {
+            throw new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    /**
+     * Gets the designer with the specified id.
+     * @param designerId
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Designer getDesigner(UUID designerId) throws CantExecuteDatabaseOperationException {
+        try{
+            DatabaseTableRecord record = getDesignerRecord(designerId);
+            Designer designer = new Designer();
+            designer.setiD(designerId);
+            designer.setName(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_NAME_COLUMN_NAME));
+            designer.setPublicKey(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME));
+
+            return designer;
+        } catch (Exception exception){
+            throw new CantExecuteDatabaseOperationException(exception,null,null);
+        }
+    }
+
+    /**
+     * Gets the specified translator Id
+     * @param translatorId
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Translator getTranslator(UUID translatorId) throws CantExecuteDatabaseOperationException {
+        try{
+            DatabaseTableRecord record = getDesignerRecord(translatorId);
+            Translator translator= new Translator();
+            translator.setId(translatorId);
+            translator.setName(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME));
+            translator.setPublicKey(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME));
+
+            return translator;
+        } catch (Exception exception){
+            throw new CantExecuteDatabaseOperationException(exception,null,null);
+        }
+    }
+
+    /**
+     * Used by the network service. Gets the list of IDs installed in the catalog to compare.
+     * @param catalogItems
+     * @return
+     * @throws InvalidParameterException
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public List<UUID> getCatalogIdsForNetworkService(CatalogItems catalogItems) throws InvalidParameterException, CantExecuteDatabaseOperationException {
+        List<UUID> uuids;
+        openDatabase();
+        try{
+            switch (catalogItems){
+                case LANGUAGE:
+                    uuids = getWalletLanguagesForNetworkService();
+                    break;
+                case SKIN:
+                    uuids=  getWalletSkinsForNetworkService();
+                    break;
+                case WALLET:
+                    uuids=  getWalletIdsForNetworkService();
+                    break;
+                default:
+                    throw new InvalidParameterException("Invalid parameter.", null, catalogItems.toString(), null);
+            }
+            closeDatabase();
+            return uuids;
+        } catch (Exception exception) {
+            closeDatabase();
+            throw new CantExecuteDatabaseOperationException(exception, null, null);
+        }
+    }
+
 
     private List<UUID> getWalletIdsForNetworkService() throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME);
@@ -881,35 +1005,45 @@ public class WalletStoreNetworkServiceDatabaseDao implements DealsWithErrors, De
         }
     }
 
-    /**
-     * Used by the network service. Gets the list of IDs installed in the catalog to compare.
-     * @param catalogItems
-     * @return
-     * @throws InvalidParameterException
-     * @throws CantExecuteDatabaseOperationException
-     */
-    public List<UUID> getCatalogIdsForNetworkService(CatalogItems catalogItems) throws InvalidParameterException, CantExecuteDatabaseOperationException {
-        List<UUID> uuids;
-        openDatabase();
-        try{
-            switch (catalogItems){
-                case LANGUAGE:
-                    uuids = getWalletLanguagesForNetworkService();
-                    break;
-                case SKIN:
-                    uuids=  getWalletSkinsForNetworkService();
-                    break;
-                case WALLET:
-                    uuids=  getWalletIdsForNetworkService();
-                    break;
-                default:
-                    throw new InvalidParameterException("Invalid parameter.", null, catalogItems.toString(), null);
-            }
-            closeDatabase();
-            return uuids;
-        } catch (Exception exception) {
-            closeDatabase();
-            throw new CantExecuteDatabaseOperationException(exception, null, null);
+    private DatabaseTableRecord getDeveloperRecord(UUID developerId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME);
+        databaseTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, developerId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+            if (databaseTable.getRecords().size() != 1)
+                throw new InvalidResultReturnedByDatabaseException(null, "developer Id: " + developerId.toString(), null );
+
+            return databaseTable.getRecords().get(0);
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    private DatabaseTableRecord getDesignerRecord(UUID designerId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME);
+        databaseTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designerId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+            if (databaseTable.getRecords().size() != 1)
+                throw new InvalidResultReturnedByDatabaseException(null, "Designer Id: " + designerId.toString(), null );
+
+            return databaseTable.getRecords().get(0);
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(e, null, null);
+        }
+    }
+
+    private DatabaseTableRecord getTranslatorRecord(UUID translatorId) throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = getDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME);
+        databaseTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translatorId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+            if (databaseTable.getRecords().size() != 1)
+                throw new InvalidResultReturnedByDatabaseException(null, "Designer Id: " + translatorId.toString(), null );
+
+            return databaseTable.getRecords().get(0);
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(e, null, null);
         }
     }
 

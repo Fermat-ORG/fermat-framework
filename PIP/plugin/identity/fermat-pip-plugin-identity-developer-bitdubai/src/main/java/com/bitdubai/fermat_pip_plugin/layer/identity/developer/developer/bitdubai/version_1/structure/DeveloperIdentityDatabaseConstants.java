@@ -23,7 +23,6 @@ public class DeveloperIdentityDatabaseConstants {
     public static final String DEVELOPER_TABLE_NAME = "DevelopersTable";
 
     public static final String DEVELOPER_DEVELOPER_PUBLIC_KEY_COLUMN_NAME = "developer_public_key";
-    public static final String DEVELOPER_DEVELOPER_PRIVATE_KEY_COLUMN_NAME = "developer_private_key";
     public static final String DEVELOPER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
     public static final String DEVELOPER_DEVELOPER_ALIAS_COLUMN_NAME = "developer_alias";
 

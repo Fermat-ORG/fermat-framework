@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_language.DealsWithWalletLanguage</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.middleware.wallet_language.DealsWithWalletLanguage</code>
  * indicates that the plugin needs the functionality of a WalletLanguageManager
  * <p/>
  *

@@ -103,8 +103,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      * @param fragmentType Type Id of fragment to show
      */
 
-    private void loadFragment(Fragments fragmentType)
-    {
+    private void loadFragment(Fragments fragmentType){
+
+
         FragmentTransaction transaction;
         com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment=null;
 
@@ -134,7 +135,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
 
-                     transaction = getSupportFragmentManager().beginTransaction();
+                    transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.startContainer, fragd);
                     // Commit the transaction
                     transaction.commit();
@@ -152,7 +153,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     fragt.setResource((Resource) screenObjects[0]);
                     fragt.setDeveloperDatabase((DeveloperDatabase) screenObjects[1]);
 
-                     transaction = getSupportFragmentManager().beginTransaction();
+                    transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.startContainer, fragt);
                     // Commit the transaction
                     transaction.commit();
@@ -299,11 +300,22 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     public void onBackPressed() {
 
+
         // get actual fragment on execute
         Fragments frgBackType = null;
         try {
             SubAppRuntimeManager subAppRuntimeManager = getAppRuntimeMiddleware();
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment();
+
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment=null;
+
+            try{
+
+                fragment  = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment();
+
+            }catch (NullPointerException nullPointerException){
+                fragment=null;
+            }
+
 
 
             //get setting fragment to back
@@ -373,15 +385,16 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 switch (activityType){
 
 
-                    case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
+                    case CWP_SUB_APP_ALL_DEVELOPER: //Developer manager
 
 
                         getAppRuntimeMiddleware().getSubApp(SubApps.CWP_DEVELOPER_APP);
-                        getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+                        getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
 
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                         break;
 
@@ -405,7 +418,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         intent = new Intent(this, com.bitdubai.android_core.app.WalletFactoryActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;
 
                     //wallet publisher
@@ -416,7 +429,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;
 
                     case CWP_WALLET_RUNTIME_STORE_MAIN:
@@ -425,6 +438,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;
                 }
 
@@ -481,6 +495,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     intent.putExtra(WalletActivity.INSTALLED_WALLET,installedWallet);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     break;
             }
         }

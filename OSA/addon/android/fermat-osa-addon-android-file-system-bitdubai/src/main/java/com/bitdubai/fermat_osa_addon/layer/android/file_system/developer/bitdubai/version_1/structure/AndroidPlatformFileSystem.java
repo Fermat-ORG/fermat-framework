@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
 
 /**
  * Created by ciencias on 02.02.15.
@@ -82,11 +82,18 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
     @Override
     public PlatformTextFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws  CantCreateFileException{
         checkContext();
+       try{
         return new AndroidPlatformTextFile( this.context,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+       }catch (CantCreateFileException exception){
+               throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE,exception,null,"Check the cause of this error");
+           }
+           catch(Exception e){
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
+        }
     }
 
     @Override
-    public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
+    public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
         checkContext();
         try {
             AndroidPlatformBinaryFile newFile = new AndroidPlatformBinaryFile(this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
@@ -94,13 +101,21 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
             return newFile;
         } catch (CantLoadFileException e){
             throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, e, "", "Check the cause");
+        }catch(Exception e){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
         }
     }
 
     @Override
     public PlatformBinaryFile createBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
-        checkContext();
+       checkContext();
+        try {
         return new AndroidPlatformBinaryFile(this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+        }catch (CantCreateFileException exception){
+            throw exception;
+        }catch(Exception e){
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
+           }
     }
 
     /**

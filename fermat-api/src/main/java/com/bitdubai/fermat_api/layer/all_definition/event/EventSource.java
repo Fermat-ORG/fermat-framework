@@ -9,6 +9,7 @@ public enum EventSource {
     USER_DEVICE_USER_PLUGIN ("UDU"),
     CRYPTO_NETWORK_BITCOIN_PLUGIN ("CNB"),
     COMMUNICATION_CLOUD_PLUGIN ("CCL"),
+    NETWORK_SERVICE_TEMPLATE_PLUGIN ("NTP"),
     NETWORK_SERVICE_INTRA_USER_PLUGIN ("NIU"),
     NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN ("NWR"),
     NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN ("NWC"),
@@ -79,11 +80,14 @@ public enum EventSource {
                 return EventSource.CRYPTO_ROUTER;
             case "CCV":
                 return EventSource.CRYPTO_VAULT;
+            //Modified by Manuel Perez on 03/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
+
         }
 
         /**
          * If we try to cpmvert am invalid string.
          */
-        throw new InvalidParameterException(code);
+        //throw new InvalidParameterException(code);
     }
 }

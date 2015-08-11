@@ -97,6 +97,11 @@ public class StartAgentTest {
                 public void loadFromMedia() throws CantLoadFileException {
 
                 }
+
+                @Override
+                public void delete() {
+
+                }
             };
             return textFile;
         }
@@ -109,6 +114,16 @@ public class StartAgentTest {
         @Override
         public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
             return null;
+        }
+
+        @Override
+        public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
+        }
+
+        @Override
+        public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
         }
 
         @Override

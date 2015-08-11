@@ -40,7 +40,7 @@ public class GetDatabaseTableListTest {
 
 
     @Test
-    public void getDataBaseTableList_DeveloperObjectFactoryImplemented__DatabaseTableListWithValidContent(){
+    public void getDataBaseTableListTest_DeveloperObjectFactoryImplemented__DatabaseTableListWithValidContent(){
 
         List<DeveloperDatabaseTable> resultList;
         /**
@@ -63,7 +63,7 @@ public class GetDatabaseTableListTest {
 
 
     @Test
-    public void getDatabaseTableList_NullsArguments_ThrowsGenericException() throws Exception{
+    public void getDatabaseTableListTest_NullsArguments_ThrowsGenericException() throws Exception{
         /**
          * With null DeveloperObjectFactory argument this method throws an exception
          */
@@ -76,7 +76,7 @@ public class GetDatabaseTableListTest {
 
 
     @Test
-    public void getDatabaseTableList_OpenDeveloperObjectFactoryCanGetDatabaseTableList_DatabaseTableListNotNull() throws Exception {
+    public void getDatabaseTableListTest_OpenDeveloperObjectFactoryCanGetDatabaseTableList_DatabaseTableListNotNull() throws Exception {
         List<DeveloperDatabaseTable> developerDatabaseTableList;
 
         developerDatabaseTableList= extraUserUserAddonRoot.getDatabaseTableList(testDeveloperObjectFactory,testDeveloperDatabase);

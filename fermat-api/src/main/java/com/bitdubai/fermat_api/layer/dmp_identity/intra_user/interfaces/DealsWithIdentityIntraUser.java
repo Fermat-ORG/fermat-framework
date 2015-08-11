@@ -5,5 +5,5 @@ package com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces;
  * provides the methods to set an instance of the Intra User plugin of the Identity layer
  */
 public interface DealsWithIdentityIntraUser {
-    public void setIntraUserManager(IntraUserManager intraUserManager);
+    public void setIntraUserManager(IntraUserIdentityManager intraUserIdentityManager);
 }

@@ -13,7 +13,7 @@ public class SetIdTest {
     ExtraUserUserAddonRoot testExtraUserUserAddonRoot=new ExtraUserUserAddonRoot();
 
     @Test
-    public void setPluginId_setValidRandomPluginId_throwsNoExceptions(){
+    public void setPluginIdTest_setValidRandomPluginId_throwsNoExceptions(){
 
         UUID pluginId=UUID.randomUUID();
         testExtraUserUserAddonRoot.setId(pluginId);

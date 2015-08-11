@@ -45,6 +45,8 @@ public enum EventType {
     MONEY_RECEIVED ("MR1"),
     FINISHED_WALLET_INSTALLATION ("FWI"),
 
+    WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED("WRNSD"),
+
     INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE ("TWT"),
     INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER ("TWE"),
 
@@ -268,12 +270,15 @@ public enum EventType {
                 return EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER;
             case"ICROBWTEU":
                 return EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER;
+            //Modified by Manuel Perez on 03/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
+
         }
 
         /**
          * If we try to cpmvert am invalid string.
          */
-        throw new InvalidParameterException(code);
+        //throw new InvalidParameterException(code);
     };
 
     /**

@@ -9,6 +9,7 @@ public enum InstallationStatus {
     INSTALLED ("INSED"),
     NOT_INSTALLED ("NOINS"),
     INSTALLING ("INSING"),
+    UNINSTALLING("UNING"),
     INSTALL_AVAILABLE("INSA"),
     UPGRADE_AVAILABLE("UPGA"),
     UPGRADING("UPGING");
@@ -28,11 +29,14 @@ public enum InstallationStatus {
             case "INSED": return InstallationStatus.INSTALLED;
             case "NOINS": return InstallationStatus.NOT_INSTALLED;
             case "INSING": return InstallationStatus.INSTALLING;
+            case "UNING": return InstallationStatus.UNINSTALLING;
             case "INSA": return InstallationStatus.INSTALL_AVAILABLE;
             case "UPGA": return InstallationStatus.UPGRADE_AVAILABLE;
             case "UPGING": return InstallationStatus.UPGRADING;
+            //Modified by Manuel Perez 05/08/2015
             default:
-                throw new InvalidParameterException(code);
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the InstalationStatus enum");
+
         }
     }
 }

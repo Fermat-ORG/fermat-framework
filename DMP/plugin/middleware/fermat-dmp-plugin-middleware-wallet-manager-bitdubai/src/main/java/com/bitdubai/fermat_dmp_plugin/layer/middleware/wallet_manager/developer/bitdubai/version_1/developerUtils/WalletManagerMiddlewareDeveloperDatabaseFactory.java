@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database.WalletManagerMiddlewareDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +22,20 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
     String pluginId;
     List<String> walletsIds;
 
-    public WalletManagerMiddlewareDeveloperDatabaseFactory (String pluginId, List<String> walletsIds){
+    public WalletManagerMiddlewareDeveloperDatabaseFactory (String pluginId){
         this.pluginId = pluginId;
-        this.walletsIds = walletsIds;
+
     }
 
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
-         * We have one database for each walletId, so we will return all their names.
-         * Remember that a database name in this plug-in is the internal wallet id.
+         * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        for(String databaseName : this.walletsIds)
-            databases.add(developerObjectFactory.getNewDeveloperDatabase(databaseName, this.pluginId));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE, pluginId));
         return databases;
+
 
     }
 
@@ -58,6 +57,12 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
         WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME);
         WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME);
         WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_VERSION_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_DENSITY_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME);
+        WalletManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME);
+
         /**
          * Wallets table
          */

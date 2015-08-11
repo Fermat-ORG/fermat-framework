@@ -34,10 +34,11 @@ dependencies {
 
 
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.52'
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    compile 'com.sun.istack:istack-commons-runtime:2.22'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    
+
+    compile('com.thoughtworks.xstream:xstream:1.4.7') {
+        exclude group: 'xmlpull', module: 'xmlpull'
+    }
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
 	testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'

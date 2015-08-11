@@ -1,21 +1,25 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTabStrip;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import ae.javax.xml.bind.annotation.XmlElement;
-import ae.javax.xml.bind.annotation.XmlElementWrapper;
-import ae.javax.xml.bind.annotation.XmlElements;
-import ae.javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by rodrigo on 2015.07.17..
  */
-@XmlRootElement(name = "tabStrip")
+
 public class TabStrip implements FermatTabStrip {
+
+    /**
+     * WIZARD
+     */
+    Map<WizardTypes, Wizard> wizards;
 
     /**
      * TabStrip class member variables
@@ -66,64 +70,60 @@ public class TabStrip implements FermatTabStrip {
     /**
      * TabStrip class getters
      */
-    @XmlElement
+
     @Override
     public int getDividerColor() {
         return dividerColor;
     }
 
-    @XmlElement
+
     @Override
     public int getIndicatorColor() {
         return indicatorColor;
     }
 
-    @XmlElement
     @Override
     public int getIndicatorHeight() {
         return indicatorHeight;
     }
 
-    @XmlElement
+
     @Override
     public int getBackgroundColor() {
         return backgroundColor;
     }
 
-    @XmlElement
+
     @Override
     public int getTextColor() {
         return textColor;
     }
 
-    @XmlElement
+
     @Override
     public int getBackgroundResource() {
         return backgroundResource;
     }
 
-    @XmlElement
+
     @Override
     public String getTabsColor() {
         return tabsColor;
     }
 
-    @XmlElement
+
     @Override
     public String getTabsTextColor() {
         return tabsTextColor;
     }
 
-    @XmlElement
+
     @Override
     public String getTabsIndicateColor() {
         return tabsIndicateColor;
     }
 
-    @XmlElements({
-        @XmlElement(name="tab", type=Tab.class),
-    })
-    @XmlElementWrapper
+
     @Override
     public List<Tab> getTabs() {
         return tabs;
@@ -179,5 +179,27 @@ public class TabStrip implements FermatTabStrip {
 
     public void setTabs(List<Tab> tabs) {
         this.tabs = tabs;
+    }
+
+    /**
+     * Add wizard to attach to this Tab
+     *
+     * @param type   Wizard type enumerable
+     * @param wizard Wizard runtime
+     * @throws Exception
+     */
+    public void addWizard(WizardTypes type, Wizard wizard) throws Exception {
+        if (wizards == null)
+            wizards = new HashMap<>();
+        if (wizard == null || type == null)
+            throw new NullPointerException("arguments cannot be null");
+        if (wizards.get(type) != null) {
+            throw new Exception(String.format("Type %s is already registered.", type.getKey()));
+        }
+        wizards.put(type, wizard);
+    }
+
+    public Map<WizardTypes, Wizard> getWizards() {
+        return wizards;
     }
 }

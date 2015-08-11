@@ -3,8 +3,25 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdu
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartInstallationException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartLanguageInstallationException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartSkinInstallationException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallSkinException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -33,7 +50,17 @@ import java.util.UUID;
  * * *
  */
 
-public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreNetworkService, DealsWithWalletStoreMiddleware, LogManagerForDevelopers,Plugin, Service{
+public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService, WalletStoreModuleManager, LogManagerForDevelopers,Plugin, Service{
+
+    /**
+     * WalletStoreModulePluginRoot member variables
+     */
+    com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager walletStoreModuleManager;
+
+    /**
+     * DealsWithErrors interface member variables
+     */
+    ErrorManager errorManager;
 
     /**
      * DealsWithLogger interface member variable
@@ -54,15 +81,17 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
      */
     EventManager eventManager;
 
+
     /**
      * DealsWithWalletStoreNetworkService interface member variable
      */
     WalletStoreManager walletStoreManagerNetworkService;
 
     /**
-     * DealsWithWalletStoreMiddleware interface member variable
+     * DealsWithWEalletStoreMiddleware interface member variable
      */
     com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
+
 
     /**
      * Plugin Interface member variables.
@@ -113,7 +142,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
     /**
@@ -125,7 +154,6 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
         this.pluginId = pluginId;
     }
 
-
     /**
      * DealsWithLogger Interface implementation.
      */
@@ -135,22 +163,6 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
         this.logManager = logManager;
     }
 
-
-    /**
-     * DealsWithWalletStoreNetworkService interface implementation
-     */
-    @Override
-    public void setWalletStoreManager(WalletStoreManager walletStoreManager) {
-        this.walletStoreManagerNetworkService = walletStoreManager;
-    }
-
-    /**
-     * DealsWithWalletStoreMiddleware interface implementation
-     */
-    @Override
-    public void setWalletStoreManager(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManager) {
-        this.walletStoreManagerMiddleware = walletStoreManager;
-    }
 
     /**
      * LogManagerForDevelopers Interface implementation.
@@ -190,5 +202,76 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
         }
 
     }
+
+    /**
+     * DealsWithWalletStoreMiddleware interface implementation
+     * @param walletStoreManager
+     */
+    @Override
+    public void setWalletStoreManager(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManager) {
+        this.walletStoreManagerMiddleware = walletStoreManager;
+    }
+
+    /**
+     * DEalswithWalletStoreNetworkService interface implementation
+     * @param walletStoreManager
+     */
+    @Override
+    public void setWalletStoreManager(WalletStoreManager walletStoreManager) {
+        this.walletStoreManagerNetworkService = walletStoreManager;
+    }
+
+    /**
+     * WalletStoreMOdule manager interface implementation
+     */
+
+    private com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager getWalletStoreModuleManager(){
+        if (walletStoreModuleManager == null)
+            walletStoreModuleManager = new com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
+
+        return walletStoreModuleManager;
+    }
+
+    @Override
+    public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException {
+        return walletStoreModuleManager.getCatalogue();
+    }
+
+    @Override
+    public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartLanguageInstallationException {
+        walletStoreModuleManager.installLanguage(walletCatalogueId, languageId);
+    }
+
+    @Override
+    public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartSkinInstallationException {
+        walletStoreModuleManager.installSkin(walletCatalogueId, skinId);
+    }
+
+    @Override
+    public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
+        walletStoreModuleManager.installWallet(walletCategory, nicheWallet, skinId, languageId, walletCatalogueId, version);
+    }
+
+    @Override
+    public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartUninstallLanguageException {
+        walletStoreModuleManager.uninstallLanguage(walletCatalogueId, languageId);
+    }
+
+    @Override
+    public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantStartUninstallSkinException {
+        walletStoreModuleManager.uninstallSkin(walletCatalogueId, skinId);
+    }
+
+    @Override
+    public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException {
+        walletStoreModuleManager.uninstallWallet(walletCatalogueId);
+    }
+
+    @Override
+    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
+        return walletStoreModuleManager.getCatalogItemDetails(walletCatalogId);
+    }
+
+
 
 }

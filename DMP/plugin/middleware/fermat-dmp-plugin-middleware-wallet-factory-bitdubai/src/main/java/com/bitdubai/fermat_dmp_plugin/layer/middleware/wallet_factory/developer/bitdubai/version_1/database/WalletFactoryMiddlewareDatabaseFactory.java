@@ -87,64 +87,8 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Project Proposal table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_TABLE_NAME);
-
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FACTORY_PROJECT_STATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PATH_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_PROJECT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-
-            table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PROPOSAL_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Project Skin table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_TABLE_NAME);
-
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_DESIGNER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PATH_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_PROJECT_PROPOSAL_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-
-            table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SKIN_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Project Language table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TABLE_NAME);
-
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_LANGUAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_TRANSLATOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PATH_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_PROJECT_PROPOSAL_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-
-            table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_LANGUAGE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
