@@ -1,8 +1,8 @@
 package com.bitdubai.sub_app.wallet_factory.session;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ProjectsFragment;
 
@@ -38,7 +38,6 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
     /**
      *  Projects opened
      */
-    private Map<WalletFactoryProject,ProjectsFragment.WalletFactoryProjectProposal> walletFactoryProjectWalletFactoryProjectProposalMap;
 
 
     /**
