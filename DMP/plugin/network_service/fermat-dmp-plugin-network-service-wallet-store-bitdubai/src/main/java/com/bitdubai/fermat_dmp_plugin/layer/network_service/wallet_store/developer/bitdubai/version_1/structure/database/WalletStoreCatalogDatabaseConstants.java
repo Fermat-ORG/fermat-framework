@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 /**
  * Created by rodrigo on 7/21/15.
  */
-public class WalletStoreNetworkServiceDatabaseConstants {
+public class WalletStoreCatalogDatabaseConstants {
 
     /**
      * Database name

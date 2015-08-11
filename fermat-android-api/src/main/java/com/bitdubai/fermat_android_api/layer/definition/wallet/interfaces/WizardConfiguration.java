@@ -3,7 +3,10 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 
 /**
- * Created by francisco on 05/08/15.
+ * Wizard Configuration Interface
+ *
+ * @author Francisco Vásquez
+ * @version 1.0
  */
 public interface WizardConfiguration {
 
