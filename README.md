@@ -27,7 +27,7 @@ What makes Fermat different from other wallet platforms or services?
 
 * **Fermat segments the world population and brings a custom tailored solution for each segment.** Any developer can create niche wallets for a particular group of people. Brands can easily create their own wallet for their followers.
 
-* **Fermat uses crypto currency networks as public value transport networks.** Fermat users cant choose to move their money arround the world easily and almost for free via these public value transport networks or the legacy financial system networks as well. 
+* **Fermat uses crypto currency networks as public value transport networks.** Fermat users can choose to move their money arround the world easily and almost for free via these public value transport networks or the legacy financial system networks as well. 
 
 * **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. 
 
