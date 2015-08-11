@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -499,7 +499,7 @@ public class WalletPublisherMiddlewareDao {
             walletPublishedMiddlewareInformation.setFinalWalletVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FINAL_WALLET_VERSION_COLUMN_NAME)));
             walletPublishedMiddlewareInformation.setInitialPlatformVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_INITIAL_PLATFORM_VERSION_COLUMN_NAME)));
             walletPublishedMiddlewareInformation.setFinalPlatformVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FINAL_PLATFORM_VERSION_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setType(ComponentPublishedInformationType.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_COMPONENT_TYPE_COLUMN_NAME)));
+            walletPublishedMiddlewareInformation.setType(DescriptorFactoryProjectType.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_COMPONENT_TYPE_COLUMN_NAME)));
             walletPublishedMiddlewareInformation.setVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_VERSION_COLUMN_NAME)));
             walletPublishedMiddlewareInformation.setVersionTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_VERSION_TIMESTAMP_COLUMN_NAME)));
             walletPublishedMiddlewareInformation.setStatus(ComponentPublishedInformationStatus.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STATUS_COLUMN_NAME)));
@@ -536,9 +536,9 @@ public class WalletPublisherMiddlewareDao {
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_ID_COLUMN_NAME, walletPublishedMiddlewareInformation.getId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_ID_COLUMN_NAME,                   walletPublishedMiddlewareInformation.getWalletFactoryProjectId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_NAME_COLUMN_NAME,                 walletPublishedMiddlewareInformation.getWalletFactoryProjectName());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_ok ID_COLUMN_NAME, walletPublishedMiddlewareInformation.getId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_ID_COLUMN_NAME,                   walletPublishedMiddlewareInformation.getDescriptorFactoryProjectId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_NAME_COLUMN_NAME,                 walletPublishedMiddlewareInformation.getDescriptorFactoryProjectName());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WALLET_ID_COLUMN_NAME,                walletPublishedMiddlewareInformation.getWalletId().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_CATALOG_ID_COLUMN_NAME,               walletPublishedMiddlewareInformation.getCatalogId().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STORE_ID_COLUMN_NAME,                 walletPublishedMiddlewareInformation.getStoreId().toString());

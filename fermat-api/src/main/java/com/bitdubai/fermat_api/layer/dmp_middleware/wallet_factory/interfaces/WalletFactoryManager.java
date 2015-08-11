@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 
 import java.util.List;
 import java.util.UUID;
@@ -62,6 +63,15 @@ public interface WalletFactoryManager {
      * @throws CantGetWalletFactoryProjectsException if something goes wrong
      */
     List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectsException;
+
+
+    /**
+     * This method returns all the Wallet Factory Projects Closed that exists in the device for the current logged developer user
+     *
+     * @return list of wallet factory projects
+     * @throws CantGetWalletFactoryProjectsException if something goes wrong
+     */
+    List<WalletFactoryProject> getAllWalletFactoryProjectsClosed() throws CantGetWalletFactoryProjectsException;
 
     /**
      * This method return a Wallet Factory Project instance looking by name, and the current developer logged in

@@ -555,4 +555,17 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         this.publishWallet(catalogItem);
 
     }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletStoreManager#constructEmptyCatalogItem()
+     */
+    public CatalogItem constructEmptyCatalogItem(){
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem catalogItem = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem();
+
+
+
+        return catalogItem;
+    }
 }

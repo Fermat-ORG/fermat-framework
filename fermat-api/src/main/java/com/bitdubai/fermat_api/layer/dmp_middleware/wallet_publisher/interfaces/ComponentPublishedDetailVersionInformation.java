@@ -9,15 +9,15 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation</code> define
- * the static information about a published component.
+ * the static information about the detail version published component.
  * <p/>
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
@@ -26,7 +26,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface ComponentPublishedInformation {
+public interface ComponentPublishedDetailVersionInformation {
 
     /**
      * Get the id
@@ -36,53 +36,73 @@ public interface ComponentPublishedInformation {
     public UUID getId();
 
     /**
-     * Get the Descriptor Factory Project Id
+     * Get the Catalog Id
      *
      * @return UUID
      */
-    public UUID getDescriptorFactoryProjectId();
+    public UUID getCatalogId();
 
     /**
-     * Get the Descriptor Factory Project Name
+     * Get the Screen Size
+     *
+     * @return ScreenSize
+     */
+    public ScreenSize getScreenSize();
+
+    /**
+     * Get the Initial Wallet Version Supported
+     *
+     * @return Version
+     */
+    public Version getInitialWalletVersion();
+
+    /**
+     * Get the Final Wallet Version Supported
+     *
+     * @return Version
+     */
+    public Version getFinalWalletVersion();
+
+    /**
+     * Get the Initial Platform Version Supported
+     *
+     * @return Version
+     */
+    public Version getInitialPlatformVersion();
+
+    /**
+     * Get the Final Platform Version Supported
+     *
+     * @return Version
+     */
+    public Version getFinalPlatformVersion();
+
+    /**
+     * Get the Version
+     *
+     * @return Version
+     */
+    public Version getVersion();
+
+    /**
+     * Get the Version Timestamp
+     *
+     * @return Timestamp
+     */
+    public Timestamp getVersionTimestamp();
+
+    /**
+     * Get the Component Id
+     *
+     * @return UUID
+     */
+    public UUID getComponentId();
+
+    /**
+     * Get the observations
      *
      * @return String
      */
-    public String getDescriptorFactoryProjectName();
-
-    /**
-     * Get the Type
-     *
-     * @return DescriptorFactoryProjectType
-     */
-    public DescriptorFactoryProjectType getType();
-
-
-    /**
-     * Get the Status
-     *
-     * @return ComponentPublishedInformationStatus
-     */
-    public ComponentPublishedInformationStatus getStatus();
-
-    /**
-     * Get the Status Timestamp
-     *
-     * @return Timestamp
-     */
-    public Timestamp getStatusTimestamp();
-
-    /**
-     * Get the Publication Timestamp
-     *
-     * @return Timestamp
-     */
-    public Timestamp getPublicationTimestamp();
-
-    /**
-     * Get the Publisher Id
-     *
-     * @return UUID
-     */
-    public UUID getPublisherId();
+    public String getObservations();
 
 }

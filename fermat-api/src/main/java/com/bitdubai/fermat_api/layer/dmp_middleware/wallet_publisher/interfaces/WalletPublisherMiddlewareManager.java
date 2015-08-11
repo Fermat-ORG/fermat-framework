@@ -6,8 +6,8 @@
  */
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager</code> mark
@@ -29,11 +28,11 @@ import java.util.UUID;
 public interface WalletPublisherMiddlewareManager {
 
     /**
-     * This method returns the information stored about the all published component
+     * This method returns the list of the WalletFactoryProject closed and ready to be published
      *
-     * @return Map<UUID, List<WalletFactoryProjectProposal>>  A map where each entry corresponds to a WalletFactoryProject id and the list of WalletFactoryProjectProposal to be publish with their information
+     * @return List<WalletFactoryProject>  list of WalletFactoryProject
      */
-    public Map<UUID, List<WalletFactoryProjectProposal>> getWalletFactoryProjectProposalToPublish();
+    public List<WalletFactoryProject> getWalletFactoryProjectToPublish();
 
     /**
      * This method returns the information stored about the all published component
@@ -75,16 +74,16 @@ public interface WalletPublisherMiddlewareManager {
      * @return true if it can be published, false otherwise.
      * @throws CantCheckPublicationException
      */
-    public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCheckPublicationException;
+    public boolean canBePublished(WalletFactoryProject walletFactoryProjectProposal) throws CantCheckPublicationException;
 
     /**
      * This method publishes the wallet factory project <code>WalletFactoryProjectProposal</code> in
      * the wallet store and register relevant information of this process.
      *
-     * @param walletFactoryProjectProposal the wallet factory project to publish
+     * @param walletFactoryProject the wallet factory project to publish
      * @throws CantPublishComponetException
      */
-    public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishComponetException;
+    public void publishWallet(WalletFactoryProject walletFactoryProject) throws CantPublishComponetException;
 
     /**
      * This method publishes the skin factory project <code>WalletFactoryProjectSkin</code> with the skin information in

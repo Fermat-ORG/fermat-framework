@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.DealsWithWalletLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguageManager;
@@ -473,11 +473,11 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#getWalletFactoryProjectProposalToPublish()
+     * @see WalletPublisherMiddlewareManager#getWalletFactoryProjectToPublish()
      */
     @Override
-    public Map<UUID, List<WalletFactoryProjectProposal>> getWalletFactoryProjectProposalToPublish() {
-        return walletPublisherMiddlewareManagerImpl.getWalletFactoryProjectProposalToPublish();
+    public List<WalletFactoryProject> getWalletFactoryProjectToPublish() {
+        return walletPublisherMiddlewareManagerImpl.getWalletFactoryProjectToPublish();
     }
 
     /**
@@ -518,20 +518,20 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#canBePublished(WalletFactoryProjectProposal)
+     * @see WalletPublisherMiddlewareManager#canBePublished(WalletFactoryProject)
      */
     @Override
-    public boolean canBePublished(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantCheckPublicationException {
-        return walletPublisherMiddlewareManagerImpl.canBePublished(walletFactoryProjectProposal);
+    public boolean canBePublished(WalletFactoryProject walletFactoryProject) throws CantCheckPublicationException {
+        return walletPublisherMiddlewareManagerImpl.canBePublished(walletFactoryProject);
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProjectProposal)
+     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProject)
      */
     @Override
-    public void publishWallet(WalletFactoryProjectProposal walletFactoryProjectProposal) throws CantPublishComponetException {
-        walletPublisherMiddlewareManagerImpl.publishWallet(walletFactoryProjectProposal);
+    public void publishWallet(WalletFactoryProject walletFactoryProject) throws CantPublishComponetException {
+        walletPublisherMiddlewareManagerImpl.publishWallet(walletFactoryProject);
     }
 
     /**

@@ -8,8 +8,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
 
 import java.sql.Timestamp;
@@ -24,7 +24,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ComponentPublishedMiddlewareInformation implements ComponentPublishedInformation {
+public class ComponentPublishedDetailVersionMiddlewareInformation implements ComponentPublishedInformation {
 
     /**
      * Represent the id
@@ -119,52 +119,10 @@ public class ComponentPublishedMiddlewareInformation implements ComponentPublish
     /**
      * Constructor
      */
-    public ComponentPublishedMiddlewareInformation(){
+    public ComponentPublishedDetailVersionMiddlewareInformation(){
         super();
     }
 
-    /**
-     * Constructor with parameters
-     *
-     * @param catalogId
-     * @param finalPlatformVersion
-     * @param finalWalletVersion
-     * @param id
-     * @param initialPlatformVersion
-     * @param initialWalletVersion
-     * @param publicationTimestamp
-     * @param publisherId
-     * @param screenSize
-     * @param status
-     * @param statusTimestamp
-     * @param storeId
-     * @param type
-     * @param version
-     * @param versionTimestamp
-     * @param walletFactoryProjectId
-     * @param walletFactoryProjectName
-     * @param walletId
-     */
-    public ComponentPublishedMiddlewareInformation(UUID catalogId, Version finalPlatformVersion, Version finalWalletVersion, UUID id, Version initialPlatformVersion, Version initialWalletVersion, Timestamp publicationTimestamp, UUID publisherId, ScreenSize screenSize, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, UUID storeId, DescriptorFactoryProjectType type, Version version, Timestamp versionTimestamp, UUID walletFactoryProjectId, String walletFactoryProjectName, UUID walletId) {
-        this.catalogId = catalogId;
-        this.finalPlatformVersion = finalPlatformVersion;
-        this.finalWalletVersion = finalWalletVersion;
-        this.id = id;
-        this.initialPlatformVersion = initialPlatformVersion;
-        this.initialWalletVersion = initialWalletVersion;
-        this.publicationTimestamp = publicationTimestamp;
-        this.publisherId = publisherId;
-        this.screenSize = screenSize;
-        this.status = status;
-        this.statusTimestamp = statusTimestamp;
-        this.storeId = storeId;
-        this.type = type;
-        this.version = version;
-        this.versionTimestamp = versionTimestamp;
-        this.walletFactoryProjectId = walletFactoryProjectId;
-        this.walletFactoryProjectName = walletFactoryProjectName;
-        this.walletId = walletId;
-    }
 
     /**
      * (non-Javadoc)

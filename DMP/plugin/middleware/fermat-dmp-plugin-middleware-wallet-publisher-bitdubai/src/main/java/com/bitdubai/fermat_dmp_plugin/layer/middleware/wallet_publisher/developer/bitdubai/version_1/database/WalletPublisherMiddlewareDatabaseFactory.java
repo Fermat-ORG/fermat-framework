@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.Wallet PublisherMiddlewareDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.Wallet PublisherMiddlewareDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
@@ -38,7 +38,6 @@ public class WalletPublisherMiddlewareDatabaseFactory implements DealsWithPlugin
 
     /**
      * Constructor with parameters to instantiate class
-     * .
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
@@ -54,10 +53,10 @@ public class WalletPublisherMiddlewareDatabaseFactory implements DealsWithPlugin
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
-        /**
+        /*
          * I will create the database where I am going to store the information of this wallet.
          */
         try {
@@ -69,33 +68,23 @@ public class WalletPublisherMiddlewareDatabaseFactory implements DealsWithPlugin
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
         }
 
-        /**
+        /*
          * Next, I will add the needed tables.
          */
         try {
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
-            /**
+            /*
              * Create COMPONENT PUBLISHED INFORMATION table.
              */
             table = databaseFactory.newTableFactory(ownerId, WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_TABLE_NAME);
 
             table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WALLET_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_CATALOG_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STORE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_SCREEN_SIZE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_INITIAL_WALLET_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FINAL_WALLET_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_INITIAL_PLATFORM_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FINAL_PLATFORM_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_COMPONENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_VERSION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 2, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_DFP_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_DFP_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_COMPONENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STATUS_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_PUBLICATION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_PUBLISHER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
@@ -108,8 +97,35 @@ public class WalletPublisherMiddlewareDatabaseFactory implements DealsWithPlugin
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            /*
+             * Create COMPONENT DETAILS VERSION table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_TABLE_NAME);
+
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_SCREEN_SIZE_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_VERSION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_INITIAL_WALLET_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_FINAL_WALLET_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_INITIAL_PLATFORM_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_FINAL_PLATFORM_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_OBSERVATIONS_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_CATALOG_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_COMPONENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+
+            table.addIndex(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_DETAILS_VERSION_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
         } catch (InvalidOwnerIdException invalidOwnerId) {
-            /**
+
+            /*
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
@@ -125,5 +141,4 @@ public class WalletPublisherMiddlewareDatabaseFactory implements DealsWithPlugin
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
-
 }
