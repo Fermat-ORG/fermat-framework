@@ -3,8 +3,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_settings.develope
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
@@ -37,13 +40,15 @@ import java.util.UUID;
  */
 public class WalletSettingsSettings implements WalletSettings {
 
-    private final String WALLET_SETTINGS_FILE_NAME = "walletsSettings";
+    private final String WALLET_SETTINGS_FILE_NAME = "settings";
+
+    private final String WALLET_SETTIGS_DIRECTORY= "walletPrefencesSettings";
 
     private PluginFileSystem pluginFileSystem;
     private UUID pluginId;
     private ErrorManager errorManager;
     private PluginTextFile walletSettingsXml;
-    private UUID walletIdInTheDevice;
+    private String walletPublicKey;
 
 
     /**
@@ -51,12 +56,12 @@ public class WalletSettingsSettings implements WalletSettings {
      *
      */
 
-    public WalletSettingsSettings(UUID walletIdInTheDevice,PluginFileSystem pluginFileSystem, UUID pluginId,ErrorManager errorManager){
+    public WalletSettingsSettings(String walletPublicKey,PluginFileSystem pluginFileSystem, UUID pluginId,ErrorManager errorManager){
 
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
-        this.walletIdInTheDevice = walletIdInTheDevice;
+        this.walletPublicKey = walletPublicKey;
 
     }
 
@@ -85,7 +90,7 @@ public class WalletSettingsSettings implements WalletSettings {
             /**
              * Check wallet id is equals to this wallet process
              */
-            if (rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE).equals(this.walletIdInTheDevice.toString())) {
+            if (rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE).equals(walletPublicKey)) {
                 return UUID.fromString(rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_LANGUAGE_NODE).toString());
             } else {
                 //error invalid wallet id
@@ -124,7 +129,7 @@ public class WalletSettingsSettings implements WalletSettings {
             /**
              * Check wallet id is equals to this wallet process
              */
-            if (rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE).equals(this.walletIdInTheDevice.toString())) {
+            if (rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE).equals(walletPublicKey)) {
                 return UUID.fromString(rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_SKIN_NODE).toString());
             } else {
                 //error invalid wallet id
@@ -170,7 +175,7 @@ public class WalletSettingsSettings implements WalletSettings {
             /**
              * Check wallet id is equals to this wallet process
              */
-            if (rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE).equals(this.walletIdInTheDevice.toString())) {
+            if (rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE).equals(walletPublicKey)) {
                 rootNode.getChild(WalletSettingsConstants.WALLET_SETTINGS_XML_LANGUAGE_NODE).setText(languageId.toString());
             } else
             {
@@ -222,7 +227,7 @@ public class WalletSettingsSettings implements WalletSettings {
             /**
              * Check wallet id is equals to this wallet process
              */
-            if(rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE).equals(this.walletIdInTheDevice.toString()))
+            if(rootNode.getChildText(WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE).equals(walletPublicKey))
             {
                 rootNode.getChild(WalletSettingsConstants.WALLET_SETTINGS_XML_SKIN_NODE).setText(skinId.toString());
             }else
@@ -249,6 +254,66 @@ public class WalletSettingsSettings implements WalletSettings {
         }
     }
 
+    /**
+     * This method let us set the preference settings for a wallet
+     *
+     * @param walletPreferenceSettings
+     * @throws CantSetDefaultSkinException
+     */
+    @Override
+    public void setPreferenceSettings(String walletPreferenceSettings,String walletPublicKey) throws CantSaveWalletSettings {
+        String xml = XMLParser.parseObject(walletPreferenceSettings);
+
+        try {
+
+            PluginTextFile pluginTextFile= pluginFileSystem.getTextFile(pluginId,WALLET_SETTINGS_FILE_NAME+"_"+walletPublicKey,WALLET_SETTIGS_DIRECTORY,FilePrivacy.PUBLIC,FileLifeSpan.PERMANENT);
+
+            pluginTextFile.setContent(xml);
+
+            pluginTextFile.persistToMedia();
+
+        } catch (FileNotFoundException e) {
+
+            try {
+
+                pluginFileSystem.createTextFile(pluginId, WALLET_SETTINGS_FILE_NAME, WALLET_SETTIGS_DIRECTORY, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+            } catch (CantCreateFileException e1) {
+                throw new CantSaveWalletSettings("CANT SAVE WALLET SETTINGS",e1,"cant create "+WALLET_SETTIGS_DIRECTORY,"");
+            }
+
+        } catch (CantCreateFileException e) {
+            throw new CantSaveWalletSettings("CANT SAVE WALLET SETTINGS",e,"cant create "+WALLET_SETTIGS_DIRECTORY,"");
+        } catch (CantPersistFileException e) {
+            throw new CantSaveWalletSettings("CANT SAVE WALLET SETTINGS",e,"cant create "+WALLET_SETTIGS_DIRECTORY,"");
+        }
+    }
+
+    /**
+     * This method let us get the preference settings for a wallet
+     *
+     * @return preference settings of a wallet
+     * @throws CantGetDefaultSkinException
+     */
+    @Override
+    public String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings {
+
+        try {
+
+            PluginTextFile pluginTextFile= pluginFileSystem.getTextFile(pluginId,WALLET_SETTINGS_FILE_NAME+"_"+walletPublicKey,WALLET_SETTIGS_DIRECTORY,FilePrivacy.PUBLIC,FileLifeSpan.PERMANENT);
+
+            return walletPublicKey;
+
+        } catch (FileNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+        } catch (CantCreateFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+
+
+        throw new CantLoadWalletSettings("CANT LOAD WALLET SETTINGS",new Exception("cant load wallet settings"),"cannot get xml: "+walletPublicKey,"");
+    }
+
 
     private void loadSettingsFile() throws CantLoadSettingsFileException {
         StringBuffer strXml = new StringBuffer();
@@ -259,7 +324,7 @@ public class WalletSettingsSettings implements WalletSettings {
              * If not exists I created it.
              * * *
              */
-            walletSettingsXml = pluginFileSystem.getTextFile(pluginId, this.walletIdInTheDevice.toString(), WALLET_SETTINGS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            walletSettingsXml = pluginFileSystem.getTextFile(pluginId, walletPublicKey, WALLET_SETTINGS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             /**
              * Now I read the content of the file and place it in memory.
@@ -274,7 +339,7 @@ public class WalletSettingsSettings implements WalletSettings {
                  * make default xml structure
                  */
                 strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ROOT +">");
-                strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE +">"+ this.walletIdInTheDevice.toString() +"</"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE +">");
+                strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE +">"+ walletPublicKey +"</"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE +">");
                 strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_LANGUAGE_NODE +"></"+ WalletSettingsConstants.WALLET_SETTINGS_XML_LANGUAGE_NODE +">");
                 strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_SKIN_NODE +"></"+ WalletSettingsConstants.WALLET_SETTINGS_XML_SKIN_NODE +">");
                 strXml.append("</"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ROOT +">");
@@ -294,7 +359,7 @@ public class WalletSettingsSettings implements WalletSettings {
              */
 
             try{
-                walletSettingsXml = pluginFileSystem.createTextFile(pluginId, this.walletIdInTheDevice.toString(), WALLET_SETTINGS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                walletSettingsXml = pluginFileSystem.createTextFile(pluginId, walletPublicKey, WALLET_SETTINGS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             }
             catch (CantCreateFileException cantCreateFileException ) {
                 /**
@@ -308,7 +373,7 @@ public class WalletSettingsSettings implements WalletSettings {
                  * make default xml structure
                  */
                 strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ROOT +">");
-                strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE +">"+ this.walletIdInTheDevice.toString() +"</"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE +">");
+                strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE +">"+ walletPublicKey +"</"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ID_NODE +">");
                 strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_LANGUAGE_NODE +"></"+ WalletSettingsConstants.WALLET_SETTINGS_XML_LANGUAGE_NODE +">");
                 strXml.append("<"+ WalletSettingsConstants.WALLET_SETTINGS_XML_SKIN_NODE +"></"+ WalletSettingsConstants.WALLET_SETTINGS_XML_SKIN_NODE +">");
                 strXml.append("</"+ WalletSettingsConstants.WALLET_SETTINGS_XML_ROOT +">");
