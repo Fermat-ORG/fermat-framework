@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantExportWalletFactoryProjectException;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Pr
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposalManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantGetWalletSkinStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
@@ -191,6 +193,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
         String xmlSkin;
         String xmlLanguage;
         String mainFolderWalletRepository=folderRepositoryLink+"/navigation_structure";
+        Skin importedSkin;
         List<String> directoryGenericsPaths;
         WalletFactoryMiddlewareProjectSkin walletFactoryMiddlewareProjectSkin=null;
         //String repositoryURL;
@@ -213,12 +216,14 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
                 directoryGenericsPaths=repositoryManager.getDirectoryContent(ghRepository,folderRepositoryLink+"/skins");
                 for(String path: directoryGenericsPaths){
 
+                    xmlSkin=null;
                     try{
                         xmlSkin=repositoryManager.getFileContent(ghRepository,path);
 
                     }catch (GitHubCantReadFileContent exception){
                         continue;
                     }
+                    importedSkin=this.walletSkinManager.getSkinFromXmlString(xmlSkin);
                     //WalletSkinMiddlewarePluginRoot walletSkinMiddlewarePluginRoot=new WalletSkinMiddlewarePluginRoot();
                     //walletSkinMiddlewarePluginRoot.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
@@ -263,11 +268,11 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
             throw new CantImportWalletFactoryProjectException(GitHubCantGetDirectoryContent.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause");
 
 
-        }/*catch(CantGetLanguageException exception){
+        }catch(CantGetWalletSkinStructureException exception){
 
-            throw new CantImportWalletFactoryProjectException(CantGetLanguageException.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause");
+            throw new CantImportWalletFactoryProjectException(CantGetWalletSkinStructureException.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause");
 
-        }*/
+        }
 
 
 
