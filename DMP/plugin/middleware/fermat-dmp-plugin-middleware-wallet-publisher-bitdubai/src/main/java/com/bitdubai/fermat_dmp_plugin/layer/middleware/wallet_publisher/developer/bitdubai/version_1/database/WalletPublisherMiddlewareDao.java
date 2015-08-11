@@ -24,7 +24,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ComponentPublishedMiddlewareInformation;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.MiddlewareInformationPublishedComponent;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -76,19 +76,19 @@ public class WalletPublisherMiddlewareDao {
     }
 
     /**
-     * Method that find an ComponentPublishedMiddlewareInformation by id in the data base.
+     * Method that find an MiddlewareInformationPublishedComponent by id in the data base.
      *
      *  @param id Long id.
-     *  @return ComponentPublishedMiddlewareInformation found.
+     *  @return MiddlewareInformationPublishedComponent found.
      *  @throws CantReadRecordDataBaseException
      */
-    public ComponentPublishedMiddlewareInformation findById (String id) throws CantReadRecordDataBaseException {
+    public MiddlewareInformationPublishedComponent findById (String id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = null;
+        MiddlewareInformationPublishedComponent walletPublishedMiddlewareInformation = null;
 
         try {
 
@@ -106,12 +106,12 @@ public class WalletPublisherMiddlewareDao {
 
 
             /*
-             * 3 - Convert into ComponentPublishedMiddlewareInformation objects
+             * 3 - Convert into MiddlewareInformationPublishedComponent objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 3.1 - Create and configure a  ComponentPublishedMiddlewareInformation
+                 * 3.1 - Create and configure a  MiddlewareInformationPublishedComponent
                  */
                 walletPublishedMiddlewareInformation = constructFrom(record);
             }
@@ -133,13 +133,13 @@ public class WalletPublisherMiddlewareDao {
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All ComponentPublishedMiddlewareInformation.
+     *  @return All MiddlewareInformationPublishedComponent.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ComponentPublishedMiddlewareInformation> findAll () throws CantReadRecordDataBaseException {
+    public List<MiddlewareInformationPublishedComponent> findAll () throws CantReadRecordDataBaseException {
 
 
-        List<ComponentPublishedMiddlewareInformation> list = null;
+        List<MiddlewareInformationPublishedComponent> list = null;
 
         try {
 
@@ -155,20 +155,20 @@ public class WalletPublisherMiddlewareDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of ComponentPublishedMiddlewareInformation objects
+             * 3 - Create a list of MiddlewareInformationPublishedComponent objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ComponentPublishedMiddlewareInformation objects
+             * 4 - Convert into MiddlewareInformationPublishedComponent objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  ComponentPublishedMiddlewareInformation
+                 * 4.1 - Create and configure a  MiddlewareInformationPublishedComponent
                  */
-                ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = constructFrom(record);
+                MiddlewareInformationPublishedComponent walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -199,10 +199,10 @@ public class WalletPublisherMiddlewareDao {
      * the column name are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      *  @see WalletPublisherMiddlewareDatabaseConstants
-     *  @return All ComponentPublishedMiddlewareInformation.
+     *  @return All MiddlewareInformationPublishedComponent.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ComponentPublishedMiddlewareInformation> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<MiddlewareInformationPublishedComponent> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -213,7 +213,7 @@ public class WalletPublisherMiddlewareDao {
         }
 
 
-        List<ComponentPublishedMiddlewareInformation> list = null;
+        List<MiddlewareInformationPublishedComponent> list = null;
 
         try {
 
@@ -230,20 +230,20 @@ public class WalletPublisherMiddlewareDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of ComponentPublishedMiddlewareInformation objects
+             * 3 - Create a list of MiddlewareInformationPublishedComponent objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ComponentPublishedMiddlewareInformation objects
+             * 4 - Convert into MiddlewareInformationPublishedComponent objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  ComponentPublishedMiddlewareInformation
+                 * 4.1 - Create and configure a  MiddlewareInformationPublishedComponent
                  */
-                ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = constructFrom(record);
+                MiddlewareInformationPublishedComponent walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -275,10 +275,10 @@ public class WalletPublisherMiddlewareDao {
      * the key are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      * @param filters
-     * @return List<ComponentPublishedMiddlewareInformation>
+     * @return List<MiddlewareInformationPublishedComponent>
      * @throws CantReadRecordDataBaseException
      */
-    public List<ComponentPublishedMiddlewareInformation> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<MiddlewareInformationPublishedComponent> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -286,7 +286,7 @@ public class WalletPublisherMiddlewareDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<ComponentPublishedMiddlewareInformation> list = null;
+        List<MiddlewareInformationPublishedComponent> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -319,20 +319,20 @@ public class WalletPublisherMiddlewareDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 4 - Create a list of ComponentPublishedMiddlewareInformation objects
+             * 4 - Create a list of MiddlewareInformationPublishedComponent objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into ComponentPublishedMiddlewareInformation objects
+             * 5 - Convert into MiddlewareInformationPublishedComponent objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 5.1 - Create and configure a  ComponentPublishedMiddlewareInformation
+                 * 5.1 - Create and configure a  MiddlewareInformationPublishedComponent
                  */
-                ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = constructFrom(record);
+                MiddlewareInformationPublishedComponent walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -361,10 +361,10 @@ public class WalletPublisherMiddlewareDao {
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param entity ComponentPublishedMiddlewareInformation to create.
+     *  @param entity MiddlewareInformationPublishedComponent to create.
      *  @throws CantInsertRecordDataBaseException
      */
-    public void create (ComponentPublishedMiddlewareInformation entity) throws CantInsertRecordDataBaseException {
+    public void create (MiddlewareInformationPublishedComponent entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -402,10 +402,10 @@ public class WalletPublisherMiddlewareDao {
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity ComponentPublishedMiddlewareInformation to update.
+     *  @param entity MiddlewareInformationPublishedComponent to update.
      *  @throws CantUpdateRecordDataBaseException
      */
-    public void update(ComponentPublishedMiddlewareInformation entity) throws CantUpdateRecordDataBaseException {
+    public void update(MiddlewareInformationPublishedComponent entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -480,11 +480,11 @@ public class WalletPublisherMiddlewareDao {
     /**
      *
      * @param record with values from the table
-     * @return ComponentPublishedMiddlewareInformation setters the values from table
+     * @return MiddlewareInformationPublishedComponent setters the values from table
      */
-    private ComponentPublishedMiddlewareInformation constructFrom(DatabaseTableRecord record){
+    private MiddlewareInformationPublishedComponent constructFrom(DatabaseTableRecord record){
 
-        ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = new ComponentPublishedMiddlewareInformation();
+        MiddlewareInformationPublishedComponent walletPublishedMiddlewareInformation = new MiddlewareInformationPublishedComponent();
 
         try {
 
@@ -526,7 +526,7 @@ public class WalletPublisherMiddlewareDao {
      * @param walletPublishedMiddlewareInformation the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation){
+    private DatabaseTableRecord constructFrom(MiddlewareInformationPublishedComponent walletPublishedMiddlewareInformation){
 
         /*
          * Create the record to the entity

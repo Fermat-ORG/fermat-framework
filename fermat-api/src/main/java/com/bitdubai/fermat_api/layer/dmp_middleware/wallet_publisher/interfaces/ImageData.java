@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ImageData</code>
  * <p/>
@@ -15,4 +17,25 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces
  * @since Java JDK 1.7
  */
 public interface ImageData {
+
+    /**
+     * Get the id
+     *
+     * @return UUID
+     */
+    public UUID getId();
+
+    /**
+     * Get the FileId
+     *
+     * @return UUID
+     */
+    public UUID getFileId();
+
+    /**
+     * Get the Component Id
+     *
+     * @return UUID
+     */
+    public UUID getComponentId();
 }

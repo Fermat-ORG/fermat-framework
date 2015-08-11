@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
@@ -485,7 +485,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
      * @see WalletPublisherMiddlewareManager#getPublishedComponents()
      */
     @Override
-    public Map<String, List<ComponentPublishedInformation>> getPublishedComponents() throws CantGetPublishedComponentInformationException {
+    public Map<String, List<InformationPublishedComponent>> getPublishedComponents() throws CantGetPublishedComponentInformationException {
         return walletPublisherMiddlewareManagerImpl.getPublishedComponents();
     }
 
@@ -494,7 +494,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
      * @see WalletPublisherMiddlewareManager#getPublishedWallets()
      */
     @Override
-    public Map<String, List<ComponentPublishedInformation>> getPublishedWallets() throws CantGetPublishedComponentInformationException {
+    public Map<String, List<InformationPublishedComponent>> getPublishedWallets() throws CantGetPublishedComponentInformationException {
         return walletPublisherMiddlewareManagerImpl.getPublishedWallets();
     }
 
@@ -503,7 +503,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
      * @see WalletPublisherMiddlewareManager#getPublishedSkins()
      */
     @Override
-    public Map<String, List<ComponentPublishedInformation>> getPublishedSkins() throws CantGetPublishedComponentInformationException {
+    public Map<String, List<InformationPublishedComponent>> getPublishedSkins() throws CantGetPublishedComponentInformationException {
         return walletPublisherMiddlewareManagerImpl.getPublishedSkins();
     }
 
@@ -512,7 +512,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
      * @see WalletPublisherMiddlewareManager#getPublishedLanguages()
      */
     @Override
-    public Map<String, List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
+    public Map<String, List<InformationPublishedComponent>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
         return walletPublisherMiddlewareManagerImpl.getPublishedLanguages();
     }
 

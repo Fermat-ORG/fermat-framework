@@ -7,15 +7,12 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletPublisherManager</code>
@@ -33,34 +30,34 @@ public interface WalletPublisherManager {
     /**
      * This method returns the information stored about the all published component
      *
-     * @return Map<String,List<ComponentPublishedInformation>>  A map where each entry corresponds to a component name and the list of versions published with their information
+     * @return Map<String,List<InformationPublishedComponent>>  A map where each entry corresponds to a component name and the list of versions published with their information
      * @throws CantGetPublishedComponentInformationException
      */
-    public Map<String,List<ComponentPublishedInformation>> getPublishedComponents() throws CantGetPublishedComponentInformationException;
+    public Map<String,List<InformationPublishedComponent>> getPublishedComponents() throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published wallets
      *
-     * @return Map<String,List<ComponentPublishedInformation>>  A map where each entry corresponds to a wallet name and the list of versions published with their information
+     * @return Map<String,List<InformationPublishedComponent>>  A map where each entry corresponds to a wallet name and the list of versions published with their information
      * @throws CantGetPublishedComponentInformationException
      */
-    public Map<String,List<ComponentPublishedInformation>> getPublishedWallets() throws CantGetPublishedComponentInformationException;
+    public Map<String,List<InformationPublishedComponent>> getPublishedWallets() throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published skins
      *
-     * @return Map<String,List<ComponentPublishedInformation>>  A map where each entry corresponds to a skin name and the list of versions published with their information
+     * @return Map<String,List<InformationPublishedComponent>>  A map where each entry corresponds to a skin name and the list of versions published with their information
      * @throws CantGetPublishedComponentInformationException
      */
-    public Map<String,List<ComponentPublishedInformation>> getPublishedSkins() throws CantGetPublishedComponentInformationException;
+    public Map<String,List<InformationPublishedComponent>> getPublishedSkins() throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published language
      *
-     * @return Map<String,List<ComponentPublishedInformation>>  A map where each entry corresponds to a language name and the list of versions published with their information
+     * @return Map<String,List<InformationPublishedComponent>>  A map where each entry corresponds to a language name and the list of versions published with their information
      * @throws CantGetPublishedComponentInformationException
      */
-    public Map<String,List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException;
+    public Map<String,List<InformationPublishedComponent>> getPublishedLanguages() throws CantGetPublishedComponentInformationException;
 
     /**
      * This method publishes the skin factory project <code>WalletFactoryProjectSkin</code> with the skin information in

@@ -24,38 +24,51 @@ public class WalletPublisherMiddlewareDatabaseConstants {
     public static final String DATA_BASE_NAME  = "component_publisher_data_base";
 
     /**
-     * COMPONENT PUBLISHED INFORMATION database table definition.
+     * INFORMATION PUBLISHED COMPONENTS database table definition.
      */
-    static final String COMPONENT_PUBLISHED_INFORMATION_TABLE_NAME = "component_published_information";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_TABLE_NAME = "information_published_components";
 
-    static final String COMPONENT_PUBLISHED_INFORMATION_ID_COLUMN_NAME = "id";
-    static final String COMPONENT_PUBLISHED_INFORMATION_DFP_ID_COLUMN_NAME = "dfp_id";
-    static final String COMPONENT_PUBLISHED_INFORMATION_DFP_NAME_COLUMN_NAME = "dfp_name";
-    static final String COMPONENT_PUBLISHED_INFORMATION_COMPONENT_TYPE_COLUMN_NAME = "component_type";
-    static final String COMPONENT_PUBLISHED_INFORMATION_STATUS_COLUMN_NAME = "status";
-    static final String COMPONENT_PUBLISHED_INFORMATION_STATUS_TIMESTAMP_COLUMN_NAME = "status_timestamp";
-    static final String COMPONENT_PUBLISHED_INFORMATION_PUBLICATION_TIMESTAMP_COLUMN_NAME = "publication_timestamp";
-    static final String COMPONENT_PUBLISHED_INFORMATION_PUBLISHER_ID_COLUMN_NAME = "publisher_id";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME = "id";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_DFP_ID_COLUMN_NAME = "dfp_id";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_DFP_NAME_COLUMN_NAME = "dfp_name";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME = "component_type";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME = "status";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME = "status_timestamp";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME = "icon_img";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME = "main_screen_shot_img";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME = "publication_timestamp";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_ID_COLUMN_NAME = "publisher_id";
 
-    static final String COMPONENT_PUBLISHED_INFORMATION_FIRST_KEY_COLUMN = "id";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_FIRST_KEY_COLUMN = "id";
 
     /**
-     * COMPONENT DETAILS VERSION database table definition.
+     * COMPONENT VERSIONS DETAILS database table definition.
      */
-    static final String COMPONENT_DETAILS_VERSION_TABLE_NAME = "component_details_version";
+    static final String COMPONENT_VERSIONS_DETAILS_TABLE_NAME = "component_versions_details";
 
-    static final String COMPONENT_DETAILS_VERSION_ID_COLUMN_NAME = "id";
-    static final String COMPONENT_DETAILS_VERSION_SCREEN_SIZE_COLUMN_NAME = "screen_size";
-    static final String COMPONENT_DETAILS_VERSION_VERSION_COLUMN_NAME = "version";
-    static final String COMPONENT_DETAILS_VERSION_VERSION_TIMESTAMP_COLUMN_NAME = "version_timestamp";
-    static final String COMPONENT_DETAILS_VERSION_INITIAL_WALLET_VERSION_COLUMN_NAME = "initial_wallet_version";
-    static final String COMPONENT_DETAILS_VERSION_FINAL_WALLET_VERSION_COLUMN_NAME = "final_wallet_version";
-    static final String COMPONENT_DETAILS_VERSION_INITIAL_PLATFORM_VERSION_COLUMN_NAME = "initial_platform_version";
-    static final String COMPONENT_DETAILS_VERSION_FINAL_PLATFORM_VERSION_COLUMN_NAME = "final_platform_version";
-    static final String COMPONENT_DETAILS_VERSION_OBSERVATIONS_COLUMN_NAME = "observations";
-    static final String COMPONENT_DETAILS_VERSION_CATALOG_ID_COLUMN_NAME = "catalog_id";
-    static final String COMPONENT_DETAILS_VERSION_COMPONENT_ID_COLUMN_NAME = "component_id";
+    static final String COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME = "id";
+    static final String COMPONENT_VERSIONS_DETAILS_SCREEN_SIZE_COLUMN_NAME = "screen_size";
+    static final String COMPONENT_VERSIONS_DETAILS_VERSION_COLUMN_NAME = "version";
+    static final String COMPONENT_VERSIONS_DETAILS_VERSION_TIMESTAMP_COLUMN_NAME = "version_timestamp";
+    static final String COMPONENT_VERSIONS_DETAILS_INITIAL_WALLET_VERSION_COLUMN_NAME = "initial_wallet_version";
+    static final String COMPONENT_VERSIONS_DETAILS_FINAL_WALLET_VERSION_COLUMN_NAME = "final_wallet_version";
+    static final String COMPONENT_VERSIONS_DETAILS_INITIAL_PLATFORM_VERSION_COLUMN_NAME = "initial_platform_version";
+    static final String COMPONENT_VERSIONS_DETAILS_FINAL_PLATFORM_VERSION_COLUMN_NAME = "final_platform_version";
+    static final String COMPONENT_VERSIONS_DETAILS_OBSERVATIONS_COLUMN_NAME = "observations";
+    static final String COMPONENT_VERSIONS_DETAILS_CATALOG_ID_COLUMN_NAME = "catalog_id";
+    static final String COMPONENT_VERSIONS_DETAILS_COMPONENT_ID_COLUMN_NAME = "component_id";
 
-    static final String COMPONENT_DETAILS_VERSION_FIRST_KEY_COLUMN = "id";
+    static final String COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN = "id";
+
+    /**
+     * SCREENS SHOTS COMPONENTS database table definition.
+     */
+    static final String SCREENS_SHOTS_COMPONENTS_TABLE_NAME = "screens_shots_components";
+
+    static final String SCREENS_SHOTS_COMPONENTS_ID_COLUMN_NAME = "id";
+    static final String SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME = "file_id";
+    static final String SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME = "component_id";
+
+    static final String SCREENS_SHOTS_COMPONENTS_FIRST_KEY_COLUMN = "id";
 
 }
