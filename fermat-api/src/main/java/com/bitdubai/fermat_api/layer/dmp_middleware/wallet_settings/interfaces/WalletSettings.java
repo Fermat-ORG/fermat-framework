@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 
@@ -44,4 +46,24 @@ public interface WalletSettings {
      * @throws CantSetDefaultSkinException
      */
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException;
+
+    /**
+     * This method let us set the preference settings for a wallet
+     *
+     * @param walletPreferenceSettings
+     * @throws CantSetDefaultSkinException
+     */
+    public void setPreferenceSettings(String walletPreferenceSettings,String walletPublicKey) throws CantSaveWalletSettings;
+
+    /**
+     * This method let us get the preference settings for a wallet
+     *
+     * @return preference settings of a wallet
+     * @throws CantGetDefaultSkinException
+     */
+    public String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings;
+
+
+
+
 }
