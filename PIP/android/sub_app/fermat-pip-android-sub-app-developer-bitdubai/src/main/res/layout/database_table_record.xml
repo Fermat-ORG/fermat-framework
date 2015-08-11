@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/base"
     android:background="#f3e4c4"
+
     >
 
     <!--<TableLayout

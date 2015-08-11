@@ -45,7 +45,7 @@ public class WalletContactsMiddlewareDatabaseFactory implements DealsWithPluginD
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
 
         Database database;
 
@@ -75,7 +75,7 @@ public class WalletContactsMiddlewareDatabaseFactory implements DealsWithPluginD
             /**
              * Create the Wallet Contacts Address Book table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
+            table = database.getDatabaseFactory().newTableFactory(ownerId, WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
 
             table.addColumn(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
@@ -88,7 +88,7 @@ public class WalletContactsMiddlewareDatabaseFactory implements DealsWithPluginD
 
             try {
                 //Create the table
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                database.getDatabaseFactory().createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             } catch (Exception e) {

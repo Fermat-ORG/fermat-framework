@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
 
@@ -15,12 +15,14 @@ import java.util.UUID;
 public class TransactionExecutorFactory {
 
     private BitcoinWalletManager bitcoinWalletManager;
+    private ActorAddressBookManager actorAddressBookManager;
 
-    public TransactionExecutorFactory(final BitcoinWalletManager bitcoinWalletManager){
+    public TransactionExecutorFactory(final BitcoinWalletManager bitcoinWalletManager,final ActorAddressBookManager actorAddressBookManager){
         this.bitcoinWalletManager = bitcoinWalletManager;
+        this.actorAddressBookManager = actorAddressBookManager;
     }
 
-    public TransactionExecutor newTransactionExecutor(final PlatformWalletType walletType, final UUID walletId) throws CantLoadWalletException{
+    public TransactionExecutor newTransactionExecutor(final ReferenceWallet walletType, final UUID walletId) throws CantLoadWalletException{
         switch (walletType){
             case BASIC_WALLET_BITCOIN_WALLET:
                 return createBitcoinBasicWalletExecutor(walletId);
@@ -30,7 +32,7 @@ public class TransactionExecutorFactory {
     }
 
     private TransactionExecutor createBitcoinBasicWalletExecutor(final UUID walletId) throws CantLoadWalletException {
-        return new BitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.loadWallet(walletId));
+        return new BitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.loadWallet(walletId),this.actorAddressBookManager);
     }
 
 }

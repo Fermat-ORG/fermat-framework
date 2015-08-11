@@ -16,6 +16,7 @@ dependencies {
 
     compile project(':fermat-api')
     compile project(':fermat-cry-api')
+    compile project(':fermat-pip-api')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
@@ -30,6 +31,18 @@ tasks.withType(FindBugs) {
         xml.enabled = false
         html.enabled = true
     }
+}
+
+def jacocoHtmlReport = ""
+
+jacocoTestReport{
+    reports{
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
+    }
+}
+
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
 }
 
 jacocoTestReport.dependsOn clean, test

@@ -1,10 +1,9 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
@@ -22,6 +21,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class ConstructionTest {
 
     @Mock
+    private ActorAddressBookManager mockActorAddressBookManager;
+    @Mock
     private ErrorManager mockErrorManager;
     @Mock
     private BitcoinWalletManager mockBitcoinWalletManager;
@@ -34,7 +35,7 @@ public class ConstructionTest {
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated() {
-        testRelayAgent = new IncomingExtraUserRelayAgent(mockBitcoinWalletManager, mockErrorManager, mockRegistry, mockWalletAddressBookManager);
+        testRelayAgent = new IncomingExtraUserRelayAgent(mockBitcoinWalletManager, mockActorAddressBookManager, mockErrorManager, mockRegistry, mockWalletAddressBookManager);
         assertThat(testRelayAgent).isNotNull();
     }
 }

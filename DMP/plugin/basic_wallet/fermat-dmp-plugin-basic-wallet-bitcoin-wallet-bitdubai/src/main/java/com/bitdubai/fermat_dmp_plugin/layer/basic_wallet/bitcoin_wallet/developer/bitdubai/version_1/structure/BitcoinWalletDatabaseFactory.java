@@ -35,118 +35,87 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
     }
 
     public Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
-
-        Database database;
-
-        /**
-         * I will create the database where I am going to store the information of this wallet.
-         */
-        database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
-
-        /**
-         * Next, I will add the needed tables.
-         */
+        Database database = null;
         try {
-
-            DatabaseTableFactory table;
-
-            /**
-             * Then the value chunks table.
-             */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
-            table.addColumn(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING,36,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-            //table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-
-            try {
-                database.getDatabaseFactory().createTable(ownerId, table);
-            }
-            catch (CantCreateTableException cantCreateTableException) {
-                database.closeDatabase();
-                throw new CantCreateDatabaseException();
-            }
-
-
-        }
-        catch (InvalidOwnerIdException invalidOwnerId) {
-            /**
-             * This shouldn't happen here because I was the one who gave the owner id to the database file system,
-             * but anyway, if this happens, I can not continue.
-             * * *
-             */
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
+            createBitcoinWalletTable(ownerId, database.getDatabaseFactory());
+            createBitcoinWalletBalancesTable(ownerId, database.getDatabaseFactory());
+            insertInitialBalancesRecord(database);
             database.closeDatabase();
-            throw new CantCreateDatabaseException("I COUNLDN'T CREATE THE DATABASE",invalidOwnerId,"OwnerId: " + ownerId + FermatException.CONTEXT_CONTENT_SEPARATOR + "TableName: " + BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME,"");
-        }
-
-
-
-        /**
-         * Next, I will add the needed tables.
-         */
-        try {
-
-            DatabaseTableFactory table;
-
-            /**
-             * Then the value chunks table.
-             */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-
-            try {
-                database.getDatabaseFactory().createTable(ownerId, table);
-            }
-            catch (CantCreateTableException cantCreateTableException) {
+            return database;
+        } catch(CantCreateTableException | CantInsertRecordException exception){
+            if(database != null)
                 database.closeDatabase();
-                throw new CantCreateDatabaseException();
-            }
-
-            /**
-             * I will insert on first time a empty record with balances on cero
-             */
-
-            DatabaseTable bitcoinbalancewalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
-
-            DatabaseTableRecord balancesRecord = bitcoinbalancewalletTable.getEmptyRecord();
-
-            UUID balanceRecordId = UUID.randomUUID();
-
-            balancesRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId);
-            balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-            balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
-
-
-            try {
-                bitcoinbalancewalletTable.insertRecord(balancesRecord);
-            } catch (CantInsertRecordException e) {
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        } catch(CantCreateDatabaseException exception){
+            throw exception;
+        } catch(Exception exception){
+            if(database != null)
                 database.closeDatabase();
-                throw new CantCreateDatabaseException("I COULDN'T CREATE THE DATABASE",e,"","Can't insert first empty balance record");
-            }
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
 
+    private void createBitcoinWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+        try{
+            DatabaseTableFactory tableFactory = createBitcoinWalletTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch(InvalidOwnerIdException exception){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
         }
-        catch (InvalidOwnerIdException invalidOwnerId) {
-            /**
-             * This shouldn't happen here because I was the one who gave the owner id to the database file system,
-             * but anyway, if this happens, I can not continue.
-             * * *
-             */
-            database.closeDatabase();
-            throw new CantCreateDatabaseException("I COUNLDN'T CREATE THE DATABASE",invalidOwnerId,"OwnerId: " + ownerId + FermatException.CONTEXT_CONTENT_SEPARATOR + "TableName: " + BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME,"");
+    }
+
+    private DatabaseTableFactory createBitcoinWalletTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
+        table.addColumn(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING,36,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+        return table;
+    }
+
+    private void createBitcoinWalletBalancesTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+        try{
+            DatabaseTableFactory tableFactory = createBitcoinWalletBalancesTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        }catch(InvalidOwnerIdException exception){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
         }
-        database.closeDatabase();
-        return database;
+    }
+
+    private DatabaseTableFactory createBitcoinWalletBalancesTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        return table;
+    }
+
+    private void insertInitialBalancesRecord(final Database database) throws CantInsertRecordException{
+        DatabaseTable balancesTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
+        DatabaseTableRecord initialRecord = constructBalanceInitialRecord(balancesTable);
+        balancesTable.insertRecord(initialRecord);
+    }
+
+    private DatabaseTableRecord constructBalanceInitialRecord(final DatabaseTable balancesTable){
+        DatabaseTableRecord balancesRecord = balancesTable.getEmptyRecord();
+        UUID balanceRecordId = UUID.randomUUID();
+        balancesRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId);
+        balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
+        balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
+        return balancesRecord;
     }
 
 }

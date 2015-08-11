@@ -42,7 +42,7 @@ public final class BankNotesDatabaseConstants {
 
     /*
      *
-     *  WALLET Table resources.
+     *  REQUESTED Table resources.
      * */
 
     /** Constant for wallet table name. */

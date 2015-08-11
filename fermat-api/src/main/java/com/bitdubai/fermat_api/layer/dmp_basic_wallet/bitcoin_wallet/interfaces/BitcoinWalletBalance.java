@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterDebitException;
 
 /**
  * Created by ciencias on 7/6/15.
@@ -16,7 +16,7 @@ public interface BitcoinWalletBalance {
 
     public long getBalance() throws CantCalculateBalanceException;
 
-    public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitDebitException;
+    public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException;
 
     public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
 

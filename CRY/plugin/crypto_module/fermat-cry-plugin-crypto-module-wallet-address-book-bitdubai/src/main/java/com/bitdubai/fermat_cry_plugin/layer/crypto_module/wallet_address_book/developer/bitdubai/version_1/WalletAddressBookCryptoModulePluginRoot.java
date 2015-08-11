@@ -17,9 +17,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
@@ -47,90 +47,35 @@ import java.util.regex.Pattern;
 
 public class WalletAddressBookCryptoModulePluginRoot implements Crypto, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, Plugin, Service, WalletAddressBookManager {
 
-
-    /**
-     * DatabaseManagerForDevelopers interface implementation
-     * Returns the list of databases implemented on this plug in.
-     */
-    @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        WalletAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new WalletAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabase> developerDatabaseList = null;
-        try {
-            dbFactory.initializeDatabase();
-            developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database list for plugin Wallet Contacts");
-        }
-        return developerDatabaseList;
-    }
-
-    /**
-     * returns the list of tables for the given database
-     *
-     * @param developerObjectFactory
-     * @param developerDatabase
-     * @return
-     */
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        WalletAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new WalletAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabaseTable> developerDatabaseTableList = null;
-        try {
-            dbFactory.initializeDatabase();
-            developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
-        }
-        return developerDatabaseTableList;
-    }
-
-    /**
-     * returns the list of records for the passed table
-     *
-     * @param developerObjectFactory
-     * @param developerDatabase
-     * @param developerDatabaseTable
-     * @return
-     */
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        WalletAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new WalletAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
-        try {
-            dbFactory.initializeDatabase();
-            developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
-        }
-        return developerDatabaseTableRecordList;
-    }
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * DealsWithErrors Interface member variables.
      */
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
     /**
      * Plugin Interface member variables.
      */
-    UUID pluginId;
+    private UUID pluginId;
+
+    /**
+     * Service Interface member variables.
+     */
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
     /**
      * DealWitlLog interface implementation
      */
-    LogManager logManager;
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    private LogManager logManager;
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
 
 
     /**
@@ -138,23 +83,20 @@ public class WalletAddressBookCryptoModulePluginRoot implements Crypto, Database
      */
     @Override
     public WalletAddressBookRegistry getWalletAddressBookRegistry() throws CantGetWalletAddressBookRegistryException {
-
-        /**
-         * I created instance of WalletAddressBookCryptoModuleRegistry
-         */
-        WalletAddressBookCryptoModuleRegistry walletAddressBookModuleRegistry = new WalletAddressBookCryptoModuleRegistry();
-
-        walletAddressBookModuleRegistry.setErrorManager(this.errorManager);
-        walletAddressBookModuleRegistry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        walletAddressBookModuleRegistry.setPluginId(this.pluginId);
-
         try {
+            WalletAddressBookCryptoModuleRegistry walletAddressBookModuleRegistry = new WalletAddressBookCryptoModuleRegistry();
+
+            walletAddressBookModuleRegistry.setErrorManager(this.errorManager);
+            walletAddressBookModuleRegistry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            walletAddressBookModuleRegistry.setPluginId(this.pluginId);
             walletAddressBookModuleRegistry.initialize();
+
+            return walletAddressBookModuleRegistry;
         } catch (CantInitializeWalletAddressBookCryptoModuleException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantGetWalletAddressBookRegistryException(CantGetWalletAddressBookRegistryException.DEFAULT_MESSAGE, exception);
+        } catch(Exception exception){
+            throw new CantGetWalletAddressBookRegistryException(CantGetWalletAddressBookRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
-        return walletAddressBookModuleRegistry;
     }
 
     /**
@@ -215,10 +157,9 @@ public class WalletAddressBookCryptoModulePluginRoot implements Crypto, Database
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-/**
- * I will check the current values and update the LogLevel in those which is different
- */
-
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
@@ -242,6 +183,81 @@ public class WalletAddressBookCryptoModulePluginRoot implements Crypto, Database
     }
 
     /**
+     * DealsWithPluginDatabaseSystem interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
+     * Plugin methods implementation.
+     */
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    /**
+     * DatabaseManagerForDevelopers interface implementation
+     * Returns the list of databases implemented on this plug in.
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        WalletAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new WalletAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabase> developerDatabaseList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+        }
+        return developerDatabaseList;
+    }
+
+    /**
+     * returns the list of tables for the given database
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        try {
+            WalletAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new WalletAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            dbFactory.initializeDatabase();
+            List<DeveloperDatabaseTable> developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
+            return developerDatabaseTableList;
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * returns the list of records for the passed table
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @param developerDatabaseTable
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        WalletAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new WalletAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+        }
+        return developerDatabaseTableRecordList;
+    }
+
+    /**
      * Static method to get the logging level from any class under root.
      * @param className
      * @return
@@ -260,22 +276,5 @@ public class WalletAddressBookCryptoModulePluginRoot implements Crypto, Database
              */
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * Plugin methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 }

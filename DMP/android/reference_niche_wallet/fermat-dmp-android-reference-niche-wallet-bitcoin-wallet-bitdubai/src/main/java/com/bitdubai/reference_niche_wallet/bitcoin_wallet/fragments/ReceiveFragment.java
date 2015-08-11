@@ -25,28 +25,30 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.WalletContact;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.WalletContactListAdapter;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -59,19 +61,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
+
 /**
  * Created by Natalia on 02/06/2015.
  */
 public class ReceiveFragment extends Fragment {
 
+
+    /**
+     * Wallet session
+     */
+    WalletSession walletSession;
+
     private static final String ARG_POSITION = "position";
 
-    View rootView;
+    /**
+     * Screen members
+     */
+    private View rootView;
 
     private AutoCompleteTextView autocompleteContacts;
+
+    /**
+     * Wallet contact Adapter
+     */
     private WalletContactListAdapter adapter;
 
-    Typeface tf ;
+
+    /**
+     * font Style
+     */
+    Typeface tf;
 
 
     private String user_address_wallet = "";
@@ -79,19 +100,30 @@ public class ReceiveFragment extends Fragment {
     final int colorBackQR = Color.WHITE;
     final int width = 400;
     final int height = 400;
+
+    /**
+     * Hardcoded wallet_id and user_id
+     */
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
-    private static CryptoWalletManager cryptoWalletManager;
-    private static Platform platform = new Platform();
+
+    private CryptoWalletManager cryptoWalletManager;
     private CryptoWallet cryptoWallet;
+
+    /**
+     * Error Manager
+     */
+
     private ErrorManager errorManager;
 
 
-    public static ReceiveFragment newInstance(int position) {
+    public static ReceiveFragment newInstance(int position,WalletSession walletSession) {
         ReceiveFragment f = new ReceiveFragment();
+        f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -101,23 +133,20 @@ public class ReceiveFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+        errorManager = walletSession.getErrorManager();
         try {
-            errorManager = platform.getErrorManager();
-            cryptoWalletManager = platform.getCryptoWalletManager();
-            try
-            {
-                cryptoWallet = cryptoWalletManager.getCryptoWallet();
-            }
-            catch (CantGetCryptoWalletException e)
-            {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage("Unexpected error init Crypto Manager - " + e.getMessage());
-            }
-        } catch (Exception ex) {
-            showMessage("Unexpected error init Crypto Manager - " + ex.getMessage());
 
+            cryptoWalletManager = walletSession.getCryptoWalletManager();
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+
+        } catch (CantGetCryptoWalletException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception ex) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -190,7 +219,7 @@ public class ReceiveFragment extends Fragment {
             }
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+            showMessage(getActivity(),"CantGetAllWalletContactsException- " + e.getMessage());
         }
         return contacts;
     }
@@ -219,19 +248,23 @@ public class ReceiveFragment extends Fragment {
         }
     }
 
-    public void shareAddress(){
-        Intent intent2 = new Intent(); intent2.setAction(Intent.ACTION_SEND);
+    public void shareAddress() {
+        Intent intent2 = new Intent();
+        intent2.setAction(Intent.ACTION_SEND);
         intent2.setType("text/plain");
-        intent2.putExtra(Intent.EXTRA_TEXT, user_address_wallet );
+        intent2.putExtra(Intent.EXTRA_TEXT, user_address_wallet);
         startActivity(Intent.createChooser(intent2, "Share via"));
     }
 
     private void showQRCodeAndAddress() {
         try {
-            // get qr image
-            Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height, MARGIN_AUTOMATIC, colorQR, colorBackQR);
             // set qr image
             ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
+            // get qr image
+
+
+            Bitmap bitmapQR = generateBitmap(user_address_wallet,width, height, MARGIN_AUTOMATIC, colorQR, colorBackQR);
+
             imageQR.setImageBitmap(bitmapQR);
             // show qr image
             imageQR.setVisibility(View.VISIBLE);
@@ -247,10 +280,9 @@ public class ReceiveFragment extends Fragment {
             share_btn.setEnabled(true);
             share_btn.setFocusable(true);
             share_btn.setTextColor(Color.parseColor("#72af9c"));
-
-            //TODO SHOW BUTTON SHARE AND ADDRESS IN SCREEN
         } catch (WriterException writerException) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, writerException);
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(writerException));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -262,26 +294,24 @@ public class ReceiveFragment extends Fragment {
 
     private void getWalletAddress(String contact_name) {
         try {
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
-        }
-        catch (CantRequestCryptoAddressException e)
-        {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
+        } catch (CantRequestCryptoAddressException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
     }
 
     private void getWalletAddress(WalletContact walletContact) {
         try {
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(walletContact.actorId, Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, walletContact.actorId, Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
-        }
-        catch (CantRequestCryptoAddressException e)
-        {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
+        } catch (CantRequestCryptoAddressException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -292,7 +322,7 @@ public class ReceiveFragment extends Fragment {
 
     public void copyToClipboard() {
 
-        ClipboardManager myClipboard = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData myClip = ClipData.newPlainText("text", this.user_address_wallet);
         myClipboard.setPrimaryClip(myClip);
         Toast.makeText(getActivity().getApplicationContext(), "Text Copied",
@@ -313,14 +343,14 @@ public class ReceiveFragment extends Fragment {
      * Encode a string into a QR Code and return a bitmap image of the QR code
      *
      * @param contentsToEncode String to be encoded, this will often be a URL, but could be any string
-     * @param imageWidth number of pixels in width for the resultant image
-     * @param imageHeight number of pixels in height for the resultant image
-     * @param marginSize the EncodeHintType.MARGIN parameter into zxing engine
-     * @param color data color for QR code
-     * @param colorBack background color for QR code
+     * @param imageWidth       number of pixels in width for the resultant image
+     * @param imageHeight      number of pixels in height for the resultant image
+     * @param marginSize       the EncodeHintType.MARGIN parameter into zxing engine
+     * @param color            data color for QR code
+     * @param colorBack        background color for QR code
      * @return bitmap containing QR code image
      * @throws com.google.zxing.WriterException zxing engine is unable to create QR code data
-     * @throws IllegalStateException when executed on the UI thread
+     * @throws IllegalStateException            when executed on the UI thread
      */
     static public Bitmap generateBitmap(@NonNull String contentsToEncode,
                                         int imageWidth, int imageHeight,
@@ -356,17 +386,8 @@ public class ReceiveFragment extends Fragment {
         return bitmap;
     }
 
-    //show alert
-    private void showMessage(String text){
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
+
+    public void setWalletSession(WalletSession walletSession) {
+        this.walletSession = walletSession;
     }
 }

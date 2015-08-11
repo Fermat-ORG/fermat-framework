@@ -7,11 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.DealWithEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.*;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.listeners.*;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.*;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +37,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersWalletResourcesInstalledEvent = new ArrayList<>();
     private List<EventListener> listenersWalletOpenedEvent = new ArrayList<>();
     private List<EventListener> listenersWalletClosedEvent = new ArrayList<>();
+    //test
+    private List<EventListener> listenersWalletNavigationStructureDownloaded = new ArrayList<>();
     private List<EventListener> listenersNavigationStructureUpdatedEvent = new ArrayList<>();
     private List<EventListener> listenersFinishedWalletInstallationEvent = new ArrayList<>();
     private List<EventListener> listenersIntraUserContactCreatedEvent = new ArrayList<>();
@@ -64,6 +66,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersIncomingMoneyRequestRejectedEvent = new ArrayList<>();
     private List<EventListener> listenersOutgoingMoneyRequestApprovedEvent = new ArrayList<>();
     private List<EventListener> listenersOutgoingMoneyRequestRejectedEvent = new ArrayList<>();
+
 
     private List<EventListener> listenersTransactopnWaitingTransferenceEvent = new ArrayList<>();
     private List<EventListener> listenersTransactopnWaitingTransferenceExtraUserEvent = new ArrayList<>();
@@ -130,6 +133,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case WALLET_UNINSTALLED:
                 return new WalletUninstalledEventListener(eventType, this.eventMonitor);
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                return new WalletNavigationStructureDownloadedEventListener(eventType,this.eventMonitor);
 
             case BEGUN_WALLET_INSTALLATION:
                 return new BegunWalletInstallationEventListener(eventType, this.eventMonitor);
@@ -302,7 +307,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case NAVIGATION_STRUCTURE_UPDATED:
                 return new NavigationStructureUpdatedEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-            
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                return new WalletNavigationStructureDownloadedEvent();
             case FINISHED_WALLET_INSTALLATION:
                 return new FinishedWalletInstallationEvent(EventType.FINISHED_WALLET_INSTALLATION);
             
@@ -460,7 +466,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case WALLET_UNINSTALLED:
                 listenersWalletUninstalledEvent.add(listener);
                 break;
-            
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                listenersWalletNavigationStructureDownloaded.add(listener);
             case BEGUN_WALLET_INSTALLATION:
                 listenersBegunWalletInstallationEvent.add(listener);
                 break;
@@ -660,7 +667,11 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case WALLET_RESOURCES_INSTALLED:
                 listeners = listenersWalletResourcesInstalledEvent;
                 break;
-            
+
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                listeners = listenersWalletNavigationStructureDownloaded;
+                break;
+
             case NAVIGATION_STRUCTURE_UPDATED:
                 listeners = listenersNavigationStructureUpdatedEvent;
                 break;
@@ -860,7 +871,9 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case WALLET_UNINSTALLED:
                 listeners = listenersWalletUninstalledEvent;
                 break;
-
+            case WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED:
+                listeners = listenersWalletNavigationStructureDownloaded;
+                break;
             case BEGUN_WALLET_INSTALLATION:
                 listeners = listenersBegunWalletInstallationEvent;
                 break;

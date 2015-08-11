@@ -1,0 +1,73 @@
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
+
+/**
+ * Created by rodrigo on 2015.07.17..
+ */
+public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTitleBar {
+
+    /**
+     * class private attributes
+     */
+    private String label;
+
+    private String color;
+
+    private String backgroundImage;
+
+    private SearchView runtimeSearchView;
+
+    /**
+     * Class Constructors
+     */
+    public TitleBar() {
+    }
+
+    public TitleBar(String label, String color, String backgroundImage, SearchView runtimeSearchView) {
+        this.label = label;
+        this.color = color;
+        this.backgroundImage = backgroundImage;
+        this.runtimeSearchView = runtimeSearchView;
+    }
+
+    /**
+     * Class getters
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getBackgroundImage() {
+        return backgroundImage;
+    }
+
+
+    public SearchView getRuntimeSearchView() {
+        if (runtimeSearchView != null) {
+            return runtimeSearchView;
+        }
+        return null;
+    }
+
+    /**
+     * Class setters
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setBackgroundImage(String backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
+
+    public void setRuntimeSearchView(SearchView runtimeSearchView) {
+        this.runtimeSearchView = runtimeSearchView;
+    }
+}

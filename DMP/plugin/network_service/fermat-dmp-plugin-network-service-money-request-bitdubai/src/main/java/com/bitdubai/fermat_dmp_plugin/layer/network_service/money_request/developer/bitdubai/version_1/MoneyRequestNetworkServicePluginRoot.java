@@ -2,22 +2,32 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.money_request.devel
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.MoneyRequestManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.enums.CryptoRequestState;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantDeleteFromPendingCryptoRequestsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantGetPendingCryptoRequestsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantRejectRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantSendCryptoRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantSendMoneyRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfaces.CryptoRequest;
+import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfaces.MoneyRequestNetworkServiceManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingMoneyRequestReceivedEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.OutgoingMoneyRequestApprovedEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.OutgoingMoneyRequestDeliveredEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.OutgoingMoneyRequestRejectedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingMoneyRequestReceivedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.OutgoingMoneyRequestApprovedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.OutgoingMoneyRequestDeliveredEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.OutgoingMoneyRequestRejectedEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
@@ -28,7 +38,7 @@ import java.util.UUID;
 /**
  * Created by loui on 23/02/15.
  */
-public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, MoneyRequestManager {
+public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, MoneyRequestNetworkServiceManager {
 
 
     /**
@@ -173,5 +183,40 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     @Override
     public UUID getId() {
         return null;
+    }
+
+    /*
+     * MoneyRequestNetworkServiceManager Interface methods implementatio
+     */
+
+    @Override
+    public List<CryptoRequest> getPendingReceivedCryptoRequests(String identityPublicKey) throws CantGetPendingCryptoRequestsException {
+        return null;
+    }
+
+    @Override
+    public CryptoRequestState getSentRequestState(UUID requestId) {
+        return null;
+    }
+
+    @Override
+    public void deleteFromPendingReceivedCryptoRequests(UUID requestId) throws CantDeleteFromPendingCryptoRequestsException {
+
+    }
+
+    @Override
+    public void requestCrypto(UUID requestId, String receptorWalletPublicKey, CryptoAddress addressToSendThePayment, long cryptoAmount, String loggedInIntraUserPublicKey, String intraUserToSendRequestPublicKey, String description) throws CantSendCryptoRequestException {
+
+    }
+
+    @Override
+    public void requestMoney(String receptorWalletPublicKey, String requestSenderPublicKey, String requestDestinationPublicKey, String requestDescription, CryptoAddress addressToSendThePayment, FiatCurrency fiatCurrency, long fiatAmount) throws CantSendMoneyRequestException {
+
+    }
+
+
+    @Override
+    public void rejectRequest(UUID requestId, String intraUserThatSentTheRequestPublicKey) throws CantRejectRequestException {
+
     }
 }

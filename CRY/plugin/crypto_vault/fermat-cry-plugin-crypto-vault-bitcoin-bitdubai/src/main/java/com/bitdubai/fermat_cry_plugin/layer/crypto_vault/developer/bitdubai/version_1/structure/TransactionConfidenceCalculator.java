@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -94,57 +95,62 @@ public class TransactionConfidenceCalculator {
 
 
     public CryptoStatus getCryptoStatus() throws CantCalculateTransactionConfidenceException {
-        if (transaction ==null)
-            transaction = getTransactionFromVault();
+      try {
+          if (transaction == null)
+              transaction = getTransactionFromVault();
 
-        TransactionConfidence.ConfidenceType confidence = transaction.getConfidence().getConfidenceType();
+          TransactionConfidence.ConfidenceType confidence = transaction.getConfidence().getConfidenceType();
 
-        switch (confidence){
-            case BUILDING:
-                /**
-                 * If BUILDING, then the transaction is included in the best chain and your confidence in it is increasing.
-                 * Depending of how deep is the transaction in blocks, the status will be RECEIVED or CONFIRMED.
-                 */
-                int height = transaction.getConfidence().getDepthInBlocks();
+          switch (confidence) {
+              case BUILDING:
+                  /**
+                   * If BUILDING, then the transaction is included in the best chain and your confidence in it is increasing.
+                   * Depending of how deep is the transaction in blocks, the status will be RECEIVED or CONFIRMED.
+                   */
+                  int height = transaction.getConfidence().getDepthInBlocks();
 
-                /**
-                 * if the depth is one block, then the status is RECEIVED
-                 */
-                if (height == 1)
-                    return CryptoStatus.ON_BLOCKCHAIN;
+                  /**
+                   * if the depth is one block, then the status is RECEIVED
+                   */
+                  if (height == 1)
+                      return CryptoStatus.ON_BLOCKCHAIN;
 
-                /**
-                 * if the height is equal or exceeds the threshold defined in DepthInBlocksThreshold.DEPTH, then changes to CONFIRMED
-                 */
-                if (height >= TARGET_DEPTH)
-                    return CryptoStatus.IRREVERSIBLE;
-            case DEAD:
-                /**
-                 * If DEAD, then it means the transaction won’t confirm unless there is another re-org, because some other transaction is spending one of its inputs.
-                 * When this happens, it change to REVERSED status.
-                 * UPDATE: If the transaction was previously in ON_BLOCKCHAIN status, then I will set the new status to REVERSED_ON_BLOCKCHAIN.
-                 * If it was in ON_CRYPTO_STATUS, then I will change it to REVERSED_ON_CRYPTO_STATUS
-                 */
-                if (getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_CRYPTO_NETWORK )
-                    return CryptoStatus.REVERSED_ON_CRYPTO_NETWORK;
+                  /**
+                   * if the height is equal or exceeds the threshold defined in DepthInBlocksThreshold.DEPTH, then changes to CONFIRMED
+                   */
+                  if (height >= TARGET_DEPTH)
+                      return CryptoStatus.IRREVERSIBLE;
+              case DEAD:
+                  /**
+                   * If DEAD, then it means the transaction won’t confirm unless there is another re-org, because some other transaction is spending one of its inputs.
+                   * When this happens, it change to REVERSED status.
+                   * UPDATE: If the transaction was previously in ON_BLOCKCHAIN status, then I will set the new status to REVERSED_ON_BLOCKCHAIN.
+                   * If it was in ON_CRYPTO_STATUS, then I will change it to REVERSED_ON_CRYPTO_STATUS
+                   */
+                  if (getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_CRYPTO_NETWORK)
+                      return CryptoStatus.REVERSED_ON_CRYPTO_NETWORK;
 
-                if (getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_BLOCKCHAIN)
-                    return CryptoStatus.REVERSED_ON_BLOCKCHAIN;
-            case PENDING:
-                /**
-                 * If PENDING, then the transaction is unconfirmed and should be included shortly as long as it is
-                 * being broadcast from time to time and is considered valid by the network.
-                 * This is IDENTIFIED in the protocol.
-                 */
-                return CryptoStatus.ON_CRYPTO_NETWORK;
-            case UNKNOWN:
-                /**
-                 * UNKNOWN is the default state. I'm translating it to IDENTIFIED in the Transaction Protocol
-                 */
-                return CryptoStatus.PENDING_SUBMIT;
-            default:
-                return CryptoStatus.PENDING_SUBMIT;
-        }
-
+                  if (getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_BLOCKCHAIN)
+                      return CryptoStatus.REVERSED_ON_BLOCKCHAIN;
+              case PENDING:
+                  /**
+                   * If PENDING, then the transaction is unconfirmed and should be included shortly as long as it is
+                   * being broadcast from time to time and is considered valid by the network.
+                   * This is IDENTIFIED in the protocol.
+                   */
+                  return CryptoStatus.ON_CRYPTO_NETWORK;
+              case UNKNOWN:
+                  /**
+                   * UNKNOWN is the default state. I'm translating it to IDENTIFIED in the Transaction Protocol
+                   */
+                  return CryptoStatus.PENDING_SUBMIT;
+              default:
+                  return CryptoStatus.PENDING_SUBMIT;
+          }
+      }catch(CantCalculateTransactionConfidenceException exception){
+          throw new CantCalculateTransactionConfidenceException(CantCalculateTransactionConfidenceException.DEFAULT_MESSAGE, exception, null, null);
+      }catch(Exception exception){
+          throw new CantCalculateTransactionConfidenceException(CantCalculateTransactionConfidenceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+      }
     }
 }

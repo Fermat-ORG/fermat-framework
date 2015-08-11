@@ -23,11 +23,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
@@ -115,17 +116,21 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        IncomingCryptoDeveloperDatabaseFactory dbFactory = new IncomingCryptoDeveloperDatabaseFactory(pluginId.toString(), IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
+        IncomingCryptoDeveloperDatabaseFactory dbFactory = new IncomingCryptoDeveloperDatabaseFactory(errorManager, pluginId.toString(), IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return IncomingCryptoDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        IncomingCryptoDeveloperDatabaseFactory dbFactory = new IncomingCryptoDeveloperDatabaseFactory(errorManager, pluginId.toString(), IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        /**
+         * Modified by Franklin Marcano, 03/08/2015
+         */
         Database database;
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
@@ -138,6 +143,8 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }catch (Exception e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
@@ -214,17 +221,24 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         /**
          * I will check the current values and update the LogLevel in those which is different
          */
-
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (IncomingCryptoTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                IncomingCryptoTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                IncomingCryptoTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                IncomingCryptoTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+        /**
+         * Modified by Franklin Marcano, 03/08/2015
+         */
+        try{
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+                /**
+                 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+                 */
+                if (IncomingCryptoTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    IncomingCryptoTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    IncomingCryptoTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    IncomingCryptoTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
             }
+        } catch (Exception exception){
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + IncomingCryptoTransactionPluginRoot.newLoggingLevel ,"Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 

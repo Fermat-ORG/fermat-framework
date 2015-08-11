@@ -7,6 +7,8 @@ import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 
+import javax.annotation.Nullable;
+
 /**
  * Used to get the configuration of the Bitcoin network. One static method witch retrieves the network parameters
  * that we are using in all the plug in objects.

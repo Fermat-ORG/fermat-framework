@@ -7,6 +7,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -14,10 +15,10 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantIdentifyEventSourceException;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Este agente corre en su propio Thread.
@@ -124,19 +126,29 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
     @Override
     public void stop() {
-        
-        this.agentThread.interrupt();
-        
+        //this.agentThread.interrupt();
+        monitorAgent.stop();
     }
 
 
-
+    public boolean isRunning(){
+        return this.monitorAgent.isRunning();
+    }
 
     private static class MonitorAgent implements DealsWithCryptoVault, DealsWithErrors, DealsWithRegistry, Runnable  {
 
+        private AtomicBoolean running = new AtomicBoolean(false);
         /**
          * DealsWithCryptoVault Interface member variables.
          */
+        public void stop(){
+            running.set(false);
+        }
+
+        public boolean isRunning(){
+            return running.get();
+        }
+
         private CryptoVaultManager cryptoVaultManager;
 
         /**
@@ -201,6 +213,8 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
             /**
              * Infinite loop.
              */
+            running.set(true);
+
             while (true) {
 
                 /**

@@ -14,9 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.*;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantAccessTransactionsException;
@@ -30,8 +30,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javax.xml.crypto.Data;
 
 /**
  * Created by ciencias on 3/30/15.
@@ -92,17 +90,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
      */
     private Database database;
 
-    public void openRegistry(){
-        try{
-            database.openDatabase();
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        }
-    }
 
-    public void closeRegistry(){
-        //database.closeDatabase();
-    }
 
     /**
      * DealsWithErrors Interface implementation.
@@ -140,6 +128,10 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         } catch (CantOpenDatabaseException exception) {
             throw new CantInitializeCryptoRegistryException(CantInitializeCryptoRegistryException.DEFAULT_MESSAGE, exception, "", "Check the cause to see why we couldn't open the database");
         }
+        catch (Exception exception) {
+            throw new CantInitializeCryptoRegistryException(CantInitializeCryptoRegistryException.DEFAULT_MESSAGE, exception, "", "Check the cause ");
+        }
+
     }
 
     // Used by the Monitor Agent
@@ -167,6 +159,8 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
                     registryTable.insertRecord(transactionRecord);
                 } catch (CantInsertRecordException cantInsertRecord) {
                     throw new CantAcknowledgeTransactionException(CantAcknowledgeTransactionException.DEFAULT_MESSAGE, cantInsertRecord, "Table : " + registryTable.toString(), "This is a database level issue, check the cause to see the reason");
+                }catch (Exception e) {
+                    throw new CantAcknowledgeTransactionException(CantAcknowledgeTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "check the cause to see the reason");
                 }
             }
 
@@ -191,10 +185,12 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             eventRecord.setLongValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName, unixTime);
             dbTrx.addRecordToInsert(eventsTable, eventRecord);
             database.executeTransaction(dbTrx);
-        } catch (DatabaseTransactionFailedException exception) {
+        } catch (DatabaseTransactionFailedException exception) {database.closeDatabase();
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, "The Transaction Failed. Check the Cause");
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){database.closeDatabase();
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
+        }catch(Exception exception){database.closeDatabase();
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, " Check the Cause");
         }
     }
 
@@ -221,10 +217,12 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
                     event.getLongValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName)
             );
 
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantLoadTableToMemoryException exception) {database.closeDatabase();
             throw new CantReadEventException(CantReadEventException.DEFAULT_MESSAGE, exception, null, "There is no way to gracefully handle this, check the cause");
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){database.closeDatabase();
             throw new CantReadEventException(CantReadEventException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
+        }catch(Exception exception){database.closeDatabase();
+            throw new CantReadEventException(CantReadEventException.DEFAULT_MESSAGE, exception, null, " Check the Cause");
         }
     }
 
@@ -250,15 +248,17 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             eventRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "DISABLED");
             dbTrx.addRecordToUpdate(eventsTable, eventRecord);
             database.executeTransaction(dbTrx);
-        }  catch (DatabaseTransactionFailedException exception) {
+        }  catch (DatabaseTransactionFailedException exception) {database.closeDatabase();
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, "The Transaction Failed. Check the Cause");
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){database.closeDatabase();
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
+        }catch(Exception exception){database.closeDatabase();
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, null, " Check the Cause");
         }
     }
 
     // Retorna las que están en (A,TBN)
-    protected List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() {//throws CantGetTransactionsException
+    protected List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantGetTransactionsException
         List<Transaction<CryptoTransaction>> tbaList = new ArrayList<>();
         try{
             database.openDatabase();
@@ -278,6 +278,9 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         try {
             registryTable.loadToMemory();
         } catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            return tbaList;
+        }catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             return tbaList;
         }
@@ -321,9 +324,11 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             );
             registryTable.updateRecord(recordToUpdate);
 
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){database.closeDatabase();
             throw new CantAcquireResponsibilityException(CantAcquireResponsibilityException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
         } catch (FermatException exception) {
+            throw new CantAcquireResponsibilityException(CantAcquireResponsibilityException.DEFAULT_MESSAGE, exception, null, "Check the Cause");
+        } catch (Exception exception) {database.closeDatabase();
             throw new CantAcquireResponsibilityException(CantAcquireResponsibilityException.DEFAULT_MESSAGE, exception, null, "Check the Cause");
         }
 
@@ -332,7 +337,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
     // Used by Relay Agent
     // Retorna las (R,TBA)
-    protected List<Transaction<CryptoTransaction>> getResponsibleTBATransactions() {
+    protected List<Transaction<CryptoTransaction>> getResponsibleTBATransactions() throws InvalidParameterException {
         return getAllTransactionsInState(TransactionStatus.RESPONSIBLE,ProtocolStatus.TO_BE_APPLIED);
     }
 
@@ -363,9 +368,11 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             registryTable.updateRecord(recordToUpdate);
 
 
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){database.closeDatabase();
             throw new CantAccessTransactionsException(CantAccessTransactionsException.DEFAULT_MESSAGE, exception, null, "We couldn't Open the Database. Check the Cause");
         } catch (FermatException exception) {
+            throw new CantAccessTransactionsException(CantAccessTransactionsException.DEFAULT_MESSAGE, exception, null, "Check the Cause");
+        } catch (Exception exception) {database.closeDatabase();
             throw new CantAccessTransactionsException(CantAccessTransactionsException.DEFAULT_MESSAGE, exception, null, "Check the Cause");
         }
     }
@@ -391,7 +398,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
     }
 
-    private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord){
+    private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord) throws InvalidParameterException {
         CryptoAddress cryptoAddressFrom = new CryptoAddress();
         cryptoAddressFrom.setAddress(databaseTableRecord.getStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName));
         cryptoAddressFrom.setCryptoCurrency(CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)));
@@ -403,8 +410,9 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         try {
             cryptoStatus = CryptoStatus.getByCode(databaseTableRecord.getStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName));
         } catch (InvalidParameterException e) {
-            // TODO: Manage exception
-            e.printStackTrace();
+            throw e;
+        }catch (Exception e) {
+            throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, e, null, "Check the Cause");
         }
 
         CryptoTransaction cryptoTransaction = new CryptoTransaction(
@@ -419,8 +427,9 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         try {
             action = Action.getByCode(databaseTableRecord.getStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ACTION_COLUMN.columnName));
         } catch (InvalidParameterException e) {
-            // Manage Exceotion
-            e.printStackTrace();
+            throw e;
+        }catch (Exception e) {
+            throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, e, null, "Check the Cause");
         }
 
         return new Transaction<>(
@@ -453,15 +462,22 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
             return new ArrayList<>(0);
+        }catch (Exception cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            //TODO: MANAGE EXCEPTION
+            return new ArrayList<>(0);
         }
     }
 
-    private List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) {
+    private List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws InvalidParameterException {
 
         List<Transaction<CryptoTransaction>> returnList = new ArrayList<>();
         try{
             database.openDatabase();
-        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
+        } catch(CantOpenDatabaseException | DatabaseNotFoundException exception){ database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            return  returnList;
+        } catch(Exception exception){database.closeDatabase();
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             return  returnList;
         }

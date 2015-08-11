@@ -6,11 +6,16 @@ android {
         abortOnError false
     }
 
+
     compileSdkVersion 21
     buildToolsVersion '21.1.2'
 
     packagingOptions {
         exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 
     defaultConfig {
@@ -23,27 +28,37 @@ android {
     }
 
     dexOptions{ javaMaxHeapSize "4g"}
-    
+
     sourceSets {
         main {
             res.srcDirs = ['src/main/structured_res/app/shell/version_1',
-                             'src/main/res']
+                           'src/main/res']
         }
     }
     buildTypes {
+
         release {
-            apply plugin: 'idea'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+
+        }
+        debug {
+            debuggable true
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
     }
 
-	lintOptions {
-		abortOnError false
-	}
+    lintOptions {
+        abortOnError false
+    }
 }
 
 
 dependencies {
+
+    compile 'com.android.support:multidex:1.0.0'
 
     compile project(':fermat-api')
     compile project(':fermat-core')
@@ -53,7 +68,7 @@ dependencies {
 
     compile project(':fermat-osa-addon-android-database-system-bitdubai')
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
-    compile project(':fermat-osa-addon-android-device-location-bitdubai')
+//    compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
 
     // DMP Projects (Wallets)
@@ -61,19 +76,15 @@ dependencies {
     compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
 
 
+
     /*
-
-
     Wallets on the pipeline:
-
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
-
-
     */
     // DMP Projects (Sub APPs)
 
@@ -82,9 +93,7 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
 
     /*
-
     Sub APPs on the pipeline
-
     */
 
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
@@ -101,4 +110,7 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:support-v13:21.0.3'
     compile 'com.google.android.gms:play-services:6.5.87'
+
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5+'
+
 }

@@ -6,7 +6,7 @@ apply plugin: 'pmd'
 apply plugin: 'eclipse'
 
 
-group = "com.bitdubai.fermat.pip"
+group = "com.bitdubai.fermat.api"
 sourceCompatibility = 1.7
 version = '2.0.1'
 
@@ -16,7 +16,7 @@ configurations {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'fermat-pip-api',
+        attributes 'Implementation-Title': 'fermat-api',
                    'Implementation-Version': '2.0.1'
     }
 }
@@ -34,8 +34,11 @@ dependencies {
 
 
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.52'
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    
+
+    compile('com.thoughtworks.xstream:xstream:1.4.7') {
+        exclude group: 'xmlpull', module: 'xmlpull'
+    }
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
 	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
 	testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'

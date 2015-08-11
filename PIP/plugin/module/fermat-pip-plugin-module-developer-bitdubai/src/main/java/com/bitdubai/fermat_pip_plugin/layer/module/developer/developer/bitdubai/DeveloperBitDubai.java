@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_api.layer.pip_license.PluginLicensor;
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.DeveloperModulePluginRoot;
+import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
+import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.ModuleDeveloperPluginRoot;
 
 /**
  * I will choose from the different versions of my implementations which one to start. Now there is only one, so
@@ -26,26 +26,26 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     }
 
     public DeveloperBitDubai () {
-        plugin = new DeveloperModulePluginRoot();
+        plugin = new ModuleDeveloperPluginRoot();
     }
 
     @Override
     public int getAmountToPay() {
-        return 0;
+        return 50;
     }
 
     @Override
     public CryptoCurrency getCryptoCurrency() {
-        return null;
+        return CryptoCurrency.BITCOIN;
     }
 
     @Override
     public String getAddress() {
-        return null;
+        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
-        return null;
+        return TimeFrequency.MONTHLY;
     }
 }

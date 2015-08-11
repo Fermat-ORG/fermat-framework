@@ -1,18 +1,20 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions.CantRecordOpenedWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordInstalledWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.WalletOpenedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletOpenedEvent;
 
 import java.util.UUID;
 
 /**
- * Created by loui on 05/02/15.
+ * Created by Matias Furszyfer
  */
 public class WalletOpenedEventHandler implements EventHandler {
     WalletRuntimeManager walletRuntimeManager;
@@ -23,27 +25,23 @@ public class WalletOpenedEventHandler implements EventHandler {
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
-        UUID walletId = ((WalletOpenedEvent)platformEvent).getWalletId();
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+        String walletId = ((WalletOpenedEvent)platformEvent).getWalletPublicKey();
         
         
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
             
-            try
-            {
-                this.walletRuntimeManager.recordOpenedWallet(walletId);
-            }
-            catch (CantRecordOpenedWalletException cantRecordOpenedWalletException)
-            {
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-                System.err.println("CantRecordOpenedWalletException: " + cantRecordOpenedWalletException.getMessage());
-                cantRecordOpenedWalletException.printStackTrace();
-
-                throw cantRecordOpenedWalletException;
-
-            }
+//            try
+//            {
+//                this.walletRuntimeManager.recordNavigationStructure(walletId);
+//            }
+//            catch (CantRecordInstalledWalletNavigationStructureException cantRecordOpenedWalletException) {
+//                /**
+//                 * The main module could not handle this exception. Me neither. Will throw it again.
+//                 */
+//                throw cantRecordOpenedWalletException;
+//
+//            }
             
         } 
     }

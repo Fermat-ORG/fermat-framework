@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CryptoWalletException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "THE NICHE WALLET TYPE CRYPTO WALLET HAS TRIGGERED AN EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "THE NICHE REQUESTED TYPE CRYPTO REQUESTED HAS TRIGGERED AN EXCEPTION";
 
     public CryptoWalletException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

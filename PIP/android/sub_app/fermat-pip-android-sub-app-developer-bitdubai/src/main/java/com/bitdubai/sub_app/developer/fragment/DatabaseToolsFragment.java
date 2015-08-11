@@ -1,40 +1,40 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_api.Addon;
+
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Resource;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,14 +43,21 @@ import java.util.List;
  * haves all methods for the database tools activity of a developer
  * <p/>
  * <p/>
- * Created by Mati
+ * Created by Matias Furszyfer
  *
  * @version 1.0
  */
 public class DatabaseToolsFragment extends Fragment{
 
 
-    public static final String TAG_DATABASE_TOOLS_FRAGMENT= "DatabaseToolsFragment";
+    private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES.getKey();
+    private ErrorManager errorManager;
+
+    /**
+     * SubApp session
+     */
+
+    DeveloperSubAppSession developerSubAppSession;
 
     private static final String ARG_POSITION = "position";
     private static final int TAG_FRAGMENT_DATABASE = 1;
@@ -58,14 +65,14 @@ public class DatabaseToolsFragment extends Fragment{
 
     private DatabaseTool databaseTools;
 
-    private static Platform platform = new Platform();
 
     private ArrayList<Resource> mlist;
 
     private GridView gridView;
 
-    public static DatabaseToolsFragment newInstance(int position) {
+    public static DatabaseToolsFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsFragment f = new DatabaseToolsFragment();
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -77,17 +84,18 @@ public class DatabaseToolsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        errorManager = developerSubAppSession.getErrorManager();
         try {
-            ToolManager toolManager = platform.getToolManager();
-            try {
-                databaseTools = toolManager.getDatabaseTool();
-            } catch (Exception e) {
-                showMessage("CantGetToolManager - " + e.getMessage());
-                e.printStackTrace();
-            }
+
+            ToolManager toolManager = developerSubAppSession.getToolManager();
+            databaseTools = toolManager.getDatabaseTool();
+        } catch (CantGetDataBaseToolException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            showMessage("Unexpected error get tool manager - " + ex.getMessage());
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
 
@@ -112,17 +120,17 @@ public class DatabaseToolsFragment extends Fragment{
             for (int i = 0; i < plugins.size(); i++) {
                 Resource item = new Resource();
 
-                    item.picture = "plugin";
-                    item.resource = plugins.get(i).getKey();
-                    item.type=Resource.TYPE_PLUGIN;
-                    mlist.add(item);
+                item.picture = "plugin";
+                item.resource = plugins.get(i).toString().toLowerCase().replace("_", " ");
+                item.type=Resource.TYPE_PLUGIN;
+                mlist.add(item);
                 //}
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
 
                 item.picture = "addon";
-                item.resource = addons.get(i).getKey();
+                item.resource = addons.get(i).getCode();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
                 //}
@@ -136,14 +144,15 @@ public class DatabaseToolsFragment extends Fragment{
                 gridView.setNumColumns(3);
             }
             //@SuppressWarnings("unchecked")
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
             //listView.setAdapter(adapter);
         } catch (Exception e) {
-            showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
         //LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
@@ -152,21 +161,11 @@ public class DatabaseToolsFragment extends Fragment{
         return rootView;
     }
 
-    //show alert
-    private void showMessage(String text) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
-        alertDialog.setTitle("Warning");
-        alertDialog.setMessage(text);
-        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // aquí puedes añadir funciones
-            }
-        });
-        //alertDialog.setIcon(R.drawable.icon);
-        alertDialog.show();
+
+
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
-
-
 
 
     public class AppListAdapter extends ArrayAdapter<Resource> {
@@ -184,13 +183,10 @@ public class DatabaseToolsFragment extends Fragment{
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
 
 
                 holder = new ViewHolder();
-
-
-
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
@@ -199,17 +195,12 @@ public class DatabaseToolsFragment extends Fragment{
                     public void onClick(View view) {
 
                         Resource item=(Resource) gridView.getItemAtPosition(position);
-                        DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
-                        databaseToolsDatabaseListFragment.setResource(item);
+                        //set the next fragment and params
+                        Object[] params = new Object[1];
+                        params[0] = item;
+                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES,params);
 
-                        FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-
-                        //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                        FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        FT.commit();
                     }
                 });
 

@@ -3,12 +3,12 @@ package com.bitdubai.fermat_core.layer.pip_platform_service;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer.pip_platform_service.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.PlatformServiceSubsystem;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.CantStartSubsystemException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.PlatformServiceSubsystem;
 import com.bitdubai.fermat_core.layer.pip_platform_service.error_manager.ErrorManagerSubsystem;
 import com.bitdubai.fermat_core.layer.pip_platform_service.event_manager.EventManagerSubsystem;
 import com.bitdubai.fermat_core.layer.pip_platform_service.location_subsystem.LocationSubsystemSubsystem;
-
+import com.bitdubai.fermat_core.layer.pip_platform_service.platform_info.PlatformInfoSubsystem;
 /**
  * Created by ciencias on 23.01.15.
  */
@@ -17,7 +17,7 @@ public class PlatformServiceLayer implements PlatformLayer {
     Addon errorManager;
     Addon eventManager;
     Addon locationSubsystem;
-
+    Addon platformInfo;
 
 
 
@@ -33,7 +33,9 @@ public class PlatformServiceLayer implements PlatformLayer {
         return this.locationSubsystem;
     }
 
-
+    public Addon getPlatformInfo(){
+        return this.platformInfo;
+    }
 
 
     @Override
@@ -85,7 +87,23 @@ public class PlatformServiceLayer implements PlatformLayer {
 
             throw new CantStartLayerException();
         }
-        
+
+        /**
+         * I will start the Platform Info.
+         */
+
+        PlatformServiceSubsystem platformInfo = new PlatformInfoSubsystem();
+
+        try {
+            platformInfo.start();
+            this.platformInfo = ((PlatformServiceSubsystem) platformInfo).getAddon();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CanStartSubsystemException: " + e.getMessage());
+
+            throw new CantStartLayerException();
+        }
+
     }
 
 

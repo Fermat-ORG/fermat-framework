@@ -140,7 +140,7 @@ public class AndroidDatabase implements Database, DatabaseFactory {
             FermatException cause = exception;
             String context = "";
             String possibleReason = "We couldn't open the Database, you should checkout the cause";
-            System.err.println(new CantCreateTableException(message, cause, context, possibleReason).toString());
+            System.err.println(new CantCreateTableException(message, cause, context, possibleReason).toString()); //TODO: Posible bug. Manejar con errorManager.
         }
         return null;
     }
@@ -188,7 +188,7 @@ public class AndroidDatabase implements Database, DatabaseFactory {
                     selectTables.get(i).selectRecord(selectRecords.get(i));
                     //get list of variables and this values to pass at update and insert
                     //I assume that only a select defined
-                    variablesResult =  selectTables.get(i).getVarialbesResult();
+                    variablesResult =  selectTables.get(i).getVariablesResult();
                 }
 
             //update
@@ -277,6 +277,8 @@ public class AndroidDatabase implements Database, DatabaseFactory {
             String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check the cause for this error as we have already checked that the database exists";
             throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        } catch(Exception e){
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Check the cause for this error as we have already checked that the database exists");
         }
 
     }
@@ -313,14 +315,13 @@ public class AndroidDatabase implements Database, DatabaseFactory {
 
         databasePath += "/" + databaseName.replace("-","") + ".db";
 
-
         /**
          * if owner id if null
          * because it comes from platformdatabase
          */
         File databaseFile = new File(databasePath);
 
-        if(SQLiteDatabase.deleteDatabase(databaseFile))
+        if (SQLiteDatabase.deleteDatabase(databaseFile))
             return;
 
         /**
@@ -376,6 +377,8 @@ public class AndroidDatabase implements Database, DatabaseFactory {
             String possibleReasons = "This happens if the database has already been created";
             throw new CantCreateDatabaseException(message, cause, context, possibleReasons);
         }
+
+
         /**
          * This call opens or creates the database, it doesn't throw a determined exception, but we'll try to emulate one in the tests
          */
@@ -389,6 +392,9 @@ public class AndroidDatabase implements Database, DatabaseFactory {
             context += "database Name: " + databaseName;
             String possibleReasons = "This can happen if the database File where we wanted to create the database can't be created";
             throw new CantCreateDatabaseException(message, cause, context, possibleReasons);
+        }
+        catch(Exception e){
+            throw new CantCreateDatabaseException (CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e),null,"Check the cause for this error as we have already checked that the database exists");
         }
     }
 
@@ -412,6 +418,9 @@ public class AndroidDatabase implements Database, DatabaseFactory {
             String context = "";
             String possibleReason = "We couldn't open the Database, you should checkout the cause";
             throw new CantCreateTableException(message, cause, context, possibleReason);
+        }
+        catch(Exception e){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "We couldn't open the Database, you should checkout the cause");
         }
 
         /**
@@ -498,7 +507,10 @@ public class AndroidDatabase implements Database, DatabaseFactory {
             String context = "";
             String possibleReason = "We couldn't open the Database, you should checkout the cause";
             throw new CantCreateTableException(message, cause, context, possibleReason);
+        } catch(Exception e){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "We couldn't open the Database, you should checkout the cause");
         }
+
     }
 
 

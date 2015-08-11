@@ -3,7 +3,8 @@ package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * Created by eze on 2015.06.17..
+ * The enum <code>TransactionState</code> is used to list the states of a transaction when it is in
+ * the process of going out from the system.
  */
 public enum TransactionState {
     NEW("NEW"),
@@ -30,11 +31,12 @@ public enum TransactionState {
             case "STCV": return TransactionState.SENT_TO_CRYPTO_VOULT;
             case "SS": return TransactionState.SUCCESSFUL_SENT;
             case "RCV": return TransactionState.RECEIVED;
-            default:
                 /**
-                 * If we try to cpmvert am invalid string.
+                 * If we try to convert am invalid string.
                  */
-                throw new InvalidParameterException(code);
+                //Modified by Manuel Perez on 05/08/2015
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionState enum");
+
         }
     }
 }

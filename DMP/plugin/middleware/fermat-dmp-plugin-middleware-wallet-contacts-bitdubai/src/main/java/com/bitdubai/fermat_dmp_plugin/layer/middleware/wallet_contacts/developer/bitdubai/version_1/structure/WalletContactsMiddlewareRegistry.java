@@ -13,9 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsDatabaseException;
 
@@ -70,13 +70,13 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
         List<WalletContactRecord> walletContactRecords;
         try {
             walletContactRecords = walletContactsMiddlewareDao.findAll(walletId);
-            return walletContactRecords;
         } catch (CantGetAllWalletContactsException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e){
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
+        return walletContactRecords;
     }
 
     /**
@@ -179,10 +179,10 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
     }
 
     @Override
-    public WalletContactRecord getWalletContactByContactId(UUID contactId) throws CantGetWalletContactException {
+    public WalletContactRecord getWalletContactByActorId(UUID actorId) throws CantGetWalletContactException {
         WalletContactRecord walletContactRecord;
         try {
-            walletContactRecord = walletContactsMiddlewareDao.findById(contactId);
+            walletContactRecord = walletContactsMiddlewareDao.findByActorId(actorId);
             return walletContactRecord;
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

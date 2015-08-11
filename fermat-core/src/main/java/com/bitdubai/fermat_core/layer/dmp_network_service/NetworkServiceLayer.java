@@ -8,10 +8,12 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.bank_notes.BankNotesSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.money.MoneySubsystem;
+import com.bitdubai.fermat_core.layer.dmp_network_service.template.TemplateSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_community.WalletCommunitySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_resources.WalletResourcesSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_statistics.WalletStatisticsSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_network_service.wallet_store.WalletStoreSubsystem;
+import com.bitdubai.fermat_core.layer.dmp_network_service.crypto_transmission.CryptoTransmissionSubsystem;
 
 /**
  * Created by ciencias on 03.01.15.
@@ -31,6 +33,10 @@ public class NetworkServiceLayer implements PlatformLayer {
     private Plugin mWalletStatistics;
 
     private Plugin mWalletStore;
+
+    private Plugin mTemplate;
+
+    private Plugin mCryptoTransmission;
 
 
     public Plugin getBankNotesPlugin() {
@@ -60,6 +66,14 @@ public class NetworkServiceLayer implements PlatformLayer {
 
     public Plugin getWalletStore() {
         return mWalletStore;
+    }
+
+    public Plugin getTemplate(){
+        return mTemplate;
+    }
+
+    public Plugin getCryptoTransmission(){
+        return mCryptoTransmission;
     }
 
     @Override
@@ -164,6 +178,7 @@ public class NetworkServiceLayer implements PlatformLayer {
 
         }
 
+
         /**
          * Let's try to start the Wallet Statistics subsystem.
          */
@@ -188,6 +203,48 @@ public class NetworkServiceLayer implements PlatformLayer {
         try {
             walletStoreSubsystem.start();
             mWalletStore = (walletStoreSubsystem).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+            throw new CantStartLayerException();
+        }
+
+
+        /**
+         * Let's try to start the template subsystem.
+         */
+
+        NetworkSubsystem template = new TemplateSubsystem();
+
+        try {
+
+            template.start();
+            mTemplate = (template).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+            throw new CantStartLayerException();
+        }
+
+
+        /**
+         * Let's try to start the Crypto Transmission subsystem.
+         */
+
+        NetworkSubsystem cryptoTransmission = new CryptoTransmissionSubsystem();
+
+        try {
+
+            cryptoTransmission.start();
+            mCryptoTransmission = (cryptoTransmission).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());

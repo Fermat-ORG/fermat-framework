@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer.pip_module.developer;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.pip_module.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.pip_module.ModuleSubsystem;
+import com.bitdubai.fermat_pip_api.layer.pip_module.CantStartSubsystemException;
+import com.bitdubai.fermat_pip_api.layer.pip_module.ModuleSubsystem;
 import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.DeveloperBitDubai;
 
 /**

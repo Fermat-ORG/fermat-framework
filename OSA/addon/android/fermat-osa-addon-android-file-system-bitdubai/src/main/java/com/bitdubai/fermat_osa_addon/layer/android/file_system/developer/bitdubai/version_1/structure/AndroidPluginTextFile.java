@@ -202,6 +202,9 @@ public class AndroidPluginTextFile implements PluginTextFile {
             String possibleReason = "This problem should be related with the FileOutputStream either in the construction or the write operation";
             throw new CantPersistFileException(message, cause, context, possibleReason);
         }
+        catch (Exception e){
+            throw new CantPersistFileException(CantPersistFileException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
+        }
     }
 
     /**
@@ -263,9 +266,28 @@ public class AndroidPluginTextFile implements PluginTextFile {
             String possibleReason = "This problem should be related with the FileInputStream either in the construction or the read operation";
             throw new CantLoadFileException(message, cause, context, possibleReason);
         }
+        catch (Exception e){
+            throw new CantLoadFileException(CantLoadFileException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause of this error");
+        }
     }
 
-    
+    /**
+     *  remove files from the system
+     */
+
+    @Override
+    public void delete() {
+        /**
+         *  Evaluate privacyLevel to determine the location of directory - external or internal
+         */
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir().toString();
+        File file = new File(path +"/"+ this.directoryName, this.fileName);
+        file.delete();
+    }
 
 
     @Override

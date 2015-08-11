@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBookException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleDao;
 
@@ -49,6 +49,11 @@ public class RegisterActorAddressBookTest extends TestCase {
 
     Actors actorType;
 
+    UUID actorIdTo;
+
+    Actors actorTypeTo;
+
+
     CryptoAddress cryptoAddress;
 
 
@@ -60,6 +65,8 @@ public class RegisterActorAddressBookTest extends TestCase {
     public void setUp() throws Exception {
         actorId = UUID.randomUUID();
         actorType = Actors.EXTRA_USER;
+        actorIdTo = UUID.randomUUID();
+        actorTypeTo = Actors.INTRA_USER;
         cryptoAddress = new CryptoAddress("asdadas", CryptoCurrency.BITCOIN);
         pluginId = UUID.randomUUID();
         dao = new ActorAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
@@ -72,7 +79,7 @@ public class RegisterActorAddressBookTest extends TestCase {
     public void testRegister_NotNull() throws Exception {
         when(database.getTable(anyString())).thenReturn(databaseTable);
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
-        dao.registerActorAddressBook(actorId, actorType, cryptoAddress);
+        dao.registerActorAddressBook(actorId, actorType, actorIdTo, actorTypeTo, cryptoAddress);
     }
 
     @Test(expected=CantRegisterActorAddressBookException.class)
@@ -81,21 +88,21 @@ public class RegisterActorAddressBookTest extends TestCase {
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
         doThrow(new CantInsertRecordException()).when(databaseTable).insertRecord(any(DatabaseTableRecord.class));
 
-        dao.registerActorAddressBook(actorId, actorType, cryptoAddress);
+        dao.registerActorAddressBook(actorId, actorType, actorIdTo, actorTypeTo, cryptoAddress);
     }
 
     @Test(expected=CantRegisterActorAddressBookException.class)
     public void testRegister_actorIdNull_CantRegisterActorAddressBookException() throws Exception {
-        dao.registerActorAddressBook(null, actorType, cryptoAddress);
+        dao.registerActorAddressBook(null, actorType, actorIdTo, actorTypeTo, cryptoAddress);
     }
 
     @Test(expected=CantRegisterActorAddressBookException.class)
     public void testRegister_actorTypeNull_CantRegisterActorAddressBookException() throws Exception {
-        dao.registerActorAddressBook(actorId, null, cryptoAddress);
+        dao.registerActorAddressBook(actorId, null, actorIdTo, actorTypeTo, cryptoAddress);
     }
 
     @Test(expected=CantRegisterActorAddressBookException.class)
     public void testRegister_cryptoAddressNull_CantRegisterActorAddressBookException() throws Exception {
-        dao.registerActorAddressBook(actorId, actorType, null);
+        dao.registerActorAddressBook(actorId, actorType, actorIdTo, actorTypeTo, null);
     }
 }

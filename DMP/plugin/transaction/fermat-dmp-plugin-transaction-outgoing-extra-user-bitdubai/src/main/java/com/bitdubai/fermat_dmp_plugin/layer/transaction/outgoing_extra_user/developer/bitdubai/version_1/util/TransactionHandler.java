@@ -3,13 +3,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.dev
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.InconsistentTableStateException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedCryptoStatusException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserDao;
@@ -36,6 +36,9 @@ public class TransactionHandler {
                     } catch (CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                         return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
+                        return;
                     }
                 case REVERSED_ON_CRYPTO_NETWORK:
                     try {
@@ -46,14 +49,20 @@ public class TransactionHandler {
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                         return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
+                        return;
                     }
                 case ON_BLOCKCHAIN:
                     try {
                         bitcoinWallet.getBookBalance().debit(transaction);
                         dao.setToCryptoStatus(transaction, CryptoStatus.ON_BLOCKCHAIN);
                         return;
-                    } catch (CantRegisterDebitDebitException | CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e) {
+                    } catch (CantRegisterDebitException | CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                        return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
                         return;
                     }
                 case REVERSED_ON_BLOCKCHAIN:
@@ -68,6 +77,9 @@ public class TransactionHandler {
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                         return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
+                        return;
                     }
                 case IRREVERSIBLE:
                     try {
@@ -75,6 +87,9 @@ public class TransactionHandler {
                         return;
                     } catch (CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                        return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
                         return;
                     }
                 default:
@@ -101,14 +116,20 @@ public class TransactionHandler {
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
                         return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
+                        return;
                     }
                 case ON_BLOCKCHAIN:
                     try {
                         bitcoinWallet.getBookBalance().debit(transaction);
                         dao.setToCryptoStatus(transaction, CryptoStatus.ON_BLOCKCHAIN);
                         return;
-                    } catch (CantRegisterDebitDebitException  | CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e1) {
+                    } catch (CantRegisterDebitException | CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
+                        return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
                         return;
                     }
                 case REVERSED_ON_BLOCKCHAIN:
@@ -123,6 +144,9 @@ public class TransactionHandler {
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
                         return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
+                        return;
                     }
                 case IRREVERSIBLE:
                     try {
@@ -130,6 +154,9 @@ public class TransactionHandler {
                         return;
                     } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
+                        return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
                         return;
                     }
                 default:
@@ -161,6 +188,9 @@ public class TransactionHandler {
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
                         return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
+                        return;
                     }
                 case IRREVERSIBLE:
                     try {
@@ -168,6 +198,9 @@ public class TransactionHandler {
                         return;
                     } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e1);
+                        return;
+                    } catch (Exception exception) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
                         return;
                     }
                 default:

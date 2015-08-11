@@ -3,7 +3,9 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.devel
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -11,18 +13,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.*;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.exceptions.CantStartAgentException;
+//import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerDatabaseFactory;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.*;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerRegistry;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerReportAgent;
+
+import java.io.Serializable;
 
 /**
  * Created by ciencias on 05.02.15
  * Modified by Federico Rodriguez on 01.05.15
  */
-public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlatformDatabaseSystem, ErrorManager, Service {
+public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlatformDatabaseSystem, ErrorManager, Service,Serializable {
 
     /**
      * ErrorManagerRegistry variable
@@ -81,6 +84,17 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     public void reportUnexpectedAddonsException(Addons exceptionSource, UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
+
+    @Override
+    public void reportUnexpectedSubAppException(SubApps exceptionSource, UnexpectedSubAppExceptionSeverity unexpectedSubAppExceptionSeverity, Exception exception) {
+        processException(exceptionSource.toString(), unexpectedSubAppExceptionSeverity.toString(), exception);
+    }
+
+    @Override
+    public void reportUnexpectedUIException(UISource exceptionSource, UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
+        processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
+    }
+
     /**
      * Service Interface implementation.
      */
@@ -115,8 +129,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     }
 
     private void processException(final String source, final String severity, final Exception exception){
-        if(exception instanceof FermatException && serviceStatus.equals(ServiceStatus.STARTED))
-            printErrorReport(source, severity, (FermatException) exception);
+        printErrorReport(source, severity, FermatException.wrapException(exception));
     }
 
     private void printErrorReport(final String source, final String severity, final FermatException exception){

@@ -105,11 +105,11 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      */
 
     @Override
-    public List<String> getColumns()
-    {
+    public List<String> getColumns(){
         List<String> columns = new ArrayList<String>();
         Cursor c = this.database.rawQuery("SELECT * FROM "+ tableName, null);
         String[] columnNames = c.getColumnNames();
+        c.close();
 
         for (int i = 0; i < columnNames.length; ++i) {
             columns.add(columnNames[i].toString());
@@ -136,7 +136,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      */
 
     @Override
-    public List<DatabaseVariable> getVarialbesResult(){
+    public List<DatabaseVariable> getVariablesResult(){
         return this.variablesResult;
     }
 
@@ -292,7 +292,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
         catch (Exception exception)
         {
-            throw new CantSelectRecordException();
+            throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause for this error");
         }
 
 
@@ -355,7 +355,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
        }
         catch (Exception exception)
         {
-            throw new CantUpdateRecordException();
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause for this error");
         }
     }
 
@@ -408,13 +408,11 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
             }
 
-           // this.database.insert(tableName, null, initialValues);
-
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         }
         catch (Exception exception) {
-            throw new CantInsertRecordException();
-          }
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause for this error");
+        }
 
 
     }
@@ -432,46 +430,42 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         String topSentence = "";
         String offsetSentence = "";
+        if (!this.top.isEmpty())
+            topSentence = " LIMIT " + this.top;
 
+        if (!this.offset.isEmpty())
+            offsetSentence = " OFFSET " + this.offset;
+
+        Cursor cursor = null;
+
+        /**
+         * Get columns name to read values of files
+         *
+         */
         try {
-
-            if (!this.top.isEmpty())
-                topSentence = " LIMIT " + this.top;
-
-            if (!this.offset.isEmpty())
-                offsetSentence = " OFFSET " + this.offset;
-
-
-            Cursor c = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
-
             List<String> columns = getColumns();
+            cursor = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
+            while (cursor.moveToNext()) {
+                DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
+                List<DatabaseRecord> recordValues = new ArrayList<>();
 
-            if (c.moveToFirst()) {
-                do {
-                    /**
-                     * Get columns name to read values of files
-                     *
-                     */
-                    DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
-                    List<DatabaseRecord> recordValues = new ArrayList<>();
+                for(String column : columns){
+                    DatabaseRecord recordValue = new AndroidRecord();
+                    recordValue.setName(column);
+                    recordValue.setValue(cursor.getString(cursor.getColumnIndex(column)));
+                    recordValue.setChange(false);
+                    recordValue.setUseValueofVariable(false);
+                    recordValues.add(recordValue);
+                }
 
-                    for (int i = 0; i < columns.size(); ++i) {
-                        DatabaseRecord recordValue = new AndroidRecord();
-                        recordValue.setName(columns.get(i).toString());
-                        recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i).toString())));
-                        recordValue.setChange(false);
-                        recordValue.setUseValueofVariable(false);
-                        recordValues.add(recordValue);
-                    }
-                    tableRecord1.setValues(recordValues);
-                    this.records.add(tableRecord1);
-
-                } while (c.moveToNext());
+                tableRecord.setValues(recordValues);
+                this.records.add(tableRecord);
             }
-
-
+            cursor.close();
         } catch (Exception e) {
-            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
+            if(cursor != null)
+                cursor.close();
+            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
         }
     }
 
@@ -849,7 +843,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
             }
 
         }catch (Exception exception) {
-            throw new CantDeleteRecordException();
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE,FermatException.wrapException(exception),null,"Check the cause for this error");
         }
     }
 
@@ -880,7 +874,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
             if(c.moveToNext()){
                 //si pasa esto es porque hay algo mal
-                throw new Exception();
+                throw new Exception(); //TODO:Se deberia lanzar una FermatException
             }
 
         }else{

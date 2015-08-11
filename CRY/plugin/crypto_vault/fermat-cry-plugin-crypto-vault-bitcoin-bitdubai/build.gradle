@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.7
 version = '1.0'
@@ -7,14 +8,31 @@ repositories {
     mavenCentral()
 }
 
-
-
 dependencies {
+
     compile project(':fermat-api')
     compile project(':fermat-cry-api')
+    compile project(':fermat-pip-api')
+
     testCompile 'junit:junit:4.11'
     compile('org.bitcoinj:bitcoinj-core:0.12.3') {
         exclude module: 'scrypt'
     }
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
 }
+
+def jacocoHtmlReport = ""
+
+jacocoTestReport{
+    reports{
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
+    }
+}
+
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
+}
+
+jacocoTestReport.dependsOn clean, test
+jacocoTestReport.mustRunAfter test
+test.mustRunAfter clean

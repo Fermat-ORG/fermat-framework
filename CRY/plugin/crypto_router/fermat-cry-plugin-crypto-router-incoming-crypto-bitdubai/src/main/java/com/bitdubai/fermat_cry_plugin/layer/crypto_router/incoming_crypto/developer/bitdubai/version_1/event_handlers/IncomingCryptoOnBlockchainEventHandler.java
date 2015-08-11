@@ -4,9 +4,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
 
@@ -29,7 +29,10 @@ public class IncomingCryptoOnBlockchainEventHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws Exception {
+    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+        /**
+         * Modified by Franklin Marcano, 03/08/2015
+         */
         if (this.incomingCryptoEventRecorderService.getStatus() == ServiceStatus.STARTED){
 
             try
@@ -46,6 +49,10 @@ public class IncomingCryptoOnBlockchainEventHandler implements EventHandler {
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
                 throw  new CantSaveEvent("classCastException found", FermatException.wrapException(classCastException),"","");
+            }
+            catch (Exception e)
+            {
+                throw  new CantSaveEvent("Exception unchecked", FermatException.wrapException(e),"","");
             }
         }
         else

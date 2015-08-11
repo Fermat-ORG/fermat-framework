@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.manager.R;
 
 
@@ -30,6 +33,12 @@ import android.support.v4.app.Fragment;
 public class SubAppDesktopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
+    private static final String CWP_SUB_APP_ALL_DEVELOPER = Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode();
+    private static final String CWP_WALLET_BASIC_ALL_MAIN = Activities.CWP_WALLET_BASIC_ALL_MAIN.getCode();
+    private static final String CWP_WALLET_FACTORY_MAIN = Activities.CWP_WALLET_FACTORY_MAIN.getCode();
+    private static final String CWP_WALLET_PUBLISHER_MAIN = Activities.CWP_WALLET_PUBLISHER_MAIN.getCode();
+    private static final String CWP_WALLET_RUNTIME_STORE_MAIN = Activities.CWP_WALLET_RUNTIME_STORE_MAIN.getCode();
+
     private ArrayList<App> mlist;
     private static int tabId;
 
@@ -182,26 +191,58 @@ public class SubAppDesktopFragment extends Fragment {
             switch (item.picture)
             {
                 case "developer_sub_app":
-                    holder.imageView.setImageResource(R.drawable.developer_sub_app);
+                    holder.imageView.setImageResource(R.drawable.developer_sub_app_1);
                   holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_SUB_APP_ALL_DEVELOPER,null);
+
+                        }
+                    });
                     break;
                 case "wallet_factory":
-                    holder.imageView.setImageResource(R.drawable.factory);
+                    holder.imageView.setImageResource(R.drawable.factory_1);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_FACTORY_MAIN,null);
+                        }
+                    });
                     break;
 
                 case "wallet_publisher":
-                    holder.imageView.setImageResource(R.drawable.publisher);
+                    holder.imageView.setImageResource(R.drawable.publisher_1);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_PUBLISHER_MAIN,null);
+                        }
+                    });
                     break;
 
                 case "wallet_store":
-                    holder.imageView.setImageResource(R.drawable.store);
+                    holder.imageView.setImageResource(R.drawable.walet_store_1);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+          //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_RUNTIME_STORE_MAIN,null);
+                        }
+                    });
                     break;
 
             }

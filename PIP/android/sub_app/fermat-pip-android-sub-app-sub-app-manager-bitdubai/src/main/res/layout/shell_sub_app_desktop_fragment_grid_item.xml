@@ -19,7 +19,7 @@
             android:paddingBottom="14dp"
             android:orientation="vertical"
             android:clickable="true"
-            android:onClick="onItemSelectedClicked">
+          >
             <ImageView
                 android:id="@+id/image_view"
                 android:layout_width="wrap_content"
@@ -32,8 +32,7 @@
                 android:paddingRight="14dp"
                 android:src="@drawable/ic_launcher"
                 android:layout_alignParentTop="true"
-                android:layout_column="2"
-                android:onClick="onItemSelectedClicked"/>
+                android:layout_column="2"/>
             <TextView android:text="App Name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

@@ -31,6 +31,7 @@ dependencies {
     compile project(':fermat-pip-addon-platform-service-event-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-location-subsystem-bitdubai')
+    compile project(':fermat-pip-addon-platform-service-platform-info-bitdubai')
     compile project(':fermat-pip-addon-hardware-local-device-bitdubai')
     compile project(':fermat-pip-addon-hardware-remote-device-bitdubai')
     compile project(':fermat-pip-addon-user-device-user-bitdubai')
@@ -38,8 +39,11 @@ dependencies {
     compile project(':fermat-pip-plugin-actor-developer-bitdubai')
 
     compile project(':fermat-pip-plugin-identity-developer-bitdubai')
-
+    compile project(':fermat-pip-plugin-identity-translator-bitdubai')
+    compile project(':fermat-pip-plugin-identity-designer-bitdubai')
     compile project(':fermat-pip-plugin-module-developer-bitdubai')
+    compile project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai')
+
 
 // P2P Projects
 
@@ -50,8 +54,10 @@ dependencies {
 // DMP Projects (Plugins)
 
     compile project(':fermat-dmp-plugin-actor-extra-user-bitdubai')
-
+    compile project(':fermat-dmp-plugin-actor-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-identity-intra-user-bitdubai')
+    compile project(':fermat-dmp-plugin-network-service-crypto-transmission-bitdubai')
+    compile project(':fermat-dmp-plugin-request-money-request-bitdubai')
 
 /*
 
@@ -84,19 +90,20 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
 
     compile project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')
-    compile project(':fermat-dmp-plugin-network-service-money-bitdubai')
+    compile project(':fermat-dmp-plugin-network-service-money-transmission-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-money-request-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-community-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-resources-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-store-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
+    compile project(':fermat-dmp-plugin-network-service-template-bitdubai')
 
     compile project(':fermat-dmp-plugin-module-wallet-manager-bitdubai')
     compile project(':fermat-dmp-plugin-module-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-plugin-module-wallet-store-bitdubai')
     compile project(':fermat-dmp-plugin-module-wallet-factory-bitdubai')
-
+    compile project(':fermat-dmp-plugin-module-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-engine-wallet-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
 
@@ -104,9 +111,13 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-money-request-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-factory-bitdubai')
+    compile project(':fermat-dmp-plugin-middleware-wallet-language-bitdubai')
+    compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-store-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-manager-bitdubai')
+    compile project(':fermat-dmp-plugin-middleware-wallet-settings-bitdubai')
+    compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
 
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
