@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -51,7 +52,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,DatabaseManagerForDevelopers,DealsWithLogger,DealsWithPluginFileSystem,LogManagerForDevelopers, Plugin, Service,WalletSettingsManager {
+public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,DealsWithLogger,DealsWithPluginFileSystem,LogManagerForDevelopers, Plugin, Service,WalletSettingsManager {
 
 
 
@@ -141,27 +142,6 @@ public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,Datab
     }
 
     /**
-     * DatabaseManagerForDevelopers Interface implementation.
-     */
-
-    @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory){
-     return null;
-    }
-
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase){
-        return null;
-    }
-
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable){
-        return null;
-    }
-
-
-
-    /**
      * DealsWithLogger Interface implementation.
      */
 
@@ -211,7 +191,19 @@ public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,Datab
      */
 
     @Override
-    public WalletSettings getSettings(UUID walletIdInTheDevice) {
-        return new WalletSettingsSettings(walletIdInTheDevice,this.pluginFileSystem,this.pluginId,this.errorManager);
+    public WalletSettings getSettings(String walletPublicKey) {
+        return new WalletSettingsSettings(walletPublicKey,this.pluginFileSystem,this.pluginId,this.errorManager);
+    }
+
+    /**
+     * This method gives us the settings of a wallet
+     *
+     * @param xmlWalletSetting the identifier of the wallet we want to work with
+     * @return the settings of the specified wallet
+     */
+    @Override
+    public void setSettings(String xmlWalletSetting,String walletPublicKey) throws CantSaveWalletSettings {
+        WalletSettings walletSettings = new WalletSettingsSettings(walletPublicKey,pluginFileSystem,pluginId,errorManager);
+        walletSettings.setPreferenceSettings(xmlWalletSetting,walletPublicKey);
     }
 }
