@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class DeveloperDatabaseFactory {
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE, databaseId));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE, databaseId));
         return databases;
     }
 
@@ -40,14 +40,14 @@ public class DeveloperDatabaseFactory {
          * Designer table columns
          */
         List<String> designerTableColumns = new ArrayList<String>();
-        designerTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_ID_COLUMN_NAME);
-        designerTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_NAME_COLUMN_NAME);
-        designerTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME);
+        designerTableColumns.add(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME);
+        designerTableColumns.add(WalletStoreCatalogDatabaseConstants.DESIGNER_NAME_COLUMN_NAME);
+        designerTableColumns.add(WalletStoreCatalogDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME);
 
         /**
          * Designer table
          */
-        DeveloperDatabaseTable  designerTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DESIGNER_TABLE_NAME, designerTableColumns);
+        DeveloperDatabaseTable  designerTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME, designerTableColumns);
         tables.add(designerTable);
 
 
@@ -55,29 +55,29 @@ public class DeveloperDatabaseFactory {
          * Developer table columns
          */
         List<String> developerTableColumns = new ArrayList<String>();
-        developerTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_ID_COLUMN_NAME);
-        developerTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME);
-        developerTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME);
+        developerTableColumns.add(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME);
+        developerTableColumns.add(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME);
+        developerTableColumns.add(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME);
 
         /**
          * Developer table
          */
-        DeveloperDatabaseTable  developerTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.DEVELOPER_TABLE_NAME, developerTableColumns);
+        DeveloperDatabaseTable  developerTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME, developerTableColumns);
         tables.add(developerTable);
 
         /**
          * item  columns
          */
         List<String> itemTableColumns = new ArrayList<String>();
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_ID_COLUMN_NAME);
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_NAME_COLUMN_NAME);
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME);
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME);
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_SIZE_COLUMN_NAME);
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_VERSION_COLUMN_NAME);
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME);
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME);
-        itemTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_ID_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_NAME_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_SIZE_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_VERSION_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME);
 
 
 
@@ -85,7 +85,7 @@ public class DeveloperDatabaseFactory {
         /**
          * item table
          */
-        DeveloperDatabaseTable  itemTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.ITEM_TABLE_NAME, itemTableColumns );
+        DeveloperDatabaseTable  itemTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.ITEM_TABLE_NAME, itemTableColumns );
         tables.add(itemTable );
 
 
@@ -93,9 +93,9 @@ public class DeveloperDatabaseFactory {
          * translator columns
          */
         List<String> translatorTableColumns = new ArrayList<String>();
-        translatorTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME);
-        translatorTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME);
-        translatorTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME);
+        translatorTableColumns.add(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME);
+        translatorTableColumns.add(WalletStoreCatalogDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME);
+        translatorTableColumns.add(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME);
 
 
 
@@ -103,7 +103,7 @@ public class DeveloperDatabaseFactory {
         /**
          * translator table
          */
-        DeveloperDatabaseTable  translatorTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.TRANSLATOR_TABLE_NAME, translatorTableColumns);
+        DeveloperDatabaseTable  translatorTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME, translatorTableColumns);
         tables.add(translatorTable);
 
 
@@ -111,23 +111,23 @@ public class DeveloperDatabaseFactory {
          * Walletlanguage columns
          */
         List<String> walletLanguageTableColumns = new ArrayList<String>();
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME);
+        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME);
 
 
         /**
          * walletLanguage table
          */
-        DeveloperDatabaseTable  walletLanguageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETLANGUAGE_TABLE_NAME, walletLanguageTableColumns);
+        DeveloperDatabaseTable  walletLanguageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TABLE_NAME, walletLanguageTableColumns);
         tables.add(walletLanguageTable );
 
 
@@ -135,25 +135,25 @@ public class DeveloperDatabaseFactory {
          * WalletSkin columns
          */
         List<String> walletSkinTableColumns = new ArrayList<String>();
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME);
         //New column on 06/08/2015
-        walletSkinTableColumns.add(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_SCREEN_SIZE);
+        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SCREEN_SIZE);
 
 
 
         /**
          * walletSkin table
          */
-        DeveloperDatabaseTable  walletSkinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreNetworkServiceDatabaseConstants.WALLETSKIN_TABLE_NAME, walletSkinTableColumns);
+        DeveloperDatabaseTable  walletSkinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME, walletSkinTableColumns);
         tables.add(walletSkinTable);
 
         return tables;
