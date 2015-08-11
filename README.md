@@ -194,7 +194,7 @@ community of developers building plugins and niche wallets that add all sorts of
 See the [Fermat Plugins Registry](https://github.com/bitDubai/fermat/fermat-documentation)
 for a list of available Plugins. 
 
-See the [Fermat Plugins Niche Wallets Registry](https://github.com/bitDubai/fermat/fermat-documentation)
+See the [Fermat Niche Wallets Registry](https://github.com/bitDubai/fermat/fermat-documentation)
 for a list of Niche Wallets. 
 
 For installation instructions and running from the source code, see the [documentation](https://github.com/bitDubai/fermat/fermat-documentation).
