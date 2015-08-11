@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
  * Provides contact information of Intra User
  *
  * Created by loui on 22/02/15.
+ * modified by Natalia on 11/08/2015
  *
  * @version 1.0
  * @since Java JDK 1.7
