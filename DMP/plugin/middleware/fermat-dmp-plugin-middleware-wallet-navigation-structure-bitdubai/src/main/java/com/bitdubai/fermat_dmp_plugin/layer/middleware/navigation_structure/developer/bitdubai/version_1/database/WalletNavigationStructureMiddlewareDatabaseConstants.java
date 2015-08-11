@@ -15,6 +15,9 @@ public class WalletNavigationStructureMiddlewareDatabaseConstants {
 
     public static final String WALLET_NAVIGATION_STRUCTURE_TABLE_NAME = "Wallet_Navigation_Structure";
 
+    /**
+     * Modified by Manuel Perez on 11/08/2015
+     */
     public static final String WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY="public_key";
     public static final String WALLET_NAVIGATION_STRUCTURE_ACTIVITY="activity";
     public static final String WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY="start_activity";

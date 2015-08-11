@@ -268,7 +268,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
         } catch (CantSaveLanguageException exception) {
             throw new CantImportWalletFactoryProjectException(CantGetLanguageException.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause");
         }catch (Exception exception){
-            throw new CantImportWalletFactoryProjectException(CantImportWalletFactoryProjectException.DEFAULT_MESSAGE,exception,"importWalletFactoryProjectFromRepository","Check the cause");
+            throw new CantImportWalletFactoryProjectException(CantImportWalletFactoryProjectException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"importWalletFactoryProjectFromRepository","Check the cause");
         }
 
 
