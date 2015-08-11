@@ -1,17 +1,14 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -27,7 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.DescriptorFactoryMiddlewareProject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,9 +103,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      *
      *  @return All Wallet Factory Projects who belongs to a developer.
      */
-    public List<WalletFactoryProject> findAll(String developerPublicKey) throws CantGetWalletFactoryProjectsException {
+    public List<DescriptorFactoryProject> findAll(String developerPublicKey) throws CantGetWalletFactoryProjectsException {
 
-        List<WalletFactoryProject> walletFactoryProjectList = new ArrayList<>();
+        List<DescriptorFactoryProject> walletFactoryProjectList = new ArrayList<>();
 
         try {
             database.openDatabase();
@@ -126,7 +123,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 Wallets walletType = Wallets.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME));
                 String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
 
-                WalletFactoryMiddlewareProject walletFactoryProject = new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
+                DescriptorFactoryMiddlewareProject walletFactoryProject = new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
 
                 walletFactoryProjectList.add(walletFactoryProject);
             }
@@ -147,9 +144,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      *
      *  @return All Wallet Factory Projects who belongs to a developer.
      */
-    public List<WalletFactoryProject> findAllScrolling(String developerPublicKey, Integer max, Integer offset) throws CantGetWalletFactoryProjectsException {
+    public List<DescriptorFactoryProject> findAllScrolling(String developerPublicKey, Integer max, Integer offset) throws CantGetWalletFactoryProjectsException {
 
-        List<WalletFactoryProject> walletFactoryProjectList = new ArrayList<>();
+        List<DescriptorFactoryProject> walletFactoryProjectList = new ArrayList<>();
 
         try {
             database.openDatabase();
@@ -169,7 +166,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 Wallets walletType = Wallets.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME));
                 String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
 
-                WalletFactoryProject walletFactoryProject = new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
+                DescriptorFactoryProject walletFactoryProject = new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
 
                 walletFactoryProjectList.add(walletFactoryProject);
             }
@@ -192,7 +189,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      * @return Wallet Factory Projects matches with the given name.
      * @throws CantGetWalletFactoryProjectException
      */
-    public WalletFactoryProject findByName(String name, String developerPublicKey) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
+    public DescriptorFactoryProject findByName(String name, String developerPublicKey) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
         try {
             database.openDatabase();
             DatabaseTable projectTable = database.getTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME);
@@ -209,7 +206,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
 
                 database.closeDatabase();
-                return new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
+                return new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
             } else {
                 database.closeDatabase();
                 throw new ProjectNotFoundException(ProjectNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project with that name that belongs to the user.");
@@ -224,7 +221,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         }
     }
 
-    public WalletFactoryProject findProjectById(UUID id) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
+    public DescriptorFactoryProject findProjectById(UUID id) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
         try {
             database.openDatabase();
             DatabaseTable projectTable = database.getTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME);
@@ -241,7 +238,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 String path = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
 
                 database.closeDatabase();
-                return new WalletFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
+                return new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path);
             } else {
                 database.closeDatabase();
                 throw new ProjectNotFoundException(ProjectNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project with that name that belongs to the user.");
@@ -259,11 +256,11 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param walletFactoryProject WalletFactoryProject to create.
+     *  @param walletFactoryProject DescriptorFactoryProject to create.
      */
-    public void create(WalletFactoryProject walletFactoryProject) throws CantCreateWalletFactoryProjectException {
+    public void create(DescriptorFactoryProject walletFactoryProject) throws CantCreateWalletFactoryProjectException {
 
-        if (walletFactoryProject == null && walletFactoryProject.getId() != null && walletFactoryProject.getName() != null && walletFactoryProject.getDeveloperPublicKey() != null && walletFactoryProject.getType() != null){
+        if (walletFactoryProject == null && walletFactoryProject.getId() != null && walletFactoryProject.getName() != null && walletFactoryProject.getDeveloperPublicKey() != null && walletFactoryProject.getWallestType() != null){
             throw new CantCreateWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE, null, "The entity is required, can not be null", "Check the id, name, type and developer public key.");
         }
 
@@ -274,7 +271,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             entityRecord.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME, walletFactoryProject.getId());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, walletFactoryProject.getName());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME, walletFactoryProject.getDeveloperPublicKey());
-            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME, walletFactoryProject.getType().getCode());
+            entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME, walletFactoryProject.getWallestType().getCode());
             entityRecord.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME, walletFactoryProject.getPath());
 
             DatabaseTransaction transaction = database.newTransaction();
@@ -291,11 +288,11 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     }
 
     /**
-     * Method that update a WalletFactoryProject in the database.
+     * Method that update a DescriptorFactoryProject in the database.
      *
-     *  @param walletFactoryProject WalletFactoryProject to update.
+     *  @param walletFactoryProject DescriptorFactoryProject to update.
      */
-    public void update(WalletFactoryProject walletFactoryProject) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException {
+    public void update(DescriptorFactoryProject walletFactoryProject) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException {
 
         if (walletFactoryProject == null && walletFactoryProject.getId() != null && walletFactoryProject.getName() != null){
             throw new CantUpdateWalletFactoryProjectException(CantUpdateWalletFactoryProjectException.DEFAULT_MESSAGE, null, "The entity is required, can not be null.", "Check id or name values.");

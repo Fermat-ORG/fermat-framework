@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum Addons {
     ERROR_MANAGER ("ERRM"),
     EVENT_MANAGER ("EVNTM"),
-    OS ("Os"),
+    OS ("OS"),
     LOCAL_DEVICE("LOCD"),
     REMOTE_DEVICE("REMD"),
     DEVICE_USER ("DEVU"),
@@ -30,29 +30,29 @@ public enum Addons {
 
     public static Addons getByKey(String code) throws InvalidParameterException {
         switch(code){
-            case "Error Manager":
+            case "ERRM":
                 return Addons.ERROR_MANAGER ;
-            case "Event Manager":
+            case "EVNTM":
                 return Addons.EVENT_MANAGER ;
-            case "Os":
+            case "OS":
                 return Addons.OS ;
-            case "Local Device":
+            case "LOCD":
                 return Addons.LOCAL_DEVICE;
-            case "Remote Device":
+            case "REMD":
                 return Addons.REMOTE_DEVICE;
-            case "Device user":
+            case "DEVU":
                 return Addons.DEVICE_USER ;
-            case "License Manager":
+            case "LICM":
                 return Addons.LICENSE_MANAGER ;
-            case "Intra User":
+            case "INTU":
                 return Addons.INTRA_USER;
-            case "Extra User":
+            case "EXTU":
                 return Addons.EXTRA_USER;
-            case "Device Connectivity":
+            case "DEVC":
                 return Addons.DEVICE_CONNECTIVITY;
-            case "Platform Info":
+            case "PLATINF":
                 return Addons.PLATFORM_INFO;
-            case "Log Manager":
+            case "LOGM":
                 return Addons.LOG_MANAGER;
             //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");

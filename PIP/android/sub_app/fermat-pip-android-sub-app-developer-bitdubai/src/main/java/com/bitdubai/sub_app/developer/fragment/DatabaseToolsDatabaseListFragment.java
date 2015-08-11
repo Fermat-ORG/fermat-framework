@@ -123,23 +123,12 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                 database_type=Databases.TYPE_ADDON;
             }
 
-            // Get ListView object from xml
-            //final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
-
-            //TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-            //labelDatabase.setText(resource+" - Databases List");
-
-
             for(int i = 0; i < developerDatabaseList.size() ; i++) {
-                //availableResources[i] = developerDatabaseList.get(i).getName();
                 Databases item = new Databases();
-
                 item.picture = "databases";
                 item.databases =  developerDatabaseList.get(i).getName();
-                //item.developer = plugins.get(i).getDeveloper().toString();
                 item.type=Resource.TYPE_PLUGIN;
                 lstDatabases.add(item);
-                //}
             }
 
             Configuration config = getResources().getConfiguration();

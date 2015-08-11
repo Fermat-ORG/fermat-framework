@@ -305,6 +305,11 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             public boolean isDefault() {
                 return skin.isDefault();
             }
+
+            @Override
+            public ScreenSize getScreenSize() {
+                return skin.getScreenSize();
+            }
         };
 
         return walletStoreSkin;

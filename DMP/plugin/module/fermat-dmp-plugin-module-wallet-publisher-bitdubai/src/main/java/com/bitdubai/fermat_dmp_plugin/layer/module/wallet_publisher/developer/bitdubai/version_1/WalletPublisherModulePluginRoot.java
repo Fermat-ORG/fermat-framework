@@ -12,10 +12,8 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
@@ -328,20 +326,20 @@ public class WalletPublisherModulePluginRoot implements Service, DealsWithWallet
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#publishSkin(WalletFactoryProjectSkin)
+     * @see WalletPublisherManager#publishSkin(SkinDescriptorFactoryProject)
      */
     @Override
-    public void publishSkin(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantPublishComponetException {
-        walletPublisherMiddlewareManager.publishSkin(walletFactoryProjectSkin);
+    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantPublishComponetException {
+        walletPublisherMiddlewareManager.publishSkin(skinDescriptorFactoryProject);
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#publishLanguage(WalletFactoryProjectLanguage)
+     * @see WalletPublisherManager#publishLanguage(LanguageDescriptorFactoryProject)
      */
     @Override
-    public void publishLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantPublishComponetException {
-        walletPublisherMiddlewareManager.publishLanguage(walletFactoryProjectLanguage);
+    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantPublishComponetException {
+        walletPublisherMiddlewareManager.publishLanguage(languageDescriptorFactoryProject);
     }
 }
 

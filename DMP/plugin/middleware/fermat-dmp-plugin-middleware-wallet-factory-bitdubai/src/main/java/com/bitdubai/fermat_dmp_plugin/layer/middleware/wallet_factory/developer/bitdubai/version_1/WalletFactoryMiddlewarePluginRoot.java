@@ -20,9 +20,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposalManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
@@ -40,7 +39,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.DescriptorFactoryMiddlewareProject;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.utils.RepositoryManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -149,12 +148,12 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
 
 
     @Override
-    public WalletFactoryMiddlewareProject createEmptyWalletFactoryProject(String name, Wallets walletType) throws CantCreateWalletFactoryProjectException {
+    public DescriptorFactoryMiddlewareProject createEmptyWalletFactoryProject(String name, Wallets walletType) throws CantCreateWalletFactoryProjectException {
         try {
             // TODO GET CURRENT LOGGED DEVELOPER
             String developerPublicKey = "";
 
-            WalletFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletFactoryMiddlewareProject(name, developerPublicKey, walletType, WALLET_FACTORY_PROJECTS_PATH);
+            DescriptorFactoryMiddlewareProject walletFactoryMiddlewareProject = new DescriptorFactoryMiddlewareProject(name, developerPublicKey, walletType, WALLET_FACTORY_PROJECTS_PATH);
             walletFactoryMiddlewareProjectDao.create(walletFactoryMiddlewareProject);
 
             return walletFactoryMiddlewareProject;
@@ -178,7 +177,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
      * Modified by Manuel Perez on 07/06/2015
      * */
     @Override
-    public void exportWalletFactoryProjectToRepository(String name, String password,String repository, WalletFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException {
+    public void exportWalletFactoryProjectToRepository(String name, String password,String repository, DescriptorFactoryProject walletFactoryProject) throws CantExportWalletFactoryProjectException {
 
         //TODO: Where can I find the github login information?
 
@@ -218,7 +217,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
     }
 
     @Override
-    public List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectsException {
+    public List<DescriptorFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectsException {
         try {
             // TODO GET CURRENT LOGGED DEVELOPER
             String developerPublicKey = "";
@@ -230,7 +229,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
     }
 
     @Override
-    public WalletFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
+    public DescriptorFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
         try {
             // TODO GET CURRENT LOGGED DEVELOPER
             String developerPublicKey = "";

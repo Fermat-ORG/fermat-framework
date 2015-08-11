@@ -6,16 +6,13 @@
  */
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager</code> mark
@@ -61,21 +58,21 @@ public interface WalletPublisherMiddlewareManager {
     public Map<String,List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException;
 
     /**
-     * This method publishes the skin factory project <code>WalletFactoryProjectSkin</code> with the skin information in
+     * This method publishes the skin factory project <code>SkinDescriptorFactoryProject</code> with the skin information in
      * the wallet store and register relevant information of this process.
      *
-     * @param walletFactoryProjectSkin the skin factory project to publish
+     * @param skinDescriptorFactoryProject the skin factory project to publish
      * @throws CantPublishComponetException
      */
-    public void publishSkin(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantPublishComponetException;
+    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantPublishComponetException;
 
     /**
-     * This method publishes the language factory project <code>WalletFactoryProjectLanguage</code> with the language information in
+     * This method publishes the language factory project <code>LanguageDescriptorFactoryProject</code> with the language information in
      * the wallet store and register relevant information of this process (publication timestamp).
      *
-     * @param walletFactoryProjectLanguage the wallet factory project to publish
+     * @param languageDescriptorFactoryProject the wallet factory project to publish
      * @throws CantPublishComponetException
      */
-    public void publishLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantPublishComponetException;
+    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantPublishComponetException;
 
 }
