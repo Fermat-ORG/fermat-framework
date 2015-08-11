@@ -305,6 +305,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             public ScreenSize getScreenSize() {
                 return skin.getScreenSize();
             }
+
         };
 
         return walletStoreSkin;
