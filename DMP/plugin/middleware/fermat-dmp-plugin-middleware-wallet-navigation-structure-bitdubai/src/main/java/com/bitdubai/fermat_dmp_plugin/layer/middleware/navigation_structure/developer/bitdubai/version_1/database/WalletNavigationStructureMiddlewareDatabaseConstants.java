@@ -13,7 +13,14 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.dev
  */
 public class WalletNavigationStructureMiddlewareDatabaseConstants {
 
-    public static final String WALLET_NAVIGATION_STRUCTURE_WALLETS_DATABASE = "WalletNavigationStructureDatabase";
+    public static final String WALLET_NAVIGATION_STRUCTURE_TABLE_NAME = "Wallet_Navigation_Structure";
+
+    public static final String WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY="public_key";
+    public static final String WALLET_NAVIGATION_STRUCTURE_ACTIVITY="activity";
+    public static final String WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY="start_activity";
+    public static final String WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY="last_activity";
+
+    public static final String WALLET_NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN="public_key";
 
 }
 
