@@ -129,7 +129,7 @@ Fermat principles:
 
 
 * Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both Fermat developers and the Fermat user base.
-* Any alt-coin community could write Plugins to enable their crypto currency within the Fermat wallet ecosystem.
+* Any alt-coin community could write plugins to enable their crypto currency within the Fermat wallet ecosystem.
 
 
 ##### 11. Fermat should be inclusive with the current financial system.
@@ -164,7 +164,7 @@ Fermat principles:
 ##### 15. Fermat should be the finacially most efficient way to move or spend the end user's money. 
 
 
-* Cryto Vault for multiple wallets concept.
+* Crypto Vault for multiple wallets concept.
 * Financial AI Agents concept.
 
 
