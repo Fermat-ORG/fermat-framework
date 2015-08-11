@@ -7,6 +7,8 @@ import java.util.List;
  * provides the methods to search for a particular intra user
  */
 public interface IntraUserSearch {
+
     public void setNameToSearch(String nameToSearch);
+
     List<IntraUserInformation> getResult();
 }

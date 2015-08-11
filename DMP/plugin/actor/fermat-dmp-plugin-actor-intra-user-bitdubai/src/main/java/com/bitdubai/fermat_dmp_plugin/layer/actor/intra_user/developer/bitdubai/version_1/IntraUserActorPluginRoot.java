@@ -8,6 +8,15 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDecideAcceptanceLaterException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -27,15 +36,19 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+
 /**
+ * This plugin manages connections between users of the platform..
+ * Provides contact information of Intra User
+ *
  * Created by loui on 22/02/15.
+ * modified by Natalia on 11/08/2015
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 
-/**
- * This plug-in manages a registry of known extra users..
- */
-
-public class IntraUserActorPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem,  Plugin, Service  {
+public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem,  Plugin, Service  {
 
 
 
@@ -67,6 +80,138 @@ public class IntraUserActorPluginRoot implements  DealsWithErrors, DealsWithLogg
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
+    /**
+     * ActorIntraUserManager interface implementation.
+     */
+
+
+    /**
+     * That method registers a new intra user in the list
+     * managed by this plugin with ContactState PENDING_HIS_ACCEPTANCE until the other intra user
+     * accepts the connection request sent also by this method.
+     *
+     * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
+     * @param intraUserToAddName         The name of the intra user to add
+     * @param intraUserToAddPublicKey    The public key of the intra user to add
+     * @param profileImage               The profile image that the intra user has
+     * @throws CantCreateIntraUserException
+     */
+
+    @Override
+    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException {
+
+    }
+
+
+    /**
+     * That method takes the information of a connection request, accepts
+     * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
+     *
+     * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
+     * @param intraUserToAddName         The name of the intra user to add
+     * @param intraUserToAddPublicKey    The public key of the intra user to add
+     * @param profileImage               The profile image that the intra user has
+     * @throws CantAcceptIntraUserException
+     */
+
+    @Override
+    public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptIntraUserException {
+
+    }
+
+    /**
+     * That method adds an intra user registry with state PENDING_YOUR_ACCEPTANCE
+     *
+     * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
+     * @param intraUserToAddName         The name of the intra user to add
+     * @param intraUserToAddPublicKey    The public key of the intra user to add
+     * @param profileImage               The profile image that the intra user has
+     * @throws CantDecideAcceptanceLaterException
+     */
+    @Override
+    public void decideAcceptanceLater(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantDecideAcceptanceLaterException {
+
+    }
+
+    /**
+     * That method rejects a connection request from another intra user
+     *
+     * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+     * @param intraUserToRejectPublicKey The public key of the intra user that sent the request
+     * @throws CantDenyConnectionException
+     */
+    @Override
+    public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws CantDenyConnectionException {
+
+    }
+
+    /**
+     * That method disconnect an intra user from the connections registry
+     *
+     * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+     * @param intraUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
+     * @throws CantDisconnectIntraUserException
+     */
+    @Override
+    public void disconnectIntraUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraUserException {
+
+    }
+
+
+    /**
+     * That method cancels an intra user from the connections registry
+     *
+     * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+     * @param intraUserToCancelPublicKey The public key of the intra user to cancel as connection
+     * @throws CantCancelIntraUserException
+     */
+    @Override
+    public void cancelIntraUser(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws CantCancelIntraUserException {
+
+    }
+
+    /**
+     * That method get the list of all intra users that are connections of the logged in one.
+     *
+     * @param intraUserLoggedInPublicKey the public key of the intra user logged in
+     * @return the list of intra users the logged in intra user has as connections.
+     * @throws CantGetIntraUSersException
+     */
+    @Override
+    public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
+        return null;
+    }
+
+
+    /**
+     * That method get the list of all intra users
+     * that sent a connection request and are waiting for the acceptance of the logged in one.
+     *
+     * @param intraUserLoggedInPublicKey the public key of the intra user logged in
+     * @return the list of intra users the logged in intra user has as connections.
+     * @throws CantGetIntraUSersException
+     */
+
+    @Override
+    public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
+        return null;
+    }
+
+
+    /**
+     * That method get  the list of all intra users
+     * that the logged in one has sent connections request to and have not been answered yet..
+     *
+     * @param intraUserLoggedInPublicKey the public key of the intra user logged in
+     * @return the list of intra users the logged in intra user has as connections.
+     * @throws CantGetIntraUSersException
+     */
+
+    @Override
+    public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
+        return null;
+    }
+
 
     /**
      *DealsWithErrors Interface implementation.
@@ -91,6 +236,7 @@ public class IntraUserActorPluginRoot implements  DealsWithErrors, DealsWithLogg
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.ActorIntraUser");
 
         /**
          * I return the values.
@@ -200,4 +346,6 @@ public class IntraUserActorPluginRoot implements  DealsWithErrors, DealsWithLogg
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
+
 }
