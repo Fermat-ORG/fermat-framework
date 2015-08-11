@@ -124,7 +124,7 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_WALLETS_DATABASE);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
             return WalletnavigationStructureMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         }catch (CantOpenDatabaseException cantOpenDatabaseException){
             /**
