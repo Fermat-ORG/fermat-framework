@@ -55,6 +55,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -330,7 +331,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 getApplicationContext(),
                 WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getPublicKey()),
                 tabStrip,
-                walletSession);
+                walletSession,getWalletSettingsManager());
         pagertabs.setAdapter(adapter);
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
@@ -704,6 +705,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     public WalletFactoryManager getWalletFactoryManager() {
         return (WalletFactoryManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
+    }
+
+    /**
+     *  Get WalletSettingsManager
+     */
+    public WalletSettingsManager getWalletSettingsManager() {
+        return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
     }
 
     /**

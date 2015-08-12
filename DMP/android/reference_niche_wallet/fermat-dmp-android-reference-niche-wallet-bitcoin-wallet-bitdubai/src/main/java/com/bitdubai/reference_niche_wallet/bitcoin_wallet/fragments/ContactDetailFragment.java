@@ -14,6 +14,7 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -49,6 +50,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private TextView accountNameView;
     private TextView accountNumberView;
     private ImageView actionSendView;
+    private ImageView actionReceiveView;
+    private ImageView actionMoneyRequest;
     /**
      * Typeface Font
      */
@@ -61,6 +64,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private ErrorManager errorManager;
     private CryptoWalletManager cryptoWalletManager;
     private WalletSession walletSession;
+    private WalletSettingsManager walletSettingsManager;
+
     /**
      * DATA
      */
@@ -146,7 +151,28 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
                     .attach(fragment)
                     .show(fragment)
                     .commit();
+        }else if(view.getId() == R.id.action_receive && walletContact != null){
+            ReceiveFragment fragment = ReceiveFragment.newInstance(0,walletContact,walletSession);
+            fragment.fromContacts = true;
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    .add(R.id.fragment_container2, fragment)
+                    .attach(fragment)
+                    .show(fragment)
+                    .commit();
+        }else if(view.getId() == R.id.action_money_request && walletContact != null){
+            MoneyRequestFragment fragment = MoneyRequestFragment.newInstance(0,walletContact,walletSettingsManager,walletSession);
+            fragment.fromContacts = true;
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    .add(R.id.fragment_container2, fragment)
+                    .attach(fragment)
+                    .show(fragment)
+                    .commit();
         }
+
     }
 
     /**
@@ -155,6 +181,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private void setUp() {
         if (mFragmentView != null) {
             actionSendView = (ImageView) mFragmentView.findViewById(R.id.action_send);
+            actionReceiveView = (ImageView) mFragmentView.findViewById(R.id.action_receive);
+            actionMoneyRequest = (ImageView) mFragmentView.findViewById(R.id.action_money_request);
             accountNameView = (TextView) mFragmentView.findViewById(R.id.account_name);
             accountNumberView = (TextView) mFragmentView.findViewById(R.id.account_number);
             if (typeface != null) {
@@ -178,6 +206,12 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
                 accountNumberView.setText(walletContact.address);
             if (actionSendView != null) {
                 actionSendView.setOnClickListener(this);
+            }
+            if (actionReceiveView != null) {
+                actionReceiveView.setOnClickListener(this);
+            }
+            if (actionMoneyRequest != null) {
+                actionMoneyRequest.setOnClickListener(this);
             }
         }
     }
