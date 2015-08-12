@@ -14,11 +14,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantExportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
@@ -112,6 +114,8 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
      */
 
     private final String WALLET_FACTORY_PROJECTS_PATH = "wallet_factory_projects";
+    private final FactoryProjectState WALLET_FACTORY_PROJECTS_STATE = FactoryProjectState.CLOSED;
+
     WalletFactoryMiddlewareDao walletFactoryMiddlewareProjectDao;
 
     @Override
@@ -153,7 +157,7 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
             // TODO GET CURRENT LOGGED DEVELOPER
             String developerPublicKey = "";
 
-            DescriptorFactoryMiddlewareProject walletFactoryMiddlewareProject = new DescriptorFactoryMiddlewareProject(name, developerPublicKey, walletType, WALLET_FACTORY_PROJECTS_PATH);
+            DescriptorFactoryMiddlewareProject walletFactoryMiddlewareProject = new DescriptorFactoryMiddlewareProject(name, developerPublicKey, walletType, WALLET_FACTORY_PROJECTS_PATH, WALLET_FACTORY_PROJECTS_STATE);
             walletFactoryMiddlewareProjectDao.create(walletFactoryMiddlewareProject);
 
             return walletFactoryMiddlewareProject;
@@ -235,6 +239,39 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
             String developerPublicKey = "";
             return walletFactoryMiddlewareProjectDao.findByName(name, developerPublicKey);
         } catch (CantGetWalletFactoryProjectException|ProjectNotFoundException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public List<DescriptorFactoryProject> getClosedProjects(FactoryProjectState state) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
+        try {
+            // TODO GET CURRENT LOGGED DEVELOPER
+            return walletFactoryMiddlewareProjectDao.findProjectByState(state);
+        } catch (CantGetWalletFactoryProjectException|ProjectNotFoundException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void closeProject(String name) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException {
+        try {
+            // TODO GET CURRENT LOGGED DEVELOPER
+             walletFactoryMiddlewareProjectDao.closeProject(name);
+        } catch (CantUpdateWalletFactoryProjectException | ProjectNotFoundException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void setProjectState(UUID projectId, FactoryProjectState state) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException {
+        try {
+            // TODO GET CURRENT LOGGED DEVELOPER
+            walletFactoryMiddlewareProjectDao.setProjectState(projectId, state);
+        } catch (CantUpdateWalletFactoryProjectException | ProjectNotFoundException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
