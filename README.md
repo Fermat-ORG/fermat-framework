@@ -17,7 +17,9 @@ The answers to each of these questions are addressed within the Fermat platform.
 What is Fermat? 
 ---------------------
 
-Fermat is an open-source P2P digital wallet platform that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
+
+Technically Fermat is an open-source P2P digital wallet platform that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
 What makes Fermat different from other wallet platforms or services?
 
