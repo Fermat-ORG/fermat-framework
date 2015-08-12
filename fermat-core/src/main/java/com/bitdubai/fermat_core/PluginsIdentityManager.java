@@ -887,7 +887,7 @@ public class PluginsIdentityManager {
             return pluginIds.get(pluginIndex);
 
         } else {
-            throw new PluginNotRecognizedException();
+            throw new PluginNotRecognizedException(PluginNotRecognizedException.DEFAULT_MESSAGE, null, "Plugin: " + plugin.toString(), null);
         }
 
     }
