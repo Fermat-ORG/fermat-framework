@@ -97,9 +97,15 @@
             android:layout_width="fill_parent"
             android:layout_height="30dp" />
 
-        <include layout="@layout/wallet_manager_transaction_view"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"/>
+        <ListView android:id="@+id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+
+        <!--<include layout="@layout/wallet_manager_transaction_view"-->
+            <!--android:paddingTop="5dp"-->
+            <!--android:paddingBottom="5dp"/>-->
 
     </LinearLayout>
 </ScrollView>

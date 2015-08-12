@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,8 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.ListModel;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -88,6 +92,11 @@ public class BalanceFragment extends Fragment {
      * Preference setting
      */
     WalletSettingsManager walletSettingsManager;
+
+
+    ListView list;
+    CustomAdapter adapter;
+    public  ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>();
 
 
     /**
@@ -207,7 +216,40 @@ public class BalanceFragment extends Fragment {
         });
 
 
+
+        //testing
+        /******** Take some data in Arraylist ( CustomListViewValuesArr ) ***********/
+        setListData();
+
+        Resources res =getResources();
+        list = (ListView)rootView.findViewById( R.id.list );  // List defined in XML ( See Below )
+
+        /**************** Create Custom Adapter *********/
+        adapter=new CustomAdapter( getActivity(), CustomListViewValuesArr,res );
+        list.setAdapter(adapter);
+
+
         return rootView;
+    }
+
+
+    /****** Function to set data in ArrayList *************/
+    public void setListData()
+    {
+
+        for (int i = 0; i < 4; i++) {
+
+            final ListModel sched = new ListModel();
+
+            /******* Firstly take data in model object ******/
+            sched.setTitleTransaction("Transaction "+i);
+            sched.setDetailTransaction("Detalle" + i);
+            sched.setImageUrl("person1.png");
+
+            /******** Take Model Object in ArrayList **********/
+            CustomListViewValuesArr.add( sched);
+        }
+
     }
 
     /*
