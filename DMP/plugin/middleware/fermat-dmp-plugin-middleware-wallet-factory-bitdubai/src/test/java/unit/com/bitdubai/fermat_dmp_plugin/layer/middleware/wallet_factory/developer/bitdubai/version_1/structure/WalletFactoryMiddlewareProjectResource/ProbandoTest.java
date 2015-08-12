@@ -19,11 +19,11 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.DescriptorFactoryMiddlewareProject;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectLanguage;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectProposal;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryMiddlewareProjectSkin;
@@ -93,7 +93,7 @@ public class ProbandoTest {
 
             WalletFactoryMiddlewareProjectSkin que = (WalletFactoryMiddlewareProjectSkin) jaxbUnmarshaller.unmarshal(file);
 
-            List<WalletFactoryProjectSkin> skins = new ArrayList<>();
+            List<SkinDescriptorFactoryProject> skins = new ArrayList<>();
             skins.add(que);
             skins.add(que);
 
@@ -125,11 +125,11 @@ public class ProbandoTest {
 
             WalletFactoryMiddlewareProjectSkin que = (WalletFactoryMiddlewareProjectSkin) jaxbUnmarshaller.unmarshal(file);
 
-            List<WalletFactoryProjectSkin> skins = new ArrayList<>();
+            List<SkinDescriptorFactoryProject> skins = new ArrayList<>();
             skins.add(que);
             skins.add(que);
 
-            List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
+            List<LanguageDescriptorFactoryProject> languages = new ArrayList<>();
             languages.add(new WalletFactoryMiddlewareProjectLanguage("hungaro.xml", Languages.AMERICAN_ENGLISH));
             languages.add(new WalletFactoryMiddlewareProjectLanguage("alfredo.xml", Languages.AMERICAN_ENGLISH));
 
@@ -147,7 +147,7 @@ public class ProbandoTest {
 
             System.out.println("*****asd: - " + what.getAlias());
 
-            for (WalletFactoryProjectSkin lan : what.getSkins()) {
+            for (SkinDescriptorFactoryProject lan : what.getSkins()) {
                 for (WalletFactoryProjectResource sao : lan.getResources()) {
                     System.out.println("*****asd: - " + sao.getName());
                     System.out.println("*****asd: - " + sao.getResourceType());
@@ -179,7 +179,7 @@ public class ProbandoTest {
 
             System.out.println("*****asd: - " + que.getAlias());
 
-            for (WalletFactoryProjectLanguage lan : que.getLanguages()) {
+            for (LanguageDescriptorFactoryProject lan : que.getLanguages()) {
                 System.out.println("*****asd: - " + lan.getType());
             }
 
@@ -249,22 +249,22 @@ public class ProbandoTest {
         return null;
     }
 
-    private WalletFactoryMiddlewareProject getProject(String name) {
+    private DescriptorFactoryMiddlewareProject getProject(String name) {
         List<WalletFactoryProjectProposal> proposals = new ArrayList<>();
         proposals.add(getProposal("mati rosa"));
         proposals.add(getProposal("mati verde"));
         proposals.add(getProposal("mati azul"));
         proposals.add(getProposal("mati amarillo"));
 
-        return new WalletFactoryMiddlewareProject(name, "soy una developer public key", proposals);
+        return new DescriptorFactoryMiddlewareProject(name, "soy una developer public key", proposals);
     }
 
     private String getProjectXml() {
         try {
             WalletFactoryMiddlewareProjectProposal proposal = getProposal("proposal1");
-            RuntimeInlineAnnotationReader.cachePackageAnnotation(WalletFactoryMiddlewareProject.class.getPackage(), new XmlSchemaMine(""));
+            RuntimeInlineAnnotationReader.cachePackageAnnotation(DescriptorFactoryMiddlewareProject.class.getPackage(), new XmlSchemaMine(""));
 
-            JAXBContext jaxbContext = JAXBContext.newInstance(WalletFactoryMiddlewareProject.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(DescriptorFactoryMiddlewareProject.class);
 
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -282,12 +282,12 @@ public class ProbandoTest {
 
 
     private WalletFactoryMiddlewareProjectProposal getProposal(String alias) {
-        List<WalletFactoryProjectSkin> skins = new ArrayList<>();
+        List<SkinDescriptorFactoryProject> skins = new ArrayList<>();
         skins.add(getSkin("mati rosa"));
         skins.add(getSkin("mati azul"));
         skins.add(getSkin("mati verde"));
 
-        List<WalletFactoryProjectLanguage> languages = new ArrayList<>();
+        List<LanguageDescriptorFactoryProject> languages = new ArrayList<>();
         languages.add(new WalletFactoryMiddlewareProjectLanguage("hungaro.xml", Languages.AMERICAN_ENGLISH));
         languages.add(new WalletFactoryMiddlewareProjectLanguage("alfredo.xml", Languages.AMERICAN_ENGLISH));
 
@@ -364,7 +364,7 @@ public class ProbandoTest {
 
     @Test
     public void testGetProjectXML() throws Exception {
-        WalletFactoryProject walletFactoryProject = new WalletFactoryMiddlewareProject();
+        DescriptorFactoryProject walletFactoryProject = new DescriptorFactoryMiddlewareProject();
         System.out.println(walletFactoryProject.getProjectXml(getProject("WALTERFIERRO")));
     }
 

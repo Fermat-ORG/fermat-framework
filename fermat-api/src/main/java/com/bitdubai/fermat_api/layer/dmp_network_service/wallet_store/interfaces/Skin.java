@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
@@ -21,7 +22,7 @@ public interface Skin {
     public String getSkinName();
     public UUID getWalletId();
 
-
+    public ScreenSize getScreenSize();
 
     /**
      * Version information, current, Inicial and Final versions accepted.

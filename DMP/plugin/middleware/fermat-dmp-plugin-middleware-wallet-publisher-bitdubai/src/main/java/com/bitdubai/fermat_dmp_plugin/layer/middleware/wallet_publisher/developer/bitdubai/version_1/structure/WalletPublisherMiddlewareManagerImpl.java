@@ -6,12 +6,12 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponent;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -74,7 +74,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedComponents()
      */
     @Override
-    public Map<String, List<InformationPublishedComponent>> getPublishedComponents() throws CantGetPublishedComponentInformationException {
+    public Map<String, List<ComponentPublishedInformation>> getPublishedComponents() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
@@ -83,7 +83,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedWallets()
      */
     @Override
-    public Map<String, List<InformationPublishedComponent>> getPublishedWallets() throws CantGetPublishedComponentInformationException {
+    public Map<String, List<ComponentPublishedInformation>> getPublishedWallets() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
@@ -92,7 +92,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedSkins()
      */
     @Override
-    public Map<String, List<InformationPublishedComponent>> getPublishedSkins() throws CantGetPublishedComponentInformationException {
+    public Map<String, List<ComponentPublishedInformation>> getPublishedSkins() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
@@ -101,25 +101,25 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedLanguages()
      */
     @Override
-    public Map<String, List<InformationPublishedComponent>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
+    public Map<String, List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishSkin(WalletFactoryProjectSkin)
+     * @see WalletPublisherMiddlewareManager#publishSkin(SkinDescriptorFactoryProject)
      */
     @Override
-    public void publishSkin(WalletFactoryProjectSkin walletFactoryProjectSkin) throws CantPublishComponetException {
+    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantPublishComponetException {
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishLanguage(WalletFactoryProjectLanguage)
+     * @see WalletPublisherMiddlewareManager#publishLanguage(LanguageDescriptorFactoryProject)
      */
     @Override
-    public void publishLanguage(WalletFactoryProjectLanguage walletFactoryProjectLanguage) throws CantPublishComponetException {
+    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantPublishComponetException {
 
     }
 
