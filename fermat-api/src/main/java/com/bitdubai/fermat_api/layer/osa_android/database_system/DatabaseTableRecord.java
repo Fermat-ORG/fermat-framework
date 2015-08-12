@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +31,7 @@ import java.util.UUID;
 
     public double getDoubleValue(String columnName);
 
-   public String getVariableName(String columnName);
+    public String getVariableName(String columnName);
     
     public void setStringValue (String columnName, String value);
 
@@ -43,9 +45,11 @@ import java.util.UUID;
 
     public void setDoubleValue(String columnName, double value);
 
-   public void setVariableValue (String columnName, String variableName);
+    public void setVariableValue (String columnName, String variableName);
 
     public void setSelectField (String columnName);
+
+    public void setStateValue(String columnName, FactoryProjectState state);
 
     public List<DatabaseRecord> getValues();
 
