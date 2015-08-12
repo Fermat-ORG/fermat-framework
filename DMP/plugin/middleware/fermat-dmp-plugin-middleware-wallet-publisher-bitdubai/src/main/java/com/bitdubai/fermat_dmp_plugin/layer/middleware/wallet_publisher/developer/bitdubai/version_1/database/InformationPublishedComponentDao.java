@@ -1,5 +1,5 @@
 /*
- * @#WalletPublisherMiddlewareDao.java - 2015
+ * @#InformationPublishedComponentDao.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -24,8 +24,11 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ComponentPublishedMiddlewareInformation;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageImpl;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentImpl;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +36,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDao</code> have
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao</code> have
  * all methods implementation to access the data base (CRUD)
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/08/15.
@@ -41,7 +44,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherMiddlewareDao {
+public class InformationPublishedComponentDao {
 
 
     /**
@@ -54,7 +57,7 @@ public class WalletPublisherMiddlewareDao {
      *
      * @param dataBase
      */
-    public WalletPublisherMiddlewareDao(Database dataBase) {
+    public InformationPublishedComponentDao(Database dataBase) {
         super();
         this.dataBase = dataBase;
     }
@@ -72,23 +75,23 @@ public class WalletPublisherMiddlewareDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_TABLE_NAME);
+        return getDataBase().getTable(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_TABLE_NAME);
     }
 
     /**
-     * Method that find an ComponentPublishedMiddlewareInformation by id in the data base.
+     * Method that find an InformationPublishedComponentImpl by id in the data base.
      *
      *  @param id Long id.
-     *  @return ComponentPublishedMiddlewareInformation found.
+     *  @return InformationPublishedComponentImpl found.
      *  @throws CantReadRecordDataBaseException
      */
-    public ComponentPublishedMiddlewareInformation findById (String id) throws CantReadRecordDataBaseException {
+    public InformationPublishedComponentImpl findById (String id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = null;
+        InformationPublishedComponentImpl walletPublishedMiddlewareInformation = null;
 
         try {
 
@@ -96,7 +99,7 @@ public class WalletPublisherMiddlewareDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable =  getDatabaseTable();
-            incomingMessageTable.setStringFilter(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.setStringFilter(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -106,12 +109,12 @@ public class WalletPublisherMiddlewareDao {
 
 
             /*
-             * 3 - Convert into ComponentPublishedMiddlewareInformation objects
+             * 3 - Convert into InformationPublishedComponentImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 3.1 - Create and configure a  ComponentPublishedMiddlewareInformation
+                 * 3.1 - Create and configure a  InformationPublishedComponentImpl
                  */
                 walletPublishedMiddlewareInformation = constructFrom(record);
             }
@@ -133,13 +136,13 @@ public class WalletPublisherMiddlewareDao {
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All ComponentPublishedMiddlewareInformation.
+     *  @return All InformationPublishedComponentImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ComponentPublishedMiddlewareInformation> findAll () throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponentImpl> findAll () throws CantReadRecordDataBaseException {
 
 
-        List<ComponentPublishedMiddlewareInformation> list = null;
+        List<InformationPublishedComponentImpl> list = null;
 
         try {
 
@@ -155,20 +158,20 @@ public class WalletPublisherMiddlewareDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of ComponentPublishedMiddlewareInformation objects
+             * 3 - Create a list of InformationPublishedComponentImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ComponentPublishedMiddlewareInformation objects
+             * 4 - Convert into InformationPublishedComponentImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  ComponentPublishedMiddlewareInformation
+                 * 4.1 - Create and configure a  InformationPublishedComponentImpl
                  */
-                ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = constructFrom(record);
+                InformationPublishedComponentImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -199,10 +202,10 @@ public class WalletPublisherMiddlewareDao {
      * the column name are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      *  @see WalletPublisherMiddlewareDatabaseConstants
-     *  @return All ComponentPublishedMiddlewareInformation.
+     *  @return All InformationPublishedComponentImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ComponentPublishedMiddlewareInformation> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponentImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -213,7 +216,7 @@ public class WalletPublisherMiddlewareDao {
         }
 
 
-        List<ComponentPublishedMiddlewareInformation> list = null;
+        List<InformationPublishedComponentImpl> list = null;
 
         try {
 
@@ -230,20 +233,20 @@ public class WalletPublisherMiddlewareDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of ComponentPublishedMiddlewareInformation objects
+             * 3 - Create a list of InformationPublishedComponentImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ComponentPublishedMiddlewareInformation objects
+             * 4 - Convert into InformationPublishedComponentImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  ComponentPublishedMiddlewareInformation
+                 * 4.1 - Create and configure a  InformationPublishedComponentImpl
                  */
-                ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = constructFrom(record);
+                InformationPublishedComponentImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -275,10 +278,10 @@ public class WalletPublisherMiddlewareDao {
      * the key are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      * @param filters
-     * @return List<ComponentPublishedMiddlewareInformation>
+     * @return List<InformationPublishedComponentImpl>
      * @throws CantReadRecordDataBaseException
      */
-    public List<ComponentPublishedMiddlewareInformation> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponentImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -286,11 +289,10 @@ public class WalletPublisherMiddlewareDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<ComponentPublishedMiddlewareInformation> list = null;
+        List<InformationPublishedComponentImpl> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
-
 
             /*
              * 1- Prepare the filters
@@ -319,20 +321,20 @@ public class WalletPublisherMiddlewareDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 4 - Create a list of ComponentPublishedMiddlewareInformation objects
+             * 4 - Create a list of InformationPublishedComponentImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into ComponentPublishedMiddlewareInformation objects
+             * 5 - Convert into InformationPublishedComponentImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 5.1 - Create and configure a  ComponentPublishedMiddlewareInformation
+                 * 5.1 - Create and configure a  InformationPublishedComponentImpl
                  */
-                ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = constructFrom(record);
+                InformationPublishedComponentImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -361,10 +363,10 @@ public class WalletPublisherMiddlewareDao {
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param entity ComponentPublishedMiddlewareInformation to create.
+     *  @param entity InformationPublishedComponentImpl to create.
      *  @throws CantInsertRecordDataBaseException
      */
-    public void create (ComponentPublishedMiddlewareInformation entity) throws CantInsertRecordDataBaseException {
+    public void create (InformationPublishedComponentImpl entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -402,10 +404,10 @@ public class WalletPublisherMiddlewareDao {
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity ComponentPublishedMiddlewareInformation to update.
+     *  @param entity InformationPublishedComponentImpl to update.
      *  @throws CantUpdateRecordDataBaseException
      */
-    public void update(ComponentPublishedMiddlewareInformation entity) throws CantUpdateRecordDataBaseException {
+    public void update(InformationPublishedComponentImpl entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -458,7 +460,7 @@ public class WalletPublisherMiddlewareDao {
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
 
-            //falta configurar la llamada para borrar la entidad
+            //TODO: falta configurar la llamada para borrar la entidad
 
             getDataBase().executeTransaction(transaction);
 
@@ -478,45 +480,49 @@ public class WalletPublisherMiddlewareDao {
 
 
     /**
+     * Construct a InformationPublishedComponentImpl whit the values of the table record pass
+     * by parameter
      *
      * @param record with values from the table
-     * @return ComponentPublishedMiddlewareInformation setters the values from table
+     * @return InformationPublishedComponentImpl setters the values from table
      */
-    private ComponentPublishedMiddlewareInformation constructFrom(DatabaseTableRecord record){
+    private InformationPublishedComponentImpl constructFrom(DatabaseTableRecord record){
 
-        ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation = new ComponentPublishedMiddlewareInformation();
+        InformationPublishedComponentImpl informationPublishedComponent = new InformationPublishedComponentImpl();
 
         try {
 
-            walletPublishedMiddlewareInformation.setId(UUID.fromString(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_ID_COLUMN_NAME));
-            walletPublishedMiddlewareInformation.setWalletFactoryProjectId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_ID_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setWalletFactoryProjectName(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_NAME_COLUMN_NAME));
-            walletPublishedMiddlewareInformation.setWalletId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WALLET_ID_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setCatalogId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_CATALOG_ID_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setStoreId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STORE_ID_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setScreenSize(ScreenSize.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_SCREEN_SIZE_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setInitialWalletVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_INITIAL_WALLET_VERSION_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setFinalWalletVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FINAL_WALLET_VERSION_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setInitialPlatformVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_INITIAL_PLATFORM_VERSION_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setFinalPlatformVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FINAL_PLATFORM_VERSION_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setType(ComponentPublishedInformationType.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_COMPONENT_TYPE_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_VERSION_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setVersionTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_VERSION_TIMESTAMP_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setStatus(ComponentPublishedInformationStatus.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STATUS_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setStatusTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STATUS_TIMESTAMP_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setPublicationTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_PUBLICATION_TIMESTAMP_COLUMN_NAME)));
-            walletPublishedMiddlewareInformation.setPublisherId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_PUBLISHER_ID_COLUMN_NAME)));
+            informationPublishedComponent.setId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME)));
+            informationPublishedComponent.setDescriptorFactoryProjectId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DFP_ID_COLUMN_NAME)));
+            informationPublishedComponent.setDescriptorFactoryProjectName(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DFP_NAME_COLUMN_NAME));
+            informationPublishedComponent.setType(DescriptorFactoryProjectType.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME)));
+            informationPublishedComponent.setDescriptions(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME));
+
+
+            //TODO: Deserializar el objeto image xml
+            informationPublishedComponent.setIconImg(new ImageImpl());
+            informationPublishedComponent.setMainScreenShotImg(new ImageImpl());
+
+
+            informationPublishedComponent.setVideoUrl(new URL(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME)));
+            informationPublishedComponent.setStatus(ComponentPublishedInformationStatus.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME)));
+            informationPublishedComponent.setStatusTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME)));
+            informationPublishedComponent.setPublicationTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME)));
+            informationPublishedComponent.setPublisherId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_ID_COLUMN_NAME)));
 
 
         } catch (InvalidParameterException e) {
 
             //this should not happen, but if it happens return null
             return null;
+        } catch (MalformedURLException e) {
+
+            //this should not happen, but if it happens return null
+            return null;
         }
 
 
-
-        return walletPublishedMiddlewareInformation;
+        return informationPublishedComponent;
     }
 
     /**
@@ -526,7 +532,7 @@ public class WalletPublisherMiddlewareDao {
      * @param walletPublishedMiddlewareInformation the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(ComponentPublishedMiddlewareInformation walletPublishedMiddlewareInformation){
+    private DatabaseTableRecord constructFrom(InformationPublishedComponentImpl walletPublishedMiddlewareInformation){
 
         /*
          * Create the record to the entity
@@ -536,24 +542,18 @@ public class WalletPublisherMiddlewareDao {
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_ID_COLUMN_NAME, walletPublishedMiddlewareInformation.getId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_ID_COLUMN_NAME,                   walletPublishedMiddlewareInformation.getWalletFactoryProjectId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WFP_NAME_COLUMN_NAME,                 walletPublishedMiddlewareInformation.getWalletFactoryProjectName());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_WALLET_ID_COLUMN_NAME,                walletPublishedMiddlewareInformation.getWalletId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_CATALOG_ID_COLUMN_NAME,               walletPublishedMiddlewareInformation.getCatalogId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STORE_ID_COLUMN_NAME,                 walletPublishedMiddlewareInformation.getStoreId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_SCREEN_SIZE_COLUMN_NAME,              walletPublishedMiddlewareInformation.getScreenSize().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_INITIAL_WALLET_VERSION_COLUMN_NAME,   walletPublishedMiddlewareInformation.getInitialWalletVersion().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FINAL_WALLET_VERSION_COLUMN_NAME,     walletPublishedMiddlewareInformation.getFinalWalletVersion().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_INITIAL_PLATFORM_VERSION_COLUMN_NAME, walletPublishedMiddlewareInformation.getInitialPlatformVersion().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_FINAL_PLATFORM_VERSION_COLUMN_NAME,   walletPublishedMiddlewareInformation.getFinalPlatformVersion().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_COMPONENT_TYPE_COLUMN_NAME,           walletPublishedMiddlewareInformation.getType().getCode());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_VERSION_COLUMN_NAME,                  walletPublishedMiddlewareInformation.getVersion().toString());
-        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_VERSION_TIMESTAMP_COLUMN_NAME,        walletPublishedMiddlewareInformation.getVersionTimestamp().getTime());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STATUS_COLUMN_NAME,                   walletPublishedMiddlewareInformation.getStatus().getCode());
-        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_STATUS_TIMESTAMP_COLUMN_NAME,         walletPublishedMiddlewareInformation.getStatusTimestamp().getTime());
-        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_PUBLICATION_TIMESTAMP_COLUMN_NAME,    walletPublishedMiddlewareInformation.getPublicationTimestamp().getTime());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_PUBLISHED_INFORMATION_PUBLISHER_ID_COLUMN_NAME,             walletPublishedMiddlewareInformation.getPublisherId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME,                    walletPublishedMiddlewareInformation.getId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DFP_ID_COLUMN_NAME,                walletPublishedMiddlewareInformation.getDescriptorFactoryProjectId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DFP_NAME_COLUMN_NAME,              walletPublishedMiddlewareInformation.getDescriptorFactoryProjectName());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME,        walletPublishedMiddlewareInformation.getType().getCode());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DESCRIPTIONS_COLUMN_NAME,          walletPublishedMiddlewareInformation.getDescriptions());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME,              walletPublishedMiddlewareInformation.getIconImg().getFileId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME,  walletPublishedMiddlewareInformation.getMainScreenShotImg().getFileId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME,             walletPublishedMiddlewareInformation.getVideoUrl().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME,                walletPublishedMiddlewareInformation.getStatus().getCode());
+        entityRecord.setLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME, walletPublishedMiddlewareInformation.getStatusTimestamp().getTime());
+        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME,   walletPublishedMiddlewareInformation.getPublicationTimestamp().getTime());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_ID_COLUMN_NAME,          walletPublishedMiddlewareInformation.getPublisherId().toString());
 
         /*
          * return the new table record
