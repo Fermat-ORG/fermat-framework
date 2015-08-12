@@ -19,6 +19,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develope
 
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.WalletLanguageMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.WalletManagerMiddlewarePluginRoot;
@@ -83,7 +84,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 53;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 54;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -870,6 +871,17 @@ public class PluginsIdentityManager {
             }
         }
 
+        if (pluginIndex == 0) {
+            try {
+                IntraUserIdentityPluginRoot tryType;
+                tryType = (IntraUserIdentityPluginRoot) plugin;
+                pluginIndex = 53;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
         if (pluginIndex > 0) {
 
             return pluginIds.get(pluginIndex);
