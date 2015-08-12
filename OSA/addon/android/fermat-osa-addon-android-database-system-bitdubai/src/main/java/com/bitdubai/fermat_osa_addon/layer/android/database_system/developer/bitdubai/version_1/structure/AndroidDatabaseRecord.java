@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseVariable;
@@ -284,6 +285,20 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         DatabaseRecord record = new AndroidRecord();
 
         record.setName(columnName);
+        values.add(record);
+    }
+
+    @Override
+    public void setStateValue(String columnName, FactoryProjectState state) {
+        if(values == null)
+            values = new ArrayList<DatabaseRecord>();
+
+        DatabaseRecord record = new AndroidRecord();
+
+        record.setName(columnName);
+        record.setValue(state.toString());
+        // Set the field as modified to take in method after update
+        record.setChange(true);
         values.add(record);
     }
 

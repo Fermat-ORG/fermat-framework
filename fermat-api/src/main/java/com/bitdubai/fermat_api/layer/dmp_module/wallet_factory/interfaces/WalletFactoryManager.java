@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
@@ -45,11 +46,12 @@ public interface WalletFactoryManager {
 
     public FactoryProject getProject(String name)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
+    public List<FactoryProject> getClosedProjects(FactoryProjectState state)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
+
+    public FactoryProject closeProject(String name)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
+
     public Skin getSkin(UUID skinId) throws CantGetSkinException;
 
     public Language getLanguage(UUID languageId) throws CantGetLanguageException;
-
-
-
 
 }
