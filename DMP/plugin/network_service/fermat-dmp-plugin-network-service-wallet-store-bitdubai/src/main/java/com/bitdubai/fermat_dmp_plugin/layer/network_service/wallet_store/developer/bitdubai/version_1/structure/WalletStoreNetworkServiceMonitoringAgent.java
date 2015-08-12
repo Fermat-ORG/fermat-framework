@@ -1,5 +1,6 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -93,7 +94,6 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
     public void start() throws CantStartAgentException {
         Thread thread = new Thread(new Monitoring());
         runner = true;
-
         thread.start();
     }
 
