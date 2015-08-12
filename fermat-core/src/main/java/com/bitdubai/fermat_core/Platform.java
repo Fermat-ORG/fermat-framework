@@ -1204,7 +1204,7 @@ public class Platform  {
             /*
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
-            plugin.setId(pluginsIdentityManager.getPluginId(plugin));
+            plugin.setId(pluginsIdentityManager.getPluginId(plugin, descriptor));
 
             /*
              * Start the plugin service
