@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.database;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -42,6 +42,7 @@ public class WalletNavigationStructureMiddlewareDatabaseFactory implements Deals
 
     /**
      * Create the database
+     * Modified by Manuel Perez on 11/08/2015
      *
      * @param ownerId      the owner id
      * @param databaseName the database name
@@ -57,24 +58,27 @@ public class WalletNavigationStructureMiddlewareDatabaseFactory implements Deals
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
 
-
-        /**
-         * Next, I will add the needed tables.
-         */
-
-
-
             /**
              * Create Wallet Manager Wallets Table table.
              */
             DatabaseTableFactory table = null;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
+            table=databaseFactory.newTableFactory(ownerId, WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
+            table.addColumn(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY, DatabaseDataType.STRING, 36, Boolean.FALSE);
+
+            table.addIndex(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN);
+
             databaseFactory.createTable(ownerId, table);
 
-        } catch (CantCreateTableException cantCreateTableException) {
+        }catch (CantCreateTableException cantCreateTableException) {
+
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-        } catch (InvalidOwnerIdException invalidOwnerId) {
+
+        }catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.

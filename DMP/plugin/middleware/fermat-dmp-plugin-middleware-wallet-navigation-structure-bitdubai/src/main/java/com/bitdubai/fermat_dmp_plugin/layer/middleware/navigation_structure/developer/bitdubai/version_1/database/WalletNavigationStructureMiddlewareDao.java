@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.database;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database;
 
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
