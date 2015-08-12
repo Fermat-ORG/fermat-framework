@@ -12,12 +12,18 @@
     android:paddingTop="7dip"
     android:gravity="center"
     android:id="@+id/swipeRefreshLayout">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/balance_container"
+        >
 
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:clickable="true">
+    android:clickable="true"
+    >
 
 
     <LinearLayout
@@ -92,16 +98,23 @@
                 />
 
             </GridLayout>
-        
+
         <Space
             android:layout_width="fill_parent"
             android:layout_height="30dp" />
 
-        <include layout="@layout/wallet_manager_transaction_view"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"/>
+
+        <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomComponentMati
+            android:id="@+id/custonMati"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomComponentMati>
+        <!--<include layout="@layout/wallet_manager_transaction_view"-->
+            <!--android:paddingTop="5dp"-->
+            <!--android:paddingBottom="5dp"/>-->
 
     </LinearLayout>
 </ScrollView>
-
+</RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
