@@ -5,9 +5,11 @@ import android.support.v4.app.Fragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.CreateContactFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.MoneyRequestFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
@@ -29,7 +31,7 @@ public class WalletFragmentFactory implements FragmentFactory{
      */
 
     @Override
-    public Fragment getFragment(String code,WalletSession walletSession) throws FragmentNotFoundException {
+    public Fragment getFragment(String code,WalletSession walletSession,WalletSettingsManager walletSettingsManager) throws FragmentNotFoundException {
 
         android.support.v4.app.Fragment currentFragment = null;
 
@@ -39,7 +41,7 @@ public class WalletFragmentFactory implements FragmentFactory{
              * Executing fragments for BITCOIN REQUESTED.
              */
             case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
-                currentFragment =  BalanceFragment.newInstance(0, walletSession);
+                currentFragment =  BalanceFragment.newInstance(0, walletSession,walletSettingsManager);
                 break;
             case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                 currentFragment = ReceiveFragment.newInstance(0, walletSession);
@@ -56,6 +58,9 @@ public class WalletFragmentFactory implements FragmentFactory{
                 break;
             case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS:
                 currentFragment =  CreateContactFragment.newInstance(0, walletSession);
+                break;
+            case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST:
+                currentFragment = MoneyRequestFragment.newInstance(0,walletSession,walletSettingsManager);
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found",new Exception(),code,"Swith failed");
