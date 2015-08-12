@@ -1,11 +1,13 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantExportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 
 import java.util.List;
@@ -15,8 +17,9 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletFactoryManager</code>
  * indicates the functionality of a WalletFactoryManager
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -25,7 +28,7 @@ public interface WalletFactoryManager {
     /**
      * This method creates an empty project
      *
-     * @param name is the name of the new project
+     * @param name       is the name of the new project
      * @param walletType is the walletType of the new project
      * @return DescriptorFactoryProject instance of the new project
      * @throws CantCreateWalletFactoryProjectException i case i can't create the project
@@ -34,10 +37,11 @@ public interface WalletFactoryManager {
 
     /**
      * Throw this method you can import a wallet factory project from the device which we are working with
-     *
+     * <p/>
      * The method insert in database the correspondan information and copy the necessary structure
-     *
+     * <p/>
      * TODO see the params i need to send to to this
+     *
      * @param newName
      * @param resourcesId
      * @param navigationStructureId
@@ -46,9 +50,14 @@ public interface WalletFactoryManager {
     void importWalletFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException;
 
     /**
+<<<<<<< HEAD
+     * Imports a Wallet Factory Project from an extern repository maybe git, maybe another maybe both
+     * <p/>
+=======
      * Modified by Manuel Perez on 07/08/2015
      * Imports a Wallet Factory Project from an external repository, maybe git, maybe another maybe both
      *
+>>>>>>> 269fafaea07e4433bdd309ef494b29af7aeb2e2f
      * The method insert in database the correspondan information and copy the necessary structure
      *
      * @param user
@@ -78,8 +87,13 @@ public interface WalletFactoryManager {
      * @param name of the project to search
      * @return the DescriptorFactoryProject instance
      * @throws CantGetWalletFactoryProjectException if something goes wrong
-     * @throws ProjectNotFoundException if the project cannot be found
+     * @throws ProjectNotFoundException             if the project cannot be found
      */
     DescriptorFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
+    List<DescriptorFactoryProject> getClosedProjects(FactoryProjectState state) throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
+
+    void closeProject(String name) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException;
+
+    void setProjectState(UUID projectId, FactoryProjectState state) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException;
 }
