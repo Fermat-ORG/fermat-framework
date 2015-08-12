@@ -16,6 +16,10 @@ public interface FiatOverCryptoWalletTransaction {
 
     public UUID getTransactionId();
 
+    public boolean comesFromARequest();
+
+    public UUID getRequestId();
+
     public String getTransactionHash();
 
     public CryptoAddress getAddressFrom();

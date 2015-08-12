@@ -247,11 +247,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public ScreenSize getScreenSize() {
-                return skin.getScreenSize();
-            }
-
-            @Override
             public Version getVersion() {
                 return skin.getVersion();
             }
@@ -305,6 +300,12 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             public boolean isDefault() {
                 return skin.isDefault();
             }
+
+            @Override
+            public ScreenSize getScreenSize() {
+                return skin.getScreenSize();
+            }
+
         };
 
         return walletStoreSkin;

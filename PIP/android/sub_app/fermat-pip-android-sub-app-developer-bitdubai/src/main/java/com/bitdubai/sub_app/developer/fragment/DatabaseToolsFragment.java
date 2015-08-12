@@ -119,23 +119,20 @@ public class DatabaseToolsFragment extends Fragment{
 
             for (int i = 0; i < plugins.size(); i++) {
                 Resource item = new Resource();
-
                 item.picture = "plugin";
-                item.resource = plugins.get(i).toString().toLowerCase().replace("_", " ");
+                item.label = plugins.get(i).toString().toLowerCase().replace("_", " ");
+                item.resource = plugins.get(i).getKey();
                 item.type=Resource.TYPE_PLUGIN;
                 mlist.add(item);
-                //}
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
-
                 item.picture = "addon";
+                item.label = addons.get(i).toString().replace("_", " ");
                 item.resource = addons.get(i).getCode();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
-                //}
             }
-
 
             Configuration config = getResources().getConfiguration();
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -143,20 +140,14 @@ public class DatabaseToolsFragment extends Fragment{
             } else {
                 gridView.setNumColumns(3);
             }
-            //@SuppressWarnings("unchecked")
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
-            _adpatrer.notifyDataSetChanged();
-            gridView.setAdapter(_adpatrer);
-
-            //listView.setAdapter(adapter);
+            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
+            adapter.notifyDataSetChanged();
+            gridView.setAdapter(adapter);
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
-
-        //LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
-        //l.addView(gridView);
 
         return rootView;
     }
@@ -215,8 +206,7 @@ public class DatabaseToolsFragment extends Fragment{
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.resource);
-            // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.companyTextView.setText(item.label);
 
 
             switch (item.picture) {

@@ -28,7 +28,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantPublishItemInCatalogException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.InvalidResultReturnedByDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem;
@@ -38,8 +37,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develop
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.WalletCatalog;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -124,8 +123,8 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    private WalletStoreNetworkServiceDatabaseDao getDatabaseDAO() throws CantExecuteDatabaseOperationException {
-        WalletStoreNetworkServiceDatabaseDao dbDAO = new WalletStoreNetworkServiceDatabaseDao(errorManager, logManager, pluginDatabaseSystem, pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
+    private WalletStoreCatalogDatabaseDao getDatabaseDAO() throws CantExecuteDatabaseOperationException {
+        WalletStoreCatalogDatabaseDao dbDAO = new WalletStoreCatalogDatabaseDao(errorManager, logManager, pluginDatabaseSystem, pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
         return dbDAO;
     }
 

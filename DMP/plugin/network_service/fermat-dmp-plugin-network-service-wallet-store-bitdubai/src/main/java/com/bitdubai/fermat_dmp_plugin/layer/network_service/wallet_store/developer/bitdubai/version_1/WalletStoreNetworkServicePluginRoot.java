@@ -50,10 +50,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreNetworkServiceMonitoringAgent;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService.WalletStoreNetworkServiceMonitoringAgent;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -62,9 +64,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.DealsWithPlatformInfo;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -91,7 +91,7 @@ import java.util.UUID;
  * * * * * 
  */
 
-public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, DealsWithPlatformInfo, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,WalletStoreManager, Service, NetworkService, LogManagerForDevelopers,Plugin {
+public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDevelopers, DealsWithPlatformInfo, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithCommunicationLayerManager,  WalletStoreManager, Service, NetworkService, LogManagerForDevelopers,Plugin {
     /**
      * WalletStoreNetworkServicePluginRoot member variables
      */
@@ -105,6 +105,15 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     @Override
     public void setPlatformInfoManager(PlatformInfoManager platformInfoManager) {
         this.platformInfoManager = platformInfoManager;
+    }
+
+    /**
+     * DealsWithCommunicationLayerManager interface variables and implementation
+     */
+    CommunicationLayerManager communicationLayerManager;
+    @Override
+    public void setCommunicationLayerManager(CommunicationLayerManager communicationLayerManager) {
+        this.communicationLayerManager = communicationLayerManager;
     }
 
     /**
@@ -267,7 +276,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
          */
         try {
 
-            database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
+            database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             try {
@@ -296,7 +305,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         /**
          * I will initialize the Monitoring agent
          */
-        agent = new WalletStoreNetworkServiceMonitoringAgent(eventManager, errorManager, logManager, pluginDatabaseSystem, pluginId);
+        agent = new WalletStoreNetworkServiceMonitoringAgent(eventManager, errorManager, logManager, pluginDatabaseSystem, pluginId, communicationLayerManager);
         try {
             agent.start();
         } catch (Exception e) {
@@ -320,8 +329,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      * @throws CantCreateDatabaseException
      */
     private void createWalletStoreNetworkServiceDatabase() throws CantCreateDatabaseException {
-        WalletStoreNetworkServiceDatabaseFactory walletStoreNetworkServiceDatabaseFactory = new WalletStoreNetworkServiceDatabaseFactory(errorManager, logManager, pluginDatabaseSystem);
-        database = walletStoreNetworkServiceDatabaseFactory.createDatabase(pluginId, WalletStoreNetworkServiceDatabaseConstants.WALLET_STORE_DATABASE);
+        WalletStoreCatalogDatabaseFactory walletStoreCatalogDatabaseFactory = new WalletStoreCatalogDatabaseFactory(errorManager, logManager, pluginDatabaseSystem);
+        database = walletStoreCatalogDatabaseFactory.createDatabase(pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
     }
 
     @Override
@@ -439,8 +448,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServiceDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServiceDatabaseDao");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreCatalogDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreCatalogDatabaseDao");
         /**
          * I return the values.
          */
