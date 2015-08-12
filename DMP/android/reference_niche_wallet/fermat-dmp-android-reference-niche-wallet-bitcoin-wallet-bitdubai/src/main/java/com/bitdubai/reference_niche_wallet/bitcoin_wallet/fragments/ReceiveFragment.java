@@ -121,9 +121,23 @@ public class ReceiveFragment extends Fragment {
     private ErrorManager errorManager;
 
 
+    private WalletContact walletContact;
+
+    public boolean fromContacts = false;
+
+
     public static ReceiveFragment newInstance(int position,WalletSession walletSession) {
         ReceiveFragment f = new ReceiveFragment();
         f.setWalletSession(walletSession);
+        Bundle b = new Bundle();
+        b.putInt(ARG_POSITION, position);
+        f.setArguments(b);
+        return f;
+    }
+    public static ReceiveFragment newInstance(int position,WalletContact walletContact,WalletSession walletSession) {
+        ReceiveFragment f = new ReceiveFragment();
+        f.setWalletSession(walletSession);
+        f.setWalletContact(walletContact);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -389,5 +403,9 @@ public class ReceiveFragment extends Fragment {
 
     public void setWalletSession(WalletSession walletSession) {
         this.walletSession = walletSession;
+    }
+
+    public void setWalletContact(WalletContact walletContact) {
+        this.walletContact = walletContact;
     }
 }

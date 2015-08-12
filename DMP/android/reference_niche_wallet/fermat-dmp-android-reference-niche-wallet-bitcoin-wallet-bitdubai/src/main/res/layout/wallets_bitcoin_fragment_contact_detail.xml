@@ -128,11 +128,13 @@
                         android:background="#9b200a21" />
 
                     <ImageView
+                        android:id="@+id/action_receive"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
-                        android:src="@drawable/wallet_2" />
+                        android:src="@drawable/wallet_2"
+                        />
 
                     <View
                         android:layout_width="1dp"
@@ -146,6 +148,7 @@
                         android:background="#9b200a21" />
 
                     <ImageView
+                        android:id="@+id/action_money_request"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="8dp"

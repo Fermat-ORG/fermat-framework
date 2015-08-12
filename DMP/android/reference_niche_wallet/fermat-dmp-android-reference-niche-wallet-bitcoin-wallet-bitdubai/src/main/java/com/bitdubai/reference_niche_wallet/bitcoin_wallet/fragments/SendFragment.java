@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.hardware.input.InputManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -224,7 +223,7 @@ public class SendFragment extends Fragment {
                     public void onClick(View view) {
                         getActivity().getSupportFragmentManager()
                                 .beginTransaction()
-                                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+                                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
                                 .replace(R.id.fragment_container2, ContactsFragment.newInstance(0, walletSession))
                                 .commit();
                     }
