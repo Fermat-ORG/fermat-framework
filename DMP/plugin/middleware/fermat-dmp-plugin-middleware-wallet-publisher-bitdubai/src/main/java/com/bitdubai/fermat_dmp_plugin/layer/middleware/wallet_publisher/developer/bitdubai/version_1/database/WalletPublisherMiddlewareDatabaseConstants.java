@@ -32,10 +32,12 @@ public class WalletPublisherMiddlewareDatabaseConstants {
     static final String INFORMATION_PUBLISHED_COMPONENTS_DFP_ID_COLUMN_NAME = "dfp_id";
     static final String INFORMATION_PUBLISHED_COMPONENTS_DFP_NAME_COLUMN_NAME = "dfp_name";
     static final String INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME = "component_type";
-    static final String INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME = "status";
-    static final String INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME = "status_timestamp";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_DESCRIPTIONS_COLUMN_NAME = "descriptions";
     static final String INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME = "icon_img";
     static final String INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME = "main_screen_shot_img";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME = "video_url";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME = "status";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME = "status_timestamp";
     static final String INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME = "publication_timestamp";
     static final String INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_ID_COLUMN_NAME = "publisher_id";
 
@@ -65,10 +67,11 @@ public class WalletPublisherMiddlewareDatabaseConstants {
      */
     static final String SCREENS_SHOTS_COMPONENTS_TABLE_NAME = "screens_shots_components";
 
-    static final String SCREENS_SHOTS_COMPONENTS_ID_COLUMN_NAME = "id";
     static final String SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME = "file_id";
     static final String SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME = "component_id";
 
-    static final String SCREENS_SHOTS_COMPONENTS_FIRST_KEY_COLUMN = "id";
+    static final String SCREENS_SHOTS_COMPONENTS_FIRST_KEY_COLUMN = "file_id";
+
+
 
 }

@@ -1,5 +1,5 @@
 /*
- * @#ComponentVersionsDetails.java - 2015
+ * @#ComponentVersionDetail.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -16,8 +16,8 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponent</code> define
- * the static information about the detail version published component.
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetail</code> define
+ * the static information about the Component Version Detail
  * <p/>
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
@@ -26,7 +26,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface ComponentVersionsDetails {
+public interface ComponentVersionDetail {
 
     /**
      * Get the id

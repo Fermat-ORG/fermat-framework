@@ -329,19 +329,6 @@ public class WalletFactoryMiddlewarePluginRoot implements DatabaseManagerForDeve
         }
     }
 
-
-    @Override
-    public List<WalletFactoryProject> getAllWalletFactoryProjectsClosed() throws CantGetWalletFactoryProjectsException {
-        try {
-            // TODO ONLY CLOSED PROJECTS
-            String developerPublicKey = "";
-            return walletFactoryMiddlewareProjectDao.findAll(developerPublicKey);
-        } catch (CantGetWalletFactoryProjectsException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
-        }
-    }
-
     @Override
     public DescriptorFactoryProject getWalletFactoryProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
         try {

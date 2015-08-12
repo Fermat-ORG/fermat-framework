@@ -9,21 +9,15 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ImageData</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.Image</code> this wrap a image
+ * to be persist into the file system
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 11/08/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface ImageData {
-
-    /**
-     * Get the id
-     *
-     * @return UUID
-     */
-    public UUID getId();
+public interface Image {
 
     /**
      * Get the FileId
@@ -38,4 +32,11 @@ public interface ImageData {
      * @return UUID
      */
     public UUID getComponentId();
+
+    /**
+     * Get the data
+     *
+     * @return byte []
+     */
+    public byte [] getData();
 }

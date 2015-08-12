@@ -7,12 +7,12 @@
 
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 
+import java.net.URL;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -56,6 +56,33 @@ public interface InformationPublishedComponent {
      */
     public DescriptorFactoryProjectType getType();
 
+    /**
+     * Get the Descriptions
+     *
+     * @return String
+     */
+    public String getDescriptions();
+
+    /**
+     * Get the icon image
+     *
+     * @return Image
+     */
+    public Image getIconImg();
+
+    /**
+     * Get the main screen shot image
+     *
+     * @return Image
+     */
+    public Image getMainScreenShotImg();
+
+    /**
+     * Get the video url
+     *
+     * @return URL
+     */
+    public URL getVideoUrl();
 
     /**
      * Get the Status
@@ -84,5 +111,19 @@ public interface InformationPublishedComponent {
      * @return UUID
      */
     public UUID getPublisherId();
+
+    /**
+     * Get the Component Versions Details List
+     *
+     * @return List<ComponentVersionDetail>
+     */
+    public List<ComponentVersionDetail> getComponentVersionDetailList();
+
+    /**
+     * Get the Screens Shots Component List
+     *
+     * @return List<Image>
+     */
+    public List<Image> getScreensShotsComponentList();
 
 }

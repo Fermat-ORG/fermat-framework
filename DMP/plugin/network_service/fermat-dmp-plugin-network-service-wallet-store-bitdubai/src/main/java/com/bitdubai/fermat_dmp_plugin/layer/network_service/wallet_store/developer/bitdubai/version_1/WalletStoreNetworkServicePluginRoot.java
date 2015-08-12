@@ -554,7 +554,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
         developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
         developer.setName("Rodrigo");
-        developer.setid(UUID.randomUUID());
+        developer.setId(UUID.randomUUID());
         developer.setPublicKey("SDSDSDSDasdojasdiuahsdkasjdaskdasdk");
         detailedCatalogItem.setDeveloper(developer);
 
