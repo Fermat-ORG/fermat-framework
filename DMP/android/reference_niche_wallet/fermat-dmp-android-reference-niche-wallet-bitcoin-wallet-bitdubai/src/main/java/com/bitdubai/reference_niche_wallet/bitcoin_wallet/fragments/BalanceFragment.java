@@ -5,12 +5,15 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -31,6 +35,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
@@ -76,8 +82,12 @@ public class BalanceFragment extends Fragment {
      * Wallet Session
      */
 
-    ReferenceWalletSession referenceWalletSession;
-    
+    private ReferenceWalletSession referenceWalletSession;
+
+    /**
+     * Preference setting
+     */
+    WalletSettingsManager walletSettingsManager;
 
 
     /**
@@ -87,9 +97,10 @@ public class BalanceFragment extends Fragment {
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession) {
+    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession,WalletSettingsManager walletSettingsManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
         balanceFragment.setReferenceWalletSession((ReferenceWalletSession) walletSession);
+        balanceFragment.setWalletSettingManager(walletSettingsManager);
         return balanceFragment;
     }
 
@@ -173,6 +184,8 @@ public class BalanceFragment extends Fragment {
         txtViewBalance.setTypeface(tf);
         txtViewBalance.setText(formatBalanceString(balanceAvailable, ShowMoneyType.BITCOIN.getCode()));
 
+        ViewCompat.setElevation(txtViewBalance, 30);
+
         txtViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,6 +194,7 @@ public class BalanceFragment extends Fragment {
                 //refreshBalance();
             }
         });
+
 
 
         // Loading a setting SwipeRefreshLayout
@@ -293,6 +307,10 @@ public class BalanceFragment extends Fragment {
      */
     public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
+    }
+
+    public void setWalletSettingManager(WalletSettingsManager walletSettingManager) {
+        this.walletSettingsManager = walletSettingManager;
     }
 }
 
