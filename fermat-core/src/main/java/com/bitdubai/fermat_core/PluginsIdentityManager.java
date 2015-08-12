@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
 
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.WalletSkinMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.WalletStoreMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1.WalletStatisticsNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.bank_notes_wallet.developer.bitdubai.version_1.BankNotesWalletNicheWalletTypePluginRoot;
@@ -81,7 +83,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 51;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 53;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -631,7 +633,7 @@ public class PluginsIdentityManager {
             try {
                 //CryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
                 // tryType = (CryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
-                pluginIndex = 33;
+              //  pluginIndex = 33;
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.
@@ -668,7 +670,7 @@ public class PluginsIdentityManager {
             try {
                 //  FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
                 //  tryType = (FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
-                pluginIndex = 36;
+              //  pluginIndex = 36;
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.
@@ -844,6 +846,29 @@ public class PluginsIdentityManager {
             }
         }
 
+        if (pluginIndex == 0) {
+            try {
+                IntraUserModulePluginRoot tryType;
+                tryType = (IntraUserModulePluginRoot) plugin;
+                pluginIndex = 51;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                IntraUserActorPluginRoot tryType;
+                tryType = (IntraUserActorPluginRoot) plugin;
+                pluginIndex = 52;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
 
         if (pluginIndex > 0) {
 
