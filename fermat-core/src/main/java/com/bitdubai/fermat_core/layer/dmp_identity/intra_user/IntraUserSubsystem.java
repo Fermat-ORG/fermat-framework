@@ -1,28 +1,25 @@
-package com.bitdubai.fermat_core.layer.pip_user.intra_user;
+package com.bitdubai.fermat_core.layer.dmp_identity.intra_user;
 
 import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_pip_api.layer.pip_user.CantStartSubsystemException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.UserSubsystem;
+import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.IdentitySubsystem;
+
+
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 22/02/15.
  */
-public class IntraUserSubsystem implements UserSubsystem {
+public class IntraUserSubsystem implements IdentitySubsystem {
 
-    Addon addon;
-
-
-
-
+    Plugin plugin;
 
     @Override
-    public Addon getAddon() {
-        return addon;
+    public Plugin getPlugin() {
+        return plugin;
     }
-
-
-
 
 
     @Override
@@ -33,8 +30,8 @@ public class IntraUserSubsystem implements UserSubsystem {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            addon =  developerBitDubai.getAddon();
+            PluginDeveloper developer = new DeveloperBitDubai();
+            plugin =  developer.getPlugin();
         }
         catch (Exception e)
         {
