@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -217,6 +218,11 @@ public class DeveloperGetterTest {
                         }
 
                         @Override
+                        public void setStateValue(String columnName, FactoryProjectState state) {
+
+                        }
+
+                        @Override
                         public List<DatabaseRecord> getValues() {
                             DatabaseRecord databaseRecord = new DatabaseRecord() {
                                 @Override
@@ -342,6 +348,11 @@ public class DeveloperGetterTest {
 
                         @Override
                         public void setSelectField(String columnName) {
+
+                        }
+
+                        @Override
+                        public void setStateValue(String columnName, FactoryProjectState state) {
 
                         }
 
@@ -473,6 +484,11 @@ public class DeveloperGetterTest {
 
                 @Override
                 public void setUUIDFilter(String columnName, UUID value, DatabaseFilterType type) {
+
+                }
+
+                @Override
+                public void setStateFilter(String columName, FactoryProjectState factoryProjectState, DatabaseFilterType type) {
 
                 }
 

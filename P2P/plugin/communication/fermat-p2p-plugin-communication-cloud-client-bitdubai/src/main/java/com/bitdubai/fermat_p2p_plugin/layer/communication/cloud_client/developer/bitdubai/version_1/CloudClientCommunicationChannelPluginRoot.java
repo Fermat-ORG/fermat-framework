@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
  */
 public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
-    public static final String HOST_CLOUD_SERVER = "192.168.1.6";
+    public static final String HOST_CLOUD_SERVER = "137.117.108.244";
 
     public static final int PORT_CLOUD_SERVER = 9090;
 
@@ -352,7 +352,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     @Override
     public void start() {
 
-		if (true) //skip connect to the server
+		if (false) //skip connect to the server
 			return;
 
         System.out.println("Starting plugin CloudClientCommunicationChannelPluginRoot");
@@ -368,23 +368,29 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	String clientKey = AsymmectricCryptography.createPrivateKey();
 		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
 
-		try{
 
-    		cloudClient.start();
+		// I will start the connection in a new Thread to avoid interrupting the platform start up
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					cloudClient.start();
+				} catch(CommunicationException ex){
+					StringBuilder contextBuilder = new StringBuilder();
+					contextBuilder.append("Client Public Key: " + cloudClient.getIdentityPublicKey());
+					contextBuilder.append(FermatException.CONTEXT_CONTENT_SEPARATOR);
+					contextBuilder.append("Server Address: " + cloudClient.getCommunicationChannelAddress().toString());
 
-    		this.serviceStatus = ServiceStatus.STARTED;
-    	} catch(CommunicationException ex){
-			StringBuilder contextBuilder = new StringBuilder();
-			contextBuilder.append("Client Public Key: " + cloudClient.getIdentityPublicKey());
-			contextBuilder.append(FermatException.CONTEXT_CONTENT_SEPARATOR);
-			contextBuilder.append("Server Address: " + cloudClient.getCommunicationChannelAddress().toString());
+					CantStartPluginException pluginException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, ex, contextBuilder.toString(), "The Cloud Client Failed To Initialize");
 
-			CantStartPluginException pluginException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, ex, contextBuilder.toString(), "The Cloud Client Failed To Initialize");
+					errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CLOUD_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginException);
+					stop();
+				}
+			}
+		}).start();
 
-			this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CLOUD_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginException);
 
-			stop();
-    	}
+		this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
