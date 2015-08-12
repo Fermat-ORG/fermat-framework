@@ -114,6 +114,7 @@ public class WalletNavigationStructureMiddlewareDao {
             throw new CantListNavigationStructuresException(CantLoadTableToMemoryException.DEFAULT_MESSAGE,exception,"Trying to load the database to memory","Check the cause");
 
         }
+        return null;
 
     }
 

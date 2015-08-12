@@ -17,16 +17,21 @@ public interface WalletNavigationStructure {
 
     //Modified by Manuel Perez on 12/08/2015
     //This interface is based on com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet
-    public String getPublicKey();
 
-    public Activity getActivity(Activities activities);
-
-    public Activity getStartActivity();
-
-    public void setStartActivity(Activities activity);
+    public Activity getActivity();
 
     public Activity getLastActivity();
 
+    public String getPublicKey();
+
+    public Activity getStartActivity();
+
+    public void setActivity(Activity activity, String type);
+
+    public void setLastActivity(Activity activity, String type);
+
     public void setPublicKey(String publicKey);
+
+    public void setStartActivity(Activity activity, String type);
 
 }
