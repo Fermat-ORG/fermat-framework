@@ -4,6 +4,8 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
  * Created by Matias Furszyfer on 2015.08.12..
  */
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -184,6 +187,8 @@ public class MoneyRequestFragment extends Fragment {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
 
 
+
+
             // Get ListView object from xml
             listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
             swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -269,6 +274,7 @@ public class MoneyRequestFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
+
         return rootView;
     }
 

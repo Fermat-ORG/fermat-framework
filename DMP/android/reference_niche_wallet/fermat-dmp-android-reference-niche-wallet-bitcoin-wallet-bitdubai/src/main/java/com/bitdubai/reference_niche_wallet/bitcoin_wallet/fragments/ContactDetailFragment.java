@@ -154,13 +154,16 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         }else if(view.getId() == R.id.action_receive && walletContact != null){
             ReceiveFragment fragment = ReceiveFragment.newInstance(0,walletContact,walletSession);
             fragment.fromContacts = true;
-            getActivity().getSupportFragmentManager()
+            /*getActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
                     .commit();
+                    */
+            //CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
+            //cdd.show();
         }else if(view.getId() == R.id.action_money_request && walletContact != null){
             MoneyRequestFragment fragment = MoneyRequestFragment.newInstance(0,walletContact,walletSettingsManager,walletSession);
             fragment.fromContacts = true;
