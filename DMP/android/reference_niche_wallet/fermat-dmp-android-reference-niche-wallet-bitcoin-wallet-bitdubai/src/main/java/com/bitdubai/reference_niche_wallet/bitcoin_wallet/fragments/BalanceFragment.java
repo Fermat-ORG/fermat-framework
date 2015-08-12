@@ -12,7 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.support.v4.app.FragmentTransaction;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -29,12 +29,16 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.Balan
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomComponentMati;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomComponentsObjects;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.ListModel;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -47,7 +51,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
- * Created by Natalia on 02/06/2015.
+ * Created by Matias Furszyfer on 02/06/2015.
  */
 public class BalanceFragment extends Fragment {
 
@@ -216,41 +220,73 @@ public class BalanceFragment extends Fragment {
         });
 
 
+        List<CryptoWalletTransaction> cryptoWalletTransactions=null;
+        try {
+            cryptoWalletTransactions= cryptoWallet.getTransactions(5, 0, wallet_id);
+        } catch (CantGetTransactionsException e) {
+            e.printStackTrace();
+        }
 
-        //testing
-        /******** Take some data in Arraylist ( CustomListViewValuesArr ) ***********/
-        setListData();
+        List<CustomComponentsObjects> lstData = new ArrayList<CustomComponentsObjects>();
+
+        //when we have transactions
+        /*
+        for (CryptoWalletTransaction cryptoWalletTransaction:cryptoWalletTransactions){
+            lstData.add(new ListModel(cryptoWalletTransaction.getInvolvedActorName(), cryptoWalletTransaction.getBitcoinWalletTransaction().getMemo(),"person1"));
+        }
+        */
+
+        // testing purpose
+        lstData.add(new ListModel("Matias Furszyfer", "Buy one glass of water 10btc","person1"));
+        lstData.add(new ListModel("Juan Lwon", "Sell a house in 200 btc","person12"));
+        lstData.add(new ListModel("George Gonzalez", "Buy Venezuela in 3 btc","person12"));
+        lstData.add(new ListModel("Fer Lewn", "Paid 30 btc","person12"));
 
         Resources res =getResources();
-        list = (ListView)rootView.findViewById( R.id.list );  // List defined in XML ( See Below )
 
-        /**************** Create Custom Adapter *********/
-        adapter=new CustomAdapter( getActivity(), CustomListViewValuesArr,res );
-        list.setAdapter(adapter);
+        CustomComponentMati custonMati=(CustomComponentMati)rootView.findViewById(R.id.custonMati);
+
+        custonMati.setResources(res);
+
+
+        custonMati.setDataList(lstData);
+
+        custonMati.setLastTransactionsEvent(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionsFragment transactionsFragment = new TransactionsFragment();
+                transactionsFragment.setWalletSession(referenceWalletSession);
+
+                FragmentTransaction FT = getFragmentManager().beginTransaction();
+                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                FT.replace(R.id.swipeRefreshLayout, transactionsFragment);
+                FT.addToBackStack(null);
+                FT.attach(transactionsFragment);
+                FT.show(transactionsFragment);
+                FT.commit();
+            }
+        });
+        custonMati.setSeeAlltransactionsEvent(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionsFragment transactionsFragment = new TransactionsFragment();
+                transactionsFragment.setWalletSession(referenceWalletSession);
+
+                FragmentTransaction FT = getFragmentManager().beginTransaction();
+                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                FT.replace(R.id.balance_container, transactionsFragment);
+                FT.addToBackStack(null);
+                FT.attach(transactionsFragment);
+                FT.show(transactionsFragment);
+                FT.commit();
+            }
+        });
+
 
 
         return rootView;
     }
 
-
-    /****** Function to set data in ArrayList *************/
-    public void setListData()
-    {
-
-        for (int i = 0; i < 4; i++) {
-
-            final ListModel sched = new ListModel();
-
-            /******* Firstly take data in model object ******/
-            sched.setTitleTransaction("Transaction "+i);
-            sched.setDetailTransaction("Detalle" + i);
-            sched.setImageUrl("person1.png");
-
-            /******** Take Model Object in ArrayList **********/
-            CustomListViewValuesArr.add( sched);
-        }
-
-    }
 
     /*
         Method to change the balance type
