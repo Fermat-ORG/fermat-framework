@@ -106,9 +106,8 @@ public class CustomComponentMati extends LinearLayout {
             public void onClick(View view) {
                 listPosition++;
 
-                linearLayout_container.startAnimation(animationNext);
-
                 if( lstData.size()>listPosition){
+                    linearLayout_container.startAnimation(animationNext);
                     load(listPosition);
                 }else {
                     listPosition--;
@@ -121,9 +120,9 @@ public class CustomComponentMati extends LinearLayout {
             public void onClick(View view) {
                 listPosition--;
 
-                linearLayout_container.startAnimation(animationPrev);
 
                 if (listPosition > -1) {
+                    linearLayout_container.startAnimation(animationPrev);
                     load(listPosition);
                 } else {
                     listPosition++;
@@ -135,7 +134,6 @@ public class CustomComponentMati extends LinearLayout {
         linearLayout_container = (LinearLayout) findViewById(R.id.linearLayout_container);
         animationNext =    AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
         animationPrev = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
-        linearLayout_container.setAnimation(animationNext);
 
     }
 
