@@ -7,15 +7,20 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,6 +46,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 
+import org.apache.commons.collections.list.CursorableLinkedList;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.validateAddress;
@@ -49,7 +58,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by natalia on 19/06/15.
  * Modifed by Ronner Velazquez on 07/08/2015
  */
-public class CreateContactFragment extends Fragment{
+public class CreateContactFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
@@ -71,9 +80,14 @@ public class CreateContactFragment extends Fragment{
     String alias = "";
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_LOAD_IMAGE = 2;
+    static final int CONTEXT_MENU_CAMERA = 1;
+    static final int CONTEXT_MENU_GALLERY = 2;
+    static final int CONTEXT_MENU_DELETE = 3;
 
     boolean detailsVisible = false;
     boolean detailsSeparated = false;
+    Bitmap contactPicture;
     /**
      * Fragment style
      */
@@ -173,11 +187,12 @@ public class CreateContactFragment extends Fragment{
             });
 
             //take_picture_button definition
-            takePictureButton = (ImageView)rootView.findViewById(R.id.take_picture_btn);
+            takePictureButton = (ImageView) rootView.findViewById(R.id.take_picture_btn);
             takePictureButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dispatchTakePictureIntent();
+                    registerForContextMenu(takePictureButton);
+                    getActivity().openContextMenu(takePictureButton);
                 }
             });
 
@@ -439,23 +454,74 @@ public class CreateContactFragment extends Fragment{
         editContactName.setText(contactName.trim());
         detailsSeparated = false;
     }
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            //takePictureButton.setImageBitmap(getRoundedShape(imageBitmap));
-            int mHeight = takePictureButton.getHeight();
-            int mWidth = takePictureButton.getWidth();
-            takePictureButton.setBackground(new RoundedDrawable(imageBitmap,takePictureButton));
+        if (resultCode == Activity.RESULT_OK) {
+            Bitmap imageBitmap = null;
+            switch (requestCode) {
+                case REQUEST_IMAGE_CAPTURE:
+                    Bundle extras = data.getExtras();
+                    imageBitmap = (Bitmap) extras.get("data");
+                    break;
+                case REQUEST_LOAD_IMAGE:
+                    Uri selectedImage = data.getData();
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                        imageBitmap = Bitmap.createScaledBitmap(imageBitmap,takePictureButton.getWidth(),takePictureButton.getHeight(),true);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+            takePictureButton.setBackground(new RoundedDrawable(imageBitmap, takePictureButton));
             takePictureButton.setImageDrawable(null);
+            contactPicture = imageBitmap;
         }
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Select contact picture");
+        menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
+        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
+        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+        if(contactPicture!=null)
+            menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete");
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case CONTEXT_MENU_CAMERA:
+                dispatchTakePictureIntent();
+                break;
+            case CONTEXT_MENU_GALLERY:
+                loadImageFromGallery();
+                break;
+            case CONTEXT_MENU_DELETE:
+                takePictureButton.setBackground(getActivity().getResources().
+                        getDrawable(R.drawable.rounded_button_green_selector));
+                takePictureButton.setImageResource(R.drawable.ic_camera_green);
+                contactPicture = null;
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    private void loadImageFromGallery() {
+        Intent intentLoad = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intentLoad, REQUEST_LOAD_IMAGE);
+    }
 }
