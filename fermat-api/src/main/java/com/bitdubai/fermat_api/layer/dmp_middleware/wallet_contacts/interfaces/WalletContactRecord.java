@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetContactProfileImageException;
 
 import java.util.UUID;
 
@@ -15,6 +16,22 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 public interface WalletContactRecord {
+
+    /*****************************************************
+     * TODO: The actor id will be changed from UUID to an
+     *       String representing the public key of the actur
+     *       The same will happen with the wallet id
+     *       On the other hand, the contact id can stay as
+     *       a UUID
+     *****************************************************/
+
+    /**
+     * The method <code>getContactProfileImage</code> returns the contact profile image
+     *
+     * @return the profile image
+     * @throws CantGetContactProfileImageException
+     */
+    byte[] getContactProfileImage() throws CantGetContactProfileImageException;
 
     /**
      * Return the contactId

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetContactProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
@@ -81,6 +82,12 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
         this.receivedCryptoAddress = receivedCryptoAddress;
         this.walletId = walletId;
 
+    }
+
+    // TODO: IMPLEMENT THIS METHOD
+    @Override
+    public byte[] getContactProfileImage() throws CantGetContactProfileImageException {
+        return new byte[0];
     }
 
     /**

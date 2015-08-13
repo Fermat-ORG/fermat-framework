@@ -97,6 +97,7 @@ public interface MoneyRequestManager {
 
     /**
      * The method <code>rejectRequest</code> informs the rejection of a request to its creator.
+     *
      * @param requestId  The identifier of the request to reject
      * @throws FailedToRejectTheRequestException
      */
