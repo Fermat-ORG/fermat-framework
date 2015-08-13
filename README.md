@@ -8,12 +8,12 @@ As we firmly believe that the next decade will witness crypto currencies going m
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. 
 
-We believe in people with passion who are crazy enough to think they can change the world. We believe we are going to change the world.
+We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change the world.
 
 How will we do it?
 ---------------------
 
-The short answer is: we are not going to stop until we reach our goal.
+By not stopping until we reach our goal.
 
 While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
 
@@ -230,7 +230,7 @@ Future path of development: Active (First release with very limited features sch
 
 
 
-I want to help with the code!
+I want to join the team!
 ------------------------------------------------
 
 Awesome! _There are lots of ways you can help._ First read 
