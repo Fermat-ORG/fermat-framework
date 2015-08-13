@@ -66,6 +66,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -596,7 +597,17 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             SubApp subApp = getAppRuntimeMiddleware().getHomeScreen();
             Activity activity = subApp.getLastActivity();
 
-            for (FermatFragments key : activity.getFragments().keySet()) {
+
+
+            //por ahora va esto
+            WalletManager manager = getWalletManager();
+            WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
+            fragments.add(walletDesktopFragment);
+
+            fragments.add(android.support.v4.app.Fragment.instantiate(this, com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment.class.getName()));
+
+
+            /*for (FermatFragments key : activity.getFragments().keySet()) {
                 Fragment fragment = activity.getFragments().get(key);
 
                 switch (fragment.getType()) {
@@ -622,10 +633,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         break;
 
                 }
-            }
+            }*/
 
-            fragments.add(0, fragments.get(1));
-            fragments.remove(2);
+//            fragments.add(0, fragments.get(1));
+//            fragments.remove(2);
 
             /**
              * this pagerAdapter is the screenPagerAdapter with no tabs

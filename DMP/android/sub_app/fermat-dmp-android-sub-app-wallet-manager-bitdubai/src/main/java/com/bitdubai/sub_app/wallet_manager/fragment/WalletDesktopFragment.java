@@ -13,11 +13,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
@@ -82,15 +84,14 @@ public class WalletDesktopFragment extends Fragment {
         gridView.setAdapter(adapter);
 
 
-     /*    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Intent intent;
-                intent = new Intent(getActivity(), WalletActivity.class);
-                startActivity(intent);
+                Toast.makeText(getActivity(),"mati",Toast.LENGTH_SHORT).show();
                 return ;
             }
-        });*/
+        });
+
 
 
         return gridView;
