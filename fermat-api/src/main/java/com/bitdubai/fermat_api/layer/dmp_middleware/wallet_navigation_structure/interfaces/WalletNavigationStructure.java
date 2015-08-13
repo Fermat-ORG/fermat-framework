@@ -26,12 +26,12 @@ public interface WalletNavigationStructure {
 
     public Activity getStartActivity();
 
-    public void setActivity(Activity activity, String type);
+    public void setActivity(Activity activity, Activities type);
 
-    public void setLastActivity(Activity activity, String type);
+    public void setLastActivity(Activity activity, Activities type);
 
     public void setPublicKey(String publicKey);
 
-    public void setStartActivity(Activity activity, String type);
+    public void setStartActivity(Activity activity, Activities type);
 
 }
