@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
@@ -43,9 +43,9 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
     private InformationPublishedComponentDao informationPublishedComponentDao;
 
     /**
-     * Represent the walletFactoryManager
+     * Represent the walletDescriptorFactoryProjectManager
      */
-    private WalletFactoryManager walletFactoryManager;
+    private WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager;
 
     /**
      * Represent the walletStoreManager
@@ -58,14 +58,22 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      *
      * @param dataBase
      * @param walletStoreManager
-     * @param walletFactoryManager
+     * @param walletDescriptorFactoryProjectManager
      * @param logManager
      */
-    public WalletPublisherMiddlewareManagerImpl(Database dataBase, WalletStoreManager walletStoreManager,  WalletFactoryManager walletFactoryManager, LogManager logManager) {
+    public WalletPublisherMiddlewareManagerImpl(Database dataBase, WalletStoreManager walletStoreManager,  WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager, LogManager logManager) {
         this.walletStoreManager = walletStoreManager;
+    /**
+<<<<<<< HEAD Revisar este caso Franklin marcano
+        this.walletPublisherMiddlewareDao = new WalletPublisherMiddlewareDao(dataBase);
+        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
+=======
+     */
         this.informationPublishedComponentDao = new InformationPublishedComponentDao(dataBase);
-        this.walletFactoryManager = walletFactoryManager;
+        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
+
         this.logManager = logManager;
+
     }
 
 

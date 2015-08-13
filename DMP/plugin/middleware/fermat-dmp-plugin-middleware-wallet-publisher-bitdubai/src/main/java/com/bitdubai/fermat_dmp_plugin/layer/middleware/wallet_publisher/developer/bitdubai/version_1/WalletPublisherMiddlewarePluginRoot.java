@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.DealsWithWalletLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguageManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
@@ -91,9 +91,9 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * Represent the walletFactoryManager
+     * Represent the walletDescriptorFactoryProjectManager
      */
-    private WalletFactoryManager walletFactoryManager;
+    private WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager;
 
     /**
      * Represent the walletStoreManager
@@ -162,7 +162,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
         if (logManager                                == null ||
                 errorManager                          == null ||
                     errorManager                      == null ||
-                        walletFactoryManager          == null ||
+                        walletDescriptorFactoryProjectManager == null ||
                             developerIdentityManager  == null ||
                                 walletLanguageManager == null ||
                                     walletSkinManager == null ||
@@ -175,7 +175,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("errorManager: " + errorManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("walletFactoryManager: " + walletFactoryManager);
+            contextBuffer.append("walletDescriptorFactoryProjectManager: " + walletDescriptorFactoryProjectManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("walletStoreManager: " + walletStoreManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -277,7 +277,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
             /*
              * Initialize the manager
              */
-            walletPublisherMiddlewareManagerImpl = new WalletPublisherMiddlewareManagerImpl(dataBase, walletStoreManager,  walletFactoryManager, logManager);
+            walletPublisherMiddlewareManagerImpl = new WalletPublisherMiddlewareManagerImpl(dataBase, walletStoreManager, walletDescriptorFactoryProjectManager, logManager);
 
         } catch (CantInitializeWalletPublisherMiddlewareDatabaseException exception) {
 
@@ -399,11 +399,11 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
 
     /**
      * (non-Javadoc)
-     * @see DealsWithWalletFactory#setWalletFactoryManager(WalletFactoryManager)
+     * @see DealsWithWalletFactory#setWalletDescriptorFactoryProjectManager(WalletDescriptorFactoryProjectManager)
      */
     @Override
-    public void setWalletFactoryManager(WalletFactoryManager walletFactoryManager) {
-        this.walletFactoryManager = walletFactoryManager;
+    public void setWalletDescriptorFactoryProjectManager(WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager) {
+        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
     }
 
     /**
