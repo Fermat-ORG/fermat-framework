@@ -51,14 +51,8 @@ public interface WalletDescriptorFactoryProjectManager {
     void importDescriptorFactoryProjectFromDevice(String newName, UUID resourcesId, UUID navigationStructureId) throws CantImportWalletFactoryProjectException;
 
     /**
-<<<<<<< HEAD
      * Imports a Wallet Factory Project from an extern repository maybe git, maybe another maybe both
-     * <p/>
-=======
      * Modified by Manuel Perez on 07/08/2015
-     * Imports a Wallet Factory Project from an external repository, maybe git, maybe another maybe both
-     *
->>>>>>> 269fafaea07e4433bdd309ef494b29af7aeb2e2f
      * The method insert in database the correspondan information and copy the necessary structure
      *
      * @param user
