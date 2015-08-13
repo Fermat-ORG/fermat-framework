@@ -30,9 +30,6 @@ pmd {
 }
 
 dependencies {
-
-
-
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.52'
 
     compile('com.thoughtworks.xstream:xstream:1.4.7') {

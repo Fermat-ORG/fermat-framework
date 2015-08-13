@@ -4,7 +4,24 @@ Readme
 Welcome to Fermat! 
 -------------------
 
-Fermat is an open-source P2P digital wallet platform that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect that a strong consumer demand for digital wallets will inevitably emerge as paper money is going to disappear. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto while others fiat over crypto) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. The use of crypto-currencies is fraught with challenges that should be addressed in order to enable the general population to adopt digital money based on crypto-currency technology.
+
+We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. We believe that people around the world are different from each other, not only do they speak different languages, but also they have different cultural and educational backgrounds. Interests, expectations, tolerance to changes, needs, political views, ages, professions, etc, are all different; and a strong segmentation with different levels of abstraction is needed to reach every kind of people around the world.
+
+We believe in people with passion who are crazy enough to think they can change the world.
+
+While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
+
+How can we isolate ordinary people from the perceived complexity? How can we use the collective intelligence of the developer community? How can we reuse the entire current infrastructure already in place? How do we integrate legacy financial institutions in a way they feel comfortable? How do we integrate merchants, retailers and brands of all sizes in a clever way?
+
+The answers to each of these questions are addressed within the Fermat platform.
+
+What is Fermat? 
+---------------------
+
+Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
+
+Technically Fermat is an open-source P2P digital wallet platform that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
 What makes Fermat different from other wallet platforms or services?
 
@@ -12,9 +29,7 @@ What makes Fermat different from other wallet platforms or services?
 
 * **Fermat runs on end users' devices.** That enables users to hold their own money eliminating the need to trust a third party. 
 
-* **Fermat segments the world population and brings a custom tailored solution for each segment.** Any developer can create niche wallets for a particular group of people. Brands can easily create their own wallet for their followers.
-
-* **Fermat uses crypto currency networks as public value transport networks.** Fermat users cant choose to move their money arround the world easily and almost for free via these public value transport networks or the legacy financial system networks as well. 
+* **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
 
 * **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. 
 
@@ -30,7 +45,7 @@ Mission / purpose:
 ------------------------------------------------
 
 
-> Empower every single people in the world with the appropiate tools to hold and move their money in a digital format in an efficient, secure an private way.
+> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allowing them to choose which currency to use, regardless of the place they live or where they were born.
 
 
 Fermat principles:
@@ -116,7 +131,7 @@ Fermat principles:
 
 
 * Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both Fermat developers and the Fermat user base.
-* Any alt-coin community could write Plugins to enable their crypto currency within the Fermat wallet ecosystem.
+* Any alt-coin community could write plugins to enable their crypto currency within the Fermat wallet ecosystem.
 
 
 ##### 11. Fermat should be inclusive with the current financial system.
@@ -151,7 +166,7 @@ Fermat principles:
 ##### 15. Fermat should be the finacially most efficient way to move or spend the end user's money. 
 
 
-* Cryto Vault for multiple wallets concept.
+* Crypto Vault for multiple wallets concept.
 * Financial AI Agents concept.
 
 
@@ -181,7 +196,7 @@ community of developers building plugins and niche wallets that add all sorts of
 See the [Fermat Plugins Registry](https://github.com/bitDubai/fermat/fermat-documentation)
 for a list of available Plugins. 
 
-See the [Fermat Plugins Niche Wallets Registry](https://github.com/bitDubai/fermat/fermat-documentation)
+See the [Fermat Niche Wallets Registry](https://github.com/bitDubai/fermat/fermat-documentation)
 for a list of Niche Wallets. 
 
 For installation instructions and running from the source code, see the [documentation](https://github.com/bitDubai/fermat/fermat-documentation).

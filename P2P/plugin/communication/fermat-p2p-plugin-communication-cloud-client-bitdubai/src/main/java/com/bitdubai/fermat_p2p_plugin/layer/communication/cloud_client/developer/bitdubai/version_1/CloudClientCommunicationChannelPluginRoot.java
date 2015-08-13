@@ -374,7 +374,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     @Override
     public void start() {
 
-		if (false) //skip connect to the server
+		if (true) //skip connect to the server
 			return;
 
         System.out.println("Starting plugin CloudClientCommunicationChannelPluginRoot");
