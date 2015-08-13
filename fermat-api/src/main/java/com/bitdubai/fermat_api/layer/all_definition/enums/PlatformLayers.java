@@ -45,6 +45,7 @@ public enum PlatformLayers {
     BITDUBAI_ACTOR_LAYER                 ("BACTL",               Developers.BITDUBAI),
     BITDUBAI_PIP_ACTOR_LAYER             ("BPACTL",               Developers.BITDUBAI),
     BITDUBAI_IDENTITY_LAYER              ("BIDL",            Developers.BITDUBAI),
+    BITDUBAI_PIP_IDENTITY_LAYER          ("BPIDL",            Developers.BITDUBAI),
     BITDUBAI_PIP_MODULE_LAYER            ("BPIPML",          Developers.BITDUBAI),
     BITDUBAI_REQUEST_LAYER               ("BRL",             Developers.BITDUBAI),
     BITDUBAI_PIP_NETWORK_SERVICE_LAYER   ("BPIPNSL", Developers.BITDUBAI);

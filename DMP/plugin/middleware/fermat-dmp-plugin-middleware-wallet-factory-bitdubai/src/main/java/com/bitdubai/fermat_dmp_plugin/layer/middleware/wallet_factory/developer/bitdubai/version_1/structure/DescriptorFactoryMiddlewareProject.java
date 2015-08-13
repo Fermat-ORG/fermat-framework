@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
 
 import java.util.UUID;
@@ -30,6 +31,8 @@ public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProj
 
     private String path;
 
+    private FactoryProjectState state;
+
     private String publisherIdentityKey;
 
     private DescriptorFactoryProjectType descriptorFactoryProjectType;
@@ -42,20 +45,22 @@ public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProj
     public DescriptorFactoryMiddlewareProject() {
     }
 
-    public DescriptorFactoryMiddlewareProject(String name, String developerPublicKey, Wallets type, String path) {
+    public DescriptorFactoryMiddlewareProject(String name, String developerPublicKey, Wallets type, String path, FactoryProjectState state) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.developerPublicKey = developerPublicKey;
         this.type = type;
         this.path = path;
+        this.state = state;
     }
 
-    public DescriptorFactoryMiddlewareProject(UUID id, String name, String developerPublicKey, Wallets type, String path) {
+    public DescriptorFactoryMiddlewareProject(UUID id, String name, String developerPublicKey, Wallets type, String path, FactoryProjectState state) {
         this.id = id;
         this.name = name;
         this.developerPublicKey = developerPublicKey;
         this.type = type;
         this.path = path;
+        this.state = state;
     }
 
     /**
@@ -94,7 +99,10 @@ public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProj
 
     public String getPath() { return path + name; }
 
+    public FactoryProjectState getState() {
+        return state;
+    }
+
     @Override
     public String getDescription() {return description;}
-
 }
