@@ -126,6 +126,11 @@ public class ProjectsFragment extends FermatFragment {
             return null;
         }
 
+        @Override
+        public FactoryProjectState getState() {
+            return null;
+        }
+
         public String getDetail() {
             return detail;
         }

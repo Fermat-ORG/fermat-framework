@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 
 import java.util.UUID;
 
@@ -37,6 +38,8 @@ public interface DescriptorFactoryProject {
     Wallets getWallestType();
 
     String getPath();
+
+    FactoryProjectState getState();
 
     DescriptorFactoryProjectType getDescriptorProjectType();
 
