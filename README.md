@@ -16,7 +16,7 @@ How will we do it?
 While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
 
 * How can we isolate ordinary people from the perceived complexity? 
-* How can we use the collective intelligence of the open source developer community? 
+* How can we use the collective intelligence of the developer community? 
 * How can we reuse the entire current infrastructure already in place? 
 * How do we integrate legacy financial institutions in a way they feel comfortable? 
 * How do we integrate merchants, retailers and brands of all sizes in a clever way?
@@ -32,9 +32,9 @@ Technically Fermat is an open-source P2P digital wallet platform that runs on mu
 
 What makes Fermat different from other wallet platforms or services?
 
-* **Fermat is P2P.** That makes it censorship resistent and difficult to be attacked.
+* **Fermat is P2P.** This makes it censorship resistent and difficult to be attacked.
 
-* **Fermat runs on end users' devices.** That enables users to hold their own money eliminating the need to trust a third party. 
+* **Fermat runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party. 
 
 * **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
 
