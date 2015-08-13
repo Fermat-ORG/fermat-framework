@@ -31,7 +31,7 @@ import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUse
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher;
@@ -61,11 +61,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFi
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_core.layer.dmp_request.RequestServiceLayer;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.DealsWithToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.designer.DealsWithDesigner;
@@ -73,9 +71,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_identity.designer.interfaces.Design
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DealsWithDeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.DealsWithTranslator;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.exceptions.CantCreateNewTranslatorException;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.exceptions.CantGetUserTranslatorIdentitiesException;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.interfaces.Translator;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.interfaces.TranslatorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DeveloperModuleManager;
@@ -1141,7 +1136,7 @@ public class Platform  {
             }
 
             if (plugin instanceof DealsWithWalletFactory) {
-                ((DealsWithWalletFactory) plugin).setWalletFactoryManager((WalletFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE));
+                ((DealsWithWalletFactory) plugin).setWalletDescriptorFactoryProjectManager((WalletDescriptorFactoryProjectManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE));
             }
 
             if (plugin instanceof DealsWithWalletManager) {
