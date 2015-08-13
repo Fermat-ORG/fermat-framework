@@ -13,6 +13,8 @@ We believe in people with passion who are crazy enough to think they can change 
 How will we do it?
 ---------------------
 
+The short answer is: we are not going to stop until we reach our goal.
+
 While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
 
 * How can we isolate ordinary people from the perceived complexity? 
