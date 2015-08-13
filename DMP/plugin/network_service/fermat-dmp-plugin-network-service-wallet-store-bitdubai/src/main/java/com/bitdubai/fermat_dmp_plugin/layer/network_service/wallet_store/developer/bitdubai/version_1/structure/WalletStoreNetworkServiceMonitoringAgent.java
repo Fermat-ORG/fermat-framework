@@ -1,5 +1,7 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -13,6 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseDao;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -91,9 +95,19 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
 
     @Override
     public void start() throws CantStartAgentException {
+        // I register this networkservice.
+        //ECCKeyPair keyPair = new ECCKeyPair();
+        //try {
+        //    communicationLayerManager.registerNetworkService(NetworkServices.WALLET_STORE, keyPair.getPublicKey());
+       //     communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels.CLOUD, NetworkServices.WALLET_STORE, null);
+        //    System.out.println("Remote networkservices: " + communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.WALLET_STORE));
+       // } catch (CommunicationException e) {
+        //    e.printStackTrace();
+       // }
+
+
         Thread thread = new Thread(new Monitoring());
         runner = true;
-
         thread.start();
     }
 

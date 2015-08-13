@@ -1,5 +1,5 @@
 /*
- * @#ComponentPublishedInformation.java - 2015
+ * @#ComponentVersionDetail.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -9,15 +9,15 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationType;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation</code> define
- * the static information about a published component.
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetail</code> define
+ * the static information about the Component Version Detail
  * <p/>
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
@@ -26,7 +26,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface ComponentPublishedInformation {
+public interface ComponentVersionDetail {
 
     /**
      * Get the id
@@ -36,39 +36,11 @@ public interface ComponentPublishedInformation {
     public UUID getId();
 
     /**
-     * Get the Wallet Factory Project Id
-     *
-     * @return UUID
-     */
-    public UUID getWalletFactoryProjectId();
-
-    /**
-     * Get the Wallet Factory Project Name
-     *
-     * @return String
-     */
-    public String getWalletFactoryProjectName();
-
-    /**
-     * Get the Wallet Id
-     *
-     * @return UUID
-     */
-    public UUID getWalletId();
-
-    /**
      * Get the Catalog Id
      *
      * @return UUID
      */
     public UUID getCatalogId();
-
-    /**
-     * Get the Store Id
-     *
-     * @return UUID
-     */
-    public UUID getStoreId();
 
     /**
      * Get the Screen Size
@@ -106,13 +78,6 @@ public interface ComponentPublishedInformation {
     public Version getFinalPlatformVersion();
 
     /**
-     * Get the Type
-     *
-     * @return ComponentPublishedInformationType
-     */
-    public ComponentPublishedInformationType getType();
-
-    /**
      * Get the Version
      *
      * @return Version
@@ -127,31 +92,17 @@ public interface ComponentPublishedInformation {
     public Timestamp getVersionTimestamp();
 
     /**
-     * Get the Status
-     *
-     * @return ComponentPublishedInformationStatus
-     */
-    public ComponentPublishedInformationStatus getStatus();
-
-    /**
-     * Get the Status Timestamp
-     *
-     * @return Timestamp
-     */
-    public Timestamp getStatusTimestamp();
-
-    /**
-     * Get the Publication Timestamp
-     *
-     * @return Timestamp
-     */
-    public Timestamp getPublicationTimestamp();
-
-    /**
-     * Get the Publisher Id
+     * Get the Component Id
      *
      * @return UUID
      */
-    public UUID getPublisherId();
+    public UUID getComponentId();
+
+    /**
+     * Get the observations
+     *
+     * @return String
+     */
+    public String getObservations();
 
 }

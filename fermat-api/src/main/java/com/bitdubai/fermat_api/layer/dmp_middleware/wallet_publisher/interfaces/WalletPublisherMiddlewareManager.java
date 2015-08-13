@@ -28,34 +28,34 @@ public interface WalletPublisherMiddlewareManager {
     /**
      * This method returns the information stored about the all published component
      *
-     * @return Map<String,List<ComponentPublishedInformation>>  A map where each entry corresponds to a component name and the list of versions published with their information
+     * @return List<InformationPublishedComponent>
      * @throws CantGetPublishedComponentInformationException
      */
-    public Map<String,List<ComponentPublishedInformation>> getPublishedComponents() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedComponents() throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published wallets
      *
-     * @return Map<String,List<ComponentPublishedInformation>>  A map where each entry corresponds to a wallet name and the list of versions published with their information
+     * @return List<InformationPublishedComponent>
      * @throws CantGetPublishedComponentInformationException
      */
-    public Map<String,List<ComponentPublishedInformation>> getPublishedWallets() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedWallets() throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published skins
      *
-     * @return Map<String,List<ComponentPublishedInformation>>  A map where each entry corresponds to a skin name and the list of versions published with their information
+     * @return List<InformationPublishedComponent>
      * @throws CantGetPublishedComponentInformationException
      */
-    public Map<String,List<ComponentPublishedInformation>> getPublishedSkins() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedSkins() throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published language
      *
-     * @return Map<String,List<ComponentPublishedInformation>>  A map where each entry corresponds to a language name and the list of versions published with their information
+     * @return List<InformationPublishedComponent>
      * @throws CantGetPublishedComponentInformationException
      */
-    public Map<String,List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedLanguages() throws CantGetPublishedComponentInformationException;
 
     /**
      * This method publishes the skin factory project <code>SkinDescriptorFactoryProject</code> with the skin information in

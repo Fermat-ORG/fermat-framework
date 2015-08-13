@@ -20,15 +20,15 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.WalletFactoryProjectSkinManager</code>
- * indicates the functionality of a WalletFactoryProjectSkinManager
+ * The interface <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.interfaces.SkinDescriptorFactoryProjectManager</code>
+ * indicates the functionality of a SkinDescriptorFactoryProjectManager
  * <p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/07/15.
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WalletFactoryProjectSkinManager {
+public interface SkinDescriptorFactoryProjectManager {
 
     /**
      * returns a list of instances of WalletFactoryProjectSkins related to the proposal we are working with
