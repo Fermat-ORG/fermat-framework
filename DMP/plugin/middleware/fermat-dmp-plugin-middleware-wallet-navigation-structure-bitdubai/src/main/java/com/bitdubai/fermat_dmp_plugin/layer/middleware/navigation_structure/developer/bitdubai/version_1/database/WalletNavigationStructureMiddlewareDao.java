@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantListNavigationStructuresException;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantInitializeWalletNavigationStructureMiddlewareDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.WalletNavigationStructureMiddleware;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,11 +98,16 @@ public class WalletNavigationStructureMiddlewareDao {
             for (DatabaseTableRecord record : records){
 
                 UUID id = record.getUUIDValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY);
+                Activities navigationStructureMiddlewareActivity=Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY));
                 Activities startActivity= Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY));
                 Activities lastActivity=Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY));
                 //Map<Activities, Activity> activities=new HashMap<>();
                 //activities.put(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY, startActivity);
-                WalletNavigationStructure walletNavigationStructure=new WalletNavigationStructure();
+                WalletNavigationStructureMiddleware walletNavigationStructureMiddleware=new WalletNavigationStructureMiddleware(id.toString());
+                Activity walletNavigationStructureMiddlewareActivity=new Activity();
+                Activity walletNavigationStructureMiddlewareStartActivity=new Activity();
+                Activity walletNavigationStructureMiddlewareLastActivity=new Activity();
+                walletNavigationStructureMiddleware.setActivity(walletNavigationStructureMiddlewareActivity, navigationStructureMiddlewareActivity);
 
             }
 
@@ -114,7 +121,7 @@ public class WalletNavigationStructureMiddlewareDao {
             throw new CantListNavigationStructuresException(CantLoadTableToMemoryException.DEFAULT_MESSAGE,exception,"Trying to load the database to memory","Check the cause");
 
         }
-        return null;
+        //return null;
 
     }
 
