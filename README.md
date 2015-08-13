@@ -4,15 +4,22 @@ Readme
 Welcome to Fermat! 
 -------------------
 
-As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect that a strong consumer demand for digital wallets will inevitably emerge as paper money is going to disappear. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto while others fiat over crypto) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. The use of crypto-currencies is fraught with challenges that should be addressed in order to enable the general population to adopt digital money based on crypto-currency technology.
+As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto while others fiat over crypto) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. The use of crypto-currencies is fraught with challenges that should be addressed in order to enable the general population to adopt digital money based on crypto-currency technology.
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. We believe that people around the world are different from each other, not only do they speak different languages, but also they have different cultural and educational backgrounds. Interests, expectations, tolerance to changes, needs, political views, ages, professions, etc, are all different; and a strong segmentation with different levels of abstraction is needed to reach every kind of people around the world.
 
-We believe in people with passion who are crazy enough to think they can change the world.
+We believe in people with passion who are crazy enough to think they can change the world. We believe we are going to change the world.
+
+How will we do it?
+---------------------
 
 While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
 
-How can we isolate ordinary people from the perceived complexity? How can we use the collective intelligence of the developer community? How can we reuse the entire current infrastructure already in place? How do we integrate legacy financial institutions in a way they feel comfortable? How do we integrate merchants, retailers and brands of all sizes in a clever way?
+* How can we isolate ordinary people from the perceived complexity? 
+* How can we use the collective intelligence of the open source developer community? 
+* How can we reuse the entire current infrastructure already in place? 
+* How do we integrate legacy financial institutions in a way they feel comfortable? 
+* How do we integrate merchants, retailers and brands of all sizes in a clever way?
 
 The answers to each of these questions are addressed within the Fermat platform.
 
