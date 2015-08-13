@@ -79,6 +79,9 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLISHER_IDENTITY_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
 
             table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FIRST_KEY_COLUMN);
 

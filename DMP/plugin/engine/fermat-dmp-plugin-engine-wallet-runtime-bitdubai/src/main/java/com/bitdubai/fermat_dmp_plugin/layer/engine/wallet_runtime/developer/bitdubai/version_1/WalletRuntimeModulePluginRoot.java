@@ -111,7 +111,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     String lastWalletPublicKey;
 
     /**
-     * WalletFactoryProjectLanguageManager Interface member variables
+     * LanguageDescriptorFactoryProjectManager Interface member variables
      */
 
     private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation-structure-";
