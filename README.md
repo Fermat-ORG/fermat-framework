@@ -8,7 +8,7 @@ As we firmly believe that the next decade will witness crypto currencies going m
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. 
 
-We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change the world.
+We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world and move it forward.
 
 How will we do it?
 ---------------------
