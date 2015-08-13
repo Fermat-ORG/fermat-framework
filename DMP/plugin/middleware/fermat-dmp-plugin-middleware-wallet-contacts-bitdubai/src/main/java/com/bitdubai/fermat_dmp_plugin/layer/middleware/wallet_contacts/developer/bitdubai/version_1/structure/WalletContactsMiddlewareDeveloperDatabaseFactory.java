@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -96,6 +97,8 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
                    */
                 throw new CantInitializeWalletContactsDatabaseException(cantCreateDatabaseException.getMessage());
             }
+        } catch (Exception e) {
+            throw new CantInitializeWalletContactsDatabaseException(CantInitializeWalletContactsDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -113,23 +116,27 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
-        /**
-         * WalletContacts columns
-         */
-        List<String> walletContactsTableColumns = new ArrayList<String>();
-        walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME);
-        walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME);
-        walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME);
-        walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME);
-        walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME);
-        walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
-        walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME);
+        try {
+            /**
+             * WalletContacts columns
+             */
+            List<String> walletContactsTableColumns = new ArrayList<String>();
+            walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME);
+            walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME);
+            walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME);
+            walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME);
+            walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME);
+            walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
+            walletContactsTableColumns.add(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME);
 
-        /**
-         * walletContactsTableColumns table
-         */
-        DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME, walletContactsTableColumns);
-        tables.add(cryptoTransactionsTable);
+            /**
+             * walletContactsTableColumns table
+             */
+            DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME, walletContactsTableColumns);
+            tables.add(cryptoTransactionsTable);
+        } catch (Exception e) {
+            return tables;
+        }
 
         return tables;
     }
@@ -143,32 +150,36 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
         /**
          * I load the passed table name from the SQLite database.
          */
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+        DatabaseTable selectedTable = null;
         try {
+            selectedTable = database.getTable(developerDatabaseTable.getName());
             selectedTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            List<String> developerRow = new ArrayList<String>();
+            for (DatabaseTableRecord row : records) {
+                /**
+                 * for each row in the table list
+                 */
+                for (DatabaseRecord field : row.getValues()) {
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue().toString());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
             return returnedRecords;
-        }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+        } catch (Exception e) {
+            return returnedRecords;
         }
         /**
          * return the list of DeveloperRecords for the passed table.
