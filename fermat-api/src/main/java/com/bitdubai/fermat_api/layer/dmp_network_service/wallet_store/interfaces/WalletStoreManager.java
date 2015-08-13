@@ -35,4 +35,11 @@ public interface WalletStoreManager {
     public Developer getDeveloper(UUID developerId) throws CantGetDeveloperException;
     public Designer getDesigner(UUID designerId) throws CantGetDesignerException;
     public Translator getTranslator(UUID translatorId) throws CantGetTranslatorException;
+
+
+    /**
+     * Method returns an empty new instance of a CatalogItem
+     * @return CatalogItem
+     */
+    public CatalogItem constructEmptyCatalogItem();
 }

@@ -8,6 +8,20 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSaveProfileImageException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSolveRequestLaterException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserCancellingFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserDisconnectingFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -28,14 +42,16 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
+ * This plug-in provides the methods for the Intra Users sub app.
+ * To manage Intra User information and intra users connections
  * Created by loui on 22/02/15.
+ * Modified by Natalia Cortez on 11/08/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 
-/**
- * This plug-in manages a registry of known extra users..
- */
-
-public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem,  Plugin, Service  {
+public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, IntraUserModuleManager, Plugin, Service  {
 
 
 
@@ -77,8 +93,203 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLog
         this.errorManager = errorManager;
     }
 
+
     /**
-     * DealWithEvents Interface implementation.
+     * IntraUserModuleManager Interface implementation.
+     */
+
+
+    /**
+     * That method is used to create a new intra user
+     *
+     * @param intraUserName the name of the intra user to create
+     * @param profileImage  the profile image of the intra user to create
+     * @return the login identity generated for the said intra user.
+     * @throws CouldNotCreateIntraUserException
+     */
+    @Override
+    public IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws CouldNotCreateIntraUserException {
+        return null;
+    }
+
+    /**
+     * That method let the current logged in intra user set its profile
+     * picture.
+     * @param image the profile picture to set
+     * @throws CantSaveProfileImageException
+     */
+    @Override
+    public void setNewProfileImage(byte[] image, String intraUserPublicKey) throws CantSaveProfileImageException {
+
+    }
+
+
+    /**
+     * That method lists the login identities that can be used
+     * to log in as an Intra User for the current Device User.
+     *
+     * @return the list of identities the current Device User can use to log in
+     * @throws CantShowLoginIdentitiesException
+     */
+    @Override
+    public List<IntraUserLoginIdentity> showAvailableLoginIdentities() throws CantShowLoginIdentitiesException {
+        return null;
+    }
+
+
+    /**
+     * That method let an intra user log in
+     *
+     * @param intraUserPublicKey the public key of the intra user to log in
+     */
+    @Override
+    public void login(String intraUserPublicKey) {
+
+    }
+
+    /**
+     * That method searches for intra users that the logged in
+     * intra user could be interested to add.
+     *
+     * @return a list with information of intra users
+     * @throws CantGetIntraUsersListException
+     */
+    @Override
+    public List<IntraUserInformation> getSuggestionsToContact() throws CantGetIntraUsersListException {
+        return null;
+    }
+
+
+    /**
+     * That method gives us an interface to manage a search for a particular
+     * intra user
+     *
+     * @return a searching interface
+     */
+    @Override
+    public IntraUserSearch searchIntraUser() {
+        return null;
+    }
+
+    /**
+     * That method initialize the request of contact between
+     * two intra users.
+     *
+     * @param intraUserToAddName      The name of the intra user to add
+     * @param intraUserToAddPublicKey The public key of the intra user to add
+     * @param profileImage            The profile image that the intra user has
+     * @throws CantStartRequestException
+     */
+
+    @Override
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantStartRequestException {
+
+    }
+
+    /**
+     * That method takes the information of a connection request, accepts
+     * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
+     *
+     * @param intraUserToAddName      The name of the intra user to add
+     * @param intraUserToAddPublicKey The public key of the intra user to add
+     * @param profileImage            The profile image that the intra user has
+     * @throws CantAcceptRequestException
+     */
+    @Override
+    public void acceptIntraUser(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException {
+
+    }
+
+    /**
+     * That method marks the user information to decide its
+     * acceptance later.
+     *
+     * @param intraUserToAddName      The name of the intra user to add
+     * @param intraUserToAddPublicKey The public key of the intra user to add
+     * @param profileImage            The profile image that the intra user has
+     * @throws CantSolveRequestLaterException
+     */
+    @Override
+    public void decideAcceptanceLater(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantSolveRequestLaterException {
+
+    }
+
+    /**
+     * That method denies a conection request from other intra user
+     *
+     * @param intraUserToRejectPublicKey the public key of the user to deny its connection request
+     * @throws IntraUserConectionDenegationFailedException
+     */
+    @Override
+    public void denyConnection(String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
+
+    }
+
+    /**
+     * That method disconnect an intra user from the list managed by this
+     * plugin
+     *
+     * @param intraUserToDisconnectPublicKey the public key of the intra user to disconnect
+     * @throws IntraUserDisconnectingFailedException
+     */
+    @Override
+    public void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
+
+    }
+
+
+    /**
+     * That method cancels an intra user from the list managed by this
+     * @param intraUserToCancelPublicKey
+     * @throws IntraUserCancellingFailedException
+     */
+    @Override
+    public void cancelIntraUser(String intraUserToCancelPublicKey) throws IntraUserCancellingFailedException {
+
+    }
+
+
+    /**
+     * That method returns the list of all intra users registered by the
+     * logged in intra user
+     *
+     * @return the list of intra users connected to the logged in intra user
+     * @throws CantGetIntraUsersListException
+     */
+    @Override
+    public List<IntraUserInformation> getAllIntraUsers() throws CantGetIntraUsersListException {
+        return null;
+    }
+
+
+    /**
+     * That method returns the list of intra users waiting to be accepted
+     * or rejected by the logged in intra user
+     *
+     * @return the list of intra users waiting to be accepted or rejected by the  logged in intra user
+     * @throws CantGetIntraUsersListException
+     */
+    @Override
+    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance() throws CantGetIntraUsersListException {
+        return null;
+    }
+
+
+    /**
+     * That method list the intra users that haven't
+     * answered to a sent connection request by the current logged in intra user.
+     *
+     * @return the list of intra users that haven't answered to a sent connection request by the current
+     * logged in intra user.
+     * @throws CantGetIntraUsersListException
+     */
+    @Override
+    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance() throws CantGetIntraUsersListException {
+        return null;
+    }
+
+    /**
+     * LogManagerForDevelopers Interface implementation.
      */
 
 
@@ -91,6 +302,9 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLog
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch");
 
         /**
          * I return the values.
@@ -200,4 +414,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLog
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
+
+
 }

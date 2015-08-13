@@ -2,8 +2,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProject;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -15,7 +20,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProject {
+public class DescriptorFactoryMiddlewareProject implements WalletDescriptorFactoryProject {
 
     /**
      * Private class Attributes
@@ -30,11 +35,18 @@ public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProj
 
     private String path;
 
+    private FactoryProjectState state;
+
     private String publisherIdentityKey;
 
     private DescriptorFactoryProjectType descriptorFactoryProjectType;
 
     private String description;
+
+    private List<LanguageDescriptorFactoryProject> languageDescriptorFactoryProjectList;
+
+    private List<SkinDescriptorFactoryProject> skinDescriptorFactoryProjectList;
+
 
     /**
      * Class Constructors
@@ -42,20 +54,28 @@ public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProj
     public DescriptorFactoryMiddlewareProject() {
     }
 
-    public DescriptorFactoryMiddlewareProject(String name, String developerPublicKey, Wallets type, String path) {
+    public DescriptorFactoryMiddlewareProject(String name, String developerPublicKey, Wallets type, String path, FactoryProjectState state, String description, String publisherIdentityKey, DescriptorFactoryProjectType descriptorFactoryProjectType) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.developerPublicKey = developerPublicKey;
+        this.description = description;
+        this.publisherIdentityKey = publisherIdentityKey;
+        this.descriptorFactoryProjectType = descriptorFactoryProjectType;
         this.type = type;
         this.path = path;
+        this.state = state;
     }
 
-    public DescriptorFactoryMiddlewareProject(UUID id, String name, String developerPublicKey, Wallets type, String path) {
+    public DescriptorFactoryMiddlewareProject(UUID id, String name, String developerPublicKey, Wallets type, String path, FactoryProjectState state, String description, String publisherIdentityKey, DescriptorFactoryProjectType descriptorFactoryProjectType) {
         this.id = id;
         this.name = name;
         this.developerPublicKey = developerPublicKey;
+        this.publisherIdentityKey = publisherIdentityKey;
+        this.descriptorFactoryProjectType = descriptorFactoryProjectType;
+        this.description = description;
         this.type = type;
         this.path = path;
+        this.state = state;
     }
 
     /**
@@ -65,7 +85,7 @@ public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProj
     public UUID getId() { return id; }
 
     @Override
-    public UUID getWalletsId() {
+    public UUID getWalletId() {
         return id;
     }
 
@@ -88,13 +108,24 @@ public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProj
     public DescriptorFactoryProjectType getDescriptorProjectType() {return descriptorFactoryProjectType; }
 
     @Override
-    public Wallets getWallestType() {
+    public Wallets getWalletType() {
         return type;
     }
 
     public String getPath() { return path + name; }
 
+    public FactoryProjectState getState() {
+        return state;
+    }
+
     @Override
     public String getDescription() {return description;}
+
+    @Override
+    public List<LanguageDescriptorFactoryProject> getLanguages() {return languageDescriptorFactoryProjectList; }
+
+    @Override
+    public List<SkinDescriptorFactoryProject> getSkins() {return skinDescriptorFactoryProjectList;}
+
 
 }
