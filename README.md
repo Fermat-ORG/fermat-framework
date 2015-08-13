@@ -4,9 +4,11 @@ Readme
 Welcome to Fermat! 
 -------------------
 
-As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect that a strong consumer demand for digital wallets will inevitably emerge. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto while others fiat over crypto) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. The use of crypto-currencies is fraught with challenges that should be addressed in order to enable the general population to adopt digital money based on crypto-currency technology.
+As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect that a strong consumer demand for digital wallets will inevitably emerge as paper money is going to disappear. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto while others fiat over crypto) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. The use of crypto-currencies is fraught with challenges that should be addressed in order to enable the general population to adopt digital money based on crypto-currency technology.
 
-We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. We believe legacy financial institutions are not a problem but part of the solution as long as they embrace crypto currencies. We believe that people around the world are different from each other, not only do they speak different languages, but also they have different cultural and educational backgrounds. Interests, expectations, tolerance to changes, needs, political views, ages, professions, etc, are all different; and a strong segmentation with different levels of abstraction is needed to reach every kind of people around the world.
+We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. We believe that people around the world are different from each other, not only do they speak different languages, but also they have different cultural and educational backgrounds. Interests, expectations, tolerance to changes, needs, political views, ages, professions, etc, are all different; and a strong segmentation with different levels of abstraction is needed to reach every kind of people around the world.
+
+We believe in people with passion who are crazy enough to think they can change the world.
 
 While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
 
@@ -45,7 +47,7 @@ Mission / purpose:
 ------------------------------------------------
 
 
-> Empower every single people in the world with the appropiate tools to hold and move their money in a digital format in an efficient, secure an private way.
+> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allowing them to choose which currency to use, regardless of the place they live or where they were born.
 
 
 Fermat principles:
