@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -55,14 +57,34 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
+public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, CommunicationLayerManager, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
     public static final String HOST_CLOUD_SERVER = "137.117.108.244";
 
     public static final int PORT_CLOUD_SERVER = 9090;
 
 
-    /**
+	@Override
+	public void requestConnectionTo(NetworkServices networkServices, String remoteNetworkService) throws CommunicationException {
+
+	}
+
+	@Override
+	public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
+
+	}
+
+	@Override
+	public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationException {
+
+	}
+
+	@Override
+	public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
+		return null;
+	}
+
+	/**
      * CommunicationChannel Interface member variables.
      */
 	private CommunicationChannelAddress serverAddress;
