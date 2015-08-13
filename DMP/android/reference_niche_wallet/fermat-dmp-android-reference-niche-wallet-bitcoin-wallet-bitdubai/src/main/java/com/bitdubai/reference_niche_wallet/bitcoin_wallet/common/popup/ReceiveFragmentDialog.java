@@ -2,200 +2,217 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.Utils.GeneratorQR;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetWalletContactException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
  */
+
 public class ReceiveFragmentDialog extends Dialog implements
         View.OnClickListener {
 
 
-    private String pluginKey;
-    public Activity c;
+    /**
+     * Hardcoded wallet_id and user_id
+     */
+    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
+
+
+
+    public Activity activity;
     public Dialog d;
 
-    ListView list;
-    String[] web = {
-            "Not logging",
-            "Minimal logging",
-            "Moderate logging",
-            "Agressive logging"
-    } ;
+    /**
+     *  Deals with crypto wallet interface
+     */
 
-    List<String> lstEnum;
+    private CryptoWallet cryptoWallet;
 
-    Integer[] img ={
-            R.drawable.ic_action_accept_grey,
-            0,
-            0,
-            0
-    };
+    /**
+     * Deals with error manager interface
+     */
 
-    public ReceiveFragmentDialog(Activity a) {
+    private ErrorManager errorManager;
+
+    /**
+     *  Contact member
+     */
+    private WalletContact walletContact;
+    private String user_address_wallet = "";
+
+    /**
+     *  UI components
+     */
+    Button share_btn;
+    Button back_btn;
+    TextView txtAddress;
+    ImageView imageView_qr_code;
+
+
+    /**
+     *  QR image
+     */
+    final int width = 400;
+    final int height = 500;
+    final int colorQR = Color.BLACK;
+    final int colorBackQR = Color.WHITE;
+    /**
+     * Allow the zxing engine use the default argument for the margin variable
+     */
+    static public int MARGIN_AUTOMATIC = -1;
+
+
+    /**
+     *
+     * @param a
+     * @param cryptoWallet
+     */
+
+
+    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,WalletContact walletContact) {
         super(a);
-        this.pluginKey=pluginKey;
-        testing();
-        //loadEnumsLogger();
         // TODO Auto-generated constructor stub
-        this.c = a;
-        setLogLevelImage();
-
+        this.activity = a;
+        this.cryptoWallet=cryptoWallet;
+        this.walletContact=walletContact;
+        this.errorManager=errorManager;
     }
-
-    private void testing(){
-        lstEnum=new ArrayList<>();
-        for(int i=0;i<LogLevel.values().length;i++){
-            lstEnum.add(LogLevel.values()[i].getDisplayName());
-        }
-    }
-    private void setLogLevelImage(){
-//        if(logger.logLevel!=null) {
-//            switch (logger.logLevel) {
-//                case NOT_LOGGING:
-//                    img = new Integer[]{
-//                            1, 0, 0, 0
-//                    };
-//                    break;
-//                case MINIMAL_LOGGING:
-//                    img = new Integer[]{
-//                            0, 1, 0, 0
-//                    };
-//                    break;
-//                case MODERATE_LOGGING:
-//                    img = new Integer[]{
-//                            0, 0, 1, 0
-//                    };
-//                    break;
-//                case AGGRESSIVE_LOGGING:
-//                    img = new Integer[]{
-//                            0, 0, 0, 1
-//                    };
-//                    break;
-//            }
-//        }else{
-//            logger.logLevel= LogLevel.NOT_LOGGING;
-//        }
-    }
-
-        /*private void loadEnumsLogger(){
-            LogLevel[] enum_logLevel = LogLevel.values();
-            List<String> lstEnum = new ArrayList<String>();
-            for(int i=0;i<enum_logLevel.length;i++){
-                lstEnum.add(enum_logLevel[i].getDisplayName());
-            }
-        }
-        private void setIconSelected(){
-            if(logger!=null){
-                logger.logLevel.getCode();
-            }else{
-                //logger=new LogLevel(LogLevel.);
-            }
-
-        }*/
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpScreenComponents();
+
+        user_address_wallet= getWalletAddress(walletContact.name);
+
+        showQRCodeAndAddress();
+
+
+    }
+
+    private void setUpScreenComponents(){
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup);
 
 
+        share_btn = (Button) findViewById(R.id.share_btn);
+        back_btn = (Button) findViewById(R.id.back_btn);
+        txtAddress = (TextView) findViewById(R.id.txtAddress);
+        imageView_qr_code = (ImageView) findViewById(R.id.imageView_qr_code);
 
-//        CustomList adapter = new
-//                CustomList(c, lstEnum, img);
-//        //list = (ListView) findViewById(R.id.listView);
-//        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Toast.makeText(c, web[+position] + " activated", Toast.LENGTH_SHORT).show();
-                String item =list.getItemAtPosition(position).toString();
-//                if(item.compareTo(LogLevel.NOT_LOGGING.toString())==0) {
-//                    changeLogLevel(pluginKey, LogLevel.NOT_LOGGING, logger.classHierarchyLevels.getFullPath());
-//                    logger.logLevel = LogLevel.NOT_LOGGING;
-//                }else if (item.compareTo(LogLevel.MINIMAL_LOGGING.toString())==0){
-//                    changeLogLevel(pluginKey, LogLevel.MINIMAL_LOGGING, logger.classHierarchyLevels.getFullPath());
-//                    logger.logLevel = LogLevel.MINIMAL_LOGGING;
-//                }else if(item.compareTo(LogLevel.MODERATE_LOGGING.toString())==0){
-//                    changeLogLevel(pluginKey, LogLevel.MODERATE_LOGGING, logger.classHierarchyLevels.getFullPath());
-//                    logger.logLevel = LogLevel.MODERATE_LOGGING;
-//                }else if (item.compareTo(LogLevel.AGGRESSIVE_LOGGING.toString())==0){
-//                    changeLogLevel(pluginKey, LogLevel.AGGRESSIVE_LOGGING, logger.classHierarchyLevels.getFullPath());
-//                    logger.logLevel = LogLevel.AGGRESSIVE_LOGGING;
-//                }
-                dismiss();
-            }
-        });
+        back_btn.setOnClickListener(this);
+        share_btn.setOnClickListener(this);
+
+        getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
     }
+
+    private String getWalletAddress(String contact_name) {
+        String walletAddres="";
+        try {
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            walletAddres = cryptoAddress.getAddress();
+        } catch (CantRequestCryptoAddressException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }
+        return walletAddres;
+    }
+
+    private void showQRCodeAndAddress() {
+        try {
+
+            Bitmap bitmapQR = GeneratorQR.generateBitmap(user_address_wallet, width, height, MARGIN_AUTOMATIC, colorQR, colorBackQR);
+
+            /**
+             * set qr image
+             */
+            imageView_qr_code.setImageBitmap(bitmapQR);
+            imageView_qr_code.setScaleType(ImageView.ScaleType.FIT_XY);
+
+            // set address
+            txtAddress.setText(user_address_wallet);
+
+        } catch (WriterException writerException) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(writerException));
+            Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e){
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            //Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
-            /*if (i == R.id.btn_yes) {
-                c.finish();
+        if (i == R.id.back_btn) {
+            //activity.finish();
+            dismiss();
+        }else if( i == R.id.share_btn){
+            shareAddress();
+        }
 
-            } else if (i == R.id.btn_no) {
+
+
+            /*else if (i == R.id.btn_no) {
                 dismiss();
 
             } else {
             }*/
-        dismiss();
+        //dismiss();
     }
 
-//    public class CustomList extends ArrayAdapter<String> {
-//
-//        private final Activity context;
-//        private final List<String> listEnumsToDisplay;
-//        private final Integer[] imageId;
-//        public CustomList(Activity context,
-//                          List<String> listEnumsToDisplay, Integer[] imageId) {
-//            super(context, R.layout.list_single, listEnumsToDisplay);
-//            this.context = context;
-//            this.listEnumsToDisplay = listEnumsToDisplay;
-//            this.imageId = imageId;
-//
-//        }
-//        @Override
-//        public View getView(int position, View view, ViewGroup parent) {
-//            LayoutInflater inflater = context.getLayoutInflater();
-//            View rowView= inflater.inflate(R.layout.list_single, null, true);
-//            TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
-//
-//            ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-//            txtTitle.setTextColor(Color.WHITE);
-//            txtTitle.setText(listEnumsToDisplay.get(position));
-//            //txtTitle.setText(LogLevel.MINIMAL_LOGGING.toString());
-//
-//            setLogLevelImage();
-//            if(imageId[position]!=0){
-//                imageView.setImageResource(R.drawable.ic_action_accept_grey);
-//            }
-//
-//            return rowView;
-//        }
-//    }
+    public void shareAddress() {
+        Intent intent2 = new Intent();
+        intent2.setAction(Intent.ACTION_SEND);
+        intent2.setType("text/plain");
+        intent2.putExtra(Intent.EXTRA_TEXT, user_address_wallet);
+        activity.startActivity(Intent.createChooser(intent2, "Share via"));
+    }
+
+
 
 }

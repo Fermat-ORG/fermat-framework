@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ReceiveFragmentDialog;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
@@ -152,16 +153,18 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
                     .show(fragment)
                     .commit();
         }else if(view.getId() == R.id.action_receive && walletContact != null){
-            ReceiveFragment fragment = ReceiveFragment.newInstance(0,walletContact,walletSession);
-            fragment.fromContacts = true;
-            /*getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                    .add(R.id.fragment_container2, fragment)
-                    .attach(fragment)
-                    .show(fragment)
-                    .commit();
-                    */
+//            ReceiveFragment fragment = ReceiveFragment.newInstance(0,walletContact,walletSession);
+//            fragment.fromContacts = true;
+//            getActivity().getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+//                    .add(R.id.fragment_container2, fragment)
+//                    .attach(fragment)
+//                    .show(fragment)
+//                    .commit();
+            ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(),cryptoWallet,errorManager,walletContact);
+            receiveFragmentDialog.show();
+
             //CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
             //cdd.show();
         }else if(view.getId() == R.id.action_money_request && walletContact != null){

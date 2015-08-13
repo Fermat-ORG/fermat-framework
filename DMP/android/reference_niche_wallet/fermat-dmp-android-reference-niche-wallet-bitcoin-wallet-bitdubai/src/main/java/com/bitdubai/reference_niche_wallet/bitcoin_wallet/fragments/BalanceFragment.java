@@ -265,6 +265,8 @@ public class BalanceFragment extends Fragment {
                 TransactionsFragment transactionsFragment = new TransactionsFragment();
                 transactionsFragment.setWalletSession(referenceWalletSession);
 
+
+
                 FragmentTransaction FT = getFragmentManager().beginTransaction();
                 FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 FT.replace(R.id.balance_container, transactionsFragment);

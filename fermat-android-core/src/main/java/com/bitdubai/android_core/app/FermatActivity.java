@@ -585,6 +585,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
+
     /**
      * Initialise the fragments to be paged
      */

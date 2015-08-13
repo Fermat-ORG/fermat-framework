@@ -198,6 +198,7 @@ public class ReceiveFragment extends Fragment {
         stringAddressTextView.setTypeface(tf);
 
         autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.autocomplete_contacts);
+
         adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
         autocompleteContacts.setAdapter(adapter);
         autocompleteContacts.setTypeface(tf);
@@ -226,6 +227,7 @@ public class ReceiveFragment extends Fragment {
 
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
+
         try {
             List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
             for (WalletContactRecord wcr : walletContactRecords) {
