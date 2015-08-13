@@ -1,16 +1,21 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.support.v4.app.FragmentTransaction;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,23 +26,32 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomComponentMati;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.CustomComponentsObjects;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati.ListModel;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
- * Created by Natalia on 02/06/2015.
+ * Created by Matias Furszyfer on 02/06/2015.
  */
 public class BalanceFragment extends Fragment {
 
@@ -76,8 +90,17 @@ public class BalanceFragment extends Fragment {
      * Wallet Session
      */
 
-    ReferenceWalletSession referenceWalletSession;
-    
+    private ReferenceWalletSession referenceWalletSession;
+
+    /**
+     * Preference setting
+     */
+    WalletSettingsManager walletSettingsManager;
+
+
+    ListView list;
+    CustomAdapter adapter;
+    public  ArrayList<ListModel> CustomListViewValuesArr = new ArrayList<ListModel>();
 
 
     /**
@@ -87,9 +110,10 @@ public class BalanceFragment extends Fragment {
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession) {
+    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession,WalletSettingsManager walletSettingsManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
         balanceFragment.setReferenceWalletSession((ReferenceWalletSession) walletSession);
+        balanceFragment.setWalletSettingManager(walletSettingsManager);
         return balanceFragment;
     }
 
@@ -173,6 +197,8 @@ public class BalanceFragment extends Fragment {
         txtViewBalance.setTypeface(tf);
         txtViewBalance.setText(formatBalanceString(balanceAvailable, ShowMoneyType.BITCOIN.getCode()));
 
+        ViewCompat.setElevation(txtViewBalance, 30);
+
         txtViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,6 +207,7 @@ public class BalanceFragment extends Fragment {
                 //refreshBalance();
             }
         });
+
 
 
         // Loading a setting SwipeRefreshLayout
@@ -193,8 +220,73 @@ public class BalanceFragment extends Fragment {
         });
 
 
+        List<CryptoWalletTransaction> cryptoWalletTransactions=null;
+        try {
+            cryptoWalletTransactions= cryptoWallet.getTransactions(5, 0, wallet_id);
+        } catch (CantGetTransactionsException e) {
+            e.printStackTrace();
+        }
+
+        List<CustomComponentsObjects> lstData = new ArrayList<CustomComponentsObjects>();
+
+        //when we have transactions
+        /*
+        for (CryptoWalletTransaction cryptoWalletTransaction:cryptoWalletTransactions){
+            lstData.add(new ListModel(cryptoWalletTransaction.getInvolvedActorName(), cryptoWalletTransaction.getBitcoinWalletTransaction().getMemo(),"person1"));
+        }
+        */
+
+        // testing purpose
+        lstData.add(new ListModel("Matias Furszyfer", "Buy one glass of water 10btc","person1"));
+        lstData.add(new ListModel("Juan Lwon", "Sell a house in 200 btc","person12"));
+        lstData.add(new ListModel("George Gonzalez", "Buy Venezuela in 3 btc","person12"));
+        lstData.add(new ListModel("Fer Lewn", "Paid 30 btc","person12"));
+
+        Resources res =getResources();
+
+        CustomComponentMati custonMati=(CustomComponentMati)rootView.findViewById(R.id.custonMati);
+
+        custonMati.setResources(res);
+
+
+        custonMati.setDataList(lstData);
+
+        custonMati.setLastTransactionsEvent(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionsFragment transactionsFragment = new TransactionsFragment();
+                transactionsFragment.setWalletSession(referenceWalletSession);
+
+                FragmentTransaction FT = getFragmentManager().beginTransaction();
+                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                FT.replace(R.id.swipeRefreshLayout, transactionsFragment);
+                FT.addToBackStack(null);
+                FT.attach(transactionsFragment);
+                FT.show(transactionsFragment);
+                FT.commit();
+            }
+        });
+        custonMati.setSeeAlltransactionsEvent(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TransactionsFragment transactionsFragment = new TransactionsFragment();
+                transactionsFragment.setWalletSession(referenceWalletSession);
+
+                FragmentTransaction FT = getFragmentManager().beginTransaction();
+                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                FT.replace(R.id.balance_container, transactionsFragment);
+                FT.addToBackStack(null);
+                FT.attach(transactionsFragment);
+                FT.show(transactionsFragment);
+                FT.commit();
+            }
+        });
+
+
+
         return rootView;
     }
+
 
     /*
         Method to change the balance type
@@ -293,6 +385,10 @@ public class BalanceFragment extends Fragment {
      */
     public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
+    }
+
+    public void setWalletSettingManager(WalletSettingsManager walletSettingManager) {
+        this.walletSettingsManager = walletSettingManager;
     }
 }
 
