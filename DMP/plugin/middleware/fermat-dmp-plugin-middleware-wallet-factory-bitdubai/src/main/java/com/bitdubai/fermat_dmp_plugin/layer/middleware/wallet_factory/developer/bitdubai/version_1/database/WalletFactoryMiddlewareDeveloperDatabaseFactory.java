@@ -125,6 +125,9 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLISHER_IDENTITY_KEY_COLUMN_NAME);
         /**
          * Table Project addition.
          */
