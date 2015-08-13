@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletDescriptorFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantRemoveWalletFactoryProject;
@@ -225,7 +225,7 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
     }
 
     @Override
-    public FactoryProject createEmptyProject(String name, WalletCategory walletCategory, WalletType walletType) throws CantCreateWalletFactoryProjectException {
+    public FactoryProject createEmptyProject(String name, WalletCategory walletCategory, WalletType walletType) throws CantCreateWalletDescriptorFactoryProjectException {
         return null;
     }
 

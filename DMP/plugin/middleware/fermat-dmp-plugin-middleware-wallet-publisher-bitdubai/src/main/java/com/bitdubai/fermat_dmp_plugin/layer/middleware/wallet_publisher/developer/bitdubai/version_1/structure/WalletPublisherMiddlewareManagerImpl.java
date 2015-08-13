@@ -7,16 +7,16 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentPublishedInformation;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao;
 
 import java.util.List;
 import java.util.Map;
@@ -38,14 +38,14 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
     private LogManager logManager;
 
     /**
-     * Represent the walletPublisherMiddlewareDao
+     * Represent the informationPublishedComponentDao
      */
-    private WalletPublisherMiddlewareDao walletPublisherMiddlewareDao;
+    private InformationPublishedComponentDao informationPublishedComponentDao;
 
     /**
-     * Represent the walletFactoryManager
+     * Represent the walletDescriptorFactoryProjectManager
      */
-    private WalletFactoryManager walletFactoryManager;
+    private WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager;
 
     /**
      * Represent the walletStoreManager
@@ -58,14 +58,22 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      *
      * @param dataBase
      * @param walletStoreManager
-     * @param walletFactoryManager
+     * @param walletDescriptorFactoryProjectManager
      * @param logManager
      */
-    public WalletPublisherMiddlewareManagerImpl(Database dataBase, WalletStoreManager walletStoreManager,  WalletFactoryManager walletFactoryManager, LogManager logManager) {
+    public WalletPublisherMiddlewareManagerImpl(Database dataBase, WalletStoreManager walletStoreManager,  WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager, LogManager logManager) {
         this.walletStoreManager = walletStoreManager;
+    /**
+<<<<<<< HEAD Revisar este caso Franklin marcano
         this.walletPublisherMiddlewareDao = new WalletPublisherMiddlewareDao(dataBase);
-        this.walletFactoryManager = walletFactoryManager;
+        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
+=======
+     */
+        this.informationPublishedComponentDao = new InformationPublishedComponentDao(dataBase);
+        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
+
         this.logManager = logManager;
+
     }
 
 
@@ -74,7 +82,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedComponents()
      */
     @Override
-    public Map<String, List<ComponentPublishedInformation>> getPublishedComponents() throws CantGetPublishedComponentInformationException {
+    public List<InformationPublishedComponent> getPublishedComponents() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
@@ -83,7 +91,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedWallets()
      */
     @Override
-    public Map<String, List<ComponentPublishedInformation>> getPublishedWallets() throws CantGetPublishedComponentInformationException {
+    public List<InformationPublishedComponent> getPublishedWallets() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
@@ -92,7 +100,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedSkins()
      */
     @Override
-    public Map<String, List<ComponentPublishedInformation>> getPublishedSkins() throws CantGetPublishedComponentInformationException {
+    public List<InformationPublishedComponent> getPublishedSkins() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
@@ -101,7 +109,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedLanguages()
      */
     @Override
-    public Map<String, List<ComponentPublishedInformation>> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
+    public List<InformationPublishedComponent> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
         return null;
     }
 
