@@ -3,9 +3,9 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exce
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.08.02..
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 14/08/15.
  */
-public class CantRegisterCompatibleListException extends FermatException {
+public class CantCreateContactRequestException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantRegisterCompatibleListException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantRegisterCompatibleListException(String message, Exception cause, String context, String possibleReason) {
+    public CantCreateContactRequestException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
