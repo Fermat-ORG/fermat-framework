@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
@@ -11,8 +12,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;

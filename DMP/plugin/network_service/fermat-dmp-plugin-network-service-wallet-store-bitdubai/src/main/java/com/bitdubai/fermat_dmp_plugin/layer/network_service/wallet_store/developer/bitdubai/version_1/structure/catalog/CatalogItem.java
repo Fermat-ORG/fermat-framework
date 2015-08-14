@@ -121,7 +121,7 @@ public class CatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_se
         StringBuilder stringBuilder = new StringBuilder("Id: ");
         stringBuilder.append(this.id);
         stringBuilder.append(System.lineSeparator());
-        stringBuilder.append("Name: ");
+        stringBuilder.append("name: ");
         stringBuilder.append(this.name);
         stringBuilder.append(System.lineSeparator());
         stringBuilder.append("Category: ");

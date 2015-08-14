@@ -123,7 +123,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
             if (aliasExists (alias)) {
 
-                throw new CantCreateNewDeveloperException ("Cant create new developer, alias exists.", "Translator Identity", "Cant create new developer, alias exists.");
+                throw new CantCreateNewDeveloperException ("Cant create new Intra User, alias exists.", "Intra User Identity", "Cant create new Intra User, alias exists.");
             }
 
             DatabaseTable table = this.database.getTable(IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME);
@@ -150,17 +150,17 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         } catch (CantInsertRecordException e){
             database.closeDatabase();
             // Cant insert record.
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Translator Identity", "Cant create new developer, insert database problems.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Intra User Identity", "Cant create new Intra User, insert database problems.");
 
         } catch (CantPersistPrivateKeyException e){
             database.closeDatabase();
             // Cant insert record.
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Translator Identity", "Cant create new developer,persist private key error.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Intra User Identity", "Cant create new Intra User,persist private key error.");
 
         } catch (Exception e) {
             database.closeDatabase();
             // Failure unknown.
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Translator Identity", "Cant create new developer, unknown failure.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Intra User Identity", "Cant create new Intra User, unknown failure.");
         }
 
 
@@ -186,16 +186,16 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException ("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException ("Cant get intra user identity list, table not found.", "Intra User Identity", "Cant get Intra User identity list, table not found.");
             }
 
 
-            // 2) Find the developers.
+            // 2) Find the Intra users.
             table.setStringFilter(IntraUserIdentityDatabaseConstants.INTRA_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
-            // 3) Get developers.
+            // 3) Get Intra users.
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 // Add records to list.
@@ -209,16 +209,16 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         }
         catch (CantLoadTableToMemoryException e) {
             database.closeDatabase();
-            throw new CantGetIntraUserIdentitiesException(e.getMessage(), e, "Translator Identity", "Cant load " + IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
+            throw new CantGetIntraUserIdentitiesException(e.getMessage(), e, "Intra User Identity", "Cant load " + IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
         }
         catch (CantGetIntraUserIdentityPrivateKeyException e) {
             database.closeDatabase();
             // Failure unknown.
-            throw new CantGetIntraUserIdentitiesException (e.getMessage(), e, "Translator Identity", "Can't get private key.");
+            throw new CantGetIntraUserIdentitiesException (e.getMessage(), e, "Intra User Identity", "Can't get private key.");
 
         } catch (Exception e) {
             database.closeDatabase();
-            throw new CantGetIntraUserIdentitiesException (e.getMessage(), FermatException.wrapException(e), "Translator Identity", "Cant get developer identity list, unknown failure.");
+            throw new CantGetIntraUserIdentitiesException (e.getMessage(), FermatException.wrapException(e), "Intra User Identity", "Cant get Intra User identity list, unknown failure.");
         }
 
 
@@ -246,6 +246,10 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
             return pluginDatabaseSystem.openDatabase(pluginId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw  new CantExecuteDatabaseOperationException("ERROR OPEN DATABASE",exception,"", "Error in database plugin.");
+
+        }
+        catch (Exception e) {
+            throw  new CantExecuteDatabaseOperationException("ERROR OPEN DATABASE",FermatException.wrapException(e),"", "Error in database plugin.");
         }
     }
 
@@ -267,6 +271,9 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         } catch (CantCreateFileException e) {
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
         }
+        catch (Exception e) {
+            throw  new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ",FermatException.wrapException(e),"", "");
+        }
     }
 
 
@@ -287,6 +294,9 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantCreateFileException e) {
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
+        }
+        catch (Exception e) {
+            throw  new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ",FermatException.wrapException(e),"", "");
         }
     }
 
@@ -313,6 +323,9 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         catch (FileNotFoundException |CantCreateFileException e) {
             throw new CantGetIntraUserIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
         }
+        catch (Exception e) {
+            throw  new CantGetIntraUserIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ",FermatException.wrapException(e),"", "");
+        }
 
         return privateKey;
     }
@@ -333,11 +346,14 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
             profileImage = file.getContent();
 
         } catch (CantLoadFileException e) {
-            throw new CantGetIntraUserIdentityProfileImageException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
+            throw new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
 
         }
         catch (FileNotFoundException |CantCreateFileException e) {
-            throw new CantGetIntraUserIdentityProfileImageException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
+            throw new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
+        }
+        catch (Exception e) {
+            throw  new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ",FermatException.wrapException(e),"", "");
         }
 
         return profileImage;
@@ -362,7 +378,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
             table = this.database.getTable (IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME);
 
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not \" + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.", "Plugin Identity", "Cant check if alias exists, table not \" + DeveloperIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Intra User Identity", "");
             }
 
             table.setStringFilter(IntraUserIdentityDatabaseConstants.INTRA_USER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
@@ -372,10 +388,10 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Plugin Identity", "Cant load " + IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
+            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Intra User Identity", "Cant load " + IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Plugin Identity", "Cant check if alias exists, unknown failure.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Intra User Identity", "unknown failure.");
         }
     }
 
