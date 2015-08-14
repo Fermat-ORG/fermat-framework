@@ -26,7 +26,7 @@ While thinking about how to contribute to the development of the crypto currency
 The answers to each of these questions are addressed within the Fermat platform.
 
 What is Fermat? 
----------------------
+----------------------
 
 Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
 
