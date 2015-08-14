@@ -190,7 +190,7 @@ public class WalletNavigationStructureMiddlewareDao {
     public List<WalletNavigationStructure> findAllNavigationStructuresById(UUID id) throws CantListNavigationStructuresException{
 
         //TODO THIS METHOD
-
+        return null;
     }
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
