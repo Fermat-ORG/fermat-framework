@@ -795,7 +795,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             wizardFragment = new WizardFragment();
             wizardFragment.setWizard(wizard);
             wizardFragment.setCancelable(true);
-            wizardFragment.show(getSupportFragmentManager(), WizardFragment.class.getName());
+            wizardFragment.show(getFragmentManager(), WizardFragment.class.getName());
         } else {
             Log.e(TAG, "Wizard not found...");
         }
