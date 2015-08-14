@@ -21,6 +21,7 @@ public class WalletFactoryMiddlewareDatabaseConstants {
     static final String PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME = "developer_public_key";
     static final String PROJECT_NAME_COLUMN_NAME = "name";
     static final String PROJECT_PATH_COLUMN_NAME = "path";
+    static final String PROJECT_STATE_COLUMN_NAME = "project_state";
     static final String PROJECT_WALLET_TYPE_COLUMN_NAME = "wallet_type";
 
     static final String PROJECT_FIRST_KEY_COLUMN = "id";

@@ -15,6 +15,8 @@ public class IntraUserIdentityDatabaseConstants {
     /**
      * Intra User database table definition.
      */
+   public static final String INTRA_USER_DATABASE_NAME = "IntraUserIdentity";
+
     static final String INTRA_USER_TABLE_NAME = "intra_user";
 
     static final String INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME = "intra_user_public_key";
