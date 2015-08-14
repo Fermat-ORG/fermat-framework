@@ -167,7 +167,7 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
                 // Table not found.
                 logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Cant check if alias exists, table not " + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + " found.", _DEFAUL_STRING, _DEFAUL_STRING);
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not \" + PublisherIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.", "Plugin Identity", "Cant check if alias exists, table not \" + PublisherIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not \" + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + \" found.", "Plugin Identity", "Cant check if alias exists, table not \" + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + \" found.");
             }
 
 
@@ -320,7 +320,7 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
             record.setStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
             record.setStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_ALIAS_COLUMN_NAME, alias);//deviceUser.getAlias()
 
-            //  logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Inserting [Alias=" + deviceUser.getAlias() + ", PK=" + developerKeyPair.getPublicKey() + "] in " + PublisherIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+            //  logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Inserting [Alias=" + deviceUser.getAlias() + ", PK=" + developerKeyPair.getPublicKey() + "] in " + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
             table.insertRecord(record);
             // Persist private key on a file
             persistNewUserPrivateKeysFile(publicKey, developerKeyPair.getPrivateKey());
@@ -376,23 +376,23 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
             logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting developer list.", _DEFAUL_STRING, _DEFAUL_STRING);
 
             // 1) Get the table.
-            // logManager.log (PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + PublisherIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
+            // logManager.log (PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting " + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
             table = this.dataBase.getTable(PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME);
 
             if (table == null) {
 
                 // Table not found.
-                throw new CantGetUserDeveloperIdentitiesException("Cant get developer identity list, table not \" + PublisherIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.", "Plugin Identity", "Cant get developer identity list, table not \" + PublisherIdentityDatabaseConstants.DEVELOPER_TABLE_NAME + \" found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get developer identity list, table not \" + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + \" found.", "Plugin Identity", "Cant get developer identity list, table not \" + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + \" found.");
             }
 
 
-            // 2) Find the developers.
+            // 2) Find the publishers.
             logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Applying filter to " + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + " table by developer public key [" + deviceUser.getPublicKey() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
             table.setStringFilter(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
-            // 3) Get developers.
+            // 3) Get publishers.
             logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Developer identity found (" + table.getRecords().size() + ") by public key [" + deviceUser.getPublicKey() + "].", _DEFAUL_STRING, _DEFAUL_STRING);
             for (DatabaseTableRecord record : table.getRecords()) {
 

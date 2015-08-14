@@ -73,7 +73,6 @@ public enum Plugins {
     BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE("BSRNETSER", Developers.BITDUBAI),
     BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE("BCTNSER", Developers.BITDUBAI),
     BITDUBAI_REQUEST_MONEY_REQUEST("BRMR", Developers.BITDUBAI),
-
     BITDUBAI_DEVELOPER_IDENTITY("BDEVID", Developers.BITDUBAI),
     BITDUBAI_PUBLISHER_IDENTITY("BPUBID", Developers.BITDUBAI),
     BITDUBAI_TRANSLATOR_IDENTITY("BDTRAID", Developers.BITDUBAI),
@@ -160,6 +159,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE;
             case "BWSMIDD":
                 return Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE;
+            case "BWSM":
+                return Plugins.BITDUBAI_WALLET_STORE_MODULE;
             case "BWFMIDD":
                 return Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE;
             case "BWLMIDD":
@@ -208,6 +209,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_DEVELOPER_IDENTITY;
             case "BPUBID":
                 return Plugins.BITDUBAI_PUBLISHER_IDENTITY;
+            case "BDTRAID":
+                return Plugins.BITDUBAI_TRANSLATOR_IDENTITY;
             case "BTEMNETS":
                 return Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE;
             case "BINUSERNS":
@@ -230,8 +233,6 @@ public enum Plugins {
                 return Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE;
             case "BRMR":
                 return Plugins.BITDUBAI_REQUEST_MONEY_REQUEST;
-            case "BDTRAID":
-                return Plugins.BITDUBAI_TRANSLATOR_IDENTITY;
             case "BDDESID":
                 return Plugins.BITDUBAI_DESIGNER_IDENTITY;
             case "BDEVMOD":
