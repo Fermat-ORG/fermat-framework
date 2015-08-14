@@ -1,13 +1,13 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
@@ -47,7 +46,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends Fragment{
+public class DatabaseToolsFragment extends Fragment {
 
 
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES.getKey();
