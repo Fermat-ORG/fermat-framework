@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -221,7 +221,7 @@ public class SendFragment extends Fragment {
                 rootView.findViewById(R.id.change_account).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        getActivity().getSupportFragmentManager()
+                        getActivity().getFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
                                 .replace(R.id.fragment_container2, ContactsFragment.newInstance(0, walletSession))
