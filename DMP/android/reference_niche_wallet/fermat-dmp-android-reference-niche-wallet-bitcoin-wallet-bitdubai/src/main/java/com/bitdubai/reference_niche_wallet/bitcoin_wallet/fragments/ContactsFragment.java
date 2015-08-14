@@ -300,7 +300,8 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
                     FragmentManager fragmentManager = getActivity().getFragmentManager();
                     fragmentManager
                             .beginTransaction()
-                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                    //TODO COMMENTED FOR ERROR WHEN TRYING TO GET CONTACT DETAIL
+                            //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                             .add(R.id.fragment_container2, fragment)
                             .attach(fragment)
                             .show(fragment)
