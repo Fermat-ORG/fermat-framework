@@ -3,7 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,6 +116,13 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
         }
+
+        try {
+            List<WalletContactRecord> lst= cryptoWallet.listWalletContacts(wallet_id);
+
+        } catch (CantGetAllWalletContactsException e) {
+            e.printStackTrace();
+        }
         /* Load Wallet Contact */
         walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
             @Override
@@ -145,7 +152,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
                 && walletContact != null) {
             SendFragment fragment = SendFragment.newInstance(walletSession, walletContact);
             fragment.fromContacts = true;
-            getActivity().getSupportFragmentManager()
+            getActivity().getFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
@@ -170,7 +177,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         }else if(view.getId() == R.id.action_money_request && walletContact != null){
             MoneyRequestFragment fragment = MoneyRequestFragment.newInstance(0,walletContact,walletSettingsManager,walletSession);
             fragment.fromContacts = true;
-            getActivity().getSupportFragmentManager()
+            getActivity().getFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
