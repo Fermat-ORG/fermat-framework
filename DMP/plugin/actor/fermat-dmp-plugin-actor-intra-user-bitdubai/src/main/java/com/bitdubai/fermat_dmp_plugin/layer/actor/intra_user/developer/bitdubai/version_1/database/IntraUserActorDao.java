@@ -356,6 +356,67 @@ public class IntraUserActorDao {
         return list;
     }
 
+    public List<ActorIntraUser> getYourPendingConnections (String intraUserLoggedInPublicKey, ContactState contactState) throws CantGetIntraUsersListException {
+
+
+        // Setup method.
+        List<ActorIntraUser> list = new ArrayList<ActorIntraUser>(); // Intra User Actor list.
+        DatabaseTable table;
+
+        // Get Intra Users identities list.
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable (IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
+            }
+
+
+            // 2) Find  Intra Users by state.
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode(), DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+
+            // 3) Get Intra Users Recorod.
+            for (DatabaseTableRecord record : table.getRecords ()) {
+
+                // Add records to list.
+                list.add(new IntraUserActorActor(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_NAME_COLUMN_NAME),
+                        record.getStringValue (IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME),
+                        getIntraUserProfileImagePrivateKey(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME),
+                        ContactState.valueOf(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME))));
+            }
+
+            database.closeDatabase();
+        }
+        catch (CantLoadTableToMemoryException e) {
+            database.closeDatabase();
+            throw new CantGetIntraUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
+        }
+        catch (CantGetIntraUserActorProfileImageException e) {
+            database.closeDatabase();
+            // Failure unknown.
+            throw new CantGetIntraUsersListException (e.getMessage(), e, "Intra User Actor", "Can't get profile Image.");
+
+        } catch (Exception e) {
+            database.closeDatabase();
+            throw new CantGetIntraUsersListException (e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant get Intra User Actor list, unknown failure.");
+        }
+
+
+        // Return the list values.
+        return list;
+    }
 
 
     /**

@@ -278,7 +278,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
         try
         {
-            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_YOUR_ACCEPTANCE);
+            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_HIS_ACCEPTANCE);
         }
         catch(CantGetIntraUsersListException e)
         {

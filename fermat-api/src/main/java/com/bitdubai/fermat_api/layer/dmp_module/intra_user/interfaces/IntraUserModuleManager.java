@@ -92,16 +92,6 @@ public interface IntraUserModuleManager {
      */
     public void acceptIntraUser(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException;
 
-    /**
-     * The method <code>decideAcceptanceLater</code> marks the user information to decide its
-     * acceptance later.
-     *
-     * @param intraUserToAddName      The name of the intra user to add
-     * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage            The profile image that the intra user has
-     * @throws CantSolveRequestLaterException
-     */
-    public void decideAcceptanceLater(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantSolveRequestLaterException;
 
     /**
      * The method <code>denyConnection</code> denies a conection request from other intra user

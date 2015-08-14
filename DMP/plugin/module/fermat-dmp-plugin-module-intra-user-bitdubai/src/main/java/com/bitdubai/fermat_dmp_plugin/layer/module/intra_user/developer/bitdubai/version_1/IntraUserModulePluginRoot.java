@@ -8,7 +8,18 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantCreateNewIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.DealsWithIdentityIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
@@ -16,7 +27,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAccept
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSaveProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSolveRequestLaterException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserCancellingFailedException;
@@ -26,17 +36,27 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation;
 import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 
 import java.util.ArrayList;
@@ -56,7 +76,7 @@ import java.util.regex.Pattern;
  * @since Java JDK 1.7
  */
 
-public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIdentityIntraUser,DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, IntraUserModuleManager, Plugin, Service  {
+public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithIdentityIntraUser,DealsWithIntraUsersActor,DealsWithDeviceUser,DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, IntraUserModuleManager, Plugin, Service  {
 
 
 
@@ -66,10 +86,30 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
     ErrorManager errorManager;
 
     /**
+     * DealsWithIntraUsersNetworkService interface member variable
+     */
+
+    IntraUserManager intraUserNSManager;
+
+    /**
      * DealsWithIdentityIntraUser interface member variable
      */
 
     IntraUserIdentityManager intraUserIdentityManager;
+
+    IntraUserIdentity intraUserIdentity;
+
+
+    /**
+     * DealsWithIntraUsersActor interface member variable
+     */
+    ActorIntraUserManager actorIntraUserManager;
+
+
+    /**
+     * DealsWithDeviceUser interface member variable
+     */
+    DeviceUserManager deviceUserManager;
 
     /**
      * DealsWithLogger interface member variable
@@ -122,14 +162,17 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
     public IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws CouldNotCreateIntraUserException {
 
       try{
-          IntraUserIdentity intraUserIdentity =  this.intraUserIdentityManager.createNewIntraUser(intraUserName, profileImage);
+           this.intraUserIdentity =  this.intraUserIdentityManager.createNewIntraUser(intraUserName, profileImage);
 
           return new IntraUserModuleLoginIdentity(intraUserIdentity.getAlias(),intraUserIdentity.getPublicKey(),intraUserIdentity.getProfileImage());
       }
       catch (CantCreateNewIntraUserException e){
             throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER",e,"","Error in Intra user identity manager");
       }
-
+      catch(Exception e)
+      {
+          throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER",FermatException.wrapException(e),"","unknown exception");
+      }
     }
 
     /**
@@ -140,6 +183,16 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public void setNewProfileImage(byte[] image, String intraUserPublicKey) throws CantSaveProfileImageException {
+        try{
+            this.intraUserIdentity.setNewProfileImage(image);
+        }
+        catch (CantSetNewProfileImageException e){
+            throw new CantSaveProfileImageException("CAN'T SAVE INTRA USER PROFILE IMAGE",e,"","Error in Intra user identity manager");
+        }
+        catch(Exception e)
+        {
+            throw new CantSaveProfileImageException("CAN'T SAVE INTRA USER PROFILE IMAGE",FermatException.wrapException(e),"","unknown exception");
+        }
 
     }
 
@@ -153,7 +206,26 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public List<IntraUserLoginIdentity> showAvailableLoginIdentities() throws CantShowLoginIdentitiesException {
-        return null;
+        try {
+
+            List<IntraUserLoginIdentity> intraUserLoginIdentityList = new ArrayList<IntraUserLoginIdentity>();
+
+            List<IntraUserIdentity>  intraUserIdentityList =  this.intraUserIdentityManager.getIntraUsersFromCurrentDeviceUser();
+
+            for (IntraUserIdentity intraUserIdentity : intraUserIdentityList) {
+                intraUserLoginIdentityList.add(new IntraUserModuleLoginIdentity(intraUserIdentity.getAlias(),intraUserIdentity.getPublicKey(),intraUserIdentity.getProfileImage()));
+            }
+
+            return intraUserLoginIdentityList;
+
+        } catch (CantGetUserIntraUserIdentitiesException e) {
+
+            throw new CantShowLoginIdentitiesException("CAN'T GET Available Login Identities",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantShowLoginIdentitiesException("CAN'T GET Available Login Identities",FermatException.wrapException(e),"","unknown exception");
+        }
     }
 
 
@@ -176,6 +248,22 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public List<IntraUserInformation> getSuggestionsToContact() throws CantGetIntraUsersListException {
+
+        try {
+
+            List<IntraUserInformation>  intraUserInformationList = new ArrayList<IntraUserInformation>();
+
+            List<IntraUser> intraUserList =  this.intraUserNSManager.getIntraUsersSuggestions();
+
+            for (IntraUser intraUser : intraUserList) {
+                intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getUserName(),intraUser.(),intraUser.getMediumProfilePicture());
+            }
+
+            return intraUserInformationList;
+        }
+        catch (ErrorSearchingSuggestionsException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -188,8 +276,12 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public IntraUserSearch searchIntraUser() {
-        return null;
+        return new IntraUserModuleSearch(this.intraUserNSManager,this.intraUserIdentityManager);
     }
+
+    /**
+     * Intra User Actor Manager
+     */
 
     /**
      * That method initialize the request of contact between
@@ -204,7 +296,26 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
     @Override
     public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantStartRequestException {
 
-    }
+        try
+        {
+            DeviceUser deviceUser =  deviceUserManager.getLoggedInDeviceUser();
+
+            this.actorIntraUserManager.askIntraUserForAcceptance(deviceUser.getPublicKey(), intraUserToAddName, intraUserToAddPublicKey, profileImage);
+
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new CantStartRequestException("",e,"","");
+        }
+        catch(CantCreateIntraUserException e)
+        {
+            throw new CantStartRequestException("",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantStartRequestException("CAN'T ASK INTRA USER CONNECTION",FermatException.wrapException(e),"","unknown exception");
+        }
+      }
 
     /**
      * That method takes the information of a connection request, accepts
@@ -217,22 +328,28 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public void acceptIntraUser(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException {
+        try
+        {
+            DeviceUser deviceUser =  deviceUserManager.getLoggedInDeviceUser();
 
+            this.actorIntraUserManager.acceptIntraUser(deviceUser.getPublicKey(), intraUserToAddPublicKey);
+
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new CantAcceptRequestException("CAN'T ACCEPT INTRA USER CONNECTION - KEY " + intraUserToAddPublicKey,e,"","");
+        }
+        catch(CantAcceptIntraUserException e)
+        {
+            throw new CantAcceptRequestException("CAN'T ACCEPT INTRA USER CONNECTION - KEY " + intraUserToAddPublicKey,e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantAcceptRequestException("CAN'T ACCEPT INTRA USER CONNECTION - KEY " + intraUserToAddPublicKey,FermatException.wrapException(e),"","unknown exception");
+        }
     }
 
-    /**
-     * That method marks the user information to decide its
-     * acceptance later.
-     *
-     * @param intraUserToAddName      The name of the intra user to add
-     * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage            The profile image that the intra user has
-     * @throws CantSolveRequestLaterException
-     */
-    @Override
-    public void decideAcceptanceLater(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantSolveRequestLaterException {
 
-    }
 
     /**
      * That method denies a conection request from other intra user
@@ -242,7 +359,25 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public void denyConnection(String intraUserToRejectPublicKey) throws IntraUserConectionDenegationFailedException {
+        try
+        {
+            DeviceUser deviceUser =  deviceUserManager.getLoggedInDeviceUser();
 
+            this.actorIntraUserManager.denyConnection(deviceUser.getPublicKey(), intraUserToRejectPublicKey);
+
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey,e,"","");
+        }
+        catch(CantDenyConnectionException e)
+        {
+            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey,e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new IntraUserConectionDenegationFailedException("CAN'T DENY INTRA USER CONNECTION - KEY:" + intraUserToRejectPublicKey,FermatException.wrapException(e),"","unknown exception");
+        }
     }
 
     /**
@@ -254,7 +389,25 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws IntraUserDisconnectingFailedException {
+        try
+        {
+            DeviceUser deviceUser =  deviceUserManager.getLoggedInDeviceUser();
 
+            this.actorIntraUserManager.disconnectIntraUser(deviceUser.getPublicKey(), intraUserToDisconnectPublicKey);
+
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey,e,"","");
+        }
+        catch(CantDisconnectIntraUserException e)
+        {
+            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey,e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new IntraUserDisconnectingFailedException("CAN'T DISCONNECT INTRA USER CONNECTION- KEY:" + intraUserToDisconnectPublicKey,FermatException.wrapException(e),"","unknown exception");
+        }
     }
 
 
@@ -265,7 +418,25 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public void cancelIntraUser(String intraUserToCancelPublicKey) throws IntraUserCancellingFailedException {
+        try
+        {
+            DeviceUser deviceUser =  deviceUserManager.getLoggedInDeviceUser();
 
+            this.actorIntraUserManager.cancelIntraUser(deviceUser.getPublicKey(), intraUserToCancelPublicKey);
+
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new IntraUserCancellingFailedException("CAN'T CANCEL INTRA USER CONNECTION- KEY:" + intraUserToCancelPublicKey,e,"","");
+        }
+        catch(CantCancelIntraUserException e)
+        {
+            throw new IntraUserCancellingFailedException("CAN'T CANCEL INTRA USER CONNECTION- KEY:" + intraUserToCancelPublicKey,e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new IntraUserCancellingFailedException("CAN'T CANCEL INTRA USER CONNECTION- KEY:" + intraUserToCancelPublicKey,FermatException.wrapException(e),"","unknown exception");
+        }
     }
 
 
@@ -278,7 +449,31 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public List<IntraUserInformation> getAllIntraUsers() throws CantGetIntraUsersListException {
-        return null;
+        try
+        {
+            List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+
+            DeviceUser deviceUser =  deviceUserManager.getLoggedInDeviceUser();
+
+            List<ActorIntraUser> actorsList = this.actorIntraUserManager.getAllIntraUsers(deviceUser.getPublicKey());
+
+            for (ActorIntraUser intraUserActor : actorsList) {
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
+            }
+            return intraUserList;
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",e,"","");
+        }
+        catch(CantGetIntraUSersException e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",FermatException.wrapException(e),"","unknown exception");
+        }
     }
 
 
@@ -291,7 +486,31 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance() throws CantGetIntraUsersListException {
-        return null;
+        try
+        {
+            List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+
+            DeviceUser deviceUser =  deviceUserManager.getLoggedInDeviceUser();
+
+            List<ActorIntraUser> actorsList = this.actorIntraUserManager.getWaitingYourAcceptanceIntraUsers(deviceUser.getPublicKey());
+
+            for (ActorIntraUser intraUserActor : actorsList) {
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
+            }
+            return intraUserList;
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
+        }
+        catch(CantGetIntraUSersException e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
+        }
     }
 
 
@@ -305,7 +524,40 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
      */
     @Override
     public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance() throws CantGetIntraUsersListException {
-        return null;
+        try
+        {
+            List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+
+            DeviceUser deviceUser =  deviceUserManager.getLoggedInDeviceUser();
+
+            List<ActorIntraUser> actorsList = this.actorIntraUserManager.getWaitingTheirAcceptanceIntraUsers(deviceUser.getPublicKey());
+
+            for (ActorIntraUser intraUserActor : actorsList) {
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
+            }
+            return intraUserList;
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE",e,"","Error on IntraUserActor Manager");
+        }
+        catch(CantGetIntraUSersException e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE",e,"","Error on IntraUserActor Manager");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
+        }
+    }
+
+    /**
+     * DealsWithIntraUsersNetworkService Interface implementation.
+     */
+
+    @Override
+    public void setIntraUserManager(IntraUserManager intraUserManager) {
+            this.intraUserNSManager = intraUserManager;
     }
 
     /**
@@ -314,6 +566,24 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIde
     @Override
     public void setIntraUserManager(IntraUserIdentityManager intraUserIdentityManager) {
         this.intraUserIdentityManager = intraUserIdentityManager;
+    }
+
+    /**
+     * DealsWithActorIntraUser Interface implementation.
+     */
+
+    @Override
+    public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager) {
+        this.actorIntraUserManager = actorIntraUserManager;
+    }
+
+    /**
+     * DealsWithDeviceUser Interface implementation.
+     */
+
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
     }
 
     /**
