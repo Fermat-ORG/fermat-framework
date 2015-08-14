@@ -1,8 +1,8 @@
 package com.bitdubai.android_core.app;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.*;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -120,7 +120,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
 
-                     transaction = getSupportFragmentManager().beginTransaction();
+                     transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.databasecontainer, frag);
                     // Commit the transaction
                     transaction.commit();
@@ -135,7 +135,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
 
-                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.startContainer, fragd);
                     // Commit the transaction
                     transaction.commit();
@@ -153,7 +153,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     fragt.setResource((Resource) screenObjects[0]);
                     fragt.setDeveloperDatabase((DeveloperDatabase) screenObjects[1]);
 
-                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.startContainer, fragt);
                     // Commit the transaction
                     transaction.commit();
@@ -172,7 +172,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 fragr.setDeveloperDatabase((DeveloperDatabase) screenObjects[1]);
                 fragr.setDeveloperDatabaseTable((DeveloperDatabaseTable) screenObjects[2]);
 
-                transaction = getSupportFragmentManager().beginTransaction();
+                transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.startContainer, fragr);
                 // Commit the transaction
                 transaction.commit();
@@ -186,7 +186,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
 
-                    FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
                     transaction1.replace(R.id.logContainer, frag1);
                     // Commit the transaction
                     transaction1.commit();
@@ -201,7 +201,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 //set data pass to fragment
                 fragment.setContext(screenObjects);
 
-                 transaction = getSupportFragmentManager().beginTransaction();
+                 transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.logContainer, fragl);
                 // Commit the transaction
                 transaction.commit();
@@ -218,7 +218,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
 
-                   transaction = getSupportFragmentManager().beginTransaction();
+                   transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.logContainer, fragl2);
                     // Commit the transaction
                     transaction.commit();
@@ -234,7 +234,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 //set data pass to fragment
                 fragment.setContext(screenObjects);
 
-              transaction = getSupportFragmentManager().beginTransaction();
+              transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.logContainer, fragl3);
                 // Commit the transaction
                 transaction.commit();
@@ -501,6 +501,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
+    @Override
+    public void changeActivity(String activity, Object... objects) {
+
+    }
 
 
     /**

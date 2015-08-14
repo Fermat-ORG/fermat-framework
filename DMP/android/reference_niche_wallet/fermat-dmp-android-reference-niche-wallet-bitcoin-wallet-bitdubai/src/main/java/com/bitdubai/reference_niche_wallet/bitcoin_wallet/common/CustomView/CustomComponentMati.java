@@ -1,9 +1,16 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.MotionEventCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,6 +30,7 @@ import java.util.List;
 
 public class CustomComponentMati extends LinearLayout {
 
+    private static final String DEBUG_TAG = "MATTIIIIIIIII";
     /**
      *  Header
      */
@@ -66,6 +74,10 @@ public class CustomComponentMati extends LinearLayout {
 
     Animation animationNext;
     Animation animationPrev;
+
+
+    private Activity activity;
+
     /**
      *
      * @param context
@@ -135,6 +147,37 @@ public class CustomComponentMati extends LinearLayout {
         animationNext =    AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
         animationPrev = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
 
+        linearLayout_container.setOnTouchListener(new OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                int action = MotionEventCompat.getActionMasked(event);
+
+                switch(action) {
+                    case (MotionEvent.ACTION_DOWN) :
+                        Log.d(DEBUG_TAG, "Action was DOWN");
+                        return true;
+                    case (MotionEvent.ACTION_MOVE) :
+                        Log.d(DEBUG_TAG,"Action was MOVE");
+                        return true;
+                    case (MotionEvent.ACTION_UP) :
+                        Log.d(DEBUG_TAG,"Action was UP");
+                        return true;
+                    case (MotionEvent.ACTION_CANCEL) :
+                        Log.d(DEBUG_TAG,"Action was CANCEL");
+                        return true;
+                    case (MotionEvent.ACTION_OUTSIDE) :
+                        Log.d(DEBUG_TAG,"Movement occurred outside bounds " +
+                                "of current screen element");
+                        return true;
+                    default :
+                        return activity.onTouchEvent(event);
+                }
+                // ... Respond to touch events
+
+            }
+        });
+
+
     }
 
     public void setDataList(List<CustomComponentsObjects> lstData){
@@ -171,5 +214,9 @@ public class CustomComponentMati extends LinearLayout {
         this.txtSeeAlltransactions.setOnClickListener(onClickListener);
     }
 
+
+    public void setActivity(Activity activity){
+        this.activity=activity;
+    }
 
 }

@@ -2,11 +2,10 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
 import android.content.Context;
-
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;

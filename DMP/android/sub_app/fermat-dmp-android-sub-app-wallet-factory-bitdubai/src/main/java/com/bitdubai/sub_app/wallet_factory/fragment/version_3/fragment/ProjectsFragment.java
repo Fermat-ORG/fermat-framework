@@ -18,6 +18,7 @@ import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
 import java.util.List;
 import java.util.UUID;
+import android.app.Fragment;
 
 
 public class ProjectsFragment extends FermatFragment {

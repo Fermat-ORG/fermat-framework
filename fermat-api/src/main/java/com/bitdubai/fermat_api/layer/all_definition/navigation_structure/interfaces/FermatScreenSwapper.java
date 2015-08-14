@@ -11,4 +11,6 @@ public interface FermatScreenSwapper {
 
     public void selectWallet(String screen, InstalledWallet installedWallet);
 
+    public void changeActivity(String activity,Object... objects);
+
 }
