@@ -45,13 +45,13 @@ import java.util.UUID;
  * This plugin controls and maintain the installation status of catalog items like wallets, language packages and skins.
  * When a new version is available or a catalog item is available, because it was found on a peer or installed on this device, we
  * keep the status of the installation on this session.
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors,DealsWithLogger,DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, WalletStoreManager {
+public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, WalletStoreManager {
 
     /**
      * WalletStoreMiddlewarePluginRoot member variables
@@ -122,9 +122,9 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
             try {
                 createWalletStoreMiddlewareDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
-            } catch (Exception exception){
+            } catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
             }
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -134,10 +134,10 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
             try {
                 createWalletStoreMiddlewareDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             }
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
         }
 
@@ -161,17 +161,17 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
     }
 
     @Override
-    public void pause(){
+    public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
-    public void resume(){
+    public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -182,7 +182,7 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
 
 
     /**
-     * DealWithErrors Interface implementation. 
+     * DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -223,7 +223,7 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.WalletStoreMiddlewarePluginRoot");
-         /**
+        /**
          * I return the values.
          */
         return returnedClasses;
@@ -250,7 +250,7 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
 
     }
 
-    private com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager getWalletStoreManager(){
+    private com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager getWalletStoreManager() {
         com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager walletStoreManager;
         walletStoreManager = new com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager(pluginId, errorManager, logManager, pluginDatabaseSystem);
         return walletStoreManager;
@@ -262,7 +262,7 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
     }
 
     @Override
-    public void setInstallationStatus  (CatalogItems catalogItemType, UUID itemId, InstallationStatus installationStatus) throws CantSetInstallationStatusException {
+    public void setInstallationStatus(CatalogItems catalogItemType, UUID itemId, InstallationStatus installationStatus) throws CantSetInstallationStatusException {
         getWalletStoreManager().setCatalogItemInformation(catalogItemType, itemId, installationStatus);
     }
 }

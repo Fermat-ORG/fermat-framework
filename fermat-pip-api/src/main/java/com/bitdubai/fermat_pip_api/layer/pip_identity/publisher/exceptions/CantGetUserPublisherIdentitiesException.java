@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions;
+package com.bitdubai.fermat_pip_api.layer.pip_identity.publisher.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.09..
+ * Created by Nerio on 13/08/15.
  */
-public class CantCreateNewDeveloperException extends FermatException {
+public class CantGetUserPublisherIdentitiesException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -13,7 +13,7 @@ public class CantCreateNewDeveloperException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateNewDeveloperException(String message, String context, String possibleReason) {
+    public CantGetUserPublisherIdentitiesException(String message, String context, String possibleReason) {
         this(message, null, context, possibleReason);
     }
 
@@ -25,7 +25,7 @@ public class CantCreateNewDeveloperException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateNewDeveloperException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetUserPublisherIdentitiesException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
