@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEventException;
 
 import static org.fest.assertions.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -57,6 +58,17 @@ public class StartTest {
         testMonitorAgent.start();
         Thread.sleep(100);
         assertThat(testMonitorAgent.isRunning()).isTrue();
+    }
+
+    @Test
+    public void Start_ParametersProperlySet_ThreadStopped() throws Exception{
+
+        testMonitorAgent = new IncomingExtraUserMonitorAgent(mockErrorManager, mockCryptoManager, testRegistry);
+
+        testMonitorAgent.start();
+        Thread.sleep(100);
+        testMonitorAgent.stop();
+        assertThat(testMonitorAgent.isRunning()).isFalse();
     }
 
 }
