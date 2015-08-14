@@ -5,18 +5,16 @@
  * BITDUBAI/CONFIDENTIAL
  */
 
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
+package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetail</code> define
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetailMiddleware</code> define
  * the static information about the Component Version Detail
  * <p/>
  *

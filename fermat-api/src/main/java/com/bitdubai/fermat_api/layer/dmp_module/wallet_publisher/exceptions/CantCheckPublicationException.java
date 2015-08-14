@@ -1,11 +1,25 @@
+/*
+ * @#CantCheckPublicationException.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.07.15..
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantCheckPublicationException</code> define
+ * the error occurred when can not be checked a component
+ * <p/>
+ *
+ * @author Ezequiel Postan (ezequiel.postan@gmail.com) on 2015.07.15
+ * @author Update by Roberto Requena - (rart3001@gmail.com) on 14/08/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class CantGetPublishedWalletsException extends FermatException {
+public class CantCheckPublicationException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +28,7 @@ public class CantGetPublishedWalletsException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetPublishedWalletsException(String message, Exception cause, String context, String possibleReason) {
+    public CantCheckPublicationException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

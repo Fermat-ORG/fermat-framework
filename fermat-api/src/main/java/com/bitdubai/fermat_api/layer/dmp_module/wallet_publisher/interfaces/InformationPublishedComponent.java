@@ -5,10 +5,10 @@
  * BITDUBAI/CONFIDENTIAL
  */
 
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
+package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponent</code> define
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponentMiddleware</code> define
  * the static information about a published component.
  * <p/>
  *
@@ -66,14 +66,14 @@ public interface InformationPublishedComponent {
     /**
      * Get the icon image
      *
-     * @return Image
+     * @return ImageMiddleware
      */
     public Image getIconImg();
 
     /**
      * Get the main screen shot image
      *
-     * @return Image
+     * @return ImageMiddleware
      */
     public Image getMainScreenShotImg();
 
@@ -122,14 +122,14 @@ public interface InformationPublishedComponent {
     /**
      * Get the Component Versions Details List
      *
-     * @return List<ComponentVersionDetail>
+     * @return List<ComponentVersionDetailMiddleware>
      */
     public List<ComponentVersionDetail> getComponentVersionDetailList();
 
     /**
      * Get the Screens Shots Component List
      *
-     * @return List<Image>
+     * @return List<ImageMiddleware>
      */
     public List<Image> getScreensShotsComponentList();
 

@@ -8,9 +8,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetail;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.Image;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponent;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetailMiddleware;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ImageMiddleware;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponentMiddleware;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -20,7 +22,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentImpl</code> is the
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentMiddlewareImpl</code> is the
  * representation of the Information Published Component
  * <p/>
  * 
@@ -29,7 +31,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class InformationPublishedComponentImpl implements InformationPublishedComponent {
+public class InformationPublishedComponentMiddlewareImpl implements InformationPublishedComponentMiddleware {
 
     /**
      * Represent the id
@@ -59,12 +61,12 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
     /**
      * Represent the icon image
      */
-    private Image iconImg;
+    private ImageMiddleware iconImg;
 
     /**
      * Represent the main screen shot image
      */
-    private Image mainScreenShotImg;
+    private ImageMiddleware mainScreenShotImg;
 
     /**
      * Represent the video url
@@ -99,17 +101,17 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
     /**
      * Represent the Component Versions Details List
      */
-    private List<ComponentVersionDetail> componentVersionDetailList;
+    private List<?> componentVersionDetailList;
 
     /**
      * Represent the Screens Shots Component List
      */
-    private List<Image> screensShotsComponentList;
+    private List<?> screensShotsComponentList;
 
     /**
      * Constructor
      */
-    public InformationPublishedComponentImpl(){
+    public InformationPublishedComponentMiddlewareImpl(){
         super();
         this.componentVersionDetailList = new ArrayList<>();
         this.screensShotsComponentList    = new ArrayList<>();
@@ -133,7 +135,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
      * @param type
      * @param videoUrl
      */
-    public InformationPublishedComponentImpl(List<ComponentVersionDetail> componentVersionDetailList, String descriptions, UUID descriptorFactoryProjectId, String descriptorFactoryProjectName, Image iconImg, UUID id, Image mainScreenShotImg, Timestamp publicationTimestamp, UUID publisherIdentityPublicKey, List<Image> screensShotsComponentList, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, DescriptorFactoryProjectType type, URL videoUrl) {
+    public InformationPublishedComponentMiddlewareImpl(List<ComponentVersionDetailMiddleware> componentVersionDetailList, String descriptions, UUID descriptorFactoryProjectId, String descriptorFactoryProjectName, ImageMiddleware iconImg, UUID id, ImageMiddleware mainScreenShotImg, Timestamp publicationTimestamp, UUID publisherIdentityPublicKey, List<ImageMiddleware> screensShotsComponentList, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, DescriptorFactoryProjectType type, URL videoUrl) {
         super();
         this.componentVersionDetailList = componentVersionDetailList;
         this.descriptions = descriptions;
@@ -153,11 +155,11 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getComponentVersionDetailList()
+     * @see InformationPublishedComponentMiddlewareImpl#getComponentVersionDetailList()
      */
     @Override
     public List<ComponentVersionDetail> getComponentVersionDetailList() {
-        return componentVersionDetailList;
+        return (List<ComponentVersionDetail>) componentVersionDetailList;
     }
 
 
@@ -166,13 +168,13 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
      *
      * @param componentVersionDetailList
      */
-    public void setComponentVersionDetailList(List<ComponentVersionDetail> componentVersionDetailList) {
+    public void setComponentVersionDetailList(List<ComponentVersionDetailMiddleware> componentVersionDetailList) {
         this.componentVersionDetailList = componentVersionDetailList;
     }
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getDescriptions()
+     * @see InformationPublishedComponentMiddlewareImpl#getDescriptions()
      */
     @Override
     public String getDescriptions() {
@@ -191,7 +193,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getDescriptorFactoryProjectId()
+     * @see InformationPublishedComponentMiddlewareImpl#getDescriptorFactoryProjectId()
      */
     @Override
     public UUID getDescriptorFactoryProjectId() {
@@ -210,7 +212,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getDescriptorFactoryProjectName()
+     * @see InformationPublishedComponentMiddlewareImpl#getDescriptorFactoryProjectName()
      */
     @Override
     public String getDescriptorFactoryProjectName() {
@@ -229,10 +231,10 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getIconImg()
+     * @see InformationPublishedComponentMiddlewareImpl#getIconImg()
      */
     @Override
-    public Image getIconImg() {
+    public ImageMiddleware getIconImg() {
         return iconImg;
     }
 
@@ -242,13 +244,13 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
      *
      * @param iconImg
      */
-    public void setIconImg(Image iconImg) {
+    public void setIconImg(ImageMiddleware iconImg) {
         this.iconImg = iconImg;
     }
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getId()
+     * @see InformationPublishedComponentMiddlewareImpl#getId()
      */
     @Override
     public UUID getId() {
@@ -267,10 +269,10 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getMainScreenShotImg()
+     * @see InformationPublishedComponentMiddlewareImpl#getMainScreenShotImg()
      */
     @Override
-    public Image getMainScreenShotImg() {
+    public ImageMiddleware getMainScreenShotImg() {
         return mainScreenShotImg;
     }
 
@@ -280,13 +282,13 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
      *
      * @param mainScreenShotImg
      */
-    public void setMainScreenShotImg(Image mainScreenShotImg) {
+    public void setMainScreenShotImg(ImageMiddleware mainScreenShotImg) {
         this.mainScreenShotImg = mainScreenShotImg;
     }
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getPublicationTimestamp()
+     * @see InformationPublishedComponentMiddlewareImpl#getPublicationTimestamp()
      */
     @Override
     public Timestamp getPublicationTimestamp() {
@@ -305,7 +307,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getPublisherIdentityPublicKey()
+     * @see InformationPublishedComponentMiddlewareImpl#getPublisherIdentityPublicKey()
      */
     @Override
     public UUID getPublisherIdentityPublicKey() {
@@ -323,7 +325,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getSignature()
+     * @see InformationPublishedComponentMiddlewareImpl#getSignature()
      */
     @Override
     public String getSignature() {
@@ -341,11 +343,11 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getScreensShotsComponentList()
+     * @see InformationPublishedComponentMiddlewareImpl#getScreensShotsComponentList()
      */
     @Override
     public List<Image> getScreensShotsComponentList() {
-        return screensShotsComponentList;
+        return (List<Image>) screensShotsComponentList;
     }
 
 
@@ -354,13 +356,13 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
      *
      * @param screensShotsComponentList
      */
-    public void setScreensShotsComponentList(List<Image> screensShotsComponentList) {
+    public void setScreensShotsComponentList(List<ImageMiddleware> screensShotsComponentList) {
         this.screensShotsComponentList = screensShotsComponentList;
     }
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getStatus()
+     * @see InformationPublishedComponentMiddlewareImpl#getStatus()
      */
     @Override
     public ComponentPublishedInformationStatus getStatus() {
@@ -378,7 +380,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getStatusTimestamp()
+     * @see InformationPublishedComponentMiddlewareImpl#getStatusTimestamp()
      */
     @Override
     public Timestamp getStatusTimestamp() {
@@ -396,7 +398,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getType()
+     * @see InformationPublishedComponentMiddlewareImpl#getType()
      */
     @Override
     public DescriptorFactoryProjectType getType() {
@@ -414,7 +416,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getVideoUrl()
+     * @see InformationPublishedComponentMiddlewareImpl#getVideoUrl()
      */
     @Override
     public URL getVideoUrl() {
@@ -437,8 +439,8 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof InformationPublishedComponentImpl)) return false;
-        InformationPublishedComponentImpl that = (InformationPublishedComponentImpl) o;
+        if (!(o instanceof InformationPublishedComponentMiddlewareImpl)) return false;
+        InformationPublishedComponentMiddlewareImpl that = (InformationPublishedComponentMiddlewareImpl) o;
         return Objects.equals(getId(), that.getId());
     }
 
@@ -457,7 +459,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
      */
     @Override
     public String toString() {
-        return "InformationPublishedComponentImpl{" +
+        return "InformationPublishedComponentMiddlewareImpl{" +
                 "componentVersionDetailList=" + componentVersionDetailList +
                 ", id=" + id +
                 ", descriptorFactoryProjectId=" + descriptorFactoryProjectId +
