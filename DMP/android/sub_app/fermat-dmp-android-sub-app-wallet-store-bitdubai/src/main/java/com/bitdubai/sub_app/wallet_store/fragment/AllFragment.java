@@ -7,7 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 //import android.support.v7.widget.SearchView;
 import android.widget.SearchView;

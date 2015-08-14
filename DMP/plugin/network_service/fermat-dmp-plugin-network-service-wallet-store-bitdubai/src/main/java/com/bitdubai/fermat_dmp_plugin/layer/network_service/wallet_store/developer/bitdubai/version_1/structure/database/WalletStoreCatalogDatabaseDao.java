@@ -620,7 +620,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         DatabaseTableRecord developerRecord = records.get(0);
 
         Developer developer = new Developer();
-        developer.setid(developerRecord.getUUIDValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
+        developer.setId(developerRecord.getUUIDValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
         developer.setPublicKey(developerRecord.getStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME));
         developer.setName(developerRecord.getStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME));
         detailedCatalogItem.setDeveloper(developer);
@@ -877,7 +877,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         try {
             DatabaseTableRecord record = getDeveloperRecord(developerId);
             Developer developer = new Developer();
-            developer.setid(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
+            developer.setId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
             developer.setName(record.getStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME));
             developer.setPublicKey(record.getStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME));
             return developer;

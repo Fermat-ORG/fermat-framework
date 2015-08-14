@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSolveRequestLaterException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
@@ -51,7 +52,7 @@ public interface IntraUserModuleManager {
      *
      * @param intraUserPublicKey the public key of the intra user to log in
      */
-    public void login(String intraUserPublicKey);
+    public void login(String intraUserPublicKey) throws CantLoginIntraUserException;
 
     /**
      * The method <code>getSuggestionsToContact</code> searches for intra users that the logged in
