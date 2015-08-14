@@ -476,8 +476,9 @@ public class CreateContactFragment extends Fragment {
                     try {
                         imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                         imageBitmap = Bitmap.createScaledBitmap(imageBitmap,takePictureButton.getWidth(),takePictureButton.getHeight(),true);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
