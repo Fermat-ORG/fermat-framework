@@ -129,8 +129,5 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
     // DMP Projects (Addons)
 
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
-
-
-
 }
 
