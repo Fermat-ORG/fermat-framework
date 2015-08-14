@@ -70,6 +70,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_identity.designer.DealsWithDesigner
 import com.bitdubai.fermat_pip_api.layer.pip_identity.designer.interfaces.DesignerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DealsWithDeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.publisher.interfaces.DealsWithPublisherIdentity;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.publisher.interfaces.PublisherIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.DealsWithTranslator;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.translator.interfaces.TranslatorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DealsWithDeveloperModule;
@@ -130,14 +132,14 @@ import java.util.logging.Logger;
  * The Class <code>com.bitdubai.fermat_core.CorePlatformContext</code> start all
  * component of the platform and manage it
  * <p/>
- *
+ * <p/>
  * Created by ciencias on 20/01/15.
  * Update by Roberto Requena - (rart3001@gmail.com) on 24/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class Platform  {
+public class Platform {
 
     /**
      * Represent the Logger
@@ -207,7 +209,7 @@ public class Platform  {
     /**
      * Constructor
      */
-    public Platform () {
+    public Platform() {
 
         /**
          * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
@@ -235,7 +237,7 @@ public class Platform  {
      * main module. While this situation persists, we will create it inside the wallet package and receive it throw this
      * method.
      */
-    public void setFileSystemOs (FileSystemOs fileSystemOs) {
+    public void setFileSystemOs(FileSystemOs fileSystemOs) {
         this.fileSystemOs = fileSystemOs;
     }
 
@@ -244,7 +246,7 @@ public class Platform  {
      *
      * @param databaseSystemOs
      */
-    public void setDataBaseSystemOs (DataBaseSystemOs databaseSystemOs) {
+    public void setDataBaseSystemOs(DataBaseSystemOs databaseSystemOs) {
         this.databaseSystemOs = databaseSystemOs;
     }
 
@@ -254,7 +256,7 @@ public class Platform  {
      * @param locationSystemOs
      */
     public void setLocationSystemOs(LocationSystemOs locationSystemOs) {
-        this.locationSystemOs  = locationSystemOs;
+        this.locationSystemOs = locationSystemOs;
     }
 
     /**
@@ -263,7 +265,7 @@ public class Platform  {
      * @param loggerSystemOs
      */
     public void setLoggerSystemOs(LoggerSystemOs loggerSystemOs) {
-        this.loggerSystemOs  = loggerSystemOs;
+        this.loggerSystemOs = loggerSystemOs;
     }
 
 
@@ -302,14 +304,14 @@ public class Platform  {
         /*
          * Check addon for developer interfaces
          */
-        for(Addons registeredDescriptor : corePlatformContext.getRegisteredAddonskeys()) {
+        for (Addons registeredDescriptor : corePlatformContext.getRegisteredAddonskeys()) {
             checkAddonForDeveloperInterfaces(registeredDescriptor);
         }
 
         /*
          * Check plugin for developer interfaces
          */
-        for(Plugins registeredDescriptor : corePlatformContext.getRegisteredPluginskeys()) {
+        for (Plugins registeredDescriptor : corePlatformContext.getRegisteredPluginskeys()) {
             checkPluginForDeveloperInterfaces(registeredDescriptor);
         }
 
@@ -321,7 +323,7 @@ public class Platform  {
         //((DealsWithLogManagers)     corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
 
         ((DealWithDatabaseManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
-        ((DealsWithLogManagers)     corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
+        ((DealsWithLogManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
 
     }
 
@@ -373,16 +375,16 @@ public class Platform  {
             //corePlatformContext.registerPlatformLayer(new OsLayer(),              PlatformLayers.BITDUBAI_OS_LAYER);  Due to an Android bug is not possible to handle this here.
             corePlatformContext.registerPlatformLayer(new HardwareLayer(), PlatformLayers.BITDUBAI_HARDWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new UserLayer(), PlatformLayers.BITDUBAI_USER_LAYER);
-            corePlatformContext.registerPlatformLayer(new LicenseLayer(),         PlatformLayers.BITDUBAI_LICENSE_LAYER);
+            corePlatformContext.registerPlatformLayer(new LicenseLayer(), PlatformLayers.BITDUBAI_LICENSE_LAYER);
             corePlatformContext.registerPlatformLayer(new WorldLayer(), PlatformLayers.BITDUBAI_WORLD_LAYER);
             corePlatformContext.registerPlatformLayer(new CryptoNetworkLayer(), PlatformLayers.BITDUBAI_CRYPTO_NETWORK_LAYER);
             corePlatformContext.registerPlatformLayer(new CryptoVaultLayer(), PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER);
-            corePlatformContext.registerPlatformLayer(new CryptoLayer(),          PlatformLayers.BITDUBAI_CRYPTO_LAYER);
-            corePlatformContext.registerPlatformLayer(new CryptoRouterLayer(),    PlatformLayers.BITDUBAI_CRYPTO_ROUTER_LAYER);
+            corePlatformContext.registerPlatformLayer(new CryptoLayer(), PlatformLayers.BITDUBAI_CRYPTO_LAYER);
+            corePlatformContext.registerPlatformLayer(new CryptoRouterLayer(), PlatformLayers.BITDUBAI_CRYPTO_ROUTER_LAYER);
             corePlatformContext.registerPlatformLayer(new CommunicationLayer(), PlatformLayers.BITDUBAI_COMMUNICATION_LAYER);
             corePlatformContext.registerPlatformLayer(new NetworkServiceLayer(), PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER);
             corePlatformContext.registerPlatformLayer(new TransactionLayer(), PlatformLayers.BITDUBAI_TRANSACTION_LAYER);
-            corePlatformContext.registerPlatformLayer(new MiddlewareLayer(),      PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER);
+            corePlatformContext.registerPlatformLayer(new MiddlewareLayer(), PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new ModuleLayer(), PlatformLayers.BITDUBAI_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new AgentLayer(), PlatformLayers.BITDUBAI_AGENT_LAYER);
             corePlatformContext.registerPlatformLayer(new BasicWalletLayer(), PlatformLayers.BITDUBAI_BASIC_WALLET_LAYER);
@@ -399,7 +401,7 @@ public class Platform  {
             /*
              * Start all other platform layers
              */
-            for (PlatformLayers key : corePlatformContext.getRegisteredPlatformLayerskeys()){
+            for (PlatformLayers key : corePlatformContext.getRegisteredPlatformLayerskeys()) {
 
                 /*
                  * Get the platformLayer  by key
@@ -409,7 +411,7 @@ public class Platform  {
                 /*
                  * If not null
                  */
-                if (platformLayer != null){
+                if (platformLayer != null) {
 
                     /*
                      * Start the layer
@@ -513,7 +515,7 @@ public class Platform  {
              * Give the User Manager access to the File System so it can load and save user information from
              * persistent media.
              */
-            Service deviceUser = (Service) ((UserLayer)  corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_USER_LAYER)).getDeviceUser();
+            Service deviceUser = (Service) ((UserLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_USER_LAYER)).getDeviceUser();
             ((DealsWithPlatformFileSystem) deviceUser).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
             ((DealsWithEvents) deviceUser).setEventManager((EventManager) eventManager);
             corePlatformContext.registerAddon((Addon) deviceUser, Addons.DEVICE_USER);
@@ -644,18 +646,17 @@ public class Platform  {
              * Plugin Developer Identity
              * -----------------------------
              */
-              Plugin developerIdentity = ((IdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER)).getDeveloperIdentity();
-               injectPluginReferencesAndStart(developerIdentity, Plugins.BITDUBAI_DEVELOPER_IDENTITY);
+            Plugin developerIdentity = ((IdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER)).getDeveloperIdentity();
+            injectPluginReferencesAndStart(developerIdentity, Plugins.BITDUBAI_DEVELOPER_IDENTITY);
 
             /*
-             * Plugin Developer Module
+             * Plugin Publisher Identity
              * -----------------------------
              */
-            Plugin developerModule = ((com.bitdubai.fermat_core.layer.pip_module.ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_MODULE_LAYER)).getmDeveloperModule();
-            injectPluginReferencesAndStart(developerModule, Plugins.BITDUBAI_DEVELOPER_MODULE);
+            Plugin publisherIdentity = ((IdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER)).getPublisherIdentity();
+            injectPluginReferencesAndStart(publisherIdentity, Plugins.BITDUBAI_PUBLISHER_IDENTITY);
 
-
-             /*
+            /*
              * Plugin Translator Identity
              * -----------------------------
              */
@@ -663,13 +664,19 @@ public class Platform  {
             injectPluginReferencesAndStart(translatorIdentity, Plugins.BITDUBAI_TRANSLATOR_IDENTITY);
 
 
-             /*
+            /*
              * Plugin Designer Identity
              * -----------------------------
              */
             Plugin designerIdentity = ((IdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER)).getDesignerIdentity();
             injectPluginReferencesAndStart(designerIdentity, Plugins.BITDUBAI_DESIGNER_IDENTITY);
 
+            /*
+             * Plugin Developer Module
+             * -----------------------------
+             */
+            Plugin developerModule = ((com.bitdubai.fermat_core.layer.pip_module.ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_MODULE_LAYER)).getmDeveloperModule();
+            injectPluginReferencesAndStart(developerModule, Plugins.BITDUBAI_DEVELOPER_MODULE);
 
             /*
              * Plugin Extra User
@@ -966,14 +973,14 @@ public class Platform  {
              * Plugin Wallet Manager
              * -----------------------------
              */
-            Plugin walletManager =  ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletManager();
+            Plugin walletManager = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletManager();
             injectPluginReferencesAndStart(walletManager, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 
             /*
              * Plugin Wallet Runtime
              * -----------------------------
              */
-            Plugin walletRuntime =  ((ModuleLayer)  corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletRuntime();
+            Plugin walletRuntime = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletRuntime();
             injectPluginReferencesAndStart(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
             /*
@@ -1027,7 +1034,7 @@ public class Platform  {
              * Plugin Template Network Service
              * -----------------------------
              */
-            Plugin templateNetworkService = ((NetworkServiceLayer)  corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
+            Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
             injectLayerReferences(templateNetworkService);
             injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
 
@@ -1035,7 +1042,7 @@ public class Platform  {
              * Plugin Request
              * -----------------------------
              */
-            Plugin moneyRequest = ((RequestServiceLayer)  corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_REQUEST_LAYER)).getMoney();
+            Plugin moneyRequest = ((RequestServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_REQUEST_LAYER)).getMoney();
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
 
@@ -1081,6 +1088,10 @@ public class Platform  {
 
             if (plugin instanceof DealsWithDeveloperIdentity) {
                 ((DealsWithDeveloperIdentity) plugin).setDeveloperIdentityManager((DeveloperIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_IDENTITY));
+            }
+
+            if (plugin instanceof DealsWithPublisherIdentity) {
+                ((DealsWithPublisherIdentity) plugin).setPublisherIdentityManager((PublisherIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_PUBLISHER_IDENTITY));
             }
 
             if (plugin instanceof DealsWithDeveloperModule) {
@@ -1224,7 +1235,7 @@ public class Platform  {
              */
             errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, pluginNotRecognizedException);
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
             /**
              * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
@@ -1237,7 +1248,7 @@ public class Platform  {
     /**
      * This method is responsible to inject PlatformLayer referent object, since in special cases some plugin interact
      * directly with a layer instance. For example in the case of Network Services
-     *
+     * <p/>
      * NOTE: This method should always call before @see Platform#injectPluginReferencesAndStart(Plugin, Plugins)
      * always and when it is required by the plugin
      *
@@ -1259,7 +1270,7 @@ public class Platform  {
 
             }
 
-        } catch (Exception exception){
+        } catch (Exception exception) {
             LOG.log(Level.SEVERE, exception.getLocalizedMessage());
             throw new CantStartPlatformException();
         }
@@ -1270,7 +1281,7 @@ public class Platform  {
      *
      * @param descriptor
      */
-    private void checkAddonForDeveloperInterfaces(final Addons descriptor){
+    private void checkAddonForDeveloperInterfaces(final Addons descriptor) {
 
         /*
          * Get the addon by description
@@ -1280,14 +1291,14 @@ public class Platform  {
         /*
          * Validate is not null
          */
-        if(addon == null) {
+        if (addon == null) {
             return;
         }
 
         /*
          * Validate if is instance of DatabaseManagerForDevelopers
          */
-        if(addon instanceof DatabaseManagerForDevelopers) {
+        if (addon instanceof DatabaseManagerForDevelopers) {
 
             /*
              * Put into dealsWithDatabaseManagersAddons
@@ -1298,7 +1309,7 @@ public class Platform  {
         /*
          * Validate if is instance of LogManagerForDevelopers
          */
-        if(addon instanceof LogManagerForDevelopers) {
+        if (addon instanceof LogManagerForDevelopers) {
 
             /*
              * Put into dealsWithLogManagersAddons
@@ -1312,7 +1323,7 @@ public class Platform  {
      *
      * @param descriptor
      */
-    private void checkPluginForDeveloperInterfaces(final Plugins descriptor){
+    private void checkPluginForDeveloperInterfaces(final Plugins descriptor) {
 
         /*
          * Get the plugin by description
@@ -1322,14 +1333,14 @@ public class Platform  {
         /*
          * Validate is not null
          */
-        if(plugin == null) {
+        if (plugin == null) {
             return;
         }
 
         /*
          * Validate if is instance of DatabaseManagerForDevelopers
          */
-        if(plugin instanceof DatabaseManagerForDevelopers) {
+        if (plugin instanceof DatabaseManagerForDevelopers) {
 
             /*
              * Put into dealsWithDatabaseManagersPlugins
@@ -1340,7 +1351,7 @@ public class Platform  {
         /*
          * Validate if is instance of LogManagerForDevelopers
          */
-        if(plugin instanceof LogManagerForDevelopers) {
+        if (plugin instanceof LogManagerForDevelopers) {
 
             /*
              * Put into dealsWithDatabaseManagersPlugins
@@ -1352,6 +1363,7 @@ public class Platform  {
 
     /**
      * Get the CorePlatformContext
+     *
      * @return CorePlatformContext
      */
     public CorePlatformContext getCorePlatformContext() {
@@ -1365,7 +1377,7 @@ public class Platform  {
      * @param key
      * @return Plugin
      */
-    public Plugin getPlugin(Plugins key){
+    public Plugin getPlugin(Plugins key) {
         return corePlatformContext.getPlugin(key);
     }
 }
