@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,8 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 

@@ -45,7 +45,7 @@ public class IntraUserIdentityIdentity implements IntraUserIdentity {
     }
 
     @Override
-    public byte[] getProfileImage() throws CantShowProfileImageException {
+    public byte[] getProfileImage() {
         return this.profileImage;
     }
 

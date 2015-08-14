@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomListViewMati;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
