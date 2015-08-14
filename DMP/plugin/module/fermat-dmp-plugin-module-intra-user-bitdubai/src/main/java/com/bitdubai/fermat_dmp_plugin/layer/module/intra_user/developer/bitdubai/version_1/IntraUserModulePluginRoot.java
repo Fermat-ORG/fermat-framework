@@ -8,6 +8,10 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantCreateNewIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.DealsWithIdentityIntraUser;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSaveProfileImageException;
@@ -28,6 +32,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -51,7 +56,7 @@ import java.util.regex.Pattern;
  * @since Java JDK 1.7
  */
 
-public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, IntraUserModuleManager, Plugin, Service  {
+public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithIdentityIntraUser,DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, IntraUserModuleManager, Plugin, Service  {
 
 
 
@@ -59,6 +64,12 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLog
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
+
+    /**
+     * DealsWithIdentityIntraUser interface member variable
+     */
+
+    IntraUserIdentityManager intraUserIdentityManager;
 
     /**
      * DealsWithLogger interface member variable
@@ -109,7 +120,16 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLog
      */
     @Override
     public IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws CouldNotCreateIntraUserException {
-        return null;
+
+      try{
+          IntraUserIdentity intraUserIdentity =  this.intraUserIdentityManager.createNewIntraUser(intraUserName, profileImage);
+
+          return new IntraUserModuleLoginIdentity(intraUserIdentity.getAlias(),intraUserIdentity.getPublicKey(),intraUserIdentity.getProfileImage());
+      }
+      catch (CantCreateNewIntraUserException e){
+            throw new CouldNotCreateIntraUserException("CAN'T CREATE INTRA USER",e,"","Error in Intra user identity manager");
+      }
+
     }
 
     /**
@@ -286,6 +306,14 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors, DealsWithLog
     @Override
     public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance() throws CantGetIntraUsersListException {
         return null;
+    }
+
+    /**
+     * DealsWithIdentityIntraUser Interface implementation.
+     */
+    @Override
+    public void setIntraUserManager(IntraUserIdentityManager intraUserIdentityManager) {
+        this.intraUserIdentityManager = intraUserIdentityManager;
     }
 
     /**

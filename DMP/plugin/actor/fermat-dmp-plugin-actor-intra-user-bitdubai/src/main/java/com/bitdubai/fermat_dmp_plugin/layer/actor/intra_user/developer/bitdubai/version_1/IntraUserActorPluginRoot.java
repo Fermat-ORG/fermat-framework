@@ -5,9 +5,16 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
@@ -17,16 +24,30 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconn
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDao;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraUserException;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserActorDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraUserConnectionException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 
 import java.util.ArrayList;
@@ -48,9 +69,9 @@ import java.util.regex.Pattern;
  * @since Java JDK 1.7
  */
 
-public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem,  Plugin, Service  {
+public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseManagerForDevelopers,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service  {
 
-
+    private IntraUserActorDao intraUserActorDao;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -68,6 +89,13 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
      * DealsWithPlatformDatabaseSystem Interface member variables.
      */
     PluginDatabaseSystem pluginDatabaseSystem;
+
+
+    /**
+     * FileSystem Interface member variables.
+     */
+    PluginFileSystem pluginFileSystem;
+
 
     /**
      * Plugin Interface member variables.
@@ -99,6 +127,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
 
     @Override
     public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException {
+        try
+        {
+            this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey,profileImage);
+        }
+        catch(CantAddPendingIntraUserException e)
+        {
+            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER CONNECTION",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        }
 
     }
 
@@ -108,30 +148,27 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
      * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
      *
      * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
-     * @param intraUserToAddName         The name of the intra user to add
      * @param intraUserToAddPublicKey    The public key of the intra user to add
-     * @param profileImage               The profile image that the intra user has
      * @throws CantAcceptIntraUserException
      */
 
     @Override
-    public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptIntraUserException {
-
+    public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws CantAcceptIntraUserException {
+        try
+        {
+            this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ContactState.CONNECTED);
+        }
+        catch(CantUpdateIntraUserConnectionException e)
+        {
+            throw new CantAcceptIntraUserException("CAN'T ACCEPT INTRA USER CONNECTION",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantAcceptIntraUserException("CAN'T ACCEPT INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        }
     }
 
-    /**
-     * That method adds an intra user registry with state PENDING_YOUR_ACCEPTANCE
-     *
-     * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
-     * @param intraUserToAddName         The name of the intra user to add
-     * @param intraUserToAddPublicKey    The public key of the intra user to add
-     * @param profileImage               The profile image that the intra user has
-     * @throws CantDecideAcceptanceLaterException
-     */
-    @Override
-    public void decideAcceptanceLater(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantDecideAcceptanceLaterException {
 
-    }
 
     /**
      * That method rejects a connection request from another intra user
@@ -143,6 +180,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
     @Override
     public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws CantDenyConnectionException {
 
+        try
+        {
+            this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ContactState.LOCALLY_DENIED);
+        }
+        catch(CantUpdateIntraUserConnectionException e)
+        {
+            throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        }
     }
 
     /**
@@ -154,7 +203,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
      */
     @Override
     public void disconnectIntraUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraUserException {
-
+        try
+        {
+            this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ContactState.LOCALLY_DISCONNECTED);
+        }
+        catch(CantUpdateIntraUserConnectionException e)
+        {
+            throw new CantDisconnectIntraUserException("CAN'T CANCEL INTRA USER CONNECTION",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantDisconnectIntraUserException("CAN'T CANCEL INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        }
     }
 
 
@@ -167,7 +227,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
      */
     @Override
     public void cancelIntraUser(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws CantCancelIntraUserException {
-
+        try
+        {
+            this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToCancelPublicKey, ContactState.CANCELLED);
+        }
+        catch(CantUpdateIntraUserConnectionException e)
+        {
+            throw new CantCancelIntraUserException("CAN'T CANCEL INTRA USER CONNECTION",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantCancelIntraUserException("CAN'T CANCEL INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        }
     }
 
     /**
@@ -179,7 +250,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
      */
     @Override
     public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
-        return null;
+        try
+        {
+            return this.intraUserActorDao.getAllIntraUsers(intraUserLoggedInPublicKey);
+        }
+        catch(CantGetIntraUsersListException e)
+        {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS",FermatException.wrapException(e),"","");
+        }
     }
 
 
@@ -194,7 +276,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
 
     @Override
     public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
-        return null;
+        try
+        {
+            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_YOUR_ACCEPTANCE);
+        }
+        catch(CantGetIntraUsersListException e)
+        {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS",FermatException.wrapException(e),"","");
+        }
     }
 
 
@@ -209,7 +302,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
 
     @Override
     public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
-        return null;
+        try
+        {
+            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_HIS_ACCEPTANCE);
+        }
+        catch(CantGetIntraUsersListException e)
+        {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS",FermatException.wrapException(e),"","");
+        }
     }
 
 
@@ -223,9 +327,22 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
     }
 
     /**
-     * DealWithEvents Interface implementation.
+     * DealsWithPluginDatabaseSystem interface implementation.
      */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
 
+    }
+
+    /**
+     * DealWithPluginFileSystem Interface implementation.
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem  = pluginFileSystem;
+
+    }
 
     @Override
     public void setLogManager(LogManager logManager) {
@@ -303,6 +420,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
      */
     @Override
     public void start() throws CantStartPluginException {
+        try {
+            /**
+             * I created instance of IntraUserActorDao
+             */
+            this.intraUserActorDao = new IntraUserActorDao(pluginDatabaseSystem,this.pluginFileSystem, this.pluginId);
+
+            this.intraUserActorDao.initializeDatabase();
+
+        } catch (CantInitializeIntraUserActorDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
+        }
 
         this.serviceStatus = ServiceStatus.STARTED;
 
@@ -336,16 +465,53 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DealsWith
         return serviceStatus;
     }
 
-
+    /**
+     * PlugIn Interface implementation.
+     */
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
+
+
+    /**
+     * DatabaseManagerForDevelopers Interface implementation.
+     */
     @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+
+
     }
 
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
 
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        Database database;
+        try {
+            IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
+            return dbFactory.getDatabaseTableContent(developerObjectFactory,  developerDatabaseTable);
+        }catch (CantOpenDatabaseException cantOpenDatabaseException){
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        // If we are here the database could not be opened, so we return an empry list
+        return new ArrayList<>();
+    }
 }
