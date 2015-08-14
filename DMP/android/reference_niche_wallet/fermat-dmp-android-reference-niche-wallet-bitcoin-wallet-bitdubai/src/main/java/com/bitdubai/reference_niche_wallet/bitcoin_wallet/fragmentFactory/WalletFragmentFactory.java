@@ -1,6 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
@@ -33,7 +33,7 @@ public class WalletFragmentFactory implements FragmentFactory{
     @Override
     public Fragment getFragment(String code,WalletSession walletSession,WalletSettingsManager walletSettingsManager) throws FragmentNotFoundException {
 
-        android.support.v4.app.Fragment currentFragment = null;
+        Fragment currentFragment = null;
 
         Fragments fragment = Fragments.getValueFromString(code);
         switch (fragment){

@@ -96,11 +96,11 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
     @Override
     public void start() throws CantStartAgentException {
         // I register this networkservice.
-        //ECCKeyPair keyPair = new ECCKeyPair();
-        //try {
+       // ECCKeyPair keyPair = new ECCKeyPair();
+       // try {
         //    communicationLayerManager.registerNetworkService(NetworkServices.WALLET_STORE, keyPair.getPublicKey());
-       //     communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels.CLOUD, NetworkServices.WALLET_STORE, null);
-        //    System.out.println("Remote networkservices: " + communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.WALLET_STORE));
+        //    communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels.CLOUD, NetworkServices.WALLET_STORE, null);
+         //   System.out.println("Remote networkservices: " + communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.WALLET_STORE));
        // } catch (CommunicationException e) {
         //    e.printStackTrace();
        // }

@@ -7,8 +7,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -20,12 +18,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentImpl;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -53,13 +55,19 @@ public class InformationPublishedComponentDao {
     private Database dataBase;
 
     /**
+     * Represent the imageManager
+     */
+    private ImageManager imageManager;
+
+    /**
      * Constructor with parameters
      *
      * @param dataBase
      */
-    public InformationPublishedComponentDao(Database dataBase) {
+    public InformationPublishedComponentDao(Database dataBase, ImageManager imageManager) {
         super();
         this.dataBase = dataBase;
+        this.imageManager = imageManager;
     }
 
     /**
@@ -386,17 +394,38 @@ public class InformationPublishedComponentDao {
             transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+            /*
+             * 3.- Serialize the objects images into the xml file
+             */
+            imageManager.persist(entity.getIconImg());
+            imageManager.persist(entity.getMainScreenShotImg());
 
+        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
-
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
-            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            throw cantInsertRecordDataBaseException;
 
+            throw new CantInsertRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+
+        }catch (CantPersistFileException cantPersistFileException) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+            String context = contextBuffer.toString();
+            String possibleCause = "Can not update the file image";
+
+            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, cantPersistFileException, context, possibleCause);
+
+        } catch (CantCreateFileException cantCreateFileException) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+            String context = contextBuffer.toString();
+            String possibleCause = "Can not update the file image";
+
+            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, cantCreateFileException, context, possibleCause);
         }
 
     }
@@ -427,6 +456,12 @@ public class InformationPublishedComponentDao {
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 
+            /*
+             * 3.- Serialize the objects images into the xml file
+             */
+            imageManager.persist(entity.getIconImg());
+            imageManager.persist(entity.getMainScreenShotImg());
+
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -437,6 +472,23 @@ public class InformationPublishedComponentDao {
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
 
+        } catch (CantPersistFileException cantPersistFileException) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Can not update the file image";
+            throw new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantPersistFileException, context, possibleCause);
+
+        } catch (CantCreateFileException cantCreateFileException) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Can not update the file image";
+            throw new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantCreateFileException, context, possibleCause);
         }
 
     }
@@ -498,24 +550,37 @@ public class InformationPublishedComponentDao {
             informationPublishedComponent.setType(DescriptorFactoryProjectType.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME)));
             informationPublishedComponent.setDescriptions(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME));
 
-
-            //TODO: Deserializar el objeto image xml
-            informationPublishedComponent.setIconImg(new ImageImpl());
-            informationPublishedComponent.setMainScreenShotImg(new ImageImpl());
-
+            /*
+             * Xml File deserialize into the object image
+             */
+            String fileIdIconImg = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME);
+            String fileIdMainScreenShot = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME);
+            informationPublishedComponent.setIconImg(imageManager.load(fileIdIconImg));
+            informationPublishedComponent.setMainScreenShotImg(imageManager.load(fileIdMainScreenShot));
 
             informationPublishedComponent.setVideoUrl(new URL(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME)));
             informationPublishedComponent.setStatus(ComponentPublishedInformationStatus.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME)));
             informationPublishedComponent.setStatusTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME)));
             informationPublishedComponent.setPublicationTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME)));
-            informationPublishedComponent.setPublisherId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_ID_COLUMN_NAME)));
-
+            informationPublishedComponent.setPublisherIdentityPublicKey(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));
+            informationPublishedComponent.setSignature(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME));
 
         } catch (InvalidParameterException e) {
 
             //this should not happen, but if it happens return null
             return null;
+
         } catch (MalformedURLException e) {
+
+            //this should not happen, but if it happens return null
+            return null;
+
+        } catch (FileNotFoundException e) {
+
+            //this should not happen, but if it happens return null
+            return null;
+
+        } catch (CantCreateFileException e) {
 
             //this should not happen, but if it happens return null
             return null;
@@ -551,9 +616,10 @@ public class InformationPublishedComponentDao {
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME,  walletPublishedMiddlewareInformation.getMainScreenShotImg().getFileId().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME,             walletPublishedMiddlewareInformation.getVideoUrl().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME,                walletPublishedMiddlewareInformation.getStatus().getCode());
-        entityRecord.setLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME, walletPublishedMiddlewareInformation.getStatusTimestamp().getTime());
+        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME, walletPublishedMiddlewareInformation.getStatusTimestamp().getTime());
         entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME,   walletPublishedMiddlewareInformation.getPublicationTimestamp().getTime());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_ID_COLUMN_NAME,          walletPublishedMiddlewareInformation.getPublisherId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, walletPublishedMiddlewareInformation.getPublisherIdentityPublicKey().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME, walletPublishedMiddlewareInformation.getSignature());
 
         /*
          * return the new table record

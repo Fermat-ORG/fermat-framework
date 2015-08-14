@@ -1,9 +1,10 @@
 package com.bitdubai.android_core.app.common.version_1.adapters;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
@@ -111,11 +112,11 @@ import java.util.List;
 
         public void destroyItem(android.view.ViewGroup container, int position, Object object) {
 
-            FragmentManager manager = ((android.support.v4.app.Fragment) object).getFragmentManager();
+            FragmentManager manager = ((Fragment) object).getFragmentManager();
             if(manager != null) {
                 FragmentTransaction trans = manager.beginTransaction();
-                trans.detach((android.support.v4.app.Fragment) object);
-                trans.remove((android.support.v4.app.Fragment) object);
+                trans.detach((Fragment) object);
+                trans.remove((Fragment) object);
                 trans.commit();
 
 
@@ -139,7 +140,7 @@ import java.util.List;
         }
 
         @Override
-        public android.support.v4.app.Fragment getItem(int position) {
+        public Fragment getItem(int position) {
 
 
 
@@ -148,7 +149,7 @@ import java.util.List;
              */
             SubAppsSession subAppSession=null;
 
-            android.support.v4.app.Fragment currentFragment = null;
+            Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
             List<Tab> titleTabs =tabStrip.getTabs();
             for (int j = 0; j < titleTabs.size(); j++) {

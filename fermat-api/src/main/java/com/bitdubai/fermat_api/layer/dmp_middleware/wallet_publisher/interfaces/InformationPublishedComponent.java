@@ -110,7 +110,14 @@ public interface InformationPublishedComponent {
      *
      * @return UUID
      */
-    public UUID getPublisherId();
+    public UUID getPublisherIdentityPublicKey();
+
+    /**
+     * Get the Signature for this component
+     *
+     * @return String
+     */
+    public String getSignature();
 
     /**
      * Get the Component Versions Details List

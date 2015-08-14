@@ -18,12 +18,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageImpl;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -51,13 +54,19 @@ public class ScreensShotsComponentsDao {
     private Database dataBase;
 
     /**
+     * Represent the imageManager
+     */
+    private ImageManager imageManager;
+
+    /**
      * Constructor with parameters
      *
      * @param dataBase
      */
-    public ScreensShotsComponentsDao(Database dataBase) {
+    public ScreensShotsComponentsDao(Database dataBase, ImageManager imageManager) {
         super();
         this.dataBase = dataBase;
+        this.imageManager = imageManager;
     }
 
     /**
@@ -486,15 +495,23 @@ public class ScreensShotsComponentsDao {
      */
     private ImageImpl constructFrom(DatabaseTableRecord record){
 
-        ImageImpl imageImpl = new ImageImpl();
+        try {
 
-        imageImpl.setFileId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME)));
-        imageImpl.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME)));
+            String fileIdImg = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME);
 
-        //TODO: Deserializar el objeto image xml
-        imageImpl.setData(new byte[]{});
+            /*
+             * Xml File deserialize into the object image
+             */
+            return (ImageImpl) imageManager.load(fileIdImg);
 
-        return imageImpl;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
     }
 
     /**

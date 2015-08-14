@@ -27,6 +27,12 @@ public class WalletNavigationStructureMiddleware implements WalletNavigationStru
     private Activity startActivity;
     private Activity lastActivity;
 
+    public WalletNavigationStructureMiddleware(String publicKey){
+
+        this.publicKey=publicKey;
+
+    }
+
     @Override
     public Activity getActivity() {
         return this.activity;
@@ -48,20 +54,21 @@ public class WalletNavigationStructureMiddleware implements WalletNavigationStru
     }
 
     @Override
-    public void setActivity(Activity activity, String type) {
-        this.activity.setType(Activities.getValueFromString(type));
+    public void setActivity(Activity activity, Activities type) {
         this.activity=activity;
+        this.activity.setType(type);
     }
 
     @Override
-    public void setLastActivity(Activity activity, String type) {
-        this.activity.setType(Activities.getValueFromString(type));
+    public void setLastActivity(Activity activity, Activities type) {
         this.lastActivity=activity;
+        this.lastActivity.setType(type);
     }
 
     @Override
-    public void setStartActivity(Activity activity, String type) {
+    public void setStartActivity(Activity activity, Activities type) {
         this.startActivity=activity;
+        this.startActivity.setType(type);
     }
 
     @Override
