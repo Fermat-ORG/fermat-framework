@@ -87,9 +87,14 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
     private Timestamp publicationTimestamp;
 
     /**
-     * Represent the Publisher Id
+     * Represent the publisherIdentityPublicKey
      */
-    private UUID publisherId;
+    private UUID publisherIdentityPublicKey;
+
+    /**
+     * Represent the signature
+     */
+    private String signature;
 
     /**
      * Represent the Component Versions Details List
@@ -121,14 +126,14 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
      * @param id
      * @param mainScreenShotImg
      * @param publicationTimestamp
-     * @param publisherId
+     * @param publisherIdentityPublicKey
      * @param screensShotsComponentList
      * @param status
      * @param statusTimestamp
      * @param type
      * @param videoUrl
      */
-    public InformationPublishedComponentImpl(List<ComponentVersionDetail> componentVersionDetailList, String descriptions, UUID descriptorFactoryProjectId, String descriptorFactoryProjectName, Image iconImg, UUID id, Image mainScreenShotImg, Timestamp publicationTimestamp, UUID publisherId, List<Image> screensShotsComponentList, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, DescriptorFactoryProjectType type, URL videoUrl) {
+    public InformationPublishedComponentImpl(List<ComponentVersionDetail> componentVersionDetailList, String descriptions, UUID descriptorFactoryProjectId, String descriptorFactoryProjectName, Image iconImg, UUID id, Image mainScreenShotImg, Timestamp publicationTimestamp, UUID publisherIdentityPublicKey, List<Image> screensShotsComponentList, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, DescriptorFactoryProjectType type, URL videoUrl) {
         super();
         this.componentVersionDetailList = componentVersionDetailList;
         this.descriptions = descriptions;
@@ -138,7 +143,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
         this.id = id;
         this.mainScreenShotImg = mainScreenShotImg;
         this.publicationTimestamp = publicationTimestamp;
-        this.publisherId = publisherId;
+        this.publisherIdentityPublicKey = publisherIdentityPublicKey;
         this.screensShotsComponentList = screensShotsComponentList;
         this.status = status;
         this.statusTimestamp = statusTimestamp;
@@ -300,21 +305,38 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentImpl#getPublisherId()
+     * @see InformationPublishedComponentImpl#getPublisherIdentityPublicKey()
      */
     @Override
-    public UUID getPublisherId() {
-        return publisherId;
+    public UUID getPublisherIdentityPublicKey() {
+        return publisherIdentityPublicKey;
     }
 
+    /**
+     * Set the publisherIdentityPublicKey
+     *
+     * @param publisherIdentityPublicKey
+     */
+    public void setPublisherIdentityPublicKey(UUID publisherIdentityPublicKey) {
+        this.publisherIdentityPublicKey = publisherIdentityPublicKey;
+    }
 
     /**
-     * Set the publisherId
-     *
-     * @param publisherId
+     * (non-Javadoc)
+     * @see InformationPublishedComponentImpl#getSignature()
      */
-    public void setPublisherId(UUID publisherId) {
-        this.publisherId = publisherId;
+    @Override
+    public String getSignature() {
+        return signature;
+    }
+
+    /**
+     * Set the Signature
+     *
+     * @param signature
+     */
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 
     /**
@@ -448,7 +470,7 @@ public class InformationPublishedComponentImpl implements InformationPublishedCo
                 ", status=" + status +
                 ", statusTimestamp=" + statusTimestamp +
                 ", publicationTimestamp=" + publicationTimestamp +
-                ", publisherId=" + publisherId +
+                ", publisherIdentityPublicKey=" + publisherIdentityPublicKey +
                 ", screensShotsComponentList=" + screensShotsComponentList +
                 '}';
     }
