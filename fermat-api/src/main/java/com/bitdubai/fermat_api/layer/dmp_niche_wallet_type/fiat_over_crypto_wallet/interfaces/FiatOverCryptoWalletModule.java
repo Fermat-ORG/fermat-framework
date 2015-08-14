@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_request.money_request.interfaces.MoneyRequestInformation;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,9 +19,9 @@ public interface FiatOverCryptoWalletModule {
      * Contacts administration related methods
      */
 
-    List<WalletContactRecord> listWalletContacts(UUID walletId);// throws CantGetAllWalletContactsException;
+    List<WalletContactRecord> listWalletContacts(String walletPublicKey);// throws CantGetAllWalletContactsException;
 
-    List<WalletContactRecord> listWalletContactsScrolling(UUID walletId, Integer max, Integer offset);// throws CantGetAllWalletContactsException;
+    List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset);// throws CantGetAllWalletContactsException;
 
     WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, UUID walletId);// throws CantCreateWalletContactException;
 
@@ -28,32 +29,50 @@ public interface FiatOverCryptoWalletModule {
 
     void deleteWalletContact(UUID contactId);// throws CantDeleteWalletContactException;
 
-    List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId);// throws CantGetWalletContactException;
-
-    boolean isValidAddress(CryptoAddress cryptoAddress);
+    List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, String walletPublicKey);// throws CantGetWalletContactException;
 
     /**
      * Balance Fragment methods
      */
-    long getAvailableBalance(UUID walletId);// throws CantGetBalanceException;
+    long getAvailableBalance(String walletPublicKey);// throws CantGetBalanceException;
 
-    long getBookBalance(UUID walletId);//throws CantGetBalanceException;
-
-    /**
-     * Transactions Fragment methods
-     */
-    List<FiatOverCryptoWalletModuleTransaction> getTransactions(int max, int offset, UUID walletId);// throws CantGetTransactionsException;
+    long getBookBalance(String walletPublicKey);//throws CantGetBalanceException;
 
     /**
-     * Receive methods
+     * Transactions related methods
      */
-    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, ReferenceWallet referenceWallet, UUID walletId);// throws CantRequestCryptoAddressException;
+    List<FiatOverCryptoWalletModuleTransaction> getTransactions(int max, int offset, String walletPublicKey);// throws CantGetTransactionsException;
 
-    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, ReferenceWallet referenceWallet, UUID walletId);// throws CantRequestCryptoAddressException;
+    /**
+     * Money Request information
+     */
+
+    /**
+     *
+     * @return
+     */
+    List<CryptoRequestToFiatOverCryptoWallet> getCryptoRequestReceived();
+    List<MoneyRequestInformation> getMoneyRequestSent();
+    List<MoneyRequestInformation> getMoneyRequestReceived();
+
+
 
     /**
      * Send money methods
      */
-    void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType);// throws CantSendCryptoException, InsufficientFundsException;
+
+    /**
+     * The method <code>send</code> initiates a fiat transaction
+     *
+     * @param fiatAmount                The amount of fiat to send
+     * @param destinationAddress        The destination address to send the value
+     * @param notes                     The description of the payment
+     * @param walletPublicKey           The public key of the wallet sending the payment
+     * @param deliveredByActorPublicKey The public key of the actor sending the payment
+     * @param deliveredByActorType      The type of the actor sending the payment
+     * @param deliveredToActorPublicKey The public key of the actor destination of the payment
+     * @param deliveredToActorType      The type of the actor receptor of the payment
+     */
+    void send(long fiatAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType);// throws CantSendCryptoException, InsufficientFundsException;
 
 }

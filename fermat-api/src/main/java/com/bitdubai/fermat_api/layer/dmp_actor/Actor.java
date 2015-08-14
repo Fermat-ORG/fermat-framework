@@ -23,4 +23,8 @@ public interface Actor {
     public UUID getId();
 
     public Actors getType();
+
+    public byte[] getPhoto();
+
+    public void setPhoto(byte[] photo);
 }

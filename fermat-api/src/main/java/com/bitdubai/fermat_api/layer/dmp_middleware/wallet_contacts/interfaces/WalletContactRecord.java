@@ -31,7 +31,9 @@ public interface WalletContactRecord {
      * @return the profile image
      * @throws CantGetContactProfileImageException
      */
-    byte[] getContactProfileImage() throws CantGetContactProfileImageException;
+    byte[] getContactProfileImage();
+
+    void setPhoto(byte[] photo);
 
     /**
      * Return the contactId
