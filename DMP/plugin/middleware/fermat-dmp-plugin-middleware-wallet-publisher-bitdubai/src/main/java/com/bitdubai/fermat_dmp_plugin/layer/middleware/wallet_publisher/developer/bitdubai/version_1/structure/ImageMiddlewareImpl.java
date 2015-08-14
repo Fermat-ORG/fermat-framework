@@ -6,22 +6,22 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.Image;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ImageMiddleware;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageImpl</code> is the
- * representation of the Image
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageMiddlewareImpl</code> is the
+ * representation of the ImageMiddleware
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/08/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ImageImpl implements Image{
+public class ImageMiddlewareImpl implements ImageMiddleware {
 
     /**
      * Represent the FileId
@@ -41,7 +41,7 @@ public class ImageImpl implements Image{
     /**
      * Constructor
      */
-    public ImageImpl(){
+    public ImageMiddlewareImpl(){
         super();
     }
 
@@ -52,7 +52,7 @@ public class ImageImpl implements Image{
      * @param fileId
      * @param data
      */
-    public ImageImpl(UUID componentId, UUID fileId, byte[] data) {
+    public ImageMiddlewareImpl(UUID componentId, UUID fileId, byte[] data) {
         super();
         this.componentId = componentId;
         this.fileId = fileId;
@@ -61,7 +61,7 @@ public class ImageImpl implements Image{
 
     /**
      * (non-Javadoc)
-     * @see Image#getComponentId()
+     * @see ImageMiddleware#getComponentId()
      */
     @Override
     public UUID getComponentId() {
@@ -80,7 +80,7 @@ public class ImageImpl implements Image{
 
     /**
      * (non-Javadoc)
-     * @see Image#getFileId()
+     * @see ImageMiddleware#getFileId()
      */
     @Override
     public UUID getFileId() {
@@ -98,7 +98,7 @@ public class ImageImpl implements Image{
 
     /**
      * (non-Javadoc)
-     * @see Image#getData()
+     * @see ImageMiddleware#getData()
      */
     @Override
     public byte[] getData() {
@@ -121,8 +121,8 @@ public class ImageImpl implements Image{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ImageImpl)) return false;
-        ImageImpl image = (ImageImpl) o;
+        if (!(o instanceof ImageMiddlewareImpl)) return false;
+        ImageMiddlewareImpl image = (ImageMiddlewareImpl) o;
         return Objects.equals(getFileId(), image.getFileId());
     }
 
@@ -141,7 +141,7 @@ public class ImageImpl implements Image{
      */
     @Override
     public String toString() {
-        return "ImageImpl{" +
+        return "ImageMiddlewareImpl{" +
                 "componentId=" + componentId +
                 ", fileId=" + fileId +
                 ", data=" + Arrays.toString(data) +

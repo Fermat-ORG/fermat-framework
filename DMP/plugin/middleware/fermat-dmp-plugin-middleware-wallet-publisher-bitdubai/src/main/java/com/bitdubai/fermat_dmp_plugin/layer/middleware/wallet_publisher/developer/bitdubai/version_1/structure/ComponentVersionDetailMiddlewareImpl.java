@@ -8,14 +8,14 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetail;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetailMiddleware;
 
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ComponentVersionDetailImpl</code> is the
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ComponentVersionDetailMiddlewareImpl</code> is the
  * representation of the Component Version Detail
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/08/15.
@@ -23,7 +23,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ComponentVersionDetailImpl implements ComponentVersionDetail {
+public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDetailMiddleware {
 
     /**
      * Represent the id
@@ -84,7 +84,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
     /**
      * Constructor
      */
-    public ComponentVersionDetailImpl(){
+    public ComponentVersionDetailMiddlewareImpl(){
         super();
     }
 
@@ -103,7 +103,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
      * @param version
      * @param versionTimestamp
      */
-    public ComponentVersionDetailImpl(UUID catalogId, UUID componentId, Version finalPlatformVersion, Version finalWalletVersion, UUID id, Version initialPlatformVersion, Version initialWalletVersion, String observations, ScreenSize screenSize, Version version, Timestamp versionTimestamp) {
+    public ComponentVersionDetailMiddlewareImpl(UUID catalogId, UUID componentId, Version finalPlatformVersion, Version finalWalletVersion, UUID id, Version initialPlatformVersion, Version initialWalletVersion, String observations, ScreenSize screenSize, Version version, Timestamp versionTimestamp) {
         super();
         this.catalogId = catalogId;
         this.componentId = componentId;
@@ -120,7 +120,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getCatalogId()
+     * @see ComponentVersionDetailMiddleware#getCatalogId()
      */
     @Override
     public UUID getCatalogId() {
@@ -138,7 +138,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getComponentId()
+     * @see ComponentVersionDetailMiddleware#getComponentId()
      */
     @Override
     public UUID getComponentId() {
@@ -156,7 +156,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getFinalPlatformVersion()
+     * @see ComponentVersionDetailMiddleware#getFinalPlatformVersion()
      */
     @Override
     public Version getFinalPlatformVersion() {
@@ -174,7 +174,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getFinalWalletVersion()
+     * @see ComponentVersionDetailMiddleware#getFinalWalletVersion()
      */
     @Override
     public Version getFinalWalletVersion() {
@@ -192,7 +192,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getId()
+     * @see ComponentVersionDetailMiddleware#getId()
      */
     @Override
     public UUID getId() {
@@ -210,7 +210,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getInitialPlatformVersion()
+     * @see ComponentVersionDetailMiddleware#getInitialPlatformVersion()
      */
     @Override
     public Version getInitialPlatformVersion() {
@@ -228,7 +228,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getInitialWalletVersion()
+     * @see ComponentVersionDetailMiddleware#getInitialWalletVersion()
      */
     @Override
     public Version getInitialWalletVersion() {
@@ -246,7 +246,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getObservations()
+     * @see ComponentVersionDetailMiddleware#getObservations()
      */
     @Override
     public String getObservations() {
@@ -264,7 +264,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getScreenSize()
+     * @see ComponentVersionDetailMiddleware#getScreenSize()
      */
     @Override
     public ScreenSize getScreenSize() {
@@ -282,7 +282,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getVersion()
+     * @see ComponentVersionDetailMiddleware#getVersion()
      */
     @Override
     public Version getVersion() {
@@ -300,7 +300,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
 
     /**
      * (non-Javadoc)
-     * @see ComponentVersionDetail#getVersionTimestamp()
+     * @see ComponentVersionDetailMiddleware#getVersionTimestamp()
      */
     @Override
     public Timestamp getVersionTimestamp() {
@@ -323,8 +323,8 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ComponentVersionDetailImpl)) return false;
-        ComponentVersionDetailImpl that = (ComponentVersionDetailImpl) o;
+        if (!(o instanceof ComponentVersionDetailMiddlewareImpl)) return false;
+        ComponentVersionDetailMiddlewareImpl that = (ComponentVersionDetailMiddlewareImpl) o;
         return Objects.equals(getId(), that.getId());
     }
 
@@ -343,7 +343,7 @@ public class ComponentVersionDetailImpl implements ComponentVersionDetail {
      */
     @Override
     public String toString() {
-        return "ComponentVersionDetailImpl{" +
+        return "ComponentVersionDetailMiddlewareImpl{" +
                 "catalogId=" + catalogId +
                 ", id=" + id +
                 ", screenSize=" + screenSize +

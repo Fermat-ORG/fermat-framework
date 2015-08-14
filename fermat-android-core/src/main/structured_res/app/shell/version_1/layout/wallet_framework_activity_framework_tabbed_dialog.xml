@@ -6,7 +6,7 @@
     android:layout_height="wrap_content" >
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/imageMiddleware"
         android:layout_width="match_parent"
         android:layout_height="144dip"
         android:scaleType="centerCrop"
@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/image"
+        android:layout_alignBottom="@+id/imageMiddleware"
         android:background="#77000000"
         android:paddingBottom="14dip"
         android:paddingLeft="8dip"
@@ -29,7 +29,7 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="62dip"
-        android:layout_below="@+id/image"
+        android:layout_below="@+id/imageMiddleware"
         android:background="@drawable/background_tiled_diagonal_light"
 
         />

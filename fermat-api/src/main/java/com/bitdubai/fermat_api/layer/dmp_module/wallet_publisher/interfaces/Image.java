@@ -4,13 +4,13 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
+package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.Image</code> this wrap a image
- * to be persist into the file system
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ImageMiddleware</code> this wrap a image
+ * to be persist into the file system ike a xml file
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 11/08/15.
  *

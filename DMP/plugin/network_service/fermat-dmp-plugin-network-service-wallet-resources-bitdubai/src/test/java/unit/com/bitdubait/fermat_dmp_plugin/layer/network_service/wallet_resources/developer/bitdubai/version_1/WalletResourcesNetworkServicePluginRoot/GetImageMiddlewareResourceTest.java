@@ -30,7 +30,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
         * The Resource Repository  is not created, then test return error for all case.
         */
 @RunWith(MockitoJUnitRunner.class)
-public class GetImageResourceTest extends TestCase {
+public class GetImageMiddlewareResourceTest extends TestCase {
 
     /**
      * DealsWithErrors interface Mocked
