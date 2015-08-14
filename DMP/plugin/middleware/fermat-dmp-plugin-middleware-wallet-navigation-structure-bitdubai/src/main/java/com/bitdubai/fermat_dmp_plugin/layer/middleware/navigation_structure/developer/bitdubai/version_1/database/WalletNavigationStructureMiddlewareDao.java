@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantUpdateNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.NavigationStructureNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructure;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -207,7 +207,7 @@ public class WalletNavigationStructureMiddlewareDao {
 
     }
 
-    public WalletNavigationStructure findWalletNavigationStructureById(String id) throws CantGetWalletNavigationStructureException {
+    public WalletNavigationStructure findWalletNavigationStructureById(String id) throws CantGetWalletNavigationStructureException, NavigationStructureNotFoundException {
 
         try{
 
@@ -239,7 +239,7 @@ public class WalletNavigationStructureMiddlewareDao {
             }else{
 
                 this.database.closeDatabase();
-                throw new CantGetWalletNavigationStructureException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, null, "Cannot find this WalletNavigationStructure with "+id+" id","Please, check the cause");
+                throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot find this WalletNavigationStructure with "+id+" id","Please, check the cause");
 
             }
 
