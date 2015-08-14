@@ -91,6 +91,11 @@ public class BalanceFragment extends Fragment {
      */
     WalletSettingsManager walletSettingsManager;
 
+    /**
+     *
+     */
+
+
 
     ListView list;
     CustomAdapter adapter;
