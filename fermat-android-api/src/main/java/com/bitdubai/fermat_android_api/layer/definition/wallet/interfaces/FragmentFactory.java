@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
-import android.support.v4.app.Fragment;
+
+import android.app.Fragment;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;

@@ -122,7 +122,20 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     @Override
     public List<WalletContactRecord> listWalletContacts(UUID walletId) throws CantGetAllWalletContactsException {
         try {
-            return walletContactsRegistry.listWalletContacts(walletId);
+            List<WalletContactRecord> finalRecordList = new ArrayList<>();
+            finalRecordList.clear();
+            for(WalletContactRecord r : walletContactsRegistry.listWalletContacts(walletId)){
+                byte[] image = null;
+                switch (r.getActorType()) {
+                    case EXTRA_USER:
+                        image = extraUserManager.getPhoto(r.getActorId());
+                        break;
+                    default: throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+                }
+                r.setPhoto(image);
+                finalRecordList.add(r);
+            }
+            return  finalRecordList;
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException e) {
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
         }  catch (Exception e) {
@@ -133,13 +146,57 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     @Override
     public List<WalletContactRecord> listWalletContactsScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException {
         try {
-            return walletContactsRegistry.listWalletContactsScrolling(walletId, max, offset);
+            List<WalletContactRecord> finalRecordList = new ArrayList<>();
+            finalRecordList.clear();
+            for(WalletContactRecord r : walletContactsRegistry.listWalletContactsScrolling(walletId, max, offset)){
+                byte[] image = null;
+                switch (r.getActorType()) {
+                    case EXTRA_USER:
+                        image = extraUserManager.getPhoto(r.getActorId());
+                        break;
+                    default: throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+                }
+                r.setPhoto(image);
+                finalRecordList.add(r);
+            }
+            return  finalRecordList;
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException e) {
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
         } catch (Exception e) {
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
+
+
+    @Override
+    public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType,
+                                                   ReferenceWallet referenceWallet, UUID walletId, byte[] photo) throws CantCreateWalletContactException {
+        try{
+            WalletContactRecord walletContactRecord;
+            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletId(actorName, walletId);
+            UUID actorId = createActor(actorName, actorType,photo);
+
+            if (walletContactRecord == null)
+                return walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
+            else if(!(receivedCryptoAddress.getAddress().equals(walletContactRecord.getReceivedCryptoAddress().getAddress())))
+                this.updateWalletContact(walletContactRecord.getContactId(), walletContactRecord.getReceivedCryptoAddress(), walletContactRecord.getActorName());
+
+            walletContactRecord.setPhoto(photo);
+
+            return  walletContactRecord;
+        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (CantCreateOrRegisterActorException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        }  catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (CantUpdateWalletContactException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (Exception e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
 
     @Override
     public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, UUID walletId) throws CantCreateWalletContactException {
@@ -165,7 +222,15 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         } catch (Exception e) {
             throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
+    }
 
+    @Override
+    public void updateContactPhoto(UUID actorId, Actors actor, byte[] photo) throws CantUpdateWalletContactException {
+        switch (actor) {
+            case EXTRA_USER:
+                this.extraUserManager.setPhoto(actorId,photo);
+            default: throw new CantUpdateWalletContactException("Actor not expected",null,"The actor type is:" + actor.getCode(),"Incomplete switch");
+        }
     }
 
     @Override
@@ -225,7 +290,20 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     @Override
     public List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
         try {
-            return walletContactsRegistry.getWalletContactByNameContainsAndWalletId(actorName, walletId);
+            List<WalletContactRecord> finalRecordList = new ArrayList<>();
+            finalRecordList.clear();
+            for(WalletContactRecord r :walletContactsRegistry.getWalletContactByNameContainsAndWalletId(actorName, walletId)){
+                byte[] image = null;
+                switch (r.getActorType()) {
+                    case EXTRA_USER:
+                        image = extraUserManager.getPhoto(r.getActorId());
+                        break;
+                    default: throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+                }
+                r.setPhoto(image);
+                finalRecordList.add(r);
+            }
+            return  finalRecordList;
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e);
         } catch(Exception exception){
@@ -377,6 +455,21 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
             throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
         }
     }
+
+
+
+    private UUID createActor(String actorName, Actors actorType, byte[] photo) throws CantCreateOrRegisterActorException {
+        switch (actorType){
+            case EXTRA_USER:
+                Actor actor = extraUserManager.createActor(actorName,photo);
+                return actor.getId();
+            default:
+                throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, null, "", "ActorType is not Compatible.");
+        }
+        // TODO ADD CANTCREATEXTRAUSER EXCEPTION IN PLUGIN EXTRA USER
+        //      throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
+    }
+
 
     private UUID createActor(String actorName, Actors actorType) throws CantCreateOrRegisterActorException {
         switch (actorType){

@@ -1,17 +1,17 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.app.FragmentTransaction;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.app.FragmentTransaction;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +21,7 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
@@ -244,6 +245,7 @@ public class BalanceFragment extends Fragment {
 
         custonMati.setDataList(lstData);
 
+
         custonMati.setLastTransactionsEvent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -262,16 +264,21 @@ public class BalanceFragment extends Fragment {
         custonMati.setSeeAlltransactionsEvent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionsFragment transactionsFragment = new TransactionsFragment();
-                transactionsFragment.setWalletSession(referenceWalletSession);
+//                TransactionsFragment transactionsFragment = new TransactionsFragment();
+//                transactionsFragment.setWalletSession(referenceWalletSession);
+//
+//
+//
+//                FragmentTransaction FT = getFragmentManager().beginTransaction();
+//                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//                FT.replace(R.id.balance_container, transactionsFragment);
+//                FT.addToBackStack(null);
+//                FT.attach(transactionsFragment);
+//                FT.show(transactionsFragment);
+//                FT.commit();
 
-                FragmentTransaction FT = getFragmentManager().beginTransaction();
-                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                FT.replace(R.id.balance_container, transactionsFragment);
-                FT.addToBackStack(null);
-                FT.attach(transactionsFragment);
-                FT.show(transactionsFragment);
-                FT.commit();
+                ((FermatScreenSwapper)getActivity()).changeActivity("CWRWBWBV1T", null);
+
             }
         });
 

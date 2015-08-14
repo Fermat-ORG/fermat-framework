@@ -60,6 +60,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
+import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
 import java.util.ArrayList;
@@ -328,7 +329,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
          * Making the pagerTab adapter
          */
 
-        adapter = new TabsPagerAdapter(getSupportFragmentManager(),
+        adapter = new TabsPagerAdapter(getFragmentManager(),
                 getApplicationContext(),
                 WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getPublicKey()),
                 tabStrip,
@@ -360,7 +361,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         /**
          * Making the pagerTab adapter
          */
-        adapter = new TabsPagerAdapter(getSupportFragmentManager(), getApplicationContext(), getAppRuntimeMiddleware().getLastSubApp().getLastActivity(), (ApplicationSession) getApplication(), getErrorManager());
+        adapter = new TabsPagerAdapter(getFragmentManager(), getApplicationContext(), getAppRuntimeMiddleware().getLastSubApp().getLastActivity(), (ApplicationSession) getApplication(), getErrorManager());
 
         pagertabs.setAdapter(adapter);
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
@@ -571,10 +572,49 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             this.adapter = null;
             paintStatusBar(null);
 
-            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+            List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
 
-            this.screenPagerAdapter = new ScreenPagerAdapter(getSupportFragmentManager(), fragments);
+            this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
+
+        } catch (Exception e) {
+
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+    public void cleanTabs(){
+        try {
+
+
+            PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+
+
+//            //clean page adapter
+//            ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
+//            if (adapter != null) pagertabs.removeAllViews();
+//
+//            ViewPager viewpager = (ViewPager) super.findViewById(R.id.viewpager);
+//            viewpager.setVisibility(View.INVISIBLE);
+//            ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
+//            pager.setVisibility(View.INVISIBLE);
+//
+//            if (NavigationDrawerFragment != null) {
+//                this.NavigationDrawerFragment.setMenuVisibility(false);
+//                NavigationDrawerFragment = null;
+//            }
+//
+//
+//            this.adapter = null;
+//            paintStatusBar(null);
+//
+//            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+//
+//
+//            this.screenPagerAdapter = new ScreenPagerAdapter(getSupportFragmentManager(), fragments);
 
         } catch (Exception e) {
 
@@ -593,7 +633,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         try {
 
 
-            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+            List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
             SubApp subApp = getAppRuntimeMiddleware().getHomeScreen();
             Activity activity = subApp.getLastActivity();
 
@@ -604,7 +644,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
             fragments.add(walletDesktopFragment);
 
-            fragments.add(android.support.v4.app.Fragment.instantiate(this, com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment.class.getName()));
+            SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
+
+            fragments.add(subAppDesktopFragment);
 
 
             /*for (FermatFragments key : activity.getFragments().keySet()) {
@@ -641,7 +683,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             /**
              * this pagerAdapter is the screenPagerAdapter with no tabs
              */
-            screenPagerAdapter = new ScreenPagerAdapter(getSupportFragmentManager(), fragments);
+            screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
             ViewPager pager = (ViewPager) super.findViewById(R.id.viewpager);
             pager.setVisibility(View.VISIBLE);
@@ -753,7 +795,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             wizardFragment = new WizardFragment();
             wizardFragment.setWizard(wizard);
             wizardFragment.setCancelable(true);
-            wizardFragment.show(getSupportFragmentManager(), WizardFragment.class.getName());
+            wizardFragment.show(getFragmentManager(), WizardFragment.class.getName());
         } else {
             Log.e(TAG, "Wizard not found...");
         }

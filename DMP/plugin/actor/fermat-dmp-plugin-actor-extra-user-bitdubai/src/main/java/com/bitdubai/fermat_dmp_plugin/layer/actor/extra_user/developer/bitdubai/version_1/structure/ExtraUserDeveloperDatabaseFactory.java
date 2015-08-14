@@ -165,6 +165,8 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
         extraUserTableColumns.add(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME);
         extraUserTableColumns.add(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME);
         extraUserTableColumns.add(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME);
+        extraUserTableColumns.add(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN);
+
 
         /**
          * Modified by Manuel Perez on 26/07/2015

@@ -28,6 +28,11 @@ public interface CryptoWallet {
 
     WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, UUID walletId) throws CantCreateWalletContactException;
 
+    WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType,
+                                            ReferenceWallet referenceWallet, UUID walletId, byte[] photo) throws CantCreateWalletContactException;
+
+    void updateContactPhoto(UUID actorId, Actors actor, byte[] photo) throws CantUpdateWalletContactException;
+
     void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException;
 
     void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException;

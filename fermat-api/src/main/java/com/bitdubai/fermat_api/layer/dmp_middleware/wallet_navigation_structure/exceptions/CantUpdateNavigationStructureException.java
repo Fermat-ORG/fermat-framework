@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions;
+package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.08.02..
+ * Created by Manuel Perez on 13/08/15.
  */
-public class CantAcceptAddressExchangeException extends FermatException {
+public class CantUpdateNavigationStructureException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantAcceptAddressExchangeException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantAcceptAddressExchangeException(String message, Exception cause, String context, String possibleReason) {
+    public CantUpdateNavigationStructureException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
