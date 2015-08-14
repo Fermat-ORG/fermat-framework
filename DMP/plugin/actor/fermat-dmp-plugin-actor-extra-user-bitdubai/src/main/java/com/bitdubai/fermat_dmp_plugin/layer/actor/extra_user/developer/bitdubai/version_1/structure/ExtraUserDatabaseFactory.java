@@ -79,6 +79,7 @@ public class ExtraUserDatabaseFactory implements DealsWithErrors, DealsWithPlugi
             extraUserTable.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
             extraUserTable.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
             extraUserTable.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+            extraUserTable.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, DatabaseDataType.STRING, 36, false);
             extraUserTable.addIndex(ExtraUserDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUMN);
 
             databaseFactory.createTable(extraUserTable);
