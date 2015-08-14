@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.wallet_factory.session;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -29,9 +29,9 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
     private ErrorManager errorManager;
 
     /**
-     *  WalletDescriptorFactoryProjectManager
+     *  WalletFactoryProjectManager
      */
-    private WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager;
+    private WalletFactoryProjectManager walletFactoryProjectManager;
 
     /**
      *  Projects opened
@@ -46,11 +46,11 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
 
 
 
-    public WalletFactorySubAppSession(SubApps subApps, ErrorManager errorManager,WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager){
+    public WalletFactorySubAppSession(SubApps subApps, ErrorManager errorManager,WalletFactoryProjectManager walletFactoryProjectManager){
         this.subApps=subApps;
         data= new HashMap<String,Object>();
         this.errorManager=errorManager;
-        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
+        this.walletFactoryProjectManager = walletFactoryProjectManager;
     }
 
     public WalletFactorySubAppSession(SubApps subApps) {
@@ -77,8 +77,8 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
     }
 
 
-    public WalletDescriptorFactoryProjectManager getWalletDescriptorFactoryProjectManager() {
-        return walletDescriptorFactoryProjectManager;
+    public WalletFactoryProjectManager getWalletFactoryProjectManager() {
+        return walletFactoryProjectManager;
     }
 
     @Override

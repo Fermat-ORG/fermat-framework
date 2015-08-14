@@ -7,16 +7,12 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -35,9 +31,9 @@ public interface WalletPublisherManager {
     /**
      * This method returns all descriptor factory projects closed and ready to be published
      *
-     * @return List<DescriptorFactoryProject>
+     * @return List<WalletFactoryProject>
      */
-    public List<DescriptorFactoryProject> getProjectsReadyToPublish();
+    public List<WalletFactoryProject> getProjectsReadyToPublish();
 
     /**
      * This method returns the information stored about the all published component

@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager</code>
- * indicates the functionality of a WalletDescriptorFactoryProjectManager
+ * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryProjectManager</code>
+ * indicates the functionality of a WalletFactoryProjectManager
  * <p/>
  *
  *  Created by Matias Furszyfer
