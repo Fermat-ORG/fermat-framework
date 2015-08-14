@@ -14,6 +14,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
+import org.junit.Ignore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,7 @@ import ae.javax.xml.bind.Unmarshaller;*/
  */
 public class xmlConversionTest extends TestCase {
 
-
+/*
     public void testcreateResult() {
         Map<String,Resource> lstRecursosPortrait = new HashMap<String,Resource>();
         lstRecursosPortrait.put("person1", new Resource(UUID.randomUUID(), "person1", "person1.png", ResourceType.IMAGE, ResourceDensity.MDPI));
@@ -73,7 +75,7 @@ public class xmlConversionTest extends TestCase {
 
         System.out.println(xml);
     }
-
+*/
     /*    @Test
     public void testXmlToClassStructureAndInverseConversion() {
         try {
