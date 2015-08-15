@@ -25,8 +25,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageImpl;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentImpl;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentMiddlewareImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
 
 import java.net.MalformedURLException;
@@ -87,19 +86,19 @@ public class InformationPublishedComponentDao {
     }
 
     /**
-     * Method that find an InformationPublishedComponentImpl by id in the data base.
+     * Method that find an InformationPublishedComponentMiddlewareImpl by id in the data base.
      *
      *  @param id Long id.
-     *  @return InformationPublishedComponentImpl found.
+     *  @return InformationPublishedComponentMiddlewareImpl found.
      *  @throws CantReadRecordDataBaseException
      */
-    public InformationPublishedComponentImpl findById (String id) throws CantReadRecordDataBaseException {
+    public InformationPublishedComponentMiddlewareImpl findById (String id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        InformationPublishedComponentImpl walletPublishedMiddlewareInformation = null;
+        InformationPublishedComponentMiddlewareImpl walletPublishedMiddlewareInformation = null;
 
         try {
 
@@ -117,12 +116,12 @@ public class InformationPublishedComponentDao {
 
 
             /*
-             * 3 - Convert into InformationPublishedComponentImpl objects
+             * 3 - Convert into InformationPublishedComponentMiddlewareImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 3.1 - Create and configure a  InformationPublishedComponentImpl
+                 * 3.1 - Create and configure a  InformationPublishedComponentMiddlewareImpl
                  */
                 walletPublishedMiddlewareInformation = constructFrom(record);
             }
@@ -144,13 +143,13 @@ public class InformationPublishedComponentDao {
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All InformationPublishedComponentImpl.
+     *  @return All InformationPublishedComponentMiddlewareImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<InformationPublishedComponentImpl> findAll () throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponentMiddlewareImpl> findAll () throws CantReadRecordDataBaseException {
 
 
-        List<InformationPublishedComponentImpl> list = null;
+        List<InformationPublishedComponentMiddlewareImpl> list = null;
 
         try {
 
@@ -166,20 +165,20 @@ public class InformationPublishedComponentDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of InformationPublishedComponentImpl objects
+             * 3 - Create a list of InformationPublishedComponentMiddlewareImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into InformationPublishedComponentImpl objects
+             * 4 - Convert into InformationPublishedComponentMiddlewareImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  InformationPublishedComponentImpl
+                 * 4.1 - Create and configure a  InformationPublishedComponentMiddlewareImpl
                  */
-                InformationPublishedComponentImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                InformationPublishedComponentMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -210,10 +209,10 @@ public class InformationPublishedComponentDao {
      * the column name are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      *  @see WalletPublisherMiddlewareDatabaseConstants
-     *  @return All InformationPublishedComponentImpl.
+     *  @return All InformationPublishedComponentMiddlewareImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<InformationPublishedComponentImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponentMiddlewareImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -224,7 +223,7 @@ public class InformationPublishedComponentDao {
         }
 
 
-        List<InformationPublishedComponentImpl> list = null;
+        List<InformationPublishedComponentMiddlewareImpl> list = null;
 
         try {
 
@@ -241,20 +240,20 @@ public class InformationPublishedComponentDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of InformationPublishedComponentImpl objects
+             * 3 - Create a list of InformationPublishedComponentMiddlewareImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into InformationPublishedComponentImpl objects
+             * 4 - Convert into InformationPublishedComponentMiddlewareImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  InformationPublishedComponentImpl
+                 * 4.1 - Create and configure a  InformationPublishedComponentMiddlewareImpl
                  */
-                InformationPublishedComponentImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                InformationPublishedComponentMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -286,10 +285,10 @@ public class InformationPublishedComponentDao {
      * the key are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      * @param filters
-     * @return List<InformationPublishedComponentImpl>
+     * @return List<InformationPublishedComponentMiddlewareImpl>
      * @throws CantReadRecordDataBaseException
      */
-    public List<InformationPublishedComponentImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponentMiddlewareImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -297,7 +296,7 @@ public class InformationPublishedComponentDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<InformationPublishedComponentImpl> list = null;
+        List<InformationPublishedComponentMiddlewareImpl> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -329,20 +328,20 @@ public class InformationPublishedComponentDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 4 - Create a list of InformationPublishedComponentImpl objects
+             * 4 - Create a list of InformationPublishedComponentMiddlewareImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into InformationPublishedComponentImpl objects
+             * 5 - Convert into InformationPublishedComponentMiddlewareImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 5.1 - Create and configure a  InformationPublishedComponentImpl
+                 * 5.1 - Create and configure a  InformationPublishedComponentMiddlewareImpl
                  */
-                InformationPublishedComponentImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                InformationPublishedComponentMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -371,10 +370,10 @@ public class InformationPublishedComponentDao {
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param entity InformationPublishedComponentImpl to create.
+     *  @param entity InformationPublishedComponentMiddlewareImpl to create.
      *  @throws CantInsertRecordDataBaseException
      */
-    public void create (InformationPublishedComponentImpl entity) throws CantInsertRecordDataBaseException {
+    public void create (InformationPublishedComponentMiddlewareImpl entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -433,10 +432,10 @@ public class InformationPublishedComponentDao {
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity InformationPublishedComponentImpl to update.
+     *  @param entity InformationPublishedComponentMiddlewareImpl to update.
      *  @throws CantUpdateRecordDataBaseException
      */
-    public void update(InformationPublishedComponentImpl entity) throws CantUpdateRecordDataBaseException {
+    public void update(InformationPublishedComponentMiddlewareImpl entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -532,15 +531,15 @@ public class InformationPublishedComponentDao {
 
 
     /**
-     * Construct a InformationPublishedComponentImpl whit the values of the table record pass
+     * Construct a InformationPublishedComponentMiddlewareImpl whit the values of the table record pass
      * by parameter
      *
      * @param record with values from the table
-     * @return InformationPublishedComponentImpl setters the values from table
+     * @return InformationPublishedComponentMiddlewareImpl setters the values from table
      */
-    private InformationPublishedComponentImpl constructFrom(DatabaseTableRecord record){
+    private InformationPublishedComponentMiddlewareImpl constructFrom(DatabaseTableRecord record){
 
-        InformationPublishedComponentImpl informationPublishedComponent = new InformationPublishedComponentImpl();
+        InformationPublishedComponentMiddlewareImpl informationPublishedComponent = new InformationPublishedComponentMiddlewareImpl();
 
         try {
 
@@ -597,7 +596,7 @@ public class InformationPublishedComponentDao {
      * @param walletPublishedMiddlewareInformation the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(InformationPublishedComponentImpl walletPublishedMiddlewareInformation){
+    private DatabaseTableRecord constructFrom(InformationPublishedComponentMiddlewareImpl walletPublishedMiddlewareInformation){
 
         /*
          * Create the record to the entity

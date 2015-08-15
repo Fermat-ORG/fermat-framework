@@ -30,17 +30,17 @@ import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUse
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisherMiddlewarePlugin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.DealsWithIntraUsersModule;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.DealsWithWalletPublisher;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.DealsWithWalletStoreModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
@@ -493,7 +493,6 @@ public class Platform {
             ((DealsWithEvents) remoteDevice).setEventManager((EventManager) eventManager);
             corePlatformContext.registerAddon((Addon) remoteDevice, Addons.REMOTE_DEVICE);
 
-
             /*
              * Addon Local Device Manager
              * -----------------------------
@@ -506,7 +505,6 @@ public class Platform {
             ((DealsWithEvents) localDevice).setEventManager((EventManager) eventManager);
             corePlatformContext.registerAddon((Addon) localDevice, Addons.LOCAL_DEVICE);
 
-
             /*
              * Addon User Manager
              * -----------------------------
@@ -516,11 +514,10 @@ public class Platform {
              */
             Service deviceUser = (Service) ((UserLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_USER_LAYER)).getDeviceUser();
             ((DealsWithPlatformFileSystem) deviceUser).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
+            ((DealsWithPlatformDatabaseSystem) deviceUser).setPlatformDatabaseSystem(databaseSystemOs.getPlatformDatabaseSystem());
             ((DealsWithEvents) deviceUser).setEventManager((EventManager) eventManager);
+            ((DealsWithErrors) deviceUser).setErrorManager((ErrorManager) errorManager);
             corePlatformContext.registerAddon((Addon) deviceUser, Addons.DEVICE_USER);
-
-
-
 
              /*
              * Addon PlatformInfo
@@ -1146,7 +1143,7 @@ public class Platform {
             }
 
             if (plugin instanceof DealsWithWalletFactory) {
-                ((DealsWithWalletFactory) plugin).setWalletFactoryProjectManager((WalletFactoryProjectManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE));
+                ((DealsWithWalletFactory) plugin).setWalletDescriptorFactoryProjectManager((WalletDescriptorFactoryProjectManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE));
             }
 
             if (plugin instanceof DealsWithWalletManager) {

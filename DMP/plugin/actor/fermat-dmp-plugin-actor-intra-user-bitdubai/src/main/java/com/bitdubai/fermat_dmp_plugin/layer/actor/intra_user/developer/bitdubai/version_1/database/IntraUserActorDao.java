@@ -281,7 +281,7 @@ public class IntraUserActorDao {
         catch (CantGetIntraUserActorProfileImageException e) {
             database.closeDatabase();
             // Failure unknown.
-            throw new CantGetIntraUsersListException (e.getMessage(), e, "Intra User Actor", "Can't get profile Image.");
+            throw new CantGetIntraUsersListException (e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
 
         } catch (Exception e) {
             database.closeDatabase();
@@ -344,7 +344,7 @@ public class IntraUserActorDao {
         catch (CantGetIntraUserActorProfileImageException e) {
             database.closeDatabase();
             // Failure unknown.
-            throw new CantGetIntraUsersListException (e.getMessage(), e, "Intra User Actor", "Can't get profile Image.");
+            throw new CantGetIntraUsersListException (e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
 
         } catch (Exception e) {
             database.closeDatabase();

@@ -5,10 +5,10 @@
  * BITDUBAI/CONFIDENTIAL
  */
 
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
+package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisher</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.DealsWithWalletPublisher</code>
  * indicates that the plugin needs the functionality of a WalletPublisherManager
  * <p/>
  *

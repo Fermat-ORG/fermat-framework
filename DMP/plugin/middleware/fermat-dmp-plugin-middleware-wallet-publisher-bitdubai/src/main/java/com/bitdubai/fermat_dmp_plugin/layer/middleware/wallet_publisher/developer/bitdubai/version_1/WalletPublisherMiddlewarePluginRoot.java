@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.DealsWithWalletLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguageManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
@@ -87,9 +87,9 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * Represent the walletFactoryProjectManager
+     * Represent the walletDescriptorFactoryProjectManager
      */
-    private WalletFactoryProjectManager walletFactoryProjectManager;
+    private WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager;
 
     /**
      * Represent the walletStoreManager
@@ -158,7 +158,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         if (logManager                                == null ||
                 errorManager                          == null ||
                     errorManager                      == null ||
-                        walletFactoryProjectManager == null ||
+                        walletDescriptorFactoryProjectManager == null ||
                             pluginFileSystem  == null ||
                                 walletLanguageManager == null ||
                                     walletSkinManager == null ||
@@ -171,7 +171,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("errorManager: " + errorManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("walletFactoryProjectManager: " + walletFactoryProjectManager);
+            contextBuffer.append("walletDescriptorFactoryProjectManager: " + walletDescriptorFactoryProjectManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("walletStoreManager: " + walletStoreManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -395,11 +395,11 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
     /**
      * (non-Javadoc)
-     * @see DealsWithWalletFactory#setWalletFactoryProjectManager(WalletFactoryProjectManager)
+     * @see DealsWithWalletFactory#setWalletDescriptorFactoryProjectManager(WalletDescriptorFactoryProjectManager)
      */
     @Override
-    public void setWalletFactoryProjectManager(WalletFactoryProjectManager walletFactoryProjectManager) {
-        this.walletFactoryProjectManager = walletFactoryProjectManager;
+    public void setWalletDescriptorFactoryProjectManager(WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager) {
+        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
     }
 
     /**
