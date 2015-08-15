@@ -84,11 +84,11 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
      * WalletManager Interface member variables.
      */
     String deviceUserPublicKey = "";
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletId = "25428311-deb3-4064-93b2-69093e859871";
 
     List<InstalledWallet> userWallets;
 
-    private Map<String, String> walletPublicKeys = new HashMap<>();
+    private Map<String, String> walletIds = new HashMap<>();
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -167,11 +167,11 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
             //load user's wallets ids
             this.loadUserWallets(deviceUserPublicKey);
 
-            Iterator iterator = walletPublicKeys.entrySet().iterator();
+            Iterator iterator = walletIds.entrySet().iterator();
 
             while (iterator.hasNext()) {
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
-                if (mapEntry.getValue().toString().equals(walletPublicKey))
+                if (mapEntry.getValue().toString().equals(walletId.toString()))
                     existWallet = true;
             }
 
@@ -184,12 +184,12 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
                     ((DealsWithErrors) bitcoinWalletManager).setErrorManager(this.errorManager);
                     ((DealsWithPluginDatabaseSystem) bitcoinWalletManager).setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
-                    bitcoinWalletManager.createWallet(walletPublicKey);
+                    bitcoinWalletManager.createWallet(walletId);
 
                     //Save wallet id on file
 
                     try {
-                        this.persistWallet(walletPublicKey);
+                        this.persistWallet(walletId);
                     } catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 
@@ -409,16 +409,16 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     }
 
 
-    public void persistWallet(String walletPublicKey) throws CantPersistWalletException {
+    public void persistWallet(String walletId) throws CantPersistWalletException {
         /**
          * Now I will add this wallet to the list of wallets managed by the plugin.
          */
-        walletPublicKeys.put(deviceUserPublicKey, walletPublicKey);
+        walletIds.put(deviceUserPublicKey, walletId);
 
-        PluginTextFile walletPublicKeysFile = null;
+        PluginTextFile walletIdsFile = null;
 
         try {
-            walletPublicKeysFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException cantCreateFileException) {
 
             /**
@@ -432,9 +432,9 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
         /**
          * I will generate the file content.
          */
-        StringBuilder stringBuilder = new StringBuilder(walletPublicKeys.size() * 72);
+        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
 
-        Iterator iterator = walletPublicKeys.entrySet().iterator();
+        Iterator iterator = walletIds.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
             stringBuilder.append(pair.getKey().toString() + "," + pair.getValue().toString() + ";");
@@ -445,10 +445,10 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
         /**
          * Now I set the content.
          */
-        walletPublicKeysFile.setContent(stringBuilder.toString());
+        walletIdsFile.setContent(stringBuilder.toString());
 
         try {
-            walletPublicKeysFile.persistToMedia();
+            walletIdsFile.persistToMedia();
         } catch (CantPersistFileException cantPersistFileException) {
             /**
              * If I can not save the id of the new wallet created, then this method fails.
@@ -593,10 +593,10 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
          * By now I will create only a new wallet, In the future there will be more than one default wallets.
          */
 
-      //  Wallet wallet = new WalletManagerWallet();
+        //  Wallet wallet = new WalletManagerWallet();
 
-      //  ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
-       // ((DealsWithEvents) wallet).setEventManager(eventManager);
+        //  ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
+        // ((DealsWithEvents) wallet).setEventManager(eventManager);
         //((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
 
         //try {
@@ -632,12 +632,12 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
          * and load wallets ids for user
          *
          */
-        PluginTextFile walletPublicKeysFile;
+        PluginTextFile walletIdsFile;
 
         try {
 
             try {
-                walletPublicKeysFile = pluginFileSystem.getTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                walletIdsFile = pluginFileSystem.getTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             } catch (CantCreateFileException cantCreateFileException) {
 
                 /**
@@ -649,29 +649,29 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
                 throw new CantLoadWalletsException();
             }
             try {
-                walletPublicKeysFile.loadFromMedia();
+                walletIdsFile.loadFromMedia();
 
                 /*
-                 * TODO: This can't stay in a file. A user id will be assign to many walletPublicKeys
+                 * TODO: This can't stay in a file. A user id will be assign to many walletIds
                  */
                 /**
                  * Now I read the content of the file and place it in memory.
                  */
-                String[] stringWalletPublicKeys = walletPublicKeysFile.getContent().split(";", -1);
+                String[] stringWalletIds = walletIdsFile.getContent().split(";", -1);
 
-                for (String stringWalletPublicKey : stringWalletPublicKeys) {
+                for (String stringWalletId : stringWalletIds) {
 
-                    if (!stringWalletPublicKey.equals("")) {
+                    if (!stringWalletId.equals("")) {
                         /**
                          * Each record in the file has to values: the first is the external id of the wallet, and the
                          * second is the internal id of the wallet.
                          * * *
                          */
-                        String[] idPair = stringWalletPublicKey.split(",", -1);
+                        String[] idPair = stringWalletId.split(",", -1);
 
                         //put wallets of this user
                         if (idPair[0].equals(deviceUserPublicKey))
-                            walletPublicKeys.put(idPair[0], idPair[1]);
+                            walletIds.put(idPair[0], idPair[1]);
 
                         /**
                          * Great, now the wallet list is in memory.
@@ -703,7 +703,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
             try {
 
-                walletPublicKeysFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             } catch (CantCreateFileException cantCreateFileException) {
 
                 /**
@@ -714,7 +714,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
                 throw new CantLoadWalletsException();
             }
             try {
-                walletPublicKeysFile.persistToMedia();
+                walletIdsFile.persistToMedia();
             } catch (CantPersistFileException cantPersistFileException) {
 
                 /**
