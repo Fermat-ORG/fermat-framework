@@ -67,7 +67,7 @@ public class SendFragment extends Fragment {
      */
     WalletSession walletSession;
     View rootView;
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
     UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
     Typeface tf;
     CryptoWallet cryptoWallet;
@@ -200,7 +200,7 @@ public class SendFragment extends Fragment {
             });
 
             try {
-                long availableBalance = cryptoWallet.getAvailableBalance(wallet_id);
+                long availableBalance = cryptoWallet.getAvailableBalance(walletPublicKey);
                 editAmount.setHint("available funds: " + availableBalance + " bits");
             } catch (Exception ex) {
 
@@ -274,7 +274,7 @@ public class SendFragment extends Fragment {
                         }
                     } catch (Exception e) {
                         try {
-                            long actualBalance = cryptoWallet.getAvailableBalance(wallet_id);
+                            long actualBalance = cryptoWallet.getAvailableBalance(walletPublicKey);
                             editAmount.setHint("Available amount: " + actualBalance + " bits");
                         } catch (Exception ex) {
 
@@ -335,7 +335,7 @@ public class SendFragment extends Fragment {
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
             for (WalletContactRecord wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
             }
@@ -357,10 +357,10 @@ public class SendFragment extends Fragment {
             if(!amount.getText().toString().equals("") && amount.getText()!=null) {
                 try {
                     //TODO que pasa si no puedo crear el user?
-                    WalletContactRecord walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+                    WalletContactRecord walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
 
                     // TODO harcoded deliveredbyactorid
-                    cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
+                    cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), walletPublicKey, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {

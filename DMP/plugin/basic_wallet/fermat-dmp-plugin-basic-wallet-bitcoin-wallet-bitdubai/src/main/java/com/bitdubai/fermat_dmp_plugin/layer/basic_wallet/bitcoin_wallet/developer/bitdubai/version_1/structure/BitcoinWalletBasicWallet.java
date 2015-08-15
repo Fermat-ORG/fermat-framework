@@ -42,7 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
  */
 public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithErrors, DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem {
 
-    private static final String WALLET_IDS_FILE_NAME = "walletsIds";
+    private static final String WALLET_PUBLIC_KEYS_FILE_NAME = "walletsPublicKeys";
 
     /**
      * BitcoinWalletBasicWallet member variables.
@@ -50,7 +50,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     private Database database;
     //private UUID internalWalletId;
 
-    private Map<UUID, UUID> walletIds =  new HashMap<>();
+    private Map<String, UUID> walletPublicKeysMap =  new HashMap<>();
 
     private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
 
@@ -89,21 +89,21 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     //metodo create para crear la base de datos
     // metodo initialize abre la table, y si no existe da un error
 
-    /* This methid is called by the plug-in Root with the internal walletId as parameter
+    /* This method is called by the plug-in Root with the internal walletPublicKey as parameter
      * The wallet tries to open it's database. If it fails it is because the wallet was not
      * properly created before, so we end with an error in that case
      */
-    public void initialize(UUID walletId) throws CantInitializeBitcoinWalletBasicException {
-        if(walletId == null)
-            throw new CantInitializeBitcoinWalletBasicException("InternalId is null",null,"Parameter walletId is null","loadWallet didn't find the asociated id");
+    public void initialize(UUID walletInternalId) throws CantInitializeBitcoinWalletBasicException {
+        if(walletInternalId == null)
+            throw new CantInitializeBitcoinWalletBasicException("InternalId is null",null,"Parameter walletInternalId is null","loadWallet didn't find the asociated id");
 
         try {
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletInternalId.toString());
             database.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException){
-            throw new CantInitializeBitcoinWalletBasicException("I can't open database",cantOpenDatabaseException,"WalletId: " + walletId.toString(),"");
+            throw new CantInitializeBitcoinWalletBasicException("I can't open database",cantOpenDatabaseException,"WalletPublicKey: " + walletInternalId.toString(),"");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            throw new CantInitializeBitcoinWalletBasicException("Database does not exists",databaseNotFoundException,"WalletId: " + walletId.toString(),"");
+            throw new CantInitializeBitcoinWalletBasicException("Database does not exists",databaseNotFoundException,"WalletPublicKey: " + walletInternalId.toString(),"");
         } catch (Exception exception){
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(exception));
             throw new CantInitializeBitcoinWalletBasicException(CantInitializeBitcoinWalletBasicException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -123,16 +123,16 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     //       The internal Id generated should be checked before assigning it (check it was
     //       not previously assign)
 
-    public UUID create(UUID walletId) throws CantCreateWalletException {
+    public UUID create(String walletPublicKey) throws CantCreateWalletException {
         try{
             // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
             //       We need to change this in the near future
             UUID internalWalletId = UUID.randomUUID();
             createWalletDatabase(internalWalletId);
-            PluginTextFile walletIdsFile = createIdsFile();
-            loadWalletIdsMap(walletIdsFile);
-            walletIds.put(walletId, internalWalletId);
-            persistWalletIds(walletIdsFile);
+            PluginTextFile walletPublicKeysFile = createPublicKeysFile();
+            loadWalletPublicKeysMap(walletPublicKeysFile);
+            walletPublicKeysMap.put(walletPublicKey, internalWalletId);
+            persistWalletPublicKeys(walletPublicKeysFile);
             return internalWalletId;
         } catch (CantCreateWalletException exception){
             throw exception;
@@ -226,27 +226,27 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
         }
     }
 
-    private PluginTextFile createIdsFile() throws CantCreateWalletException{
+    private PluginTextFile createPublicKeysFile() throws CantCreateWalletException{
         try{
-            return pluginFileSystem.getTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            return pluginFileSystem.getTextFile(pluginId, "", WALLET_PUBLIC_KEYS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         }
         catch (CantCreateFileException cantCreateFileException ) {
-            throw new CantCreateWalletException("File could not be created (?)",cantCreateFileException,"File Name: "+WALLET_IDS_FILE_NAME,"");
+            throw new CantCreateWalletException("File could not be created (?)",cantCreateFileException,"File Name: "+WALLET_PUBLIC_KEYS_FILE_NAME,"");
         } catch (FileNotFoundException e) {
-            throw new CantCreateWalletException("File could not be found",e,"File Name: "+WALLET_IDS_FILE_NAME,"");
+            throw new CantCreateWalletException("File could not be found",e,"File Name: "+WALLET_PUBLIC_KEYS_FILE_NAME,"");
         }
     }
 
-    private void loadWalletIdsMap(final PluginTextFile walletIdsFile) throws CantCreateWalletException{
+    private void loadWalletPublicKeysMap(final PluginTextFile walletPublicKeysFile) throws CantCreateWalletException{
         try {
-            walletIdsFile.loadFromMedia();
-            String[] stringWalletIds = walletIdsFile.getContent().split(";" , -1);
+            walletPublicKeysFile.loadFromMedia();
+            String[] stringWalletPublicKeys = walletPublicKeysFile.getContent().split(";" , -1);
 
-            for (String stringWalletId : stringWalletIds ) {
+            for (String stringWalletPublicKey : stringWalletPublicKeys ) {
 
-                if(!stringWalletId.equals("")) {
-                    String[] idPair = stringWalletId.split(",", -1);
-                    walletIds.put(UUID.fromString(idPair[0]),  UUID.fromString(idPair[1]));
+                if(!stringWalletPublicKey.equals("")) {
+                    String[] idPair = stringWalletPublicKey.split(",", -1);
+                    walletPublicKeysMap.put(idPair[0],  UUID.fromString(idPair[1]));
                 }
             }
         } catch (CantLoadFileException exception) {
@@ -254,9 +254,9 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
         }
     }
 
-    private void persistWalletIds(final PluginTextFile walletIdsFile) throws CantCreateWalletException{
-        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
-        Iterator iterator = walletIds.entrySet().iterator();
+    private void persistWalletPublicKeys(final PluginTextFile walletPublicKeysFile) throws CantCreateWalletException{
+        StringBuilder stringBuilder = new StringBuilder(walletPublicKeysMap.size() * 72);
+        Iterator iterator = walletPublicKeysMap.entrySet().iterator();
 
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry)iterator.next();
@@ -264,10 +264,10 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
             iterator.remove();
         }
 
-        walletIdsFile.setContent(stringBuilder.toString());
+        walletPublicKeysFile.setContent(stringBuilder.toString());
 
         try{
-            walletIdsFile.persistToMedia();
+            walletPublicKeysFile.persistToMedia();
         }
         catch (CantPersistFileException cantPersistFileException) {
             throw new CantCreateWalletException("Could not persist in file",cantPersistFileException,"stringBuilder: " + stringBuilder.toString(),"");
