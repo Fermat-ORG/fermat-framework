@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
@@ -38,6 +39,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDao;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserConnectionCancelledEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUsersListException;
@@ -48,6 +50,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 
 
 import java.util.ArrayList;
@@ -69,7 +75,7 @@ import java.util.regex.Pattern;
  * @since Java JDK 1.7
  */
 
-public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseManagerForDevelopers,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service  {
+public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseManagerForDevelopers,DealsWithErrors, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service  {
 
     private IntraUserActorDao intraUserActorDao;
 
@@ -77,6 +83,13 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    EventManager eventManager;
+
+    List<EventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealsWithLogger interface member variable
@@ -433,6 +446,33 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
         }
 
+        /**
+         * I will initialize the handling of com.bitdubai.platform events.
+         */
+
+        EventListener eventListener;
+        EventHandler eventHandler;
+
+        /**
+         * Listener Accepted connection event
+         */
+        eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
+        eventHandler = new IntraUserConnectionCancelledEventHandlers();
+        ((IntraUserConnectionCancelledEventHandlers) eventHandler).setActorIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        /**
+         * Listener Cancelled connection event
+         */
+        eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_CANCELLED);
+        eventHandler = new IntraUserConnectionCancelledEventHandlers();
+        ((IntraUserConnectionCancelledEventHandlers) eventHandler).setActorIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
         this.serviceStatus = ServiceStatus.STARTED;
 
 
@@ -513,5 +553,10 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
+    }
+
+    @Override
+    public void setEventManager(EventManager DealsWithEvents) {
+        this.eventManager = DealsWithEvents;
     }
 }
