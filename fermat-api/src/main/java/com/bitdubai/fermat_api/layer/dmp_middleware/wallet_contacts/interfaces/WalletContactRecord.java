@@ -43,11 +43,11 @@ public interface WalletContactRecord {
     UUID getContactId();
 
     /**
-     * Return the walletId
+     * Return the walletPublicKey
      *
-     * @return UUID
+     * @return String
      */
-    UUID getWalletId();
+    String getWalletPublicKey();
 
 
     /**
