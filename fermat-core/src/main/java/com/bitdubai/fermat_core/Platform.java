@@ -496,7 +496,6 @@ public class Platform  {
             ((DealsWithEvents) remoteDevice).setEventManager((EventManager) eventManager);
             corePlatformContext.registerAddon((Addon) remoteDevice, Addons.REMOTE_DEVICE);
 
-
             /*
              * Addon Local Device Manager
              * -----------------------------
@@ -509,7 +508,6 @@ public class Platform  {
             ((DealsWithEvents) localDevice).setEventManager((EventManager) eventManager);
             corePlatformContext.registerAddon((Addon) localDevice, Addons.LOCAL_DEVICE);
 
-
             /*
              * Addon User Manager
              * -----------------------------
@@ -519,11 +517,10 @@ public class Platform  {
              */
             Service deviceUser = (Service) ((UserLayer)  corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_USER_LAYER)).getDeviceUser();
             ((DealsWithPlatformFileSystem) deviceUser).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
+            ((DealsWithPlatformDatabaseSystem) deviceUser).setPlatformDatabaseSystem(databaseSystemOs.getPlatformDatabaseSystem());
             ((DealsWithEvents) deviceUser).setEventManager((EventManager) eventManager);
+            ((DealsWithErrors) deviceUser).setErrorManager((ErrorManager) errorManager);
             corePlatformContext.registerAddon((Addon) deviceUser, Addons.DEVICE_USER);
-
-
-
 
              /*
              * Addon PlatformInfo

@@ -83,7 +83,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     /**
      * CryptoVault interface member variable
      */
-    UUID userId;
+    String userPublicKey;
     Wallet vault;
 
     /**
@@ -126,11 +126,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
     /**
      * CryptoVault interface implementations
-     * @param UserId
+     * @param userPublicKey
      */
     @Override
-    public void setUserId(UUID UserId) {
-        this.userId = UserId;
+    public void setUserPublicKey(String userPublicKey) {
+        this.userPublicKey = userPublicKey;
     }
 
     /**
@@ -138,8 +138,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @return
      */
     @Override
-    public UUID getUserId() {
-        return this.userId;
+    public String getUserPublicKey() {
+        return this.userPublicKey;
     }
 
     /**
@@ -220,14 +220,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
     /**
      * Constructor
-     * @param UserId the Id of the user of the platform.
+     * @param userPublicKey the Id of the user of the platform.
      */
-    public BitcoinCryptoVault (UUID UserId) throws CantCreateCryptoWalletException {
+    public BitcoinCryptoVault (String userPublicKey) throws CantCreateCryptoWalletException {
         try{
-            this.userId = UserId;
+            this.userPublicKey = userPublicKey;
             this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
 
-            this.vaultFileName = userId.toString() + ".vault";
+            this.vaultFileName = userPublicKey.toString() + ".vault";
             //todo this needs to be fixed. I need to find a better way to get the file
             this.vaultFile = new File("/data/data/com.bitdubai.fermat/files", vaultFileName);
         }catch(Exception exception){
@@ -260,7 +260,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private void createNewVault() throws CantCreateCryptoWalletException {
         vault = new Wallet(networkParameters);
         try {
-            PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userPublicKey.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             vaultFile.persistToMedia();
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault created into file " + vaultFileName, null, null);

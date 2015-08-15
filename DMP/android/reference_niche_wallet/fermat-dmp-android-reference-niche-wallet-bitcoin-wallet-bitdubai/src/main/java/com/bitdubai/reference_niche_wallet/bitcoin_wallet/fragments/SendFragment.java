@@ -223,7 +223,8 @@ public class SendFragment extends Fragment {
                     public void onClick(View view) {
                         getActivity().getFragmentManager()
                                 .beginTransaction()
-                                .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+                                        // TODO commented due to error
+                                //.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
                                 .replace(R.id.fragment_container2, ContactsFragment.newInstance(0, walletSession))
                                 .commit();
                     }
