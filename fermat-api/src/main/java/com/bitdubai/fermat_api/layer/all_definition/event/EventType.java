@@ -255,6 +255,17 @@ public enum EventType {
             case "DCNC":
                 return EventType.DEVICE_CONNECTIVITY_NETWORK_CHANGE;
 
+            case "IUCC":
+                return EventType.BITCOIN_NEW_PEER_CONNECTED;
+            case "IUCA":
+                return EventType.INTRA_USER_CONNECTION_ACCEPTED;
+            case "IURCR":
+                return EventType.INTRA_USER_REQUESTED_CONNECTION_RECEIVED;
+            case "IUCD":
+                return EventType.INTRA_USER_CONNECTION_DENIED;
+            case "IUCAN":
+                return EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION;
+
             case "BNPC":
                 return EventType.BITCOIN_NEW_PEER_CONNECTED;
             case "BNCWC":

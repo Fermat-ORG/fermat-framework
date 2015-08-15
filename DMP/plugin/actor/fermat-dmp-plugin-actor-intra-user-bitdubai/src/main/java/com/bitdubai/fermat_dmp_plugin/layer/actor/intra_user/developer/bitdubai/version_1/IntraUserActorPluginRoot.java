@@ -39,6 +39,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDao;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserConnectionAcceptedEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserConnectionCancelledEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
@@ -456,22 +457,23 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         /**
          * Listener Accepted connection event
          */
-        eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
+  /*      eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
         eventHandler = new IntraUserConnectionCancelledEventHandlers();
         ((IntraUserConnectionCancelledEventHandlers) eventHandler).setActorIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        listenersAdded.add(eventListener);*/
 
         /**
          * Listener Cancelled connection event
          */
-        eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_CANCELLED);
-        eventHandler = new IntraUserConnectionCancelledEventHandlers();
-        ((IntraUserConnectionCancelledEventHandlers) eventHandler).setActorIntraUserManager(this);
+     /*   eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_CANCELLED);
+        eventHandler = new IntraUserConnectionAcceptedEventHandlers();
+        ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setActorIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        listenersAdded.add(eventListener);*/
+
 
         this.serviceStatus = ServiceStatus.STARTED;
 
