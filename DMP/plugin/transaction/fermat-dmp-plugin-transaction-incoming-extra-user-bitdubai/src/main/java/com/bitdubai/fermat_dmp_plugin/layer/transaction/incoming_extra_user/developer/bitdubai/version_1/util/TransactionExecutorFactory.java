@@ -22,17 +22,17 @@ public class TransactionExecutorFactory {
         this.actorAddressBookManager = actorAddressBookManager;
     }
 
-    public TransactionExecutor newTransactionExecutor(final ReferenceWallet walletType, final UUID walletId) throws CantLoadWalletException{
+    public TransactionExecutor newTransactionExecutor(final ReferenceWallet walletType, final String walletPublicKey) throws CantLoadWalletException{
         switch (walletType){
             case BASIC_WALLET_BITCOIN_WALLET:
-                return createBitcoinBasicWalletExecutor(walletId);
+                return createBitcoinBasicWalletExecutor(walletPublicKey);
             default:
                 return null;
         }
     }
 
-    private TransactionExecutor createBitcoinBasicWalletExecutor(final UUID walletId) throws CantLoadWalletException {
-        return new BitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.loadWallet(walletId),this.actorAddressBookManager);
+    private TransactionExecutor createBitcoinBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletException {
+        return new BitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.loadWallet(walletPublicKey),this.actorAddressBookManager);
     }
 
 }
