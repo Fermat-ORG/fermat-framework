@@ -37,7 +37,7 @@ public interface CryptoWallet {
 
     void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException;
 
-    List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, String walletPublicKey) throws CantGetWalletContactException;
+    List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException;
 
     boolean isValidAddress(CryptoAddress cryptoAddress);
 

@@ -173,7 +173,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
                                                    ReferenceWallet referenceWallet, String walletPublicKey, byte[] photo) throws CantCreateWalletContactException {
         try{
             WalletContactRecord walletContactRecord;
-            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletId(actorName, walletPublicKey);
+            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletPublicKey(actorName, walletPublicKey);
             UUID actorId = createActor(actorName, actorType,photo);
 
             if (walletContactRecord == null)
@@ -202,7 +202,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantCreateWalletContactException {
         try{
             WalletContactRecord walletContactRecord;
-            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletId(actorName, walletPublicKey);
+            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletPublicKey(actorName, walletPublicKey);
             UUID actorId = createActor(actorName, actorType);
 
             if (walletContactRecord == null)
@@ -288,11 +288,11 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, String walletPublicKey) throws CantGetWalletContactException {
+    public List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException {
         try {
             List<WalletContactRecord> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
-            for(WalletContactRecord r :walletContactsRegistry.getWalletContactByNameContainsAndWalletId(actorName, walletPublicKey)){
+            for(WalletContactRecord r :walletContactsRegistry.getWalletContactByNameContainsAndWalletPublicKey(actorName, walletPublicKey)){
                 byte[] image = null;
                 switch (r.getActorType()) {
                     case EXTRA_USER:
