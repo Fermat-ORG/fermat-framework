@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragmen
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -209,7 +210,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 setPagerTabs(wallet, activity.getTabStrip(), walletSession);
             }
             if(activity.getFragments().size() == 1){
-
+                setOneFragmentInScreen();
             }
         }
         catch (Exception e) {
@@ -226,10 +227,12 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
         try {
             if(fragmentFactory!=null){
-                android.app.Fragment fragmet=fragmentFactory.getFragment(walletRuntime.getLastActivity().getLastFragment().getType().toString(), getWalletSessionManager().getWalletSession(walletPublicKey), getWalletSettingsManager());
+                Fragments fragment = walletRuntime.getLastActivity().getLastFragment().getType();
+                WalletSession walletSession = getWalletSessionManager().getWalletSession(walletPublicKey);
+                android.app.Fragment fragmet=fragmentFactory.getFragment(fragment.toString(), walletSession, getWalletSettingsManager());
                 FragmentTransaction FT = getFragmentManager().beginTransaction();
                 FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                FT.replace(R.id.balance_container, fragmet);
+                FT.replace(R.id.only_fragment_container, fragmet);
                 FT.addToBackStack(null);
                 FT.attach(fragmet);
                 FT.show(fragmet);
