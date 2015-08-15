@@ -96,13 +96,13 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         }
     }
 
-    public void registerNewTransaction(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantInsertRecordException {
+    public void registerNewTransaction(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantInsertRecordException {
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
             DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
 
-            loadRecordAsNew(recordToInsert, walletID, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
 
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException exception) {
@@ -277,12 +277,12 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
 
-    private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord, UUID walletId, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) {
+    private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord, String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) {
 
         UUID transactionId = UUID.randomUUID();
 
         databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, transactionId);
-        databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, walletId);
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, walletPublicKey);
 
         // TODO: This will be completed when the vault gives it to us
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME, "UNKNOWN YET");
@@ -385,7 +385,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     private TransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
         TransactionWrapper bitcoinTransaction = new TransactionWrapper();
 
-        UUID walletId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME);
+        String walletPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME);
         UUID transactionId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME);
         String transactionHash = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME);
         CryptoAddress addressFrom = new CryptoAddress(
@@ -407,7 +407,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         UUID actorFromId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME);
         UUID actorToId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
 
-        bitcoinTransaction.setWalletId(walletId);
+        bitcoinTransaction.setWalletPublicKey(walletPublicKey);
         bitcoinTransaction.setIdTransaction(transactionId);
         bitcoinTransaction.setTransactionHash(transactionHash);
         bitcoinTransaction.setAddressFrom(addressFrom);
