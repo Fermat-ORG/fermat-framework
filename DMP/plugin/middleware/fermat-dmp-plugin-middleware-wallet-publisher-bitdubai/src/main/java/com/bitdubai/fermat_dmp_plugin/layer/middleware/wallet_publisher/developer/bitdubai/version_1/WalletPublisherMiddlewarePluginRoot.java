@@ -18,15 +18,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.DealsWithWalletLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguageManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
@@ -37,6 +33,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -45,8 +43,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInitializeWalletPublisherMiddlewareDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublisherMiddlewareManagerImpl;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DealsWithDeveloperIdentity;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.interfaces.DeveloperIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -68,7 +64,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperIdentity, DealsWithWalletFactory, DealsWithWalletStoreMiddleware, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewareManager, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers, DealsWithWalletSkin, DealsWithWalletLanguage {
+public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileSystem, DealsWithWalletFactory, DealsWithWalletStoreMiddleware, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewarePlugin, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers, DealsWithWalletSkin, DealsWithWalletLanguage {
 
     /**
      * Represent the logManager
@@ -111,9 +107,9 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
     private WalletSkinManager walletSkinManager;
 
     /**
-     * Represent the developerIdentityManager
+     * Represent the pluginFileSystem
      */
-    private DeveloperIdentityManager developerIdentityManager;
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * Represent the plugin id
@@ -163,7 +159,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
                 errorManager                          == null ||
                     errorManager                      == null ||
                         walletDescriptorFactoryProjectManager == null ||
-                            developerIdentityManager  == null ||
+                            pluginFileSystem  == null ||
                                 walletLanguageManager == null ||
                                     walletSkinManager == null ||
                                         pluginDatabaseSystem == null) {
@@ -181,7 +177,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("walletStoreManager: " + walletStoreManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("developerIdentityManager: " + developerIdentityManager);
+            contextBuffer.append("pluginFileSystem: " + pluginFileSystem);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("walletLanguageManager: " + walletLanguageManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -277,7 +273,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
             /*
              * Initialize the manager
              */
-            walletPublisherMiddlewareManagerImpl = new WalletPublisherMiddlewareManagerImpl(dataBase, walletStoreManager, walletDescriptorFactoryProjectManager, logManager);
+            walletPublisherMiddlewareManagerImpl = new WalletPublisherMiddlewareManagerImpl(pluginId, pluginFileSystem, dataBase, walletStoreManager, logManager);
 
         } catch (CantInitializeWalletPublisherMiddlewareDatabaseException exception) {
 
@@ -417,15 +413,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
 
     /**
      * (non-Javadoc)
-     * @see DealsWithDeveloperIdentity#setDeveloperIdentityManager(DeveloperIdentityManager)
-     */
-    @Override
-    public void setDeveloperIdentityManager(DeveloperIdentityManager developerIdentityManager) {
-        this.developerIdentityManager = developerIdentityManager;
-    }
-
-    /**
-     * (non-Javadoc)
      * @see DealsWithWalletLanguage#setWalletLanguageManager(WalletLanguageManager)
      */
     @Override
@@ -480,58 +467,19 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithDeveloperId
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#getPublishedComponents()
+     * @see DealsWithPluginFileSystem#setPluginFileSystem(PluginFileSystem)
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedComponents() throws CantGetPublishedComponentInformationException {
-        return walletPublisherMiddlewareManagerImpl.getPublishedComponents();
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#getPublishedWallets()
+     * @see WalletPublisherMiddlewarePlugin#getWalletPublisherMiddlewareManagerInstance()
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedWallets() throws CantGetPublishedComponentInformationException {
-        return walletPublisherMiddlewareManagerImpl.getPublishedWallets();
+    public WalletPublisherMiddlewareManager getWalletPublisherMiddlewareManagerInstance() {
+        return walletPublisherMiddlewareManagerImpl;
     }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#getPublishedSkins()
-     */
-    @Override
-    public List<InformationPublishedComponent> getPublishedSkins() throws CantGetPublishedComponentInformationException {
-        return walletPublisherMiddlewareManagerImpl.getPublishedSkins();
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#getPublishedLanguages()
-     */
-    @Override
-    public List<InformationPublishedComponent> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
-        return walletPublisherMiddlewareManagerImpl.getPublishedLanguages();
-    }
-
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishSkin(SkinDescriptorFactoryProject)
-     */
-    @Override
-    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantPublishComponetException {
-        walletPublisherMiddlewareManagerImpl.publishSkin(skinDescriptorFactoryProject);
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishLanguage(LanguageDescriptorFactoryProject)
-     */
-    @Override
-    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantPublishComponetException {
-        walletPublisherMiddlewareManagerImpl.publishLanguage(languageDescriptorFactoryProject);
-    }
-
-
 }

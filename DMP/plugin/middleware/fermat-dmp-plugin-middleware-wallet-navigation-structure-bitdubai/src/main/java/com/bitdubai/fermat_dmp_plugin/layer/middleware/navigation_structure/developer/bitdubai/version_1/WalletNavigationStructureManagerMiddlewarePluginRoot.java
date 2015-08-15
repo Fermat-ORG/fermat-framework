@@ -14,8 +14,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantListNavigationStructuresException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.NavigationStructureNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructureManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -24,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.developerUtils.WalletnavigationStructureMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
@@ -103,7 +108,7 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
      */
     UUID pluginId;
 
-
+    WalletNavigationStructureMiddlewareDao walletNavigationStructureMiddlewareDao;
 
 
     /*
@@ -172,12 +177,18 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
+
     @Override
     public void start() throws CantStartPluginException {
 
-
-
         this.serviceStatus = ServiceStatus.STARTED;
+        walletNavigationStructureMiddlewareDao = new WalletNavigationStructureMiddlewareDao(pluginDatabaseSystem);
+        try {
+            walletNavigationStructureMiddlewareDao.initializeDatabase(pluginId, pluginId.toString());
+        } catch (CantInitializeWalletNavigationStructureMiddlewareDatabaseException e) {
+            this.serviceStatus = ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "", "");
+        }
 
     }
     @Override
@@ -284,9 +295,5 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     public void setEventManager(EventManager eventManager) {
         this.eventManager=eventManager;
     }
-
-
-
-
 
 }

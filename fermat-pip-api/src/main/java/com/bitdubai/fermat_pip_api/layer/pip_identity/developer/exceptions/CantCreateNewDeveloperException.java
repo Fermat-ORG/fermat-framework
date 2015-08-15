@@ -13,7 +13,7 @@ public class CantCreateNewDeveloperException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateNewDeveloperException (String message, String context, String possibleReason) {
+    public CantCreateNewDeveloperException(String message, String context, String possibleReason) {
         this(message, null, context, possibleReason);
     }
 

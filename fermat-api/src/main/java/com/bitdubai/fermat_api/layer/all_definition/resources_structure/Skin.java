@@ -31,6 +31,8 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private VersionCompatibility navigationStructureCompatibility;
 
+    private ScreenSize screenSize;
+
     private Map<String,Resource> lstResources;
 
     private Map<String,Layout> lstPortraitLayouts;
@@ -38,14 +40,15 @@ public class Skin implements Serializable {//implements FermatSkin {
     private Map<String,Layout> lstLandscapeLayouts;
 
 
-    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, Map<String, Resource> lstResources, Map<String, Layout> lstPortraitLayouts, Map<String, Layout> lstLandscapeLayouts) {
+    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, ScreenSize screenSize, Map<String, Resource> lstResources, Map<String, Layout> lstPortraitLayouts, Map<String, Layout> lstLandscapeLayouts) {
         this.id = id;
         this.name = name;
         this.version = version;
-        this.setNavigationStructureCompatibility(navigationStructureCompatibility);
-        this.setLstResources(lstResources);
-        this.setLstPortraitLayouts(lstPortraitLayouts);
-        this.setLstLandscapeLayouts(lstLandscapeLayouts);
+        this.navigationStructureCompatibility = navigationStructureCompatibility;
+        this.screenSize = screenSize;
+        this.lstResources = lstResources;
+        this.lstPortraitLayouts = lstPortraitLayouts;
+        this.lstLandscapeLayouts = lstLandscapeLayouts;
     }
 
     public Skin() {
@@ -109,12 +112,21 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.lstLandscapeLayouts = lstLandscapeLayouts;
     }
 
+    public ScreenSize getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(ScreenSize screenSize) {
+        this.screenSize = screenSize;
+    }
+
     @Override
     public String toString() {
         return "Skin{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", version=" + version +
+                ", screenSize= " + screenSize.toString() +
                 ", navigationStructureCompatibility=" + navigationStructureCompatibility +
                 ", lstResources=" + lstResources +
                 ", lstPortraitLayouts=" + lstPortraitLayouts +

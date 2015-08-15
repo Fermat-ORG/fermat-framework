@@ -6,9 +6,6 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -18,20 +15,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageImpl;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageImpl;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageMiddlewareImpl;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao</code> have
@@ -51,13 +46,19 @@ public class ScreensShotsComponentsDao {
     private Database dataBase;
 
     /**
+     * Represent the imageManager
+     */
+    private ImageManager imageManager;
+
+    /**
      * Constructor with parameters
      *
      * @param dataBase
      */
-    public ScreensShotsComponentsDao(Database dataBase) {
+    public ScreensShotsComponentsDao(Database dataBase, ImageManager imageManager) {
         super();
         this.dataBase = dataBase;
+        this.imageManager = imageManager;
     }
 
     /**
@@ -77,19 +78,19 @@ public class ScreensShotsComponentsDao {
     }
 
     /**
-     * Method that find an ImageImpl by id in the data base.
+     * Method that find an ImageMiddlewareImpl by id in the data base.
      *
      *  @param id Long id.
-     *  @return ImageImpl found.
+     *  @return ImageMiddlewareImpl found.
      *  @throws CantReadRecordDataBaseException
      */
-    public ImageImpl findById (String id) throws CantReadRecordDataBaseException {
+    public ImageMiddlewareImpl findById (String id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        ImageImpl walletPublishedMiddlewareInformation = null;
+        ImageMiddlewareImpl walletPublishedMiddlewareInformation = null;
 
         try {
 
@@ -107,12 +108,12 @@ public class ScreensShotsComponentsDao {
 
 
             /*
-             * 3 - Convert into ImageImpl objects
+             * 3 - Convert into ImageMiddlewareImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 3.1 - Create and configure a  ImageImpl
+                 * 3.1 - Create and configure a  ImageMiddlewareImpl
                  */
                 walletPublishedMiddlewareInformation = constructFrom(record);
             }
@@ -134,13 +135,13 @@ public class ScreensShotsComponentsDao {
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All ImageImpl.
+     *  @return All ImageMiddlewareImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ImageImpl> findAll () throws CantReadRecordDataBaseException {
+    public List<ImageMiddlewareImpl> findAll () throws CantReadRecordDataBaseException {
 
 
-        List<ImageImpl> list = null;
+        List<ImageMiddlewareImpl> list = null;
 
         try {
 
@@ -156,20 +157,20 @@ public class ScreensShotsComponentsDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of ImageImpl objects
+             * 3 - Create a list of ImageMiddlewareImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ImageImpl objects
+             * 4 - Convert into ImageMiddlewareImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  ImageImpl
+                 * 4.1 - Create and configure a  ImageMiddlewareImpl
                  */
-                ImageImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                ImageMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -200,10 +201,10 @@ public class ScreensShotsComponentsDao {
      * the column name are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      *  @see WalletPublisherMiddlewareDatabaseConstants
-     *  @return All ImageImpl.
+     *  @return All ImageMiddlewareImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ImageImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<ImageMiddlewareImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -214,7 +215,7 @@ public class ScreensShotsComponentsDao {
         }
 
 
-        List<ImageImpl> list = null;
+        List<ImageMiddlewareImpl> list = null;
 
         try {
 
@@ -231,20 +232,20 @@ public class ScreensShotsComponentsDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of ImageImpl objects
+             * 3 - Create a list of ImageMiddlewareImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ImageImpl objects
+             * 4 - Convert into ImageMiddlewareImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  ImageImpl
+                 * 4.1 - Create and configure a  ImageMiddlewareImpl
                  */
-                ImageImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                ImageMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -276,10 +277,10 @@ public class ScreensShotsComponentsDao {
      * the key are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      * @param filters
-     * @return List<ImageImpl>
+     * @return List<ImageMiddlewareImpl>
      * @throws CantReadRecordDataBaseException
      */
-    public List<ImageImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<ImageMiddlewareImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -287,7 +288,7 @@ public class ScreensShotsComponentsDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<ImageImpl> list = null;
+        List<ImageMiddlewareImpl> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -319,20 +320,20 @@ public class ScreensShotsComponentsDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 4 - Create a list of ImageImpl objects
+             * 4 - Create a list of ImageMiddlewareImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into ImageImpl objects
+             * 5 - Convert into ImageMiddlewareImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 5.1 - Create and configure a  ImageImpl
+                 * 5.1 - Create and configure a  ImageMiddlewareImpl
                  */
-                ImageImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                ImageMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -361,10 +362,10 @@ public class ScreensShotsComponentsDao {
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param entity ImageImpl to create.
+     *  @param entity ImageMiddlewareImpl to create.
      *  @throws CantInsertRecordDataBaseException
      */
-    public void create (ImageImpl entity) throws CantInsertRecordDataBaseException {
+    public void create (ImageMiddlewareImpl entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -402,10 +403,10 @@ public class ScreensShotsComponentsDao {
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity ImageImpl to update.
+     *  @param entity ImageMiddlewareImpl to update.
      *  @throws CantUpdateRecordDataBaseException
      */
-    public void update(ImageImpl entity) throws CantUpdateRecordDataBaseException {
+    public void update(ImageMiddlewareImpl entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -478,23 +479,31 @@ public class ScreensShotsComponentsDao {
 
 
     /**
-     * Construct a ImageImpl whit the values of the table record pass
+     * Construct a ImageMiddlewareImpl whit the values of the table record pass
      * by parameter
      *
      * @param record with values from the table
-     * @return ImageImpl setters the values from table
+     * @return ImageMiddlewareImpl setters the values from table
      */
-    private ImageImpl constructFrom(DatabaseTableRecord record){
+    private ImageMiddlewareImpl constructFrom(DatabaseTableRecord record){
 
-        ImageImpl imageImpl = new ImageImpl();
+        try {
 
-        imageImpl.setFileId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME)));
-        imageImpl.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME)));
+            String fileIdImg = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME);
 
-        //TODO: Deserializar el objeto image xml
-        imageImpl.setData(new byte[]{});
+            /*
+             * Xml File deserialize into the object image
+             */
+            return (ImageMiddlewareImpl) imageManager.load(fileIdImg);
 
-        return imageImpl;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
     }
 
     /**
@@ -504,7 +513,7 @@ public class ScreensShotsComponentsDao {
      * @param imageImpl the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(ImageImpl imageImpl){
+    private DatabaseTableRecord constructFrom(ImageMiddlewareImpl imageImpl){
 
         /*
          * Create the record to the entity
