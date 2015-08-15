@@ -120,11 +120,11 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public List<WalletContactRecord> listWalletContacts(UUID walletId) throws CantGetAllWalletContactsException {
+    public List<WalletContactRecord> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException {
         try {
             List<WalletContactRecord> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
-            for(WalletContactRecord r : walletContactsRegistry.listWalletContacts(walletId)){
+            for(WalletContactRecord r : walletContactsRegistry.listWalletContacts(walletPublicKey)){
                 byte[] image = null;
                 switch (r.getActorType()) {
                     case EXTRA_USER:
@@ -144,11 +144,11 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public List<WalletContactRecord> listWalletContactsScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException {
+    public List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException {
         try {
             List<WalletContactRecord> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
-            for(WalletContactRecord r : walletContactsRegistry.listWalletContactsScrolling(walletId, max, offset)){
+            for(WalletContactRecord r : walletContactsRegistry.listWalletContactsScrolling(walletPublicKey, max, offset)){
                 byte[] image = null;
                 switch (r.getActorType()) {
                     case EXTRA_USER:
@@ -170,14 +170,14 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
 
     @Override
     public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType,
-                                                   ReferenceWallet referenceWallet, UUID walletId, byte[] photo) throws CantCreateWalletContactException {
+                                                   ReferenceWallet referenceWallet, String walletPublicKey, byte[] photo) throws CantCreateWalletContactException {
         try{
             WalletContactRecord walletContactRecord;
-            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletId(actorName, walletId);
+            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletPublicKey(actorName, walletPublicKey);
             UUID actorId = createActor(actorName, actorType,photo);
 
             if (walletContactRecord == null)
-                return walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
+                return walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletPublicKey);
             else if(!(receivedCryptoAddress.getAddress().equals(walletContactRecord.getReceivedCryptoAddress().getAddress())))
                 this.updateWalletContact(walletContactRecord.getContactId(), walletContactRecord.getReceivedCryptoAddress(), walletContactRecord.getActorName());
 
@@ -199,14 +199,14 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
 
 
     @Override
-    public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, UUID walletId) throws CantCreateWalletContactException {
+    public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantCreateWalletContactException {
         try{
             WalletContactRecord walletContactRecord;
-            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletId(actorName, walletId);
+            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletPublicKey(actorName, walletPublicKey);
             UUID actorId = createActor(actorName, actorType);
 
             if (walletContactRecord == null)
-                return walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
+                return walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletPublicKey);
             else if(!(receivedCryptoAddress.getAddress().equals(walletContactRecord.getReceivedCryptoAddress().getAddress())))
                 this.updateWalletContact(walletContactRecord.getContactId(), walletContactRecord.getReceivedCryptoAddress(), walletContactRecord.getActorName());
 
@@ -234,10 +234,10 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, ReferenceWallet referenceWallet, UUID walletId) throws CantRequestCryptoAddressException {
+    public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
-            deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletId, referenceWallet);
+            deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletPublicKey, referenceWallet);
             createAndRegisterActor(deliveredByActorId, deliveredByActorType, deliveredToActorName, deliveredToActorType, deliveredCryptoAddress);
             return deliveredCryptoAddress;
         } catch (CantCreateOrRegisterActorException e) {
@@ -250,10 +250,10 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, ReferenceWallet referenceWallet, UUID walletId) throws CantRequestCryptoAddressException {
+    public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
-            deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletId, referenceWallet);
+            deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletPublicKey, referenceWallet);
             actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, deliveredCryptoAddress);
             return deliveredCryptoAddress;
         } catch (CantRequestOrRegisterCryptoAddressException e) {
@@ -288,11 +288,11 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
+    public List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException {
         try {
             List<WalletContactRecord> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
-            for(WalletContactRecord r :walletContactsRegistry.getWalletContactByNameContainsAndWalletId(actorName, walletId)){
+            for(WalletContactRecord r :walletContactsRegistry.getWalletContactByNameContainsAndWalletPublicKey(actorName, walletPublicKey)){
                 byte[] image = null;
                 switch (r.getActorType()) {
                     case EXTRA_USER:
@@ -313,9 +313,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
 
     // TODO:  ESTOS DOS METODOS SON LOS QUE NATALIA/EZE ME TIENEN QUE PASAR PARA YO HACER CORRER LA APP
     @Override
-    public long getAvailableBalance(UUID walletId) throws CantGetBalanceException {
+    public long getAvailableBalance(String walletPublicKey) throws CantGetBalanceException {
         try {
-            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return bitcoinWalletWallet.getAvailableBalance().getBalance();
         } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
@@ -327,9 +327,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public long getBookBalance(UUID walletId) throws CantGetBalanceException {
+    public long getBookBalance(String walletPublicKey) throws CantGetBalanceException {
         try {
-            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return bitcoinWalletWallet.getBookBalance().getBalance();
         } catch (com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
@@ -341,9 +341,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public List<CryptoWalletTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException {
+    public List<CryptoWalletTransaction> getTransactions(int max, int offset, String walletPublicKey) throws CantGetTransactionsException {
         try {
-            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.getTransactions(max, offset);
 
@@ -360,9 +360,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException {
         try {
-            outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+            outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
         } catch (com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException e) {
             throw new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE, e);
         } catch (CantSendFundsException e) {
@@ -483,7 +483,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         //      throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
     }
 
-    private CryptoAddress requestAndRegisterCryptoAddress(UUID walletId, ReferenceWallet referenceWallet) throws CantRequestOrRegisterCryptoAddressException {
+    private CryptoAddress requestAndRegisterCryptoAddress(String walletPublicKey, ReferenceWallet referenceWallet) throws CantRequestOrRegisterCryptoAddressException {
         CryptoAddress cryptoAddress;
         switch (referenceWallet){
             case BASIC_WALLET_BITCOIN_WALLET:
@@ -494,7 +494,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         }
         // TODO ADD CANT GET ADDRESS EXCEPTION IN PLUGIN CRYPTO VAULT
         try {
-            walletAddressBookRegistry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletId);
+            walletAddressBookRegistry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletPublicKey);
             return cryptoAddress;
         } catch (CantRegisterWalletAddressBookException e) {
             throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");

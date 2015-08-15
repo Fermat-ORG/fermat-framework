@@ -17,7 +17,7 @@ public class WalletContactsMiddlewareDatabaseConstants {
      */
     public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME = "crypto_wallet_contacts_address_book";
     public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME = "contact_id";
-    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME = "wallet_id";
+    public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME = "actor_id";
     public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME = "actor_name";
     public static final String CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME = "actor_type";

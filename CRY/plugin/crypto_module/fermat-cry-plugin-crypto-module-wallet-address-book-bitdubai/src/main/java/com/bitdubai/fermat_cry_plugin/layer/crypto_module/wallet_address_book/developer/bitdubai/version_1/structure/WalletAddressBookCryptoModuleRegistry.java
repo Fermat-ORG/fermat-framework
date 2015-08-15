@@ -72,9 +72,9 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
     }
 
     @Override
-    public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
+    public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletPublicKey(String walletPublicKey) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
         try {
-            return walletCryptoAddressBookDao.getAllWalletAddressBookModuleByWalletId(walletId);
+            return walletCryptoAddressBookDao.getAllWalletAddressBookModuleByWalletPublicKey(walletPublicKey);
         } catch (CantGetWalletAddressBookException|WalletAddressBookNotFoundException exception) {
             throw exception;
         } catch (Exception exception){
@@ -83,9 +83,9 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
     }
 
     @Override
-    public void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, UUID walletId) throws CantRegisterWalletAddressBookException {
+    public void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, String walletPublicKey) throws CantRegisterWalletAddressBookException {
         try {
-            walletCryptoAddressBookDao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletId);
+            walletCryptoAddressBookDao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletPublicKey);
         } catch (CantRegisterWalletAddressBookException exception) {
             throw exception;
         } catch (Exception exception){
