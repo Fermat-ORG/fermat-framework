@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
 
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/23/15.
  */
-public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem {
+public class DetailedCatalogItemImpl implements DetailedCatalogItem {
 
     Language language;
     List<Language> languages;
@@ -29,7 +30,7 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
     /**
      * Default constructor
      */
-    public DetailedCatalogItem() {
+    public DetailedCatalogItemImpl() {
     }
 
     /**
@@ -42,7 +43,7 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
      * @param platformInitialVersion
      * @param platformFinalVersion
      */
-    public DetailedCatalogItem(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, Developer developer) {
+    public DetailedCatalogItemImpl(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, Developer developer) {
         this.language = language;
         this.languages = languages;
         this.defaultSkin = defaultSkin;

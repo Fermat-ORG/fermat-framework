@@ -32,7 +32,7 @@ public interface CatalogItem {
     /**
      * Detailed information of the item
      */
-    public DetailedCatalogItem getDetailedCatalogItem() throws CantGetWalletDetailsException;
+    public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException;
 
 
 }
