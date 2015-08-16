@@ -29,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
+import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.EditableWalletFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ManagerFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ProjectsFragment;
@@ -226,6 +227,9 @@ import java.util.List;
                         break;
                     case CWP_WALLET_FACTORY_PROJECTS:
                         currentFragment = ProjectsFragment.newInstance(position,subAppSession);
+                        break;
+                    case CWP_WALLET_FACTORY_EDIT_MODE:
+                        currentFragment = EditableWalletFragment.newInstance(position, subAppSession,false,null);
                         break;
                     case CWP_WALLET_PUBLISHER_MAIN:
                         currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);

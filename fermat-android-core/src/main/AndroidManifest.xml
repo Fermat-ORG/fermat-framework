@@ -57,74 +57,24 @@
         </activity>
 
         <activity
-            android:name="com.bitdubai.sub_app.wallet_factory.fragment.version_1.activity.FactoryActivity"
-            android:label="Factory" >
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
-        </activity>
-        <activity
             android:name="com.bitdubai.android_core.app.SubAppActivity"
             android:label="Fermat" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.StartActivity" />
         </activity>
-        <activity android:name="com.bitdubai.android_core.app.WalletFactoryActivity"
+        <activity android:name="com.bitdubai.android_core.app.EditableWalletActivity"
             android:label="Factory">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity"></meta-data>
         </activity>
         <activity
-            android:name="com.bitdubai.sub_app.wallet_publisher.activity.PublisherActivity"
-            android:label="Publisher" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
-        </activity>
-        <activity
-            android:name="com.bitdubai.sub_app.wallet_publisher.activity.ShopsActivity"
-            android:label="Stores" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.sub_app.wallet_publisher.activity.PublisherActivity" />
-        </activity>
-        <activity
-            android:name="com.bitdubai.sub_app.wallet_publisher.activity.ShopActivity"
-            android:label="Shop" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.sub_app.wallet_publisher.activity.ShopsActivity" />
-        </activity>
-        <activity
-            android:name="com.bitdubai.android_core.app.FragmentActivity"
-            android:label="Desktop" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.SubAppActivity" />
-        </activity>
-
-        <activity
             android:name="com.bitdubai.android_core.app.WalletActivity"
             android:label="Wallet" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity" />
-        </activity>
-
-        <activity
-            android:name="com.bitdubai.android_core.app.subapp.shop.version_1.activity.ShopActivity"
-            android:label="Wallet Store" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
-        </activity>
-        <activity android:name="com.bitdubai.sub_app.wallet_factory.fragment.version_3.activity.FactoryActivity"
-            android:label="Wallet Factory">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
         </activity>
 
     </application>

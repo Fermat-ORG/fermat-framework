@@ -130,9 +130,10 @@ public class TransactionsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = walletSession.getErrorManager();
+
         try {
 
+            errorManager = walletSession.getErrorManager();
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
             cryptoWalletManager = walletSession.getCryptoWalletManager();
