@@ -42,7 +42,7 @@ public class OutgoingExtraUserDatabaseFactory implements DealsWithPluginDatabase
             DatabaseTableFactory outgoinExtraUserTable = databaseFactory.newTableFactory(ownerId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
             outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
-            outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+            outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
             outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 64, false);
             outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 34, false);
             outgoinExtraUserTable.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 34, false);

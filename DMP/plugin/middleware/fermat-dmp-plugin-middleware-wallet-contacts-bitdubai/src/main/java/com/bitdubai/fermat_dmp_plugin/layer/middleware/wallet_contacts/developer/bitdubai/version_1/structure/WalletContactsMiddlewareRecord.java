@@ -33,7 +33,7 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     /**
      * Represent the id of the wallet
      */
-    UUID walletId;
+    String walletPublicKey;
 
     /**
      * Represent the actorId
@@ -73,15 +73,15 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
      * @param actorId actor's id
      * @param actorName actor's id
      * @param actorType actor's type
-     * @param walletId wallet's id
+     * @param walletPublicKey wallet's id
      */
-    public WalletContactsMiddlewareRecord(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, UUID walletId) {
+    public WalletContactsMiddlewareRecord(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, String walletPublicKey) {
         this.actorId = actorId;
         this.actorName = actorName;
         this.actorType = actorType;
         this.contactId = contactId;
         this.receivedCryptoAddress = receivedCryptoAddress;
-        this.walletId = walletId;
+        this.walletPublicKey = walletPublicKey;
     }
 
     // TODO: IMPLEMENT THIS METHOD
@@ -106,13 +106,13 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     }
 
     /**
-     * Return the walletId
+     * Return the walletPublicKey
      *
-     * @return UUID
+     * @return String
      */
     @Override
-    public UUID getWalletId() {
-        return walletId;
+    public String getWalletPublicKey() {
+        return walletPublicKey;
     }
 
     /**

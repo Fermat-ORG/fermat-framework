@@ -60,7 +60,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     /**
      * Platform
      */
-    private UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    private String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
     private CryptoWalletManager cryptoWalletManager;
@@ -118,7 +118,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         }
 
         try {
-            List<WalletContactRecord> lst= cryptoWallet.listWalletContacts(wallet_id);
+            List<WalletContactRecord> lst= cryptoWallet.listWalletContacts(walletPublicKey);
 
         } catch (CantGetAllWalletContactsException e) {
             e.printStackTrace();
@@ -154,7 +154,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             fragment.fromContacts = true;
             getActivity().getFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
@@ -179,7 +179,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             fragment.fromContacts = true;
             getActivity().getFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
@@ -237,7 +237,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
             for (WalletContactRecord wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
             }
