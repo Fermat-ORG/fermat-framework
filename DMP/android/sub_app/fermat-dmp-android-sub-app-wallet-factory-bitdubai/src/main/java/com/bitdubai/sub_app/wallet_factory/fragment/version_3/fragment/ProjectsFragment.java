@@ -11,10 +11,14 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
+import java.util.List;
 import java.util.UUID;
+import android.app.Fragment;
 
 
 public class ProjectsFragment extends FermatFragment {
@@ -60,7 +64,7 @@ public class ProjectsFragment extends FermatFragment {
     }
 
 
-    public class DescriptorFactoryProject implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject {
+    public class WalletDescriptorFactoryProject implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProject {
 
         private String developerPublicKey;
 
@@ -80,8 +84,16 @@ public class ProjectsFragment extends FermatFragment {
 
         private DescriptorFactoryProjectType descriptorFactoryProjectType;
 
-        public DescriptorFactoryProject(String developerPublicKey, UUID id, String name, Wallets type) {
+        private List<LanguageDescriptorFactoryProject> languageDescriptorFactoryProjectList;
+
+        private List<SkinDescriptorFactoryProject> skinDescriptorFactoryProjectList;
+
+        public WalletDescriptorFactoryProject(String developerPublicKey, UUID id, String name, Wallets type, String publisherIdentityKey, String description, DescriptorFactoryProjectType descriptorFactoryProjectType) {
             this.developerPublicKey = developerPublicKey;
+            this.publisherIdentityKey = publisherIdentityKey;
+            this.description = description;
+            this.descriptorFactoryProjectType = descriptorFactoryProjectType;
+            this.type = type;
             this.id = id;
             this.name = name;
             this.type = type;
@@ -89,12 +101,12 @@ public class ProjectsFragment extends FermatFragment {
 
         @Override
         public String getDeveloperPublicKey() {
-            return null;
+            return developerPublicKey;
         }
 
         @Override
         public String getPublisherIdentityKey()  {
-            return null;
+            return publisherIdentityKey;
         }
 
         @Override
@@ -109,7 +121,7 @@ public class ProjectsFragment extends FermatFragment {
         }
 
         @Override
-        public UUID getWalletsId() {return null;}
+        public UUID getWalletId() {return null;}
 
         @Override
         public String getName() {
@@ -117,12 +129,17 @@ public class ProjectsFragment extends FermatFragment {
         }
 
         @Override
-        public Wallets getWallestType() {
+        public Wallets getWalletType() {
             return null;
         }
 
         @Override
         public String getPath() {
+            return null;
+        }
+
+        @Override
+        public FactoryProjectState getState() {
             return null;
         }
 
@@ -133,6 +150,12 @@ public class ProjectsFragment extends FermatFragment {
         public int getIcono() {
             return icono;
         }
+
+        @Override
+        public List<LanguageDescriptorFactoryProject> getLanguages() { return languageDescriptorFactoryProjectList; };
+
+        @Override
+        public List<SkinDescriptorFactoryProject> getSkins() {return skinDescriptorFactoryProjectList; }
     }
 
 }

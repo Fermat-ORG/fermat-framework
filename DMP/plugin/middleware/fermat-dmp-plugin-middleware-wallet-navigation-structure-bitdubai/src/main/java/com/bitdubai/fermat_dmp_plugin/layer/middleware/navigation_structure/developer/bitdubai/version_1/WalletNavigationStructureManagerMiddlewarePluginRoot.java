@@ -14,8 +14,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantListNavigationStructuresException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.NavigationStructureNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructureManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -24,9 +28,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.developerUtils.WalletnavigationStructureMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantInitializeWalletNavigationStructureMiddlewareDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -101,7 +108,7 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
      */
     UUID pluginId;
 
-
+    WalletNavigationStructureMiddlewareDao walletNavigationStructureMiddlewareDao;
 
 
     /*
@@ -111,18 +118,20 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
 
-        WalletnavigationStructureMiddlewareDeveloperDatabaseFactory dbFactory = new WalletnavigationStructureMiddlewareDeveloperDatabaseFactory(pluginId.toString());
+        WalletNavigationStructureMiddlewareDeveloperDatabaseFactory dbFactory = new WalletNavigationStructureMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return WalletnavigationStructureMiddlewareDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+
+        WalletNavigationStructureMiddlewareDeveloperDatabaseFactory dbFactory = new WalletNavigationStructureMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        Database database;
+        /*Database database;
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
             return WalletnavigationStructureMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
@@ -130,7 +139,7 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
+            /*FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -138,7 +147,28 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         // If we are here the database could not be opened, so we return an empry list
-        return new ArrayList<>();
+        return new ArrayList<>();*/
+        //Modified by Manuel Perez on 12/08/2015
+        WalletNavigationStructureMiddlewareDeveloperDatabaseFactory dbFactory = new WalletNavigationStructureMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = new ArrayList<>();
+        try {
+
+            dbFactory.initializeDatabase();
+            developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+
+        } catch (CantInitializeWalletNavigationStructureMiddlewareDatabaseException exception) {
+
+            FermatException e = new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantInitializeWalletNavigationStructureMiddlewareDatabaseException.DEFAULT_MESSAGE,exception,"WalletId: " + developerDatabase.getName(),"Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+
+        }catch (Exception exception) {
+
+            FermatException fermatException=new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + pluginId.toString(),"Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, fermatException);
+
+        }
+        return developerDatabaseTableRecordList;
+
     }
 
     /**
@@ -147,12 +177,18 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
+
     @Override
     public void start() throws CantStartPluginException {
 
-
-
         this.serviceStatus = ServiceStatus.STARTED;
+        walletNavigationStructureMiddlewareDao = new WalletNavigationStructureMiddlewareDao(pluginDatabaseSystem);
+        try {
+            walletNavigationStructureMiddlewareDao.initializeDatabase(pluginId, pluginId.toString());
+        } catch (CantInitializeWalletNavigationStructureMiddlewareDatabaseException e) {
+            this.serviceStatus = ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "", "");
+        }
 
     }
     @Override
@@ -259,9 +295,5 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     public void setEventManager(EventManager eventManager) {
         this.eventManager=eventManager;
     }
-
-
-
-
 
 }

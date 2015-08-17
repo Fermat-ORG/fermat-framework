@@ -128,6 +128,9 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
          catch (CantGetIntraUserIdentitiesException e) {
              throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS",e,"","");
         }
+        catch (Exception e) {
+            throw new CantGetUserIntraUserIdentitiesException ("CAN'T GET INTRA USER IDENTITYS", FermatException.wrapException(e), "", "");
+        }
     }
 
     /**
@@ -169,7 +172,10 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
         catch(CantCreateNewDeveloperException e)
         {
             throw new CantCreateNewIntraUserException("CAN'T CREATE NEW INTRA USER IDENTITY",e,"Error save user on database","");
-        }
+       }
+        catch (Exception e) {
+            throw new CantCreateNewIntraUserException ("CAN'T CREATE NEW INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
+         }
 
     }
 
@@ -253,11 +259,11 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
              * The database exists but cannot be open. I can not handle this situation.
              */
             FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
