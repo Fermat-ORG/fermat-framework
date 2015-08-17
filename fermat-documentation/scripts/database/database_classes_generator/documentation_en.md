@@ -15,7 +15,7 @@
 * If you don't follow that, maybe not compile or the result wouldn't be the expected one.
 
 * Parameters to fill:
-<code>
+```groovy
 String developerName = "Leon Acosta" // your name
 String developerMail = "laion.cj91@gmail.com" // your mail
 String pluginName = "Wallet Factory" // name of the plugin
@@ -38,8 +38,8 @@ databaseTables << [
     ],
     firstKey:"ID" // first index
 ]
-</code>
+```
 
 For the execution of the script you can use the groovy client or the groovy console.
 
-In this case, and to evade installing the client, you can use the groovy console online: [Groovy Console]http://groovyconsole.appspot.com/
+In this case, and to evade installing the client, you can use the groovy console online: [Groovy Console](http://groovyconsole.appspot.com/)
