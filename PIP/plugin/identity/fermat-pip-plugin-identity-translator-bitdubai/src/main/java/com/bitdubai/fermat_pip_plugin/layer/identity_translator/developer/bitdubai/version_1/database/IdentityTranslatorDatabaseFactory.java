@@ -69,7 +69,7 @@ public class IdentityTranslatorDatabaseFactory implements DealsWithErrors, Deals
          */
         try {
 
-            database = this.pluginDatabaseSystem.createDatabase(pluginId, IdentityTranslatorDatabaseConstants.TRANSLATOR_TABLE_NAME);
+            database = this.pluginDatabaseSystem.createDatabase(pluginId, IdentityTranslatorDatabaseConstants.TRANSLATOR_DB_NAME);
 
             /**
              * Next, I will add the needed tables.

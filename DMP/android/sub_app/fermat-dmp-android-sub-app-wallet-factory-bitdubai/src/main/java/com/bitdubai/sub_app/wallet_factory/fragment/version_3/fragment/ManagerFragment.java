@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +57,9 @@ public class ManagerFragment extends  Fragment {
         balances_available = new String[]{"$1,970.00 available"};
 
         /*try {
-            //List<DescriptorFactoryProject> lstFactoryProjects= subAppSession.getWalletFactoryManager().getAllWalletFactoryProjects();
+            //List<DescriptorFactoryProject> lstFactoryProjects= subAppSession.getWalletDescriptorFactoryProjectManager().getAllWalletFactoryProjects();
 
-            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletFactoryManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
+            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletDescriptorFactoryProjectManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
 
             //List<WalletFactoryProjectProposal> walletFactoryProjectProposal= walletFactoryProjectProposalManager.getProposals();
 

@@ -1,13 +1,13 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -63,7 +63,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     private ErrorManager errorManager;
 
     View rootView;
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
 
     //Type face font
@@ -124,7 +124,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         //get contacts list
         List<WalletContactRecord> walletContactRecords = new ArrayList<>();
         try {
-            walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
@@ -297,10 +297,11 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
                     String accountName = String.valueOf(adapter.getItem(position));
                     Fragment fragment = ContactDetailFragment.newInstance(walletSession, accountName);
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentManager fragmentManager = getActivity().getFragmentManager();
                     fragmentManager
                             .beginTransaction()
-                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                    //TODO COMMENTED FOR ERROR WHEN TRYING TO GET CONTACT DETAIL
+                            //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                             .add(R.id.fragment_container2, fragment)
                             .attach(fragment)
                             .show(fragment)

@@ -22,42 +22,47 @@ public interface CryptoWallet {
      * Contacts Fragment methods...
      */
 
-    List<WalletContactRecord> listWalletContacts(UUID walletId) throws CantGetAllWalletContactsException;
+    List<WalletContactRecord> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
 
-    List<WalletContactRecord> listWalletContactsScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException;
+    List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException;
 
-    WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, UUID walletId) throws CantCreateWalletContactException;
+    WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantCreateWalletContactException;
+
+    WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType,
+                                            ReferenceWallet referenceWallet, String walletPublicKey, byte[] photo) throws CantCreateWalletContactException;
+
+    void updateContactPhoto(UUID actorId, Actors actor, byte[] photo) throws CantUpdateWalletContactException;
 
     void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException;
 
     void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException;
 
-    List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
+    List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException;
 
     boolean isValidAddress(CryptoAddress cryptoAddress);
 
     /**
      * Balance Fragment methods
      */
-    long getAvailableBalance(UUID walletId) throws CantGetBalanceException;
+    long getAvailableBalance(String walletPublicKey) throws CantGetBalanceException;
 
-    long getBookBalance(UUID walletId)throws CantGetBalanceException; ;
+    long getBookBalance(String walletPublicKey)throws CantGetBalanceException; ;
 
     /**
      * Transactions Fragment methods
      */
-    List<CryptoWalletTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException;
+    List<CryptoWalletTransaction> getTransactions(int max, int offset, String walletPublicKey) throws CantGetTransactionsException;
 
     /**
      * Receive methods
      */
-    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, ReferenceWallet referenceWallet, UUID walletId) throws CantRequestCryptoAddressException;
+    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantRequestCryptoAddressException;
 
-    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, ReferenceWallet referenceWallet, UUID walletId) throws CantRequestCryptoAddressException;
+    CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantRequestCryptoAddressException;
 
     /**
      * Send money methods
      */
-    void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
+    void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
 
 }
