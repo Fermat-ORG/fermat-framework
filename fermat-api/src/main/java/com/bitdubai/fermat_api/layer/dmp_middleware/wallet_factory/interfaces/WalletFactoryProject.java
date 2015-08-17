@@ -20,14 +20,9 @@ import java.util.UUID;
  * Created by eze on 2015.07.14..
  */
 public interface WalletFactoryProject {
-    //identity getters
-    String getDeveloperPublicKey();
-    String getTranslatorPublicKey();
-    String getDesignerPublickKey();
-
     // project info
-    UUID getProjectId();
-    void setProjectId(UUID id);
+    UUID getProjectPublicKey();
+    void setProjectPublickKey(String publickKey);
 
     String getName();
     void setName(String name);

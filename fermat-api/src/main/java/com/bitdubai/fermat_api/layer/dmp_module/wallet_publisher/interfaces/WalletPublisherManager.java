@@ -7,10 +7,7 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantPublishComponentException;
 
@@ -37,7 +34,7 @@ public interface WalletPublisherManager {
      *
      * @return List<DescriptorFactoryProject>
      */
-    public List<DescriptorFactoryProject> getProjectsReadyToPublish();
+    public List<WalletFactoryProject> getProjectsReadyToPublish();
 
     /**
      * This method returns the information stored about the all published component
@@ -98,7 +95,7 @@ public interface WalletPublisherManager {
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
+    public void publishSkin(WalletFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
 
     /**
      * This method publishes the language factory project <code>LanguageDescriptorFactoryProject</code> with the language information in
@@ -115,7 +112,7 @@ public interface WalletPublisherManager {
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
+    public void publishLanguage(WalletFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
 
     /**
      * This method publishes the wallet factory project <code>WalletDescriptorFactoryProject</code> with the wallet information in
@@ -134,7 +131,7 @@ public interface WalletPublisherManager {
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
+    public void publishWallet(WalletFactoryProject walletDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
 
 
 }
