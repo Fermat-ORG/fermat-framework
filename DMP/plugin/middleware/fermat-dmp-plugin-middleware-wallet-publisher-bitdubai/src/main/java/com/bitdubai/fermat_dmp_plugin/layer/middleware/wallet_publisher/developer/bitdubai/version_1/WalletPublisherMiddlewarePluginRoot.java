@@ -1,7 +1,7 @@
 /*
  * @#WalletPublisherMiddlewarePluginRoot.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1;
@@ -157,12 +157,12 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
          */
         if (logManager                                == null ||
                 errorManager                          == null ||
-                    errorManager                      == null ||
-                        walletDescriptorFactoryProjectManager == null ||
-                            pluginFileSystem  == null ||
-                                walletLanguageManager == null ||
-                                    walletSkinManager == null ||
-                                        pluginDatabaseSystem == null) {
+                errorManager                      == null ||
+                walletDescriptorFactoryProjectManager == null ||
+                pluginFileSystem  == null ||
+                walletLanguageManager == null ||
+                walletSkinManager == null ||
+                pluginDatabaseSystem == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -255,7 +255,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         /*
          * Validate required resources
          */
-      //TODO: DESCOMENTAR LA VALIDACION validateInjectedResources();
+        //TODO: DESCOMENTAR LA VALIDACION validateInjectedResources();
 
         try {
 

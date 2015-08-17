@@ -154,7 +154,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             fragment.fromContacts = true;
             getActivity().getFragmentManager()
                     .beginTransaction()
-                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                            //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
@@ -179,7 +179,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             fragment.fromContacts = true;
             getActivity().getFragmentManager()
                     .beginTransaction()
-                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                            //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
