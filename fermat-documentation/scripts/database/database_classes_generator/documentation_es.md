@@ -14,7 +14,7 @@ Los parámetros a llenar son:
 String developerName = "Leon Acosta" // tu nombre
 String developerMail = "laion.cj91@gmail.com" // tu correo
 String pluginName = "Wallet Factory" // Nombre del plugin
-String layerName = "Middleware" < -- nombre de la capa a la que pertenece el plugin
+String layerName = "Middleware" // nombre de la capa a la que pertenece el plugin
 String packageRoot = "com.bitdubai.fermat_dmp_plugin" // package root con la plataforma a la que pertenece el plugin
 String jdkVersion = "1.7"
 
@@ -24,7 +24,7 @@ List databaseTables = []
 // con cada uno de estos add (<<) se agrega una nueva tabla
 
 databaseTables << [
-    name: "Project", <<- nombre de la tabla
+    name: "Project", // nombre de la tabla
     columns: [ // columnas
         ["ID", "STRING", "36", "true"], // nombre de la columna, tipo de dato, tamaño, si es primary o no
         ["Developer Public Key", "STRING", "100", "false"],
