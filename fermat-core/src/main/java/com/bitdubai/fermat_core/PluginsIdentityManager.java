@@ -20,7 +20,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develope
 
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletDescriptorFactoryProjectMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryProjectMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.WalletLanguageMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.WalletManagerMiddlewarePluginRoot;
@@ -372,7 +372,7 @@ public class PluginsIdentityManager {
         if (plugin instanceof ExtraUserUserAddonRoot)
             pluginIndex = 41;
 
-        if (plugin instanceof WalletDescriptorFactoryProjectMiddlewarePluginRoot)
+        if (plugin instanceof WalletFactoryProjectMiddlewarePluginRoot)
             pluginIndex = 42;
 
         if (plugin instanceof WalletManagerMiddlewarePluginRoot)
@@ -383,8 +383,8 @@ public class PluginsIdentityManager {
 
         if (pluginIndex == 0) {
             try {
-                WalletDescriptorFactoryProjectMiddlewarePluginRoot tryType;
-                tryType = (WalletDescriptorFactoryProjectMiddlewarePluginRoot) plugin;
+                WalletFactoryProjectMiddlewarePluginRoot tryType;
+                tryType = (WalletFactoryProjectMiddlewarePluginRoot) plugin;
                 pluginIndex = 42;
             } catch (Exception e) {
                 /**
