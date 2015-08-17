@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -8,12 +9,14 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantGetItemInformationException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.exceptions.CantSetInstallationStatusException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
@@ -32,6 +35,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletSt
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreLanguage;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreSkin;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
@@ -55,6 +59,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -462,7 +468,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
 
     /**
-     * start the installation of the passed wallet.
+     * Start the installation of the passed wallet.
      * @param walletCategory
      * @param nicheWallet
      * @param skinId
@@ -476,21 +482,39 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
             CatalogItem catalogItem = walletStoreManagerNetworkService.getCatalogItem(walletCatalogueId);
             DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
-            WalletInstallationProcess walletInstallationProcess;
-            walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
+            WalletInstallationProcess walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
             DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
             Skin skin = detailedCatalogItem.getDefaultSkin();
             Language language = detailedCatalogItem.getDefaultLanguage();
 
-            //walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(), null, null,
-            //       deviceUser.getPublicKey(), null, catalogItem.getId(), detailedCatalogItem.getVersion(),
-            //        null,null, skin.getSkinId(),
-            //        skin.getVersion(), skin.getSkinName(),null,
-            //        language.getLanguageId(), language.getVersion(), language.getLanguageName()
+            /*
+            For now, we'll pass null to the walletPrivateKey, walletIconName, skinPreview method arguments
+            TODO: Get the real values for this null objects.
+            */
+            walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
+                    catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
+                    catalogItem.getId(), detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
+                    skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
+                    language.getVersion(), language.getLanguageName(), language.getLanguageName().value(),
+                    detailedCatalogItem.getDeveloper().getName(), version.toString());
 
 
-        } catch (Exception exception) {
-            throw new CantStartInstallationException(CantStartInstallationException.DEFAULT_MESSAGE, exception, null, null);
+        }catch (CantSetInstallationStatusException exception){
+            throw new CantStartInstallationException(CantSetInstallationStatusException.DEFAULT_MESSAGE, exception, "Cannot set the instalation status", "Please, check the cause");
+        }catch(CantGetCatalogItemException exception){
+            throw new CantStartInstallationException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, "Cannot get the catalog items", "Please, check the cause");
+        }catch(CantFindProcessException exception){
+            throw new CantStartInstallationException(CantFindProcessException.DEFAULT_MESSAGE, exception, "Cannot get the WalletInstallationProcess", "Please, check the cause");
+        }catch(CantGetLoggedInDeviceUserException exception){
+            throw new CantStartInstallationException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, exception, "Cannot get the Device user", "Please, check the cause");
+        }catch(CantGetSkinException exception){
+            throw new CantStartInstallationException(CantGetSkinException.DEFAULT_MESSAGE, exception, "cannot get the wallet Skin", "Please, check the cause");
+        }catch(CantGetLanguageException exception){
+            throw new CantStartInstallationException(CantGetLanguageException.DEFAULT_MESSAGE, exception, "Cannot get the wallet language", "Please, check the cause");
+        }catch(CantInstallWalletException exception){
+            throw new CantStartInstallationException(CantStartInstallationException.DEFAULT_MESSAGE, exception, "Trying to install a new wallet", "Please, check the cause");
+        }catch (Exception exception) {
+            throw new CantStartInstallationException(CantStartInstallationException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Trying to install a new wallet", "Please, check the cause");
         }
     }
 
