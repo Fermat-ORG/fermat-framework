@@ -159,6 +159,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     //para testear
     private Map<String, byte[]> imagenes;
 
+
+    /**
+     * Github connection until the main repository be open source
+     */
+    private GithubConnection githubConnection;
+
     /**
      * Service Interface implementation.
      */
@@ -186,6 +192,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
             networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
             networkServicesWalletResourcesDAO.initializeDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
+
+            /**
+             *  Connect with main repository
+             */
+            githubConnection = new GithubConnection();
 
 
 
@@ -263,13 +274,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     //el xml de las skin debe estar pegado a una estructura de navegacion
     @Override
     public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
-        String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
+        // this will be use when the repository be open source
+        //String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
+        String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
 
         String linkToResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
 
 
-        String localStoragePath=this.localStoragePath+walletCategory + "/" + walletType + "/" + developer + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+        String localStoragePath=this.localStoragePath+developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
 
         Skin skin = null;
 
@@ -280,8 +293,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         try {
 
-            skin = checkAndInstallSkinResources(linkToResources,localStoragePath);
 
+            skin = checkAndInstallSkinResources(linkToResources, localStoragePath);
 
 
             Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
@@ -763,8 +776,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String repoManifest = "";
         String skinFilename = "/skin.xml";
         try {
-            //connect to repo and get manifest file
-            repoManifest = getRepositoryStringFile(linkToSkin, skinFilename);
+            //connect to repo and get skin file
+            // this will work when we have open source repository
+
+            //repoManifest = getRepositoryStringFile(linkToSkin, skinFilename);
+
+            //this work only for the private repository
+            repoManifest = githubConnection.getFile(linkToSkin+skinFilename);
 
 
             Skin skin = new Skin();
@@ -777,7 +795,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             return skin;
 
-        } catch (MalformedURLException | FileNotFoundException e) {
+        } catch (MalformedURLException e) {
 
             throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Http error in connection with the repository to load manifest file", "");
 
