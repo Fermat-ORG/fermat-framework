@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BterServiceAPI;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -18,6 +19,8 @@ public class JsonService {
     static InputStream is = null;
     static JSONObject jObj = null;
     static String json = "";
+
+    BterServiceAPI bterServiceAPI = new BterServiceAPI();
 
     public JSONObject getJSONFromUrl(String url) {
 
@@ -60,4 +63,6 @@ public class JsonService {
         return jObj;
 
     }
+
+
 }

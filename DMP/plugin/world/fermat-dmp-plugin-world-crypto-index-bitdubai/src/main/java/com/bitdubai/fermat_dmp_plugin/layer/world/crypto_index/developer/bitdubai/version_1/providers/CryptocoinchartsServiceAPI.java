@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers;
 
 /**
  * Created by francisco on 13/08/15.
@@ -26,12 +26,12 @@ public class CryptocoinchartsServiceAPI {
     }
 
     public String getListCoin() {
-        listCoin="http://api.cryptocoincharts.info/listCoins";
+        listCoin="http://api.cryptocoincharts.info/listCoins/";
         return listCoin;
     }
 
     public String getManyTradingPair() {
-        manyTradingPair="http://api.cryptocoincharts.info/tradingPairs";
+        manyTradingPair="http://api.cryptocoincharts.info/tradingPairs/";
         return manyTradingPair;
     }
 
