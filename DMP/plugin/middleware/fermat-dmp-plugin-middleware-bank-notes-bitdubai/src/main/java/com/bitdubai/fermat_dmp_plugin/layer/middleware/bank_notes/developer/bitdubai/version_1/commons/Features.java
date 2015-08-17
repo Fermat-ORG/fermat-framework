@@ -22,7 +22,7 @@ public enum Features {
 
 
     // Define the features.
-    Features ("Image");
+    Features ("ImageMiddleware");
 
 
     // Private instance fields declarations.

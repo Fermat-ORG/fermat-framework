@@ -1,25 +1,35 @@
 /*
  * @#WalletPublisherMiddlewareManagerImpl.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponetException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponent;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationMiddlewareException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponentMiddlewareException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponentMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ComponentVersionDetailDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ScreensShotsComponentsDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
 
+import java.net.URL;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublisherMiddlewareManagerImpl</code> have
@@ -43,46 +53,56 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
     private InformationPublishedComponentDao informationPublishedComponentDao;
 
     /**
-     * Represent the walletDescriptorFactoryProjectManager
+     * Represent the componentVersionDetailDao
      */
-    private WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager;
+    private ComponentVersionDetailDao componentVersionDetailDao;
+
+    /**
+     * Represent the screensShotsComponentsDao
+     */
+    private ScreensShotsComponentsDao screensShotsComponentsDao;
 
     /**
      * Represent the walletStoreManager
      */
     private WalletStoreManager walletStoreManager;
 
-
     /**
      * Constructor whit parameters
      *
+     * @param pluginOwnerId
+     * @param pluginFileSystem
      * @param dataBase
      * @param walletStoreManager
-     * @param walletDescriptorFactoryProjectManager
      * @param logManager
      */
-    public WalletPublisherMiddlewareManagerImpl(Database dataBase, WalletStoreManager walletStoreManager,  WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager, LogManager logManager) {
+    public WalletPublisherMiddlewareManagerImpl(UUID pluginOwnerId, PluginFileSystem pluginFileSystem, Database dataBase, WalletStoreManager walletStoreManager, LogManager logManager) {
         this.walletStoreManager = walletStoreManager;
-    /**
-<<<<<<< HEAD Revisar este caso Franklin marcano
-        this.walletPublisherMiddlewareDao = new WalletPublisherMiddlewareDao(dataBase);
-        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
-=======
-     */
-        this.informationPublishedComponentDao = new InformationPublishedComponentDao(dataBase);
-        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
-
+        this.informationPublishedComponentDao = new InformationPublishedComponentDao(dataBase, new ImageManager(pluginOwnerId, pluginFileSystem));
+        this.componentVersionDetailDao = new ComponentVersionDetailDao(dataBase);
+        this.screensShotsComponentsDao = new ScreensShotsComponentsDao(dataBase, new ImageManager(pluginOwnerId, pluginFileSystem));
         this.logManager = logManager;
-
     }
 
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#getProjectsReadyToPublish()
+     */
+    @Override
+    public List<DescriptorFactoryProject> getProjectsReadyToPublish() {
+
+        /*
+         * The module make this job
+         */
+        throw new NotImplementedException();
+    }
 
     /**
      * (non-Javadoc)
      * @see WalletPublisherMiddlewareManager#getPublishedComponents()
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedComponents() throws CantGetPublishedComponentInformationException {
+    public List<InformationPublishedComponent> getPublishedComponents() throws CantGetPublishedComponentInformationMiddlewareException {
         return null;
     }
 
@@ -91,7 +111,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedWallets()
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedWallets() throws CantGetPublishedComponentInformationException {
+    public List<InformationPublishedComponent> getPublishedWallets() throws CantGetPublishedComponentInformationMiddlewareException {
         return null;
     }
 
@@ -100,7 +120,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedSkins()
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedSkins() throws CantGetPublishedComponentInformationException {
+    public List<InformationPublishedComponent> getPublishedSkins() throws CantGetPublishedComponentInformationMiddlewareException {
         return null;
     }
 
@@ -109,25 +129,43 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @see WalletPublisherMiddlewareManager#getPublishedLanguages()
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedLanguages() throws CantGetPublishedComponentInformationException {
+    public List<InformationPublishedComponent> getPublishedLanguages() throws CantGetPublishedComponentInformationMiddlewareException {
         return null;
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishSkin(SkinDescriptorFactoryProject)
+     * @see WalletPublisherMiddlewareManager#getInformationPublishedComponentWithDetails(UUID)
      */
     @Override
-    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject) throws CantPublishComponetException {
+    public InformationPublishedComponentMiddleware getInformationPublishedComponentWithDetails(UUID idInformationPublishedComponent) throws CantGetPublishedComponentInformationMiddlewareException {
+        return null;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#publishSkin(SkinDescriptorFactoryProject, byte[], byte[], List, URL, String, Version, Version, Version, Version, String)
+     */
+    @Override
+    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentMiddlewareException {
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishLanguage(LanguageDescriptorFactoryProject)
+     * @see WalletPublisherMiddlewareManager#publishLanguage(LanguageDescriptorFactoryProject, byte[], byte[], String, Version, Version, Version, Version, String)
      */
     @Override
-    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject) throws CantPublishComponetException {
+    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentMiddlewareException {
+
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletPublisherMiddlewareManager#publishWallet(WalletDescriptorFactoryProject, byte[], byte[], List, URL, String, Version, Version, Version, Version, String)
+     */
+    @Override
+    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentMiddlewareException {
 
     }
 

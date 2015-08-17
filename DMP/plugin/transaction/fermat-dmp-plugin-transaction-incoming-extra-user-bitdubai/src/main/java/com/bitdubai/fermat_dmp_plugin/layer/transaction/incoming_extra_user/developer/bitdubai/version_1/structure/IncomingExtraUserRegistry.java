@@ -386,7 +386,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         databaseTableRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName, transaction.getInformation().getTransactionHash());
         databaseTableRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName, transaction.getInformation().getAddressFrom().getAddress());
         databaseTableRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName, transaction.getInformation().getAddressTo().getAddress());
-        databaseTableRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName, String.valueOf(transaction.getInformation().getCryptoCurrency()));
+        databaseTableRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName, String.valueOf(transaction.getInformation().getCryptoCurrency().getCode()));
         databaseTableRecord.setLongValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName, transaction.getInformation().getCryptoAmount());
 
         databaseTableRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ACTION_COLUMN.columnName,transaction.getAction().getCode());

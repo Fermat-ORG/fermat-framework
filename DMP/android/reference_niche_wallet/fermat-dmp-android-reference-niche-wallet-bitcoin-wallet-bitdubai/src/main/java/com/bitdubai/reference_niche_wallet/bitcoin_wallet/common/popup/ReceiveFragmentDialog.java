@@ -48,9 +48,9 @@ public class ReceiveFragmentDialog extends Dialog implements
 
 
     /**
-     * Hardcoded wallet_id and user_id
+     * Hardcoded walletPublicKey and user_id
      */
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
     UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
 
 
@@ -149,7 +149,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
             walletAddres = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -199,7 +199,6 @@ public class ReceiveFragmentDialog extends Dialog implements
 
             /*else if (i == R.id.btn_no) {
                 dismiss();
-
             } else {
             }*/
         //dismiss();

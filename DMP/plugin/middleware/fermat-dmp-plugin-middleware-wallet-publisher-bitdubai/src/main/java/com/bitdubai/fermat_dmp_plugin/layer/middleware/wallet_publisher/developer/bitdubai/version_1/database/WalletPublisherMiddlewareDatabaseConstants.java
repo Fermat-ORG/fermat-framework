@@ -1,7 +1,7 @@
 /*
  * @#WalletPublisherMiddlewareDatabaseConstants.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database;
@@ -39,7 +39,8 @@ public class WalletPublisherMiddlewareDatabaseConstants {
     static final String INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME = "status";
     static final String INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME = "status_timestamp";
     static final String INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME = "publication_timestamp";
-    static final String INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_ID_COLUMN_NAME = "publisher_id";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "publisher_identity_public_key";
+    static final String INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME = "signature";
 
     static final String INFORMATION_PUBLISHED_COMPONENTS_FIRST_KEY_COLUMN = "id";
 
@@ -71,7 +72,5 @@ public class WalletPublisherMiddlewareDatabaseConstants {
     static final String SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME = "component_id";
 
     static final String SCREENS_SHOTS_COMPONENTS_FIRST_KEY_COLUMN = "file_id";
-
-
 
 }
