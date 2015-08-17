@@ -262,6 +262,24 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
                 return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(eventMonitor);
+cl
+            /**
+             * Intra User Actor
+             */
+            case INTRA_USER_CONNECTION_ACCEPTED:
+                return new IntraUserActorConnectionAcceptedEventListener(eventType,this.eventMonitor);
+
+            case INTRA_USER_CONNECTION_CANCELLED:
+                return new IntraUserActorConnectionCancelledEventListener(eventType,this.eventMonitor);
+
+            case INTRA_USER_REQUESTED_CONNECTION:
+                return new IntraUserActorRequestConnectionEventListener(eventType,this.eventMonitor);
+
+            case INTRA_USER_CONNECTION_DENIED:
+                return new IntraUserDeniedConnectionEventListener(eventType,this.eventMonitor);
+
+
+
 
         }
         return null;
