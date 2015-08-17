@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
@@ -21,7 +22,7 @@ import java.util.UUID;
  */
 public interface WalletFactoryProject {
     // project info
-    UUID getProjectPublicKey();
+    String getProjectPublicKey();
     void setProjectPublickKey(String publickKey);
 
     String getName();
@@ -30,11 +31,11 @@ public interface WalletFactoryProject {
     String getDescription();
     void setDescription(String description);
 
-    Wallets getWalletType();
-    void setWalletType(Wallets walletType);
+    WalletType getWalletType();
+    void setWalletType(WalletType walletType);
 
     WalletFactoryProjectState getProjectState();
-    void setProjectState(WalletFactoryProjectState state);
+    void setProjectState(WalletFactoryProjectState projectSstate);
 
     Timestamp getCreationTimestamp();
     void setCreationTimestamp(Timestamp timestamp);
