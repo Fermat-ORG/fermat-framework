@@ -254,7 +254,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
                 return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor);
 
-            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:_TRANSFERENCE_EXTRA_USER:
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
                 return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener(eventMonitor);
 
             case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
@@ -262,7 +262,6 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
                 return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(eventMonitor);
-cl
             /**
              * Intra User Actor
              */
