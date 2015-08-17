@@ -10,7 +10,7 @@ También tener en cuenta que a la hora de crear cada una de las tablas:
 
 Los parámetros a llenar son:
 
-<code>
+```groovy
 String developerName = "Leon Acosta" // tu nombre
 String developerMail = "laion.cj91@gmail.com" // tu correo
 String pluginName = "Wallet Factory" // Nombre del plugin
@@ -33,7 +33,8 @@ databaseTables << [
     ],
     firstKey:"ID" // index
 ]
-</code>
+```
+
 Para la ejecución del mismo pueden utilizar el cliente groovy/la consola groovy o directamente de forma online a través de alguna groovy console online.
 
 Lo más sencillo es usar la consola online: http://groovyconsole.appspot.com/
