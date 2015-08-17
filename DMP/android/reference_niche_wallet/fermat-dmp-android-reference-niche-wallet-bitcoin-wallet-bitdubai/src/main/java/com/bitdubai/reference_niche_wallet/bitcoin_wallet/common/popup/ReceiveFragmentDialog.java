@@ -199,7 +199,6 @@ public class ReceiveFragmentDialog extends Dialog implements
 
             /*else if (i == R.id.btn_no) {
                 dismiss();
-
             } else {
             }*/
         //dismiss();

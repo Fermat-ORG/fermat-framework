@@ -369,9 +369,9 @@ public class WalletNavigationStructureMiddlewareDao {
 
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
-      //  try {
-         //   return pluginDatabaseSystem.openDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
-       // } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+        //  try {
+        //   return pluginDatabaseSystem.openDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
+        // } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
         //    throw  new CantExecuteDatabaseOperationException("",exception, "", "Error in database plugin.");
         //}
         return null;
