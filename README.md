@@ -13,7 +13,7 @@ We believe in people with passion who are crazy enough to think they can change 
 How will we do it?
 ---------------------
 
-By not stopping until we reach our goal.
+Not stopping until we reach our goal.
 
 While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
 
@@ -26,7 +26,7 @@ While thinking about how to contribute to the development of the crypto currency
 The answers to each of these questions are addressed within the Fermat platform.
 
 What is Fermat? 
----------------------
+----------------------
 
 Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
 
