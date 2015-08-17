@@ -42,4 +42,4 @@ databaseTables << [
 
 For the execution of the script you can use the groovy client or the groovy console.
 
-In this case, and to evade installing the client, you can use the groovy console online: [Groovy Console]http://groovyconsole.appspot.com/
+In this case, and to evade installing the client, you can use the groovy console online: [Groovy Console](http://groovyconsole.appspot.com/)
