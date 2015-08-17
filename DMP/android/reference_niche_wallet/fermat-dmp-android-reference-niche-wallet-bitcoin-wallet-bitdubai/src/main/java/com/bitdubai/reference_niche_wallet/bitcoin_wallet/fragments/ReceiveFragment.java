@@ -126,13 +126,19 @@ public class ReceiveFragment extends Fragment {
 
     public boolean fromContacts = false;
 
+    /**
+     * Resources
+     */
+    private WalletResourcesProviderManager walletResourcesProviderManager;
 
-    public static ReceiveFragment newInstance(int position,WalletSession walletSession) {
+
+    public static ReceiveFragment newInstance(int position, WalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
         ReceiveFragment f = new ReceiveFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
     public static ReceiveFragment newInstance(int position,WalletContact walletContact,WalletSession walletSession) {
@@ -411,5 +417,9 @@ public class ReceiveFragment extends Fragment {
 
     public void setWalletContact(WalletContact walletContact) {
         this.walletContact = walletContact;
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 }

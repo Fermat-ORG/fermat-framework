@@ -63,10 +63,6 @@ public class GithubConnection {
         IOUtils.copy(inputStream, writer, "UTF-8");
         String theString = writer.toString();
 
-
-        //testing
-        System.out.println(theString);
-
         return theString;
     }
 

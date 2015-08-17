@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
@@ -72,8 +73,12 @@ public class BalanceFragment extends Fragment {
      */
 
     private CryptoWalletManager cryptoWalletManager;
-    CryptoWallet cryptoWallet;
+    private CryptoWallet cryptoWallet;
 
+    /**
+     *  Resources
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
 
     /**
      * TypeFace to apply in all fragment
@@ -109,10 +114,11 @@ public class BalanceFragment extends Fragment {
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession,WalletSettingsManager walletSettingsManager) {
+    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
         balanceFragment.setReferenceWalletSession((ReferenceWalletSession) walletSession);
         balanceFragment.setWalletSettingManager(walletSettingsManager);
+        balanceFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return balanceFragment;
     }
 
@@ -394,6 +400,10 @@ public class BalanceFragment extends Fragment {
 
     public void setWalletSettingManager(WalletSettingsManager walletSettingManager) {
         this.walletSettingsManager = walletSettingManager;
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 }
 
