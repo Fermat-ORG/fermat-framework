@@ -26,6 +26,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +52,7 @@ import ae.javax.xml.bind.Unmarshaller;*/
 public class xmlConversionTest extends TestCase {
 
 
-    public void testcreateResult() {
+    public void testCreateNAvigationStructure() {
         Activity runtimeActivity;
         Fragment runtimeFragment;
         WalletNavigationStructure runtimeWalletNavigationStructure;
@@ -202,6 +204,48 @@ public class xmlConversionTest extends TestCase {
         String xml = XMLParser.parseObject(runtimeWalletNavigationStructure);
 
         System.out.println(xml);
+    }
+
+    @Test
+    public void testCreateSkin(){
+
+
+
+
+            try {
+
+                Version version = new Version(1,0,0);
+                VersionCompatibility versionCompatibility = new VersionCompatibility(version,version);
+
+                Map<String, Resource> resources  =new HashMap<String, Resource>();
+
+                //public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
+
+
+                Resource resource = new Resource(UUID.randomUUID(),"personIcon","person1.png",ResourceType.IMAGE,ResourceDensity.MDPI);
+
+                resources.put(resource.getName(),resource);
+
+                Map<String, Layout> portraitLayouts = new HashMap<String, Layout>();
+
+                Layout layout_portrait_1 = new Layout(UUID.randomUUID(),"reference_wallet_contact_fragment.xml","reference_wallet_contact_fragment");
+
+                portraitLayouts.put(layout_portrait_1.getName(),layout_portrait_1);
+
+                Map<String, Layout> landscapeLayouts = new HashMap<String, Layout>();
+
+                Layout layout_landscape_1 = new Layout(UUID.randomUUID(),"reference_wallet_contact_fragment.xml","reference_wallet_contact_fragment");
+
+                landscapeLayouts.put(layout_landscape_1.getName(), layout_landscape_1);
+
+                Skin skin = new Skin(UUID.randomUUID(),"reference_wallet",version,versionCompatibility,resources,portraitLayouts,landscapeLayouts);
+
+                System.out.println(XMLParser.parseObject(skin));
+
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
+
     }
 
     /*    @Test

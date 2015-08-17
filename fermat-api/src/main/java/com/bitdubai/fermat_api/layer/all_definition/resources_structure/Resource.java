@@ -39,11 +39,12 @@ public class Resource implements Serializable {
     public Resource() {
     }
 
-    public Resource(String name, String fileName, ResourceType resourceType) {
+    public Resource(String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.fileName = fileName;
         this.resourceType = resourceType;
+        this.resourceDensity = resourceDensity;
     }
 
     public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {

@@ -1,78 +1,52 @@
-<com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>
-  <publicKey>reference_wallet</publicKey>
-  <activities>
+<com.bitdubai.fermat__api.layer.all__definition.resources__structure.Skin>
+  <id>f39421a2-0b63-4d50-aba6-51b70d492c3e</id>
+  <name>reference_wallet</name>
+  <version>
+    <major>1</major>
+    <minor>0</minor>
+    <patch>0</patch>
+    <versionSeparator>.</versionSeparator>
+  </version>
+  <navigationStructureCompatibility>
+    <initialVersion reference="../../version"/>
+    <finalVersion reference="../../version"/>
+    <PLATFORM__VERSION>
+      <major>1</major>
+      <minor>0</minor>
+      <patch>0</patch>
+      <versionSeparator>.</versionSeparator>
+    </PLATFORM__VERSION>
+  </navigationStructureCompatibility>
+  <resources>
     <entry>
-      <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Activities>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Activities>
-      <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Activity>
-        <type>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS</type>
-        <fragments>
-          <entry>
-            <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>
-            <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-              <type>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS</type>
-            </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-          </entry>
-        </fragments>
-        <startFragment>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS</startFragment>
-        <titleBar>
-          <label>Fermat Bitcoin Reference Wallet</label>
-        </titleBar>
-        <color>#72af9c</color>
-        <statusBar>
-          <color>#72af9c</color>
-          <isVisible>false</isVisible>
-        </statusBar>
-      </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Activity>
+      <string>personIcon</string>
+      <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Resource>
+        <id>c64813ea-1214-4725-ae8e-94a0791a9205</id>
+        <name>personIcon</name>
+        <fileName>person1.png</fileName>
+        <resourceType>IMAGE</resourceType>
+        <resourceDensity>MDPI</resourceDensity>
+      </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Resource>
     </entry>
+  </resources>
+  <portraitLayouts>
     <entry>
-      <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Activities>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Activities>
-      <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Activity>
-        <type>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN</type>
-        <fragments>
-          <entry>
-            <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>
-            <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-              <type>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE</type>
-            </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-          </entry>
-          <entry>
-            <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>
-            <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-              <type>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS</type>
-            </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-          </entry>
-        </fragments>
-        <titleBar>
-          <label>Fermat Bitcoin Reference Wallet</label>
-        </titleBar>
-        <tabStrip>
-          <dividerColor>7516060</dividerColor>
-          <indicatorColor>0</indicatorColor>
-          <indicatorHeight>0</indicatorHeight>
-          <backgroundColor>0</backgroundColor>
-          <textColor>0</textColor>
-          <backgroundResource>0</backgroundResource>
-          <tabsColor>#8bba9e</tabsColor>
-          <tabsTextColor>#FFFFFF</tabsTextColor>
-          <tabsIndicateColor>#72af9c</tabsIndicateColor>
-          <tabs>
-            <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Tab>
-              <label>Balance</label>
-              <fragment>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE</fragment>
-            </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Tab>
-            <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Tab>
-              <label>Contacts</label>
-              <fragment>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS</fragment>
-            </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Tab>
-          </tabs>
-        </tabStrip>
-        <color>#72af9c</color>
-        <statusBar>
-          <color>#72af9c</color>
-          <isVisible>false</isVisible>
-        </statusBar>
-      </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Activity>
+      <string>reference_wallet_contact_fragment</string>
+      <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+        <id>2494c954-d3c9-48b7-82a7-09978f3fffff</id>
+        <filename>reference_wallet_contact_fragment.xml</filename>
+        <name>reference_wallet_contact_fragment</name>
+      </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
     </entry>
-  </activities>
-  <startActivity>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN</startActivity>
-</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>
+  </portraitLayouts>
+  <landscapeLayouts>
+    <entry>
+      <string>reference_wallet_contact_fragment</string>
+      <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+        <id>a2ed367d-df93-4cbb-9bab-6cf25066fcb1</id>
+        <filename>reference_wallet_contact_fragment.xml</filename>
+        <name>reference_wallet_contact_fragment</name>
+      </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+    </entry>
+  </landscapeLayouts>
+</com.bitdubai.fermat__api.layer.all__definition.resources__structure.Skin>

@@ -479,7 +479,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              * delete portrait resources
              */
             String linkToPortraitResources = linkToResources + "portrait/resources/";
-            deleteResources(linkToPortraitResources, skin.getLstResources(), skin.getId());
+            deleteResources(linkToPortraitResources, skin.getResources(), skin.getId());
 
             /**
 
@@ -487,7 +487,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              * delete layouts
              */
             String linkToPortraitLayouts = linkToResources + "/layouts";
-            deleteLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId());
+            deleteLayouts(linkToPortraitLayouts, skin.getPortraitLayouts(), skin.getId());
 
 
 
@@ -507,19 +507,19 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          * download portrait resources
          */
         String linkToPortraitResources = linkToResources + "/resources/" + "/drawables/";
-        downloadResourcesFromRepo(linkToPortraitResources, skin.getLstResources(), skin.getId(),localStoragePath);
+        downloadResourcesFromRepo(linkToPortraitResources, skin.getResources(), skin.getId(),localStoragePath);
 
         /**
          * download portrait layouts
          */
         String linkToPortraitLayouts = linkToResources + "portrait/resources/" + "/layouts/";
-        downloadLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId(),localStoragePath);
+        downloadLayouts(linkToPortraitLayouts, skin.getPortraitLayouts(), skin.getId(),localStoragePath);
 
         /**
          * download landscape layouts
          */
         String linkToLandscapeLayouts = linkToResources + "landscape/resources/" + "/layouts/";
-        downloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId(),localStoragePath);
+        downloadLayouts(linkToLandscapeLayouts, skin.getLandscapeLayouts(), skin.getId(),localStoragePath);
 
 
         //TODO: raise a event
