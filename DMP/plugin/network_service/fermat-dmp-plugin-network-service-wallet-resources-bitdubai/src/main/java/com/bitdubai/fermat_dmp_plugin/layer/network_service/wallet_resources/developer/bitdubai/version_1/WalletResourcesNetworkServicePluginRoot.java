@@ -321,7 +321,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download navigation structure
              */
 
-            String linkToNavigationStructure = linkToRepo + "versions/" + skin.getNavigationStructureCompatibility() + "/";
+            String linkToNavigationStructure = linkToRepo + "navigation_structure/" + skin.getNavigationStructureCompatibility() + "/";
             donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath);
 
 
@@ -645,8 +645,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              *  Download portrait navigation structure
              */
-            String navigationStructureName="navigation_structure_portrait.xml";
-            String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
+            String navigationStructureName="navigation_structure.xml";
+            //this will be use when the main repository be open source
+            //String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
+
+            // this is used because we have a private main repository
+            String navigationStructureXML = githubConnection.getFile(link+navigationStructureName);
+
             try {
 
                 recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath);
@@ -670,8 +675,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -774,7 +777,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     private Skin checkAndInstallSkinResources(String linkToSkin,String localStoragePath) throws CantCheckResourcesException, CantPersistFileException {
         String repoManifest = "";
-        String skinFilename = "/skin.xml";
+        String skinFilename = "skin.xml";
         try {
             //connect to repo and get skin file
             // this will work when we have open source repository

@@ -54,7 +54,7 @@ public class GithubConnection {
 
     public String getFile(String path) throws IOException {
 
-        GHContent ghContent= ghRepository.getFileContent("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/1.0.0/navigation_structure.xml");
+        GHContent ghContent= ghRepository.getFileContent(path);
 
         InputStream inputStream = ghContent.read();
 

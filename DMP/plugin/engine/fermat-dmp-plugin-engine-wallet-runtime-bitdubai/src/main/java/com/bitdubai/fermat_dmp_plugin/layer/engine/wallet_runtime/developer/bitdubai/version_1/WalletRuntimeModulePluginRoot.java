@@ -1140,7 +1140,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String languageName = null;
 
         try {
-            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "BitDubai", "medium", "default", "en", "1.0.0");
+            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0");
         } catch (WalletResourcesInstalationException e) {
             e.printStackTrace();
         }
