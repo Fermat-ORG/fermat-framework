@@ -30,7 +30,7 @@ public class WalletNavigationStructureDownloadedHandler implements EventHandler 
         String link = walletNavigationStructureDownloadedEvent.getLinkToRepo();
         UUID skinId = walletNavigationStructureDownloadedEvent.getSkinId();
         String filename = walletNavigationStructureDownloadedEvent.getFilename();
-        System.out.println("JORGEEEEEEEEEEEEEEEEEEEEEEEEEEE HOla");
+        System.out.println("JORGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HOla");
 
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
 

@@ -34,7 +34,7 @@
       <string>reference_wallet_contact_fragment</string>
       <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
         <id>2494c954-d3c9-48b7-82a7-09978f3fffff</id>
-        <filename>reference_wallet_contact_fragment.xml</filename>
+        <filename>wallets_bitcoin_fragment_balance.xml</filename>
         <name>reference_wallet_contact_fragment</name>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
     </entry>
@@ -44,7 +44,7 @@
       <string>reference_wallet_contact_fragment</string>
       <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
         <id>a2ed367d-df93-4cbb-9bab-6cf25066fcb1</id>
-        <filename>reference_wallet_contact_fragment.xml</filename>
+        <filename>wallets_bitcoin_fragment_balance.xml</filename>
         <name>reference_wallet_contact_fragment</name>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
     </entry>

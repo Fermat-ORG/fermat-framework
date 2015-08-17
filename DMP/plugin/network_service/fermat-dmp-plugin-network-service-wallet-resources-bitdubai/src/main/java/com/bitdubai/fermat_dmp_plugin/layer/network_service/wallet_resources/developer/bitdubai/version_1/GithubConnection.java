@@ -13,6 +13,8 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -41,8 +43,7 @@ public class GithubConnection {
 
             GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
             ghRepository = gitHub.getRepository("furszy/fermat");
-            //testing
-            System.out.println(ghRepository.toString());
+
 
         } catch (java.io.FileNotFoundException e) {
             throw new GitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException.DEFAULT_MESSAGE, e, "Check the name of the repository.", "");
@@ -67,6 +68,24 @@ public class GithubConnection {
         System.out.println(theString);
 
         return theString;
+    }
+
+    public byte[] getImage(String path) throws IOException {
+
+        GHContent ghContent= ghRepository.getFileContent(path);
+
+        InputStream inputStream = ghContent.read();
+
+        BufferedInputStream in = new BufferedInputStream(inputStream);
+        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+        int c;
+        while ((c = in.read()) != -1) {
+            byteArrayOut.write(c);
+        }
+
+        in.close();
+        return byteArrayOut.toByteArray();
+
     }
 
 

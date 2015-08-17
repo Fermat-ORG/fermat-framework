@@ -114,7 +114,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      * LanguageDescriptorFactoryProjectManager Interface member variables
      */
 
-    private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation-structure-";
+    private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation_structure";
 
     /**
      * DealsWithWalletResources
@@ -1152,10 +1152,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
 
             String publicKey="reference_wallet";
-            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
             if(walletNavigationStructure==null){
                 // testing purpose mati
-                setNavigationStructureXml(startWalletNavigationStructure());
+                //setNavigationStructureXml(startWalletNavigationStructure());
                 walletNavigationStructure= getNavigationStructure(publicKey);
             }
             //listWallets.put(publicKey, walletNavigationStructure);
@@ -1227,6 +1227,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     @Override
     public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure){
         String publiKey=walletNavigationStructure.getPublicKey();
+        System.out.println("HOLAAAAAAAAAAAAAAAAAAAA MATIIIIIIIIII");
         try {
             String navigationStructureXml = parseNavigationStructureXml(walletNavigationStructure);
             String navigationStructureName=NAVIGATION_STRUCTURE_FILE_NAME+publiKey+".xml";
