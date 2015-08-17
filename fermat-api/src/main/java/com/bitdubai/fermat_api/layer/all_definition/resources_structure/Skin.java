@@ -51,10 +51,6 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.lstLandscapeLayouts = lstLandscapeLayouts;
     }
 
-    public Skin() {
-
-    }
-
     public UUID getId() {
         return id;
     }

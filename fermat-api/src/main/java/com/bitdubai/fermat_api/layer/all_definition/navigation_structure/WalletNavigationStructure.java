@@ -53,8 +53,6 @@ public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.
     }
 
 
-
-
     /**
      * WalletNavigationStructure interface implementation.
      */

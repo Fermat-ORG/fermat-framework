@@ -4,7 +4,7 @@ package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitduba
  * Created by rodrigo on 2015.07.15..
  */
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -144,7 +144,7 @@ public class MockedPluginDatabaseSystem implements PluginDatabaseSystem {
                             }
 
                             @Override
-                            public void setStateValue(String columnName, FactoryProjectState state) {
+                            public void setStateValue(String columnName, WalletFactoryProjectState state) {
 
                             }
 
@@ -241,7 +241,7 @@ public class MockedPluginDatabaseSystem implements PluginDatabaseSystem {
                         }
 
                             @Override
-                            public void setStateValue(String columnName, FactoryProjectState state) {
+                            public void setStateValue(String columnName, WalletFactoryProjectState state) {
 
                             }
 
@@ -336,7 +336,7 @@ public class MockedPluginDatabaseSystem implements PluginDatabaseSystem {
                     }
 
                     @Override
-                    public void setStateFilter(String columName, FactoryProjectState factoryProjectState, DatabaseFilterType type) {
+                    public void setStateFilter(String columName, WalletFactoryProjectState factoryProjectState, DatabaseFilterType type) {
 
                     }
 
