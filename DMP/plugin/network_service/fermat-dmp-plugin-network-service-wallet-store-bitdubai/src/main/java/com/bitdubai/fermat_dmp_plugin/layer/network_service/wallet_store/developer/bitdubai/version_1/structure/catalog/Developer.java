@@ -7,7 +7,7 @@ import java.util.UUID;
  */
 public class Developer implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer {
     UUID id;
-    String Name;
+    String name;
     String publicKey;
 
     /**
@@ -24,7 +24,7 @@ public class Developer implements com.bitdubai.fermat_api.layer.dmp_network_serv
      */
     public Developer(UUID id, String name, String publicKey) {
         this.id = id;
-        Name = name;
+        this.name = name;
         this.publicKey = publicKey;
     }
 
@@ -35,7 +35,7 @@ public class Developer implements com.bitdubai.fermat_api.layer.dmp_network_serv
 
     @Override
     public String getName() {
-        return this.Name;
+        return this.name;
     }
 
     @Override
@@ -43,12 +43,12 @@ public class Developer implements com.bitdubai.fermat_api.layer.dmp_network_serv
         return this.publicKey;
     }
 
-    public void setid(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public void setPublicKey(String publicKey) {

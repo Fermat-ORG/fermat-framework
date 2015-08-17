@@ -9,7 +9,13 @@ public enum Activities {
     CWP_SHOP_MANAGER_MAIN ("CSMM"),
     CWP_WALLET_MANAGER_MAIN ("CWMM"),
     CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN ("CWRWAKAB1M"),
+
+    /**
+     * Reference wallet
+     */
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN ("CWRWBWBV1M"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS("CWRWBWBV1T"),
+
     CWP_WALLET_STORE_MAIN ("CWSM"),
     CWP_WALLET_ADULTS_ALL_MAIN ("CWAAM"),
     CWP_WALLET_BASIC_ALL_MAIN ("CWBAM"),
@@ -80,8 +86,8 @@ public enum Activities {
                 return Activities.CWP_WALLET_MANAGER_MAIN;
             case "CWRWAKAB1M":
                 return Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN;
-            case "CWRWBWBV1M":
-                return Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
+            case "CWRWBWBV1T":
+                return Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS;
             case "CWSM":
                 return Activities.CWP_WALLET_STORE_MAIN;
             case "CWAAM":

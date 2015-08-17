@@ -2,11 +2,10 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
 import android.content.Context;
-
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +60,7 @@ public class TransactionsFragment extends Fragment{
     private static final String ARG_POSITION = "position";
 
 
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -166,7 +165,7 @@ public class TransactionsFragment extends Fragment{
             // Create the adapter to convert the array to views
 
 
-                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
 
 
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
@@ -298,7 +297,7 @@ public class TransactionsFragment extends Fragment{
         try {
             if (lstTransactions.isEmpty()){
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
 
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
@@ -306,7 +305,7 @@ public class TransactionsFragment extends Fragment{
             }
             else{
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
 

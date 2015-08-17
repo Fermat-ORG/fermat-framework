@@ -51,7 +51,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService.WalletStoreNetworkServiceMonitoringAgent;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreNetworkServiceMonitoringAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
@@ -554,7 +554,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
         developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
         developer.setName("Rodrigo");
-        developer.setid(UUID.randomUUID());
+        developer.setId(UUID.randomUUID());
         developer.setPublicKey("SDSDSDSDasdojasdiuahsdkasjdaskdasdk");
         detailedCatalogItem.setDeveloper(developer);
 
@@ -563,5 +563,18 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
         this.publishWallet(catalogItem);
 
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see WalletStoreManager#constructEmptyCatalogItem()
+     */
+    public CatalogItem constructEmptyCatalogItem(){
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem catalogItem = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem();
+
+
+
+        return catalogItem;
     }
 }
