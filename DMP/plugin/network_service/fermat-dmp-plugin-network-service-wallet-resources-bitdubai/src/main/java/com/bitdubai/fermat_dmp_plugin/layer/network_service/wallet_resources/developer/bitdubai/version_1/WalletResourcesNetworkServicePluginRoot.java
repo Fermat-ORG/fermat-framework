@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -264,14 +265,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
         String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
-
-
-        String linkToResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
-
-
-        String localStoragePath=this.localStoragePath+walletCategory + "/" + walletType + "/" + developer + "/"+ "skins/" + skinName + "/" + screenSize + "/";
-
-        Skin skin = null;
+        String linkToLanguageResources = linkToRepo + "languages/" ;
+        String linkToSkinResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
+        String localSkinStoragePath=this.localStoragePath+walletCategory + "/" + walletType + "/" + developer + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+        String localLanguageStoragePath=this.localStoragePath+walletCategory + "/" + walletType + "/" + developer + "/"+ "languages/";
 
         /**
          * add progress
@@ -280,18 +277,20 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         try {
 
-            skin = checkAndInstallSkinResources(linkToResources,localStoragePath);
+            Skin skin = checkAndInstallSkinResources(linkToSkinResources,localSkinStoragePath);
+            addProgress(WalletInstalationProgress.SKIN_DOWNLOADED);
 
-
-
-            Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
-
+            Repository skinRepository = new Repository(skinName, navigationStructureVersion, localSkinStoragePath);
             /**
              *  Save repository in memory for use
              */
-            repositoriesName.put(skin.getId(), repository);
+            repositoriesName.put(skin.getId(), skinRepository);
 
-
+            //Install Language
+            Language installingLanguage=checkAndInstallLanguageResources(linkToLanguageResources,localLanguageStoragePath, languageName);
+            addProgress(WalletInstalationProgress.LANGUAGE_DOWNLOADED);
+            Repository languageRepository = new Repository(languageName, navigationStructureVersion, localLanguageStoragePath);
+            repositoriesName.put(installingLanguage.getId(),languageRepository);
             /*NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
 
             try {
@@ -309,15 +308,16 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
 
             String linkToNavigationStructure = linkToRepo + "versions/" + skin.getNavigationStructureCompatibility() + "/";
-            donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath);
+            donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localSkinStoragePath);
 
 
             /**
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, localStoragePath);
+            downloadResourcesFromRepo(linkToSkinResources, skin, localStoragePath);
 
+            addProgress(WalletInstalationProgress.INSTALATION_FINISH);
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
             throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
@@ -757,7 +757,29 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
+    private Language checkAndInstallLanguageResources(String linkToLanguage,String localStoragePath, String languageFileName) throws CantCheckResourcesException, CantPersistFileException {
 
+        //String languageFilename = "/language.xml";
+        try {
+            //connect to repo and get manifest file
+            languageFileName+=".xml";
+            String repoManifest = getRepositoryStringFile(linkToLanguage, languageFileName);
+            Language language = new Language();
+            language = (Language) XMLParser.parseXML(repoManifest, language);
+
+            /**
+             *  Language record
+             */
+            recordXML(repoManifest, language.getName(), language.getId(), localStoragePath);
+
+            return language;
+
+        } catch (MalformedURLException | FileNotFoundException exception) {
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", exception, "Http error in connection with the repository to load manifest file", "");
+        } catch (IOException exception) {
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", exception, "Error load manifest file ", "Repository not exist or manifest file not exist");
+        }
+    }
 
     private Skin checkAndInstallSkinResources(String linkToSkin,String localStoragePath) throws CantCheckResourcesException, CantPersistFileException {
         String repoManifest = "";

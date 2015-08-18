@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ImageMiddleware;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -59,7 +59,7 @@ public class ImageManager {
      *
      * @param imageMiddleware
      */
-    public void persist(ImageMiddleware imageMiddleware) throws CantCreateFileException, CantPersistFileException {
+    public void persist(Image imageMiddleware) throws CantCreateFileException, CantPersistFileException {
 
         /*
          * Obtain the xml representation of the object
@@ -88,9 +88,9 @@ public class ImageManager {
      *
      *   file_id = file name
      *
-     * @return ImageMiddleware
+     * @return Image
      */
-    public ImageMiddleware load(String file_id) throws FileNotFoundException, CantCreateFileException {
+    public Image load(String file_id) throws FileNotFoundException, CantCreateFileException {
 
         /*
          * Load the file
@@ -100,7 +100,7 @@ public class ImageManager {
         /**
          * Parse the xml into the object
          */
-        ImageMiddleware imageMiddleware = (ImageMiddleware) XMLParser.parseXML(xmlFile.getContent(), ImageMiddleware.class);
+        Image imageMiddleware = (Image) XMLParser.parseXML(xmlFile.getContent(), Image.class);
 
         /**
          * Return the imageMiddleware
