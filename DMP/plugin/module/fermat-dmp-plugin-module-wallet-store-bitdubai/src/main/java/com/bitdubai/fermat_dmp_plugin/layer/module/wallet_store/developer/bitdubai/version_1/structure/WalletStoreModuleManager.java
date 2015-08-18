@@ -212,8 +212,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public DetailedCatalogItem getDetailedCatalogItem() throws CantGetWalletDetailsException {
-                return catalogItem.getDetailedCatalogItem();
+            public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException {
+                return catalogItem.getDetailedCatalogItemImpl();
             }
         };
 
