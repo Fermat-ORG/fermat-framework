@@ -174,6 +174,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
     private WalletStoreCatalogueItem getWalletCatalogueItem(final CatalogItem catalogItem, final InstallationStatus installationStatus){
         WalletStoreCatalogueItem walletStoreCatalogueItem = new WalletStoreCatalogueItem() {
+
             @Override
             public InstallationStatus getInstallationStatus() {
                 return installationStatus;
@@ -422,6 +423,9 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             public Developer getDeveloper() {
                 return detailedCatalogItem.getDeveloper();
             }
+
+            @Override
+            public Designer getDesigner() {return  detailedCatalogItem.getDesigner(); }
         };
 
         return walletStoreDetailedCatalogItem;
@@ -570,7 +574,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             final List<WalletStoreCatalogueItem> walletStoreCatalogueItemList = new ArrayList<WalletStoreCatalogueItem>();
             WalletCatalog walletCatalog =  walletStoreManagerNetworkService.getWalletCatalogue();
 
-
+            
             for (CatalogItem catalogItem :  walletCatalog.getWalletCatalog(0,0)){
                 InstallationStatus installationStatus = getWalletInstallationStatus(catalogItem);
                 WalletStoreCatalogueItem walletStoreCatalogueItem = getWalletCatalogueItem(catalogItem, installationStatus);

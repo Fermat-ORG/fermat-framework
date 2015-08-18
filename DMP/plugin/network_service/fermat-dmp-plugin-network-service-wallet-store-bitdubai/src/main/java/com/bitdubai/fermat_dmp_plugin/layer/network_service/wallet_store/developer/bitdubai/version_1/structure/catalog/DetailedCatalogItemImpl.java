@@ -26,6 +26,7 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
     Version platformInitialVersion;
     Version platformFinalVersion;
     Developer developer;
+    Designer designer;
 
     /**
      * Default constructor
@@ -43,7 +44,7 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
      * @param platformInitialVersion
      * @param platformFinalVersion
      */
-    public DetailedCatalogItemImpl(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, Developer developer) {
+    public DetailedCatalogItemImpl(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, Developer developer, Designer designer) {
         this.language = language;
         this.languages = languages;
         this.defaultSkin = defaultSkin;
@@ -52,6 +53,7 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
         this.platformInitialVersion = platformInitialVersion;
         this.platformFinalVersion = platformFinalVersion;
         this.developer = developer;
+        this.designer = designer;
     }
 
     @Override
@@ -90,9 +92,10 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
     }
 
     @Override
-    public Developer getDeveloper() {
-        return developer;
-    }
+    public Developer getDeveloper() { return developer; }
+
+    @Override
+    public Designer getDesigner() {return designer; }
 
     public void setLanguage(Language language) {
         this.language = language;

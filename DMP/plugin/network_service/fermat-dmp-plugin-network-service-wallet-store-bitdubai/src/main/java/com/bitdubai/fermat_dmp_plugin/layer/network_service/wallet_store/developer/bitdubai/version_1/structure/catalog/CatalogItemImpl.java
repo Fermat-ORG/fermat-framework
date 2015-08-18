@@ -113,6 +113,7 @@ public class CatalogItemImpl implements CatalogItem {
         this.name = name;
     }
 
+
     public void setDescription(String description) {
         this.description = description;
     }
