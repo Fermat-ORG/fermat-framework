@@ -280,15 +280,17 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             Skin skin = checkAndInstallSkinResources(linkToSkinResources,localSkinStoragePath);
             addProgress(WalletInstalationProgress.SKIN_DOWNLOADED);
 
-            Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
+            Repository skinRepository = new Repository(skinName, navigationStructureVersion, localSkinStoragePath);
             /**
              *  Save repository in memory for use
              */
-            repositoriesName.put(skin.getId(), repository);
+            repositoriesName.put(skin.getId(), skinRepository);
 
             //Install Language
             Language installingLanguage=checkAndInstallLanguageResources(linkToLanguageResources,localLanguageStoragePath, languageName);
-
+            addProgress(WalletInstalationProgress.LANGUAGE_DOWNLOADED);
+            Repository languageRepository = new Repository(languageName, navigationStructureVersion, localLanguageStoragePath);
+            repositoriesName.put(installingLanguage.getId(),languageRepository);
             /*NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
 
             try {
@@ -315,6 +317,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             downloadResourcesFromRepo(linkToSkinResources, skin, localStoragePath);
 
+            addProgress(WalletInstalationProgress.INSTALATION_FINISH);
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
             throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
