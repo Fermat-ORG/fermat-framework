@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
@@ -42,34 +43,38 @@ public interface WalletPublisherManager {
     /**
      * This method returns the information stored about the all published component
      *
+     * @param publisherIdentityPublicKey
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedComponents() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedComponents(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published wallets
      *
+     * @param publisherIdentityPublicKey
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedWallets() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedWallets(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published skins
      *
+     * @param publisherIdentityPublicKey
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedSkins() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedSkins(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published language
      *
+     * @param publisherIdentityPublicKey
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent>  getPublishedLanguages() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent>  getPublishedLanguages(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published component with his details
@@ -122,6 +127,7 @@ public interface WalletPublisherManager {
      * the wallet store and register relevant information of this process.
      *
      * @param walletDescriptorFactoryProject
+     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -134,7 +140,7 @@ public interface WalletPublisherManager {
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
+    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
 
 
 }

@@ -8,7 +8,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetailMiddleware;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -23,7 +23,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDetailMiddleware {
+public class ComponentVersionDetailMiddlewareImpl implements ComponentVersionDetail {
 
     /**
      * Represent the id
