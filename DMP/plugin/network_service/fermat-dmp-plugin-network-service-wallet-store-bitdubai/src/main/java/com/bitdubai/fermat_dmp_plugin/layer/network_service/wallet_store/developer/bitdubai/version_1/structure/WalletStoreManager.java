@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDeveloperInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
@@ -216,6 +217,19 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
             publishItemInDB(null, null, null, null, null, designer);
         } catch (Exception e) {
             throw new CantPublishDesignerInCatalogException (CantPublishDesignerInCatalogException.DEFAULT_MESSAGE, e, null, null);
+        }
+    }
+
+    /**
+     * saves the designer in DB
+     * @param developer
+     * @throws CantPublishDesignerInCatalogException
+     */
+    public void publishDeveloper(Developer developer) throws CantPublishDeveloperInCatalogException {
+        try{
+            publishItemInDB(null, developer, null, null, null, null);
+        } catch (Exception e) {
+            throw new CantPublishDeveloperInCatalogException (CantPublishDeveloperInCatalogException.DEFAULT_MESSAGE, e, null, null);
         }
     }
 

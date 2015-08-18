@@ -17,14 +17,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetTranslatorException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDeveloperInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
@@ -220,6 +225,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     @Override
     public void publishDesigner(Designer designer) throws CantPublishDesignerInCatalogException {
         getWalletStoreManager().publishDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) designer);
+    }
+
+    @Override
+    public void publishDeveloper(Developer developer) throws CantPublishDeveloperInCatalogException
+    {
+        getWalletStoreManager().publishDeveloper((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer) developer);
     }
 
     @Override
@@ -478,6 +489,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         }
     }
 
+
     //todo delete - TESTING
     public void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException {
         UUID walletId = UUID.randomUUID();
@@ -510,6 +522,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skin.setIsDefault(true);
         //New set. Sets the ScreenSize
         skin.setScreenSize(ScreenSize.MEDIUM);
+
+
 
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;
@@ -570,13 +584,106 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     /**
      * (non-Javadoc)
      * @see WalletStoreManager#constructEmptyCatalogItem()
-     */
+    */
     public CatalogItem constructEmptyCatalogItem(){
 
         CatalogItemImpl catalogItemImpl = new CatalogItemImpl();
 
+        return catalogItemImpl;
+    }
 
+    public Language constructLanguage(UUID skinId, String nameLanguage, String languageLabel, UUID walletId, Version version, Version initalWalletVersion, Version finalWalletVersion,  List<URL> videoPreviews, URL LanguageURL, long languageSizeInBytes, Translator translator, boolean isDefault )
+    {
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language languageImpl;
+        languageImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language();
+        //Todo for implementation
+        return languageImpl;
+    }
+
+    public Skin constructSkin(UUID skinId, String nameSkin, UUID walletId, ScreenSize screenSize, Version version, Version initalWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL skinURL, long skinSizeInBytes, Designer designer, boolean isDefault ){
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skinImpl;
+
+        skinImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
+        //Todo for implementation
+        return skinImpl;
+    }
+    public Developer constructDeveloper(UUID developerId, String name, String PublicKey)
+    {
+        Developer developerImpl;
+        developerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
+        return developerImpl;
+    }
+
+    public Designer constructDesigner(UUID designerrId, String name, String PublicKey){
+
+        Designer designerImpl;
+        designerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
+
+        return designerImpl;
+    }
+
+    public CatalogItem constructCatalogItem(UUID walletId,int defaultSizeInBytes,
+                             String name, String description,
+                             WalletCategory walletCategory,
+                             byte[] icon,
+                             Version version,
+                             Version platformInitialVersion,
+                             Version platformFinalVersion,
+                             List<Skin> skins,
+                             Skin skin,
+                             Language language,
+                             List<Language> languages,
+                             Designer designer,
+                             Developer developer,
+                             Translator translator) throws CantGetWalletIconException{
+        CatalogItemImpl catalogItemImpl = new CatalogItemImpl();
+        DetailedCatalogItemImpl detailedCatalogItemImpl;
+
+        detailedCatalogItemImpl = new DetailedCatalogItemImpl();
+
+        catalogItemImpl.setId(walletId);
+        catalogItemImpl.setDefaultSizeInBytes(defaultSizeInBytes);
+        catalogItemImpl.setName(name);
+        catalogItemImpl.setCategory(walletCategory);
+        catalogItemImpl.setDescription(description);
+        catalogItemImpl.setWalletCatalogId(walletId);
+        catalogItemImpl.setIcon(icon);
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin constructskin;
+        constructskin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
+
+        //Los objetos skin, language, developer, designer seria metodos que devolverian el objeto ya construido, con los parametros necesarios, para cada metodo.
+        //que luego sera pasados a este metodo ya construido.
+        //Construct skin for implement in DetailedCatalogItemImpl
+        constructskin.setId(skin.getSkinId());
+        constructskin.setPresentationImage(skin.getPresentationImage());
+        constructskin.setUrl(skin.getSkinURL());
+        constructskin.setSkinSizeInBytes((int) skin.getSkinSizeInBytes());
+        constructskin.setFinalWalletVersion(skin.getInitialWalletVersion());
+        constructskin.setHasVideoPreview(false); //Todo Revisar
+        constructskin.setInitialWalletVersion(skin.getInitialWalletVersion());
+        constructskin.setVersion(skin.getVersion());
+        constructskin.setWalletId(walletId);
+        constructskin.setId(skin.getSkinId());
+        constructskin.setName(skin.getSkinName());
+        constructskin.setIsDefault(skin.isDefault());
+        constructskin.setScreenSize(skin.getScreenSize());
+
+        //constructskin.setDesigner(designer); //Todo Revisar
+
+        detailedCatalogItemImpl.setVersion(version);
+        detailedCatalogItemImpl.setPlatformInitialVersion(platformInitialVersion);
+        detailedCatalogItemImpl.setPlatformFinalVersion(platformFinalVersion);
+        detailedCatalogItemImpl.setDefaultSkin(constructskin);
+
+        detailedCatalogItemImpl.setSkins(skins); //Todo Revisar
+        //detailedCatalogItemImpl.setDeveloper(); //Todo Revisar
+        //detailedCatalogItemImpl.setLanguage(); //Todo Revisar
+        //detailedCatalogItemImpl.setLanguages(); //Todo Revisar
+
+        catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);
 
         return catalogItemImpl;
     }
+
 }
