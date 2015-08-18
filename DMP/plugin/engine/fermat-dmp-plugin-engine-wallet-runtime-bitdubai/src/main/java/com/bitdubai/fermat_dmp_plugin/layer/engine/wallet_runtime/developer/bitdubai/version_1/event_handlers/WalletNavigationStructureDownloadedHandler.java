@@ -34,7 +34,7 @@ public class WalletNavigationStructureDownloadedHandler implements EventHandler 
 
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
 
-
+            System.out.println("JORGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HOla111");
                 this.walletRuntimeManager.recordNavigationStructure(xmlText,link,filename,skinId);
 
 

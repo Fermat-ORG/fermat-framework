@@ -1,6 +1,12 @@
 package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -9,6 +15,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Spannable;
@@ -51,6 +58,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
@@ -75,7 +83,7 @@ import java.util.Vector;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration {
+public class FermatActivity extends FragmentActivity implements WizardConfiguration,FermatNotifications {
 
     private static final String TAG = "fermat-core";
 
@@ -242,6 +250,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     Toast.LENGTH_LONG).show();
         }
     }
+
 
     public Activity getActivityUsedType() {
         Activity activity = null;
@@ -823,5 +832,32 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onDestroy() {
         super.onDestroy();
         wizards = null;
+    }
+
+    @Override
+    public void launchNotification(String notificationTitle, String notificationImageText, String notificationTextBody) {
+        notificate(notificationTitle,notificationImageText,notificationTextBody);
+    }
+    public void notificate(String notificationTitle, String notificationImageText, String notificationTextBody){
+        //Log.i(TAG, "Got a new result: " + notification_title);
+        Resources r = getResources();
+        PendingIntent pi = PendingIntent
+                .getActivity(this, 0, new Intent(this, SubAppActivity.class), 0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(notificationTitle)
+                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                .setContentTitle(notificationImageText)
+                .setContentText(notificationTextBody)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, notification);
+//
+//        prefs.edit()
+//            .putString(FlickrFetchr.PREF_LAST_RESULT_ID, resultId)
+//    .commit();
     }
 }
