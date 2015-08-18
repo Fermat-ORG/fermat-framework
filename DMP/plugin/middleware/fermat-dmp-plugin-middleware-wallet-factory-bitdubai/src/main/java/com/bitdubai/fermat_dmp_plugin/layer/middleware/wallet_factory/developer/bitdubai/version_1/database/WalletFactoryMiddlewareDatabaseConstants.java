@@ -26,30 +26,30 @@ public class WalletFactoryMiddlewareDatabaseConstants {
      */
     static final String SKIN_TABLE_NAME = "skin";
 
-    static final String SKIN_PROJECT_PUBLICKKEY_COLUMN_NAME = "project_publickkey";
+    static final String SKIN_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
     static final String SKIN_SKIN_ID_COLUMN_NAME = "skin_id";
     static final String SKIN_DEFAULT_COLUMN_NAME = "default";
 
-    static final String SKIN_FIRST_KEY_COLUMN = "project_publickkey";
+    static final String SKIN_FIRST_KEY_COLUMN = "project_publickey";
 
     /**
      * language database table definition.
      */
     static final String LANGUAGE_TABLE_NAME = "language";
 
-    static final String LANGUAGE_PROJECT_PUBLICKKEY_COLUMN_NAME = "project_publickkey";
+    static final String LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
     static final String LANGUAGE_LANGUAGE_ID_COLUMN_NAME = "language_id";
     static final String LANGUAGE_DEFAULT_COLUMN_NAME = "default";
 
-    static final String LANGUAGE_FIRST_KEY_COLUMN = "project_publickkey";
+    static final String LANGUAGE_FIRST_KEY_COLUMN = "project_publickey";
 
     /**
      * navigation_structure database table definition.
      */
     static final String NAVIGATION_STRUCTURE_TABLE_NAME = "navigation_structure";
 
-    static final String NAVIGATION_STRUCTURE_PROJECT_PUBLICKKEY_COLUMN_NAME = "project_publickkey";
+    static final String NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
     static final String NAVIGATION_STRUCTURE_LANGUAGE_ID_COLUMN_NAME = "language_id";
 
-    static final String NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN = "project_publickkey";
+    static final String NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN = "project_publickey";
 }

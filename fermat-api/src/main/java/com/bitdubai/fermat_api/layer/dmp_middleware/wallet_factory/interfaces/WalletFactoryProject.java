@@ -41,7 +41,7 @@ public interface WalletFactoryProject {
     void setCreationTimestamp(Timestamp timestamp);
 
     Timestamp getLastModificationTimestamp();
-    void setLastModificationTimeststamp(Timestamp timeststamp);
+    void setLastModificationTimeststamp(Timestamp timestamp);
 
 
     //skin
