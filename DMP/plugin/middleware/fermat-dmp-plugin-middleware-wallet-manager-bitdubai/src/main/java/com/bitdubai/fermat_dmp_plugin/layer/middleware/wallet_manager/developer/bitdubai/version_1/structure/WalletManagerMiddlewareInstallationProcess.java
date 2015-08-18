@@ -64,11 +64,11 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
         return this.installationProgress;
     }
 
-    private boolean isWalletInstalled(String walletId) throws CantExecuteDatabaseOperationException {
+    private boolean isWalletInstalled(UUID walletCatalogueId) throws CantExecuteDatabaseOperationException {
 
         try {
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
-            walletManagerDao.getInstalletWallet(UUID.fromString(walletId));
+            walletManagerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
             return true;
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantExecuteDatabaseOperationException(exception,"Error checking if the wallet is installed","Please, check the cause");
@@ -107,7 +107,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
              */
             installationProgress = InstallationStatus.INSTALLING;
 
-            if(!isWalletInstalled(walletPublicKey)){
+            if(!isWalletInstalled(walletCatalogueId)){
 
                 /**
                  * Send wallet info to Wallet Resource
