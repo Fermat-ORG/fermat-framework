@@ -446,7 +446,17 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.INSTALLING);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
+            Language installingLanguage=getWalletLanguageFromWalletCatalogueId(walletCatalogueId);
+            walletManagerManager.installLanguage(walletCatalogueId, languageId, installingLanguage.getLanguageName(), installingLanguage.getLanguageLabel(), installingLanguage.getVersion());
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.INSTALLED);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLED);
         } catch (Exception exception) {
+            try{
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.NOT_INSTALLED);
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.NOT_INSTALLED);
+            } catch (CantSetInstallationStatusException e) {
+                throw new CantStartLanguageInstallationException(CantStartLanguageInstallationException.DEFAULT_MESSAGE, e, null, null);
+            }
             throw new CantStartLanguageInstallationException(CantStartLanguageInstallationException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
@@ -462,11 +472,46 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.INSTALLING);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
+            Skin installingSkin=getWalletSkinFromWalletCatalogueId(walletCatalogueId);
+            //We send null preview for now.
+            walletManagerManager.installSkin(walletCatalogueId, skinId, installingSkin.getSkinName(), null, installingSkin.getVersion());
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.INSTALLED);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLED);
         } catch (Exception exception) {
+            try{
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.NOT_INSTALLED);
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.NOT_INSTALLED);
+            } catch (CantSetInstallationStatusException e) {
+                throw new CantStartSkinInstallationException(CantStartSkinInstallationException.DEFAULT_MESSAGE, e, null, null);
+            }
             throw new CantStartSkinInstallationException (CantStartSkinInstallationException .DEFAULT_MESSAGE, exception, null, null);
         }
     }
 
+    private Language getWalletLanguageFromWalletCatalogueId(UUID walletCatalogueId) throws CantGetLanguageException {
+
+        try{
+
+            DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
+            return detailedCatalogItem.getDefaultLanguage();
+
+        } catch(CantGetCatalogItemException exception) {
+            throw new CantGetLanguageException(CantGetCatalogItemException.DEFAULT_MESSAGE,exception,"Cannot get the wallet language", "Please, check the cause");
+        }
+
+    }
+
+    private Skin getWalletSkinFromWalletCatalogueId(UUID walletCatalogueId) throws CantGetSkinException {
+
+        DetailedCatalogItem detailedCatalogItem = null;
+        try {
+            detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
+            return detailedCatalogItem.getDefaultSkin();
+        } catch (CantGetCatalogItemException exception) {
+            throw new CantGetSkinException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception,"Cannot get the wallet Skin", "Please, check the cause");
+        }
+
+    }
 
     /**
      * start the installation of the passed wallet.
@@ -483,11 +528,10 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
             CatalogItem catalogItem = walletStoreManagerNetworkService.getCatalogItem(walletCatalogueId);
             DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
-            WalletInstallationProcess walletInstallationProcess;
-            walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
+            WalletInstallationProcess walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
             DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
-            Skin skin = detailedCatalogItem.getDefaultSkin();
-            Language language = detailedCatalogItem.getDefaultLanguage();
+            Skin skin = getWalletSkinFromWalletCatalogueId(walletCatalogueId);
+            Language language = getWalletLanguageFromWalletCatalogueId(walletCatalogueId);
 
             /*
             For now, we'll pass null to the  walletPrivateKey, walletIconName, skinPreview method arguments
@@ -497,7 +541,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
                 catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
                 walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
                 skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
-                language.getVersion(), language.getLanguageName(), language.getLanguageName().value(),
+                language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
                 detailedCatalogItem.getDeveloper().getName(), version.toString());
 
         }catch (CantSetInstallationStatusException exception){
@@ -509,7 +553,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         }catch(CantGetLoggedInDeviceUserException exception){
             throw new CantStartInstallationException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, exception, "Cannot get the Device user", "Please, check the cause");
         }catch(CantGetSkinException exception){
-            throw new CantStartInstallationException(CantGetSkinException.DEFAULT_MESSAGE, exception, "cannot get the wallet Skin", "Please, check the cause");
+            throw new CantStartInstallationException(CantGetSkinException.DEFAULT_MESSAGE, exception, "Cannot get the wallet Skin", "Please, check the cause");
         }catch(CantGetLanguageException exception){
             throw new CantStartInstallationException(CantGetLanguageException.DEFAULT_MESSAGE, exception, "Cannot get the wallet language", "Please, check the cause");
         }catch(CantInstallWalletException exception){
