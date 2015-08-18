@@ -22,7 +22,7 @@ public class JsonService {
 
     BterServiceAPI bterServiceAPI = new BterServiceAPI();
 
-    public JSONObject getJSONFromUrl(String url) {
+    public static JSONObject getJSONFromUrl(String url) {
 
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();

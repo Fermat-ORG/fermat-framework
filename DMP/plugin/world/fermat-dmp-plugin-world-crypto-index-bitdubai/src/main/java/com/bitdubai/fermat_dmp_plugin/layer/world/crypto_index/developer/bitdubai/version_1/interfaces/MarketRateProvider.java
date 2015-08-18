@@ -2,7 +2,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdub
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+//import org.json.JSONObject;
+
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by francisco on 15/08/15.
@@ -10,6 +14,7 @@ import org.json.JSONObject;
 public interface MarketRateProvider {
 
     double getMarketExchangeRate(String pair, long time,String url, String jsonField);
+    //double getMarketExchangeRate();
     JSONObject jsonInterface(String url);
     /**Interface Pair Crypto Fiat**/
     String pairCryptoFiat (CryptoCurrency c, FiatCurrency f);

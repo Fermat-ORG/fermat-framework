@@ -6,6 +6,9 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by francisco on 12/08/15.
  */
@@ -17,7 +20,7 @@ public class MarketPrice implements MarketRateProvider {
     String pair;
     JsonService jsonService = new JsonService();
     JSONObject jsonObject = new JSONObject();
-
+    List<String> jsonList;
 
     public MarketPrice(FiatCurrency f, CryptoCurrency c, long time) {
         this.f = f;
@@ -96,6 +99,8 @@ public class MarketPrice implements MarketRateProvider {
         pair=f1.getCode() + "_" + f2.getCode();
         return pair;
     }
+
+
 
 
 }
