@@ -1,7 +1,7 @@
 /*
  * @#WalletPublisherModulePluginRoot.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1;
@@ -117,8 +117,8 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
          */
         if (logManager                                   == null ||
                 errorManager                             == null ||
-                    errorManager                         == null ||
-                        walletPublisherMiddlewarePlugin == null ) {
+                errorManager                         == null ||
+                walletPublisherMiddlewarePlugin == null ) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -376,4 +376,3 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
         walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletDescriptorFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey);
     }
 }
-
