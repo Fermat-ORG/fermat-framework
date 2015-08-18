@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
@@ -93,7 +94,7 @@ public interface WalletPublisherMiddlewareManager{
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
+    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
      * This method publishes the language factory project <code>LanguageDescriptorFactoryProject</code> with the language information in
@@ -110,13 +111,14 @@ public interface WalletPublisherMiddlewareManager{
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
+    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
      * This method publishes the wallet factory project <code>WalletDescriptorFactoryProject</code> with the wallet information in
      * the wallet store and register relevant information of this process.
      *
      * @param walletDescriptorFactoryProject
+     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -129,7 +131,7 @@ public interface WalletPublisherMiddlewareManager{
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException;
+    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
 
 

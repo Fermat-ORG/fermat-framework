@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
@@ -19,8 +20,11 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -36,6 +40,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 
 import java.net.URL;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,33 +251,33 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishSkin(SkinDescriptorFactoryProject, byte[], byte[], List, URL, String, Version, Version, Version, Version, String)
+     * @see WalletPublisherMiddlewareManager#publishSkin(SkinDescriptorFactoryProject, byte[], byte[], List, URL, String, Version, Version, Version, Version, String, String)
      */
     @Override
-    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentMiddlewareException {
+    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishLanguage(LanguageDescriptorFactoryProject, byte[], byte[], String, Version, Version, Version, Version, String)
+     * @see WalletPublisherMiddlewareManager#publishLanguage(LanguageDescriptorFactoryProject, byte[], byte[], String, Version, Version, Version, Version, String, String)
      */
     @Override
-    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentMiddlewareException {
+    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishWallet(WalletDescriptorFactoryProject, byte[], byte[], List, URL, String, Version, Version, Version, Version, String)
+     * @see WalletPublisherMiddlewareManager#publishWallet(WalletDescriptorFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, String, String)
      */
     @Override
-    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentMiddlewareException {
+    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
         try {
 
-            // TODO: CREATE THE CATALOG ITEM
-            CatalogItem catalogItem = null;
+            Version defaultVersion = new Version(1, 0, 0);
+            CatalogItem catalogItem = constructCatalogItemObject(walletDescriptorFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion);
 
             /* ----------------------------------------
              * Create the informationPublishedComponent
@@ -286,6 +291,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             informationPublishedComponentMiddlewareImpl.setStatus(ComponentPublishedInformationStatus.REQUESTED);
             informationPublishedComponentMiddlewareImpl.setStatusTimestamp(new Timestamp(System.currentTimeMillis()));
             informationPublishedComponentMiddlewareImpl.setPublisherIdentityPublicKey(publisherIdentityPublicKey);
+            informationPublishedComponentMiddlewareImpl.setSignature(signature);
 
             //Create the icon image
             ImageMiddlewareImpl iconImg = new ImageMiddlewareImpl();
@@ -306,14 +312,13 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             // Save into data base
             informationPublishedComponentDao.create(informationPublishedComponentMiddlewareImpl);
 
-
             /* --------------------------
              * Create the version details
              * --------------------------
              */
             ComponentVersionDetailMiddlewareImpl componentVersionDetailMiddlewareImpl = new ComponentVersionDetailMiddlewareImpl();
             componentVersionDetailMiddlewareImpl.setId(UUID.randomUUID());
-            componentVersionDetailMiddlewareImpl.setVersion(new Version(1, 0, 0));
+            componentVersionDetailMiddlewareImpl.setVersion(defaultVersion);
             componentVersionDetailMiddlewareImpl.setVersionTimestamp(new Timestamp(System.currentTimeMillis()));
             componentVersionDetailMiddlewareImpl.setInitialWalletVersion(initialWalletVersion);
             componentVersionDetailMiddlewareImpl.setFinalWalletVersion(finalWalletVersion);
@@ -326,7 +331,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
             // Save into data base
             componentVersionDetailDao.create(componentVersionDetailMiddlewareImpl);
-
 
             /* -------------------------------------
              * Create all screenShots images details
@@ -349,13 +353,10 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              */
             walletStoreManager.publishWallet(catalogItem);
 
-
             /*
-             * If publish ok change the status
+             * If publish proccess is ok change the status and update in the database
              */
             informationPublishedComponentMiddlewareImpl.setStatus(ComponentPublishedInformationStatus.PUBLISHED);
-
-            // update data base
             informationPublishedComponentDao.update(informationPublishedComponentMiddlewareImpl);
 
         } catch (CantPublishWalletInCatalogException e) {
@@ -364,7 +365,195 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             e.printStackTrace();
         } catch (CantUpdateRecordDataBaseException e) {
             e.printStackTrace();
+        } catch (CantGetWalletIconException e) {
+            e.printStackTrace();
         }
+
+    }
+
+
+    /**
+     * This method encapsulate the creation of a object CatalogItem
+     *
+     * @param walletDescriptorFactoryProject
+     * @param walletCategory
+     * @param version
+     * @param icon
+     * @param mainScreenShot
+     * @param screenShotDetails
+     * @param videoUrl
+     * @param initialWalletVersion
+     * @param finalWalletVersion
+     * @param initialPlatformVersion
+     * @param finalPlatformVersion
+     * @return CatalogItem
+     * @throws CantGetWalletIconException
+     */
+    private CatalogItem constructCatalogItemObject(WalletDescriptorFactoryProject walletDescriptorFactoryProject, WalletCategory walletCategory, Version version, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion) throws CantGetWalletIconException {
+
+        /*
+         * Construct the videos urls
+         */
+        List<URL> videoPreviews = new ArrayList<URL>();
+        if (videoUrl != null) {
+            videoPreviews.add(videoUrl);
+        }
+
+
+        /*
+         * Construct the default skin
+         */
+        SkinDescriptorFactoryProject defaultSkinDescriptorFactoryProject = walletDescriptorFactoryProject.getSkins().get(0); //TODO: Get from the descriptor
+        Skin defaultSkin = constructSkinObject(defaultSkinDescriptorFactoryProject,
+                version,
+                mainScreenShot,
+                screenShotDetails,
+                (!videoPreviews.isEmpty()),
+                videoPreviews,
+                initialWalletVersion,
+                finalWalletVersion);
+
+
+        /*
+         * Create other supported skins list
+         */
+        List<Skin> otherSkinSupportedList = new ArrayList<>();
+        for (SkinDescriptorFactoryProject skinDescriptorFactoryProject : walletDescriptorFactoryProject.getSkins()){
+
+            /*
+             * Construct
+             */
+            Skin skin = constructSkinObject(skinDescriptorFactoryProject,
+                    version,
+                    mainScreenShot,
+                    screenShotDetails,
+                    (!videoPreviews.isEmpty()),
+                    videoPreviews,
+                    initialWalletVersion,
+                    finalWalletVersion);
+
+            /*
+             * Add to the list
+             */
+            otherSkinSupportedList.add(skin);
+        }
+
+
+        /*
+         * Construct the default language
+         */
+        LanguageDescriptorFactoryProject defaultLanguageDescriptorFactoryProject =  walletDescriptorFactoryProject.getLanguages().get(0); //TODO: Get from the descriptor
+        Language defaultLanguage = constructLanguageObject(defaultLanguageDescriptorFactoryProject,
+                version,
+                videoPreviews,
+                initialWalletVersion,
+                finalWalletVersion);
+        /*
+         * Create other supported languages list
+         */
+        List<Language> otherLanguageSupportedList = new ArrayList<>();
+        for (LanguageDescriptorFactoryProject languageDescriptorFactoryProject : walletDescriptorFactoryProject.getLanguages()){
+
+            /*
+            * Construct
+            */
+            Language language = constructLanguageObject(languageDescriptorFactoryProject,
+                    version,
+                    videoPreviews,
+                    initialWalletVersion,
+                    finalWalletVersion);
+            /*
+             * Add to the list
+             */
+            otherLanguageSupportedList.add(language);
+        }
+
+        /*
+         * Construct the catalog item instance
+         */
+        return walletStoreManager.constructCatalogItem(walletDescriptorFactoryProject.getId(),
+                                                        0, //TODO: defaultSizeInBytes
+                                                        walletDescriptorFactoryProject.getName(),
+                                                        walletDescriptorFactoryProject.getDescription(),
+                                                        walletCategory,
+                                                        icon,
+                                                        version,
+                                                        initialPlatformVersion,
+                                                        finalPlatformVersion,
+                                                        otherSkinSupportedList,
+                                                        defaultSkin,
+                                                        defaultLanguage,
+                                                        otherLanguageSupportedList,
+                                                        null, //TODO: designer
+                                                        null, //TODO: developer
+                                                        null  //TODO: translator
+                                                        );
+    }
+
+    /**
+     * This method encapsulate the creation of a object Skin
+     *
+     * @param skinDescriptorFactoryProject
+     * @param version
+     * @param mainScreenShot
+     * @param screenShotDetails
+     * @param hasVideoPreview
+     * @param videoPreviews
+     * @param initialWalletVersion
+     * @param finalWalletVersion
+     * @return Skin
+     */
+   private Skin constructSkinObject(SkinDescriptorFactoryProject skinDescriptorFactoryProject, Version version, byte[] mainScreenShot, List<byte[]> screenShotDetails, boolean hasVideoPreview, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion){
+
+
+       /*
+        * Construct the new instance
+        */
+       return walletStoreManager.constructSkin(skinDescriptorFactoryProject.getId(),
+                                               skinDescriptorFactoryProject.getName(),
+                                               skinDescriptorFactoryProject.getWalletId(),
+                                               skinDescriptorFactoryProject.getScreenSize(),
+                                               version,
+                                               initialWalletVersion,
+                                               finalWalletVersion,
+                                               mainScreenShot,
+                                               screenShotDetails,
+                                               hasVideoPreview,
+                                               videoPreviews,
+                                               null, // TODO: skinURL cambiar por la pagina del publisher
+                                               0,    // TODO: skinSizeInBytes
+                                               null, // TODO: designer
+                                               Boolean.TRUE);
+
+   }
+
+    /**
+     * This method encapsulate the creation of a object Language
+     *
+     * @param languageDescriptorFactoryProject
+     * @param version
+     * @param videoPreviews
+     * @param initialWalletVersion
+     * @param finalWalletVersion
+     * @return Language
+     */
+    private Language constructLanguageObject(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, Version version, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion){
+
+        /*
+        * Construct the new instance
+        */
+        return walletStoreManager.constructLanguage(languageDescriptorFactoryProject.getId(),
+                                                    languageDescriptorFactoryProject.getName(),
+                                                    languageDescriptorFactoryProject.getDescription(), //TODO: Get from the descriptor languageLabel
+                                                    languageDescriptorFactoryProject.getWalletId(),
+                                                    version,
+                                                    initialWalletVersion,
+                                                    finalWalletVersion,
+                                                    videoPreviews,
+                                                    null, // TODO: LanguageURL cambiar por la pagina del publisher
+                                                    0,    // TODO: skinSizeInBytes
+                                                    null, // TODO: designer
+                                                    Boolean.TRUE);
 
     }
 

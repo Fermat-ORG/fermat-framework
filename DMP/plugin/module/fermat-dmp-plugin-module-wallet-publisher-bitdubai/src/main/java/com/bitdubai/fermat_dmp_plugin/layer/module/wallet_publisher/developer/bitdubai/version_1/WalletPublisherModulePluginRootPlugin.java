@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectException;
@@ -389,7 +390,9 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
 
         try {
 
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishSkin(skinDescriptorFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey);
+            String signature = null; //TODO: This have to be generate by the PublisherIdentity method
+
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishSkin(skinDescriptorFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey, signature);
             walletDescriptorFactoryProjectManager.setProjectState(skinDescriptorFactoryProject.getId(), FactoryProjectState.PUBLISHED);
 
         } catch (Exception exception) {
@@ -406,7 +409,9 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
 
         try {
 
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishLanguage(languageDescriptorFactoryProject, icon, mainScreenShot, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey);
+            String signature = null; //TODO: This have to be generate by the PublisherIdentity method
+
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishLanguage(languageDescriptorFactoryProject, icon, mainScreenShot, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey, signature);
             walletDescriptorFactoryProjectManager.setProjectState(languageDescriptorFactoryProject.getId(), FactoryProjectState.PUBLISHED);
 
         } catch (Exception exception) {
@@ -416,13 +421,15 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#publishWallet(WalletDescriptorFactoryProject, byte[], byte[], List, URL, String, Version, Version, Version, Version, String)
+     * @see WalletPublisherManager#publishWallet(WalletDescriptorFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, String)
      */
-    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException {
+    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException {
 
         try {
 
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletDescriptorFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey);
+            String signature = null; //TODO: This have to be generate by the PublisherIdentity method
+
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletDescriptorFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey, signature);
             walletDescriptorFactoryProjectManager.setProjectState(walletDescriptorFactoryProject.getId(), FactoryProjectState.PUBLISHED);
 
         } catch (Exception exception) {
