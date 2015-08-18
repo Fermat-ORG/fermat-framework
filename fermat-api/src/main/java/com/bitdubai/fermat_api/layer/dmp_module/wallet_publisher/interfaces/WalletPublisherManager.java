@@ -42,34 +42,38 @@ public interface WalletPublisherManager {
     /**
      * This method returns the information stored about the all published component
      *
+     * @param publisherIdentityPublicKey
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedComponents() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedComponents(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published wallets
      *
+     * @param publisherIdentityPublicKey
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedWallets() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedWallets(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published skins
      *
+     * @param publisherIdentityPublicKey
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedSkins() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent> getPublishedSkins(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published language
      *
+     * @param publisherIdentityPublicKey
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent>  getPublishedLanguages() throws CantGetPublishedComponentInformationException;
+    public List<InformationPublishedComponent>  getPublishedLanguages(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published component with his details

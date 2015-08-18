@@ -20,6 +20,12 @@ import com.bitdubai.fermat_api.FermatException;
  * @since Java JDK 1.7
  */
 public class CantPublishComponentException extends FermatException {
+
+    /**
+     * Represent the DEFAULT_MESSAGE
+     */
+    public static String DEFAULT_MESSAGE = "Exception occurred trying to publish component";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

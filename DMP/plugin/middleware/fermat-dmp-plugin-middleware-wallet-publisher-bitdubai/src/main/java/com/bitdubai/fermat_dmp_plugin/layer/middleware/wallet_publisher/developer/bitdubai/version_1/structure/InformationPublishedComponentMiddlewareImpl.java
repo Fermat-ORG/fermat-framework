@@ -8,11 +8,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ComponentVersionDetailMiddleware;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ImageMiddleware;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.InformationPublishedComponentMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -31,7 +29,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class InformationPublishedComponentMiddlewareImpl implements InformationPublishedComponentMiddleware {
+public class InformationPublishedComponentMiddlewareImpl implements InformationPublishedComponent {
 
     /**
      * Represent the id
@@ -61,12 +59,12 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
     /**
      * Represent the icon image
      */
-    private ImageMiddleware iconImg;
+    private Image iconImg;
 
     /**
      * Represent the main screen shot image
      */
-    private ImageMiddleware mainScreenShotImg;
+    private Image mainScreenShotImg;
 
     /**
      * Represent the video url
@@ -91,7 +89,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
     /**
      * Represent the publisherIdentityPublicKey
      */
-    private UUID publisherIdentityPublicKey;
+    private String publisherIdentityPublicKey;
 
     /**
      * Represent the signature
@@ -101,12 +99,12 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
     /**
      * Represent the Component Versions Details List
      */
-    private List<?> componentVersionDetailList;
+    private List<ComponentVersionDetail> componentVersionDetailList;
 
     /**
      * Represent the Screens Shots Component List
      */
-    private List<?> screensShotsComponentList;
+    private List<Image> screensShotsComponentList;
 
     /**
      * Constructor
@@ -135,7 +133,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      * @param type
      * @param videoUrl
      */
-    public InformationPublishedComponentMiddlewareImpl(List<ComponentVersionDetailMiddleware> componentVersionDetailList, String descriptions, UUID descriptorFactoryProjectId, String descriptorFactoryProjectName, ImageMiddleware iconImg, UUID id, ImageMiddleware mainScreenShotImg, Timestamp publicationTimestamp, UUID publisherIdentityPublicKey, List<ImageMiddleware> screensShotsComponentList, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, DescriptorFactoryProjectType type, URL videoUrl) {
+    public InformationPublishedComponentMiddlewareImpl(List<ComponentVersionDetail> componentVersionDetailList, String descriptions, UUID descriptorFactoryProjectId, String descriptorFactoryProjectName, Image iconImg, UUID id, Image mainScreenShotImg, Timestamp publicationTimestamp, String publisherIdentityPublicKey, List<Image> screensShotsComponentList, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, DescriptorFactoryProjectType type, URL videoUrl) {
         super();
         this.componentVersionDetailList = componentVersionDetailList;
         this.descriptions = descriptions;
@@ -168,7 +166,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      *
      * @param componentVersionDetailList
      */
-    public void setComponentVersionDetailList(List<ComponentVersionDetailMiddleware> componentVersionDetailList) {
+    public void setComponentVersionDetailList(List<ComponentVersionDetail> componentVersionDetailList) {
         this.componentVersionDetailList = componentVersionDetailList;
     }
 
@@ -234,7 +232,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      * @see InformationPublishedComponentMiddlewareImpl#getIconImg()
      */
     @Override
-    public ImageMiddleware getIconImg() {
+    public Image getIconImg() {
         return iconImg;
     }
 
@@ -244,7 +242,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      *
      * @param iconImg
      */
-    public void setIconImg(ImageMiddleware iconImg) {
+    public void setIconImg(Image iconImg) {
         this.iconImg = iconImg;
     }
 
@@ -272,7 +270,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      * @see InformationPublishedComponentMiddlewareImpl#getMainScreenShotImg()
      */
     @Override
-    public ImageMiddleware getMainScreenShotImg() {
+    public Image getMainScreenShotImg() {
         return mainScreenShotImg;
     }
 
@@ -282,7 +280,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      *
      * @param mainScreenShotImg
      */
-    public void setMainScreenShotImg(ImageMiddleware mainScreenShotImg) {
+    public void setMainScreenShotImg(Image mainScreenShotImg) {
         this.mainScreenShotImg = mainScreenShotImg;
     }
 
@@ -310,7 +308,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      * @see InformationPublishedComponentMiddlewareImpl#getPublisherIdentityPublicKey()
      */
     @Override
-    public UUID getPublisherIdentityPublicKey() {
+    public String getPublisherIdentityPublicKey() {
         return publisherIdentityPublicKey;
     }
 
@@ -319,7 +317,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      *
      * @param publisherIdentityPublicKey
      */
-    public void setPublisherIdentityPublicKey(UUID publisherIdentityPublicKey) {
+    public void setPublisherIdentityPublicKey(String publisherIdentityPublicKey) {
         this.publisherIdentityPublicKey = publisherIdentityPublicKey;
     }
 
@@ -347,7 +345,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      */
     @Override
     public List<Image> getScreensShotsComponentList() {
-        return (List<Image>) screensShotsComponentList;
+        return screensShotsComponentList;
     }
 
 
@@ -356,7 +354,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      *
      * @param screensShotsComponentList
      */
-    public void setScreensShotsComponentList(List<ImageMiddleware> screensShotsComponentList) {
+    public void setScreensShotsComponentList(List<Image> screensShotsComponentList) {
         this.screensShotsComponentList = screensShotsComponentList;
     }
 
