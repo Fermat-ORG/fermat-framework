@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_android_api.layer.definition.wallet.Utils;
+package com.bitdubai.fermat_android_api.layer.definition.wallet.utils;
 
 import android.graphics.Bitmap;
 import android.os.Looper;
