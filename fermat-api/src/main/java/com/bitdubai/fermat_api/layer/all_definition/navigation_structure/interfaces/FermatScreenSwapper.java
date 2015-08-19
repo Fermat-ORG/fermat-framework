@@ -9,7 +9,7 @@ public interface FermatScreenSwapper {
 
     public void changeScreen(String screen,Object[] objects);
 
-    public void selectWallet(String screen, InstalledWallet installedWallet);
+    public void selectWallet(InstalledWallet installedWallet);
 
     public void changeActivity(String activity,Object... objects);
 
