@@ -23,7 +23,7 @@ public class WalletManagerMiddlewareDatabaseConstants {
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_PRIVATE_KEY_COLUMN_NAME = "wallet_private_key";
     public static final String WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
-    public static final String WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME = "device_user_public_key";
+    public static final String WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME = "developer_name";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME = "wallet_catalog_id";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME = "wallet_category";
     public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME = "wallet_type";

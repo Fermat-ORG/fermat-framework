@@ -63,7 +63,7 @@ public class WalletAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
     private DatabaseTableFactory createTableCryptoAddressBookTable(final UUID pluginId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
         DatabaseTableFactory tableFactory = databaseFactory.newTableFactory(pluginId, WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
         tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36, true);
-        tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, DatabaseDataType.STRING, 36, false);
+        tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_PUBLIC_KEY, DatabaseDataType.STRING, 132, false);
         tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, DatabaseDataType.STRING, 3, false);
         tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 34, false);
         tableFactory.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, DatabaseDataType.STRING, 3, false);

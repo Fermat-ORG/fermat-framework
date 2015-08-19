@@ -14,7 +14,7 @@ public class Resource implements Serializable {
 
         public String label;
 
-        public String resource;
+        public String code;
 
         public String developer;
 
@@ -25,7 +25,7 @@ public class Resource implements Serializable {
                 return "Resource{" +
                         "picture=\'" + picture + "\'" +
                         ", label=\'" + label + "\'" +
-                        ", resource=\'" + resource + "\'" +
+                        ", code=\'" + code + "\'" +
                         ", developer=\'" + developer + "\'" +
                         ", type=" + type +
                         '}';

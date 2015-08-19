@@ -84,11 +84,11 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
      * WalletManager Interface member variables.
      */
     String deviceUserPublicKey = "";
-    UUID walletId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletId = "25428311-deb3-4064-93b2-69093e859871";
 
     List<InstalledWallet> userWallets;
 
-    private Map<String, UUID> walletIds = new HashMap<>();
+    private Map<String, String> walletIds = new HashMap<>();
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -409,7 +409,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     }
 
 
-    public void persistWallet(UUID walletId) throws CantPersistWalletException {
+    public void persistWallet(String walletId) throws CantPersistWalletException {
         /**
          * Now I will add this wallet to the list of wallets managed by the plugin.
          */
@@ -593,10 +593,10 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
          * By now I will create only a new wallet, In the future there will be more than one default wallets.
          */
 
-      //  Wallet wallet = new WalletManagerWallet();
+        //  Wallet wallet = new WalletManagerWallet();
 
-      //  ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
-       // ((DealsWithEvents) wallet).setEventManager(eventManager);
+        //  ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
+        // ((DealsWithEvents) wallet).setEventManager(eventManager);
         //((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
 
         //try {
@@ -671,7 +671,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
                         //put wallets of this user
                         if (idPair[0].equals(deviceUserPublicKey))
-                            walletIds.put(idPair[0], UUID.fromString(idPair[1]));
+                            walletIds.put(idPair[0], idPair[1]);
 
                         /**
                          * Great, now the wallet list is in memory.

@@ -2,11 +2,10 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
 import android.content.Context;
-
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -61,7 +61,7 @@ public class TransactionsFragment extends Fragment{
     private static final String ARG_POSITION = "position";
 
 
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -117,13 +117,25 @@ public class TransactionsFragment extends Fragment{
      */
     private WalletSession walletSession;
 
+    /**
+     * Resources
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
 
-    public static TransactionsFragment newInstance(int position,WalletSession walletSession) {
+    /**
+     *
+     * @param position
+     * @param walletSession
+     * @return
+     */
+
+    public static TransactionsFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         TransactionsFragment f = new TransactionsFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -131,9 +143,10 @@ public class TransactionsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = walletSession.getErrorManager();
+
         try {
 
+            errorManager = walletSession.getErrorManager();
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
             cryptoWalletManager = walletSession.getCryptoWalletManager();
@@ -166,7 +179,7 @@ public class TransactionsFragment extends Fragment{
             // Create the adapter to convert the array to views
 
 
-                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
 
 
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
@@ -298,7 +311,7 @@ public class TransactionsFragment extends Fragment{
         try {
             if (lstTransactions.isEmpty()){
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
 
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
@@ -306,7 +319,7 @@ public class TransactionsFragment extends Fragment{
             }
             else{
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
 
@@ -330,6 +343,10 @@ public class TransactionsFragment extends Fragment{
         }
 
 
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
 

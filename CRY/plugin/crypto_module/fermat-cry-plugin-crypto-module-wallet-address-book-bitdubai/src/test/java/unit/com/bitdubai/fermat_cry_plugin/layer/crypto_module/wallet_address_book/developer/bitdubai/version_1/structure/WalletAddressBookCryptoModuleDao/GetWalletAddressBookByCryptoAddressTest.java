@@ -35,9 +35,6 @@ import static org.mockito.Mockito.when;
 public class GetWalletAddressBookByCryptoAddressTest extends TestCase {
 
     @Mock
-    ErrorManager errorManager;
-
-    @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
 
     @Mock
@@ -60,7 +57,7 @@ public class GetWalletAddressBookByCryptoAddressTest extends TestCase {
     public void setUp() throws Exception {
         cryptoAddress = new CryptoAddress("asdadas", CryptoCurrency.BITCOIN);
         pluginId = UUID.randomUUID();
-        dao = new WalletAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
+        dao = new WalletAddressBookCryptoModuleDao(pluginDatabaseSystem, pluginId);
         when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(database);
         dao.initialize();
 

@@ -36,4 +36,6 @@ public interface DetailedCatalogItem {
     public Version getPlatformFinalVersion();
 
     public Developer getDeveloper();
+    public Designer getDesigner();
+
 }

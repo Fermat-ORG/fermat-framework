@@ -12,7 +12,7 @@ dependencies {
 
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
-
+    compile 'org.jdom:jdom:2.0.2'
 
     testCompile 'junit:junit:4.11'
     testCompile 'org.robolectric:robolectric:3.0-rc3'
