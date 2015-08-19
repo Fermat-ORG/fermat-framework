@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -72,6 +73,7 @@ public class SendTest extends TestCase {
     long cryptoAmount;
     CryptoAddress destinationAddress;
     UUID walletId;
+    String walletPublicKey;
     String notes;
     UUID deliveredByActorId;
     Actors deliveredByActorType;
@@ -85,6 +87,7 @@ public class SendTest extends TestCase {
         cryptoAmount = 1;
         destinationAddress = new CryptoAddress("asdasd", CryptoCurrency.BITCOIN);
         walletId = UUID.randomUUID();
+        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         notes = "NOTE";
         deliveredByActorId = UUID.randomUUID();
         deliveredByActorType = Actors.EXTRA_USER;
@@ -104,7 +107,7 @@ public class SendTest extends TestCase {
     @Test
     public void testSend_Success() throws Exception {
         doReturn(transactionManager).when(outgoingExtraUserManager).getTransactionManager();
-        nicheWalletTypeCryptoWallet.send(cryptoAmount, destinationAddress, notes, walletId, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+        nicheWalletTypeCryptoWallet.send(cryptoAmount, destinationAddress, notes, walletPublicKey, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
     }
 
     @Ignore
@@ -112,25 +115,25 @@ public class SendTest extends TestCase {
     public void testSend_InsufficientFundsException() throws Exception {
         doReturn(transactionManager).when(outgoingExtraUserManager).getTransactionManager();
         doThrow(new InsufficientFundsException("gasdil", null, null, null))
-        .when(transactionManager).send(any(UUID.class), any(CryptoAddress.class), anyLong(), anyString(), any(UUID.class), any(Actors.class), any(UUID.class), any(Actors.class));
+        .when(transactionManager).send(anyString(), any(CryptoAddress.class), anyLong(), anyString(), any(UUID.class), any(Actors.class), any(UUID.class), any(Actors.class));
 
-        nicheWalletTypeCryptoWallet.send(cryptoAmount, destinationAddress, notes, walletId, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+        nicheWalletTypeCryptoWallet.send(cryptoAmount, destinationAddress, notes, walletPublicKey, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
     }
 
     @Test(expected=CantSendCryptoException.class)
     public void testSend_CantGetTransactionManagerException() throws Exception {
-        doThrow(new CantGetTransactionManagerException("gasdil", null, null, null))
+        doThrow(new CantGetTransactionManagerException("MOCK", null, null, null))
             .when(outgoingExtraUserManager).getTransactionManager();
 
-        nicheWalletTypeCryptoWallet.send(cryptoAmount, destinationAddress, notes, walletId, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+        nicheWalletTypeCryptoWallet.send(cryptoAmount, destinationAddress, notes, walletPublicKey, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
     }
 
     @Test(expected=CantSendCryptoException.class)
     public void testSend_CantSendFundsException() throws Exception {
         doReturn(transactionManager).when(outgoingExtraUserManager).getTransactionManager();
-        doThrow(new CantSendFundsException("gasdil", null, null, null))
-                .when(transactionManager).send(any(UUID.class), any(CryptoAddress.class), anyLong(), anyString(), any(UUID.class), any(Actors.class), any(UUID.class), any(Actors.class));
+        doThrow(new CantSendFundsException("MOCK", null, null, null))
+                .when(transactionManager).send(anyString(), any(CryptoAddress.class), anyLong(), anyString(), any(UUID.class), any(Actors.class), any(UUID.class), any(Actors.class));
 
-        nicheWalletTypeCryptoWallet.send(cryptoAmount, destinationAddress, notes, walletId, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+        nicheWalletTypeCryptoWallet.send(cryptoAmount, destinationAddress, notes, walletPublicKey, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
     }
 }

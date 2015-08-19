@@ -52,7 +52,7 @@
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Resource>
     </entry>
   </lstLandscapeResources>
-  <lstPortraitLayouts>
+  <portraitLayouts>
     <entry>
       <string>wallets_bitcoin_fragment_balance</string>
       <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
@@ -67,8 +67,8 @@
         <filename>wallets_bitcoin_fragment_transactions.xml</filename>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
     </entry>
-  </lstPortraitLayouts>
-  <lstLandscapeLayouts>
+  </portraitLayouts>
+  <landscapeLayouts>
     <entry>
       <string>wallets_bitcoin_fragment_balance</string>
       <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
@@ -83,5 +83,5 @@
         <filename>wallets_bitcoin_fragment_transactions.xml</filename>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
     </entry>
-  </lstLandscapeLayouts>
+  </landscapeLayouts>
 </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Skin>
