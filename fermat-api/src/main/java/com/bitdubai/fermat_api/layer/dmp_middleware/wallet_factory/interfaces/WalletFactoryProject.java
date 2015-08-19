@@ -45,18 +45,18 @@ public interface WalletFactoryProject {
 
 
     //skin
-    Skin getDefaultSkin() throws CantGetWalletFactoryProjectSkinException;
+    Skin getDefaultSkin();
     void setDefaultSkin(Skin skin);
-    List<Skin> getSkins() throws CantGetWalletFactoryProjectSkinException;
-    Skin getEmptySkin() throws CantGetWalletFactoryProjectSkinException;
-    void deleteSkin(Skin skin) throws CantDeleteWalletFactoryProjectSkinException;
+    List<Skin> getSkins();
+    Skin getEmptySkin();
+    void deleteSkin(Skin skin);
 
     //Language getters
-    Language getDefaultLanguage() throws CantGetWalletFactoryProjectLanguageException;
+    Language getDefaultLanguage();
     void setDefaultLanguage(Language language);
-    List<Language> getLanguages()throws CantGetWalletFactoryProjectLanguageException;
-    Language getEmptyLanguage() throws CantGetWalletFactoryProjectLanguageException;
-    void deleteLanguage (Language language) throws CantDeleteWalletFactoryProjectLanguageException;
+    List<Language> getLanguages();
+    Language getEmptyLanguage();
+    void deleteLanguage (Language language);
 
     //Navigation Structure
     WalletNavigationStructure getNavigationStructure();

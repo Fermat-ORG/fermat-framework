@@ -94,7 +94,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return record;
     }
 
-    private DatabaseTransaction addSkinRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException, CantGetWalletFactoryProjectSkinException {
+    private DatabaseTransaction addSkinRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
         Skin defaultSkin = null;
 
         defaultSkin = walletFactoryProject.getDefaultSkin();
@@ -113,7 +113,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return transaction;
     }
 
-    private DatabaseTransaction addLanguageRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException, CantGetWalletFactoryProjectLanguageException {
+    private DatabaseTransaction addLanguageRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
         Language defaultLanguage = null;
 
         defaultLanguage = walletFactoryProject.getDefaultLanguage();
