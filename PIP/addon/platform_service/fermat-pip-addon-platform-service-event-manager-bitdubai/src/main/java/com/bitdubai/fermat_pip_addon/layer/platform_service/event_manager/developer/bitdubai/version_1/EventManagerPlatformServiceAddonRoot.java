@@ -268,7 +268,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INTRA_USER_CONNECTION_ACCEPTED:
                 return new IntraUserActorConnectionAcceptedEventListener(eventType,this.eventMonitor);
 
-            case INTRA_USER_CONNECTION_CANCELLED:
+            case INTRA_USER_DISCONNECTION_REQUEST_RECEIVED:
                 return new IntraUserActorConnectionCancelledEventListener(eventType,this.eventMonitor);
 
             case INTRA_USER_REQUESTED_CONNECTION:

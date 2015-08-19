@@ -7,9 +7,10 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum IntraUserNotificationDescriptor {
     //Modified by Manuel Perez on 05/08/2015
-    ACCEPTED_YOU("AY"),
-    DELETED_YOU("DY"),
-    REJECTED_YOU("RY");
+    ACCEPTED("ACP"),
+    DISCONNECTED("DIS"),
+    RECEIVED("REC"),
+    DENIED("DEN");
 
     private String code;
 
@@ -29,12 +30,14 @@ public enum IntraUserNotificationDescriptor {
 
         switch (code){
 
-            case "AY":
-                return IntraUserNotificationDescriptor.ACCEPTED_YOU;
-            case "DY":
-                return IntraUserNotificationDescriptor.DELETED_YOU;
-            case "RY":
-                return IntraUserNotificationDescriptor.REJECTED_YOU;
+            case "ACP":
+                return IntraUserNotificationDescriptor.ACCEPTED;
+            case "DIS":
+                return IntraUserNotificationDescriptor.DISCONNECTED;
+            case "REC":
+                return IntraUserNotificationDescriptor.RECEIVED;
+            case "DEN":
+                return IntraUserNotificationDescriptor.DENIED;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the IntraUserNotificationDescriptor enum");
 

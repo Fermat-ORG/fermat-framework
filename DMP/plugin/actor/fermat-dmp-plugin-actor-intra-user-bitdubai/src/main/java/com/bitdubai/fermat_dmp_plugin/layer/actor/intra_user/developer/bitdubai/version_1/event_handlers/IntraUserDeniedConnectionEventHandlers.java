@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionDeniedEvent;
@@ -19,8 +20,15 @@ public class IntraUserDeniedConnectionEventHandlers implements EventHandler {
      */
     ActorIntraUserManager actorIntraUserManager;
 
+    IntraUserManager intraUserNetworkServiceManager;
+
     public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager){
         this.actorIntraUserManager = actorIntraUserManager;
+
+    }
+
+    public void setIntraUserManager( IntraUserManager intraUserNetworkServiceManager){
+        this.intraUserNetworkServiceManager = intraUserNetworkServiceManager;
 
     }
 
@@ -32,6 +40,10 @@ public class IntraUserDeniedConnectionEventHandlers implements EventHandler {
             this.actorIntraUserManager.denyConnection(intraUserActorConnectionDeniedEvent.getIntraUserLoggedInPublicKey(),
                     intraUserActorConnectionDeniedEvent.getIntraUserToAddPublicKey());
 
+            /**
+             * Confirm Denied on Network services
+             */
+            intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionDeniedEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionDeniedEvent.getIntraUserToAddPublicKey());
 
 
         }
