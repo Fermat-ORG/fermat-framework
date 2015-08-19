@@ -1,5 +1,6 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -47,7 +48,7 @@ public class findTest {
 
     private UUID testPluginId;
 
-    private DatabaseTableRecord mockBalanceRecord;
+    private String walletPublicKey;
 
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
     WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
@@ -56,6 +57,7 @@ public class findTest {
     @Before
     public void setUp() throws Exception{
         testPluginId = UUID.randomUUID();
+        walletPublicKey = new ECCKeyPair().getPublicKey();
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem);
     }
 
@@ -69,7 +71,7 @@ public class findTest {
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findAll(testPluginId);
+        walletContactsMiddlewareDao.findAll(walletPublicKey);
     }
 
     @Test
@@ -82,7 +84,8 @@ public class findTest {
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findAllScrolling(testPluginId, 1, 0);
+
+        walletContactsMiddlewareDao.findAllScrolling(walletPublicKey, 1, 0);
     }
 
     @Test
@@ -95,6 +98,7 @@ public class findTest {
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
+
         walletContactsMiddlewareDao.findByActorId(testPluginId);
     }
 
@@ -108,7 +112,8 @@ public class findTest {
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findByNameContainsAndWalletId(testPluginId.toString(), testPluginId);
+
+        walletContactsMiddlewareDao.findByNameContainsAndWalletPublicKey(testPluginId.toString(), walletPublicKey);
     }
 
     @Test
@@ -121,6 +126,7 @@ public class findTest {
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
-        walletContactsMiddlewareDao.findByNameAndWalletId(testPluginId.toString(),testPluginId);
+
+        walletContactsMiddlewareDao.findByNameAndWalletPublicKey(testPluginId.toString(), walletPublicKey);
     }
 }

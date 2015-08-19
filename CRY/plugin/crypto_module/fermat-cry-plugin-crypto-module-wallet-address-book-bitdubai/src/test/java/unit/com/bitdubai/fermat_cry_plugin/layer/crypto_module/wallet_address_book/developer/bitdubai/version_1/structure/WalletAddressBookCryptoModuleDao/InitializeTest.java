@@ -1,11 +1,13 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDao;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletAddressBookCryptoModuleException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDao;
-import com.googlecode.catchexception.CatchException;
+import static com.googlecode.catchexception.CatchException.*;
 
 import junit.framework.TestCase;
 
@@ -18,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+
 import static org.fest.assertions.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
@@ -27,10 +30,16 @@ import static org.mockito.Mockito.*;
 public class InitializeTest extends TestCase {
 
     @Mock
-    ErrorManager errorManager;
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     @Mock
-    PluginDatabaseSystem pluginDatabaseSystem;
+    Database mockDatabase;
+
+    @Mock
+    DatabaseTableFactory mockTable;
+
+    @Mock
+    DatabaseFactory mockDatabaseFactory;
 
     WalletAddressBookCryptoModuleDao dao;
 
@@ -39,23 +48,17 @@ public class InitializeTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
-        dao = new WalletAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
+        dao = new WalletAddressBookCryptoModuleDao(pluginDatabaseSystem, pluginId);
+        when(pluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
+        when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
+        when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTable);
     }
 
     @Ignore
+    @Test
     public void testInitialize_NotNull() throws Exception {
-        /*
-         * TODO This test should pass but there is a wrong design decision that makes a cast of the Database interface into the DatabaseFactory; we should really look into that
-         */
-
-        CatchException.catchException(dao).initialize();
-        assertThat(CatchException.caughtException()).isNull();
-    }
-
-    @Test(expected=CantInitializeWalletAddressBookCryptoModuleException.class)
-    public void testInitialize_ErrorManagerNull_CantInitializeActorAddressBookCryptoModuleException() throws Exception {
-        dao.setErrorManager(null);
-        dao.initialize();
+        catchException(dao).initialize();
+        assertThat(caughtException()).isNull();
     }
 
     @Test(expected=CantInitializeWalletAddressBookCryptoModuleException.class)

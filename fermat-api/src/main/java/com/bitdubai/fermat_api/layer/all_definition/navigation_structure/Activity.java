@@ -24,6 +24,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     Fragments lastFragment;
 
+    Fragments startFragment;
+
     TitleBar titleBar;
 
     SideMenu sideMenu;
@@ -77,6 +79,15 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.statusBar = statusBar;
     }
 
+
+    public void setLastFragment(Fragments lastFragment) {
+        this.lastFragment = lastFragment;
+    }
+
+    public void setStartFragment(Fragments startFragment) {
+        this.startFragment = startFragment;
+    }
+
     /**
      * Activity  interface implementation.
      */
@@ -122,6 +133,9 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     @Override
     public Fragment getLastFragment() {
+        if(lastFragment==null){
+            lastFragment = startFragment;
+        }
         return fragments.get(lastFragment);
     }
 

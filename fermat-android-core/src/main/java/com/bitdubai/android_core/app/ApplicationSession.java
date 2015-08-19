@@ -20,6 +20,12 @@ import com.bitdubai.fermat_core.Platform;
 
 public class ApplicationSession extends android.support.multidex.MultiDexApplication {
 
+    /**
+     * Application states
+     */
+    public static final int STATE_NOT_CREATED=0;
+    public static final int STATE_STARTED=1;
+
 
     /**
      *  Fermat platform
@@ -38,6 +44,11 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
      */
 
     private WalletSessionManager walletSessionManager;
+
+    /**
+     *  Application state
+     */
+    private int applicationState=STATE_NOT_CREATED;
 
 
     /**
@@ -76,6 +87,26 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
 
     public WalletSessionManager getWalletSessionManager(){
         return walletSessionManager;
+    }
+
+    /**
+     *  Method to change the application state from services or activities
+     *
+     * @param applicationState  is an application state constant from ApplicationSession class
+     */
+
+    public void changeApplicationState(int applicationState){
+        this.applicationState=applicationState;
+    }
+
+    /**
+     * Method to get the application state from services or activities
+     *
+     * @return application state constant from ApplicationSession class
+     */
+
+    public int getApplicationState(){
+        return applicationState;
     }
 
 }
