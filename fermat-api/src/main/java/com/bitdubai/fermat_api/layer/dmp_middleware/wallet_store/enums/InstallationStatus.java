@@ -10,6 +10,7 @@ public enum InstallationStatus {
     NOT_INSTALLED ("NOINS"),
     INSTALLING ("INSING"),
     UNINSTALLING("UNING"),
+    UNINSTALLED("UNED"),
     INSTALL_AVAILABLE("INSA"),
     UPGRADE_AVAILABLE("UPGA"),
     UPGRADING("UPGING");
@@ -30,6 +31,7 @@ public enum InstallationStatus {
             case "NOINS": return InstallationStatus.NOT_INSTALLED;
             case "INSING": return InstallationStatus.INSTALLING;
             case "UNING": return InstallationStatus.UNINSTALLING;
+            case "UNED": return InstallationStatus.UNINSTALLED;
             case "INSA": return InstallationStatus.INSTALL_AVAILABLE;
             case "UPGA": return InstallationStatus.UPGRADE_AVAILABLE;
             case "UPGING": return InstallationStatus.UPGRADING;
