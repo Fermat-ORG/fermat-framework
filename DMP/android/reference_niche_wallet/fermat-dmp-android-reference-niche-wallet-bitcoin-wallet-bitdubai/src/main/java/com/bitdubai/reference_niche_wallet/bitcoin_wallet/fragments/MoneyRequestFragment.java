@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -129,6 +130,11 @@ public class MoneyRequestFragment extends Fragment {
     private WalletContact walletContact;
 
     /**
+     * Resources
+     */
+    private WalletResourcesProviderManager walletResourcesProviderManager;
+
+    /**
      *
      * @param position
      * @param walletSession
@@ -145,7 +151,8 @@ public class MoneyRequestFragment extends Fragment {
         f.setArguments(b);
         return f;
     }
-    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact,WalletSettingsManager walletSettingsManager, WalletSession walletSession) {
+
+    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, WalletSettingsManager walletSettingsManager, WalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
         f.setWalletSettingsManager(walletSettingsManager);
@@ -153,6 +160,7 @@ public class MoneyRequestFragment extends Fragment {
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -370,6 +378,10 @@ public class MoneyRequestFragment extends Fragment {
 
     public void setContact(WalletContact contact) {
         this.walletContact = contact;
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
 

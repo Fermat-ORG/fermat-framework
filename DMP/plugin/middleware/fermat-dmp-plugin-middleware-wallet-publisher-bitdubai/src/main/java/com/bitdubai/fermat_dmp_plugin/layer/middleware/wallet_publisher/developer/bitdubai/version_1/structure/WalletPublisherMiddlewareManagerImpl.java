@@ -483,11 +483,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         otherSkinSupportedList,
                                                         defaultSkin,
                                                         defaultLanguage,
-                                                        otherLanguageSupportedList,
-                                                        null, //TODO: designer
-                                                        null, //TODO: developer
-                                                        null  //TODO: translator
-                                                        );
+                                                        null,//otherLanguageSupportedList, //Todo Revisar
+                                                        null);
     }
 
     /**
@@ -543,7 +540,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         * Construct the new instance
         */
         return walletStoreManager.constructLanguage(languageDescriptorFactoryProject.getId(),
-                                                    languageDescriptorFactoryProject.getName(),
+                                                    null, //languageDescriptorFactoryProject.getName(),//Todo Revisar
                                                     languageDescriptorFactoryProject.getDescription(), //TODO: Get from the descriptor languageLabel
                                                     languageDescriptorFactoryProject.getWalletId(),
                                                     version,

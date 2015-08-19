@@ -20,6 +20,8 @@ import java.util.Properties;
 /**
  * Created by Matias Furszyfer on 2015.08.07..
  */
+
+
 public class GithubConnectionTest {
 
 
@@ -28,8 +30,8 @@ public class GithubConnectionTest {
 
 
         Properties properties = new Properties();
-        properties.setProperty("login", "furszy");
-        properties.setProperty("password", "");
+        properties.setProperty("login", "MALOTeam");
+        properties.setProperty("password", "fermat123456");
 
         try {
             GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
@@ -46,8 +48,8 @@ public class GithubConnectionTest {
     @Test
     public void testDownloadFilesFromRepo() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty("login", "furszy");
-        properties.setProperty("password", "");
+        properties.setProperty("login", "MALOTeam");
+        properties.setProperty("password", "fermat123456");
 
 
         GitHub gitHub = GitHubBuilder.fromProperties(properties).build();

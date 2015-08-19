@@ -173,7 +173,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet(CWP_WALLET_BASIC_ALL_MAIN, installedWallet);
+                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
 
                         }
                     });
@@ -183,7 +183,7 @@ public class WalletDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet(CWP_WALLET_BASIC_ALL_MAIN, installedWallet);
+                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
 
                         }
                     });

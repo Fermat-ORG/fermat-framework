@@ -117,47 +117,59 @@ public class IntraUserActorDao {
         }
     }
 
-    public void createNewIntraUser (String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAddPendingIntraUserException {
+    public void createNewIntraUser (String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ContactState contactState) throws CantAddPendingIntraUserException {
 
         try {
 
+            /**
+             * if intra user exist on table
+             * change status
+             */
+            if (intraUserExists(intraUserToAddPublicKey)) {
 
-            if (aliasExists (intraUserToAddName)) {
+                this.updateIntraUserConnectionState(intraUserLoggedInPublicKey,intraUserToAddPublicKey,contactState);
 
-                throw new CantAddPendingIntraUserException ("Cant create new developer, alias exists.",null, "", "");
+            }
+            else
+            {
+                /**
+                 * Get actual date
+                 */
+                Date d = new Date();
+                long milliseconds = d.getTime();
+
+                DatabaseTable table = this.database.getTable(IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
+                DatabaseTableRecord record = table.getEmptyRecord();
+
+                record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey);
+                record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_NAME_COLUMN_NAME,intraUserToAddName );
+                record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
+                record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey);
+                record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+                record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+
+                table.insertRecord(record);
+
+
+                /**
+                 * Persist profile image on a file
+                 */
+                persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+
+                database.closeDatabase();
             }
 
-            /**
-             * Get actual date
-             */
-            Date d = new Date();
-            long milliseconds = d.getTime();
 
-            DatabaseTable table = this.database.getTable(IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
-            DatabaseTableRecord record = table.getEmptyRecord();
-
-            record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey);
-            record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_NAME_COLUMN_NAME,intraUserToAddName );
-            record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, ContactState.PENDING_HIS_ACCEPTANCE.getCode());
-            record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey);
-            record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
-            record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
-
-            table.insertRecord(record);
-
-
-            /**
-             * Persist profile image on a file
-             */
-            persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
-
-            database.closeDatabase();
 
         } catch (CantInsertRecordException e){
             database.closeDatabase();
-            // Cant insert record.
+
             throw new CantAddPendingIntraUserException("CAN'T INSERT INTRA USER", e, "", "Cant create new intra user, insert database problems.");
 
+        } catch (CantUpdateIntraUserConnectionException e) {
+            database.closeDatabase();
+
+            throw new CantAddPendingIntraUserException ("CAN'T INSERT INTRA USER", FermatException.wrapException(e), "", "Cant update exist intra user state, unknown failure.");
 
         } catch (Exception e) {
             database.closeDatabase();
@@ -489,6 +501,44 @@ public class IntraUserActorDao {
 
         return profileImage;
     }
+
+
+    /**
+     * <p>Method that check if intra user public key exists.
+     * @param intraUserToAddPublicKey
+     * @return boolean exists
+     * @throws CantCreateNewDeveloperException
+     */
+    private boolean intraUserExists (String intraUserToAddPublicKey) throws CantCreateNewDeveloperException {
+
+
+        DatabaseTable table;
+        /**
+         * Get developers identities list.
+         * I select records on table
+         */
+
+        try {
+            table = this.database.getTable (IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not  found.", "Intra User Actor", "Cant check if alias exists, table not found.");
+            }
+
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            return table.getRecords ().size () > 0;
+
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Intra User Actor", "Cant load " + IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
+
+        } catch (Exception e) {
+            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant check if alias exists, unknown failure.");
+        }
+    }
+
 
     /**
      * <p>Method that check if alias exists.

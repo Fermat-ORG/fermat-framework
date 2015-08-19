@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
@@ -58,6 +59,7 @@ public class ListWalletContactsScrollingTest extends TestCase {
     WalletContactsRegistry walletContactsRegistry;
 
     UUID walletId;
+    String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
 
@@ -65,6 +67,7 @@ public class ListWalletContactsScrollingTest extends TestCase {
     public void setUp() throws Exception {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
         walletId = UUID.randomUUID();
+        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         nicheWalletTypeCryptoWallet.setErrorManager(errorManager);
@@ -75,16 +78,16 @@ public class ListWalletContactsScrollingTest extends TestCase {
 
     @Test
     public void testListWalletContactsScrolling_NotNull() throws Exception {
-        List<WalletContactRecord> walletContactRecordsList = nicheWalletTypeCryptoWallet.listWalletContactsScrolling(walletId, 1, 10);
+        List<WalletContactRecord> walletContactRecordsList = nicheWalletTypeCryptoWallet.listWalletContactsScrolling(walletPublicKey, 1, 10);
         assertThat(walletContactRecordsList).isNotNull();
     }
 
     @Test
     public void testListWalletContacts_CantGetAllWalletContactsException() throws Exception {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException())
-        .when(walletContactsRegistry).listWalletContactsScrolling(any(UUID.class), anyInt(), anyInt());
+        .when(walletContactsRegistry).listWalletContactsScrolling(anyString(), anyInt(), anyInt());
 
-        catchException(nicheWalletTypeCryptoWallet).listWalletContactsScrolling(walletId, 1, 10);
+        catchException(nicheWalletTypeCryptoWallet).listWalletContactsScrolling(walletPublicKey, 1, 10);
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantGetAllWalletContactsException.class);
@@ -94,7 +97,7 @@ public class ListWalletContactsScrollingTest extends TestCase {
     public void ListWalletContacts_RegistryIsNotInitialized_CantGetAllWalletContactsException() throws Exception {
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
 
-        catchException(nicheWalletTypeCryptoWallet).listWalletContactsScrolling(walletId, 1, 10);
+        catchException(nicheWalletTypeCryptoWallet).listWalletContactsScrolling(walletPublicKey, 1, 10);
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantGetAllWalletContactsException.class);

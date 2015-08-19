@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionAcceptedEvent;
 
 /**
  * Created by natalia on 14/08/15.
@@ -27,12 +29,19 @@ public class IntraUserConnectionAcceptedEventHandlers implements EventHandler {
     public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         if (((Service) this.actorIntraUserManager).getStatus() == ServiceStatus.STARTED){
 
+            IntraUserActorConnectionAcceptedEvent intraUserActorConnectionAcceptedEvent = (IntraUserActorConnectionAcceptedEvent) platformEvent;
+            this.actorIntraUserManager.acceptIntraUser(intraUserActorConnectionAcceptedEvent.getIntraUserLoggedInPublicKey(),
+                    intraUserActorConnectionAcceptedEvent.getIntraUserToAddPublicKey());
+
+
 
         }
         else
         {
             throw new TransactionServiceNotStartedException();
         }
+
+
 
     }
 }

@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
@@ -57,6 +58,7 @@ public class GetWalletContactByContainsLikeAndWalletIdTest extends TestCase {
     WalletContactsRegistry walletContactsRegistry;
 
     UUID walletId;
+    String walletPublicKey;
     String actorName;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
@@ -65,6 +67,7 @@ public class GetWalletContactByContainsLikeAndWalletIdTest extends TestCase {
     public void setUp() throws Exception {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
         walletId = UUID.randomUUID();
+        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         actorName = "Leonardo Dicaprio";
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
@@ -76,7 +79,7 @@ public class GetWalletContactByContainsLikeAndWalletIdTest extends TestCase {
 
     @Test
     public void testGetWalletContactByNameContainsAndWalletId_NotNull() throws Exception {
-        List<WalletContactRecord> walletContactRecordList = nicheWalletTypeCryptoWallet.getWalletContactByNameContainsAndWalletId(actorName, walletId);
+        List<WalletContactRecord> walletContactRecordList = nicheWalletTypeCryptoWallet.getWalletContactByNameContainsAndWalletPublicKey(actorName, walletPublicKey);
 
         assertNotNull(walletContactRecordList);
     }
@@ -84,8 +87,8 @@ public class GetWalletContactByContainsLikeAndWalletIdTest extends TestCase {
     @Test(expected=CantGetWalletContactException.class)
     public void testGetWalletContactByNameContainsAndWalletId_CantGetWalletContactException() throws Exception {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException())
-        .when(walletContactsRegistry).getWalletContactByNameContainsAndWalletId(anyString(), any(UUID.class));
+        .when(walletContactsRegistry).getWalletContactByNameContainsAndWalletPublicKey(anyString(), anyString());
 
-        nicheWalletTypeCryptoWallet.getWalletContactByNameContainsAndWalletId(actorName, walletId);
+        nicheWalletTypeCryptoWallet.getWalletContactByNameContainsAndWalletPublicKey(actorName, walletPublicKey);
     }
 }
