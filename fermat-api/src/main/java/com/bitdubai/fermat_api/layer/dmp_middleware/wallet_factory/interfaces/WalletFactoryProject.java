@@ -59,6 +59,6 @@ public interface WalletFactoryProject {
     void deleteLanguage (Language language) throws CantDeleteWalletFactoryProjectLanguageException;
 
     //Navigation Structure
-    WalletNavigationStructure getNavigationStructure(UUID id);
+    WalletNavigationStructure getNavigationStructure();
     void setNavigationStructure (WalletNavigationStructure navigationStructure);
 }

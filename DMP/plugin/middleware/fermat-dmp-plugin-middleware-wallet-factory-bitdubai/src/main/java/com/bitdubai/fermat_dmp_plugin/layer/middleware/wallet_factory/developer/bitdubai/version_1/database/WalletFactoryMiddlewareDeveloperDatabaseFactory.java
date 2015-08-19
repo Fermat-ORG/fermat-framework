@@ -136,7 +136,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
          */
         List<String> skinColumns = new ArrayList<String>();
 
-        skinColumns.add(WalletFactoryMiddlewareDatabaseConstants.SKIN_PROJECT_PUBLICKKEY_COLUMN_NAME);
+        skinColumns.add(WalletFactoryMiddlewareDatabaseConstants.SKIN_PROJECT_PUBLICKEY_COLUMN_NAME);
         skinColumns.add(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME);
         skinColumns.add(WalletFactoryMiddlewareDatabaseConstants.SKIN_DEFAULT_COLUMN_NAME);
         /**
@@ -150,7 +150,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
          */
         List<String> languageColumns = new ArrayList<String>();
 
-        languageColumns.add(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_PROJECT_PUBLICKKEY_COLUMN_NAME);
+        languageColumns.add(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME);
         languageColumns.add(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
         languageColumns.add(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_DEFAULT_COLUMN_NAME);
         /**
@@ -164,8 +164,8 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
          */
         List<String> navigation_structureColumns = new ArrayList<String>();
 
-        navigation_structureColumns.add(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKKEY_COLUMN_NAME);
-        navigation_structureColumns.add(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_LANGUAGE_ID_COLUMN_NAME);
+        navigation_structureColumns.add(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME);
+        navigation_structureColumns.add(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME);
         /**
          * Table navigation_structure addition.
          */

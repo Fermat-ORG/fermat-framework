@@ -93,7 +93,7 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME);
 
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.SKIN_PROJECT_PUBLICKKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.SKIN_PROJECT_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.SKIN_DEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 5, Boolean.TRUE);
 
@@ -109,7 +109,7 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME);
 
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_PROJECT_PUBLICKKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_DEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 5, Boolean.TRUE);
 
@@ -125,8 +125,8 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME);
 
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_LANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN);
 

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
@@ -85,11 +86,11 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return record;
     }
 
-    private DatabaseTableRecord insertNavigationStructureData(String projectPublicKey, UUID id) throws DatabaseOperationException, MissingProjectDataException{
+    private DatabaseTableRecord getNavigationStructureData(String projectPublicKey, String publicKey) throws DatabaseOperationException, MissingProjectDataException{
         DatabaseTable databaseTable = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME, projectPublicKey);
-        record.setUUIDValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_LANGUAGE_ID_COLUMN_NAME, id);
+        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME, publicKey);
         return record;
     }
 
@@ -131,6 +132,18 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return transaction;
     }
 
+    private DatabaseTransaction addNavigationStructureRecordToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
+        WalletNavigationStructure navigationStructure = null;
+
+        navigationStructure = walletFactoryProject.getNavigationStructure();
+        if (navigationStructure != null){
+            DatabaseTableRecord record = getNavigationStructureData(walletFactoryProject.getProjectPublicKey(), navigationStructure.getPublicKey());
+            transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME), record);
+        }
+
+        return transaction;
+    }
+
     /**
      * Inserts the Wallet Factory Project information into the database.
      * If is has skins and languages, they are also inserted everything inside the same database transaction.
@@ -141,32 +154,24 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     public void insertWalletFactoryProjectData(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException{
         DatabaseTransaction transaction = database.newTransaction();
 
-        // add the Wallet factory project database record to a transaction
-        DatabaseTableRecord walletFactoryRecord = getWalletFactoryProjectRecord(walletFactoryProject);
-        transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME), walletFactoryRecord);
-
-        // I will add any skin defined in the project into the transaction.
         try {
+            // add the Wallet factory project database record to a transaction
+            DatabaseTableRecord walletFactoryRecord = getWalletFactoryProjectRecord(walletFactoryProject);
+            transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME), walletFactoryRecord);
+
+            // I wil add the skins to the transaction if there are any
             transaction = addSkinRecordsToTransaction(transaction, walletFactoryProject);
-        } catch (CantGetWalletFactoryProjectSkinException e) {
-            //// TODO: 8/18/15 handle this
-        }
 
-
-        // I will add the language to the transaction if I have any
-        try {
+            // I wil add the Languages to the transaction if there are any
             transaction = addLanguageRecordsToTransaction(transaction, walletFactoryProject);
-        } catch (CantGetWalletFactoryProjectLanguageException e) {
-            //// TODO: 8/18/15 handle this
-        }
 
+            //I will add the navigation structure inside the transaction if there is any
+            transaction = addNavigationStructureRecordToTransaction(transaction, walletFactoryProject);
 
-        transaction.addRecordToInsert();
-
-        try {
+            //I execute the transaction and persist the database side of the project.
             database.executeTransaction(transaction);
-        } catch (DatabaseTransactionFailedException e) {
-            //// TODO: 8/18/15 handle this
+        } catch (Exception e) {
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to insert a new Factory project in the database.", null);
         }
     }
 

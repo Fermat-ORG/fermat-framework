@@ -49,7 +49,7 @@ public class WalletFactoryMiddlewareDatabaseConstants {
     static final String NAVIGATION_STRUCTURE_TABLE_NAME = "navigation_structure";
 
     static final String NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
-    static final String NAVIGATION_STRUCTURE_LANGUAGE_ID_COLUMN_NAME = "language_id";
+    static final String NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME = "publicKey";
 
     static final String NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN = "project_publickey";
 }
