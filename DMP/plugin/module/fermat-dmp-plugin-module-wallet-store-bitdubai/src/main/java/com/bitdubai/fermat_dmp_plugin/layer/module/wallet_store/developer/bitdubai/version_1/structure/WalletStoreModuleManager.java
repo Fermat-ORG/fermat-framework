@@ -574,7 +574,16 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.UNINSTALLING);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLING);
+            walletManagerManager.uninstallLanguage(walletCatalogueId, languageId);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.UNINSTALLED);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLED);
         } catch (Exception exception) {
+            try{
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.NOT_UNINSTALLED);
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.NOT_UNINSTALLED);
+            } catch (CantSetInstallationStatusException e) {
+                throw new CantStartUninstallLanguageException(CantStartUninstallLanguageException.DEFAULT_MESSAGE, e, null, null);
+            }
             throw new CantStartUninstallLanguageException(CantStartUninstallLanguageException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
@@ -590,7 +599,17 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.UNINSTALLING);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLING);
+            walletManagerManager.uninstallSkin(walletCatalogueId, skinId);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.UNINSTALLED);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLED);
+
         } catch (Exception exception) {
+            try{
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.NOT_UNINSTALLED);
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.NOT_UNINSTALLED);
+            } catch (CantSetInstallationStatusException e) {
+                throw new CantStartUninstallSkinException(CantStartUninstallSkinException.DEFAULT_MESSAGE, e, null, null);
+            }
             throw new CantStartUninstallSkinException (CantStartUninstallSkinException .DEFAULT_MESSAGE, exception, null, null);
         }
     }
