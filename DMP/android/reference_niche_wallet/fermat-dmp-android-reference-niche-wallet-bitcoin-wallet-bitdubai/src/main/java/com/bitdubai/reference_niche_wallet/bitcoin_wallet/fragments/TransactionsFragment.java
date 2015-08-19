@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -116,13 +117,25 @@ public class TransactionsFragment extends Fragment{
      */
     private WalletSession walletSession;
 
+    /**
+     * Resources
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
 
-    public static TransactionsFragment newInstance(int position,WalletSession walletSession) {
+    /**
+     *
+     * @param position
+     * @param walletSession
+     * @return
+     */
+
+    public static TransactionsFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         TransactionsFragment f = new TransactionsFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -130,9 +143,10 @@ public class TransactionsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = walletSession.getErrorManager();
+
         try {
 
+            errorManager = walletSession.getErrorManager();
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
             cryptoWalletManager = walletSession.getCryptoWalletManager();
@@ -329,6 +343,10 @@ public class TransactionsFragment extends Fragment{
         }
 
 
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
 

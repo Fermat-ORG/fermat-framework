@@ -480,6 +480,13 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_PROJECTS);
 
             runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("EditMode");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_EDIT_MODE);
+
+            runtimeTabStrip.addTab(runtimeTab);
+
             runtimeActivity.setTabStrip(runtimeTabStrip);
             runtimeSubApp.addActivity(runtimeActivity);
 
@@ -490,6 +497,10 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_PROJECTS);
             runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_PROJECTS, runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_EDIT_MODE);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_EDIT_MODE, runtimeFragment);
 
             /* Adding WizardTypes */
             Wizard runtimeWizard = new Wizard();
@@ -503,6 +514,56 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeWizard.addPage(runtimeWizardPage);
             /* Adding wizard */
             runtimeActivity.addWizard(WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT, runtimeWizard);
+
+            /**
+             *  Edit Activity
+             */
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_EDIT_WALLET);
+            runtimeActivity.setColor("#b46a54");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#b46a54");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Edit Wallet");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeTabStrip = new TabStrip();
+
+            runtimeTabStrip.setTabsColor("#8bba9e");
+
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+            runtimeTabStrip.setTabsIndicateColor("#72af9c");
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Balance");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Contacts");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+            runtimeTabStrip.addTab(runtimeTab);
+
+            runtimeTabStrip.setDividerColor(0x72af9c);
+            //runtimeTabStrip.setBackgroundColor("#72af9c");
+            runtimeActivity.setTabStrip(runtimeTabStrip);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE, runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS, runtimeFragment);
+
+
+            runtimeSubApp.addActivity(runtimeActivity);
+
+
+
             /**End Wallet Factory*/
 
             //wallet Publisher app
@@ -539,6 +600,8 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_PUBLISHER_MAIN);
             runtimeActivity.addFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN, runtimeFragment);
+
+
 
             /**End Wallet Publisher*/
 

@@ -22,6 +22,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -69,6 +70,7 @@ public class StartTest  {
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
+        when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
     }
 
     @Before
@@ -88,6 +90,8 @@ public class StartTest  {
         testPluginRoot.setId(testId);
 
         catchException(testPluginRoot).start();
+
+        Assertions.assertThat(caughtException()).isNull();
 
         Assertions.assertThat(testPluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
 

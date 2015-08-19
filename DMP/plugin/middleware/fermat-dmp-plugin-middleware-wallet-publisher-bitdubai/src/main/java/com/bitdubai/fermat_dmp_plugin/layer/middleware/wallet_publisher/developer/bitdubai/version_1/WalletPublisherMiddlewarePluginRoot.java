@@ -26,7 +26,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -64,7 +65,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileSystem, DealsWithWalletFactory, DealsWithWalletStoreMiddleware, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewarePlugin, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers, DealsWithWalletSkin, DealsWithWalletLanguage {
+public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileSystem, DealsWithWalletFactory, DealsWithWalletStoreNetworkService, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewarePlugin, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers, DealsWithWalletSkin, DealsWithWalletLanguage {
 
     /**
      * Represent the logManager
@@ -404,7 +405,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
     /**
      * (non-Javadoc)
-     * @see DealsWithWalletStoreMiddleware#setWalletStoreManager(WalletStoreManager)
+     * @see DealsWithWalletStoreNetworkService#setWalletStoreManager(WalletStoreManager)
      */
     @Override
     public void setWalletStoreManager(WalletStoreManager walletStoreManager) {
