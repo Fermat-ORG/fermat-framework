@@ -15,6 +15,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -60,7 +61,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     /**
      * Platform
      */
-    private String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    private String wallet_id = "25428311-deb3-4064-93b2-69093e859871";
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
     private CryptoWalletManager cryptoWalletManager;
@@ -73,8 +74,13 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private String accountName;
     private WalletContact walletContact;
 
+    /**
+     *  Resources
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
 
-    public static ContactDetailFragment newInstance(WalletSession walletSession, String accountName) {
+
+    public static ContactDetailFragment newInstance(WalletSession walletSession, String accountName,WalletResourcesProviderManager walletResourcesProviderManager) {
         if (accountName == null || accountName.isEmpty())
             return null;
         if (walletSession == null)
@@ -82,6 +88,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         ContactDetailFragment f = new ContactDetailFragment();
         f.setWalletSession(walletSession);
         f.setAccountName(accountName);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -118,7 +125,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         }
 
         try {
-            List<WalletContactRecord> lst= cryptoWallet.listWalletContacts(walletPublicKey);
+            List<WalletContactRecord> lst= cryptoWallet.listWalletContacts(wallet_id);
 
         } catch (CantGetAllWalletContactsException e) {
             e.printStackTrace();
@@ -154,7 +161,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             fragment.fromContacts = true;
             getActivity().getFragmentManager()
                     .beginTransaction()
-                            //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
@@ -175,11 +182,11 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             //CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
             //cdd.show();
         }else if(view.getId() == R.id.action_money_request && walletContact != null){
-            MoneyRequestFragment fragment = MoneyRequestFragment.newInstance(0,walletContact,walletSettingsManager,walletSession);
+            MoneyRequestFragment fragment = MoneyRequestFragment.newInstance(0,walletContact,walletSettingsManager,walletSession,walletResourcesProviderManager);
             fragment.fromContacts = true;
             getActivity().getFragmentManager()
                     .beginTransaction()
-                            //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
@@ -237,7 +244,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
+            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
             for (WalletContactRecord wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
             }
@@ -246,5 +253,9 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         }
         return contacts;
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 }

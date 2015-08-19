@@ -74,6 +74,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME);
+            database.closeDatabase();
         } catch (DatabaseNotFoundException e) {
 
             OutgoingExtraUserDatabaseFactory databaseFactory = new OutgoingExtraUserDatabaseFactory();
@@ -105,6 +106,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
             loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
 
             transactionTable.insertRecord(recordToInsert);
+            database.closeDatabase();
         } catch (CantInsertRecordException exception) {
             throw exception;
         } catch (Exception exception) {

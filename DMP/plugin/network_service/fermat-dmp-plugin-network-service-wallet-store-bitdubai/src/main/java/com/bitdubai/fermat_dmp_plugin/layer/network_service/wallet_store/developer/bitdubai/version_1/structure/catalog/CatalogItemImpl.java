@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
 
 import java.util.UUID;
@@ -10,19 +11,19 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/23/15.
  */
-public class CatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem {
+public class CatalogItemImpl implements CatalogItem {
     UUID id;
     String name;
     WalletCategory category;
     String description;
     int defaultSizeInBytes;
     byte[] icon;
-    com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem detailedCatalogItem;
+    DetailedCatalogItemImpl detailedCatalogItemImpl;
 
     /**
      * Default constructor
      */
-    public CatalogItem() {
+    public CatalogItemImpl() {
     }
 
     /**
@@ -33,16 +34,16 @@ public class CatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_se
      * @param description
      * @param defaultSizeInBytes
      * @param icon
-     * @param detailedCatalogItem
+     * @param detailedCatalogItemImpl
      */
-    public CatalogItem(UUID id, String name, WalletCategory category, String description, int defaultSizeInBytes, byte[] icon, com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem detailedCatalogItem) {
+    public CatalogItemImpl(UUID id, String name, WalletCategory category, String description, int defaultSizeInBytes, byte[] icon, DetailedCatalogItemImpl detailedCatalogItemImpl) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.description = description;
         this.defaultSizeInBytes = defaultSizeInBytes;
         this.icon = icon;
-        this.detailedCatalogItem = detailedCatalogItem;
+        this.detailedCatalogItemImpl = detailedCatalogItemImpl;
     }
 
     @Override
@@ -76,8 +77,8 @@ public class CatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_se
     }
 
     @Override
-    public DetailedCatalogItem getDetailedCatalogItem() throws CantGetWalletDetailsException {
-        return detailedCatalogItem;
+    public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException {
+        return detailedCatalogItemImpl;
     }
 
     public void setWalletCatalogId(UUID id) {
@@ -100,8 +101,8 @@ public class CatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_se
         this.icon = icon;
     }
 
-        public void setDetailedCatalogItem(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem detailedCatalogItem) {
-        this.detailedCatalogItem = detailedCatalogItem;
+        public void setDetailedCatalogItemImpl(DetailedCatalogItemImpl detailedCatalogItemImpl) {
+        this.detailedCatalogItemImpl = detailedCatalogItemImpl;
     }
 
     public void setId(UUID id) {
@@ -111,6 +112,7 @@ public class CatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_se
     public void setName(String name) {
         this.name = name;
     }
+
 
     public void setDescription(String description) {
         this.description = description;

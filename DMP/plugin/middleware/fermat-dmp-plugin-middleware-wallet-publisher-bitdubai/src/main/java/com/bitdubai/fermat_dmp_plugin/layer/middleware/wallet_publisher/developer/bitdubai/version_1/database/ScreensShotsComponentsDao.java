@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
@@ -84,7 +86,7 @@ public class ScreensShotsComponentsDao {
      *  @return ImageMiddlewareImpl found.
      *  @throws CantReadRecordDataBaseException
      */
-    public ImageMiddlewareImpl findById (String id) throws CantReadRecordDataBaseException {
+    public Image findById (String id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
@@ -138,10 +140,10 @@ public class ScreensShotsComponentsDao {
      *  @return All ImageMiddlewareImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ImageMiddlewareImpl> findAll () throws CantReadRecordDataBaseException {
+    public List<Image> findAll () throws CantReadRecordDataBaseException {
 
 
-        List<ImageMiddlewareImpl> list = null;
+        List<Image> list = null;
 
         try {
 
@@ -204,7 +206,7 @@ public class ScreensShotsComponentsDao {
      *  @return All ImageMiddlewareImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ImageMiddlewareImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<Image> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -215,7 +217,7 @@ public class ScreensShotsComponentsDao {
         }
 
 
-        List<ImageMiddlewareImpl> list = null;
+        List<Image> list = null;
 
         try {
 
@@ -280,7 +282,7 @@ public class ScreensShotsComponentsDao {
      * @return List<ImageMiddlewareImpl>
      * @throws CantReadRecordDataBaseException
      */
-    public List<ImageMiddlewareImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<Image> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -288,7 +290,7 @@ public class ScreensShotsComponentsDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<ImageMiddlewareImpl> list = null;
+        List<Image> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -385,6 +387,11 @@ public class ScreensShotsComponentsDao {
             transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 
+            /*
+             * 3.- Serialize the objects images into the xml file
+             */
+            imageManager.persist(entity);
+
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
 
@@ -396,6 +403,22 @@ public class ScreensShotsComponentsDao {
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
 
+        } catch (CantPersistFileException cantPersistFileException) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+            String context = contextBuffer.toString();
+            String possibleCause = "Can not update the file image";
+
+            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, cantPersistFileException, context, possibleCause);
+        } catch (CantCreateFileException cantCreateFileException) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+            String context = contextBuffer.toString();
+            String possibleCause = "Can not update the file image";
+
+            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, cantCreateFileException, context, possibleCause);
         }
 
     }
