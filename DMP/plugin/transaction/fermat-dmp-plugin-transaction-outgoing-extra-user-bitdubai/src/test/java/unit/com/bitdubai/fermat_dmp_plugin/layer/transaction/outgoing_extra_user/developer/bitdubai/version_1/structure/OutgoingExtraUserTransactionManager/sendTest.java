@@ -86,7 +86,7 @@ public class sendTest {
 
     private CryptoAddress cryptoAddress;
     private UUID testId;
-    private UUID testwalletID;
+    private String testwalletID;
     private String testDataBaseName;
     private OutgoingExtraUserTransactionManager testTransactionManager;
 
@@ -95,7 +95,7 @@ public class sendTest {
         cryptoAddress = new CryptoAddress();
         cryptoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
         cryptoAddress.setAddress(UUID.randomUUID().toString());
-        testwalletID = UUID.randomUUID();
+        testwalletID = anyString();
         testId = UUID.randomUUID();
         testDataBaseName = OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME;
 
@@ -108,7 +108,7 @@ public class sendTest {
         when(mockPluginDatabaseSystem.openDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
-        when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWalletWallet);
+        when(mockBitcoinWalletManager.loadWallet(anyString())).thenReturn(mockBitcoinWalletWallet);
         when(mockBitcoinWalletWallet.getAvailableBalance()).thenReturn(mockBitcoinWalletBalance);
 
         when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
@@ -197,7 +197,7 @@ public class sendTest {
 
     @Test
     public void Send_FailedWalletLoad_ThrowsCantSendFundsException() throws Exception {
-        when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenThrow(new CantLoadWalletException("Mock", null, null, null));
+        when(mockBitcoinWalletManager.loadWallet(anyString())).thenThrow(new CantLoadWalletException("Mock", null, null, null));
 
         testTransactionManager = new OutgoingExtraUserTransactionManager();
         testTransactionManager.setPluginDatabaseSystem(mockPluginDatabaseSystem);
