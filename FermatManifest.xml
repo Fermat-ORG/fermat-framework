@@ -1,0 +1,167 @@
+<fermat>
+    <columns>
+        <column code="PIP" name="Plug-ins Platform" logo="PIP_logo.png">
+            <plugins>
+                <layers>
+                    <layer name="Network Service">
+                        <plugin
+                                name="Intra User"
+                                description="Enables searching for Intra Users and conecting one to the other"
+                                dificulty="6"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                                <author name="lnacosta" scope="implementation" percentage="100"></author>
+                                <author name="laderuner" scope="unit-tests" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                                <mantainer name="lnacosta"></mantainer>
+                            </mantainers>
+                            <certifications>
+                                <certification type="implementation" signed-by="acostarodrigo"></certification>
+                                <certification type="testing" signed-by="jorgeejgonzalez"></certification>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Crypto Address"
+                                description="Enables the underground exchange of crypto addresses"
+                                dificulty="5"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                                <author name="lnacosta" scope="implementation" percentage="100"></author>
+                                <author name="lnacosta" scope="unit-tests" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin></plugin>
+                    </layer>
+                </layers>
+            </plugins>
+            <addons>
+                <layers>
+                    <layer>
+                        <addon></addon>
+                        <addon></addon>
+                        <addon></addon>
+                    </layer>
+                </layers>
+            </addons>
+        </column>
+        <column code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
+            <plugins>
+                <layers>
+                    <layer name="Network Service">
+                        <plugin
+                                name="Intra User"
+                                description="Enables searching for Intra Users and conecting one to the other"
+                                dificulty="6"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                                <author name="lnacosta" scope="implementation" percentage="100"></author>
+                                <author name="laderuner" scope="unit-tests" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                                <mantainer name="lnacosta"></mantainer>
+                            </mantainers>
+                            <certifications>
+                                <certification type="implementation" signed-by="acostarodrigo"></certification>
+                                <certification type="testing" signed-by="jorgeejgonzalez"></certification>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Crypto Address"
+                                description="Enables the underground exchange of crypto addresses"
+                                dificulty="5"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                                <author name="lnacosta" scope="implementation" percentage="100"></author>
+                                <author name="lnacosta" scope="unit-tests" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin></plugin>
+                    </layer>
+                </layers>
+            </plugins>
+            <addons>
+                <layers>
+                    <layer>
+                        <addon></addon>
+                        <addon></addon>
+                        <addon></addon>
+                    </layer>
+                </layers>
+            </addons>
+        </column>
+    </columns>
+    <super-layers>
+        <super-layer code="OSA" name="Operative System API">
+            <layers>
+                <layer name="Multi OS"></layer>
+                <layer name="Andoid">
+                    <addons>
+                        <addon
+                                name="File System"
+                                description="Is the interface between the OS specific File System and the platform components that need to consume file system services"
+                                dificulty="3"
+                                code-level="production"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                                <author name="nattyco" scope="implementation" percentage="85"></author>
+                                <author name="lnacosta" scope="implementation" percentage="15"></author>
+                                <author name="laderuner" scope="unit-tests" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                                <mantainer name="lnacosta"></mantainer>
+                            </mantainers>
+                            <certifications>
+                                <certification type="implementation" signed-by="acostarodrigo"></certification>
+                                <certification type="testing" signed-by="jorgeejgonzalez"></certification>
+                            </certifications>
+                        </addon>
+                        <addon
+                                name="Database System"
+                                description="Is a wrapper designed to isolate the rest of the components from the OS dependent Database System"
+                                dificulty="5"
+                                code-level="production"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                                <author name="nattyco" scope="implementation" percentage="85"></author>
+                                <author name="lnacosta" scope="implementation" percentage="15"></author>
+                                <author name="laderuner" scope="unit-tests" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                                <mantainer name="lnacosta"></mantainer>
+                            </mantainers>
+                            <certifications>
+                                <certification type="implementation" signed-by="acostarodrigo"></certification>
+                                <certification type="testing" signed-by="jorgeejgonzalez"></certification>
+                            </certifications>
+                        </addon>
+                    </addons>
+                </layer>
+            </layers>
+        </super-layer>
+    </super-layers>
+</fermat>
