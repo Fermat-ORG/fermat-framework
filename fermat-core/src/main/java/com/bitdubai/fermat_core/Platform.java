@@ -214,11 +214,6 @@ public class Platform {
      * Constructor
      */
     public Platform() {
-
-        /**
-         * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
-         */
-        eventMonitor = new PlatformEventMonitor();
         corePlatformContext = new CorePlatformContext();
 
         dealsWithDatabaseManagersPlugins = new ConcurrentHashMap<>();
@@ -469,6 +464,12 @@ public class Platform {
             ((DealsWithPlatformDatabaseSystem) errorManager).setPlatformDatabaseSystem(databaseSystemOs.getPlatformDatabaseSystem());
             corePlatformContext.registerAddon((Addon) errorManager, Addons.ERROR_MANAGER);
             errorManager.start();
+
+
+            /**
+             * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
+             */
+            eventMonitor = new PlatformEventMonitor((ErrorManager) errorManager);
 
             /*
              * Addon Event Manager

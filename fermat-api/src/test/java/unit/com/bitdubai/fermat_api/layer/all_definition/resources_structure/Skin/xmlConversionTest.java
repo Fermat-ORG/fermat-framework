@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +38,13 @@ import java.util.UUID;
  */
 public class xmlConversionTest extends TestCase {
 
-/*
+    // TODO REVIEW THIS.
+    @Test
+    public void testPrueba() {
+        String hello = "World";
+    }
+
+    /*
     public void testcreateResult() {
         Map<String,Resource> lstRecursosPortrait = new HashMap<String,Resource>();
         lstRecursosPortrait.put("person1", new Resource(UUID.randomUUID(), "person1", "person1.png", ResourceType.IMAGE, ResourceDensity.MDPI));
