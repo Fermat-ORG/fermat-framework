@@ -51,7 +51,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class BalanceFragment extends Fragment {
 
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
     /**
      *  Screen members
@@ -151,12 +151,12 @@ public class BalanceFragment extends Fragment {
             /**
              * Get AvailableBalance
              */
-            balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
+            balanceAvailable = cryptoWallet.getAvailableBalance(walletPublicKey);
 
             /**
              * Get BookBalance
              */
-            bookBalance = cryptoWallet.getBookBalance(wallet_id);
+            bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
         }
          catch (CantGetCryptoWalletException e) {
              referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -228,7 +228,7 @@ public class BalanceFragment extends Fragment {
 
         List<CryptoWalletTransaction> cryptoWalletTransactions=null;
         try {
-            cryptoWalletTransactions= cryptoWallet.getTransactions(5, 0, wallet_id);
+            cryptoWalletTransactions= cryptoWallet.getTransactions(5, 0, walletPublicKey);
         } catch (CantGetTransactionsException e) {
             e.printStackTrace();
         }
@@ -360,9 +360,9 @@ public class BalanceFragment extends Fragment {
     private void refreshBalance() {
         try {
 
-            balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
+            balanceAvailable = cryptoWallet.getAvailableBalance(walletPublicKey);
 
-            bookBalance = cryptoWallet.getBookBalance(wallet_id);
+            bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
 
 
             if(referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())){

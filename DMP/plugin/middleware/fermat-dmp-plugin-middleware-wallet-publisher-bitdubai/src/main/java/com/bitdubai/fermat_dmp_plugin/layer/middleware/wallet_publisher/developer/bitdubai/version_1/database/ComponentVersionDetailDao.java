@@ -1,7 +1,7 @@
 /*
  * @#InformationPublishedComponentDao.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database;
@@ -9,6 +9,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -22,7 +23,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ComponentVersionDetailImpl;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ComponentVersionDetailMiddlewareImpl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -80,13 +81,13 @@ public class ComponentVersionDetailDao {
      *  @return ComponentVersionDetailImpl found.
      *  @throws CantReadRecordDataBaseException
      */
-    public ComponentVersionDetailImpl findById (String id) throws CantReadRecordDataBaseException {
+    public ComponentVersionDetail findById (String id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        ComponentVersionDetailImpl walletPublishedMiddlewareInformation = null;
+        ComponentVersionDetailMiddlewareImpl walletPublishedMiddlewareInformation = null;
 
         try {
 
@@ -134,10 +135,10 @@ public class ComponentVersionDetailDao {
      *  @return All ComponentVersionDetailImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ComponentVersionDetailImpl> findAll () throws CantReadRecordDataBaseException {
+    public List<ComponentVersionDetail> findAll () throws CantReadRecordDataBaseException {
 
 
-        List<ComponentVersionDetailImpl> list = null;
+        List<ComponentVersionDetail> list = null;
 
         try {
 
@@ -166,7 +167,7 @@ public class ComponentVersionDetailDao {
                 /*
                  * 4.1 - Create and configure a  ComponentVersionDetailImpl
                  */
-                ComponentVersionDetailImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                ComponentVersionDetailMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -200,7 +201,7 @@ public class ComponentVersionDetailDao {
      *  @return All ComponentVersionDetailImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ComponentVersionDetailImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<ComponentVersionDetail> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -211,7 +212,7 @@ public class ComponentVersionDetailDao {
         }
 
 
-        List<ComponentVersionDetailImpl> list = null;
+        List<ComponentVersionDetail> list = null;
 
         try {
 
@@ -241,7 +242,7 @@ public class ComponentVersionDetailDao {
                 /*
                  * 4.1 - Create and configure a  ComponentVersionDetailImpl
                  */
-                ComponentVersionDetailImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                ComponentVersionDetailMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -276,7 +277,7 @@ public class ComponentVersionDetailDao {
      * @return List<ComponentVersionDetailImpl>
      * @throws CantReadRecordDataBaseException
      */
-    public List<ComponentVersionDetailImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<ComponentVersionDetail> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -284,7 +285,7 @@ public class ComponentVersionDetailDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<ComponentVersionDetailImpl> list = null;
+        List<ComponentVersionDetail> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -329,7 +330,7 @@ public class ComponentVersionDetailDao {
                 /*
                  * 5.1 - Create and configure a  ComponentVersionDetailImpl
                  */
-                ComponentVersionDetailImpl walletPublishedMiddlewareInformation = constructFrom(record);
+                ComponentVersionDetailMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -361,7 +362,7 @@ public class ComponentVersionDetailDao {
      *  @param entity ComponentVersionDetailImpl to create.
      *  @throws CantInsertRecordDataBaseException
      */
-    public void create (ComponentVersionDetailImpl entity) throws CantInsertRecordDataBaseException {
+    public void create (ComponentVersionDetailMiddlewareImpl entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -402,7 +403,7 @@ public class ComponentVersionDetailDao {
      *  @param entity ComponentVersionDetailImpl to update.
      *  @throws CantUpdateRecordDataBaseException
      */
-    public void update(ComponentVersionDetailImpl entity) throws CantUpdateRecordDataBaseException {
+    public void update(ComponentVersionDetailMiddlewareImpl entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -481,9 +482,9 @@ public class ComponentVersionDetailDao {
      * @param record with values from the table
      * @return ComponentVersionDetailImpl setters the values from table
      */
-    private ComponentVersionDetailImpl constructFrom(DatabaseTableRecord record){
+    private ComponentVersionDetailMiddlewareImpl constructFrom(DatabaseTableRecord record){
 
-        ComponentVersionDetailImpl componentVersionDetailImpl = new ComponentVersionDetailImpl();
+        ComponentVersionDetailMiddlewareImpl componentVersionDetailImpl = new ComponentVersionDetailMiddlewareImpl();
 
         try {
 
@@ -516,7 +517,7 @@ public class ComponentVersionDetailDao {
      * @param componentVersionDetailImpl the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(ComponentVersionDetailImpl componentVersionDetailImpl){
+    private DatabaseTableRecord constructFrom(ComponentVersionDetailMiddlewareImpl componentVersionDetailImpl){
 
         /*
          * Create the record to the entity

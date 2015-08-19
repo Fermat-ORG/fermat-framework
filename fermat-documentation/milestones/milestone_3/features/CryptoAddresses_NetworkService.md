@@ -28,7 +28,9 @@
 
 * Receive a Contact Request
  * The user receives a Contact Request.
- * He is informed in the graphic interface by showing him a profile image and the name of the actor.
+
+ * He is informed in the graphic interface by showing him a profile imageMiddleware and the name of the actor.
+
  * He also can accept or deny the request.
 
 * Accept a received Contact Request
@@ -58,7 +60,9 @@
    * intraUserToContactPublicKey - the intra-user with whom is wanted to be contacts
    * requesterIntraUserPublicKey - the intra-user public key that is sending the request
    * requesterIntraUserName - the intra-user name that is sending the request
-   * requesterIntraUserProfileImage - the intra-user profile image that is sending the request
+
+   * requesterIntraUserProfileImage - the intra-user profile imageMiddleware that is sending the request
+
  * The network sevice saves the data in the actions table with a requestId (a random UUID) and a State: PENDING_REMOTE_ACCEPTANCE.
  * Then send all the information including the requestId generated to the counterparty.
 
@@ -91,7 +95,9 @@
    * intraUserToContactPublicKey - the intra-user with whom the actor wants to be contact
    * requesterIntraUserPublicKey - the intra-user public key that have sended the request
    * requesterIntraUserName - the intra-user name that have sended the request
-   * requesterIntraUserProfileImage - the intra-user profile image that have sended the request
+
+   * requesterIntraUserProfileImage - the intra-user profile imageMiddleware that have sended the request
+
  * The network sevice saves the data in the actions table with the State: PENDING_LOCALLY_ACCEPTANCE.
  * Then raises a CONTACT_REQUEST_RECEIVED event and post the requestId.
 
@@ -140,7 +146,9 @@
  * cryptoAddressToSend - a cryptoaddress generated that is sended to the actor
  * requesterIntraUserPublicKey - the intra-user public key that is sending the request
  * requesterIntraUserName - the intra-user name that is sending the request
- * requesterIntraUserProfileImage - the intra-user profile image that is sending the request
+
+ * requesterIntraUserProfileImage - the intra-user profile imageMiddleware that is sending the request
+
 
  -- receiver fields
  * walletAcceptingTheRequestPublicKey - wallet which is accepting the request

@@ -7,8 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -17,26 +15,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.Utils.GeneratorQR;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -48,9 +39,9 @@ public class ReceiveFragmentDialog extends Dialog implements
 
 
     /**
-     * Hardcoded wallet_id and user_id
+     * Hardcoded walletPublicKey and user_id
      */
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
     UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
 
 
@@ -149,7 +140,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
             walletAddres = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -199,7 +190,6 @@ public class ReceiveFragmentDialog extends Dialog implements
 
             /*else if (i == R.id.btn_no) {
                 dismiss();
-
             } else {
             }*/
         //dismiss();

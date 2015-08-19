@@ -377,6 +377,9 @@ project(':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai').project
 include ':fermat-pip-plugin-identity-developer-bitdubai'
 project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-developer-bitdubai')
 
+include ':fermat-pip-plugin-identity-publisher-bitdubai'
+project(':fermat-pip-plugin-identity-publisher-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-publisher-bitdubai')
+
 include ':fermat-pip-plugin-identity-traslator-developer-bitdubai'
 project(':fermat-pip-plugin-identity-traslator-developer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-traslator-developer-bitdubai')
 

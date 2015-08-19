@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUserSearchResult;
+
 import java.util.List;
 
 /**
@@ -10,5 +12,5 @@ public interface IntraUserSearch {
 
     public void setNameToSearch(String nameToSearch);
 
-    List<IntraUserInformation> getResult();
+    List<IntraUserInformation> getResult() throws CantGetIntraUserSearchResult;
 }

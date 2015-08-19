@@ -263,6 +263,30 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
         return actor;
     }
 
+    @Override
+    public void setPhoto(UUID id, byte[] photo) {
+        try {
+            this.extraUserRegistry.setPhoto(id,photo);
+        } catch (CantGetExtraUserRegistry cantGetExtraUserRegistry) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetExtraUserRegistry);
+        } catch (Exception exception){
+
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getActor: "+id ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+        }
+    }
+
+    @Override
+    public byte[] getPhoto(UUID id) {
+        byte[] photo = null;
+        try {
+            photo = this.extraUserRegistry.getPhoto(id);
+        } catch (CantGetExtraUserRegistry cantGetExtraUserRegistry) {
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, cantGetExtraUserRegistry);
+        }
+        return photo;
+    }
+
     /**
      * <p>Create a new Extra User, insert new table record.
      *
@@ -286,6 +310,25 @@ public class ExtraUserUserAddonRoot implements DatabaseManagerForDevelopers, Dea
         //TODO Manuel, aqui falta el manejo de la exception generica
         return user;
     }
+
+    @Override
+    public Actor createActor(String userName, byte[] photo) {
+        Actor user = null;
+        try {
+            user = this.extraUserRegistry.createUser(userName,photo);
+        } catch (CantCreateExtraUserRegistry cantCreateExtraUserRegistry) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateExtraUserRegistry);
+        }/*Modified by Manuel Perez on 27/07/2015*/
+        catch(Exception exception){
+
+            FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "createActor: "+userName ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+
+        }
+        //TODO Manuel, aqui falta el manejo de la exception generica
+        return user;
+    }
+
 
     /**
      * Service Interface implementation.
