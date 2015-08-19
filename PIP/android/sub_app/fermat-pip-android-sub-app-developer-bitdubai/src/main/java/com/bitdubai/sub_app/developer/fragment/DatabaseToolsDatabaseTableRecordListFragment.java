@@ -1,8 +1,5 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.app.AlertDialog;
-
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -21,7 +18,6 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
@@ -108,10 +104,10 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
         try {
             if (resource.type== Databases.TYPE_ADDON) {
-                Addons addon = Addons.getByKey(resource.resource);
+                Addons addon = Addons.getByKey(resource.code);
                 this.developerDatabaseTableRecordList = databaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
             } else if (resource.type== Databases.TYPE_PLUGIN) {
-                Plugins plugin = Plugins.getByKey(resource.resource);
+                Plugins plugin = Plugins.getByKey(resource.code);
                 this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(plugin, developerDatabase, developerDatabaseTable);
             }
 

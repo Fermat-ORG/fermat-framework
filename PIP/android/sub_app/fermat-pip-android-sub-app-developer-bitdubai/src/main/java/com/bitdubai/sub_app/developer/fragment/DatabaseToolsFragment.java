@@ -1,10 +1,8 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -120,7 +118,7 @@ public class DatabaseToolsFragment extends Fragment {
                 Resource item = new Resource();
                 item.picture = "plugin";
                 item.label = plugins.get(i).toString().toLowerCase().replace("_", " ");
-                item.resource = plugins.get(i).getKey();
+                item.code = plugins.get(i).getKey();
                 item.type=Resource.TYPE_PLUGIN;
                 mlist.add(item);
             }
@@ -128,7 +126,7 @@ public class DatabaseToolsFragment extends Fragment {
                 Resource item = new Resource();
                 item.picture = "addon";
                 item.label = addons.get(i).toString().replace("_", " ");
-                item.resource = addons.get(i).getCode();
+                item.code = addons.get(i).getCode();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
             }
