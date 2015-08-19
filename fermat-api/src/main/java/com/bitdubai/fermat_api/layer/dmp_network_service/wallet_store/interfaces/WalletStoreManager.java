@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -63,28 +64,28 @@ public interface WalletStoreManager {
      */
     public CatalogItem constructEmptyCatalogItem();
 
-    public Language constructLanguage(UUID skinId, String nameLanguage, String languageLabel, UUID walletId, Version version, Version initalWalletVersion, Version finalWalletVersion,  List<URL> videoPreviews, URL LanguageURL, long languageSizeInBytes, Translator translator, boolean isDefault );
+    public Language constructLanguage(UUID languageId, Languages nameLanguage, String languageLabel, UUID walletId, Version version, Version initalWalletVersion, Version finalWalletVersion, List<URL> videoPreviews, URL LanguageURL, long languageSizeInBytes, Translator translator, boolean isDefault);
 
-    public Skin constructSkin(UUID skinId, String nameSkin, UUID walletId, ScreenSize screenSize, Version version, Version initalWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL skinURL, long skinSizeInBytes, Designer designer, boolean isDefault );
+    public Skin constructSkin(UUID skinId, String nameSkin, UUID walletId, ScreenSize screenSize, Version version, Version initalWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL skinURL, int skinSizeInBytes, Designer designer, boolean isDefault);
 
     public CatalogItem constructCatalogItem(UUID walletId, int defaultSizeInBytes,
-                             String name, String description,
-                             WalletCategory walletCategory,
-                             byte[] icon,
-                             Version version,
-                             Version platformInitialVersion,
-                             Version platformFinalVersion,
-                             List<Skin> skins,
-                             Skin skin,
-                             Language language,
-                             List<Language> languages,
-                             Designer designer,
-                             Developer developer,
-                             Translator translator) throws CantGetWalletIconException;
+                                            String name, String description,
+                                            WalletCategory walletCategory,
+                                            byte[] icon,
+                                            Version version,
+                                            Version platformInitialVersion,
+                                            Version platformFinalVersion,
+                                            List<Skin> skins,
+                                            Skin skin,
+                                            Language language,
+                                            Developer developer,
+                                            List<Language> languages) throws CantGetWalletIconException;
 
     public Developer constructDeveloper(UUID developerId, String name, String PublicKey);
 
-    public Designer constructDesigner(UUID designerrId, String name, String PublicKey);
+    public Designer constructDesigner(UUID designerId, String name, String PublicKey);
+
+    public Translator constructTranslator(UUID translatorId, String name, String PublicKey);
 
 }
 
