@@ -21,9 +21,11 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
@@ -72,8 +74,12 @@ public class BalanceFragment extends Fragment {
      */
 
     private CryptoWalletManager cryptoWalletManager;
-    CryptoWallet cryptoWallet;
+    private CryptoWallet cryptoWallet;
 
+    /**
+     *  Resources
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
 
     /**
      * TypeFace to apply in all fragment
@@ -91,6 +97,11 @@ public class BalanceFragment extends Fragment {
      */
     WalletSettingsManager walletSettingsManager;
 
+    /**
+     *
+     */
+
+
 
     ListView list;
     CustomAdapter adapter;
@@ -104,10 +115,11 @@ public class BalanceFragment extends Fragment {
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession,WalletSettingsManager walletSettingsManager) {
+    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
         balanceFragment.setReferenceWalletSession((ReferenceWalletSession) walletSession);
         balanceFragment.setWalletSettingManager(walletSettingsManager);
+        balanceFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return balanceFragment;
     }
 
@@ -249,16 +261,7 @@ public class BalanceFragment extends Fragment {
         custonMati.setLastTransactionsEvent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TransactionsFragment transactionsFragment = new TransactionsFragment();
-                transactionsFragment.setWalletSession(referenceWalletSession);
-
-                FragmentTransaction FT = getFragmentManager().beginTransaction();
-                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                FT.replace(R.id.swipeRefreshLayout, transactionsFragment);
-                FT.addToBackStack(null);
-                FT.attach(transactionsFragment);
-                FT.show(transactionsFragment);
-                FT.commit();
+                ((FermatNotifications)getActivity()).launchNotification("Mati notification","Reference wallet","Vendiste una lata de café por 100 btc");
             }
         });
         custonMati.setSeeAlltransactionsEvent(new View.OnClickListener() {
@@ -277,7 +280,7 @@ public class BalanceFragment extends Fragment {
 //                FT.show(transactionsFragment);
 //                FT.commit();
 
-                ((FermatScreenSwapper)getActivity()).changeActivity("CWRWBWBV1T", null);
+                ((FermatScreenSwapper)getActivity()).changeActivity("CWRWBWBV1T");
 
             }
         });
@@ -296,11 +299,11 @@ public class BalanceFragment extends Fragment {
         ReferenceWalletSession referenceWalletSession =(ReferenceWalletSession) this.referenceWalletSession;
         try
         {
-            if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()) {
+            if(referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
                 txtViewTypeBalance.setText(R.string.book_balance);
                 referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
-            }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+            }else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())){
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
                 txtViewTypeBalance.setText(R.string.available_balance);
                 referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
@@ -319,9 +322,9 @@ public class BalanceFragment extends Fragment {
      */
     private void changeBalance() {
         try {
-            if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())){
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-            }else if (referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+            }else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())){
                 txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
             }
         }catch (Exception e){
@@ -362,9 +365,9 @@ public class BalanceFragment extends Fragment {
             bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
 
 
-            if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+            if(referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())){
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-            }else if(referenceWalletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode()){
+            }else if(referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())){
                 txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
             }
 
@@ -389,6 +392,10 @@ public class BalanceFragment extends Fragment {
 
     public void setWalletSettingManager(WalletSettingsManager walletSettingManager) {
         this.walletSettingsManager = walletSettingManager;
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 }
 

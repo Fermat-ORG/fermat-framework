@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -91,18 +92,24 @@ public class SendFragment extends Fragment {
     public boolean fromContacts = false;
 
     /**
+     * Resources
+     */
+    private WalletResourcesProviderManager walletResourcesProviderManager;
+
+    /**
      * Create a new instance of SendFragment and set walletSession and platforms plugin inside
      *
      * @param position      An object that contains all session data
      * @param walletSession SendFragment with Session and platform plugins inside
      * @return
      */
-    public static SendFragment newInstance(int position, WalletSession walletSession) {
+    public static SendFragment newInstance(int position, WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         SendFragment f = new SendFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -469,5 +476,9 @@ public class SendFragment extends Fragment {
      */
     public void setWalletSession(WalletSession walletSession) {
         this.walletSession = walletSession;
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 }

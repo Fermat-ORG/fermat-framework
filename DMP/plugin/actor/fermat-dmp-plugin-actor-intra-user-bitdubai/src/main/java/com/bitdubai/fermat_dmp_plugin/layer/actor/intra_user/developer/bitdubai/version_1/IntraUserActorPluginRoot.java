@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDecideAcceptanceLaterException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
@@ -41,6 +40,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserConnectionAcceptedEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserConnectionCancelledEventHandlers;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserDeniedConnectionEventHandlers;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserRequestConnectionEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUsersListException;
@@ -55,6 +56,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.IntraUserDeniedConnectionEventListener;
 
 
 import java.util.ArrayList;
@@ -143,7 +145,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException {
         try
         {
-            this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey,profileImage);
+            this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey,profileImage,ContactState.PENDING_REMOTELY_ACCEPTANCE);
         }
         catch(CantAddPendingIntraUserException e)
         {
@@ -292,7 +294,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
         try
         {
-            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_HIS_ACCEPTANCE);
+            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_LOCALLY_ACCEPTANCE);
         }
         catch(CantGetIntraUsersListException e)
         {
@@ -318,7 +320,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
         try
         {
-            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_HIS_ACCEPTANCE);
+            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_REMOTELY_ACCEPTANCE);
         }
         catch(CantGetIntraUsersListException e)
         {
@@ -328,6 +330,24 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         {
             throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS",FermatException.wrapException(e),"","");
         }
+    }
+
+
+    @Override
+    public void receivingIntraUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException {
+        try
+        {
+            this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey,profileImage,ContactState.PENDING_LOCALLY_ACCEPTANCE);
+        }
+        catch(CantAddPendingIntraUserException e)
+        {
+            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION",FermatException.wrapException(e),"","");
+        }
+
     }
 
 
@@ -457,22 +477,43 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         /**
          * Listener Accepted connection event
          */
-  /*      eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
+       eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
         eventHandler = new IntraUserConnectionCancelledEventHandlers();
         ((IntraUserConnectionCancelledEventHandlers) eventHandler).setActorIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);*/
+        listenersAdded.add(eventListener);
 
         /**
          * Listener Cancelled connection event
          */
-     /*   eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_CANCELLED);
+       eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_CANCELLED);
         eventHandler = new IntraUserConnectionAcceptedEventHandlers();
         ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setActorIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);*/
+        listenersAdded.add(eventListener);
+
+        /**
+         * Listener Request connection event
+         */
+        eventListener = eventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION);
+        eventHandler = new IntraUserRequestConnectionEventHandlers();
+        ((IntraUserRequestConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        /**
+         * Listener Denied connection event
+         */
+        eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED);
+        eventHandler = new IntraUserDeniedConnectionEventHandlers();
+        ((IntraUserDeniedConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
 
 
         this.serviceStatus = ServiceStatus.STARTED;

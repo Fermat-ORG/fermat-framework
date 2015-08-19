@@ -38,17 +38,12 @@ import java.util.UUID;
  * This class manages the relationship between users and crypto addresses by storing them on a Database Table.
  */
 
-public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class WalletAddressBookCryptoModuleDao implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * CryptoAddressBook Interface member variables.
      */
     private Database database;
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    ErrorManager errorManager;
 
     /**
      * DealsWithDatabaseSystem Interface member variables.
@@ -64,11 +59,10 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
     /**
      * Constructor.
      */
-    public WalletAddressBookCryptoModuleDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public WalletAddressBookCryptoModuleDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         /**
          * The only one who can set the pluginId is the Plugin Root.
          */
-        this.errorManager = errorManager;
         this.pluginId = pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
 
@@ -167,15 +161,6 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
             throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
 
-    }
-
-    /**
-     * DealsWithErrors interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     /**

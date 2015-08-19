@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.StoredBlockchain;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.params.RegTestParams;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,14 +30,22 @@ import java.util.UUID;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class createBlockChainTest {
+
     @Mock
     ErrorManager errorManager;
+
+    private String walletPublicKey;
+
+    @Before
+    public void setUp() {
+        walletPublicKey = new ECCKeyPair().getPublicKey();
+    }
 
     @Test(expected = CantCreateBlockStoreFileException.class)
     public void genereateCantPersistFileException() throws CantCreateBlockStoreFileException {
         MockedPluginFileSystemWithError pluginFileSystem = new MockedPluginFileSystemWithError();
         Wallet wallet = new Wallet(RegTestParams.get());
-        StoredBlockChain storedBlockChain = new StoredBlockChain(wallet, UUID.randomUUID());
+        StoredBlockChain storedBlockChain = new StoredBlockChain(wallet, walletPublicKey);
         storedBlockChain.setErrorManager(errorManager);
         storedBlockChain.setPluginId(UUID.randomUUID());
         storedBlockChain.setPluginFileSystem(pluginFileSystem);
@@ -50,7 +60,7 @@ public class createBlockChainTest {
     public void genereateCantCreateFileException() throws CantCreateBlockStoreFileException {
         MockedPluginFileSystemWithError2 pluginFileSystem = new MockedPluginFileSystemWithError2();
         Wallet wallet = new Wallet(RegTestParams.get());
-        StoredBlockChain storedBlockChain = new StoredBlockChain(wallet, UUID.randomUUID());
+        StoredBlockChain storedBlockChain = new StoredBlockChain(wallet, walletPublicKey);
         storedBlockChain.setErrorManager(errorManager);
         storedBlockChain.setPluginId(UUID.randomUUID());
         storedBlockChain.setPluginFileSystem(pluginFileSystem);
@@ -64,7 +74,7 @@ public class createBlockChainTest {
     public void getBlockchainTest() throws CantCreateBlockStoreFileException {
         MockedPluginFileSystem pluginFileSystem = new MockedPluginFileSystem();
         Wallet wallet = new Wallet(RegTestParams.get());
-        StoredBlockChain storedBlockChain = new StoredBlockChain(wallet, UUID.randomUUID());
+        StoredBlockChain storedBlockChain = new StoredBlockChain(wallet, walletPublicKey);
         storedBlockChain.setErrorManager(errorManager);
         storedBlockChain.setPluginId(UUID.randomUUID());
         storedBlockChain.setPluginFileSystem(pluginFileSystem);

@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleRegistry;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -46,7 +47,7 @@ public class RegisterWalletAddressBookTest extends TestCase {
     @Mock
     DatabaseTableRecord databaseTableRecord;
 
-    UUID walletId;
+    String walletPublicKey;
 
     ReferenceWallet referenceWallet;
 
@@ -59,7 +60,7 @@ public class RegisterWalletAddressBookTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        walletId = UUID.randomUUID();
+        walletPublicKey = new ECCKeyPair().getPublicKey();
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
         cryptoAddress = new CryptoAddress("asdadas", CryptoCurrency.BITCOIN);
         pluginId = UUID.randomUUID();
@@ -76,7 +77,7 @@ public class RegisterWalletAddressBookTest extends TestCase {
     public void testRegister_NotNull() throws Exception {
         when(database.getTable(anyString())).thenReturn(databaseTable);
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
-        registry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletId);
+        registry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletPublicKey);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
@@ -85,21 +86,21 @@ public class RegisterWalletAddressBookTest extends TestCase {
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
         doThrow(new CantInsertRecordException()).when(databaseTable).insertRecord(any(DatabaseTableRecord.class));
 
-        registry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletId);
+        registry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, walletPublicKey);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
-    public void testRegister_walletIdNull_CantRegisterWalletAddressBookException() throws Exception {
+    public void testRegister_walletPublicKeyNull_CantRegisterWalletAddressBookException() throws Exception {
         registry.registerWalletCryptoAddressBook(cryptoAddress, referenceWallet, null);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
     public void testRegister_platformWalletTypeNull_CantRegisterWalletAddressBookException() throws Exception {
-        registry.registerWalletCryptoAddressBook(cryptoAddress, null, walletId);
+        registry.registerWalletCryptoAddressBook(cryptoAddress, null, walletPublicKey);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
     public void testRegister_cryptoAddressNull_CantRegisterWalletAddressBookException() throws Exception {
-        registry.registerWalletCryptoAddressBook(null, referenceWallet, walletId);
+        registry.registerWalletCryptoAddressBook(null, referenceWallet, walletPublicKey);
     }
 }
