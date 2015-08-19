@@ -61,7 +61,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     /**
      * Platform
      */
-    private UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    private String wallet_id = "25428311-deb3-4064-93b2-69093e859871";
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
     private CryptoWalletManager cryptoWalletManager;

@@ -47,12 +47,6 @@ public class Resource implements Serializable {
         this.resourceDensity = resourceDensity;
     }
 
-    public Resource(String name, String fileName, ResourceType resourceType, ResourceDensity resourceDensity) {
-        this.name = name;
-        this.fileName = fileName;
-        this.resourceType = resourceType;
-        this.resourceDensity = resourceDensity;
-    }
 
     public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
         this.id = id;
