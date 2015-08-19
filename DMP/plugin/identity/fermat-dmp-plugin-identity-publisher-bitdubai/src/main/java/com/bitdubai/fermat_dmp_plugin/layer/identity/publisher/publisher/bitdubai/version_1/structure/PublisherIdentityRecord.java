@@ -18,18 +18,20 @@ public class PublisherIdentityRecord implements PublisherIdentity {
     private String alias;
     private String publicKey;
     private String privateKey;
+    private String websiteurl;
 
     public PublisherIdentityRecord() {
         super ();
     }
 
-    public PublisherIdentityRecord(String alias, String publicKey, String privateKey) {
+    public PublisherIdentityRecord(String alias, String publicKey, String privateKey, String websiteurl) {
 
         super ();
 
         this.alias = alias;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.websiteurl = websiteurl;
     }
 
     @Override
@@ -46,6 +48,10 @@ public class PublisherIdentityRecord implements PublisherIdentity {
         return publicKey;
     }
 
+    @Override
+    public String getWebsiteurl() {
+        return websiteurl;
+    }
 
     public void setPublicKey (String publicKey) {
         this.publicKey = publicKey;

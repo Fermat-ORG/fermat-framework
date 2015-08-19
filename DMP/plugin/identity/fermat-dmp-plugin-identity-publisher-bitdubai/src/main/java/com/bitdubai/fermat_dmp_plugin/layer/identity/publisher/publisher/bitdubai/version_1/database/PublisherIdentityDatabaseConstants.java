@@ -25,6 +25,7 @@ public class PublisherIdentityDatabaseConstants {
     public static final String PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME = "publisher_public_key";
     public static final String PUBLISHER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
     public static final String PUBLISHER_PUBLISHER_ALIAS_COLUMN_NAME = "publisher_alias";
+    public static final String PUBLISHER_PUBLISHER_WEBSITE_URL_COLUMN_NAME = "publisher_website_url";
 
     public static final String PUBLISHER_FIRST_KEY_COLUMN = "publishers_public_key";
 

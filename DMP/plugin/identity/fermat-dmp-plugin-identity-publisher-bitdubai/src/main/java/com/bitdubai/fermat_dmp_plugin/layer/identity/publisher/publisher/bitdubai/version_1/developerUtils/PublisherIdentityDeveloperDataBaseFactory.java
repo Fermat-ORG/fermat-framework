@@ -35,6 +35,7 @@ public class PublisherIdentityDeveloperDataBaseFactory {
         developerIdentityTableColumns.add("publisher_private_key");
         developerIdentityTableColumns.add("device_user_public_key");
         developerIdentityTableColumns.add("publisher_alias");
+        developerIdentityTableColumns.add("publisher_website_url");
         DeveloperDatabaseTable outgoingExtraUserRegistryTable = developerObjectFactory.getNewDeveloperDatabaseTable("DevelopersTable", developerIdentityTableColumns);
         tables.add(outgoingExtraUserRegistryTable);
         return tables;

@@ -78,6 +78,7 @@ public class PublisherIdentityDatabaseFactory implements DealsWithPluginDatabase
             table.addColumn(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.TRUE);
             table.addColumn(PublisherIdentityDatabaseConstants.PUBLISHER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
             table.addColumn(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_WEBSITE_URL_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
 
             table.addIndex(PublisherIdentityDatabaseConstants.PUBLISHER_FIRST_KEY_COLUMN);
 

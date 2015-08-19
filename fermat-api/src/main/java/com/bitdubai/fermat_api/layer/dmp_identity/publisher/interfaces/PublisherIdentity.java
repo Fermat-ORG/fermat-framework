@@ -23,6 +23,11 @@ public interface PublisherIdentity {
 
     /**
      *
+     * @return the URL SITE  of the represented Publisher
+     */
+    String getWebsiteurl();
+    /**
+     *
      * @param mensage unsigned
      * @return signed message
      */

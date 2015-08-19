@@ -6,11 +6,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.dmp_identity.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_identity.IdentitySubsystem;
-import com.bitdubai.fermat_core.layer.dmp_identity.designer.DesignerIdentitySubsystem;
 import com.bitdubai.fermat_core.layer.pip_Identity.developer.DeveloperIdentitySubsystem;
-import com.bitdubai.fermat_core.layer.dmp_identity.intra_user.IntraUserSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_identity.publisher.PublisherIdentitySubsystem;
-import com.bitdubai.fermat_core.layer.dmp_identity.translator.TranslatorIdentitySubsystem;
 
 /**
  * Created by natalia on 11/08/15.

@@ -93,6 +93,8 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
     final String PUBLISHER_IDENTITY_PRIVATE_KEYS_FILE_NAME = "developerIdentityPrivateKeys";
 
+    String siteURL = "http:\\www.bitDubai.com"; //;
+
     // Public constructor declarations.
 
     /**
@@ -286,7 +288,6 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
      */
     public PublisherIdentity createNewDeveloper(String alias, ECCKeyPair developerKeyPair, DeviceUser deviceUser) throws CantCreateNewDeveloperException {
 
-
         // Check the arguments.
         if (developerKeyPair == null || isEmpty(alias) || deviceUser == null) {
 
@@ -302,7 +303,7 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         }
 
 
-        // Create the new developer.
+        // Create the new publisher.
         try {
 
             logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Initializing developer record creation.", _DEFAUL_STRING, _DEFAUL_STRING);
@@ -321,6 +322,7 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
             record.setStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
             record.setStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_ALIAS_COLUMN_NAME, alias);//deviceUser.getAlias()
+            record.setStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_WEBSITE_URL_COLUMN_NAME, siteURL);//deviceUser.getAlias()
 
             //  logManager.log(PublisherIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Inserting [Alias=" + deviceUser.getAlias() + ", PK=" + developerKeyPair.getPublicKey() + "] in " + PublisherIdentityDatabaseConstants.PUBLISHER_TABLE_NAME + " table and record.", _DEFAUL_STRING, _DEFAUL_STRING);
             table.insertRecord(record);
@@ -339,8 +341,8 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
         }
 
 
-        // Return the new developer.
-        return new PublisherIdentityRecord(alias, developerKeyPair.getPublicKey(), developerKeyPair.getPrivateKey());
+        // Return the new publisher.
+        return new PublisherIdentityRecord(alias, developerKeyPair.getPublicKey(), developerKeyPair.getPrivateKey(), siteURL);
     }
 
 
@@ -400,7 +402,7 @@ public class PublisherIdentityDao implements DealsWithPluginDatabaseSystem, Deal
 
                 // Add records to list.
                 list.add(new PublisherIdentityRecord(record.getStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_ALIAS_COLUMN_NAME),
-                        record.getStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME), getPublisherIdentiyPrivateKey(record.getStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME))));
+                        record.getStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME), getPublisherIdentiyPrivateKey(record.getStringValue(PublisherIdentityDatabaseConstants.PUBLISHER_PUBLISHER_PUBLIC_KEY_COLUMN_NAME)), siteURL));
             }
 
 
