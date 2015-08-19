@@ -103,36 +103,68 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         defaultSkin = walletFactoryProject.getDefaultSkin();
         if (defaultSkin != null){
             // if a skin was defined in the project, then I will prepare the database record and add it to the transaction
+            DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME);
+
             DatabaseTableRecord defaultSkinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), defaultSkin.getId(), true);
-            transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME), defaultSkinRecord);
+            DatabaseTableFilter filter = getSkinFilter()
+            transaction.addRecordToInsert(table, defaultSkinRecord);
 
             // I will add all the skins defined, if there are more than one.
-            for (Skin skin : walletFactoryProject.getSkins()){
-                DatabaseTableRecord skinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), skin.getId(), false);
-                transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME), skinRecord);
+            if (!walletFactoryProject.getSkins().isEmpty()){
+                for (Skin skin : walletFactoryProject.getSkins()){
+                    DatabaseTableRecord skinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), skin.getId(), false);
+                    transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME), skinRecord);
+                }
             }
+
         }
 
         return transaction;
     }
 
-    private DatabaseTransaction addLanguageRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
+    private DatabaseTransaction addLanguageRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException, CantLoadTableToMemoryException {
         Language defaultLanguage = null;
 
         defaultLanguage = walletFactoryProject.getDefaultLanguage();
 
         if (defaultLanguage != null){
+            DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME);
             DatabaseTableRecord defaultLanguageRecord = getLanguageDataRecord(walletFactoryProject.getProjectPublicKey(), defaultLanguage.getId(), true);
-            transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME), defaultLanguageRecord);
+
+            DatabaseTableFilter filter = getLanguageFilter(defaultLanguage.getId().toString());
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, defaultLanguageRecord);
+            else {
+                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, defaultLanguageRecord);
+            }
 
             //I will add any other language defined
-            for (Language language : walletFactoryProject.getLanguages()){
-                DatabaseTableRecord record = getLanguageDataRecord(walletFactoryProject.getProjectPublicKey(), language.getId(), false);
-                transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME), record);
-            }
-        }
+            if (!walletFactoryProject.getLanguages().isEmpty()){
+                for (Language language : walletFactoryProject.getLanguages()){
+                    DatabaseTableRecord record = getLanguageDataRecord(walletFactoryProject.getProjectPublicKey(), language.getId(), false);
+                    filter.setValue(language.getId().toString());
+                    if (isNewRecord(table, filter))
+                        transaction.addRecordToInsert(table, record);
+                    else{
+                        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                        transaction.addRecordToUpdate(table, defaultLanguageRecord);
+                    }
 
+                }
+            }
+
+        }
         return transaction;
+    }
+
+    private DatabaseTableFilter getLanguageFilter(String value) {
+        DatabaseTableFilter filter = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME).getEmptyTableFilter();
+        filter.setColumn(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
+        filter.setType(DatabaseFilterType.EQUAL);
+        filter.setValue(value);
+
+        return filter;
     }
 
     private DatabaseTransaction addNavigationStructureRecordToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException, CantLoadTableToMemoryException {
@@ -200,7 +232,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             //I execute the transaction and persist the database side of the project.
             database.executeTransaction(transaction);
         } catch (Exception e) {
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to insert a new Factory project in the database.", null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Factory project in the database.", null);
         }
     }
 
