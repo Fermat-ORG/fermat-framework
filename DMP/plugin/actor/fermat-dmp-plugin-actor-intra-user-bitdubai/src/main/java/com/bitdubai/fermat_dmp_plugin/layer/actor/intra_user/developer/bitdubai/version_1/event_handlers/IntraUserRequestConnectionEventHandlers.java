@@ -3,8 +3,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
@@ -23,6 +26,14 @@ public class IntraUserRequestConnectionEventHandlers implements EventHandler {
     ActorIntraUserManager actorIntraUserManager;
     EventManager eventManager;
     IntraUserManager intraUserNetworkServiceManager;
+
+
+    EventMonitor eventMonitor;
+
+    public void setEventManager(EventMonitor eventMonitor){
+        this.eventMonitor = eventMonitor;
+
+    }
 
     public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager){
         this.actorIntraUserManager = actorIntraUserManager;
@@ -43,24 +54,36 @@ public class IntraUserRequestConnectionEventHandlers implements EventHandler {
     public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         if (((Service) this.actorIntraUserManager).getStatus() == ServiceStatus.STARTED){
 
-            IntraUserActorRequestConnectionEvent intraUserActorRequestConnectionEvent = (IntraUserActorRequestConnectionEvent) platformEvent;
-            this.actorIntraUserManager.receivingIntraUserRequestConnection(intraUserActorRequestConnectionEvent.getIntraUserLoggedInPublicKey(),
-                    intraUserActorRequestConnectionEvent.getIntraUserToAddName(),
-                    intraUserActorRequestConnectionEvent.getIntraUserToAddPublicKey(),
-                    intraUserActorRequestConnectionEvent.getIntraUserProfileImage());
+            try
+            {
+                IntraUserActorRequestConnectionEvent intraUserActorRequestConnectionEvent = (IntraUserActorRequestConnectionEvent) platformEvent;
+                this.actorIntraUserManager.receivingIntraUserRequestConnection(intraUserActorRequestConnectionEvent.getIntraUserLoggedInPublicKey(),
+                        intraUserActorRequestConnectionEvent.getIntraUserToAddName(),
+                        intraUserActorRequestConnectionEvent.getIntraUserToAddPublicKey(),
+                        intraUserActorRequestConnectionEvent.getIntraUserProfileImage());
 
-            /**
-             * Confirm connection on Network services
-             */
+                /**
+                 * Confirm connection on Network services
+                 */
 
-            intraUserNetworkServiceManager.confirmNotification(intraUserActorRequestConnectionEvent.getIntraUserLoggedInPublicKey(), intraUserActorRequestConnectionEvent.getIntraUserToAddPublicKey());
+                intraUserNetworkServiceManager.confirmNotification(intraUserActorRequestConnectionEvent.getIntraUserLoggedInPublicKey(), intraUserActorRequestConnectionEvent.getIntraUserToAddPublicKey());
 
 
-            /**
-             * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
-             */
-            PlatformEvent event =  eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION);
-            eventManager.raiseEvent(event);
+                /**
+                 * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
+                 */
+                PlatformEvent event =  eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION);
+                eventManager.raiseEvent(event);
+
+            }
+            catch(CantCreateIntraUserException e)
+            {
+                this.eventMonitor.handleEventException(e,platformEvent);
+            }
+            catch(Exception e)
+            {
+                this.eventMonitor.handleEventException(e,platformEvent);
+            }
 
         }
         else

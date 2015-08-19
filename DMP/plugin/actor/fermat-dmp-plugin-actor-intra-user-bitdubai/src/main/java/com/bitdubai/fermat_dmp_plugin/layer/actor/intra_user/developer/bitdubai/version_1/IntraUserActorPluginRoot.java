@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
@@ -25,7 +25,6 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconn
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserNotification;
@@ -422,14 +421,6 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
             this.intraUserActorDao.initializeDatabase();
 
-
-        /**
-         * I ask the list of pending requests to the Network Service to execute
-         */
-
-        this.processNotifications();
-
-
          /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -487,7 +478,13 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         listenersAdded.add(eventListener);
 
 
+            /**
+             * I ask the list of pending requests to the Network Service to execute
+             */
 
+            this.processNotifications();
+
+            // set plugin status Started
         this.serviceStatus = ServiceStatus.STARTED;
 
 
@@ -670,26 +667,43 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
         try
         {
-            IntraUserNotification intraUserNotification = intraUserNetworkServiceManager.getNotifications("");
-            String intraUserSedingPublicKey = intraUserNotification.getPublicKeyOfTheIntraUserSendingUsANotification();
-            switch ( intraUserNotification.getNotificationDescriptor()){
-                case ACCEPTED:
-                    this.acceptIntraUser("",intraUserSedingPublicKey);
-                    //fire event
-                case DISCONNECTED:
-                    this.disconnectIntraUser("", intraUserSedingPublicKey);
-                case RECEIVED:
-                    this.receivingIntraUserRequestConnection("", "", intraUserSedingPublicKey, null);
-                case DENIED:
-                    this.denyConnection("",intraUserSedingPublicKey);
-                default:
 
+            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getNotifications();
+
+
+            for (IntraUserNotification notification : intraUserNotificationes) {
+
+                String intraUserSedingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
+
+                switch ( notification.getNotificationDescriptor()){
+                    case ACCEPTED:
+                        this.acceptIntraUser("",intraUserSedingPublicKey);
+                        /**
+                         * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
+                         */
+                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
+
+                    case DISCONNECTED:
+                        this.disconnectIntraUser("", intraUserSedingPublicKey);
+                    case RECEIVED:
+                        this.receivingIntraUserRequestConnection("", "", intraUserSedingPublicKey, null);
+                        /**
+                         * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
+                         */
+                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
+
+                    case DENIED:
+                        this.denyConnection("",intraUserSedingPublicKey);
+                    default:
+
+                }
+
+                /**
+                 * I confirm the application in the Network Service
+                 */
+                intraUserNetworkServiceManager.confirmNotification("", intraUserSedingPublicKey);
             }
 
-            /**
-             * I confirm the application in the Network Service
-             */
-            intraUserNetworkServiceManager.confirmNotification("", intraUserSedingPublicKey);
 
         }
         catch(CantAcceptIntraUserException e)

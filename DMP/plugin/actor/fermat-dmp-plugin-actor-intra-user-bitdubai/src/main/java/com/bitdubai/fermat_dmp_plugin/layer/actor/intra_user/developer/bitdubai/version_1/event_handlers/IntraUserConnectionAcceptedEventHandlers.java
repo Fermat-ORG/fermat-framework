@@ -3,8 +3,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
@@ -23,6 +25,8 @@ public class IntraUserConnectionAcceptedEventHandlers implements EventHandler {
      */
     ActorIntraUserManager actorIntraUserManager;
     EventManager eventManager;
+    EventMonitor eventMonitor;
+
     IntraUserManager intraUserNetworkServiceManager;
 
     public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager){
@@ -35,6 +39,11 @@ public class IntraUserConnectionAcceptedEventHandlers implements EventHandler {
 
     }
 
+    public void setEventManager(EventMonitor eventMonitor){
+        this.eventMonitor = eventMonitor;
+
+    }
+
     public void setIntraUserManager( IntraUserManager intraUserNetworkServiceManager){
         this.intraUserNetworkServiceManager = intraUserNetworkServiceManager;
 
@@ -44,21 +53,34 @@ public class IntraUserConnectionAcceptedEventHandlers implements EventHandler {
     public void handleEvent(PlatformEvent platformEvent) throws FermatException {
         if (((Service) this.actorIntraUserManager).getStatus() == ServiceStatus.STARTED){
 
-            IntraUserActorConnectionAcceptedEvent intraUserActorConnectionAcceptedEvent = (IntraUserActorConnectionAcceptedEvent) platformEvent;
-            /**
-             * Change Intra User Actor Status To Connected
-             */
-            this.actorIntraUserManager.acceptIntraUser(intraUserActorConnectionAcceptedEvent.getIntraUserLoggedInPublicKey(),
-                    intraUserActorConnectionAcceptedEvent.getIntraUserToAddPublicKey());
-            /**
-             * Confirm connexion on Network services
-             */
-            intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionAcceptedEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionAcceptedEvent.getIntraUserToAddPublicKey());
-            /**
-             * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
-             */
-            PlatformEvent event =  eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION);
-            eventManager.raiseEvent(event);
+            try
+            {
+                IntraUserActorConnectionAcceptedEvent intraUserActorConnectionAcceptedEvent = (IntraUserActorConnectionAcceptedEvent) platformEvent;
+                /**
+                 * Change Intra User Actor Status To Connected
+                 */
+                this.actorIntraUserManager.acceptIntraUser(intraUserActorConnectionAcceptedEvent.getIntraUserLoggedInPublicKey(),
+                        intraUserActorConnectionAcceptedEvent.getIntraUserToAddPublicKey());
+                /**
+                 * Confirm connexion on Network services
+                 */
+                intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionAcceptedEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionAcceptedEvent.getIntraUserToAddPublicKey());
+                /**
+                 * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
+                 */
+                PlatformEvent event =  eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION);
+                eventManager.raiseEvent(event);
+
+            }
+            catch(CantAcceptIntraUserException e)
+            {
+                this.eventMonitor.handleEventException(e,platformEvent);
+            }
+
+            catch(Exception e)
+            {
+                this.eventMonitor.handleEventException(e,platformEvent);
+            }
 
         }
         else
