@@ -55,6 +55,7 @@ public class getWalletContactTest {
     @Before
     public void setUp() throws Exception {
         testPluginId = UUID.randomUUID();
+        testActorId = UUID.randomUUID();
         walletPublicKey = new ECCKeyPair().getPublicKey();
         testSearchName = "Hector";
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem);

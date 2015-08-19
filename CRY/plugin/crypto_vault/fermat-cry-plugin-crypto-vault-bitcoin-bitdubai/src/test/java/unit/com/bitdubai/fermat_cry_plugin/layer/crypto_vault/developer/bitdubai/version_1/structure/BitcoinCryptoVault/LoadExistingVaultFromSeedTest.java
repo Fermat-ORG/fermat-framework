@@ -18,7 +18,7 @@ public class LoadExistingVaultFromSeedTest {
     @Test
     public void correctLoad() throws CantCreateCryptoWalletException, IOException {
         MnemonicCode code = new MnemonicCode();
-        BitcoinCryptoVault vault = new BitcoinCryptoVault(UUID.randomUUID());
+        BitcoinCryptoVault vault = new BitcoinCryptoVault("replace_device_user_key");
         vault.loadExistingVaultFromSeed(code.toString() ,1);
 
         Assert.assertNotNull(vault);
