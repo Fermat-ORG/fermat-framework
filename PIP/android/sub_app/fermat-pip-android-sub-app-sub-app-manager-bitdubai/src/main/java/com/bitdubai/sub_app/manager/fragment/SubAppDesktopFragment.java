@@ -25,8 +25,7 @@ import com.bitdubai.sub_app.manager.R;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import android.support.v4.app.Fragment;
-
+import android.app.Fragment;
 /**
  * Created by Natalia on 12/01/2015.
  */
@@ -191,7 +190,7 @@ public class SubAppDesktopFragment extends Fragment {
             switch (item.picture)
             {
                 case "developer_sub_app":
-                    holder.imageView.setImageResource(R.drawable.developer_sub_app_1);
+                    holder.imageView.setImageResource(R.drawable.developer_nuevo);
                   holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +204,7 @@ public class SubAppDesktopFragment extends Fragment {
                     });
                     break;
                 case "wallet_factory":
-                    holder.imageView.setImageResource(R.drawable.factory_1);
+                    holder.imageView.setImageResource(R.drawable.factory_nuevo);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -218,7 +217,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_publisher":
-                    holder.imageView.setImageResource(R.drawable.publisher_1);
+                    holder.imageView.setImageResource(R.drawable.publisher_nuevo);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -232,7 +231,7 @@ public class SubAppDesktopFragment extends Fragment {
                     break;
 
                 case "wallet_store":
-                    holder.imageView.setImageResource(R.drawable.walet_store_1);
+                    holder.imageView.setImageResource(R.drawable.store_nuevo);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {

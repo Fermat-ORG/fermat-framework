@@ -53,7 +53,7 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
         /**
          * I will try to create and initialize a new DAO
          */
-        walletCryptoAddressBookDao = new WalletAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
+        walletCryptoAddressBookDao = new WalletAddressBookCryptoModuleDao(pluginDatabaseSystem, pluginId);
         walletCryptoAddressBookDao.initialize();
     }
 
@@ -72,9 +72,9 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
     }
 
     @Override
-    public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
+    public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletPublicKey(String walletPublicKey) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
         try {
-            return walletCryptoAddressBookDao.getAllWalletAddressBookModuleByWalletId(walletId);
+            return walletCryptoAddressBookDao.getAllWalletAddressBookModuleByWalletPublicKey(walletPublicKey);
         } catch (CantGetWalletAddressBookException|WalletAddressBookNotFoundException exception) {
             throw exception;
         } catch (Exception exception){
@@ -83,9 +83,9 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
     }
 
     @Override
-    public void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, UUID walletId) throws CantRegisterWalletAddressBookException {
+    public void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, String walletPublicKey) throws CantRegisterWalletAddressBookException {
         try {
-            walletCryptoAddressBookDao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletId);
+            walletCryptoAddressBookDao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletPublicKey);
         } catch (CantRegisterWalletAddressBookException exception) {
             throw exception;
         } catch (Exception exception){

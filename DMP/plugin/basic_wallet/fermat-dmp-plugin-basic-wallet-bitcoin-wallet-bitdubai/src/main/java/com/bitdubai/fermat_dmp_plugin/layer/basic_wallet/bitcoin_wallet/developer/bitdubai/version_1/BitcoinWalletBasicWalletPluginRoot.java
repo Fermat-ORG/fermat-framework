@@ -51,7 +51,7 @@ import java.util.UUID;
 public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,DatabaseManagerForDevelopers,DealsWithErrors,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Service, Plugin {
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
-    private Map<UUID, UUID> walletIds =  new HashMap<>();
+    private Map<String, UUID> walletIds =  new HashMap<>();
 
 
     /**
@@ -201,26 +201,26 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     }
 
     @Override
-    public BitcoinWalletWallet loadWallet(UUID walletId) throws CantLoadWalletException {
-       try {
-           BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
-           bitcoinWallet.setErrorManager(this.errorManager);
-           bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-           bitcoinWallet.setPluginFileSystem(pluginFileSystem);
+    public BitcoinWalletWallet loadWallet(String walletId) throws CantLoadWalletException {
+        try {
+            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
+            bitcoinWallet.setErrorManager(this.errorManager);
+            bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            bitcoinWallet.setPluginFileSystem(pluginFileSystem);
 
-           UUID internalWalletId = walletIds.get(walletId);
-           bitcoinWallet.initialize(internalWalletId);
+            UUID internalWalletId = walletIds.get(walletId);
+            bitcoinWallet.initialize(internalWalletId);
 
-           return bitcoinWallet;
-       } catch(CantInitializeBitcoinWalletBasicException exception){
-           throw new CantLoadWalletException("I can't initialize wallet",exception,"","");
-       } catch(Exception exception){
-           throw new CantLoadWalletException(CantLoadWalletException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"","");
-       }
+            return bitcoinWallet;
+        } catch(CantInitializeBitcoinWalletBasicException exception){
+            throw new CantLoadWalletException("I can't initialize wallet",exception,"","");
+        } catch(Exception exception){
+            throw new CantLoadWalletException(CantLoadWalletException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"","");
+        }
     }
 
     @Override
-    public void createWallet(UUID walletId) throws CantCreateWalletException {
+    public void createWallet(String walletId) throws CantCreateWalletException {
         try {
             BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(pluginId);
             bitcoinWallet.setErrorManager(errorManager);
@@ -244,7 +244,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         for (String stringWalletId : stringWalletIds )
             if(!stringWalletId.equals("")) {
                 String[] idPair = stringWalletId.split(",", -1);
-                walletIds.put(UUID.fromString(idPair[0]),  UUID.fromString(idPair[1]));
+                walletIds.put(idPair[0],  UUID.fromString(idPair[1]));
             }
     }
 

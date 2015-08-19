@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
@@ -63,12 +65,14 @@ public class GetTransactionsTest extends TestCase {
     BitcoinWalletWallet bitcoinWalletWallet;
 
     UUID walletId;
+    String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
         walletId = UUID.randomUUID();
+        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         nicheWalletTypeCryptoWallet.setErrorManager(errorManager);
@@ -80,24 +84,24 @@ public class GetTransactionsTest extends TestCase {
 
     @Test
     public void testGetTransactions_Success() throws Exception {
-        doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
-        nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletId);
+        doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(anyString());
+        nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletPublicKey);
     }
 
     @Test(expected=CantGetTransactionsException.class)
     public void ttestGetTransactions_CantLoadWalletException() throws Exception {
-        doThrow(new CantLoadWalletException("gasdil", null, null, null))
-                .when(bitcoinWalletManager).loadWallet(any(UUID.class));
+        doThrow(new CantLoadWalletException("MOCK", null, null, null))
+                .when(bitcoinWalletManager).loadWallet(anyString());
 
-        nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletId);
+        nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletPublicKey);
     }
 
     @Test(expected=CantGetTransactionsException.class)
     public void testGetTransactions_CantGetTransactionsException() throws Exception {
-        doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
-        doThrow(new com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException("gasdil", null, null, null))
+        doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(anyString());
+        doThrow(new com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException("MOCK", null, null, null))
         .when(bitcoinWalletWallet).getTransactions(anyInt(), anyInt());
 
-        nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletId);
+        nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletPublicKey);
     }
 }

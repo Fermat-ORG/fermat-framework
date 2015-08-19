@@ -111,10 +111,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     String lastWalletPublicKey;
 
     /**
-     * WalletFactoryProjectLanguageManager Interface member variables
+     * LanguageDescriptorFactoryProjectManager Interface member variables
      */
 
-    private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation-structure-";
+    private final String NAVIGATION_STRUCTURE_FILE_NAME = "navigation_structure";
 
     /**
      * DealsWithWalletResources
@@ -1140,7 +1140,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String languageName = null;
 
 //        try {
-//            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "BitDubai", "medium", "default", "en", "1.0.0");
+//            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0");
 //        } catch (WalletResourcesInstalationException e) {
 //            e.printStackTrace();
 //        }
@@ -1150,9 +1150,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             /**
              * Esto es hasta que tengamos las cosas andando y conectadas
              */
+
             String publicKey="reference_wallet";
-            WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
             if(walletNavigationStructure==null){
+                // testing purpose mati
                 setNavigationStructureXml(startWalletNavigationStructure());
                 walletNavigationStructure= getNavigationStructure(publicKey);
             }
@@ -1225,6 +1227,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     @Override
     public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure){
         String publiKey=walletNavigationStructure.getPublicKey();
+        System.out.println("HOLAAAAAAAAAAAAAAAAAAAA MATIIIIIIIIII");
         try {
             String navigationStructureXml = parseNavigationStructureXml(walletNavigationStructure);
             String navigationStructureName=NAVIGATION_STRUCTURE_FILE_NAME+publiKey+".xml";
@@ -1322,12 +1325,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
         runtimeTabStrip.addTab(runtimeTab);
 
-        */
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Money request");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST);
         runtimeTabStrip.addTab(runtimeTab);
+
+        */
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Contacts");
@@ -1361,14 +1365,46 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
 
-        */
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST);
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST,runtimeFragment);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST, runtimeFragment);
+
+        */
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS, runtimeFragment);
+
+
+        /**
+         * Transaction Activity
+         */
+
+        runtimeActivity= new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeActivity.setColor("#8bba9e");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#72af9c");
+        //runtimeActivity.setColor("#d07b62");
+
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#72af9c");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS, runtimeFragment);
+
+
 
         return runtimeWalletNavigationStructure;
     }

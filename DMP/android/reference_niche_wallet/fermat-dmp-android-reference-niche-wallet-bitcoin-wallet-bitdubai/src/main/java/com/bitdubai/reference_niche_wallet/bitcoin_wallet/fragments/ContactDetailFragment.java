@@ -3,7 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ReceiveFragmentDialog;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
@@ -59,7 +61,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     /**
      * Platform
      */
-    private UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    private String wallet_id = "25428311-deb3-4064-93b2-69093e859871";
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
     private CryptoWalletManager cryptoWalletManager;
@@ -72,8 +74,13 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private String accountName;
     private WalletContact walletContact;
 
+    /**
+     *  Resources
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
 
-    public static ContactDetailFragment newInstance(WalletSession walletSession, String accountName) {
+
+    public static ContactDetailFragment newInstance(WalletSession walletSession, String accountName,WalletResourcesProviderManager walletResourcesProviderManager) {
         if (accountName == null || accountName.isEmpty())
             return null;
         if (walletSession == null)
@@ -81,6 +88,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         ContactDetailFragment f = new ContactDetailFragment();
         f.setWalletSession(walletSession);
         f.setAccountName(accountName);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -115,6 +123,13 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
         }
+
+        try {
+            List<WalletContactRecord> lst= cryptoWallet.listWalletContacts(wallet_id);
+
+        } catch (CantGetAllWalletContactsException e) {
+            e.printStackTrace();
+        }
         /* Load Wallet Contact */
         walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
             @Override
@@ -144,29 +159,34 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
                 && walletContact != null) {
             SendFragment fragment = SendFragment.newInstance(walletSession, walletContact);
             fragment.fromContacts = true;
-            getActivity().getSupportFragmentManager()
+            getActivity().getFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
                     .commit();
         }else if(view.getId() == R.id.action_receive && walletContact != null){
-            ReceiveFragment fragment = ReceiveFragment.newInstance(0,walletContact,walletSession);
-            fragment.fromContacts = true;
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                    .add(R.id.fragment_container2, fragment)
-                    .attach(fragment)
-                    .show(fragment)
-                    .commit();
+//            ReceiveFragment fragment = ReceiveFragment.newInstance(0,walletContact,walletSession);
+//            fragment.fromContacts = true;
+//            getActivity().getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+//                    .add(R.id.fragment_container2, fragment)
+//                    .attach(fragment)
+//                    .show(fragment)
+//                    .commit();
+            ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(),cryptoWallet,errorManager,walletContact);
+            receiveFragmentDialog.show();
+
+            //CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
+            //cdd.show();
         }else if(view.getId() == R.id.action_money_request && walletContact != null){
-            MoneyRequestFragment fragment = MoneyRequestFragment.newInstance(0,walletContact,walletSettingsManager,walletSession);
+            MoneyRequestFragment fragment = MoneyRequestFragment.newInstance(0,walletContact,walletSettingsManager,walletSession,walletResourcesProviderManager);
             fragment.fromContacts = true;
-            getActivity().getSupportFragmentManager()
+            getActivity().getFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                     .add(R.id.fragment_container2, fragment)
                     .attach(fragment)
                     .show(fragment)
@@ -233,5 +253,9 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         }
         return contacts;
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 }
