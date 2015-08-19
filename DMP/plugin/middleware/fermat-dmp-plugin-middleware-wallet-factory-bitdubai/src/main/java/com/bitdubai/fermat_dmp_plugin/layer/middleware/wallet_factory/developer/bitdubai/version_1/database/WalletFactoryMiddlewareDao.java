@@ -9,12 +9,15 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
@@ -99,7 +102,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
         defaultSkin = walletFactoryProject.getDefaultSkin();
         if (defaultSkin != null){
-            // if n skin was defined in the project, then I will prepare the database record and add it to the transaction
+            // if a skin was defined in the project, then I will prepare the database record and add it to the transaction
             DatabaseTableRecord defaultSkinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), defaultSkin.getId(), true);
             transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME), defaultSkinRecord);
 
@@ -132,16 +135,42 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return transaction;
     }
 
-    private DatabaseTransaction addNavigationStructureRecordToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
+    private DatabaseTransaction addNavigationStructureRecordToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException, CantLoadTableToMemoryException {
         WalletNavigationStructure navigationStructure = null;
 
         navigationStructure = walletFactoryProject.getNavigationStructure();
         if (navigationStructure != null){
             DatabaseTableRecord record = getNavigationStructureData(walletFactoryProject.getProjectPublicKey(), navigationStructure.getPublicKey());
-            transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME), record);
+            DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME);
+            DatabaseTableFilter filter = getNavigationStructureFilter(navigationStructure.getPublicKey());
+            if (isNewRecord(table, filter)){
+                //If it is a new record, then I ll insert it
+                transaction.addRecordToInsert(table, record);
+            } else {
+                //if it exists, then I will update it.
+                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, record);
+            }
         }
-
         return transaction;
+    }
+
+    private DatabaseTableFilter getNavigationStructureFilter(String publicKey) {
+        DatabaseTableFilter filter = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME).getEmptyTableFilter();
+        filter.setColumn(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME);
+        filter.setType(DatabaseFilterType.EQUAL);
+        filter.setValue(publicKey);
+
+        return filter;
+    }
+
+    private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        table.loadToMemory();
+        if (table.getRecords().isEmpty())
+            return true;
+        else
+            return false;
     }
 
     /**
