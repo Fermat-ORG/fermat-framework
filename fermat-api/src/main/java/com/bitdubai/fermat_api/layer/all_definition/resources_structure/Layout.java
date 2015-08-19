@@ -11,9 +11,12 @@ public class Layout {
 
     private String filename;
 
-    public Layout(UUID id, String filename) {
+    private String name;
+
+    public Layout(UUID id, String filename,String name) {
         this.id = id;
         this.filename = filename;
+        this.name=name;
     }
 
     public UUID getId() {
@@ -30,5 +33,13 @@ public class Layout {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

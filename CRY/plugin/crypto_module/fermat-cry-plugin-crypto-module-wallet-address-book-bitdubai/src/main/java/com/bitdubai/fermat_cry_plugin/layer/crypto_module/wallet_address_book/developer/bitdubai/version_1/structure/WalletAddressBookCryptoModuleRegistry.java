@@ -53,7 +53,7 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
         /**
          * I will try to create and initialize a new DAO
          */
-        walletCryptoAddressBookDao = new WalletAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
+        walletCryptoAddressBookDao = new WalletAddressBookCryptoModuleDao(pluginDatabaseSystem, pluginId);
         walletCryptoAddressBookDao.initialize();
     }
 

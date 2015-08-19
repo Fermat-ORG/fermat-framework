@@ -47,13 +47,13 @@ public class SettersTest {
     @Test
     public void constructorTest(){
         pluginFileSystem = new MockedPluginFileSystem();
-        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, UUID.randomUUID(), UUID.randomUUID());
+        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, UUID.randomUUID(),  "replace_device_user_key");
     }
 
     @Test
     public void settersTest(){
         pluginFileSystem = new MockedPluginFileSystem();
-        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, UUID.randomUUID(), UUID.randomUUID());
+        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, UUID.randomUUID(),  "replace_device_user_key");
         transactionNotificationAgent.setErrorManager(errorManager);
         transactionNotificationAgent.setEventManager(eventManager);
         transactionNotificationAgent.setPluginId(UUID.randomUUID());

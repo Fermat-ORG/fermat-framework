@@ -1,6 +1,7 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRecord;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -52,14 +53,14 @@ public class initializateTest {
     @Test
     public void initializateTest (){
         CryptoAddress goodAddress = new CryptoAddress("mmxw6KZzLEXfnvRSVkNUkg5TrG19DiBeaD", CryptoCurrency.BITCOIN);
-        walletContactsMiddlewareDatabaseConstants = new WalletContactsMiddlewareRecord(UUID.randomUUID(),"Luis",Actors.DEVICE_USER,UUID.randomUUID(),goodAddress,UUID.randomUUID());
+        walletContactsMiddlewareDatabaseConstants = new WalletContactsMiddlewareRecord(UUID.randomUUID(),"Luis",Actors.DEVICE_USER,UUID.randomUUID(),goodAddress, new ECCKeyPair().getPublicKey());
 
         walletContactsMiddlewareDatabaseConstants.getActorId();
         walletContactsMiddlewareDatabaseConstants.getActorName();
         walletContactsMiddlewareDatabaseConstants.getActorType();
         walletContactsMiddlewareDatabaseConstants.getContactId();
         walletContactsMiddlewareDatabaseConstants.getReceivedCryptoAddress();
-        walletContactsMiddlewareDatabaseConstants.getWalletId();
+        walletContactsMiddlewareDatabaseConstants.getWalletPublicKey();
 
 
         walletContactsMiddlewareDatabaseConstants = new WalletContactsMiddlewareRecord(UUID.randomUUID(),goodAddress,"Luis");

@@ -1,11 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,24 +29,21 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private VersionCompatibility navigationStructureCompatibility;
 
-    private ScreenSize screenSize;
+    private Map<String,Resource> resources;
 
-    private Map<String,Resource> lstResources;
+    private Map<String,Layout> portraitLayouts;
 
-    private Map<String,Layout> lstPortraitLayouts;
-
-    private Map<String,Layout> lstLandscapeLayouts;
+    private Map<String,Layout> landscapeLayouts;
 
 
-    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, ScreenSize screenSize, Map<String, Resource> lstResources, Map<String, Layout> lstPortraitLayouts, Map<String, Layout> lstLandscapeLayouts) {
+    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, Map<String, Resource> resources, Map<String, Layout> portraitLayouts, Map<String, Layout> landscapeLayouts) {
         this.id = id;
         this.name = name;
         this.version = version;
-        this.navigationStructureCompatibility = navigationStructureCompatibility;
-        this.screenSize = screenSize;
-        this.lstResources = lstResources;
-        this.lstPortraitLayouts = lstPortraitLayouts;
-        this.lstLandscapeLayouts = lstLandscapeLayouts;
+        this.setNavigationStructureCompatibility(navigationStructureCompatibility);
+        this.setResources(resources);
+        this.setPortraitLayouts(portraitLayouts);
+        this.setLandscapeLayouts(landscapeLayouts);
     }
 
     public Skin(){};
@@ -86,36 +81,28 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.navigationStructureCompatibility = navigationStructureCompatibility;
     }
 
-    public Map<String, Resource> getLstResources() {
-        return lstResources;
+    public Map<String, Resource> getResources() {
+        return resources;
     }
 
-    public void setLstResources(Map<String, Resource> lstResources) {
-        this.lstResources = lstResources;
+    public void setResources(Map<String, Resource> resources) {
+        this.resources = resources;
     }
 
-    public Map<String, Layout> getLstPortraitLayouts() {
-        return lstPortraitLayouts;
+    public Map<String, Layout> getPortraitLayouts() {
+        return portraitLayouts;
     }
 
-    public void setLstPortraitLayouts(Map<String, Layout> lstPortraitLayouts) {
-        this.lstPortraitLayouts = lstPortraitLayouts;
+    public void setPortraitLayouts(Map<String, Layout> portraitLayouts) {
+        this.portraitLayouts = portraitLayouts;
     }
 
-    public Map<String, Layout> getLstLandscapeLayouts() {
-        return lstLandscapeLayouts;
+    public Map<String, Layout> getLandscapeLayouts() {
+        return landscapeLayouts;
     }
 
-    public void setLstLandscapeLayouts(Map<String, Layout> lstLandscapeLayouts) {
-        this.lstLandscapeLayouts = lstLandscapeLayouts;
-    }
-
-    public ScreenSize getScreenSize() {
-        return screenSize;
-    }
-
-    public void setScreenSize(ScreenSize screenSize) {
-        this.screenSize = screenSize;
+    public void setLandscapeLayouts(Map<String, Layout> landscapeLayouts) {
+        this.landscapeLayouts = landscapeLayouts;
     }
 
     @Override
@@ -124,11 +111,10 @@ public class Skin implements Serializable {//implements FermatSkin {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", version=" + version +
-                ", screenSize= " + screenSize.toString() +
                 ", navigationStructureCompatibility=" + navigationStructureCompatibility +
-                ", lstResources=" + lstResources +
-                ", lstPortraitLayouts=" + lstPortraitLayouts +
-                ", lstLandscapeLayouts=" + lstLandscapeLayouts +
+                ", resources=" + resources +
+                ", portraitLayouts=" + portraitLayouts +
+                ", landscapeLayouts=" + landscapeLayouts +
                 '}';
     }
 }
