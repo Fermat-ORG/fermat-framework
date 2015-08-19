@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleRegistry;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class GetAllWalletAddressBookByWalletIdTest extends TestCase {
+public class GetAllWalletAddressBookByWalletPublicKeyTest extends TestCase {
 
     @Mock
     ErrorManager errorManager;
@@ -50,13 +51,13 @@ public class GetAllWalletAddressBookByWalletIdTest extends TestCase {
 
     WalletAddressBookCryptoModuleRegistry registry;
 
-    UUID walletId;
+    String walletPublicKey;
 
     UUID pluginId;
 
     @Before
     public void setUp() throws Exception {
-        walletId = UUID.randomUUID();
+        walletPublicKey = new ECCKeyPair().getPublicKey();
         pluginId = UUID.randomUUID();
         registry = new WalletAddressBookCryptoModuleRegistry();
         registry.setErrorManager(errorManager);
@@ -68,7 +69,7 @@ public class GetAllWalletAddressBookByWalletIdTest extends TestCase {
     }
 
     @Test
-    public void testGetAllWalletAddressBookByWalletId_NotNull() throws Exception {
+    public void testGetAllWalletAddressBookByWalletPublicKey_NotNull() throws Exception {
         when(databaseTableRecord.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE)).thenReturn(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET.getCode());
         when(databaseTableRecord.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY)).thenReturn(CryptoCurrency.BITCOIN.getCode());
         List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
@@ -76,26 +77,26 @@ public class GetAllWalletAddressBookByWalletIdTest extends TestCase {
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(database.getTable(anyString())).thenReturn(databaseTable);
 
-        assertNotNull(registry.getAllWalletCryptoAddressBookByWalletId(walletId));
+        assertNotNull(registry.getAllWalletCryptoAddressBookByWalletPublicKey(walletPublicKey));
     }
 
     @Test(expected=CantGetWalletAddressBookException.class)
-    public void testGetAllWalletAddressBookByWalletId_walletIdNull_CantGetWalletAddressBookException() throws Exception {
-        registry.getAllWalletCryptoAddressBookByWalletId(null);
+    public void testGetAllWalletAddressBookByWalletPublicKey_walletPublicKeyNull_CantGetWalletAddressBookException() throws Exception {
+        registry.getAllWalletCryptoAddressBookByWalletPublicKey(null);
     }
 
     @Test(expected=WalletAddressBookNotFoundException.class)
-    public void testGetAllWalletAddressBookByWalletId_WalletAddressBookNotFoundException() throws Exception {
+    public void testGetAllWalletAddressBookByWalletPublicKey_WalletAddressBookNotFoundException() throws Exception {
         when(database.getTable(anyString())).thenReturn(databaseTable);
 
-        registry.getAllWalletCryptoAddressBookByWalletId(walletId);
+        registry.getAllWalletCryptoAddressBookByWalletPublicKey(walletPublicKey);
     }
 
     @Test(expected=CantGetWalletAddressBookException.class)
-    public void testGetAllWalletAddressBookByWalletId_CantLoadTableToMemoryException_WalletAddressBookNotFoundException() throws Exception {
+    public void testGetAllWalletAddressBookByWalletPublicKey_CantLoadTableToMemoryException_WalletAddressBookNotFoundException() throws Exception {
         doThrow(new CantLoadTableToMemoryException()).when(databaseTable).loadToMemory();
         when(database.getTable(anyString())).thenReturn(databaseTable);
 
-        registry.getAllWalletCryptoAddressBookByWalletId(walletId);
+        registry.getAllWalletCryptoAddressBookByWalletPublicKey(walletPublicKey);
     }
 }

@@ -7,6 +7,14 @@ import java.util.UUID;
  */
 public interface Developer {
     public UUID getId();
+
     public String getName();
+
     public String getPublicKey();
+
+    public void setId(UUID id);
+
+    public void setName(String name);
+
+    public void setPublicKey(String publicKey);
 }
