@@ -551,7 +551,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                     finalWalletVersion,
                                                     videoPreviews,
                                                     null, // TODO: LanguageURL cambiar por la pagina del publisher
-                                                    0,    // TODO: skinSizeInBytes
+                                                    0,    // TODO: languajeSizeInBytes
                                                     null, // TODO: designer
                                                     Boolean.TRUE);
 
