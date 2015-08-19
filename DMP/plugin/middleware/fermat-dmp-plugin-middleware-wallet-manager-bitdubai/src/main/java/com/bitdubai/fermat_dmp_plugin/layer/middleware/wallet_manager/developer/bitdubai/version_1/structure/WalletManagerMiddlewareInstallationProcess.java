@@ -44,7 +44,6 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
     /**
      * Constructor
      */
-
     public WalletManagerMiddlewareInstallationProcess(WalletResourcesInstalationManager walletResources, WalletCategory walletCategory, String walletPlatformIdentifier, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.walletResources = walletResources;
         this.walletCategory = walletCategory;
@@ -68,7 +67,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
 
         try {
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
-            walletManagerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
+            walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
             return true;
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantExecuteDatabaseOperationException(exception,"Error checking if the wallet is installed","Please, check the cause");

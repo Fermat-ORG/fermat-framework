@@ -15,15 +15,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallSkinException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRemoveWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRenameWalletException;
@@ -69,7 +66,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletInstalledEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -140,13 +136,73 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
      */
     UUID pluginId;
 
+    /**
+     * Service Interface member variables.
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+    /**
+     * This method let the client create a new wallet of a type already intalled by the user.
+     * Clone Wallet
+     *
+     */
+    public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException{
 
+        try
+        {
+            /**
+             * I'll first get de installed wallet with walletIdInTheDevice params (public key)
+             */
+            WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+
+            InstalledWallet installedWallet = walletManagerDao.getInstalledWallet(walletIdInTheDevice);
+            /**
+             * Call the wallet resource to install new wallet
+             */
+            // TODO: Le tendria que pasar la wallet public key
+            walletResources.installCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getSkinsId().get(0).getAlias(), installedWallet.getLanguagesId().get(0).getLanguage().value(), installedWallet.getWalletNavigationStructureVersion());
+
+            /**
+             * I create a new clone wallet on database
+             */
+            ECCKeyPair keyPair = new ECCKeyPair();
+
+            walletManagerDao.persistWallet(keyPair.getPublicKey(),keyPair.getPrivateKey(),installedWallet.getWalletDeviceUserPublicKey(),installedWallet.getWalletCategory(),newName, installedWallet.getWalletIcon(), installedWallet.getWalletPlatformIdentifier(), installedWallet.getWalletCatalogId(), installedWallet.getWalletVersion(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getWalletNavigationStructureVersion());
+
+            /**
+             * I persist skin and language on database
+             */
+            walletManagerDao.persistWalletSkin(installedWallet.getWalletCatalogId(),installedWallet.getSkinsId().get(0).getId(),installedWallet.getSkinsId().get(0).getAlias(),installedWallet.getSkinsId().get(0).getPreview(),installedWallet.getSkinsId().get(0).getVersion());
+            walletManagerDao.persistWalletLanguage(installedWallet.getWalletCatalogId(),installedWallet.getLanguagesId().get(0).getId(),installedWallet.getLanguagesId().get(0).getLanguage(),installedWallet.getLanguagesId().get(0).getLabel(),installedWallet.getLanguagesId().get(0).getVersion());
+
+        }
+        catch (CantPersistWalletSkinException ex)
+        {
+            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
+        }
+        catch (CantPersistWalletLanguageException ex)
+        {
+            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
+        }
+        catch (WalletResourcesInstalationException ex)
+        {
+            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
+        }
+        catch (CantGetInstalledWalletsException e){
+            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
+        }
+        catch (CantExecuteDatabaseOperationException e){
+            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
+        }
+        catch (Exception exception){
+            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",FermatException.wrapException(exception), null, null);
+        }
+
+    }
 
     /*
      * DatabaseManagerForDevelopers interface methods implementation
      */
-
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
 
@@ -175,16 +231,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        } catch(Exception exception){
+            FermatException e = new CantDeliverDatabaseException("Unexpected Exception",exception,"WalletId: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
     }
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
 
     @Override
     public void start() throws CantStartPluginException {
@@ -203,7 +256,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception){
-                throw new CantStartPluginException("Cannot start WalletmanagerMiddleware plugin.", FermatException.wrapException(exception), null, null);
+                throw new CantStartPluginException("Cannot start WalletManagerMiddleware plugin.", FermatException.wrapException(exception), null, null);
             }
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             /**
@@ -216,7 +269,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
                 throw new CantStartPluginException();
             }
         } catch (Exception exception){
-            throw new CantStartPluginException("Cannot start WalletmanagerMiddleware plugin.", FermatException.wrapException(exception), null, null);
+            throw new CantStartPluginException("Cannot start WalletManagerMiddleware plugin.", FermatException.wrapException(exception), "Unexpected Exception", "Check the casue");
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -242,7 +295,6 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         return this.serviceStatus;
     }
 
-
     /**
      * DealWithErrors Interface implementation. 
      */
@@ -259,13 +311,9 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         this.pluginId = pluginId;
     }
 
-
-
-
     /**
      * DealsWithLogger Interface implementation.
      */
-
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
@@ -274,7 +322,6 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
     /**
      * LogManagerForDevelopers Interface implementation.
      */
-
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
@@ -320,73 +367,6 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
      */
 
     /**
-     * This method let the client create a new wallet of a type already intalled by the user.
-     * Clone Wallet
-     *
-     */
-    public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException{
-
-        try
-        {
-            /**
-             * I'll first get de installed wallet with walletIdInTheDevice params (public key)
-             */
-
-            WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
-
-            InstalledWallet installedWallet = walletManagerDao.getInstalletWallet(walletIdInTheDevice);
-            /**
-             * Call the wallet resource to install new wallet
-             */
-            // TODO: Le tendria que pasar la wallet public key
-            walletResources.installCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getSkinsId().get(0).getAlias(), installedWallet.getLanguagesId().get(0).getLanguage().value(), installedWallet.getWalletNavigationStructureVersion());
-
-            /**
-             * I create a new clone wallet on database
-             */
-            ECCKeyPair keyPair = new ECCKeyPair();
-
-            walletManagerDao.persistWallet(keyPair.getPublicKey(),keyPair.getPrivateKey(),installedWallet.getWalletDeviceUserPublicKey(),installedWallet.getWalletCategory(),newName, installedWallet.getWalletIcon(), installedWallet.getWalletPlatformIdentifier(), installedWallet.getWalletCatalogId(), installedWallet.getWalletVersion(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getWalletNavigationStructureVersion());
-
-            /**
-             * I persist skin and language on database
-             */
-
-            walletManagerDao.persistWalletSkin(installedWallet.getWalletCatalogId(),installedWallet.getSkinsId().get(0).getId(),installedWallet.getSkinsId().get(0).getAlias(),installedWallet.getSkinsId().get(0).getPreview(),installedWallet.getSkinsId().get(0).getVersion());
-
-            walletManagerDao.persistWalletLanguage(installedWallet.getWalletCatalogId(),installedWallet.getLanguagesId().get(0).getId(),installedWallet.getLanguagesId().get(0).getLanguage(),installedWallet.getLanguagesId().get(0).getLabel(),installedWallet.getLanguagesId().get(0).getVersion());
-
-        }
-        catch (CantPersistWalletSkinException ex)
-        {
-
-            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
-        catch (CantPersistWalletLanguageException ex)
-        {
-
-            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
-        catch (WalletResourcesInstalationException ex)
-        {
-
-            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
-        catch (CantGetInstalledWalletsException e){
-            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
-        }
-        catch (CantExecuteDatabaseOperationException e){
-            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
-        }
-        catch (Exception exception){
-            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",FermatException.wrapException(exception), null, null);
-        }
-
-
-    }
-
-
-    /**
      * This method returns the list of installed wallets in the device
      *
      */
@@ -396,7 +376,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
-            installedWallets = walletManagerDao.getInstalletWallets();
+            installedWallets = walletManagerDao.getInstalledWallets();
         }
         catch (CantGetInstalledWalletsException e){
             throw new CantListWalletsException("CAN'T INSTALL REQUESTED Language",e, null, null);
@@ -448,20 +428,17 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              */
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
-            InstalledWallet installedWallet = walletManagerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
+            InstalledWallet installedWallet = walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
 
             /**
              * Call Wallet Resource to install Language
              */
-
             walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), languageId.toString(), language.value());
 
             /**
              * Save language in the Data Base
              */
-
             walletManagerDao.persistWalletLanguage(walletCatalogueId, languageId, language, label, version);
-
 
         }
         catch (WalletResourcesInstalationException e){
@@ -496,7 +473,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              */
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
-            InstalledWallet installedWallet = walletManagerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
+            InstalledWallet installedWallet = walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
 
             /**
              * Call Wallet Resource to install Skin
@@ -541,7 +518,6 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         try {
 
             eventManager.raiseEvent(new WalletInstalledEvent(EventType.WALLET_INSTALLED));
-
             return new WalletManagerMiddlewareInstallationProcess(this.walletResources,walletCategory,walletPlatformIdentifier,this.pluginDatabaseSystem,pluginId);
 
         } catch (Exception e){
@@ -565,7 +541,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Get installed wallet info
              */
-            InstalledWallet installedWallet = walletMangerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
+            InstalledWallet installedWallet = walletMangerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
 
             /**
              * Get language information
@@ -609,7 +585,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             WalletManagerMiddlewareDao walletMangerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
 
-            InstalledWallet installedWallet = walletMangerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
+            InstalledWallet installedWallet = walletMangerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
 
             /**
              * Get skin information
@@ -619,27 +595,23 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Conected with Wallet Resource to unistalld resources
              */
-
-
            walletResources.unninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(),true);
             /**
              * I delete skin from database
              */
             walletMangerDao.deleteWalletSkin(walletCatalogueId, skinId);
 
-
-
         } catch (WalletResourcesUnninstallException e){
-            throw new CantUninstallSkinException("CAN'T UNISTALL WALLET SKIN",e, null, null);
+            throw new CantUninstallSkinException("CAN'T UNINSTALL WALLET SKIN",e, null, null);
 
         } catch (CantDeleteWalletSkinException e){
-            throw new CantUninstallSkinException("CAN'T UNISTALL REQUESTED ON_REVISION",e, null, null);
+            throw new CantUninstallSkinException("CAN'T UNINSTALL REQUESTED ON_REVISION",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantUninstallSkinException("CAN'T UNISTALL REQUESTED ON_REVISION",e, null, null);
+            throw new CantUninstallSkinException("CAN'T UNINSTALL REQUESTED ON_REVISION",e, null, null);
         }
         catch (Exception exception){
-            throw new CantUninstallSkinException("CAN'T UNISTALL REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
+            throw new CantUninstallSkinException("CAN'T UNINSTALL REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -658,16 +630,13 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              */
             WalletManagerMiddlewareDao walletMangerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
-
-            InstalledWallet installedWallet = walletMangerDao.getInstalletWallet(walletIdInThisDevice);
-
+            InstalledWallet installedWallet = walletMangerDao.getInstalledWallet(walletIdInThisDevice);
             /**
              * Conected with Wallet Resource to unistalld resources
              */
             //TODO: Falta que reciba el Public key de la wallet y la lista de skins y language instalados
 
             walletResources.unninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(),true);
-
 
             /**
              * Delete wallet for DataBase
@@ -723,7 +692,6 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         try
         {
             WalletManagerMiddlewareDao walletDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
-
             walletDao.changeWalletName(walletIdInTheDevice, newName);
 
         } catch (CantUpdateWalletNameException e){
