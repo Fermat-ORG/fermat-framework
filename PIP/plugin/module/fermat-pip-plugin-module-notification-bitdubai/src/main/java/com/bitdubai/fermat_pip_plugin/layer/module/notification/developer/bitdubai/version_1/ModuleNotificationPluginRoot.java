@@ -1,25 +1,28 @@
 package com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.event_handlers.NewNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.structure.NotificationEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +36,7 @@ import java.util.regex.Pattern;
  * @since Java JDK 1.7
  */
 
-public class ModuleNotificationPluginRoot implements  DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service, Plugin {
+public class ModuleNotificationPluginRoot implements  DealsWithErrors,DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,NotificationManager, Service, Plugin {
 
 
     /**
@@ -55,6 +58,16 @@ public class ModuleNotificationPluginRoot implements  DealsWithErrors, DealsWith
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
+    /**
+     * PlatformService Interface member variables.
+     */
+    List<EventListener> listenersAdded = new ArrayList<>();
+
+    /**
+     * Deals with event manager
+     */
+    private EventManager eventManager;
+
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -72,6 +85,7 @@ public class ModuleNotificationPluginRoot implements  DealsWithErrors, DealsWith
      *  Events pool
      */
     List<NotificationEvent> poolNotification;
+
 
     /**
      * Service Interface implementation.
@@ -141,4 +155,29 @@ public class ModuleNotificationPluginRoot implements  DealsWithErrors, DealsWith
         this.pluginFileSystem=pluginFileSystem;
     }
 
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    private void setUpEventListeners(){
+
+        EventListener eventListenerNewNotification = eventManager.getNewListener(EventType.NEW_NOTIFICATION);
+        EventHandler eventHandlerNewNotification = new NewNotificationHandler(this);
+        eventListenerNewNotification.setEventHandler(eventHandlerNewNotification);
+        eventManager.addListener(eventListenerNewNotification);
+        listenersAdded.add(eventListenerNewNotification);
+
+
+    }
+
+    @Override
+    public void addNotification(String notificationTitle, String textTitle, String textBody) {
+
+    }
+
+    @Override
+    public List<com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent> getPoolNotification() {
+        return null;
+    }
 }
