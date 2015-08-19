@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
 
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/23/15.
  */
-public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem {
+public class DetailedCatalogItemImpl implements DetailedCatalogItem {
 
     Language language;
     List<Language> languages;
@@ -25,11 +26,12 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
     Version platformInitialVersion;
     Version platformFinalVersion;
     Developer developer;
+    Designer designer;
 
     /**
      * Default constructor
      */
-    public DetailedCatalogItem() {
+    public DetailedCatalogItemImpl() {
     }
 
     /**
@@ -42,7 +44,7 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
      * @param platformInitialVersion
      * @param platformFinalVersion
      */
-    public DetailedCatalogItem(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, Developer developer) {
+    public DetailedCatalogItemImpl(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, Developer developer, Designer designer) {
         this.language = language;
         this.languages = languages;
         this.defaultSkin = defaultSkin;
@@ -51,6 +53,7 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
         this.platformInitialVersion = platformInitialVersion;
         this.platformFinalVersion = platformFinalVersion;
         this.developer = developer;
+        this.designer = designer;
     }
 
     @Override
@@ -89,9 +92,10 @@ public class DetailedCatalogItem implements com.bitdubai.fermat_api.layer.dmp_ne
     }
 
     @Override
-    public Developer getDeveloper() {
-        return developer;
-    }
+    public Developer getDeveloper() { return developer; }
+
+    @Override
+    public Designer getDesigner() {return designer; }
 
     public void setLanguage(Language language) {
         this.language = language;

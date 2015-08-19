@@ -9,6 +9,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -74,13 +75,13 @@ public class ComponentVersionDetailDao {
     }
 
     /**
-     * Method that find an ComponentVersionDetailMiddlewareImpl by id in the data base.
+     * Method that find an ComponentVersionDetailImpl by id in the data base.
      *
      *  @param id Long id.
-     *  @return ComponentVersionDetailMiddlewareImpl found.
+     *  @return ComponentVersionDetailImpl found.
      *  @throws CantReadRecordDataBaseException
      */
-    public ComponentVersionDetailMiddlewareImpl findById (String id) throws CantReadRecordDataBaseException {
+    public ComponentVersionDetail findById (String id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
@@ -104,12 +105,12 @@ public class ComponentVersionDetailDao {
 
 
             /*
-             * 3 - Convert into ComponentVersionDetailMiddlewareImpl objects
+             * 3 - Convert into ComponentVersionDetailImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 3.1 - Create and configure a  ComponentVersionDetailMiddlewareImpl
+                 * 3.1 - Create and configure a  ComponentVersionDetailImpl
                  */
                 walletPublishedMiddlewareInformation = constructFrom(record);
             }
@@ -131,13 +132,13 @@ public class ComponentVersionDetailDao {
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All ComponentVersionDetailMiddlewareImpl.
+     *  @return All ComponentVersionDetailImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ComponentVersionDetailMiddlewareImpl> findAll () throws CantReadRecordDataBaseException {
+    public List<ComponentVersionDetail> findAll () throws CantReadRecordDataBaseException {
 
 
-        List<ComponentVersionDetailMiddlewareImpl> list = null;
+        List<ComponentVersionDetail> list = null;
 
         try {
 
@@ -153,18 +154,18 @@ public class ComponentVersionDetailDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of ComponentVersionDetailMiddlewareImpl objects
+             * 3 - Create a list of ComponentVersionDetailImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ComponentVersionDetailMiddlewareImpl objects
+             * 4 - Convert into ComponentVersionDetailImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  ComponentVersionDetailMiddlewareImpl
+                 * 4.1 - Create and configure a  ComponentVersionDetailImpl
                  */
                 ComponentVersionDetailMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
@@ -197,10 +198,10 @@ public class ComponentVersionDetailDao {
      * the column name are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      *  @see WalletPublisherMiddlewareDatabaseConstants
-     *  @return All ComponentVersionDetailMiddlewareImpl.
+     *  @return All ComponentVersionDetailImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<ComponentVersionDetailMiddlewareImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<ComponentVersionDetail> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -211,7 +212,7 @@ public class ComponentVersionDetailDao {
         }
 
 
-        List<ComponentVersionDetailMiddlewareImpl> list = null;
+        List<ComponentVersionDetail> list = null;
 
         try {
 
@@ -228,18 +229,18 @@ public class ComponentVersionDetailDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 3 - Create a list of ComponentVersionDetailMiddlewareImpl objects
+             * 3 - Create a list of ComponentVersionDetailImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into ComponentVersionDetailMiddlewareImpl objects
+             * 4 - Convert into ComponentVersionDetailImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  ComponentVersionDetailMiddlewareImpl
+                 * 4.1 - Create and configure a  ComponentVersionDetailImpl
                  */
                 ComponentVersionDetailMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
@@ -273,10 +274,10 @@ public class ComponentVersionDetailDao {
      * the key are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
      * @param filters
-     * @return List<ComponentVersionDetailMiddlewareImpl>
+     * @return List<ComponentVersionDetailImpl>
      * @throws CantReadRecordDataBaseException
      */
-    public List<ComponentVersionDetailMiddlewareImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<ComponentVersionDetail> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -284,7 +285,7 @@ public class ComponentVersionDetailDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<ComponentVersionDetailMiddlewareImpl> list = null;
+        List<ComponentVersionDetail> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -316,18 +317,18 @@ public class ComponentVersionDetailDao {
             List<DatabaseTableRecord> records = walletPublishedMiddlewareInformationTable.getRecords();
 
             /*
-             * 4 - Create a list of ComponentVersionDetailMiddlewareImpl objects
+             * 4 - Create a list of ComponentVersionDetailImpl objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into ComponentVersionDetailMiddlewareImpl objects
+             * 5 - Convert into ComponentVersionDetailImpl objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 5.1 - Create and configure a  ComponentVersionDetailMiddlewareImpl
+                 * 5.1 - Create and configure a  ComponentVersionDetailImpl
                  */
                 ComponentVersionDetailMiddlewareImpl walletPublishedMiddlewareInformation = constructFrom(record);
 
@@ -358,7 +359,7 @@ public class ComponentVersionDetailDao {
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param entity ComponentVersionDetailMiddlewareImpl to create.
+     *  @param entity ComponentVersionDetailImpl to create.
      *  @throws CantInsertRecordDataBaseException
      */
     public void create (ComponentVersionDetailMiddlewareImpl entity) throws CantInsertRecordDataBaseException {
@@ -399,7 +400,7 @@ public class ComponentVersionDetailDao {
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity ComponentVersionDetailMiddlewareImpl to update.
+     *  @param entity ComponentVersionDetailImpl to update.
      *  @throws CantUpdateRecordDataBaseException
      */
     public void update(ComponentVersionDetailMiddlewareImpl entity) throws CantUpdateRecordDataBaseException {
@@ -475,11 +476,11 @@ public class ComponentVersionDetailDao {
 
 
     /**
-     * Construct a ComponentVersionDetailMiddlewareImpl whit the values of the table record pass
+     * Construct a ComponentVersionDetailImpl whit the values of the table record pass
      * by parameter
      *
      * @param record with values from the table
-     * @return ComponentVersionDetailMiddlewareImpl setters the values from table
+     * @return ComponentVersionDetailImpl setters the values from table
      */
     private ComponentVersionDetailMiddlewareImpl constructFrom(DatabaseTableRecord record){
 

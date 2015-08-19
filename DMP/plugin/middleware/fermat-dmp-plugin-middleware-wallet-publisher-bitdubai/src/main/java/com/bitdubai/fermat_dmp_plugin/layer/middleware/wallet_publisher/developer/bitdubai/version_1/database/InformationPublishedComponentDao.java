@@ -9,6 +9,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -92,7 +93,7 @@ public class InformationPublishedComponentDao {
      *  @return InformationPublishedComponentMiddlewareImpl found.
      *  @throws CantReadRecordDataBaseException
      */
-    public InformationPublishedComponentMiddlewareImpl findById (String id) throws CantReadRecordDataBaseException {
+    public InformationPublishedComponent findById (UUID id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
@@ -106,7 +107,7 @@ public class InformationPublishedComponentDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable =  getDatabaseTable();
-            incomingMessageTable.setStringFilter(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.setStringFilter(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_FIRST_KEY_COLUMN, id.toString(), DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -146,10 +147,10 @@ public class InformationPublishedComponentDao {
      *  @return All InformationPublishedComponentMiddlewareImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<InformationPublishedComponentMiddlewareImpl> findAll () throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponent> findAll () throws CantReadRecordDataBaseException {
 
 
-        List<InformationPublishedComponentMiddlewareImpl> list = null;
+        List<InformationPublishedComponent> list = null;
 
         try {
 
@@ -212,7 +213,7 @@ public class InformationPublishedComponentDao {
      *  @return All InformationPublishedComponentMiddlewareImpl.
      *  @throws CantReadRecordDataBaseException
      */
-    public List<InformationPublishedComponentMiddlewareImpl> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponent> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -223,7 +224,7 @@ public class InformationPublishedComponentDao {
         }
 
 
-        List<InformationPublishedComponentMiddlewareImpl> list = null;
+        List<InformationPublishedComponent> list = null;
 
         try {
 
@@ -288,7 +289,7 @@ public class InformationPublishedComponentDao {
      * @return List<InformationPublishedComponentMiddlewareImpl>
      * @throws CantReadRecordDataBaseException
      */
-    public List<InformationPublishedComponentMiddlewareImpl> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<InformationPublishedComponent> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -296,7 +297,7 @@ public class InformationPublishedComponentDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<InformationPublishedComponentMiddlewareImpl> list = null;
+        List<InformationPublishedComponent> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -561,7 +562,7 @@ public class InformationPublishedComponentDao {
             informationPublishedComponent.setStatus(ComponentPublishedInformationStatus.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME)));
             informationPublishedComponent.setStatusTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME)));
             informationPublishedComponent.setPublicationTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME)));
-            informationPublishedComponent.setPublisherIdentityPublicKey(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));
+            informationPublishedComponent.setPublisherIdentityPublicKey(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
             informationPublishedComponent.setSignature(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME));
 
         } catch (InvalidParameterException e) {
@@ -615,9 +616,9 @@ public class InformationPublishedComponentDao {
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME,  walletPublishedMiddlewareInformation.getMainScreenShotImg().getFileId().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME,             walletPublishedMiddlewareInformation.getVideoUrl().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME,                walletPublishedMiddlewareInformation.getStatus().getCode());
-        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME, walletPublishedMiddlewareInformation.getStatusTimestamp().getTime());
+        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME,      walletPublishedMiddlewareInformation.getStatusTimestamp().getTime());
         entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME,   walletPublishedMiddlewareInformation.getPublicationTimestamp().getTime());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, walletPublishedMiddlewareInformation.getPublisherIdentityPublicKey().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, walletPublishedMiddlewareInformation.getPublisherIdentityPublicKey());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME, walletPublishedMiddlewareInformation.getSignature());
 
         /*

@@ -94,7 +94,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletDescriptorFactoryProjectMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletSkin, DealsWithWalletLanguage, LogManagerForDevelopers, Plugin, Service, WalletDescriptorFactoryProjectManager {
+public class WalletFactoryProjectMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletSkin, DealsWithWalletLanguage, LogManagerForDevelopers, Plugin, Service, WalletDescriptorFactoryProjectManager {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -444,7 +444,7 @@ public class WalletDescriptorFactoryProjectMiddlewarePluginRoot implements Datab
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletDescriptorFactoryProjectMiddlewarePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryProjectMiddlewarePluginRoot");
 
         /**
          * I return the values.
@@ -463,11 +463,11 @@ public class WalletDescriptorFactoryProjectMiddlewarePluginRoot implements Datab
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (WalletDescriptorFactoryProjectMiddlewarePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                WalletDescriptorFactoryProjectMiddlewarePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                WalletDescriptorFactoryProjectMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (WalletFactoryProjectMiddlewarePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                WalletFactoryProjectMiddlewarePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                WalletFactoryProjectMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                WalletDescriptorFactoryProjectMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                WalletFactoryProjectMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_android_api.layer.definition.wallet.Utils;
+package com.bitdubai.fermat_android_api.layer.definition.wallet.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
