@@ -238,17 +238,17 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
     @Override
     public WalletFactoryProject getWalletFactoryProjectByPublicKey(String publicKey) throws CantGetWalletFactoryProjectException {
-        return null;
+        return walletFactoryProjectMiddlewareManager.getWalletFactoryProject(publicKey);
     }
 
     @Override
     public List<WalletFactoryProject> getWalletFactoryProjectByState(WalletFactoryProjectState walletFactoryProjectState) throws CantGetWalletFactoryProjectException {
-        return null;
+        return walletFactoryProjectMiddlewareManager.getWalletFactoryProjectsByState(walletFactoryProjectState);
     }
 
     @Override
     public List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectException {
-        return null;
+        return walletFactoryProjectMiddlewareManager.getAllFactoryProjects();
     }
 
     /**

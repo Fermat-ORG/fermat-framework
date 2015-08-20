@@ -7,13 +7,15 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.XML;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -23,10 +25,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.MissingProjectDataException;
 
+import org.apache.commons.codec.language.bm.Lang;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,10 +73,13 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
         this.pluginFileSystem = pluginFileSystem;
     }
 
-
-    private void saveWalletFactoryProjectDatainDatabase(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
+    private WalletFactoryMiddlewareDao getDao(){
         WalletFactoryMiddlewareDao dao = new WalletFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
-        dao.saveWalletFactoryProjectData(walletFactoryProject);
+        return dao;
+    }
+
+    private void saveWalletFactoryProjectDataInDatabase(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
+        getDao().saveWalletFactoryProjectData(walletFactoryProject);
     }
 
     private void saveWalletFactoryProjectSkinXML(WalletFactoryProject walletFactoryProject) throws CantCreateFileException, CantPersistFileException {
@@ -158,7 +167,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
      */
     public void saveWalletFactoryProject(WalletFactoryProject walletFactoryProject) throws CantCreateWalletFactoryProjectException {
         try {
-            saveWalletFactoryProjectDatainDatabase(walletFactoryProject);
+            saveWalletFactoryProjectDataInDatabase(walletFactoryProject);
             saveWalletFactoryProjectSkinXML(walletFactoryProject);
             saveWalletFactoryProjectLanguageXML(walletFactoryProject);
             saveWalletFactoryProjectNavigationStructureXML(walletFactoryProject);
@@ -320,6 +329,232 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
         }
     }
 
+    private Skin loadSkinFromXML(String projectPublicKey, UUID id) throws FileNotFoundException, CantCreateFileException {
+        Skin skin;
 
+        PluginTextFile skinFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, id.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        skin = (Skin) XMLParser.parseXML(skinFile.getContent(), Skin.class);
+        return skin;
+
+    }
+
+    private WalletNavigationStructure loadNavigationStructureFromXML(String projectPublicKey, String publicKey) throws FileNotFoundException, CantCreateFileException {
+        WalletNavigationStructure navigationStructure;
+
+        PluginTextFile navigationStructureFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, publicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        navigationStructure = (WalletNavigationStructure) XMLParser.parseXML(navigationStructureFile.getContent(), WalletNavigationStructure.class);
+        return navigationStructure;
+
+    }
+
+    private Language loadLanguageFromXML(String projectPublicKey, UUID id) throws FileNotFoundException, CantCreateFileException {
+        Language language;
+
+        PluginTextFile languageFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, id.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        language = (Language) XMLParser.parseXML(languageFile.getContent(), Language.class);
+        return language;
+    }
+
+    private List<WalletFactoryProject> getWalletFactoryProjects(DatabaseTableFilter filter) throws DatabaseOperationException, CantLoadTableToMemoryException, FileNotFoundException, CantCreateFileException {
+        List<WalletFactoryProject> walletFactoryProjects = new ArrayList<>();
+
+        for (WalletFactoryProject walletFactoryProject : getDao().getWalletFactoryProjects(filter)){
+            //I will re create the skin object from the XML files using the Ids saved in database
+            if (walletFactoryProject.getDefaultSkin() != null)
+                walletFactoryProject.setDefaultSkin(loadSkinFromXML(walletFactoryProject.getProjectPublicKey(), walletFactoryProject.getDefaultSkin().getId()));
+
+            List<Skin> skins = new ArrayList<>();
+            for (Skin skin : walletFactoryProject.getSkins()){
+                    skins.add(loadSkinFromXML(walletFactoryProject.getProjectPublicKey(), skin.getId()));
+            }
+            walletFactoryProject.setSkins(skins);
+
+            // Now I will do the same with the Languages
+            if (walletFactoryProject.getDefaultLanguage() != null)
+                walletFactoryProject.setDefaultLanguage(loadLanguageFromXML(walletFactoryProject.getProjectPublicKey(), walletFactoryProject.getDefaultLanguage().getId()));
+
+            List<Language> languages = new ArrayList<>();
+            for (Language language : walletFactoryProject.getLanguages()){
+                languages.add(loadLanguageFromXML(walletFactoryProject.getProjectPublicKey(), language.getId()));
+            }
+            walletFactoryProject.setLanguages(languages);
+
+            // Lastly wil load the Navigation Structure from the XML if it is defined in the DB
+            if (walletFactoryProject.getNavigationStructure() != null)
+                walletFactoryProject.setNavigationStructure(loadNavigationStructureFromXML(walletFactoryProject.getProjectPublicKey(), walletFactoryProject.getNavigationStructure().getPublicKey()));
+
+            // At this point I have a WalletFactoryProject totally loaded from the XML files
+            walletFactoryProjects.add(walletFactoryProject);
+        }
+
+        return walletFactoryProjects;
+    }
+
+    /**
+     * Returns the WalletFactoryProject for the specified publicKey
+     * @param publicKey
+     * @return
+     * @throws CantGetWalletFactoryProjectException
+     */
+    public WalletFactoryProject getWalletFactoryProject(final String publicKey) throws CantGetWalletFactoryProjectException{
+        // I define the filter to search for the public Key
+        DatabaseTableFilter filter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue() {
+                return publicKey;
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.EQUAL;
+            }
+        };
+        List<WalletFactoryProject> walletFactoryProjects;
+        try {
+            walletFactoryProjects = getWalletFactoryProjects(filter);
+
+            if (walletFactoryProjects.size() > 1)
+                throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, null, "PublicKey: " + publicKey, "Unexpected value returned. Duplicated projects in database.");
+
+            if (walletFactoryProjects.size() == 1)
+                return walletFactoryProjects.get(0);
+            else
+                return null;
+
+        } catch (DatabaseOperationException | CantLoadTableToMemoryException e) {
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "PublicKey: " + publicKey, "database error");
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "PublicKey: " + publicKey, "Mismatch between database records and XML files.");
+        } catch (Exception e){
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "PublicKey: " + publicKey, "Unknown.");
+        }
+    }
+
+    /**
+     * Gets the list of WalletFactoryProjects for the specified State
+     * @param projectState
+     * @return
+     * @throws CantGetWalletFactoryProjectException
+     */
+    public List<WalletFactoryProject> getWalletFactoryProjectsByState(final WalletFactoryProjectState projectState) throws CantGetWalletFactoryProjectException {
+        // I define the filter to search for project state
+        DatabaseTableFilter filter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME;
+            }
+
+            @Override
+            public String getValue() {
+                return projectState.value();
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.EQUAL;
+            }
+        };
+        List<WalletFactoryProject> walletFactoryProjects;
+        try {
+            walletFactoryProjects = getWalletFactoryProjects(filter);
+
+            return walletFactoryProjects;
+
+        } catch (DatabaseOperationException | CantLoadTableToMemoryException e) {
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "ProjectState: " + projectState.toString(), "database error");
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "ProjectState: " + projectState.toString(), "Mismatch between database records and XML files.");
+        } catch (Exception e){
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "ProjectState: " + projectState.toString(), "Unknown.");
+        }
+    }
+
+    /**
+     * Gets all WalletFactoryProjects stored
+     * @return
+     * @throws CantGetWalletFactoryProjectException
+     */
+    public List<WalletFactoryProject> getAllFactoryProjects() throws CantGetWalletFactoryProjectException {
+        // I define a blank filter
+        DatabaseTableFilter filter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return null;
+            }
+
+            @Override
+            public String getValue() {
+                return null;
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return null;
+            }
+        };
+        List<WalletFactoryProject> walletFactoryProjects;
+        try {
+            walletFactoryProjects = getWalletFactoryProjects(filter);
+
+            return walletFactoryProjects;
+
+        } catch (DatabaseOperationException | CantLoadTableToMemoryException e) {
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, "database error");
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, "Mismatch between database records and XML files.");
+        } catch (Exception e){
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, "Unknown.");
+        }
+    }
 
 }
