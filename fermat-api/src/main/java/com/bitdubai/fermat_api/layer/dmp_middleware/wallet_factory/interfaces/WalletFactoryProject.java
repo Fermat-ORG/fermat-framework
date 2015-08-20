@@ -35,7 +35,7 @@ public interface WalletFactoryProject {
     void setWalletType(WalletType walletType);
 
     WalletFactoryProjectState getProjectState();
-    void setProjectState(WalletFactoryProjectState projectSstate);
+    void setProjectState(WalletFactoryProjectState projectState);
 
     Timestamp getCreationTimestamp();
     void setCreationTimestamp(Timestamp timestamp);

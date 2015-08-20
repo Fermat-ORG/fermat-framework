@@ -19,7 +19,7 @@ import java.util.UUID;
 public interface WalletFactoryProjectManager {
 
     // getters project
-    WalletFactoryProject getWalletFactoryProjectById(UUID id) throws CantGetWalletFactoryProjectException;
+    WalletFactoryProject getWalletFactoryProjectByPublicKey(String publicKey) throws CantGetWalletFactoryProjectException;
     List<WalletFactoryProject> getWalletFactoryProjectsByIDeveloperPublicKey(PublicKey publicKey) throws CantGetWalletFactoryProjectException;
     WalletFactoryProject getWalletFactoryProjectsByIDeveloperPublicKey(PublicKey publicKey, UUID id) throws CantGetWalletFactoryProjectException;
     List<WalletFactoryProject> getWalletFactoryProjectByState (WalletFactoryProjectState walletFactoryProjectState) throws CantGetWalletFactoryProjectException;

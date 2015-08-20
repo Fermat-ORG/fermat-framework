@@ -38,7 +38,7 @@ import java.util.UUID;
 
 
 public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryProjectManager {
-    WalletFactoryProjectManager walletFactoryProjectManager;
+    WalletFactoryProjectMiddlewareManager walletFactoryProjectMiddlewareManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -82,7 +82,8 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
         // create database
 
         // I created the WalletFactoryProjectMiddlewareManager object
-        WalletFactoryProjectMiddlewareManager= new WalletFactoryProjectMiddlewareManager();
+        walletFactoryProjectMiddlewareManager = new WalletFactoryProjectMiddlewareManager(this.pluginId, pluginDatabaseSystem, pluginFileSystem);
+
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -234,7 +235,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     }
 
     @Override
-    public WalletFactoryProject getWalletFactoryProjectById(UUID id) throws CantGetWalletFactoryProjectException {
+    public WalletFactoryProject getWalletFactoryProjectByPublicKey(String publicKey) throws CantGetWalletFactoryProjectException {
         return null;
     }
 
@@ -260,12 +261,16 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
     @Override
     public WalletFactoryProject createEmptyWalletFactoryProject() throws CantCreateWalletFactoryProjectException {
-        return null;
+        return walletFactoryProjectMiddlewareManager.getNewWalletFactoryProject();
     }
 
     @Override
     public void saveWalletFactoryProjectChanges(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
-
+        try {
+            walletFactoryProjectMiddlewareManager.saveWalletFactoryProject(walletFactoryProject);
+        } catch (Exception exception) {
+            throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, exception, "there was an error saving the Project information.", null);
+        }
     }
 
     @Override

@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.XML;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -23,6 +26,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.MissingProjectDataException;
 
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -162,6 +167,154 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             throw new CantCreateWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE, e, walletFactoryProject.getName(), null);
         } catch (Exception exception){
             throw new CantCreateWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE, exception, walletFactoryProject.getName(), null);
+        }
+    }
+
+    /**
+     * Creates and empty project just with basic information as the publicKey, state and creation time.
+     * It also persists all the information needed on disk and database.
+     * @return
+     */
+    public WalletFactoryProject getNewWalletFactoryProject() throws CantCreateWalletFactoryProjectException {
+        try{
+            WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
+                @Override
+                public String getProjectPublicKey() {
+                    ECCKeyPair publicKey = new ECCKeyPair();
+                    return publicKey.getPublicKey().toString();
+                }
+
+                @Override
+                public void setProjectPublickKey(String publickKey) {
+
+                }
+
+                @Override
+                public String getName() {
+                    return null;
+                }
+
+                @Override
+                public void setName(String name) {
+
+                }
+
+                @Override
+                public String getDescription() {
+                    return null;
+                }
+
+                @Override
+                public void setDescription(String description) {
+
+                }
+
+                @Override
+                public WalletType getWalletType() {
+                    return null;
+                }
+
+                @Override
+                public void setWalletType(WalletType walletType) {
+
+                }
+
+                @Override
+                public WalletFactoryProjectState getProjectState() {
+                    return WalletFactoryProjectState.IN_PROGRESS;
+                }
+
+                @Override
+                public void setProjectState(WalletFactoryProjectState projectState) {
+
+                }
+
+                @Override
+                public Timestamp getCreationTimestamp() {
+                    java.util.Date date = new java.util.Date();
+                    return new Timestamp(date.getTime());
+                }
+
+                @Override
+                public void setCreationTimestamp(Timestamp timestamp) {
+
+                }
+
+                @Override
+                public Timestamp getLastModificationTimestamp() {
+                    return null;
+                }
+
+                @Override
+                public void setLastModificationTimeststamp(Timestamp timestamp) {
+
+                }
+
+                @Override
+                public Skin getDefaultSkin() {
+                    return null;
+                }
+
+                @Override
+                public void setDefaultSkin(Skin skin) {
+
+                }
+
+                @Override
+                public List<Skin> getSkins() {
+                    return null;
+                }
+
+                @Override
+                public Skin getEmptySkin() {
+                    return null;
+                }
+
+                @Override
+                public void deleteSkin(Skin skin) {
+
+                }
+
+                @Override
+                public Language getDefaultLanguage() {
+                    return null;
+                }
+
+                @Override
+                public void setDefaultLanguage(Language language) {
+
+                }
+
+                @Override
+                public List<Language> getLanguages() {
+                    return null;
+                }
+
+                @Override
+                public Language getEmptyLanguage() {
+                    return null;
+                }
+
+                @Override
+                public void deleteLanguage(Language language) {
+
+                }
+
+                @Override
+                public WalletNavigationStructure getNavigationStructure() {
+                    return null;
+                }
+
+                @Override
+                public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
+
+                }
+            };
+            saveWalletFactoryProject(walletFactoryProject);
+
+            return walletFactoryProject;
+        } catch (Exception exception){
+            throw new CantCreateWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE, exception, "error creating new project.", null);
         }
     }
 
