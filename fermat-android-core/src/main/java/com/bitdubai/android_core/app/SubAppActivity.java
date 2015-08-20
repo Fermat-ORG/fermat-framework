@@ -137,7 +137,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     DatabaseToolsDatabaseListFragment fragd= DatabaseToolsDatabaseListFragment.newInstance(0,subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
                     fragd.setResource((Resource)screenObjects[0]);
-                    //set data pass to fragment
+                    //set data pass to fragmentg
                     fragment.setContext(screenObjects);
 
                     transaction = getFragmentManager().beginTransaction();
