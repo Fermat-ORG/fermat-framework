@@ -14,7 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantExportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
@@ -259,11 +261,21 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
         return null;
     }
 
+    /**
+     * Creates and (almost) empty project and persists it.
+     * @return
+     * @throws CantCreateWalletFactoryProjectException
+     */
     @Override
     public WalletFactoryProject createEmptyWalletFactoryProject() throws CantCreateWalletFactoryProjectException {
         return walletFactoryProjectMiddlewareManager.getNewWalletFactoryProject();
     }
 
+    /**
+     * Persists in disk and database all changes in the project
+     * @param walletFactoryProject
+     * @throws CantSaveWalletFactoryProyect
+     */
     @Override
     public void saveWalletFactoryProjectChanges(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
         try {
@@ -275,6 +287,16 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
     @Override
     public void deleteWalletProjectFactory(WalletFactoryProject walletFactoryProject) throws CantDeleteWalletFactoryProjectException {
+
+    }
+
+    @Override
+    public void exportProjectToRepository() throws CantExportWalletFactoryProjectException {
+
+    }
+
+    @Override
+    public void importProjectFromRepository(String publicKey) throws CantImportWalletFactoryProjectException {
 
     }
 }
