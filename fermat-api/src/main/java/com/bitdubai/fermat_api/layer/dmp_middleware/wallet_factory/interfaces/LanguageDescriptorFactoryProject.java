@@ -9,6 +9,7 @@ import java.util.UUID;
  * Created by eze on 2015.07.15..
  */
 public interface LanguageDescriptorFactoryProject extends DescriptorFactoryProject{
+    String getLanguageLabel();
 
 
 
