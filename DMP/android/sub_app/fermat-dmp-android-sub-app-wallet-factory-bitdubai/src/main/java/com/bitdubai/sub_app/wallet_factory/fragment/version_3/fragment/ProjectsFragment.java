@@ -156,6 +156,26 @@ public class ProjectsFragment extends FermatFragment {
 
         @Override
         public List<SkinDescriptorFactoryProject> getSkins() {return skinDescriptorFactoryProjectList; }
+
+        @Override
+        public void setLanguages(List<LanguageDescriptorFactoryProject> languages) {
+
+        }
+
+        @Override
+        public void setSkins(List<SkinDescriptorFactoryProject> skins) {
+
+        }
+
+        @Override
+        public String getAuthor() {
+            return null;
+        }
+
+        @Override
+        public int getDefaultSizeInBytes() {
+            return 0;
+        }
     }
 
 }
