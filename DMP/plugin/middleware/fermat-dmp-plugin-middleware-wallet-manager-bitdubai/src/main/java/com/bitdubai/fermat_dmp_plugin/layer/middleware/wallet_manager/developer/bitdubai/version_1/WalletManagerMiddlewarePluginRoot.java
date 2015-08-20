@@ -339,7 +339,8 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              * Call the wallet resource to install new wallet
              */
             // TODO: Le tendria que pasar la wallet public key
-            walletResources.installCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getSkinsId().get(0).getAlias(), installedWallet.getLanguagesId().get(0).getLanguage().value(), installedWallet.getWalletNavigationStructureVersion());
+            //TODO: se necesita pasarle la public key de la wallet  instalar al resources
+            //walletResources.installCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getSkinsId().get(0).getAlias(), installedWallet.getLanguagesId().get(0).getLanguage().value(), installedWallet.getWalletNavigationStructureVersion());
 
             /**
              * I create a new clone wallet on database
@@ -367,11 +368,11 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
             throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
         }
-        catch (WalletResourcesInstalationException ex)
-        {
-
-            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
+//        catch (WalletResourcesInstalationException ex)
+//        {
+//
+//            throw new CantCreateNewWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
+//        }
         catch (CantGetInstalledWalletsException e){
             throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
         }

@@ -8,4 +8,13 @@ import java.util.List;
 public interface WalletDescriptorFactoryProject extends DescriptorFactoryProject{
     public List<LanguageDescriptorFactoryProject> getLanguages();
     public List<SkinDescriptorFactoryProject> getSkins();
+
+    public void setLanguages(List<LanguageDescriptorFactoryProject> languages);
+    public void setSkins (List<SkinDescriptorFactoryProject> skins);
+
+    public String getAuthor();
+    public int getDefaultSizeInBytes();
+
+
+
 }

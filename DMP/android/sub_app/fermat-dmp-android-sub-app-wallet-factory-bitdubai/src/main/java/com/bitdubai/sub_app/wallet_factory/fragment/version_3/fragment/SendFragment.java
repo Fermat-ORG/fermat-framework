@@ -1,9 +1,9 @@
 package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
 
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +11,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_factory.R;
 
 
@@ -45,7 +47,7 @@ public  class SendFragment extends Fragment {
 
 
 
-    public static SendFragment newInstance(int position) {
+    public static SendFragment newInstance(int position,SubAppsSession subAppsSession) {
         SendFragment f = new SendFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);

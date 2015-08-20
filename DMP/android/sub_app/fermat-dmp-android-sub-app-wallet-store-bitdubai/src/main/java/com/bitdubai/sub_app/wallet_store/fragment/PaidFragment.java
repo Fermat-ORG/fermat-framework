@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_store.Model.App;
 import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
 import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
@@ -33,7 +34,7 @@ public class PaidFragment extends Fragment {
 
     private int position;
 
-    public static PaidFragment newInstance(int position) {
+    public static PaidFragment newInstance(int position,SubAppsSession subAppsSession) {
         PaidFragment f = new PaidFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);

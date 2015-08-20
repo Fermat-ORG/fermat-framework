@@ -6,6 +6,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_publisher.R;
 
 /**
@@ -15,7 +17,7 @@ public class MainFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     Typeface tf;
-    public static MainFragment newInstance(int position) {
+    public static MainFragment newInstance(int position,SubAppsSession subAppsSession) {
         MainFragment f = new MainFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);

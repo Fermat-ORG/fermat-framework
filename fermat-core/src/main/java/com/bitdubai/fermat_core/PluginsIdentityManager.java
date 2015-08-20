@@ -34,6 +34,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bi
 import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1.WalletStatisticsNetworkServicePluginRoot;
@@ -93,7 +94,7 @@ import java.util.UUID;
  */
 public class PluginsIdentityManager {
 
-    private static final Integer AMOUNT_OF_KNOWN_PLUGINS = 63;
+    private static final Integer AMOUNT_OF_KNOWN_PLUGINS = 64;
 
     private PlatformFileSystem platformFileSystem;
     private List<UUID> pluginIds = new ArrayList<>();
@@ -381,18 +382,6 @@ public class PluginsIdentityManager {
         if (plugin instanceof WalletPublisherMiddlewarePluginRoot)
             pluginIndex = 44;
 
-        if (pluginIndex == 0) {
-            try {
-                WalletFactoryProjectMiddlewarePluginRoot tryType;
-                tryType = (WalletFactoryProjectMiddlewarePluginRoot) plugin;
-                pluginIndex = 42;
-            } catch (Exception e) {
-                /**
-                 * If this fails, is because this is not the index for this plug in.
-                 */
-            }
-        }
-
         if (plugin instanceof WalletStoreMiddlewarePluginRoot)
             pluginIndex = 45;
 
@@ -446,6 +435,9 @@ public class PluginsIdentityManager {
 
         if (plugin instanceof PublisherIdentityPluginRoot)
             pluginIndex = 62;
+
+        if (plugin instanceof IntraUserNetworkServicePluginRoot)
+            pluginIndex = 63;
 
         if (pluginIndex > 0)
             return pluginIds.get(pluginIndex);

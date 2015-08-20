@@ -267,6 +267,8 @@ public class IntraUserActorDao {
 
             // 2) Find all Intra Users.
             table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, ContactState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+
             table.loadToMemory();
 
 

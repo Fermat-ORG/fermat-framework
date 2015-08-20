@@ -89,8 +89,6 @@ import java.util.UUID;
  */
 
 
-//TODO: Rodri hay que cambiar los links al repo de recursos que se encuentran apuntando al viejo por el nuevo path que se cambió hoy. el lunes si queres lo hago yo. ahora no llego con el tiempo.
-
 public class WalletResourcesNetworkServicePluginRoot implements Service, NetworkService, WalletResourcesInstalationManager, WalletResourcesProviderManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin {
 
 
@@ -273,7 +271,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     //el xml de las skin debe estar pegado a una estructura de navegacion
     @Override
-    public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
+    public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion,String walletPublicKey) throws WalletResourcesInstalationException {
         // this will be use when the repository be open source
         //String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
@@ -322,7 +320,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
 
             String linkToNavigationStructure = linkToRepo + "navigation_structure/" + skin.getNavigationStructureCompatibility() + "/";
-            donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath);
+            donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath,walletPublicKey);
 
 
             /**
@@ -637,7 +635,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    private void donwloadNavigationStructure(String link, UUID skinId,String localStoragePath) {
+    private void donwloadNavigationStructure(String link, UUID skinId,String localStoragePath,String walletPublicKey) {
         try {
 
 
@@ -669,6 +667,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             walletNavigationStructureDownloadedEvent.setSkinId(skinId);
             walletNavigationStructureDownloadedEvent.setXmlText(navigationStructureXML);
             walletNavigationStructureDownloadedEvent.setLinkToRepo(localStoragePath);
+            walletNavigationStructureDownloadedEvent.setWalletPublicKey(walletPublicKey);
             eventManager.raiseEvent(platformEvent);
 
 
