@@ -82,6 +82,8 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     @Override
     public void start() throws CantStartPluginException {
         // create database
+        //TODO
+
 
         // I created the WalletFactoryProjectMiddlewareManager object
         walletFactoryProjectMiddlewareManager = new WalletFactoryProjectMiddlewareManager(this.pluginId, pluginDatabaseSystem, pluginFileSystem);
