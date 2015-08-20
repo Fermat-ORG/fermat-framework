@@ -635,17 +635,22 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
 
+        /*
         long timestamp =tx.getLockTime();
         if (timestamp == 0)
-        /**
-         * If the transaction doesn't have a locktime, I will return the current timestamp
-         */
+
+         // If the transaction doesn't have a locktime, I will return the current timestamp
+
             return System.currentTimeMillis();
         else
-        /**
-         * I get the current timestamp
-         */
-        return tx.getLockTime();
+        // I get the current timestamp
+
+        return tx.getLockTime() * 1000;
+        */
+
+        // Changed be Ezequiel Postan <ezequiel.postan@gmail.com>
+        // August 20th 2015
+        return tx.getUpdateTime().getTime();
     }
 
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {

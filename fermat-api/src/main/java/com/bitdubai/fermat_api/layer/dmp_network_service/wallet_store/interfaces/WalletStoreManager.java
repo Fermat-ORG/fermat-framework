@@ -64,9 +64,32 @@ public interface WalletStoreManager {
      */
     public CatalogItem constructEmptyCatalogItem();
 
-    public Language constructLanguage(UUID languageId, Languages nameLanguage, String languageLabel, UUID walletId, Version version, Version initalWalletVersion, Version finalWalletVersion, List<URL> videoPreviews, URL LanguageURL, long languageSizeInBytes, Translator translator, boolean isDefault);
+    public Language constructLanguage(UUID languageId,
+                                      Languages nameLanguage,
+                                      String languageLabel,
+                                      UUID walletId,
+                                      Version version,
+                                      Version initalWalletVersion,
+                                      Version finalWalletVersion,
+                                      List<URL> videoPreviews,
+                                      long languageSizeInBytes,
+                                      Translator translator,
+                                      boolean isDefault);
 
-    public Skin constructSkin(UUID skinId, String nameSkin, UUID walletId, ScreenSize screenSize, Version version, Version initalWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL skinURL, int skinSizeInBytes, Designer designer, boolean isDefault);
+    public Skin constructSkin(UUID skinId,
+                              String nameSkin,
+                              UUID walletId,
+                              ScreenSize screenSize,
+                              Version version,
+                              Version initalWalletVersion,
+                              Version finalWalletVersion,
+                              byte[] presentationImage,
+                              List<byte[]> previewImageList,
+                              boolean hasVideoPreview,
+                              List<URL> videoPreviews,
+                              int skinSizeInBytes,
+                              Designer designer,
+                              boolean isDefault);
 
     public CatalogItem constructCatalogItem(UUID walletId, int defaultSizeInBytes,
                                             String name, String description,
@@ -79,7 +102,8 @@ public interface WalletStoreManager {
                                             Skin skin,
                                             Language language,
                                             Developer developer,
-                                            List<Language> languages) throws CantGetWalletIconException;
+                                            List<Language> languages,
+                                            URL publisherWebsiteUrl) throws CantGetWalletIconException;
 
     public Developer constructDeveloper(UUID developerId, String name, String PublicKey);
 
