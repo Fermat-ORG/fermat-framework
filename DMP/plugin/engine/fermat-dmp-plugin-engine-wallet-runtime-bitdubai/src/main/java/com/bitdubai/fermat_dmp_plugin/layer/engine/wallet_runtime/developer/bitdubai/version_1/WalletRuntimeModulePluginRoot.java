@@ -1141,11 +1141,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         String publicKey="reference_wallet";
 
-        try {
-            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
-        } catch (WalletResourcesInstalationException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
+//        } catch (WalletResourcesInstalationException e) {
+//            e.printStackTrace();
+//        }
 
 
         try{
@@ -1157,7 +1157,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
             if(walletNavigationStructure==null){
                 // testing purpose mati
-                //setNavigationStructureXml(startWalletNavigationStructure());
+                setNavigationStructureXml(startWalletNavigationStructure());
                 walletNavigationStructure= getNavigationStructure(publicKey);
             }
             //listWallets.put(publicKey, walletNavigationStructure);
@@ -1314,6 +1314,16 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
         runtimeTabStrip.addTab(runtimeTab);
 
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Transactions BOOK");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Transactions AVAILABLE");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE);
+        runtimeTabStrip.addTab(runtimeTab);
+
         /*runtimeTab = new Tab();
         runtimeTab.setLabel("Send");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
@@ -1353,6 +1363,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE, runtimeFragment);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK, runtimeFragment);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE, runtimeFragment);
 
 
         /*

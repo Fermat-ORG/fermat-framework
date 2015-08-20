@@ -45,13 +45,13 @@ public class StartAgentTest {
 
     @Test
     public void startTest() throws CantStartAgentException {
-        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager,pluginDatabaseSystem,errorManager, UUID.randomUUID(), UUID.randomUUID());
+        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager,pluginDatabaseSystem,errorManager, UUID.randomUUID(), "replace_device_user_key");
         transactionNotificationAgent.start();
     }
 
     @Test
     public void stopTest() throws CantStartAgentException {
-        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager,pluginDatabaseSystem,errorManager, UUID.randomUUID(), UUID.randomUUID());
+        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager,pluginDatabaseSystem,errorManager, UUID.randomUUID(), "replace_device_user_key");
         transactionNotificationAgent.start();
         transactionNotificationAgent.stop();
     }

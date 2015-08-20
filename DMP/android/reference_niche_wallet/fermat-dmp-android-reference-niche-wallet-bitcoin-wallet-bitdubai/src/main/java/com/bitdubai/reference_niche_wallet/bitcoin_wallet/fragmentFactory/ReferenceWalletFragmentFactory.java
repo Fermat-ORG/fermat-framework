@@ -12,6 +12,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.CreateContac
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.MoneyRequestFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsBookFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
 
 /**
@@ -61,6 +62,12 @@ public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_andro
                 break;
             case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST:
                 currentFragment = MoneyRequestFragment.newInstance(0,null,walletSettingsManager,walletSession,walletResourcesProviderManager);
+                break;
+            case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK:
+                currentFragment =  TransactionsBookFragment.newInstance(0, walletSession, walletResourcesProviderManager);
+                break;
+            case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE:
+                currentFragment =  TransactionsBookFragment.newInstance(0, walletSession, walletResourcesProviderManager);
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found",new Exception(),code,"Swith failed");
