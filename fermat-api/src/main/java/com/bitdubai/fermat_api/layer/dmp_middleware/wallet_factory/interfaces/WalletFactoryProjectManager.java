@@ -26,7 +26,7 @@ public interface WalletFactoryProjectManager {
     List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectException;
 
     // Edition of wallet factory project
-    WalletFactoryProject createNewWalletFactoryProject() throws CantCreateWalletFactoryProjectException;
-    void saveWalletFactoryProjectChanges(UUID id) throws CantSaveWalletFactoryProyect;
-    void deleteWalletProjectFactory(UUID id) throws CantDeleteWalletFactoryProjectException;
+    WalletFactoryProject createEmptyWalletFactoryProject() throws CantCreateWalletFactoryProjectException;
+    void saveWalletFactoryProjectChanges(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect;
+    void deleteWalletProjectFactory(WalletFactoryProject walletFactoryProject) throws CantDeleteWalletFactoryProjectException;
 }

@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryProjectMiddlewareManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -37,6 +38,7 @@ import java.util.UUID;
 
 
 public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryProjectManager {
+    WalletFactoryProjectManager walletFactoryProjectManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -72,11 +74,15 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
 
     /**
-     * WalletFactoryProjectManager Interfaces member variables.
+     * WalletFactoryProjectMiddlewareManager Interfaces member variables.
      */
 
     @Override
     public void start() throws CantStartPluginException {
+        // create database
+
+        // I created the WalletFactoryProjectMiddlewareManager object
+        WalletFactoryProjectMiddlewareManager= new WalletFactoryProjectMiddlewareManager();
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -253,17 +259,17 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     }
 
     @Override
-    public WalletFactoryProject createNewWalletFactoryProject() throws CantCreateWalletFactoryProjectException {
+    public WalletFactoryProject createEmptyWalletFactoryProject() throws CantCreateWalletFactoryProjectException {
         return null;
     }
 
     @Override
-    public void saveWalletFactoryProjectChanges(UUID id) throws CantSaveWalletFactoryProyect {
+    public void saveWalletFactoryProjectChanges(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
 
     }
 
     @Override
-    public void deleteWalletProjectFactory(UUID id) throws CantDeleteWalletFactoryProjectException {
+    public void deleteWalletProjectFactory(WalletFactoryProject walletFactoryProject) throws CantDeleteWalletFactoryProjectException {
 
     }
 }

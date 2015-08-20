@@ -28,7 +28,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 8/17/15.
  */
-public class WalletFactoryProjectManager implements DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
 
     UUID pluginId;
 
@@ -56,7 +56,7 @@ public class WalletFactoryProjectManager implements DealsWithPluginDatabaseSyste
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public WalletFactoryProjectManager(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem) {
+    public WalletFactoryProjectMiddlewareManager(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem) {
         this.pluginId = pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
@@ -65,7 +65,7 @@ public class WalletFactoryProjectManager implements DealsWithPluginDatabaseSyste
 
     private void saveWalletFactoryProjectDatainDatabase(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
         WalletFactoryMiddlewareDao dao = new WalletFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
-        dao.insertWalletFactoryProjectData(walletFactoryProject);
+        dao.saveWalletFactoryProjectData(walletFactoryProject);
     }
 
     private void saveWalletFactoryProjectSkinXML(WalletFactoryProject walletFactoryProject) throws CantCreateFileException, CantPersistFileException {
@@ -151,7 +151,7 @@ public class WalletFactoryProjectManager implements DealsWithPluginDatabaseSyste
      * It includes persisting the information in the database and XML on files.
      * @param walletFactoryProject
      */
-    public void saveNewWalletFactoryProject(WalletFactoryProject walletFactoryProject) throws CantCreateWalletFactoryProjectException {
+    public void saveWalletFactoryProject(WalletFactoryProject walletFactoryProject) throws CantCreateWalletFactoryProjectException {
         try {
             saveWalletFactoryProjectDatainDatabase(walletFactoryProject);
             saveWalletFactoryProjectSkinXML(walletFactoryProject);

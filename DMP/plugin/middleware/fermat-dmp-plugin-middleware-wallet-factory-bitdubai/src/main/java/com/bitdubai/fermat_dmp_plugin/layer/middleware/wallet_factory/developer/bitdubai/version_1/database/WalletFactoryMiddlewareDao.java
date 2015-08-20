@@ -97,7 +97,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return record;
     }
 
-    private DatabaseTransaction addSkinRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException {
+    private DatabaseTransaction addSkinRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException, CantLoadTableToMemoryException {
         Skin defaultSkin = null;
 
         defaultSkin = walletFactoryProject.getDefaultSkin();
@@ -106,20 +106,42 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME);
 
             DatabaseTableRecord defaultSkinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), defaultSkin.getId(), true);
-            DatabaseTableFilter filter = getSkinFilter()
-            transaction.addRecordToInsert(table, defaultSkinRecord);
+            DatabaseTableFilter filter = getSkinFilter(defaultSkin.getId().toString());
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, defaultSkinRecord);
+            else {
+                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, defaultSkinRecord);
+            }
+
 
             // I will add all the skins defined, if there are more than one.
             if (!walletFactoryProject.getSkins().isEmpty()){
                 for (Skin skin : walletFactoryProject.getSkins()){
                     DatabaseTableRecord skinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), skin.getId(), false);
-                    transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME), skinRecord);
+                    filter.setValue(skin.getId().toString());
+                    if (isNewRecord(table, filter))
+                        transaction.addRecordToInsert(table, skinRecord);
+                    else {
+                        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                        transaction.addRecordToUpdate(table, skinRecord);
+                    }
                 }
             }
 
         }
 
         return transaction;
+    }
+
+    private DatabaseTableFilter getSkinFilter(String value) {
+        DatabaseTableFilter filter = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME).getEmptyTableFilter();
+        filter.setColumn(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME);
+        filter.setType(DatabaseFilterType.EQUAL);
+        filter.setValue(value);
+
+        return filter;
     }
 
     private DatabaseTransaction addLanguageRecordsToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException, CantLoadTableToMemoryException {
@@ -148,7 +170,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                         transaction.addRecordToInsert(table, record);
                     else{
                         table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                        transaction.addRecordToUpdate(table, defaultLanguageRecord);
+                        transaction.addRecordToUpdate(table, record);
                     }
 
                 }
@@ -206,19 +228,31 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     }
 
     /**
-     * Inserts the Wallet Factory Project information into the database.
-     * If is has skins and languages, they are also inserted everything inside the same database transaction.
+     * Saves the Wallet Factory Project in the database.
+     * If it doesn't exists, it insert, if they already exists, everything is updated.
+     * If it has skins and languages, it persists all of them.
      * @param walletFactoryProject
      * @throws DatabaseOperationException
      * @throws MissingProjectDataException
      */
-    public void insertWalletFactoryProjectData(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException{
+    public void saveWalletFactoryProjectData(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException{
         DatabaseTransaction transaction = database.newTransaction();
 
         try {
             // add the Wallet factory project database record to a transaction
+            DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME);
             DatabaseTableRecord walletFactoryRecord = getWalletFactoryProjectRecord(walletFactoryProject);
-            transaction.addRecordToInsert(getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME), walletFactoryRecord);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(walletFactoryProject.getProjectPublicKey());
+            filter.setColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME);
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, walletFactoryRecord);
+            else {
+                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, walletFactoryRecord);
+            }
+
 
             // I wil add the skins to the transaction if there are any
             transaction = addSkinRecordsToTransaction(transaction, walletFactoryProject);
