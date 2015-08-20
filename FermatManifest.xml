@@ -34,7 +34,51 @@
                             <certifications>
                             </certifications>
                         </plugin>
-                        <plugin></plugin>
+                        <plugin
+                                name="Device Private Network"
+                                description=""
+                                dificulty="5"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Messanger"
+                                description=""
+                                dificulty="5"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Technical Support"
+                                description=""
+                                dificulty="5"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
                     </layer>
                 </layers>
             </plugins>
