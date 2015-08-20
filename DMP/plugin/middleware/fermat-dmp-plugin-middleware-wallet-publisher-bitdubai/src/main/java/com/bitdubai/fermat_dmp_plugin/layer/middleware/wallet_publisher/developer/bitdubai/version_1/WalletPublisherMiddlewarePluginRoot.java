@@ -660,7 +660,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         SkinDescriptorFactoryProject skin = new SkinDescriptorFactoryProject() {
             @Override
             public ScreenSize getScreenSize() {
-                return null;
+                return ScreenSize.MEDIUM;
             }
 
             @Override
