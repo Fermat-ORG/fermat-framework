@@ -3,7 +3,10 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.content.Context;
 import android.app.Fragment;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
@@ -167,6 +172,7 @@ public class TransactionsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        UUID skinId = UUID.randomUUID();
         try {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
             // Get ListView object from xml
@@ -252,6 +258,24 @@ public class TransactionsFragment extends Fragment{
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
+
+
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.imageView_test);
+
+        // ESTO ES SOLO TESTEO
+
+        byte[] image=null;
+        try {
+
+            image=walletResourcesProviderManager.getImageResource("personIcon", skinId);
+
+        } catch (CantGetResourcesException e) {
+            e.printStackTrace();
+        }
+
+        Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+        imageView.setImageDrawable(drawable);
+
         return rootView;
     }
 
