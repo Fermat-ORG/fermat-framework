@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 
 /**
@@ -12,5 +13,7 @@ public interface FermatScreenSwapper {
     public void selectWallet(InstalledWallet installedWallet);
 
     public void changeActivity(String activity,Object... objects);
+
+    public void selectSubApp(InstalledSubApp installedSubApp);
 
 }

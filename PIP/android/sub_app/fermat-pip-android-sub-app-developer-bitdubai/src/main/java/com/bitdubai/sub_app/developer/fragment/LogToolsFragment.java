@@ -285,7 +285,7 @@ public class LogToolsFragment extends Fragment {
 
                         params[0] = lst;
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS,params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(com.bitdubai.sub_app.developer.FragmentFactory.Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(),params);
 
 
                     }
