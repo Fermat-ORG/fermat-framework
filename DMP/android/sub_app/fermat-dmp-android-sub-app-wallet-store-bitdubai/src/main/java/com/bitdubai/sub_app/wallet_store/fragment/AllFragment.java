@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_store.Model.App;
 import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
 import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
@@ -47,7 +48,7 @@ public class AllFragment extends Fragment implements SearchView.OnQueryTextListe
     AppListAdapter _adpatrer;
     GridView gridView;
 
-    public static AllFragment newInstance(int position) {
+    public static AllFragment newInstance(int position,SubAppsSession subAppsSession) {
         AllFragment f = new AllFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
