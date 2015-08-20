@@ -20,8 +20,12 @@ import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develope
 
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryProjectMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.IdentityDesignerPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.IdentityTranslatorPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryProjectMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.WalletLanguageMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.WalletManagerMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot;
@@ -75,10 +79,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.ActorDeveloperPluginRoot;
-import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
-import com.bitdubai.fermat_pip_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
-import com.bitdubai.fermat_pip_plugin.layer.identity_designer.developer.bitdubai.version_1.IdentityDesignerPluginRoot;
-import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.IdentityTranslatorPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.ModuleDeveloperPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstalationNetworkServicePluginRoot;
 import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot;
