@@ -62,6 +62,26 @@ public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProj
         this.state = state;
     }
 
+    @Override
+    public void setLanguages(List<LanguageDescriptorFactoryProject> languages) {
+
+    }
+
+    @Override
+    public void setSkins(List<SkinDescriptorFactoryProject> skins) {
+
+    }
+
+    @Override
+    public String getAuthor() {
+        return null;
+    }
+
+    @Override
+    public int getDefaultSizeInBytes() {
+        return 0;
+    }
+
     public DescriptorFactoryMiddlewareProject(UUID id, String name, String developerPublicKey, Wallets type, String path, FactoryProjectState state, String description, String publisherIdentityKey, DescriptorFactoryProjectType descriptorFactoryProjectType) {
         this.id = id;
         this.name = name;
