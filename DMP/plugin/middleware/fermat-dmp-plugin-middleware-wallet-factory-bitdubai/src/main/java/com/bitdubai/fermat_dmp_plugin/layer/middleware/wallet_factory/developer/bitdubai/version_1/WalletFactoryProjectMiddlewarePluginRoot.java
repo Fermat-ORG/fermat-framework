@@ -242,16 +242,6 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     }
 
     @Override
-    public List<WalletFactoryProject> getWalletFactoryProjectsByIDeveloperPublicKey(PublicKey publicKey) throws CantGetWalletFactoryProjectException {
-        return null;
-    }
-
-    @Override
-    public WalletFactoryProject getWalletFactoryProjectsByIDeveloperPublicKey(PublicKey publicKey, UUID id) throws CantGetWalletFactoryProjectException {
-        return null;
-    }
-
-    @Override
     public List<WalletFactoryProject> getWalletFactoryProjectByState(WalletFactoryProjectState walletFactoryProjectState) throws CantGetWalletFactoryProjectException {
         return null;
     }

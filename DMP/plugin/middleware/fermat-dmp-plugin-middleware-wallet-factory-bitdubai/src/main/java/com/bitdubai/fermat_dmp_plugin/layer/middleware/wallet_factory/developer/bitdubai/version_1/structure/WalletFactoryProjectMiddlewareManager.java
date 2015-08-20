@@ -265,10 +265,6 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                     return null;
                 }
 
-                @Override
-                public Skin getEmptySkin() {
-                    return null;
-                }
 
                 @Override
                 public void deleteSkin(Skin skin) {
@@ -290,10 +286,6 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                     return null;
                 }
 
-                @Override
-                public Language getEmptyLanguage() {
-                    return null;
-                }
 
                 @Override
                 public void deleteLanguage(Language language) {
@@ -309,6 +301,16 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
 
                 }
+
+                @Override
+                public void setSkins(List<Skin> skins) {
+
+                }
+
+                @Override
+                public void setLanguages(List<Language> languages) {
+
+                }
             };
             saveWalletFactoryProject(walletFactoryProject);
 
@@ -317,5 +319,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             throw new CantCreateWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE, exception, "error creating new project.", null);
         }
     }
+
+
 
 }

@@ -22,8 +22,6 @@ public interface WalletFactoryProjectManager {
 
     // getters project
     WalletFactoryProject getWalletFactoryProjectByPublicKey(String publicKey) throws CantGetWalletFactoryProjectException;
-    List<WalletFactoryProject> getWalletFactoryProjectsByIDeveloperPublicKey(PublicKey publicKey) throws CantGetWalletFactoryProjectException;
-    WalletFactoryProject getWalletFactoryProjectsByIDeveloperPublicKey(PublicKey publicKey, UUID id) throws CantGetWalletFactoryProjectException;
     List<WalletFactoryProject> getWalletFactoryProjectByState (WalletFactoryProjectState walletFactoryProjectState) throws CantGetWalletFactoryProjectException;
     List<WalletFactoryProject> getAllWalletFactoryProjects() throws CantGetWalletFactoryProjectException;
 
