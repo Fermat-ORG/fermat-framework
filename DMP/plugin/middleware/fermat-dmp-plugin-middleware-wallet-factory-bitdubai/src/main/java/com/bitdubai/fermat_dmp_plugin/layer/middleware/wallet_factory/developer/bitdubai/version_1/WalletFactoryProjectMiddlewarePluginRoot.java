@@ -175,16 +175,6 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements DatabaseManager
     }
 
     @Override
-    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin getDefaultSkin() {
-        return null;
-    }
-
-    @Override
-    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language getDefaultLanguage() {
-        return null;
-    }
-
-    @Override
     public WalletDescriptorFactoryMiddlewareProject createEmptyWalletFactoryProject(String name, Wallets walletType, String description, String publisherIdentityKey, DescriptorFactoryProjectType descriptorFactoryProjectType, String developerPublicKey) throws CantCreateWalletDescriptorFactoryProjectException {
         try {
             // TODO GET CURRENT LOGGED DEVELOPER

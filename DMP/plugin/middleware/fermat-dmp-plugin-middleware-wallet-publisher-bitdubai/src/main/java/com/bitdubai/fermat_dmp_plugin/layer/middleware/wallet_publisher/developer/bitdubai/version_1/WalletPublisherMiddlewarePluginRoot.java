@@ -270,10 +270,13 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
     @Override
     public void start() throws CantStartPluginException {
 
+        System.out.println("WalletPublisherMiddlewarePluginRoot - start()");
+
         /*
          * Validate required resources
          */
-        //TODO: DESCOMENTAR LA VALIDACION validateInjectedResources();
+        //TODO: DESCOMENTAR LA VALIDACION
+        //validateInjectedResources();
 
         try {
 
@@ -308,6 +311,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             throw pluginStartException;
         }
 
+        test();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -511,7 +515,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             WalletDescriptorFactoryProject walletDescriptorFactoryProject = constructWalletDescriptorFactoryProjectTest();
             byte[] icon = null;
             byte[] mainScreenShot = null;
-            List<byte[]> screenShotDetails = null;
+            List<byte[]> screenShotDetails = new ArrayList<>();
             URL videoUrl = new URL("https://www.youtube.com/watch?v=pBzjx7V3Ldw");
             String observations = "Its Rock!";
             Version initialWalletVersion = new Version(1,0,0);
@@ -641,7 +645,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String getDescription() {
-                return "Wallet Test Publication";
+                return "Wallet Test Publication description";
             }
 
             @Override
@@ -658,69 +662,85 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
     private SkinDescriptorFactoryProject constructSkinDescriptorFactoryProjectTest(){
 
         SkinDescriptorFactoryProject skin = new SkinDescriptorFactoryProject() {
+
             @Override
             public ScreenSize getScreenSize() {
-                return null;
+                return ScreenSize.MEDIUM;
             }
 
             @Override
             public Designer getDesigner() {
-                return null;
+                return new Designer() {
+                    @Override
+                    public String getAlias() {
+                        return "R@rt3001";
+                    }
+
+                    @Override
+                    public String getPublicKey() {
+                        return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
+                    }
+
+                    @Override
+                    public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                        return "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
+                    }
+                };
             }
 
             @Override
             public String getDeveloperPublicKey() {
-                return null;
+                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             }
 
             @Override
             public String getPublisherIdentityKey() {
-                return null;
+                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             }
 
             @Override
             public UUID getId() {
-                return null;
+                return UUID.randomUUID();
             }
 
             @Override
             public UUID getWalletId() {
-                return null;
+                return UUID.randomUUID();
             }
 
             @Override
             public String getName() {
-                return null;
+                return "Skin test publication";
             }
 
             @Override
             public Wallets getWalletType() {
-                return null;
+                return Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI;
             }
 
             @Override
             public String getPath() {
-                return null;
+                return "";
             }
 
             @Override
             public FactoryProjectState getState() {
-                return null;
+                return FactoryProjectState.CLOSED;
             }
 
             @Override
             public DescriptorFactoryProjectType getDescriptorProjectType() {
-                return null;
+                return DescriptorFactoryProjectType.SKIN;
             }
 
             @Override
             public String getDescription() {
-                return null;
+                return "Skin Test Publication description";
             }
 
             @Override
             public int getDefaultSizeInBytes() {
-                return 0;
+                return 50;
             }
         };
 
@@ -734,72 +754,88 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         LanguageDescriptorFactoryProject language = new LanguageDescriptorFactoryProject() {
             @Override
             public Languages getLanguagesName() {
-                return null;
+                return Languages.ENGLISH;
             }
 
             @Override
             public String getLanguageLabel() {
-                return null;
+                return Languages.ENGLISH.value();
             }
 
             @Override
             public Translator getTranslator() {
-                return null;
+                return new Translator() {
+
+                    @Override
+                    public String getAlias() {
+                        return "R@rt3001";
+                    }
+
+                    @Override
+                    public String getPublicKey() {
+                        return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
+                    }
+
+                    @Override
+                    public String createMessageSignature(String mensage) {
+                        return "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
+                    }
+                };
             }
 
             @Override
             public String getDeveloperPublicKey() {
-                return null;
+                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             }
 
             @Override
             public String getPublisherIdentityKey() {
-                return null;
+                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             }
 
             @Override
             public UUID getId() {
-                return null;
+                return UUID.randomUUID();
             }
 
             @Override
             public UUID getWalletId() {
-                return null;
+                return UUID.randomUUID();
             }
 
             @Override
             public String getName() {
-                return null;
+                return "Skin test publication";
             }
 
             @Override
             public Wallets getWalletType() {
-                return null;
+                return Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI;
             }
 
             @Override
             public String getPath() {
-                return null;
+                return "";
             }
 
             @Override
             public FactoryProjectState getState() {
-                return null;
+                return FactoryProjectState.CLOSED;
             }
 
             @Override
             public DescriptorFactoryProjectType getDescriptorProjectType() {
-                return null;
+                return DescriptorFactoryProjectType.SKIN;
             }
 
             @Override
             public String getDescription() {
-                return null;
+                return "Skin Test Publication description";
             }
 
             @Override
             public int getDefaultSizeInBytes() {
-                return 0;
+                return 50;
             }
         };
 
