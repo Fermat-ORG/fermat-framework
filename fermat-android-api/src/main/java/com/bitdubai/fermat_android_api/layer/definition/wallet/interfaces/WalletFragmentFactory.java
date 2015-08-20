@@ -10,9 +10,9 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.Wallet
 /**
  * This interface provides the fragments and objects needed by the wallet runtime
  *
- * @author Ezequiel Postan - (ezequiel.postan@gmail.com)
+ * @author Matias Furszyfer
  */
-public interface FragmentFactory {
+public interface WalletFragmentFactory {
 
     /**
      * This method takes a reference (string) to a fragment and returns the corresponding fragment.

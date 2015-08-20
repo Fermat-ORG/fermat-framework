@@ -3,7 +3,6 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory;
 import android.app.Fragment;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
@@ -19,7 +18,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.Transactions
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class WalletFragmentFactory implements FragmentFactory{
+public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
 
 
     /**

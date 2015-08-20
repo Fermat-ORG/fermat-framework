@@ -9,7 +9,8 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -22,9 +23,11 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_core.Platform;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
@@ -32,7 +35,6 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.EditableWalletFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ManagerFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ProjectsFragment;
 import com.bitdubai.sub_app.wallet_store.fragment.AcceptedNearbyFragment;
 import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
@@ -55,13 +57,12 @@ import java.util.List;
 
         private Activity activity;
 
-        private FragmentFactory fragmentFactory;
+        private WalletFragmentFactory walletFragmentFactory;
 
         private TabStrip tabStrip;
 
 
         private WalletSession walletSession;
-        private SubAppSessionManager subAppSessionManager;
 
         private Platform platform;
         private ErrorManager errorManager;
@@ -70,16 +71,30 @@ import java.util.List;
 
         private WalletResourcesProviderManager walletResourcesProviderManager;
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,ApplicationSession applicationSession,ErrorManager errorManager) {
+        private SubAppFragmentFactory subAppFragmentFactory;
+
+        private SubAppSettingsManager subAppSettingsManager;
+
+        private SubAppResourcesProviderManager subAppResourcesProviderManager;
+
+        private SubAppsSession subAppsSession;
+
+
+    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,SubAppsSession SubAppSession,ErrorManager errorManager,SubAppFragmentFactory subAppFragmentFactory,SubAppSettingsManager subAppSettingsManager,SubAppResourcesProviderManager subAppResourcesProviderManager) {
             super(fm);
             this.context=context;
 
+
+            this.subAppsSession = SubAppSession;
             //this.walletSessionManager=applicationSession.getWalletSessionManager();
-            this.subAppSessionManager=applicationSession.getSubAppSessionManager();
-            this.platform=applicationSession.getFermatPlatform();
-            this.errorManager=errorManager;
+            //this.subAppSessionManager=applicationSession.getSubAppSessionManager();
+            //this.platform=applicationSession.getFermatPlatform();
+        this.errorManager=errorManager;
             this.activity=activity;
             tabStrip=activity.getTabStrip();
+            this.subAppFragmentFactory=subAppFragmentFactory;
+            this.subAppSettingsManager = subAppSettingsManager;
+            this.subAppResourcesProviderManager = subAppResourcesProviderManager;
 
 
             if(activity.getTabStrip() != null){
@@ -93,13 +108,13 @@ import java.util.List;
 
         }
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,FragmentFactory fragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
+        public TabsPagerAdapter(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
             super(fm);
             this.context=context;
 
             this.walletSession=walletSession;
             this.errorManager=errorManager;
-            this.fragmentFactory=fragmentFactory;
+            this.walletFragmentFactory = walletFragmentFactory;
             this.tabStrip=tabStrip;
             this.walletSettingsManager=walletSettingsManager;
             this.walletResourcesProviderManager =walletResourcesProviderManager;
@@ -169,88 +184,98 @@ import java.util.List;
 
 
 
-            if(activity!=null){
-                if(activity.getType()== Activities.CWP_SUB_APP_ALL_DEVELOPER){
-                     subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
-                            (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
-                             platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE));
-                }else if (activity.getType()== Activities.CWP_WALLET_FACTORY_MAIN){
-                     subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_WALLET_FACTORY,
-                            (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
-                             platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MODULE));
-                }
-            }
+//            if(activity!=null){
+//                if(activity.getType()== Activities.CWP_SUB_APP_ALL_DEVELOPER){
+//                     subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_DEVELOPER_APP,
+//                            (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
+//                             platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE));
+//                }else if (activity.getType()== Activities.CWP_WALLET_FACTORY_MAIN){
+//                     subAppSession = subAppSessionManager.openSubAppSession(SubApps.CWP_WALLET_FACTORY,
+//                            (ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER),
+//                             platform.getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MODULE));
+//                }
+//            }
 
 
 
 
 
             try {
-                if(fragmentFactory!=null){
-                    currentFragment=fragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettingsManager,walletResourcesProviderManager);
+                if(walletFragmentFactory !=null){
+                    currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettingsManager,walletResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
             }
 
+
+            try {
+                if(subAppFragmentFactory !=null){
+                    currentFragment= subAppFragmentFactory.getFragment(fragmentType.getKey(),subAppsSession,subAppSettingsManager,subAppResourcesProviderManager);
+                }
+            } catch (FragmentNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
             /**
              *  Swith for subApps
              */
             //execute current activity fragments
-            try {
-                switch (fragmentType) {
-                    case CWP_SHELL_LOGIN:
+            //try {
+                //switch (fragmentType) {
+//                    case CWP_SHELL_LOGIN:
+//
+//                        break;
+//                    //developr aap
+//                    case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
+//                        currentFragment = DatabaseToolsFragment.newInstance(position,subAppSession);
+//                        break;
+//
+//                    case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
+//                        currentFragment = LogToolsFragment.newInstance(0,subAppSession);
+//                        break;
+//                    //wallet store
+//                    case CWP_SHOP_MANAGER_MAIN:
+//                        currentFragment = AllFragment.newInstance(position,subAppSession);
+//                        break;
+//                    case CWP_SHOP_MANAGER_FREE:
+//                        currentFragment = FreeFragment.newInstance(position,subAppSession);
+//                        break;
+//                    case CWP_SHOP_MANAGER_PAID:
+//                        currentFragment = PaidFragment.newInstance(position,subAppSession);
+//                        break;
+//                    case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
+//                        currentFragment = AcceptedNearbyFragment.newInstance(position,subAppSession);
+//                        break;
+//                    //**
+//                    case CWP_SUB_APP_DEVELOPER:
+//                        currentFragment = SubAppDesktopFragment.newInstance(position);
+//                        break;
+//                    case CWP_WALLET_FACTORY_MANAGER:
+//                        currentFragment = ManagerFragment.newInstance(position,subAppSession);
+//                        break;
+//                    case CWP_WALLET_FACTORY_PROJECTS:
+//                        currentFragment = ProjectsFragment.newInstance(position,subAppSession);
+//                        break;
+//                    case CWP_WALLET_FACTORY_EDIT_MODE:
+//                        currentFragment = EditableWalletFragment.newInstance(position, subAppSession,false,null);
+//                        break;
+//                    case CWP_WALLET_PUBLISHER_MAIN:
+//                        currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);
+//                        break;
 
-                        break;
-                    //developr aap
-                    case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
-                        currentFragment = DatabaseToolsFragment.newInstance(position,subAppSession);
-                        break;
 
-                    case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
-                        currentFragment = LogToolsFragment.newInstance(0,subAppSession);
-                        break;
-                    //wallet store
-                    case CWP_SHOP_MANAGER_MAIN:
-                        currentFragment = AllFragment.newInstance(position);
-                        break;
-                    case CWP_SHOP_MANAGER_FREE:
-                        currentFragment = FreeFragment.newInstance(position);
-                        break;
-                    case CWP_SHOP_MANAGER_PAID:
-                        currentFragment = PaidFragment.newInstance(position);
-                        break;
-                    case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
-                        currentFragment = AcceptedNearbyFragment.newInstance(position);
-                        break;
-                    //**
-                    case CWP_SUB_APP_DEVELOPER:
-                        currentFragment = SubAppDesktopFragment.newInstance(position);
-                        break;
-                    case CWP_WALLET_FACTORY_MANAGER:
-                        currentFragment = ManagerFragment.newInstance(position,subAppSession);
-                        break;
-                    case CWP_WALLET_FACTORY_PROJECTS:
-                        currentFragment = ProjectsFragment.newInstance(position,subAppSession);
-                        break;
-                    case CWP_WALLET_FACTORY_EDIT_MODE:
-                        currentFragment = EditableWalletFragment.newInstance(position, subAppSession,false,null);
-                        break;
-                    case CWP_WALLET_PUBLISHER_MAIN:
-                        currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);
-                        break;
-
-
-                }
-
-            }
-            catch(Exception ex)
-            {
-                errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
-
-                Toast.makeText(context, "Error in ScreenPagerAdapter GetItem " + ex.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
+//                }
+//
+//            }
+//            catch(Exception ex)
+//            {
+//                errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
+//
+//                Toast.makeText(context, "Error in ScreenPagerAdapter GetItem " + ex.getMessage(),
+//                        Toast.LENGTH_LONG).show();
+//            }
 
 
             return currentFragment;
