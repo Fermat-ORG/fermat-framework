@@ -5,36 +5,29 @@
                 <layers>
                     <layer name="Network Service">
                         <plugin
-                                name="Intra User"
-                                description="Enables searching for Intra Users and conecting one to the other"
-                                dificulty="6"
-                                code-level="development"
+                                name="Developer"
+                                description=""
+                                dificulty="5"
+                                code-level="concept"
                                 >
                             <authors>
                                 <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                                 <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                                <author name="lnacosta" scope="implementation" percentage="100"></author>
-                                <author name="laderuner" scope="unit-tests" percentage="100"></author>
                             </authors>
                             <mantainers>
-                                <mantainer name="lnacosta"></mantainer>
                             </mantainers>
                             <certifications>
-                                <certification type="implementation" signed-by="acostarodrigo"></certification>
-                                <certification type="testing" signed-by="jorgeejgonzalez"></certification>
                             </certifications>
                         </plugin>
                         <plugin
-                                name="Crypto Address"
-                                description="Enables the underground exchange of crypto addresses"
+                                name="Error Manager"
+                                description=""
                                 dificulty="5"
-                                code-level="development"
+                                code-level="concept"
                                 >
                             <authors>
                                 <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                                 <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                                <author name="lnacosta" scope="implementation" percentage="100"></author>
-                                <author name="lnacosta" scope="unit-tests" percentage="100"></author>
                             </authors>
                             <mantainers>
                             </mantainers>
@@ -83,7 +76,7 @@
                                 name="Crypto Address"
                                 description="Enables the underground exchange of crypto addresses"
                                 dificulty="5"
-                                code-level="development"
+                                code-level="concept"
                                 >
                             <authors>
                                 <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
