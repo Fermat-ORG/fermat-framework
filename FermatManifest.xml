@@ -132,7 +132,7 @@
             <plugins>
                 <layers>
 
-                    <layer name="Engine">
+                    <layer name="Engine" language="java">
                         <plugin
                                 name="Sub App Runtime"
                                 description=""
@@ -150,7 +150,7 @@
                         </plugin>
                     </layer>
 
-                    <layer name="Sub App Module">
+                    <layer name="Sub App Module" language="java">
                         <plugin
                                 name="Shell"
                                 description=""
@@ -274,7 +274,7 @@
                     </layer>
 
 
-                    <layer name="Actor">
+                    <layer name="Actor" language="java">
                         <plugin
                                 name="Developer"
                                 description=""
@@ -307,7 +307,7 @@
                         </plugin>
                     </layer>
 
-                    <layer name="Middleware">
+                    <layer name="Middleware" language="java">
                         <plugin
                                 name="Intra User Technical Support"
                                 description=""
@@ -355,7 +355,16 @@
                         </plugin>
                     </layer>
 
-                    <layer name="World">
+                    <layer name="Request" language="java"></layer>
+                    <layer name="Business Transaction" language="java"></layer>
+                    <layer name="Digital Asset Transaction" language="java"></layer>
+                    <layer name="Digital Money Transaction" language="java"></layer>
+                    <layer name="Cash Transaction" language="java"></layer>
+                    <layer name="Contract" language="java"></layer>
+                    <layer name="Composite Wallet" language="java"></layer>
+                    <layer name="Wallet" language="java"></layer>
+
+                    <layer name="World" language="java">
                         <plugin
                                 name="Location"
                                 description=""
@@ -373,7 +382,7 @@
                         </plugin>
                     </layer>
 
-                    <layer name="Identity">
+                    <layer name="Identity" language="java">
                         <plugin
                                 name="Developer"
                                 description=""
@@ -406,7 +415,7 @@
                         </plugin>
                     </layer>
 
-                    <layer name="Network Service">
+                    <layer name="Network Service" language="java">
                         <plugin
                                 name="System Monitor"
                                 description=""
@@ -513,7 +522,409 @@
             <plugins>
                 <layers>
 
-                    <layer name="Identity">
+                    <layer name="Actor" language="java">
+                        <plugin
+                                name="Intra User"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Extra User"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Shop"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Middleware" language="java">
+                        <plugin
+                                name="Wallet Contacts"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Wallet Settings"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Bank Notes"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Request" language="java">
+                        <plugin
+                                name="Money Request"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Business Transaction" language="java"></layer>
+                    <layer name="Digital Asset Transaction" language="java"></layer>
+
+                    <layer name="Digital Money Transaction" language="java">
+                        <plugin
+                                name="Incoming Device User"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Incoming Extra User"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Incoming Intra User"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Intra Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Outgoing Device User"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Outgoing Extra User"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Outgoing Intra User"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Inter Account"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Cash Transaction" language="java"></layer>
+                    <layer name="Contract" language="java"></layer>
+
+                    <layer name="Composite Wallet" language="java">
+                        <plugin
+                                name="Multi Account Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Wallet" language="java">
+                        <plugin
+                                name="Bitcoin Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Fiat Over Crypto Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Bitcoin Loss Protected Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Discount Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Fiat Wallet" language="java">
+                        <plugin
+                                name="Shop"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Coinapult"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Crypto Index"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Shape Shift"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Coinbase"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Identity" language="java">
                         <plugin
                                 name="Intra User"
                                 description=""
@@ -546,7 +957,7 @@
                         </plugin>
                     </layer>
 
-                    <layer name="Network Service">
+                    <layer name="Network Service" language="java">
                         <plugin
                                 name="Intra User"
                                 description="Enables searching for Intra Users and conecting one to the other"
