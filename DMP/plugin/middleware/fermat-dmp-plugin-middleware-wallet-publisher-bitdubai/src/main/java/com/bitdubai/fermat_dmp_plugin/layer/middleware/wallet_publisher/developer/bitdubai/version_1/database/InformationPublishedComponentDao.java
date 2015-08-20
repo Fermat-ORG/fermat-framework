@@ -617,7 +617,13 @@ public class InformationPublishedComponentDao {
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME,             walletPublishedMiddlewareInformation.getVideoUrl().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME,                walletPublishedMiddlewareInformation.getStatus().getCode());
         entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME,      walletPublishedMiddlewareInformation.getStatusTimestamp().getTime());
-        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME,   walletPublishedMiddlewareInformation.getPublicationTimestamp().getTime());
+
+        if (walletPublishedMiddlewareInformation.getPublicationTimestamp() == null) {
+            entityRecord.setLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME, 0);
+        }else {
+            entityRecord.setLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME, walletPublishedMiddlewareInformation.getPublicationTimestamp().getTime());
+        }
+
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, walletPublishedMiddlewareInformation.getPublisherIdentityPublicKey());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME, walletPublishedMiddlewareInformation.getSignature());
 
