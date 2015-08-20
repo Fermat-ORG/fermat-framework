@@ -93,7 +93,7 @@ import java.io.StringReader;
  * @since Java JDK 1.7
  */
 
-public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithIdentityIntraUser,DealsWithIntraUsersActor,DealsWithDeviceUser,DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, IntraUserModuleManager, Plugin, Service  {
+public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithIdentityIntraUser,DealsWithIntraUsersActor,DealsWithDeviceUser,DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers,  IntraUserModuleManager, Plugin, Service  {
 
     private final String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
 
@@ -145,10 +145,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
 
-    /**
-     * DealsWithPlatformDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
+
 
     /**
      * Plugin Interface member variables.
@@ -829,10 +826,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
         this.pluginId = pluginId;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
+
 
         /**
          * private methods

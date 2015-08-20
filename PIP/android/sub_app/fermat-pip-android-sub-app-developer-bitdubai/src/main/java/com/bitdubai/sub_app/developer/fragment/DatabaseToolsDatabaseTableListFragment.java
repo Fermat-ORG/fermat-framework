@@ -235,7 +235,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                         params[1] = developerDatabase;
                         params[2] = developerDatabaseTableList.get(position);
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS,params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(com.bitdubai.sub_app.developer.FragmentFactory.Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),params);
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
