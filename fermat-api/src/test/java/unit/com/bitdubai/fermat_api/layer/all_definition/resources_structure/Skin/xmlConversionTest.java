@@ -41,9 +41,6 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by rodrigo on 2015.07.24..
@@ -51,7 +48,6 @@ import java.util.UUID;
 public class xmlConversionTest extends TestCase {
 
     public void testcreateResult() {
-
 
 //        RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
 //        runtimeSubApp.setType(SubApps.CWP_SHELL);
