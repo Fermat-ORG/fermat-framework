@@ -123,6 +123,8 @@ public class TransactionsBookFragment extends Fragment{
 
 
     int type=0;
+    private TextView textView_transactions_type;
+
     /**
      *
      * @param position
@@ -177,6 +179,13 @@ public class TransactionsBookFragment extends Fragment{
             swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 
             //adapter.
+
+            textView_transactions_type = (TextView) rootView.findViewById(R.id.textView_transactions_type);
+            if(type==0){
+                textView_transactions_type.setText("Book transactions");
+            }else if(type==1){
+                textView_transactions_type.setText("Available transactions");
+            }
 
 
             // Create the adapter to convert the array to views
