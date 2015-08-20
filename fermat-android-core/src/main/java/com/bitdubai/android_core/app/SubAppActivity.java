@@ -145,7 +145,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     // Commit the transaction
                     transaction.commit();
 
-
                 break;
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT:
 
