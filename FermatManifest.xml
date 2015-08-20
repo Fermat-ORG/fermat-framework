@@ -1383,78 +1383,7 @@
             <plugins>
                 <layers>
 
-                    <layer name="Engine" language="java"></layer>
-                    <layer name="Wallet Module" language="java"></layer>
 
-
-
-                    <layer name="Request" language="java"></layer>
-
-                    <layer name="Business Transaction" language="java"></layer>
-                    <layer name="Digital Asset Transaction" language="java"></layer>
-                    <layer name="Digital Money Transaction" language="java"></layer>
-                    <layer name="Cash Transaction" language="java"></layer>
-                    <layer name="Contract" language="java"></layer>
-                    <layer name="Composite Wallet" language="java"></layer>
-                    <layer name="Fiat Wallet" language="java"></layer>
-
-                    <layer name="Identity" language="java">
-                        <plugin
-                                name="Publisher"
-                                description=""
-                                dificulty="1"
-                                code-level="development"
-                                >
-                            <authors>
-                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            </authors>
-                            <mantainers>
-                            </mantainers>
-                            <certifications>
-                            </certifications>
-                        </plugin>
-                    </layer>
-
-                    <layer name="Network Service" language="java">
-                        <plugin
-                                name="Wallet Store"
-                                description="Enables searching for Intra Users and conecting one to the other"
-                                dificulty="6"
-                                code-level="development"
-                                >
-                            <authors>
-                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                                <author name="lnacosta" scope="implementation" percentage="100"></author>
-                                <author name="laderuner" scope="unit-tests" percentage="100"></author>
-                            </authors>
-                            <mantainers>
-                                <mantainer name="lnacosta"></mantainer>
-                            </mantainers>
-                            <certifications>
-                                <certification type="implementation" signed-by="acostarodrigo"></certification>
-                                <certification type="testing" signed-by="jorgeejgonzalez"></certification>
-                            </certifications>
-                        </plugin>
-                        <plugin
-                                name="Wallet Statistics"
-                                description="Enables the underground exchange of crypto addresses"
-                                dificulty="5"
-                                code-level="concept"
-                                >
-                            <authors>
-                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                                <author name="lnacosta" scope="implementation" percentage="100"></author>
-                                <author name="lnacosta" scope="unit-tests" percentage="100"></author>
-                            </authors>
-                            <mantainers>
-                            </mantainers>
-                            <certifications>
-                            </certifications>
-                        </plugin>
-                    </layer>
 
                 </layers>
             </plugins>
