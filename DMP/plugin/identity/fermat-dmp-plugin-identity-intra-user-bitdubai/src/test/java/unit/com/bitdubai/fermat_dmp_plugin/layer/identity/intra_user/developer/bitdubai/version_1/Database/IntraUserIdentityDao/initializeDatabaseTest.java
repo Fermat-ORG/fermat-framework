@@ -11,7 +11,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdub
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserIdentitiesException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserIdentityPrivateKeyException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserIdentityDatabaseException;
-import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.AndroidPluginFileSystem;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure.DeviceUserUser;
 import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
@@ -46,14 +45,13 @@ public class initializeDatabaseTest{
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
+    @Mock
     private PluginFileSystem mockPluginFileSystem;
 
     private UUID testOwnerId1;
 
     @Before
     public void SetUp() throws CantCreateDatabaseException, CantInitializeIntraUserIdentityDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException {
-        mockPluginFileSystem = new AndroidPluginFileSystem();
-
         testOwnerId1 = UUID.randomUUID();
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         identityDao = new IntraUserIdentityDao(mockPluginDatabaseSystem, mockPluginFileSystem, testOwnerId1);
