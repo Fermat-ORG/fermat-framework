@@ -94,6 +94,4 @@ public interface WalletDescriptorFactoryProjectManager {
 
     void setProjectState(UUID projectId, FactoryProjectState state) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException;
 
-    Skin getDefaultSkin();
-    Language getDefaultLanguage();
 }

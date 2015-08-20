@@ -41,8 +41,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.Wall
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.DealsWithIntraUsersModule;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.DealsWithWalletPublisher;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.DealsWithWalletPublisherModule;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.DealsWithWalletStoreModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
@@ -1152,8 +1152,8 @@ public class Platform {
                 ((DealsWithWalletManager) plugin).setWalletManagerManager((WalletManagerManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE));
             }
 
-            if (plugin instanceof DealsWithWalletPublisher) {
-                ((DealsWithWalletPublisher) plugin).setWalletPublisherManager((WalletPublisherManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE));
+            if (plugin instanceof DealsWithWalletPublisherModule) {
+                ((DealsWithWalletPublisherModule) plugin).setWalletPublisherManager((WalletPublisherModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE));
             }
 
             if (plugin instanceof DealsWithWalletResources) {

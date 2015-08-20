@@ -55,4 +55,7 @@ public interface DescriptorFactoryProject {
      * @return the description of the project
      */
     String getDescription();
+
+
+    public int getDefaultSizeInBytes();
 }
