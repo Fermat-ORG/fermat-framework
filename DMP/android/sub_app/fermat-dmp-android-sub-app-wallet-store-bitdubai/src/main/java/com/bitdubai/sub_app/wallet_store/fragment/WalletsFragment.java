@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.fragments.RecyclerViewFragment;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 
 /**
@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletSt
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class WalletsFragment extends RecyclerViewFragment {
+public class WalletsFragment extends FermatListFragment {
 
     /**
      * STATIC

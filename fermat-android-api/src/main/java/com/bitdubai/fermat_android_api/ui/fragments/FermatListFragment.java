@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 /**
  * RecyclerView Fragment
  */
-public abstract class RecyclerViewFragment extends Fragment implements RecyclerListFragment {
+public abstract class FermatListFragment extends Fragment implements RecyclerListFragment {
 
     protected final String TAG = "Recycler Base";
     /**
