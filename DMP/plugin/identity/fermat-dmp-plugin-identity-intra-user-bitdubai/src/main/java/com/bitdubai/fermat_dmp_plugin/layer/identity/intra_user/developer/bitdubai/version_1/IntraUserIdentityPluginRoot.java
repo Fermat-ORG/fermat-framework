@@ -1,32 +1,53 @@
 package com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
+
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantCreateNewIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDao;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserIdentitiesException;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserIdentityDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityIdentity;
+import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * An Intra-User identity is used to "authenticate" in a wallet or some sub-apps.
@@ -43,8 +64,9 @@ import java.util.List;
  */
 
 
-public class IntraUserIdentityPluginRoot implements Addon, DealsWithDeviceUser, DealsWithErrors, DealsWithPlatformDatabaseSystem, DealsWithPlatformFileSystem, IntraUserIdentityManager, Service  {
+public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithErrors, DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem, IntraUserIdentityManager, LogManagerForDevelopers,Service, Plugin {
 
+    private IntraUserIdentityDao intraUserIdentityDao;
     /**
      * DealsWithDeviceUsers Interface member variables.
      */
@@ -56,20 +78,29 @@ public class IntraUserIdentityPluginRoot implements Addon, DealsWithDeviceUser, 
      */
     ErrorManager errorManager;
 
-    /**
-     * DealsWithPlatformDatabaseSystem Interface member variables.
-     */
-    PlatformDatabaseSystem platformDatabaseSystem;
+    // DealsWithPluginDatabaseSystem Interface member variables.
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * DealsWithPlatformFileSystem Interface member variables.
+     * FileSystem Interface member variables.
      */
-    PlatformFileSystem platformFileSystem;
+    PluginFileSystem pluginFileSystem;
+
+
+    /**
+     * DealsWithPluginIdentity Interface member variables.
+     */
+    UUID pluginId;
 
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+    // DealsWithlogManager interface member variable.
+    private LogManager logManager = null;
+
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
 
     /**
@@ -84,7 +115,22 @@ public class IntraUserIdentityPluginRoot implements Addon, DealsWithDeviceUser, 
      */
     @Override
     public List<IntraUserIdentity> getIntraUsersFromCurrentDeviceUser() throws CantGetUserIntraUserIdentitiesException {
-        return null;
+
+        try
+        {
+
+           DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            return   intraUserIdentityDao.getIntraUserFromCurrentDeviceUser(loggedUser);
+        }
+        catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS",e,"Error get logged user device","");
+       }
+         catch (CantGetIntraUserIdentitiesException e) {
+             throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS",e,"","");
+        }
+        catch (Exception e) {
+            throw new CantGetUserIntraUserIdentitiesException ("CAN'T GET INTRA USER IDENTITYS", FermatException.wrapException(e), "", "");
+        }
     }
 
     /**
@@ -108,14 +154,55 @@ public class IntraUserIdentityPluginRoot implements Addon, DealsWithDeviceUser, 
      */
     @Override
     public IntraUserIdentity createNewIntraUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserException {
-        return null;
+        try{
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+
+            ECCKeyPair keyPair = new ECCKeyPair();
+            String publicKey = keyPair.getPublicKey();
+            String privateKey = keyPair.getPrivateKey();
+
+            intraUserIdentityDao.createNewUser(alias,publicKey,privateKey,loggedUser,profileImage);
+
+            return new IntraUserIdentityIdentity(alias,publicKey,privateKey,profileImage);
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new CantCreateNewIntraUserException("CAN'T CREATE NEW INTRA USER IDENTITY",e,"Error get logged user device","");
+        }
+        catch(CantCreateNewDeveloperException e)
+        {
+            throw new CantCreateNewIntraUserException("CAN'T CREATE NEW INTRA USER IDENTITY",e,"Error save user on database","");
+       }
+        catch (Exception e) {
+            throw new CantCreateNewIntraUserException ("CAN'T CREATE NEW INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
+         }
+
     }
 
     /**
      * Service Interface implementation.
      */
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException{
+
+        /**
+         * I created instance of IntraUserIdentityDao
+         */
+
+
+        try {
+
+            this.intraUserIdentityDao = new IntraUserIdentityDao(pluginDatabaseSystem,this.pluginFileSystem, this.pluginId);
+
+            this.intraUserIdentityDao.initializeDatabase();
+
+        } catch (CantInitializeIntraUserIdentityDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_IDENTITY);
+        }
+
+
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -139,6 +226,48 @@ public class IntraUserIdentityPluginRoot implements Addon, DealsWithDeviceUser, 
         return serviceStatus;
     }
 
+    /**
+     * DatabaseManagerForDevelopers Interface implementation.
+     */
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+
+
+        IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+
+
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        Database database;
+        try {
+            IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
+            return dbFactory.getDatabaseTableContent(developerObjectFactory,  developerDatabaseTable);
+        }catch (CantOpenDatabaseException cantOpenDatabaseException){
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        // If we are here the database could not be opened, so we return an empry list
+        return new ArrayList<>();
+    }
 
     /**
      * DealWithDeviceUser Interface implementation.
@@ -162,15 +291,65 @@ public class IntraUserIdentityPluginRoot implements Addon, DealsWithDeviceUser, 
      * DealsWithPluginDatabaseSystem interface implementation.
      */
     @Override
-    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
-        this.platformDatabaseSystem = platformDatabaseSystem;
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+
     }
 
     /**
-     * DealWithPlatformFileSystem Interface implementation.
+     * DealWithPluginFileSystem Interface implementation.
      */
     @Override
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
-        this.platformFileSystem = platformFileSystem;
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem  = pluginFileSystem;
+
+    }
+
+
+
+
+    /**
+     * LogManagerForDevelopers Interface implementation.
+     */
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1IntraUserIdentityPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityIdentity");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDao");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDatabaseFactory");
+
+
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
+    }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (IntraUserIdentityPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                IntraUserIdentityPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                IntraUserIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                IntraUserIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+    }
+
+    /**
+     * PlugIn Interface implementation.
+     */
+    @Override
+    public void setId(UUID pluginId) {
+     this.pluginId = pluginId;
     }
 }

@@ -8,15 +8,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletDescriptorFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantRemoveWalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableDevelopersException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.FactoryProject;
@@ -226,7 +225,7 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
     }
 
     @Override
-    public FactoryProject createEmptyProject(String name, WalletCategory walletCategory, WalletType walletType) throws CantCreateWalletFactoryProjectException {
+    public FactoryProject createEmptyProject(String name, WalletCategory walletCategory, WalletType walletType) throws CantCreateWalletDescriptorFactoryProjectException {
         return null;
     }
 
@@ -250,6 +249,16 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
 
     @Override
     public FactoryProject getProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
+        return null;
+    }
+
+    @Override
+    public List<FactoryProject> getClosedProjects(FactoryProjectState state) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
+        return null;
+    }
+
+    @Override
+    public FactoryProject closeProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
         return null;
     }
 

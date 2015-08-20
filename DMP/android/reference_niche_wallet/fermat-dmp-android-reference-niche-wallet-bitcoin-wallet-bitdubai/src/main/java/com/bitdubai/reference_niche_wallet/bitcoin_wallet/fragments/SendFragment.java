@@ -7,9 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.hardware.input.InputManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -33,6 +32,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -68,7 +68,7 @@ public class SendFragment extends Fragment {
      */
     WalletSession walletSession;
     View rootView;
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
     UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
     Typeface tf;
     CryptoWallet cryptoWallet;
@@ -92,18 +92,24 @@ public class SendFragment extends Fragment {
     public boolean fromContacts = false;
 
     /**
+     * Resources
+     */
+    private WalletResourcesProviderManager walletResourcesProviderManager;
+
+    /**
      * Create a new instance of SendFragment and set walletSession and platforms plugin inside
      *
      * @param position      An object that contains all session data
      * @param walletSession SendFragment with Session and platform plugins inside
      * @return
      */
-    public static SendFragment newInstance(int position, WalletSession walletSession) {
+    public static SendFragment newInstance(int position, WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         SendFragment f = new SendFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -201,7 +207,7 @@ public class SendFragment extends Fragment {
             });
 
             try {
-                long availableBalance = cryptoWallet.getAvailableBalance(wallet_id);
+                long availableBalance = cryptoWallet.getAvailableBalance(walletPublicKey);
                 editAmount.setHint("available funds: " + availableBalance + " bits");
             } catch (Exception ex) {
 
@@ -222,9 +228,10 @@ public class SendFragment extends Fragment {
                 rootView.findViewById(R.id.change_account).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        getActivity().getSupportFragmentManager()
+                        getActivity().getFragmentManager()
                                 .beginTransaction()
-                                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+                                        // TODO commented due to error
+                                //.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
                                 .replace(R.id.fragment_container2, ContactsFragment.newInstance(0, walletSession))
                                 .commit();
                     }
@@ -274,7 +281,7 @@ public class SendFragment extends Fragment {
                         }
                     } catch (Exception e) {
                         try {
-                            long actualBalance = cryptoWallet.getAvailableBalance(wallet_id);
+                            long actualBalance = cryptoWallet.getAvailableBalance(walletPublicKey);
                             editAmount.setHint("Available amount: " + actualBalance + " bits");
                         } catch (Exception ex) {
 
@@ -335,7 +342,7 @@ public class SendFragment extends Fragment {
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
             for (WalletContactRecord wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
             }
@@ -357,10 +364,10 @@ public class SendFragment extends Fragment {
             if(!amount.getText().toString().equals("") && amount.getText()!=null) {
                 try {
                     //TODO que pasa si no puedo crear el user?
-                    WalletContactRecord walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+                    WalletContactRecord walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
 
                     // TODO harcoded deliveredbyactorid
-                    cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
+                    cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), walletPublicKey, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {
@@ -469,5 +476,9 @@ public class SendFragment extends Fragment {
      */
     public void setWalletSession(WalletSession walletSession) {
         this.walletSession = walletSession;
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 }

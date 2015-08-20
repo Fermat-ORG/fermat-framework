@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
@@ -62,37 +63,41 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
 
     /**
      * bring all contacts from the selected wallet
-     * @param walletId wallet's id
+     * @param walletPublicKey wallet's id
      */
     @Override
-    public List<WalletContactRecord> listWalletContacts(UUID walletId) throws CantGetAllWalletContactsException {
+    public List<WalletContactRecord> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException {
         List<WalletContactRecord> walletContactRecords;
         try {
-            walletContactRecords = walletContactsMiddlewareDao.findAll(walletId);
+            walletContactRecords = walletContactsMiddlewareDao.findAll(walletPublicKey);
         } catch (CantGetAllWalletContactsException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (Exception e){
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
         return walletContactRecords;
     }
 
     /**
      * bring all contacts from the selected wallet limited by parameter
-     * @param walletId wallet's id
+     * @param walletPublicKey wallet's id
      * @param max number of entities to get
      * @param offset position in the list for pagination
      * @return List<WalletContactRecord> walletsContacts with all attributes
      * @throws CantGetAllWalletContactsException
      */
     @Override
-    public List<WalletContactRecord> listWalletContactsScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException {
+    public List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException {
         List<WalletContactRecord> walletContactRecords;
         try {
-            walletContactRecords = walletContactsMiddlewareDao.findAllScrolling(walletId, max, offset);
+            walletContactRecords = walletContactsMiddlewareDao.findAllScrolling(walletPublicKey, max, offset);
             return walletContactRecords;
         } catch (CantGetAllWalletContactsException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (Exception e){
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -102,21 +107,23 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
      * @param actorName actor's name
      * @param actorType actor's actorType (extra-intra-device)
      * @param receivedCryptoAddress received cryptoAddress
-     * @param walletId wallet's id
+     * @param walletPublicKey wallet's id
      * @return WalletContactRecord
      */
     @Override
-    public WalletContactRecord createWalletContact(UUID actorId, String actorName, Actors actorType, CryptoAddress receivedCryptoAddress, UUID walletId) throws CantCreateWalletContactException {
+    public WalletContactRecord createWalletContact(UUID actorId, String actorName, Actors actorType, CryptoAddress receivedCryptoAddress, String walletPublicKey) throws CantCreateWalletContactException {
 
         WalletContactRecord walletContactRecord;
         try {
             UUID contactId = UUID.randomUUID();
-            walletContactRecord = new WalletContactsMiddlewareRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
+            walletContactRecord = new WalletContactsMiddlewareRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletPublicKey);
             walletContactsMiddlewareDao.create(walletContactRecord);
             return walletContactRecord;
         } catch (CantCreateWalletContactException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (Exception e){
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -128,6 +135,8 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
         } catch (CantUpdateWalletContactException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (Exception e){
+            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -138,26 +147,30 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
         } catch (CantDeleteWalletContactException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (Exception e){
+            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
     @Override
-    public WalletContactRecord getWalletContactByNameAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
+    public WalletContactRecord getWalletContactByNameAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException {
         WalletContactRecord walletContactRecord;
         try {
-            walletContactRecord = walletContactsMiddlewareDao.findByNameAndWalletId(actorName, walletId);
+            walletContactRecord = walletContactsMiddlewareDao.findByNameAndWalletPublicKey(actorName, walletPublicKey);
             return walletContactRecord;
         } catch (CantGetWalletContactException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (Exception e){
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
     @Override
-    public List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
+    public List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException {
         List<WalletContactRecord> walletContactRecordList;
         try {
-            walletContactRecordList = walletContactsMiddlewareDao.findByNameContainsAndWalletId(actorName, walletId);
+            walletContactRecordList = walletContactsMiddlewareDao.findByNameContainsAndWalletPublicKey(actorName, walletPublicKey);
             return walletContactRecordList;
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

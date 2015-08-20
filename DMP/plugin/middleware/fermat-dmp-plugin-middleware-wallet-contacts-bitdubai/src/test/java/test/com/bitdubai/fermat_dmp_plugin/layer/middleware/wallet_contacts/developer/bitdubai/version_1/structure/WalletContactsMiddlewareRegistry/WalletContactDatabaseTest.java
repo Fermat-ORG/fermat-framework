@@ -1,6 +1,8 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -44,8 +46,19 @@ public class WalletContactDatabaseTest {
     private DatabaseTransaction mockDatabaseTransaction;
 
     private UUID testPluginId;
-    private CryptoAddress receivedCryptoAddress;
+
+    private UUID testActorId;
+
+    private UUID testContactId;
+
+    private String testContactName;
+
+    private String testWalletPublicKey;
+
+    private CryptoAddress testReceivedCryptoAddress;
+
     private List<DatabaseTableRecord> databaseTableRecordList;
+
     private Actors actorType;
 
     WalletContactsMiddlewareDao walletContactsMiddlewareDao;
@@ -54,7 +67,13 @@ public class WalletContactDatabaseTest {
     @Before
     public void setUp() throws Exception {
         testPluginId = UUID.randomUUID();
-        actorType = Actors.DEVICE_USER;
+        testContactId = UUID.randomUUID();
+        testActorId = UUID.randomUUID();
+        testContactName = "Estanislao";
+        testWalletPublicKey = new ECCKeyPair().getPublicKey();
+        actorType = Actors.EXTRA_USER;
+        testReceivedCryptoAddress = new CryptoAddress("crypto_address", CryptoCurrency.BITCOIN);
+
         databaseTableRecordList = new ArrayList<>();
         databaseTableRecordList.add(mockDatabaseTableRecord);
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem);
@@ -71,7 +90,8 @@ public class WalletContactDatabaseTest {
         when(mockDatabaseTable.getEmptyRecord()).thenReturn(mockDatabaseTableRecord);
         when(mockDatabase.newTransaction()).thenReturn(mockDatabaseTransaction);
         walletContactsMiddlewareRegistry.initialize();
-        walletContactsMiddlewareRegistry.createWalletContact(testPluginId, testPluginId.toString(), actorType, receivedCryptoAddress, testPluginId);
+
+        walletContactsMiddlewareRegistry.createWalletContact(testActorId, testContactName, actorType, testReceivedCryptoAddress, testWalletPublicKey);
     }
 
     @Test
@@ -81,7 +101,8 @@ public class WalletContactDatabaseTest {
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabase.newTransaction()).thenReturn(mockDatabaseTransaction);
         walletContactsMiddlewareRegistry.initialize();
-        walletContactsMiddlewareRegistry.updateWalletContact(testPluginId, receivedCryptoAddress, testPluginId.toString());
+
+        walletContactsMiddlewareRegistry.updateWalletContact(testContactId, testReceivedCryptoAddress, testContactName);
     }
 
     @Test
@@ -91,6 +112,7 @@ public class WalletContactDatabaseTest {
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(mockDatabase.newTransaction()).thenReturn(mockDatabaseTransaction);
         walletContactsMiddlewareRegistry.initialize();
-        walletContactsMiddlewareRegistry.deleteWalletContact(testPluginId);
+
+        walletContactsMiddlewareRegistry.deleteWalletContact(testContactId);
     }
 }

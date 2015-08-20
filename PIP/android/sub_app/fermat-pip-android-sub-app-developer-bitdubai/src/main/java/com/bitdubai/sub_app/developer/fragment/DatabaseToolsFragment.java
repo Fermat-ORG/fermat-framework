@@ -1,13 +1,11 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
@@ -47,7 +44,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends Fragment{
+public class DatabaseToolsFragment extends Fragment {
 
 
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES.getKey();
@@ -119,23 +116,20 @@ public class DatabaseToolsFragment extends Fragment{
 
             for (int i = 0; i < plugins.size(); i++) {
                 Resource item = new Resource();
-
                 item.picture = "plugin";
-                item.resource = plugins.get(i).toString().toLowerCase().replace("_", " ");
+                item.label = plugins.get(i).toString().toLowerCase().replace("_", " ");
+                item.code = plugins.get(i).getKey();
                 item.type=Resource.TYPE_PLUGIN;
                 mlist.add(item);
-                //}
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
-
                 item.picture = "addon";
-                item.resource = addons.get(i).getCode();
+                item.label = addons.get(i).toString().replace("_", " ");
+                item.code = addons.get(i).getCode();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
-                //}
             }
-
 
             Configuration config = getResources().getConfiguration();
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -143,20 +137,14 @@ public class DatabaseToolsFragment extends Fragment{
             } else {
                 gridView.setNumColumns(3);
             }
-            //@SuppressWarnings("unchecked")
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
-            _adpatrer.notifyDataSetChanged();
-            gridView.setAdapter(_adpatrer);
-
-            //listView.setAdapter(adapter);
+            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
+            adapter.notifyDataSetChanged();
+            gridView.setAdapter(adapter);
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
-
-        //LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
-        //l.addView(gridView);
 
         return rootView;
     }
@@ -215,8 +203,7 @@ public class DatabaseToolsFragment extends Fragment{
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.resource);
-            // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.companyTextView.setText(item.label);
 
 
             switch (item.picture) {

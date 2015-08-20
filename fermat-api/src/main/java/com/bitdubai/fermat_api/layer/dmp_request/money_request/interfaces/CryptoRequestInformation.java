@@ -2,11 +2,20 @@ package com.bitdubai.fermat_api.layer.dmp_request.money_request.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import java.util.UUID;
+
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_request.money_request.interfaces.CryptoRequestInformation</code>
  * provides the methods to access the information of a crypto request
  */
 public interface CryptoRequestInformation {
+
+    /**
+     * The method <code>getRequestId</code> returns the identifier of the request
+     *
+     * @return the identifier of the request
+     */
+    UUID getRequestId();
 
     /**
      * The method <code>getSenderWalletPublicKey</code> returns the public key of the wallet sending

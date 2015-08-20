@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSingIntraUserMessageException;
@@ -17,24 +18,47 @@ import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUse
  */
 public class IntraUserIdentityIdentity implements IntraUserIdentity {
 
+    private String alias;
+    private String publicKey;
+    private byte[] profileImage;
+    private String privateKey;
+
+    /**
+     * Constructor
+     */
+
+    public IntraUserIdentityIdentity(String alias,String publicKey,String privateKey,byte[] profileImage)
+    {
+        this.alias = alias;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+        this.privateKey = privateKey;
+    }
     @Override
     public String getAlias() {
-        return null;
+        return this.alias;
     }
 
     @Override
     public String getPublicKey() {
-        return null;
+        return this.publicKey;
     }
 
     @Override
-    public byte[] getProfileImage() throws CantShowProfileImageException {
-        return new byte[0];
+    public byte[] getProfileImage() {
+        return this.profileImage;
     }
 
     @Override
     public String createMessageSignature(String message) throws CantSingIntraUserMessageException {
-        return null;
+        try{
+            return AsymmectricCryptography.createMessageSignature(message, this.privateKey);
+        }
+        catch(Exception e)
+        {
+            throw new CantSingIntraUserMessageException("Fatal Error Signed message",e,"","");
+        }
+
     }
 
     /**

@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantStoreMemoException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
@@ -50,7 +50,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     private Database database;
     //private UUID internalWalletId;
 
-    private Map<UUID, UUID> walletIds =  new HashMap<>();
+    private Map<String, UUID> walletIds =  new HashMap<>();
 
     private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
 
@@ -123,7 +123,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     //       The internal Id generated should be checked before assigning it (check it was
     //       not previously assign)
 
-    public UUID create(UUID walletId) throws CantCreateWalletException {
+    public UUID create(String walletId) throws CantCreateWalletException {
         try{
             // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
             //       We need to change this in the near future
@@ -246,7 +246,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
 
                 if(!stringWalletId.equals("")) {
                     String[] idPair = stringWalletId.split(",", -1);
-                    walletIds.put(UUID.fromString(idPair[0]),  UUID.fromString(idPair[1]));
+                    walletIds.put(idPair[0],  UUID.fromString(idPair[1]));
                 }
             }
         } catch (CantLoadFileException exception) {

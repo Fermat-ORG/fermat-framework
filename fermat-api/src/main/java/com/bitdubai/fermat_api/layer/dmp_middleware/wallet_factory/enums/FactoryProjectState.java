@@ -10,18 +10,21 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums;
  * @since Java JDK 1.7
  */
 public enum FactoryProjectState {
-    DRAFT("draft"),
-    VERSIONED("versioned"),
-    DISMISSED("dismissed");
+    IN_PROGRESS("In_Progress"),//draft
+    CLOSED("Closed"),//versioned
+    PUBLISHED("Published"),
+    DELETED("Deleted");//dismissed
 
-    public static FactoryProjectState fromValue(String key) {
+    public static FactoryProjectState getByCode(String key) {
         switch(key) {
-            case"draft":
-                return DRAFT;
-            case"versioned":
-                return VERSIONED;
-            case"dismissed":
-                return DISMISSED;
+            case"In_Progress":
+                return IN_PROGRESS;
+            case"Closed":
+                return CLOSED;
+            case"Published":
+                return PUBLISHED;
+            case"Deleted":
+                return DELETED;
         }
         //throw new InvalidParameterException(key);
         return null;

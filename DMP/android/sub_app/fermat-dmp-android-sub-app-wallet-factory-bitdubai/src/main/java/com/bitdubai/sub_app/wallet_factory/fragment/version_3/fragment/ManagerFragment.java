@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +10,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectProposalsException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectsException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposalManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
-
-import java.util.List;
 
 
 public class ManagerFragment extends  Fragment {
@@ -64,9 +57,9 @@ public class ManagerFragment extends  Fragment {
         balances_available = new String[]{"$1,970.00 available"};
 
         /*try {
-            //List<WalletFactoryProject> lstFactoryProjects= subAppSession.getWalletFactoryManager().getAllWalletFactoryProjects();
+            //List<DescriptorFactoryProject> lstFactoryProjects= subAppSession.getWalletDescriptorFactoryProjectManager().getAllWalletFactoryProjects();
 
-            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletFactoryManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
+            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletDescriptorFactoryProjectManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
 
             //List<WalletFactoryProjectProposal> walletFactoryProjectProposal= walletFactoryProjectProposalManager.getProposals();
 

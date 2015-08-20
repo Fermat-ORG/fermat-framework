@@ -9,11 +9,16 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
+import java.util.List;
 import java.util.UUID;
+import android.app.Fragment;
 
 
 public class ProjectsFragment extends FermatFragment {
@@ -59,9 +64,13 @@ public class ProjectsFragment extends FermatFragment {
     }
 
 
-    public class WalletFactoryProject implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject {
+    public class WalletDescriptorFactoryProject implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProject {
 
         private String developerPublicKey;
+
+        private String publisherIdentityKey;
+
+        private String description;
 
         private UUID id;
 
@@ -73,8 +82,18 @@ public class ProjectsFragment extends FermatFragment {
 
         private String detail;
 
-        public WalletFactoryProject(String developerPublicKey, UUID id, String name, Wallets type) {
+        private DescriptorFactoryProjectType descriptorFactoryProjectType;
+
+        private List<LanguageDescriptorFactoryProject> languageDescriptorFactoryProjectList;
+
+        private List<SkinDescriptorFactoryProject> skinDescriptorFactoryProjectList;
+
+        public WalletDescriptorFactoryProject(String developerPublicKey, UUID id, String name, Wallets type, String publisherIdentityKey, String description, DescriptorFactoryProjectType descriptorFactoryProjectType) {
             this.developerPublicKey = developerPublicKey;
+            this.publisherIdentityKey = publisherIdentityKey;
+            this.description = description;
+            this.descriptorFactoryProjectType = descriptorFactoryProjectType;
+            this.type = type;
             this.id = id;
             this.name = name;
             this.type = type;
@@ -82,8 +101,19 @@ public class ProjectsFragment extends FermatFragment {
 
         @Override
         public String getDeveloperPublicKey() {
-            return null;
+            return developerPublicKey;
         }
+
+        @Override
+        public String getPublisherIdentityKey()  {
+            return publisherIdentityKey;
+        }
+
+        @Override
+        public DescriptorFactoryProjectType getDescriptorProjectType() {return descriptorFactoryProjectType; }
+
+        @Override
+        public String getDescription() {return description;}
 
         @Override
         public UUID getId() {
@@ -91,17 +121,25 @@ public class ProjectsFragment extends FermatFragment {
         }
 
         @Override
+        public UUID getWalletId() {return null;}
+
+        @Override
         public String getName() {
             return null;
         }
 
         @Override
-        public Wallets getType() {
+        public Wallets getWalletType() {
             return null;
         }
 
         @Override
         public String getPath() {
+            return null;
+        }
+
+        @Override
+        public FactoryProjectState getState() {
             return null;
         }
 
@@ -112,37 +150,12 @@ public class ProjectsFragment extends FermatFragment {
         public int getIcono() {
             return icono;
         }
-    }
-
-    public class WalletFactoryProjectProposal implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectProposal {
-
-
-        private UUID id;
-        private String alias;
-        private FactoryProjectState state;
-
 
         @Override
-        public UUID getId() {
-            return null;
-        }
+        public List<LanguageDescriptorFactoryProject> getLanguages() { return languageDescriptorFactoryProjectList; };
 
         @Override
-        public String getAlias() {
-            return null;
-        }
-
-        @Override
-        public FactoryProjectState getState() {
-            return null;
-        }
-
-        @Override
-        public String getPath() {
-            return null;
-        }
-
-
+        public List<SkinDescriptorFactoryProject> getSkins() {return skinDescriptorFactoryProjectList; }
     }
 
 }

@@ -60,7 +60,6 @@ public class DeveloperDatabaseFactory {
             DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME, cryptoTransactionsTableColumns);
             tables.add(cryptoTransactionsTable);
 
-
             /**
              * Fermat transaction columns
              */
@@ -85,7 +84,6 @@ public class DeveloperDatabaseFactory {
              */
             DeveloperDatabaseTable TransitionProtocol_StatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_NAME, TransitionProtocol_StatusTableColumns);
             tables.add(TransitionProtocol_StatusTable);
-
 
             return tables;
         }

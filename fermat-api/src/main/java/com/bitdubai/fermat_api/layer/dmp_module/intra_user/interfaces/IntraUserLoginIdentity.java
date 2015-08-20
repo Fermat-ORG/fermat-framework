@@ -6,6 +6,8 @@ package com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces;
  */
 public interface IntraUserLoginIdentity {
 
+
+
     /**
      * The method  <code>getAlias</code> returns the alias of the intra user identity
      *

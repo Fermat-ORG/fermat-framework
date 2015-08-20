@@ -1,13 +1,13 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,6 +25,7 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -63,7 +64,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     private ErrorManager errorManager;
 
     View rootView;
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
 
     //Type face font
@@ -90,6 +91,24 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     ProgressBar mLoadingView;
     // empty view
     TextView mEmptyView;
+
+    /**
+     * Resources
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
+
+
+
+    public static ContactsFragment newInstance(WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+        if (walletSession == null)
+            return null;
+        ContactsFragment f = new ContactsFragment();
+        f.setWalletSession(walletSession);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
+
+
+        return f;
+    }
 
 
     @Override
@@ -124,7 +143,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         //get contacts list
         List<WalletContactRecord> walletContactRecords = new ArrayList<>();
         try {
-            walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
@@ -296,11 +315,12 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
                     String accountName = String.valueOf(adapter.getItem(position));
-                    Fragment fragment = ContactDetailFragment.newInstance(walletSession, accountName);
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    Fragment fragment = ContactDetailFragment.newInstance(walletSession, accountName,walletResourcesProviderManager);
+                    FragmentManager fragmentManager = getActivity().getFragmentManager();
                     fragmentManager
                             .beginTransaction()
-                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                    //TODO COMMENTED FOR ERROR WHEN TRYING TO GET CONTACT DETAIL
+                                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                             .add(R.id.fragment_container2, fragment)
                             .attach(fragment)
                             .show(fragment)
@@ -344,9 +364,13 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         this.walletSession = walletSession;
     }
 
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
+    }
+
 
     /**
-     * Sort array and extract sections in background Thread here we use AsyncTask
+     * Sort array and extract sections f background Thread here we use AsyncTask
      */
     private class Populate extends AsyncTask<ArrayList<String>, Void, Void> {
         private final int TOTAL_CONTACTS_SECTION_POSITION = 0;

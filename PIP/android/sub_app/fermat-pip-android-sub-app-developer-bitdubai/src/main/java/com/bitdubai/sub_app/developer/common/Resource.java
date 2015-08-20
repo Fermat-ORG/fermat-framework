@@ -12,7 +12,9 @@ public class Resource implements Serializable {
 
         public String picture;
 
-        public String resource;
+        public String label;
+
+        public String code;
 
         public String developer;
 
@@ -21,9 +23,10 @@ public class Resource implements Serializable {
         @Override
         public String toString() {
                 return "Resource{" +
-                        "picture='" + picture + '\'' +
-                        ", resource='" + resource + '\'' +
-                        ", developer='" + developer + '\'' +
+                        "picture=\'" + picture + "\'" +
+                        ", label=\'" + label + "\'" +
+                        ", code=\'" + code + "\'" +
+                        ", developer=\'" + developer + "\'" +
                         ", type=" + type +
                         '}';
         }

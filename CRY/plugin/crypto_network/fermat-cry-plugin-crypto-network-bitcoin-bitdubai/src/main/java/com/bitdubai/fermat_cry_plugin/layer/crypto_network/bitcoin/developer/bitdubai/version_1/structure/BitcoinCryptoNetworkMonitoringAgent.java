@@ -42,7 +42,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     private StoredBlockChain storedBlockChain;
     private PeerGroup peers;
     private Wallet wallet;
-    private UUID userId;
+    private String userPublicKey;
 
 
     /**
@@ -75,11 +75,11 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
      * constructor
      * @param wallet the BitcoinJ wallet that will be used to store the transactions and specify which
      *               addresses to monitore
-     * @param UserId the user ID that we are calling the connection for.
+     * @param userPublicKey the user ID that we are calling the connection for.
      */
-    public BitcoinCryptoNetworkMonitoringAgent(Wallet wallet, UUID UserId){
+    public BitcoinCryptoNetworkMonitoringAgent(Wallet wallet, String userPublicKey){
         this.wallet = wallet;
-        this.userId = UserId;
+        this.userPublicKey = userPublicKey;
         this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
         peers = null;
     }
@@ -190,7 +190,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          * I prepare the block chain object
          */
         try {
-            storedBlockChain = new StoredBlockChain(wallet, userId);
+            storedBlockChain = new StoredBlockChain(wallet, userPublicKey);
             storedBlockChain.setPluginId(pluginId);
             storedBlockChain.setPluginFileSystem(pluginFileSystem);
             storedBlockChain.setErrorManager(errorManager);

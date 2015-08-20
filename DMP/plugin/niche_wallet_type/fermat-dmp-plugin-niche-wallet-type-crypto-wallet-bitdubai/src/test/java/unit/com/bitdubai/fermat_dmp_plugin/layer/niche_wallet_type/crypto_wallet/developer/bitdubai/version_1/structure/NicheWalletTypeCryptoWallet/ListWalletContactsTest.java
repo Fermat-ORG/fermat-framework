@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
@@ -56,6 +57,7 @@ public class ListWalletContactsTest extends TestCase {
     WalletContactsRegistry walletContactsRegistry;
 
     UUID walletId;
+    String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
 
@@ -63,6 +65,7 @@ public class ListWalletContactsTest extends TestCase {
     public void setUp() throws Exception {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
         walletId = UUID.randomUUID();
+        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         nicheWalletTypeCryptoWallet.setErrorManager(errorManager);
@@ -73,16 +76,16 @@ public class ListWalletContactsTest extends TestCase {
 
     @Test
     public void testListWalletContacts_NotNull() throws Exception {
-        List<WalletContactRecord> walletContactRecordsList = nicheWalletTypeCryptoWallet.listWalletContacts(walletId);
+        List<WalletContactRecord> walletContactRecordsList = nicheWalletTypeCryptoWallet.listWalletContacts(walletPublicKey);
         assertThat(walletContactRecordsList).isNotNull();
     }
 
     @Test
     public void testListWalletContacts_CantGetAllWalletContactsException() throws Exception {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException())
-        .when(walletContactsRegistry).listWalletContacts(any(UUID.class));
+        .when(walletContactsRegistry).listWalletContacts(anyString());
 
-        catchException(nicheWalletTypeCryptoWallet).listWalletContacts(walletId);
+        catchException(nicheWalletTypeCryptoWallet).listWalletContacts(walletPublicKey);
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantGetAllWalletContactsException.class);
@@ -91,7 +94,7 @@ public class ListWalletContactsTest extends TestCase {
     @Test
     public void testListWalletContacts_RegistryIsNotInitialized_CantGetAllWalletContactsException() throws Exception {
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
-        catchException(nicheWalletTypeCryptoWallet).listWalletContacts(walletId);
+        catchException(nicheWalletTypeCryptoWallet).listWalletContacts(walletPublicKey);
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantGetAllWalletContactsException.class);

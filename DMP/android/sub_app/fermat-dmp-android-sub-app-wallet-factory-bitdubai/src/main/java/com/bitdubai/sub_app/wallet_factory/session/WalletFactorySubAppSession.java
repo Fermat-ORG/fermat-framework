@@ -1,10 +1,8 @@
 package com.bitdubai.sub_app.wallet_factory.session;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ProjectsFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,14 +29,13 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
     private ErrorManager errorManager;
 
     /**
-     *  WalletFactoryManager
+     *  WalletDescriptorFactoryProjectManager
      */
-    private WalletFactoryManager walletFactoryManager;
+    private WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager;
 
     /**
      *  Projects opened
      */
-    private Map<WalletFactoryProject,ProjectsFragment.WalletFactoryProjectProposal> walletFactoryProjectWalletFactoryProjectProposalMap;
 
 
     /**
@@ -49,11 +46,11 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
 
 
 
-    public WalletFactorySubAppSession(SubApps subApps, ErrorManager errorManager,WalletFactoryManager walletFactoryManager){
+    public WalletFactorySubAppSession(SubApps subApps, ErrorManager errorManager,WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager){
         this.subApps=subApps;
         data= new HashMap<String,Object>();
         this.errorManager=errorManager;
-        this.walletFactoryManager=walletFactoryManager;
+        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
     }
 
     public WalletFactorySubAppSession(SubApps subApps) {
@@ -80,8 +77,8 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
     }
 
 
-    public WalletFactoryManager getWalletFactoryManager() {
-        return walletFactoryManager;
+    public WalletDescriptorFactoryProjectManager getWalletDescriptorFactoryProjectManager() {
+        return walletDescriptorFactoryProjectManager;
     }
 
     @Override
