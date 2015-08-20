@@ -239,7 +239,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     }
 
     /**
-     * DealWithEvents Interface implementation. 
+     * DealWithEvents Interface implementation.
      */
 
     @Override
@@ -248,7 +248,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     }
 
     /**
-     * DealWithErrors Interface implementation. 
+     * DealWithErrors Interface implementation.
      */
 
     @Override
@@ -257,7 +257,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     }
 
     /**
-     * DealsWithPluginIdentity methods implementation. 
+     * DealsWithPluginIdentity methods implementation.
      */
 
     @Override
@@ -268,7 +268,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
     /**
      * The first time this plugins runs, it will setup the initial structure for the App, subApp and so on through the local
-     * interfaces of the classes involved, 
+     * interfaces of the classes involved,
      */
     private void firstRunCheck() {
 
@@ -281,7 +281,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
 
     /**
-     * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the 
+     * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.
      */
     private void factoryReset() throws CantFactoryResetException {
@@ -563,7 +563,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeSubApp.addActivity(runtimeActivity);
 
 
-
             /**End Wallet Factory*/
 
             //wallet Publisher app
@@ -600,7 +599,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_PUBLISHER_MAIN);
             runtimeActivity.addFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN, runtimeFragment);
-
 
 
             /**End Wallet Publisher*/
@@ -729,7 +727,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
              */
 
 
-        /*-- wallet store --*/
+            /*-- wallet store --*/
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
 
@@ -760,47 +758,30 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeTabStrip = new TabStrip();
             runtimeTab = new Tab();
-            runtimeTab.setLabel("All");
-            runtimeTab.setFragment(Fragments.CWP_SHOP_MANAGER_MAIN);
+            runtimeTab.setLabel("INSTALLED");
+            runtimeTab.setFragment(Fragments.CWP_SHOP_MANAGER_INSTALLED);
             runtimeTabStrip.addTab(runtimeTab);
             runtimeTab = new Tab();
-            runtimeTab.setLabel("Free");
-            runtimeTab.setFragment(Fragments.CWP_SHOP_MANAGER_FREE);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Paid");
-            runtimeTab.setFragment(Fragments.CWP_SHOP_MANAGER_PAID);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Accepted nearby");
-            runtimeTab.setFragment(Fragments.CWP_SHOP_MANAGER_ACCEPTED_NEARBY);
+            runtimeTab.setLabel("WALLETS");
+            runtimeTab.setFragment(Fragments.CWP_SHOP_MANAGER_WALLETS);
             runtimeTabStrip.addTab(runtimeTab);
 
 
             runtimeActivity.setTabStrip(runtimeTabStrip);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_MAIN);
-            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_MAIN, runtimeFragment);
+            runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_INSTALLED);
+            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_INSTALLED, runtimeFragment);
 
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_FREE);
-            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_FREE, runtimeFragment);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_PAID);
-            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_PAID, runtimeFragment);
+            runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_WALLETS);
+            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_WALLETS, runtimeFragment);
 
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_ACCEPTED_NEARBY);
-            runtimeActivity.addFragment(Fragments.CWP_SHOP_MANAGER_ACCEPTED_NEARBY, runtimeFragment);
-
-
-/**
- * End of Wallet Store
- */
+            /**
+             * End of Wallet Store
+             */
 
             //Account Details
 

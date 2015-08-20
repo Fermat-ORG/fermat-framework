@@ -11,10 +11,9 @@ public enum Fragments implements FermatFragments {
     CWP_WALLET_MANAGER_MAIN("CWMM"),
     CWP_SUB_APP_DEVELOPER("CSAD"),
     CWP_WALLET_MANAGER_SHOP("CWMS"),
-    CWP_SHOP_MANAGER_MAIN("CSMM"),
-    CWP_SHOP_MANAGER_FREE("CSMF"),
-    CWP_SHOP_MANAGER_PAID("CSMP"),
-    CWP_SHOP_MANAGER_ACCEPTED_NEARBY("CSMAN"),
+    /*wallet store*/
+    CWP_SHOP_MANAGER_INSTALLED("CSMI"),
+    CWP_SHOP_MANAGER_WALLETS("CSMW"),
 
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND("CWRWBTCABS"),
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE("CWRWBTCABB"),
@@ -117,14 +116,6 @@ public enum Fragments implements FermatFragments {
                 return Fragments.CWP_SUB_APP_DEVELOPER;
             case "CWMS":
                 return Fragments.CWP_WALLET_MANAGER_SHOP;
-            case "CSMM":
-                return Fragments.CWP_SHOP_MANAGER_MAIN;
-            case "CSMF":
-                return Fragments.CWP_SHOP_MANAGER_FREE;
-            case "CSMP":
-                return Fragments.CWP_SHOP_MANAGER_PAID;
-            case "CSMAN":
-                return Fragments.CWP_SHOP_MANAGER_ACCEPTED_NEARBY;
             case "CWRWBTCABS":
                 return Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND;
             case "CWRWBTCABB":
@@ -229,6 +220,11 @@ public enum Fragments implements FermatFragments {
                 return Fragments.CWP_WALLET_FACTORY_MANAGER;
             case "CWFP":
                 return Fragments.CWP_WALLET_FACTORY_PROJECTS;
+            /*wallet store*/
+            case "CSMI":
+                return Fragments.CWP_SHOP_MANAGER_INSTALLED;
+            case "CSMW":
+                return Fragments.CWP_SHOP_MANAGER_WALLETS;
 
         }
 
