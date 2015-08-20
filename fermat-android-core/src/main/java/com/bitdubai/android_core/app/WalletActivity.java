@@ -1,31 +1,40 @@
 package com.bitdubai.android_core.app;
 
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
 
 
 /**
@@ -33,7 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
  */
 
 
-public class WalletActivity extends FermatActivity{
+public class WalletActivity extends FermatActivity implements FermatScreenSwapper {
 
 
     public static final String INSTALLED_WALLET="installedWallet";
@@ -193,11 +202,15 @@ public class WalletActivity extends FermatActivity{
              */
             if(activity.getTabStrip() == null && activity.getFragments().size() > 1){
                 initialisePaging();
-            }else{
+            }
+            if (activity.getTabStrip() !=null ){
                 /**
                  * Paint tabs
                  */
-                setPagerTabs(wallet,activity.getTabStrip(),walletSession);
+                setPagerTabs(wallet, activity.getTabStrip(), walletSession);
+            }
+            if(activity.getFragments().size() == 1){
+                setOneFragmentInScreen();
             }
         }
         catch (Exception e) {
@@ -205,6 +218,31 @@ public class WalletActivity extends FermatActivity{
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
+    }
+    private void setOneFragmentInScreen(){
+        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.only_fragment_container));
+        WalletNavigationStructure walletRuntime= getWalletRuntimeManager().getLastWallet();
+        String walletPublicKey = walletRuntime.getPublicKey();
+        FragmentFactory fragmentFactory= WalletFragmentFactory.getFragmentFactoryByWalletType(walletPublicKey);
+
+        try {
+            if(fragmentFactory!=null){
+                Fragments fragment = walletRuntime.getLastActivity().getLastFragment().getType();
+                WalletSession walletSession = getWalletSessionManager().getWalletSession(walletPublicKey);
+                android.app.Fragment fragmet=fragmentFactory.getFragment(fragment.toString(), walletSession, getWalletSettingsManager(),getWalletResourcesProviderManager());
+                FragmentTransaction FT = getFragmentManager().beginTransaction();
+                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                FT.replace(R.id.only_fragment_container, fragmet);
+                FT.addToBackStack(null);
+                FT.attach(fragmet);
+                FT.show(fragmet);
+                FT.commit();
+
+            }
+        } catch (FragmentNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
     private WalletSession createOrCallWalletSession(){
         Bundle bundle = getIntent().getExtras();
@@ -234,4 +272,32 @@ public class WalletActivity extends FermatActivity{
 
     }
 
+    @Override
+    public void changeActivity(String activityName, Object... objects) {
+        try {
+            resetThisActivity();
+
+            getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
+
+            loadUI(getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()));
+
+
+        }catch (Exception e){
+
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+        }
+
+
+    }
+
+    @Override
+    public void changeScreen(String screen, Object[] objects) {
+
+    }
+
+    @Override
+    public void selectWallet(InstalledWallet installedWallet) {
+
+    }
 }

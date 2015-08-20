@@ -1,15 +1,12 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.app.AlertDialog;
-
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
@@ -139,10 +135,10 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         try {
 
             if (databases.type==Databases.TYPE_ADDON) {
-                Addons addon = Addons.getByKey(databases.resource);
+                Addons addon = Addons.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
             } else if (databases.type==Databases.TYPE_PLUGIN) {
-                Plugins plugin = Plugins.getByKey(databases.resource);
+                Plugins plugin = Plugins.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
             }
 

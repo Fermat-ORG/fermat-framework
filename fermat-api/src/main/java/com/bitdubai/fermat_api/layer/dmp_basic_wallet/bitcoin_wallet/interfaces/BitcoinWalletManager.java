@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public interface BitcoinWalletManager {
 
-    public BitcoinWalletWallet loadWallet (UUID walletId) throws CantLoadWalletException;
+    public BitcoinWalletWallet loadWallet (String walletPublicKey) throws CantLoadWalletException;
 
-    public void createWallet (UUID walletId) throws CantCreateWalletException;
+    public void createWallet (String walletPublicKey) throws CantCreateWalletException;
 }

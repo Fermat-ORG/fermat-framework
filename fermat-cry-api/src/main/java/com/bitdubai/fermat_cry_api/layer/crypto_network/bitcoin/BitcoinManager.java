@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin;
 
 
-import java.util.UUID;
-
 /**
  * Created by rodrigoa on 20/05/15.
  */
 public interface BitcoinManager {
 
-    UUID walletID = null;
+    // changed from UUID to Strubg representing a public key
+    // Ezequiel Postan August 15th 2015
+    String walletID = null;
 
     /**
      *   Used to specify the network that will be used by the plug in.

@@ -185,7 +185,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
                         System.out.println("New CommunicationChannelAddress linked on " + networkInterface.getName());
                         System.out.println("Host = " + communicationChannelAddress.getHost());
-                        System.out.println("Port = " + communicationChannelAddress.getPort());
+                        System.out.println("Port = "     + communicationChannelAddress.getPort());
                         System.out.println("Identity Public Key = " + identity.getPublicKey());
                         System.out.println("Cloud Service Manager on " + networkInterface.getName() + " started.");
 

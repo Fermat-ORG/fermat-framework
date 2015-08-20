@@ -32,7 +32,16 @@ public interface CatalogItem {
     /**
      * Detailed information of the item
      */
-    public DetailedCatalogItem getDetailedCatalogItem() throws CantGetWalletDetailsException;
+    public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException;
 
+    //public void setWalletName(String name);
+
+    //public void setWalletCatalogId(UUID id);
+
+    //public void setCategory(WalletCategory category);
+
+    //public void setDefaultSizeInBytes(int defaultSizeInBytes);
+
+    //public void setIcon(byte[] icon);
 
 }

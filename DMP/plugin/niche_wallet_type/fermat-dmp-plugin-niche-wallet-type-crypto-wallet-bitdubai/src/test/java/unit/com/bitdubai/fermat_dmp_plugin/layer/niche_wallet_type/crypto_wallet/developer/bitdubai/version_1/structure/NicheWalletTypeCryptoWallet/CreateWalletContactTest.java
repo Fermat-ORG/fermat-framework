@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -97,6 +98,7 @@ public class CreateWalletContactTest extends TestCase {
     CryptoAddress deliveredCryptoAddress;
     ReferenceWallet referenceWallet;
     UUID walletId;
+    String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
 
@@ -107,6 +109,7 @@ public class CreateWalletContactTest extends TestCase {
         deliveredCryptoAddress = new CryptoAddress("asdasd ", CryptoCurrency.BITCOIN);
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
         walletId = UUID.randomUUID();
+        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         nicheWalletTypeCryptoWallet.setErrorManager(errorManager);
@@ -119,13 +122,13 @@ public class CreateWalletContactTest extends TestCase {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
         doReturn(user).when(extraUserManager).createActor(anyString());
         doReturn(cryptoAddress).when(cryptoVaultManager).getAddress();
-        doReturn(walletContactRecord).when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), any(UUID.class));
+        doReturn(walletContactRecord).when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), anyString());
         nicheWalletTypeCryptoWallet.initialize();
     }
 
     @Test
     public void testCreateWalletContact_NotNull() throws Exception {
-        WalletContactRecord walletContactRecord = nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+        WalletContactRecord walletContactRecord = nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
         assertThat(walletContactRecord).isNotNull();
     }
 
@@ -133,9 +136,9 @@ public class CreateWalletContactTest extends TestCase {
     @Ignore
     @Test
     public void testCreateWalletContact_ContactAlreadyExists() throws Exception {
-        doReturn(walletContactRecord).when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));
+        doReturn(walletContactRecord).when(walletContactsRegistry).getWalletContactByNameAndWalletPublicKey(anyString(), anyString());
 
-        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
     }
 
     // TYPE OF ACTOR NOT RECOGNIZED BY THE PLUGIN
@@ -143,7 +146,7 @@ public class CreateWalletContactTest extends TestCase {
     public void testCreateWalletContact_ActorTypeNotRecognized() throws Exception {
         actorType = Actors.INTRA_USER;
 
-        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
     }
 
     /**
@@ -154,25 +157,25 @@ public class CreateWalletContactTest extends TestCase {
     // CANT REGISTER ACTOR ADDRESS BOOK TEST
     @Test(expected=CantCreateWalletContactException.class)
     public void testCreateWalletContact_CantRegisterActorAddressBookException() throws Exception {
-        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException("gasdil", null, null, null))
-                .when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), any(UUID.class));
+        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException("MOCK", null, null, null))
+                .when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), anyString());
 
-        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
     }
 
     // CANT GET REQUESTED CONTACT TO KNOW IF ALREADY EXISTS TEST
     @Test(expected=CantCreateWalletContactException.class)
     public void testCreateWalletContact_CantGetWalletContactException() throws Exception {
-        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException("gasdil", null, null, null))
-            .when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));
+        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException("MOCK", null, null, null))
+            .when(walletContactsRegistry).getWalletContactByNameAndWalletPublicKey(anyString(), anyString());
 
-        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
     }
 
     @Test
     public void testCreateWalletContact_RegistryIsNotInitialized_CantGetWalletContactException() throws Exception {
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
-        catchException(nicheWalletTypeCryptoWallet).createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletId);
+        catchException(nicheWalletTypeCryptoWallet).createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantCreateWalletContactException.class);

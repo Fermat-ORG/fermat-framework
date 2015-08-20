@@ -1,9 +1,10 @@
 package com.bitdubai.android_core.app.common.version_1.adapters;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
@@ -22,12 +23,14 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
+import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.EditableWalletFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ManagerFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ProjectsFragment;
@@ -44,7 +47,8 @@ import java.util.List;
     public class TabsPagerAdapter extends FragmentPagerAdapter {
 
 
-        private String[] titles;
+
+    private String[] titles;
 
 
         private Context context;
@@ -63,6 +67,8 @@ import java.util.List;
         private ErrorManager errorManager;
 
         private WalletSettingsManager walletSettingsManager;
+
+        private WalletResourcesProviderManager walletResourcesProviderManager;
 
         public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,ApplicationSession applicationSession,ErrorManager errorManager) {
             super(fm);
@@ -87,7 +93,7 @@ import java.util.List;
 
         }
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,FragmentFactory fragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletSettingsManager walletSettingsManager) {
+        public TabsPagerAdapter(FragmentManager fm,Context context,FragmentFactory fragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
             super(fm);
             this.context=context;
 
@@ -96,6 +102,7 @@ import java.util.List;
             this.fragmentFactory=fragmentFactory;
             this.tabStrip=tabStrip;
             this.walletSettingsManager=walletSettingsManager;
+            this.walletResourcesProviderManager =walletResourcesProviderManager;
 
             if(tabStrip != null){
                 List<Tab> titleTabs = tabStrip.getTabs();
@@ -111,11 +118,11 @@ import java.util.List;
 
         public void destroyItem(android.view.ViewGroup container, int position, Object object) {
 
-            FragmentManager manager = ((android.support.v4.app.Fragment) object).getFragmentManager();
+            FragmentManager manager = ((Fragment) object).getFragmentManager();
             if(manager != null) {
                 FragmentTransaction trans = manager.beginTransaction();
-                trans.detach((android.support.v4.app.Fragment) object);
-                trans.remove((android.support.v4.app.Fragment) object);
+                trans.detach((Fragment) object);
+                trans.remove((Fragment) object);
                 trans.commit();
 
 
@@ -139,7 +146,7 @@ import java.util.List;
         }
 
         @Override
-        public android.support.v4.app.Fragment getItem(int position) {
+        public Fragment getItem(int position) {
 
 
 
@@ -148,7 +155,7 @@ import java.util.List;
              */
             SubAppsSession subAppSession=null;
 
-            android.support.v4.app.Fragment currentFragment = null;
+            Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
             List<Tab> titleTabs =tabStrip.getTabs();
             for (int j = 0; j < titleTabs.size(); j++) {
@@ -180,7 +187,7 @@ import java.util.List;
 
             try {
                 if(fragmentFactory!=null){
-                    currentFragment=fragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettingsManager);
+                    currentFragment=fragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettingsManager,walletResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -225,6 +232,9 @@ import java.util.List;
                         break;
                     case CWP_WALLET_FACTORY_PROJECTS:
                         currentFragment = ProjectsFragment.newInstance(position,subAppSession);
+                        break;
+                    case CWP_WALLET_FACTORY_EDIT_MODE:
+                        currentFragment = EditableWalletFragment.newInstance(position, subAppSession,false,null);
                         break;
                     case CWP_WALLET_PUBLISHER_MAIN:
                         currentFragment = com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment.newInstance(position);

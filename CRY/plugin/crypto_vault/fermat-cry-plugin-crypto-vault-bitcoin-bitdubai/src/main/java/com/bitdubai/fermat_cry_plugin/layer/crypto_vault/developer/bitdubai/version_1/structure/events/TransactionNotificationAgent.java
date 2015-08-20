@@ -42,7 +42,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
      * TransactionNotificationAgent variables
      */
     Database database;
-    UUID walletId;
+    String userPublicKey;
 
     /**
      * Agent interface member variables
@@ -81,12 +81,12 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
     /**
      * Constructor
      */
-    public TransactionNotificationAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, UUID walletId){
+    public TransactionNotificationAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, String userPublicKey){
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.walletId = walletId;
+        this.userPublicKey = userPublicKey;
     }
 
     /**
@@ -208,7 +208,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
              */
             try {
 
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, walletId.toString());
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, userPublicKey);
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
                 /**
@@ -222,7 +222,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  */
                 try {
 
-                    database =  databaseFactory.createDatabase(pluginId, walletId.toString());
+                    database =  databaseFactory.createDatabase(pluginId, userPublicKey);
 
                 }
                 catch (CantCreateDatabaseException cantCreateDatabaseException){

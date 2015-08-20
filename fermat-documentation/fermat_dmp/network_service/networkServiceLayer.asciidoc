@@ -11,7 +11,7 @@ There are some common patterns in the way all the network services (the plug-ins
 Let's say we have two devices A and B and a network service that is implemented in both devices. The network service implementations will communicate as pairs, i.e. the  network service implementation of A will interact directly (in a logical way) to the  implementation in B and vice versa. Physically the communication will be conducted trough the communication layer but the components will interact as if they where talking directly to each other (as if they were in the same device). +
 
 To implement this, each plug-in (network service) has two special classes. One represent the local network service and the other represent the remote network service. +
-The remote network service class internally has a connection provided by communication layer. When two devices A and B interact trough a network service we have this image:
+The remote network service class internally has a connection provided by communication layer. When two devices A and B interact trough a network service we have this imageMiddleware:
 
 ----
        Device A           Device B
