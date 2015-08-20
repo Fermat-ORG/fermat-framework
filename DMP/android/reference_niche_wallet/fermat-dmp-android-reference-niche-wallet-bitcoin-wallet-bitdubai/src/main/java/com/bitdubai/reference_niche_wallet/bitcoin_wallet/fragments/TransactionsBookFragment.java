@@ -92,7 +92,7 @@ public class TransactionsBookFragment extends Fragment{
      */
     //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
-    private int cantTransactions = 10;
+    private int cantTransactions = 50;
 
 
     /**
@@ -444,9 +444,9 @@ public class TransactionsBookFragment extends Fragment{
 
                     if(textView_amount != null)
                         if(type==0){
-                            textView_amount.setText(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance()+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode())+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
                         }else if( type==1){
-                            textView_amount.setText(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance()+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(),ShowMoneyType.BITCOIN.getCode())+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
                         }
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
