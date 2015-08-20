@@ -484,7 +484,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         defaultSkin,
                                                         defaultLanguage,
                                                         null,//otherLanguageSupportedList, //Todo Revisar
-                                                        null);
+                                                        null,
+                                                        null); //Coloca el ulr del publisher
     }
 
     /**
@@ -517,7 +518,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                screenShotDetails,
                                                hasVideoPreview,
                                                videoPreviews,
-                                               null, // TODO: skinURL cambiar por la pagina del publisher
                                                0,    // TODO: skinSizeInBytes
                                                null, // TODO: designer
                                                Boolean.TRUE);
@@ -547,7 +547,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                     initialWalletVersion,
                                                     finalWalletVersion,
                                                     videoPreviews,
-                                                    null, // TODO: LanguageURL cambiar por la pagina del publisher
                                                     0,    // TODO: skinSizeInBytes
                                                     null, // TODO: designer
                                                     Boolean.TRUE);

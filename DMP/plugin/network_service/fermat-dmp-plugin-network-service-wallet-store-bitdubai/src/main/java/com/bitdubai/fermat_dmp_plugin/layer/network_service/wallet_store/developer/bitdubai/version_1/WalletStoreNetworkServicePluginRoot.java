@@ -510,7 +510,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
         byte[] presentationImage = new byte[]{114, 22};
         skin.setPresentationImage(presentationImage);
-        skin.setUrl(new URL("http://example.com/pages/"));
+        //skin.setUrl(new URL("http://example.com/pages/"));
         skin.setSkinSizeInBytes(100);
         skin.setFinalWalletVersion(new Version(1, 0, 0));
         skin.setHasVideoPreview(false);
@@ -543,7 +543,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         detailedCatalogItemImpl.setPlatformFinalVersion(new Version("1.0.0"));
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language language = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language();
-        language.setUrl(new URL("http://example.com/pages/"));
+        //language.setUrl(new URL("http://example.com/pages/"));
         language.setWalletId(walletId);
         language.setId(UUID.randomUUID());
         language.setInitialWalletVersion(new Version("1.0.0"));
@@ -600,7 +600,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                                       Version initalWalletVersion,
                                       Version finalWalletVersion,
                                       List<URL> videoPreviews,
-                                      URL LanguageURL,
                                       long languageSizeInBytes,
                                       Translator translator,
                                       boolean isDefault)
@@ -615,7 +614,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         languageImpl.setVersion(version);
         languageImpl.setInitialWalletVersion(initalWalletVersion);
         languageImpl.setFinalWalletVersion(finalWalletVersion);
-        languageImpl.setUrl(LanguageURL);
         languageImpl.setLanguagePackageSizeInBytes((int) languageSizeInBytes);
         languageImpl.setTranslator((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator)translator); //Todo Implementation
         languageImpl.setIsDefault(isDefault);
@@ -623,7 +621,20 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         return languageImpl;
     }
 
-    public Skin constructSkin(UUID skinId, String nameSkin, UUID walletId, ScreenSize screenSize, Version version, Version initalWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL skinURL, int skinSizeInBytes, Designer designer, boolean isDefault ){
+    public Skin constructSkin(UUID skinId,
+                              String nameSkin,
+                              UUID walletId,
+                              ScreenSize screenSize,
+                              Version version,
+                              Version initalWalletVersion,
+                              Version finalWalletVersion,
+                              byte[] presentationImage,
+                              List<byte[]> previewImageList,
+                              boolean hasVideoPreview,
+                              List<URL> videoPreviews,
+                              int skinSizeInBytes,
+                              Designer designer,
+                              boolean isDefault ){
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skinImpl;
 
@@ -640,13 +651,13 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skinImpl.setPreviewImageList(previewImageList);
         skinImpl.setHasVideoPreview(hasVideoPreview);
         skinImpl.setVideoPreviews(videoPreviews);
-        skinImpl.setUrl(skinURL);
         skinImpl.setSkinSizeInBytes(skinSizeInBytes);
-        skinImpl.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer)designer); //Todo implementation
+        skinImpl.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer)designer);
         skinImpl.setIsDefault(isDefault);
 
         return skinImpl;
     }
+
     public Developer constructDeveloper(UUID developerId, String name, String PublicKey)
     {
         Developer developerImpl;
@@ -692,7 +703,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                                             Skin skin,
                                             Language language,
                                             Developer developer,
-                                            List<Language> languages) throws CantGetWalletIconException {
+                                            List<Language> languages,
+                                            URL publisherWebsiteUrl) throws CantGetWalletIconException {
 
         CatalogItemImpl catalogItemImpl = new CatalogItemImpl();
         DetailedCatalogItemImpl detailedCatalogItemImpl;
@@ -706,13 +718,13 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         catalogItemImpl.setDescription(description);
         catalogItemImpl.setWalletCatalogId(walletId);
         catalogItemImpl.setIcon(icon);
+        catalogItemImpl.setpublisherWebsiteUrl(publisherWebsiteUrl);
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin constructskin;
         constructskin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
 
         constructskin.setId(skin.getSkinId());
         constructskin.setPresentationImage(skin.getPresentationImage());
-        constructskin.setUrl(skin.getSkinURL());
         constructskin.setSkinSizeInBytes((int) skin.getSkinSizeInBytes());
         constructskin.setFinalWalletVersion(skin.getInitialWalletVersion());
         constructskin.setHasVideoPreview(false);
@@ -724,14 +736,14 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         constructskin.setIsDefault(skin.isDefault());
         constructskin.setScreenSize(skin.getScreenSize());
 
-        constructskin.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) skin.getDesigner()); //Todo Implementation
+        constructskin.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) skin.getDesigner());
 
         detailedCatalogItemImpl.setVersion(version);
         detailedCatalogItemImpl.setPlatformInitialVersion(platformInitialVersion);
         detailedCatalogItemImpl.setPlatformFinalVersion(platformFinalVersion);
         detailedCatalogItemImpl.setDefaultSkin(skin);
         detailedCatalogItemImpl.setSkins(skins);
-        detailedCatalogItemImpl.setDeveloper((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer) developer); //Todo Implementation
+        detailedCatalogItemImpl.setDeveloper((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer) developer);
         detailedCatalogItemImpl.setLanguage(language);
         detailedCatalogItemImpl.setLanguages(languages);
 

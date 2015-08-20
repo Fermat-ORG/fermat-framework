@@ -21,7 +21,6 @@ public class WalletStoreCatalogDatabaseConstants {
     public static final String WALLETSKIN_WALLETID_COLUMN_NAME = "walletId";
     public static final String WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME = "walletInitialVersion";
     public static final String WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME = "walletFinalVersion";
-    public static final String WALLETSKIN_URL_COLUMN_NAME = "url";
     public static final String WALLETSKIN_SIZE_COLUMN_NAME = "size";
     public static final String WALLETSKIN_DESIGNERID_COLUMN_NAME = "designerId";
     public static final String WALLETSKIN_ISDEFAULT_COLUMN_NAME = "isDefault";
@@ -56,7 +55,6 @@ public class WalletStoreCatalogDatabaseConstants {
     public static final String WALLETLANGUAGE_WALLETID_COLUMN_NAME = "walletid";
     public static final String WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME = "walletInitialVersion";
     public static final String WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME = "walletFinalVersion";
-    public static final String WALLETLANGUAGE_URL_COLUMN_NAME = "url";
     public static final String WALLETLANGUAGE_FILESIZE_COLUMN_NAME = "filesize";
     public static final String WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME = "translatorId";
     public static final String WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME = "isDefault";
@@ -88,6 +86,7 @@ public class WalletStoreCatalogDatabaseConstants {
     public static final String ITEM_PLATFORMINITIALVERSION_COLUMN_NAME = "platformInitialVersion";
     public static final String ITEM_PLATFORMFINALVERSION_COLUMN_NAME = "platformFinalVersion";
     public static final String ITEM_DEVELOPER_ID_COLUMN_NAME = "developerId";
+    public static final String ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME = "url";
 
     static final String ITEM_FIRST_KEY_COLUMN = "id";
 

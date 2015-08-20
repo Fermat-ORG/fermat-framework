@@ -179,7 +179,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME, catalogItemImpl.getCategory().toString());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME, catalogItemImpl.getDescription());
         record.setIntegerValue(WalletStoreCatalogDatabaseConstants.ITEM_SIZE_COLUMN_NAME, catalogItemImpl.getDefaultSizeInBytes());
-        //detailedCatalogItem
+        record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME, catalogItemImpl.getpublisherWebsiteUrl().toString());
         try {
             record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_VERSION_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getVersion().toString());
             record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getPlatformInitialVersion().toString());
@@ -221,7 +221,6 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, skin.getWalletId());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, skin.getInitialWalletVersion().toString());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, skin.getFinalWalletVersion().toString());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME, skin.getSkinURL().toString());
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, skin.getDesigner().getId());
         record.setLongValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME, skin.getSkinSizeInBytes());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME, String.valueOf(skin.isDefault()));
@@ -292,7 +291,6 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME, language.getWalletId());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME, language.getInitialWalletVersion().toString());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME, language.getFinalWalletVersion().toString());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME, language.getFileURL().toString());
         record.setIntegerValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME, language.getLanguagePackageSizeInBytes());
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, language.getTranslator().getId());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME, String.valueOf(language.isDefault()));
@@ -404,6 +402,16 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         /**
          * the detailed catalog item will be null at this point.
          */
+
+        String databaseURL = null;
+        URL url = null;
+        try {
+            databaseURL = record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME);
+            url = new URL(databaseURL);
+        } catch (MalformedURLException e) {
+            throw new InvalidResultReturnedByDatabaseException(e, databaseURL, "incorrect URL format.");
+        }
+        catalogItemImpl.setpublisherWebsiteUrl(url);
         return catalogItemImpl;
     }
 
@@ -743,15 +751,6 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         skin.setDesigner(designer);
 
         skin.setSkinSizeInBytes(record.getIntegerValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME));
-        URL url = null;
-        String databaseURL = record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME);
-        try {
-            url = new URL(databaseURL);
-        } catch (MalformedURLException e) {
-            throw new InvalidResultReturnedByDatabaseException(e, databaseURL, "incorrect URL format.");
-        }
-        skin.setUrl(url);
-
 
         return skin;
     }
@@ -814,15 +813,6 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         Translator translator = getTranslator(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME));
         language.setTranslator(translator);
 
-        String databaseURL = null;
-        URL url = null;
-        try {
-            databaseURL = record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME);
-            url = new URL(databaseURL);
-        } catch (MalformedURLException e) {
-            throw new InvalidResultReturnedByDatabaseException(e, databaseURL, "incorrect URL format.");
-        }
-        language.setUrl(url);
 
         language.setWalletId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME));
 
