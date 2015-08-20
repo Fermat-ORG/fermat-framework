@@ -67,12 +67,12 @@ public class WalletDescriptorFactoryMiddlewareProject extends DescriptorFactoryM
     }
 
     @Override
-    public Skin getDefaultSkin() {
+    public SkinDescriptorFactoryProject getDefaultSkin() {
         return null;
     }
 
     @Override
-    public Language getDefaultLanguage() {
+    public LanguageDescriptorFactoryProject getDefaultLanguage() {
         return null;
     }
 }

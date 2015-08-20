@@ -19,7 +19,7 @@ public interface WalletDescriptorFactoryProject extends DescriptorFactoryProject
     public DeveloperIdentity getDeveloperIdentity();
 
 
-    Skin getDefaultSkin();
-    Language getDefaultLanguage();
+    SkinDescriptorFactoryProject getDefaultSkin();
+    LanguageDescriptorFactoryProject getDefaultLanguage();
 
 }
