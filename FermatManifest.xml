@@ -1307,7 +1307,90 @@
                 </layers>
             </addons>
         </column>
+        <column code="WPD" name="Wallet Production and Distribution" logo="WPD_logo.png">
+            <androids>
+                <layers>
 
+                    <layer name="Niche Wallet"></layer>
+                    <layer name="Reference Wallet"></layer>
+
+                    <layer name="Sub App">
+                        <android
+                                name="Wallet Manager"
+                                description=""
+                                dificulty="1"
+                                code-level="production"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+                        <android
+                                name="Wallet Factory"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+                        <android
+                                name="Wallet Publisher"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+                        <android
+                                name="Wallet Store"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+
+                    </layer>
+
+                </layers>
+            </androids>
+
+            <addons>
+                <layers>
+                    <layer>
+                        <addon></addon>
+                        <addon></addon>
+                        <addon></addon>
+                    </layer>
+                </layers>
+            </addons>
+        </column>
     </columns>
     <super-layers>
         <super-layer code="OSA" name="Operative System API">
