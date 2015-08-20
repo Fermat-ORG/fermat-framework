@@ -1,8 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
-import android.content.Context;
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,13 +16,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -32,17 +34,11 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionItem;
-
-
-import android.widget.TextView;
-import android.widget.Toast;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,13 +51,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
-
 
 /**
  * Created by Matias Furszyfer
  */
-public class TransactionsFragment extends Fragment{
+public class TransactionsBookFragment extends Fragment{
 
     private static final String ARG_POSITION = "position";
 
@@ -127,6 +121,7 @@ public class TransactionsFragment extends Fragment{
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
 
+
     /**
      *
      * @param position
@@ -134,8 +129,8 @@ public class TransactionsFragment extends Fragment{
      * @return
      */
 
-    public static TransactionsFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
-        TransactionsFragment f = new TransactionsFragment();
+    public static TransactionsBookFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+        TransactionsBookFragment f = new TransactionsBookFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
@@ -272,9 +267,9 @@ public class TransactionsFragment extends Fragment{
 //        } catch (CantGetResourcesException e) {
 //            e.printStackTrace();
 //        }
-//
-//        Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
-//        imageView.setImageDrawable(drawable);
+
+        //Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+        //imageView.setImageDrawable(drawable);
 
         return rootView;
     }
@@ -374,6 +369,7 @@ public class TransactionsFragment extends Fragment{
     }
 
 
+
     /**
      * List Item adapter
      */
@@ -432,10 +428,7 @@ public class TransactionsFragment extends Fragment{
                     }
 
                     if(textView_amount != null)
-                        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(), ShowMoneyType.BITCOIN.getCode()));
-                        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode())
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode()));
+                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
