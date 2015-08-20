@@ -518,8 +518,8 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     }
 
     @Override
-    public IntraUserNotification getNotifications(String intraUserLogedInPublicKey) {
-        return null;
+    public List<IntraUserNotification> getNotifications(){
+        return new ArrayList<IntraUserNotification>();
     }
 
     @Override

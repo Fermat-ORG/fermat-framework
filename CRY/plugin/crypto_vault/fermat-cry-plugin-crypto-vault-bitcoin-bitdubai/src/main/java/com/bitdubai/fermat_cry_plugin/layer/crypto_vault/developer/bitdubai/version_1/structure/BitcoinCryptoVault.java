@@ -640,7 +640,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * If the transaction doesn't have a locktime, I will return the current timestamp
          */
-            return System.currentTimeMillis() / 1000L;
+            return System.currentTimeMillis();
         else
         /**
          * I get the current timestamp
