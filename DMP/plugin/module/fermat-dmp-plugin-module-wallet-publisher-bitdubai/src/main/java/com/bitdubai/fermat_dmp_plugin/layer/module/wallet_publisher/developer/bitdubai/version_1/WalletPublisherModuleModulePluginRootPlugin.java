@@ -14,9 +14,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
@@ -28,7 +27,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantPublishComponentException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -58,7 +57,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherModulePluginRootPlugin implements Service, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherManager
+public class WalletPublisherModuleModulePluginRootPlugin implements Service, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherModuleManager
 {
 
     /**
@@ -109,7 +108,7 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
     /**
      * Constructor
      */
-    public WalletPublisherModulePluginRootPlugin() {
+    public WalletPublisherModuleModulePluginRootPlugin() {
         serviceStatus = ServiceStatus.CREATED;
         listenersAdded = new ArrayList<>();
     }
@@ -273,7 +272,7 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1.WalletPublisherModulePluginRootPlugin");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1.WalletPublisherModuleModulePluginRootPlugin");
 
         /**
          * I return the values.
@@ -295,11 +294,11 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (WalletPublisherModulePluginRootPlugin.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                WalletPublisherModulePluginRootPlugin.newLoggingLevel.remove(pluginPair.getKey());
-                WalletPublisherModulePluginRootPlugin.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (WalletPublisherModuleModulePluginRootPlugin.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                WalletPublisherModuleModulePluginRootPlugin.newLoggingLevel.remove(pluginPair.getKey());
+                WalletPublisherModuleModulePluginRootPlugin.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                WalletPublisherModulePluginRootPlugin.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                WalletPublisherModuleModulePluginRootPlugin.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
@@ -307,7 +306,7 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#getProjectsReadyToPublish()
+     * @see WalletPublisherModuleManager#getProjectsReadyToPublish()
      */
     @Override
     public List<DescriptorFactoryProject> getProjectsReadyToPublish() {
@@ -338,43 +337,43 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#getPublishedComponents(String)
+     * @see WalletPublisherModuleManager#getPublishedComponents(PublisherIdentity)
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedComponents(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException {
-        return walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().getPublishedComponents(publisherIdentityPublicKey);
+    public List<InformationPublishedComponent> getPublishedComponents(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException {
+        return walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().getPublishedComponents(publisherIdentity.getPublicKey());
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#getPublishedWallets(String)
+     * @see WalletPublisherModuleManager#getPublishedWallets(PublisherIdentity)
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedWallets(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException {
-        return walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().getPublishedWallets(publisherIdentityPublicKey);
+    public List<InformationPublishedComponent> getPublishedWallets(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException {
+        return walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().getPublishedWallets(publisherIdentity.getPublicKey());
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#getPublishedSkins(String)
+     * @see WalletPublisherModuleManager#getPublishedSkins(PublisherIdentity)
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedSkins(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException {
-        return walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().getPublishedSkins(publisherIdentityPublicKey);
+    public List<InformationPublishedComponent> getPublishedSkins(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException {
+        return walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().getPublishedSkins(publisherIdentity.getPublicKey());
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#getPublishedLanguages(String)
+     * @see WalletPublisherModuleManager#getPublishedLanguages(PublisherIdentity)
      */
     @Override
-    public List<InformationPublishedComponent> getPublishedLanguages(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException {
-        return walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().getPublishedLanguages(publisherIdentityPublicKey);
+    public List<InformationPublishedComponent> getPublishedLanguages(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException {
+        return walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().getPublishedLanguages(publisherIdentity.getPublicKey());
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#getInformationPublishedComponentWithDetails(UUID)
+     * @see WalletPublisherModuleManager#getInformationPublishedComponentWithDetails(UUID)
      */
     @Override
     public InformationPublishedComponent getInformationPublishedComponentWithDetails(UUID idInformationPublishedComponent) throws CantGetPublishedComponentInformationException {
@@ -383,57 +382,57 @@ public class WalletPublisherModulePluginRootPlugin implements Service, DealsWith
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#publishSkin(SkinDescriptorFactoryProject, byte[], byte[], List, URL, String, Version, Version, Version, Version, String))
+     * @see WalletPublisherModuleManager#publishSkin(SkinDescriptorFactoryProject, byte[], byte[], List, URL, String, Version, Version, Version, Version, PublisherIdentity))
      */
     @Override
-    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,  String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException {
+    public void publishSkin(SkinDescriptorFactoryProject skinDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,  String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             String signature = null; //TODO: This have to be generate by the PublisherIdentity method
 
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishSkin(skinDescriptorFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey, signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishSkin(skinDescriptorFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentity.getPublicKey(), signature);
             walletDescriptorFactoryProjectManager.setProjectState(skinDescriptorFactoryProject.getId(), FactoryProjectState.PUBLISHED);
 
         } catch (Exception exception) {
-            throw new CantPublishComponentException(CantPublishComponentException.DEFAULT_MESSAGE, exception, "WalletPublisherModulePluginRootPlugin", "unknown");
+            throw new CantPublishComponentException(CantPublishComponentException.DEFAULT_MESSAGE, exception, "WalletPublisherModuleModulePluginRootPlugin", "unknown");
         }
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#publishLanguage(LanguageDescriptorFactoryProject, byte[], byte[], String, Version, Version, Version, Version, String))
+     * @see WalletPublisherModuleManager#publishLanguage(LanguageDescriptorFactoryProject, byte[], byte[], String, Version, Version, Version, Version, PublisherIdentity))
      */
     @Override
-    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot,  String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException {
+    public void publishLanguage(LanguageDescriptorFactoryProject languageDescriptorFactoryProject, byte[] icon, byte[] mainScreenShot,  String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             String signature = null; //TODO: This have to be generate by the PublisherIdentity method
 
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishLanguage(languageDescriptorFactoryProject, icon, mainScreenShot, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey, signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishLanguage(languageDescriptorFactoryProject, icon, mainScreenShot, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentity.getPublicKey(), signature);
             walletDescriptorFactoryProjectManager.setProjectState(languageDescriptorFactoryProject.getId(), FactoryProjectState.PUBLISHED);
 
         } catch (Exception exception) {
-            throw new CantPublishComponentException(CantPublishComponentException.DEFAULT_MESSAGE, exception, "WalletPublisherModulePluginRootPlugin", "unknown");
+            throw new CantPublishComponentException(CantPublishComponentException.DEFAULT_MESSAGE, exception, "WalletPublisherModuleModulePluginRootPlugin", "unknown");
         }
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherManager#publishWallet(WalletDescriptorFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, String)
+     * @see WalletPublisherModuleManager#publishWallet(WalletDescriptorFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, PublisherIdentity)
      */
-    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey) throws CantPublishComponentException {
+    public void publishWallet(WalletDescriptorFactoryProject walletDescriptorFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             String signature = null; //TODO: This have to be generate by the PublisherIdentity method
 
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletDescriptorFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey, signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletDescriptorFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentity.getPublicKey(), signature);
             walletDescriptorFactoryProjectManager.setProjectState(walletDescriptorFactoryProject.getId(), FactoryProjectState.PUBLISHED);
 
         } catch (Exception exception) {
-            throw new CantPublishComponentException(CantPublishComponentException.DEFAULT_MESSAGE, exception, "WalletPublisherModulePluginRootPlugin", "unknown");
+            throw new CantPublishComponentException(CantPublishComponentException.DEFAULT_MESSAGE, exception, "WalletPublisherModuleModulePluginRootPlugin", "unknown");
         }
     }
 
