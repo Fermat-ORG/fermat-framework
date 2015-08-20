@@ -44,6 +44,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionIt
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -85,7 +87,7 @@ public class TransactionsFragment extends Fragment{
     private View rootView;
     private ListView listViewTransactions;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private TextView textView_transactions_type;
 
     /**
      * List transactions
@@ -98,7 +100,7 @@ public class TransactionsFragment extends Fragment{
      */
     //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
-    private int cantTransactions = 10;
+    private int cantTransactions = 50;
 
 
     /**
@@ -126,6 +128,7 @@ public class TransactionsFragment extends Fragment{
      * Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
+
 
     /**
      *
@@ -172,7 +175,7 @@ public class TransactionsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        UUID skinId = UUID.randomUUID();
+
         try {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
             // Get ListView object from xml
@@ -181,11 +184,13 @@ public class TransactionsFragment extends Fragment{
 
             //adapter.
 
+            textView_transactions_type = (TextView) rootView.findViewById(R.id.textView_transactions_type);
+            textView_transactions_type.setText(walletSession.getBalanceTypeSelected());
 
             // Create the adapter to convert the array to views
 
 
-                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
+            lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
 
 
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
@@ -432,10 +437,7 @@ public class TransactionsFragment extends Fragment{
                     }
 
                     if(textView_amount != null)
-                        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(), ShowMoneyType.BITCOIN.getCode()));
-                        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode())
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode()));
+                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode()));
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));

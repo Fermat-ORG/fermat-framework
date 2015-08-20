@@ -64,10 +64,10 @@ public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_andro
                 currentFragment = MoneyRequestFragment.newInstance(0,null,walletSettingsManager,walletSession,walletResourcesProviderManager);
                 break;
             case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK:
-                currentFragment =  TransactionsBookFragment.newInstance(0, walletSession, walletResourcesProviderManager);
+                currentFragment =  TransactionsBookFragment.newInstance(0, walletSession, walletResourcesProviderManager,0);
                 break;
             case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE:
-                currentFragment =  TransactionsBookFragment.newInstance(0, walletSession, walletResourcesProviderManager);
+                currentFragment =  TransactionsBookFragment.newInstance(0, walletSession, walletResourcesProviderManager,1);
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found",new Exception(),code,"Swith failed");
