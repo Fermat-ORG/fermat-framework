@@ -122,6 +122,7 @@ public class TransactionsBookFragment extends Fragment{
     WalletResourcesProviderManager walletResourcesProviderManager;
 
 
+    int type=0;
     /**
      *
      * @param position
@@ -129,12 +130,13 @@ public class TransactionsBookFragment extends Fragment{
      * @return
      */
 
-    public static TransactionsBookFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static TransactionsBookFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,int type) {
         TransactionsBookFragment f = new TransactionsBookFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setType(type);
         f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
@@ -243,6 +245,7 @@ public class TransactionsBookFragment extends Fragment{
              */
             EntryAdapter adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
 
         } catch (CantGetTransactionsException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -368,6 +371,9 @@ public class TransactionsBookFragment extends Fragment{
         this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
 
 
     /**
@@ -428,7 +434,11 @@ public class TransactionsBookFragment extends Fragment{
                     }
 
                     if(textView_amount != null)
-                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
+                        if(type==0){
+                            textView_amount.setText(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance()+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
+                        }else if( type==1){
+                            textView_amount.setText(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance()+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
+                        }
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));

@@ -172,7 +172,7 @@ public class TransactionsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        UUID skinId = UUID.randomUUID();
+
         try {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
             // Get ListView object from xml
@@ -432,9 +432,9 @@ public class TransactionsFragment extends Fragment{
                     }
 
                     if(textView_amount != null)
-                        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
+                        if(walletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())){
                             textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(), ShowMoneyType.BITCOIN.getCode()));
-                        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode())
+                        }else if (walletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode()))
                             textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode()));
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
