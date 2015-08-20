@@ -484,7 +484,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         defaultSkin,
                                                         defaultLanguage,
                                                         null, //TODO: walletDescriptorFactoryProject.getDeveloperIdentity()
-                                                        otherLanguageSupportedList);
+                                                        otherLanguageSupportedList,
+                                                        null);
     }
 
     /**
@@ -517,7 +518,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                screenShotDetails,
                                                hasVideoPreview,
                                                videoPreviews,
-                                               null, // TODO: skinURL cambiar por la pagina del publisher
                                                skinDescriptorFactoryProject.getDefaultSizeInBytes(),
                                                null, // TODO: skinDescriptorFactoryProject.getDesigner()
                                                Boolean.TRUE);
@@ -547,7 +547,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                     initialWalletVersion,
                                                     finalWalletVersion,
                                                     videoPreviews,
-                                                    null, // TODO: LanguageURL cambiar por la pagina del publisher
                                                     languageDescriptorFactoryProject.getDefaultSizeInBytes(),
                                                     null, // TODO: languageDescriptorFactoryProject.getTranslator(),
                                                     Boolean.TRUE);
