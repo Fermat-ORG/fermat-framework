@@ -47,7 +47,7 @@ public class initializeDatabaseTest{
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
     private PluginFileSystem mockPluginFileSystem;
-    
+
     private UUID testOwnerId1;
 
     @Before

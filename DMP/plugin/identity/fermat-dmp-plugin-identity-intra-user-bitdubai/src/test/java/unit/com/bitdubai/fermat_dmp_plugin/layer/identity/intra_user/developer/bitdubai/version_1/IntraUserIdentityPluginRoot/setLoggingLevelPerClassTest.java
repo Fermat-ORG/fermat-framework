@@ -74,8 +74,6 @@ public class setLoggingLevelPerClassTest {
 
         byte[] profile = new byte[100];
 
-        //pluginRoot.createNewIntraUser("alias", profile);
-
         catchException(pluginRoot).createNewIntraUser("alias", profile);
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
     }
