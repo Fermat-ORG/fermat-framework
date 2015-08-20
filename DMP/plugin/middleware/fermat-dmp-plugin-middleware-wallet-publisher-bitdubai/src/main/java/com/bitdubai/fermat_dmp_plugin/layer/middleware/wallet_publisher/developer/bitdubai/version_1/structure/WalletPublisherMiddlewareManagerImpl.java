@@ -403,7 +403,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * Construct the default skin
          */
-        SkinDescriptorFactoryProject defaultSkinDescriptorFactoryProject = walletDescriptorFactoryProject.getSkins().get(0); //TODO: Get from the descriptor
+        SkinDescriptorFactoryProject defaultSkinDescriptorFactoryProject = walletDescriptorFactoryProject.getDefaultSkin();
         Skin defaultSkin = constructSkinObject(defaultSkinDescriptorFactoryProject,
                 version,
                 mainScreenShot,
@@ -442,7 +442,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * Construct the default language
          */
-        LanguageDescriptorFactoryProject defaultLanguageDescriptorFactoryProject =  walletDescriptorFactoryProject.getLanguages().get(0); //TODO: Get from the descriptor
+        LanguageDescriptorFactoryProject defaultLanguageDescriptorFactoryProject =  walletDescriptorFactoryProject.getDefaultLanguage();
         Language defaultLanguage = constructLanguageObject(defaultLanguageDescriptorFactoryProject,
                 version,
                 videoPreviews,
@@ -472,7 +472,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
          * Construct the catalog item instance
          */
         return walletStoreManager.constructCatalogItem(walletDescriptorFactoryProject.getId(),
-                                                        0, //TODO: defaultSizeInBytes
+                                                        walletDescriptorFactoryProject.getDefaultSizeInBytes(),
                                                         walletDescriptorFactoryProject.getName(),
                                                         walletDescriptorFactoryProject.getDescription(),
                                                         walletCategory,
@@ -483,7 +483,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         otherSkinSupportedList,
                                                         defaultSkin,
                                                         defaultLanguage,
-                                                        null,//otherLanguageSupportedList, //Todo Revisar
+                                                        null, //TODO: walletDescriptorFactoryProject.getDeveloperIdentity()
+                                                        otherLanguageSupportedList,
                                                         null);
     }
 
@@ -517,9 +518,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                screenShotDetails,
                                                hasVideoPreview,
                                                videoPreviews,
-                                               null, // TODO: skinURL cambiar por la pagina del publisher
-                                               0,    // TODO: skinSizeInBytes
-                                               null, // TODO: designer
+                                               skinDescriptorFactoryProject.getDefaultSizeInBytes(),
+                                               null, // TODO: skinDescriptorFactoryProject.getDesigner()
                                                Boolean.TRUE);
 
    }
@@ -540,16 +540,15 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         * Construct the new instance
         */
         return walletStoreManager.constructLanguage(languageDescriptorFactoryProject.getId(),
-                                                    null, //languageDescriptorFactoryProject.getName(),//Todo Revisar
-                                                    languageDescriptorFactoryProject.getDescription(), //TODO: Get from the descriptor languageLabel
+                                                    languageDescriptorFactoryProject.getLanguagesName(),
+                                                    languageDescriptorFactoryProject.getLanguageLabel(),
                                                     languageDescriptorFactoryProject.getWalletId(),
                                                     version,
                                                     initialWalletVersion,
                                                     finalWalletVersion,
                                                     videoPreviews,
-                                                    null, // TODO: LanguageURL cambiar por la pagina del publisher
-                                                    0,    // TODO: skinSizeInBytes
-                                                    null, // TODO: designer
+                                                    languageDescriptorFactoryProject.getDefaultSizeInBytes(),
+                                                    null, // TODO: languageDescriptorFactoryProject.getTranslator(),
                                                     Boolean.TRUE);
 
     }

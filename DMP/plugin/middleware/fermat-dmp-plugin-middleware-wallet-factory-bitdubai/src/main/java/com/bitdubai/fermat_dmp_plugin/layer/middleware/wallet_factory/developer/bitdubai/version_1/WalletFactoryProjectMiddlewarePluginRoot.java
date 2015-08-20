@@ -62,6 +62,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.
 
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.DescriptorFactoryMiddlewareProject;
 
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletDescriptorFactoryMiddlewareProject;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.utils.RepositoryManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -173,14 +174,23 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements DatabaseManager
         return this.serviceStatus;
     }
 
+    @Override
+    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin getDefaultSkin() {
+        return null;
+    }
 
     @Override
-    public DescriptorFactoryMiddlewareProject createEmptyWalletFactoryProject(String name, Wallets walletType, String description, String publisherIdentityKey, DescriptorFactoryProjectType descriptorFactoryProjectType, String developerPublicKey) throws CantCreateWalletDescriptorFactoryProjectException {
+    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language getDefaultLanguage() {
+        return null;
+    }
+
+    @Override
+    public WalletDescriptorFactoryMiddlewareProject createEmptyWalletFactoryProject(String name, Wallets walletType, String description, String publisherIdentityKey, DescriptorFactoryProjectType descriptorFactoryProjectType, String developerPublicKey) throws CantCreateWalletDescriptorFactoryProjectException {
         try {
             // TODO GET CURRENT LOGGED DEVELOPER
             //String developerPublicKey = "";
 
-            DescriptorFactoryMiddlewareProject walletFactoryMiddlewareProject = new DescriptorFactoryMiddlewareProject(name, developerPublicKey, walletType, WALLET_FACTORY_PROJECTS_PATH, WALLET_FACTORY_PROJECTS_STATE, description, publisherIdentityKey, descriptorFactoryProjectType);
+            WalletDescriptorFactoryMiddlewareProject walletFactoryMiddlewareProject = new WalletDescriptorFactoryMiddlewareProject(name, developerPublicKey, walletType, WALLET_FACTORY_PROJECTS_PATH, WALLET_FACTORY_PROJECTS_STATE, description, publisherIdentityKey, descriptorFactoryProjectType);
             walletFactoryMiddlewareProjectDao.create(walletFactoryMiddlewareProject);
 
             return walletFactoryMiddlewareProject;
@@ -201,7 +211,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements DatabaseManager
     @Override
     public void importDescriptorFactoryProjectFromRepository(String user, String password, String repository, String folderRepositoryLink) throws CantImportWalletFactoryProjectException {
         // TODO LOOK FOR A WAY TO TO THIS
-        DescriptorFactoryMiddlewareProject importedWalletFactoryProject=null;
+        WalletDescriptorFactoryProject importedWalletFactoryProject=null;
         String xml;
         String xmlSkin;
         String xmlLanguage;
@@ -222,7 +232,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements DatabaseManager
 
                 xml=repositoryManager.getFileContent(ghRepository, mainFileWalletRepository);
                 //Convert XML read from a repository file, we cast this information to a WalletFactoryProject
-                importedWalletFactoryProject=(DescriptorFactoryMiddlewareProject)XMLParser.parseXML(xml,importedWalletFactoryProject);
+                importedWalletFactoryProject = (WalletDescriptorFactoryProject) XMLParser.parseXML(xml,importedWalletFactoryProject);
                 //Persists this wallet in the Database
                 walletFactoryMiddlewareProjectDao.create(importedWalletFactoryProject);
 
