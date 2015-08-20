@@ -92,7 +92,7 @@ public class TransactionsBookFragment extends Fragment{
      */
     //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
-    private int cantTransactions = 10;
+    private int cantTransactions = 50;
 
 
     /**
