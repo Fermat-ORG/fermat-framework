@@ -4,7 +4,9 @@
             <androids>
                 <layers>
 
-                    <layer name="Sub App Module">
+                    <layer name="Niche Wallet"></layer>
+                    <layer name="Reference Wallet"></layer>
+                    <layer name="Sub App">
                         <android
                                 name="Shell"
                                 description=""
@@ -150,6 +152,8 @@
                         </plugin>
                     </layer>
 
+                    <layer name="Wallet Module" language="java"></layer>
+
                     <layer name="Sub App Module" language="java">
                         <plugin
                                 name="Shell"
@@ -273,6 +277,7 @@
                         </plugin>
                     </layer>
 
+                    <layer name="Agent" language="java"></layer>
 
                     <layer name="Actor" language="java">
                         <plugin
@@ -519,8 +524,196 @@
             </addons>
         </column>
         <column code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
+            <androids>
+                <layers>
+
+                    <layer name="Niche Wallet"></layer>
+
+                    <layer name="Bitcoin Wallet">
+                        <android
+                                name="Shell"
+                                description=""
+                                dificulty="1"
+                                code-level="production"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+                        <android
+                                name="Fiat Over Crypto"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+                        <android
+                                name="Bitcoin Loss Protected"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+                        <android
+                                name="Discount Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+                        <android
+                                name="Bank Notes"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </android>
+                    </layer>
+
+                    <layer name="Sub App"></layer>
+
+                </layers>
+            </androids>
             <plugins>
                 <layers>
+
+                    <layer name="Engine" language="java">
+                        <plugin
+                                name="Wallet Runtime"
+                                description=""
+                                dificulty="6"
+                                code-level="production"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Wallet Module" language="java">
+                        <plugin
+                                name="Crypto Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="production"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Fiat Over Crypto"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Crypto Loss Protected"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Discount Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Bank Notes Wallet"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="Sub App Module" language="java"></layer>
+
+                    <layer name="Agent" language="java"></layer>
+
 
                     <layer name="Actor" language="java">
                         <plugin
