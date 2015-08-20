@@ -111,7 +111,8 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                 /**
                  * Send wallet info to Wallet Resource
                  */
-                walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion);
+                //TODO: se necesita pasarle la public key de la wallet  instalar al resources
+                //walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion);
                 /**
                  * Persist wallet info in database
                  */
@@ -137,11 +138,11 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
             installationProgress = InstallationStatus.NOT_INSTALLED;
             throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Wallet to install "+ walletPublicKey, "");
         }
-        catch (WalletResourcesInstalationException ex)
-        {
-            installationProgress = InstallationStatus.NOT_INSTALLED;
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
+//        catch (WalletResourcesInstalationException ex)
+//        {
+//            installationProgress = InstallationStatus.NOT_INSTALLED;
+//            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
+//        }
         catch (CantPersistWalletSkinException ex)
         {
 

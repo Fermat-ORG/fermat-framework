@@ -202,7 +202,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                         params[0] = resource;
                         params[1] = developerDatabaseList.get(position);
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES,params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(com.bitdubai.sub_app.developer.FragmentFactory.Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),params);
 
 
                     }
