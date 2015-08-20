@@ -74,7 +74,19 @@ public interface IntraUserManager {
      */
     void cancelIntraUSer(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws ErrorCancellingIntraUserException;
 
+    /**
+     * The method <coda>getNotifications</coda> returns all pending notifications
+     * of responses to requests for connection
+     *
+     * @return List of IntraUserNotification
+     */
+    public List<IntraUserNotification> getNotifications();
 
-    public IntraUserNotification getNotifications(String intraUserLogedInPublicKey);
+
+    /**
+     *
+     * @param intraUserLogedInPublicKey
+     * @param intraUserInvolvedPublicKey
+     */
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey);
 }

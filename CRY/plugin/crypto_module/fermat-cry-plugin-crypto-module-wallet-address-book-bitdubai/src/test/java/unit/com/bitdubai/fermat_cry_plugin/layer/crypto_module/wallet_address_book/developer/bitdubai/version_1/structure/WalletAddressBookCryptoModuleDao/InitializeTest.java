@@ -12,6 +12,7 @@ import static com.googlecode.catchexception.CatchException.*;
 import junit.framework.TestCase;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -19,7 +20,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import static org.fest.assertions.api.Assertions.*;
 
@@ -55,11 +55,8 @@ public class InitializeTest extends TestCase {
     }
 
     @Ignore
+    @Test
     public void testInitialize_NotNull() throws Exception {
-        /**
-         * TODO error when running gradle test in console.
-         * TODO test is running OK in Android Studio
-         */
         catchException(dao).initialize();
         assertThat(caughtException()).isNull();
     }

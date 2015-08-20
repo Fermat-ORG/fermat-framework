@@ -31,29 +31,23 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-/*
-=======
->>>>>>> de82977c2779fd194c0499e6f6d841387bf25cf5
+
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by rodrigo on 2015.07.24..
  */
 public class xmlConversionTest extends TestCase {
 
-
     public void testcreateResult() {
-
 
 //        RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
 //        runtimeSubApp.setType(SubApps.CWP_SHELL);

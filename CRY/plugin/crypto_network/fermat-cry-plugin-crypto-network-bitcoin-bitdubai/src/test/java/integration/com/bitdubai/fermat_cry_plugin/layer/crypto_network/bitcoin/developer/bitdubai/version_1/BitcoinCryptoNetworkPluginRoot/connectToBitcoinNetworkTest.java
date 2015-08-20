@@ -19,16 +19,13 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.params.RegTestParams;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
-
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 /**
  * Created by rodrigo on 2015.07.05..
@@ -43,6 +40,8 @@ public class connectToBitcoinNetworkTest {
     @Mock
     ErrorManager errorManager;
 
+    //TODO we must check this test
+    @Ignore
     @Test
     public void connectTest() throws CantConnectToBitcoinNetwork {
 
