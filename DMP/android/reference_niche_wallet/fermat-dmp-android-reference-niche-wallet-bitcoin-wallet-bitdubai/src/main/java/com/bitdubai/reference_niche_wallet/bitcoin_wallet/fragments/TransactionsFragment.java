@@ -3,7 +3,10 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.content.Context;
 import android.app.Fragment;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
@@ -38,6 +43,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionIt
 
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,7 +87,7 @@ public class TransactionsFragment extends Fragment{
     private View rootView;
     private ListView listViewTransactions;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private TextView textView_transactions_type;
 
     /**
      * List transactions
@@ -93,7 +100,7 @@ public class TransactionsFragment extends Fragment{
      */
     //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
-    private int cantTransactions = 10;
+    private int cantTransactions = 50;
 
 
     /**
@@ -121,6 +128,7 @@ public class TransactionsFragment extends Fragment{
      * Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
+
 
     /**
      *
@@ -167,6 +175,7 @@ public class TransactionsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         try {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
             // Get ListView object from xml
@@ -175,11 +184,13 @@ public class TransactionsFragment extends Fragment{
 
             //adapter.
 
+            textView_transactions_type = (TextView) rootView.findViewById(R.id.textView_transactions_type);
+            textView_transactions_type.setText(walletSession.getBalanceTypeSelected());
 
             // Create the adapter to convert the array to views
 
 
-                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
+            lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
 
 
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
@@ -252,6 +263,24 @@ public class TransactionsFragment extends Fragment{
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
+
+
+//        ImageView imageView = (ImageView) rootView.findViewById(R.id.imageView_test);
+//
+//        // ESTO ES SOLO TESTEO
+//
+//        byte[] image=null;
+//        try {
+//
+//            image=walletResourcesProviderManager.getImageResource("personIcon", skinId);
+//
+//        } catch (CantGetResourcesException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+//        imageView.setImageDrawable(drawable);
+
         return rootView;
     }
 
@@ -408,10 +437,7 @@ public class TransactionsFragment extends Fragment{
                     }
 
                     if(textView_amount != null)
-                        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(), ShowMoneyType.BITCOIN.getCode()));
-                        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode())
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode()));
+                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode()));
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));

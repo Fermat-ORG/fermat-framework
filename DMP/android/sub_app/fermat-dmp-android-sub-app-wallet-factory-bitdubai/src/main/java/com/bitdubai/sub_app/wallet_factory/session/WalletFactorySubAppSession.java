@@ -1,7 +1,8 @@
 package com.bitdubai.sub_app.wallet_factory.session;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -29,9 +30,9 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
     private ErrorManager errorManager;
 
     /**
-     *  WalletFactoryProjectManager
+     *  WalletFactoryManager
      */
-    private WalletFactoryProjectManager walletFactoryProjectManager;
+    private WalletFactoryManager walletFactoryManager;
 
     /**
      *  Projects opened
@@ -46,11 +47,11 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
 
 
 
-    public WalletFactorySubAppSession(SubApps subApps, ErrorManager errorManager,WalletFactoryProjectManager walletFactoryProjectManager){
+    public WalletFactorySubAppSession(SubApps subApps, ErrorManager errorManager,WalletFactoryManager walletFactoryManager){
         this.subApps=subApps;
         data= new HashMap<String,Object>();
         this.errorManager=errorManager;
-        this.walletFactoryProjectManager = walletFactoryProjectManager;
+        this.walletFactoryManager = walletFactoryManager;
     }
 
     public WalletFactorySubAppSession(SubApps subApps) {
@@ -77,8 +78,8 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
     }
 
 
-    public WalletFactoryProjectManager getWalletFactoryProjectManager() {
-        return walletFactoryProjectManager;
+    public WalletFactoryManager getWalletFactoryManager() {
+        return walletFactoryManager;
     }
 
     @Override
