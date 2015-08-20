@@ -1383,6 +1383,72 @@
             <plugins>
                 <layers>
 
+                    <layer name="Engine" language="java"></layer>
+                    <layer name="Wallet Module" language="java"></layer>
+
+                    <layer name="Sub App Module" language="java">
+                        <plugin
+                                name="Wallet Manager"
+                                description=""
+                                dificulty="1"
+                                code-level="production"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Wallet Factory"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Wallet Publisher"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Wallet Store"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
 
 
                 </layers>
