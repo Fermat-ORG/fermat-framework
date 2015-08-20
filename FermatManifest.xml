@@ -3,6 +3,73 @@
         <column code="PIP" name="Plug-ins Platform" logo="PIP_logo.png">
             <plugins>
                 <layers>
+
+                    <layer name="Middleware">
+                        <plugin
+                                name="Intra User Technical Support"
+                                description=""
+                                dificulty="7"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Developer Technical Support"
+                                description=""
+                                dificulty="7"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Developer Error Manager"
+                                description=""
+                                dificulty="5"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
+                    <layer name="World">
+                        <plugin
+                                name="Location"
+                                description=""
+                                dificulty="3"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
                     <layer name="Identity">
                         <plugin
                                 name="Developer"
@@ -35,6 +102,7 @@
                             </certifications>
                         </plugin>
                     </layer>
+
                     <layer name="Network Service">
                         <plugin
                                 name="Developer"
