@@ -3,6 +3,38 @@
         <column code="PIP" name="Plug-ins Platform" logo="PIP_logo.png">
             <plugins>
                 <layers>
+                    <layer name="Identity">
+                        <plugin
+                                name="Developer"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Designer"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
                     <layer name="Network Service">
                         <plugin
                                 name="Developer"
