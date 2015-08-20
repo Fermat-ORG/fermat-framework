@@ -408,6 +408,21 @@
 
                     <layer name="Network Service">
                         <plugin
+                                name="System Monitor"
+                                description=""
+                                dificulty="5"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
                                 name="Developer"
                                 description=""
                                 dificulty="5"
@@ -497,6 +512,40 @@
         <column code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
             <plugins>
                 <layers>
+
+                    <layer name="Identity">
+                        <plugin
+                                name="Intra User"
+                                description=""
+                                dificulty="1"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Shop"
+                                description=""
+                                dificulty="1"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                    </layer>
+
                     <layer name="Network Service">
                         <plugin
                                 name="Intra User"
@@ -535,8 +584,98 @@
                             <certifications>
                             </certifications>
                         </plugin>
-                        <plugin></plugin>
+                        <plugin
+                                name="Money"
+                                description=""
+                                dificulty="5"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Money Request"
+                                description=""
+                                dificulty="5"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Crypto Transmission"
+                                description=""
+                                dificulty="5"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Money Transmission"
+                                description=""
+                                dificulty="5"
+                                code-level="development"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Wallet Community"
+                                description=""
+                                dificulty="5"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
+                        <plugin
+                                name="Bank Notes"
+                                description=""
+                                dificulty="5"
+                                code-level="concept"
+                                >
+                            <authors>
+                                <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                                <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            </authors>
+                            <mantainers>
+                            </mantainers>
+                            <certifications>
+                            </certifications>
+                        </plugin>
                     </layer>
+
                 </layers>
             </plugins>
             <addons>
