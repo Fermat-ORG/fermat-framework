@@ -73,7 +73,7 @@ public class IntraUserIdentityIdentity implements IntraUserIdentity {
      */
     @Override
     public void setNewProfileImage(byte[] newProfileImage) throws CantSetNewProfileImageException {
-
+        this.profileImage = newProfileImage;
     }
 
 }

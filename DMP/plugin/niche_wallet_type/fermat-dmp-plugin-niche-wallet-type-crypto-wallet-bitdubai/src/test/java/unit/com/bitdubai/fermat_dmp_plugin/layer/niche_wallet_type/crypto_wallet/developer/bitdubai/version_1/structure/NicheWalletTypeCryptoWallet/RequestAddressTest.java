@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -90,6 +91,7 @@ public class RequestAddressTest extends TestCase {
     Actors actorType;
     ReferenceWallet referenceWallet;
     UUID walletId;
+    String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
 
@@ -97,6 +99,7 @@ public class RequestAddressTest extends TestCase {
     public void setUp() throws Exception {
         actorName = "Ricardo Darin";
         actorId = UUID.randomUUID();
+        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         actorType = Actors.EXTRA_USER;
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
         walletId = UUID.randomUUID();
@@ -116,7 +119,7 @@ public class RequestAddressTest extends TestCase {
 
     @Test
     public void testRequestAddress_NotNull() throws Exception {
-        CryptoAddress cryptoAddress = nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletId);
+        CryptoAddress cryptoAddress = nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletPublicKey);
         assertNotNull(cryptoAddress);
     }
 
@@ -125,7 +128,7 @@ public class RequestAddressTest extends TestCase {
     public void testRequestAddress_PlatformWalletTypeNotRecognized() throws Exception {
         referenceWallet = ReferenceWallet.BASIC_WALLET_DISCOUNT_WALLET;
 
-        nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletId);
+        nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletPublicKey);
     }
 
     /**
@@ -138,7 +141,7 @@ public class RequestAddressTest extends TestCase {
     public void testRequestAddress_ActorTypeNotRecognized() throws Exception {
         actorType = Actors.INTRA_USER;
 
-        nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletId);
+        nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletPublicKey);
     }
 
     /**
@@ -152,15 +155,15 @@ public class RequestAddressTest extends TestCase {
         doThrow(new CantRegisterActorAddressBookException("gasdil", null, null, null))
                 .when(actorAddressBookRegistry).registerActorAddressBook(any(UUID.class), any(Actors.class),any(UUID.class), any(Actors.class), any(CryptoAddress.class));
 
-        nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletId);
+        nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletPublicKey);
     }
 
     // CANT REGISTER REQUESTED ADDRESS BOOK TEST
     @Test(expected=CantRequestCryptoAddressException.class)
     public void testRequestAddress_CantRequestOrRegisterCryptoAddressException() throws Exception {
         doThrow(new CantRegisterWalletAddressBookException("gasdil", null, null, null))
-                .when(walletAddressBookRegistry).registerWalletCryptoAddressBook(any(CryptoAddress.class), any(ReferenceWallet.class), any(UUID.class));
+                .when(walletAddressBookRegistry).registerWalletCryptoAddressBook(any(CryptoAddress.class), any(ReferenceWallet.class), anyString());
 
-        nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletId);
+        nicheWalletTypeCryptoWallet.requestAddress(actorId, actorType, actorId, actorType, referenceWallet, walletPublicKey);
     }
 }

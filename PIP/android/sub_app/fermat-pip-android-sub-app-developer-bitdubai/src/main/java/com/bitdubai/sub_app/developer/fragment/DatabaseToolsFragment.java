@@ -189,7 +189,7 @@ public class DatabaseToolsFragment extends Fragment {
                         //set the next fragment and params
                         Object[] params = new Object[1];
                         params[0] = item;
-                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES,params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(com.bitdubai.sub_app.developer.FragmentFactory.Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),params);
 
                     }
                 });
