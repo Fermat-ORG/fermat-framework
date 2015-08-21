@@ -312,8 +312,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1677,14 +1679,16 @@
 					<plugin
 							name="Wallet Store"
 							description=""
-							dificulty="1"
+							dificulty="4"
 							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1800,21 +1804,18 @@
 					<plugin
 							name="Wallet Store"
 							description="Enables searching for Intra Users and conecting one to the other"
-							dificulty="6"
+							dificulty="8"
 							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="100"></author>
-							<author name="laderuner" scope="unit-tests" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="lnacosta"></mantainer>
+							<mantainer name="acostarodrigo"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification type="implementation" signed-by="acostarodrigo"></certification>
-							<certification type="testing" signed-by="jorgeejgonzalez"></certification>
 						</certifications>
 					</plugin>
 					<plugin
