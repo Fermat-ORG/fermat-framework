@@ -274,6 +274,7 @@ public class TransactionsFragment extends Fragment{
 //
 //            image=walletResourcesProviderManager.getImageResource("personIcon", skinId);
 //
+//
 //        } catch (CantGetResourcesException e) {
 //            e.printStackTrace();
 //        }

@@ -70,6 +70,24 @@ public class GithubConnectionTest {
 
     }
 
+    @Test
+    public void testuploadFilesFromRepo() throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty("login", "MALOTeam");
+        properties.setProperty("password", "fermat123456");
+
+
+        GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
+        GHRepository ghRepository = gitHub.getRepository("furszy/fermat");
+
+
+        GHUser hub=ghRepository.getOwner();
+
+        ghRepository.createContent("mati", "testeando", "seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/text.txt");
+
+
+    }
+
 
 
 
