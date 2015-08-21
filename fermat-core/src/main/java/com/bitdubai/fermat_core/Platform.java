@@ -1012,6 +1012,7 @@ public class Platform {
              * -----------------------------
              */
             Plugin intraUserNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getIntraUser();
+            injectLayerReferences(intraUserNetworkService);
             injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
 
 
