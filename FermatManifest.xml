@@ -71,7 +71,7 @@
                     <android
                             name="Sub App Manager"
                             description=""
-                            dificulty="4"
+                            dificulty=""
                             code-level="production"
                             >
                         <authors>
@@ -582,6 +582,191 @@
 			<layer super_layer="P2P"></layer>
 			<layer super_layer="CRY"></layer>
 
+			<layer name="License" language="java">
+				<addons>
+					<addon
+							name="Plugin"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+				</addons>
+			</layer>
+			<layer name="Plugin" language="java">
+				<addons>
+					<addon
+							name="Identity"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Dependency"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+				</addons>
+			</layer>
+			<layer name="User" language="java">
+				<addons>
+					<addon
+							name="Device User"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+				</addons>
+			</layer>
+			<layer name="Hardware" language="java">
+				<addons>
+					<addon
+							name="Local Device"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Device Network"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+				</addons>
+			</layer>
+			<layer name="Platform Service" language="java">
+				<addons>
+					<addon
+							name="Error Manager"
+							description=""
+							dificulty="3"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Event Manager"
+							description=""
+							dificulty="3"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Connectivity Subsystem"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Location Subsystem"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Power Subsystem"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+				</addons>
+			</layer>
 			<layer super_layer="OSA"></layer>
         </column>
         <column code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
