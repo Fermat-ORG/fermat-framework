@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -128,6 +129,10 @@ public class TransactionsBookFragment extends Fragment{
     int type=0;
     private TextView textView_transactions_type;
 
+    private boolean isLoading;
+
+    private EntryAdapter adapter;
+
     /**
      *
      * @param position
@@ -228,22 +233,46 @@ public class TransactionsBookFragment extends Fragment{
 
 
 
-            /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    //view.
+            listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
+                public int currentScrollState;
+                public int currentVisibleItemCount;
+                public int currentFirstVisibleItem;
+//                @Override
+//                public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                    //view.
+//                }
+//
+//                @Override
+//                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                    //showMessage("holas");
+//                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
+//                            +"first vible item:"+firstVisibleItem+"\n"
+//                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+//
+//                }
+
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    this.currentFirstVisibleItem = firstVisibleItem;
+                    this.currentVisibleItemCount = visibleItemCount;
                 }
 
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    //showMessage("holas");
-                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
-                            +"first vible item:"+firstVisibleItem+"\n"
-                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    this.currentScrollState = scrollState;
+                    this.isScrollCompleted();
+                }
 
+                private void isScrollCompleted() {
+                    if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
+                        /*** In this way I detect if there's been a scroll which has completed ***/
+                        /*** do the work for load more date! ***/
+                        if (!isLoading) {
+                            isLoading = true;
+                            //loadMoreDAta();
+                            loadNewTransactions();
+                        }
+                    }
                 }
             });
-            */
 
             /**
              * Load transactions
@@ -262,7 +291,7 @@ public class TransactionsBookFragment extends Fragment{
             /**
              *
              */
-            EntryAdapter adapter = new EntryAdapter(getActivity(), items);
+            adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
@@ -374,7 +403,13 @@ public class TransactionsBookFragment extends Fragment{
                 }
                 pointerOffset = lstTransactions.size();
 
-                showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
+                if(type==0){
+                    lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.BOOK);
+                }else if(type==1){
+                    lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.AVAILABLE);
+                }
+
+                adapter.notifyDataSetChanged();
             }
         }
 
