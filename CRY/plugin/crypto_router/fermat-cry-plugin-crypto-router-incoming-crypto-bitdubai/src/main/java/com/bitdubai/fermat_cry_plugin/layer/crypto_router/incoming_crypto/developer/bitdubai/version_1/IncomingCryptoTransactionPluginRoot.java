@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-//import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -184,6 +183,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
+        this.logManager.log(IncomingCryptoTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Incoming Crypto Starting...", null, null);
     }
 
     /**
@@ -254,7 +254,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
-            String[] correctedClass = className.split((Pattern.quote("$")));
+            String[] correctedClass = className.split(Pattern.quote("$"));
             return IncomingCryptoTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             /**

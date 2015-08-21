@@ -22,10 +22,13 @@ public class HandleEventTest {
     @Mock
     private EventManager mockEventManager;
 
+    @Mock
     private IncomingCryptoRegistry mockRegistry;
 
+    @Mock
     private IncomingCryptoEventRecorderService testRecorderService;
 
+    @Mock
     private IncomingCryptoTransactionsWaitingTransferenceEventHandler testEventHandler;
 
     @Before
