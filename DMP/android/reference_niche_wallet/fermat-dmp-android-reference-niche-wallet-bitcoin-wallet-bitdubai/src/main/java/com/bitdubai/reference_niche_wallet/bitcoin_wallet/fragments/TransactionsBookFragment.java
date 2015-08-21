@@ -179,7 +179,7 @@ public class TransactionsBookFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        UUID skinId = UUID.randomUUID();
+
         try {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
             // Get ListView object from xml
@@ -277,16 +277,10 @@ public class TransactionsBookFragment extends Fragment{
             /**
              * Load transactions
              */
-            loadTransactionMap();
+            loadTransactionMap(lstTransactions);
 
 
-            for (String date: mapTransactionPerDate.keySet()){
-                //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-                items.add(new SectionItem(date));
-                for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
-                    items.add(new EntryItem(cryptoWalletTransaction));
-                }
-            }
+            convertToUIList();
 
             /**
              *
@@ -328,7 +322,7 @@ public class TransactionsBookFragment extends Fragment{
     /**
      *  Order transactions in a map
      */
-    private void loadTransactionMap(){
+    private void loadTransactionMap(List<CryptoWalletTransaction> lstTransactions){
         Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
         for(CryptoWalletTransaction transaction:lstTransactions){
             Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
@@ -345,6 +339,16 @@ public class TransactionsBookFragment extends Fragment{
     private String convertDateToString(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         return sdf.format(date);
+    }
+    private List convertToUIList(){
+        for (String date: mapTransactionPerDate.keySet()){
+            //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            items.add(new SectionItem(date));
+            for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
+                items.add(new EntryItem(cryptoWalletTransaction));
+            }
+        }
+        return items;
     }
 
     /**
@@ -374,12 +378,20 @@ public class TransactionsBookFragment extends Fragment{
                 loadNewTransactions();
                 //transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTransactions);
                 //listViewTransactions.setAdapter(transactionArrayAdapter);
+                swipeRefreshLayout.bringToFront();
+                swipeRefreshLayout.invalidate();
                 swipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
 
     }
-
+    private void loadTransaction(List<CryptoWalletTransaction> lstTransactions){
+        if (lstTransactions.isEmpty()){
+            loadTransactionMap(lstTransactions);
+            convertToUIList();
+            adapter.notifyDataSetChanged();
+        }
+    }
     /**
      *  Update transaction list
      */
@@ -410,6 +422,7 @@ public class TransactionsBookFragment extends Fragment{
                 }
 
                 adapter.notifyDataSetChanged();
+
             }
         }
 
