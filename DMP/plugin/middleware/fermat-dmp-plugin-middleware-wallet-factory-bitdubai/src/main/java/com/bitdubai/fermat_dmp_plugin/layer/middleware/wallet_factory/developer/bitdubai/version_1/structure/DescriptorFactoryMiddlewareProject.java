@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.De
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProject;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +21,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DescriptorFactoryMiddlewareProject implements WalletDescriptorFactoryProject {
+public class DescriptorFactoryMiddlewareProject implements DescriptorFactoryProject {
 
     /**
      * Private class Attributes
@@ -42,11 +43,6 @@ public class DescriptorFactoryMiddlewareProject implements WalletDescriptorFacto
     private DescriptorFactoryProjectType descriptorFactoryProjectType;
 
     private String description;
-
-    private List<LanguageDescriptorFactoryProject> languageDescriptorFactoryProjectList;
-
-    private List<SkinDescriptorFactoryProject> skinDescriptorFactoryProjectList;
-
 
     /**
      * Class Constructors
@@ -122,30 +118,8 @@ public class DescriptorFactoryMiddlewareProject implements WalletDescriptorFacto
     public String getDescription() {return description;}
 
     @Override
-    public List<LanguageDescriptorFactoryProject> getLanguages() {return languageDescriptorFactoryProjectList; }
-
-    @Override
-    public List<SkinDescriptorFactoryProject> getSkins() {return skinDescriptorFactoryProjectList;}
-
-    @Override
-    public void setLanguages(List<LanguageDescriptorFactoryProject> languages) {
-
-    }
-
-    @Override
-    public void setSkins(List<SkinDescriptorFactoryProject> skins) {
-
-    }
-
-    @Override
-    public String getAuthor() {
-        return null;
-    }
-
-    @Override
     public int getDefaultSizeInBytes() {
         return 0;
     }
-
 
 }

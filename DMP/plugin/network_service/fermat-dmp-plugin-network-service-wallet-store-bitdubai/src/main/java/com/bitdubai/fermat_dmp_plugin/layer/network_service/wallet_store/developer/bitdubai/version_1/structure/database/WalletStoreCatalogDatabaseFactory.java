@@ -240,6 +240,7 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.ITEM_FIRST_KEY_COLUMN);
 
@@ -302,7 +303,6 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 12, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
@@ -369,7 +369,6 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 12, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
