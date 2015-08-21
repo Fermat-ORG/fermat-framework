@@ -219,11 +219,13 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.only_fragment_container));
         WalletNavigationStructure walletRuntime= getWalletRuntimeManager().getLastWallet();
         String walletPublicKey = walletRuntime.getPublicKey();
-        WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletPublicKey);
+        String walletCategory = walletRuntime.getWalletCategory();
+        String walletType = walletRuntime.getWalletType();
+        WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory,walletType,walletPublicKey);
 
         try {
             if(walletFragmentFactory !=null){
-                Fragments fragment = walletRuntime.getLastActivity().getLastFragment().getType();
+                String fragment = walletRuntime.getLastActivity().getLastFragment().getType();
                 WalletSession walletSession = getWalletSessionManager().getWalletSession(walletPublicKey);
                 android.app.Fragment fragmet= walletFragmentFactory.getFragment(fragment.toString(), walletSession, getWalletSettingsManager(),getWalletResourcesProviderManager());
                 FragmentTransaction FT = getFragmentManager().beginTransaction();
@@ -290,6 +292,11 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {
+
+    }
+
+    @Override
+    public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
 
     }
 

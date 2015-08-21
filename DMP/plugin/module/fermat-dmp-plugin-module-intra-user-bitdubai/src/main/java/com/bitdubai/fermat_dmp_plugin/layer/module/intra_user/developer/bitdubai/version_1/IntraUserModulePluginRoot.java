@@ -336,9 +336,11 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
             return intraUserInformationList;
         }
         catch (ErrorSearchingSuggestionsException e) {
-            e.printStackTrace();
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
         }
-        return null;
+        catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+        }
     }
 
 

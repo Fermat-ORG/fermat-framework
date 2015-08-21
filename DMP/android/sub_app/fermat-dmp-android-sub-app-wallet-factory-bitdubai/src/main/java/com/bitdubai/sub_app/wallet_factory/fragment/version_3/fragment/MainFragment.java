@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 /**
@@ -39,7 +41,13 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+
+
         return inflater.inflate(R.layout.wallet_factory_main_fragment, container, false);
+
+
+
     }
 
 

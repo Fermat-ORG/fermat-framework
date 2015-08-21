@@ -22,11 +22,11 @@ public interface FermatActivity {
 
     public Activities getType();
 
-    public Map<FermatFragments, Fragment> getFragments();
+    public Map<String, Fragment> getFragments();
 
     public Fragment getLastFragment();
 
-    public Fragment getFragment(Fragments fragment);
+    public Fragment getFragment(String fragment);
 
     public TitleBar getTitleBar() ;
 
@@ -37,4 +37,6 @@ public interface FermatActivity {
     public TabStrip getTabStrip() ;
 
     public StatusBar getStatusBar();
+
+    public Activities getBackActivity();
 }

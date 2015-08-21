@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCreateWalletException;
 
@@ -325,7 +326,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
             List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> installetMiddlewareWallets = walletMiddlewareManager.getInstalledWallets();
             for (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet : installetMiddlewareWallets){
 
-                InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),
+                InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),wallet.getWalletType(),
                         wallet.getSkinsId(),
                         wallet.getLanguagesId(),
                         wallet.getWalletIcon(),
@@ -572,6 +573,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     public List<InstalledWallet> getUserWallets() {
         // Harcoded para testear el circuito más arriba
         InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",

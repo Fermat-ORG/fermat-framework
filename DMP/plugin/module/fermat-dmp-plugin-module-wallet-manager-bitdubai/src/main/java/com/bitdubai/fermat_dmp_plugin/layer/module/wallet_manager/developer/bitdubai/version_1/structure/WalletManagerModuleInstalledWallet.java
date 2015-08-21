@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
@@ -25,6 +26,7 @@ import java.util.List;
 public class WalletManagerModuleInstalledWallet implements InstalledWallet, Serializable {
 
     private WalletCategory walletCategory;
+    private WalletType walletType;
     private List<InstalledSkin> skinsId;
     private List<InstalledLanguage> languajesId;
     private String walletIcon;
@@ -33,7 +35,8 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     private String walletPlatformIdentifier;
     private Version version;
 
-    public WalletManagerModuleInstalledWallet(WalletCategory walletCategory, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+
+    public WalletManagerModuleInstalledWallet(WalletCategory walletCategory,WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
         this.languajesId = languajesId;
@@ -42,6 +45,7 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
         this.publicKey = publicKey;
         this.walletPlatformIdentifier = walletPlatformIdentifier;
         this.version = version;
+        this.walletType=walletType;
     }
 
     /**
@@ -112,6 +116,11 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
       */
     public Version getWalletVersion(){
         return version;
+    }
+
+    @Override
+    public WalletType getWalletType() {
+        return this.walletType;
     }
 
 

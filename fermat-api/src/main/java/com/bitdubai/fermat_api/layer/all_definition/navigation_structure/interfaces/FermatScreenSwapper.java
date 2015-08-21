@@ -16,4 +16,6 @@ public interface FermatScreenSwapper {
 
     public void selectSubApp(InstalledSubApp installedSubApp);
 
+    public void changeWalletFragment(String walletCategory, String walletType,String walletPublicKey, String fragmentType);
+
 }
