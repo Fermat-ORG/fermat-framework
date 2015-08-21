@@ -17,7 +17,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.S
  * Created by Franklin Marcano 05/08/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class serviceStatusTest {
+public class ServiceStatusTest {
 
     @Test
     public void pausedTest(){
@@ -57,10 +57,9 @@ public class serviceStatusTest {
         IncomingCryptoTransactionPluginRoot root = new IncomingCryptoTransactionPluginRoot();
         try {
             root.stop();
+            Assert.assertEquals(STOPPED, root.getStatus());
         } catch (Exception exception){
             Assert.assertNotNull(exception);
-        } finally {
-            //Assert.assertEquals(STOPPED, root.getStatus());
         }
     }
 }

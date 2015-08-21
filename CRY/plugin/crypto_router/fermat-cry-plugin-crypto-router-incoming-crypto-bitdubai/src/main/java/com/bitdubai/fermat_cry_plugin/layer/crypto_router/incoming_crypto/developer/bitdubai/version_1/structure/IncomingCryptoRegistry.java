@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.ExpectedTransactionNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -73,7 +75,7 @@ import java.util.UUID;
 
 public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, TransactionProtocolManager<CryptoTransaction> {
 
-    static int flag = 0;
+    int flag = 0;
 
     public void proofTransaction() {
 
@@ -319,7 +321,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
             registryTable.clearAllFilters();
 
-        ;
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
@@ -340,7 +341,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
             List<DatabaseTableRecord> records = registryTable.getRecords();
             if (records.size() != 1) {
-                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
+                String message = "Unexpected number of transactions found";
+                String context = "The number of transactions found was: "+records.size()+ " and we expected 1";
+                FermatException e = new ExpectedTransactionNotFoundException(message,null,context,"");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 //TODO: MANAGE EXCEPTION
             } else {
                 DatabaseTableRecord recordToUpdate = records.get(0);
@@ -417,7 +421,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             List<DatabaseTableRecord> records = registryTable.getRecords();
 
             if (records.size() != 1) {
-                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
+                String message = "Unexpected number of transactions found";
+                String context = "The number of transactions found was: "+records.size()+ " and we expected 1";
+                FermatException e = new ExpectedTransactionNotFoundException(message,null,context,"");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 //TODO: MANAGE EXCEPTION
             } else {
                 DatabaseTableRecord recordToUpdate = records.get(0);
@@ -480,7 +487,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
                 List<DatabaseTableRecord> records = registryTable.getRecords();
                 if (records.size() != 1) {
-                    //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
+                    String message = "Unexpected number of transactions found";
+                    String context = "The number of transactions found was: "+records.size()+ " and we expected 1";
+                    FermatException e = new ExpectedTransactionNotFoundException(message,null,context,"");
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     //TODO: MANAGE EXCEPTION
                 } else {
                     r = records.get(0);
@@ -488,9 +498,8 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 }
 
                 registryTable.clearAllFilters();
-
-                return specialistEnumSet;
             }
+            return specialistEnumSet;
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
@@ -546,7 +555,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         List<DatabaseTableRecord> records = registryTable.getRecords();
         if (records.size() != 1) {
-            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
+            String message = "Unexpected number of transactions found";
+            String context = "The number of transactions found was: "+records.size()+ " and we expected 1";
+            FermatException e = new ExpectedTransactionNotFoundException(message,null,context,"");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             //TODO: MANAGE EXCEPTION
         } else {
             recordToUpdate = records.get(0);
