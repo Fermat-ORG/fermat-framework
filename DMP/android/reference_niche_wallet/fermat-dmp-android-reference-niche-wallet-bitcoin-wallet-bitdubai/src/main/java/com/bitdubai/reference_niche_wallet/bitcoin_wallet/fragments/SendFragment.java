@@ -46,6 +46,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentResult;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class SendFragment extends Fragment {
     /**
      * Wallet session
      */
-    WalletSession walletSession;
+    ReferenceWalletSession walletSession;
     View rootView;
     String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
     UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
@@ -89,7 +90,7 @@ public class SendFragment extends Fragment {
 
     private WalletContact contact;
 
-    public boolean fromContacts = false;
+    public boolean fromContacts = true;
 
     /**
      * Resources
@@ -103,7 +104,7 @@ public class SendFragment extends Fragment {
      * @param walletSession SendFragment with Session and platform plugins inside
      * @return
      */
-    public static SendFragment newInstance(int position, WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static SendFragment newInstance(int position, ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         SendFragment f = new SendFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
@@ -120,7 +121,7 @@ public class SendFragment extends Fragment {
      * @param walletSession SendFragment with Session and platform plugins inside
      * @return
      */
-    public static SendFragment newInstance(WalletSession walletSession, WalletContact contact) {
+    public static SendFragment newInstance(ReferenceWalletSession walletSession, WalletContact contact) {
         SendFragment f = new SendFragment();
         f.setWalletSession(walletSession);
         f.setContact(contact);
@@ -474,7 +475,7 @@ public class SendFragment extends Fragment {
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 

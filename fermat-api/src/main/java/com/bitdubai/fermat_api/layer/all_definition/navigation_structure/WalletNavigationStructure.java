@@ -18,6 +18,12 @@ public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.
 
     private String publicKey;
 
+    /**
+     * Wallet identifiers
+     */
+    private String walletCategory;
+    private String walletType;
+
 
     /**
      * Screens in a WalletNavigationStructure
@@ -134,5 +140,19 @@ public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.
         activities.put(activity.getType(), activity);
     }
 
+    public String getWalletCategory() {
+        return walletCategory;
+    }
 
+    public void setWalletCategory(String walletCategory) {
+        this.walletCategory = walletCategory;
+    }
+
+    public String getWalletType() {
+        return walletType;
+    }
+
+    public void setWalletType(String walletType) {
+        this.walletType = walletType;
+    }
 }
