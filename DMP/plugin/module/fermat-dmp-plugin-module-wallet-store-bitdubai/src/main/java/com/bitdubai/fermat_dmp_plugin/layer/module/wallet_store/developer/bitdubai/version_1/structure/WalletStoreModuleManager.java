@@ -216,6 +216,11 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
+            public URL getpublisherWebsiteUrl(){
+                return catalogItem.getpublisherWebsiteUrl();
+            }
+
+            @Override
             public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException {
                 return catalogItem.getDetailedCatalogItemImpl();
             }
@@ -285,10 +290,10 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
                 return skin.getVideoPreviews();
             }
 
-            @Override
-            public URL getSkinURL() {
-                return skin.getSkinURL();
-            }
+            //@Override Eliminar
+            //public URL getSkinURL() {
+                //return skin.getSkinURL();
+            //}
 
             @Override
             public long getSkinSizeInBytes() {
@@ -348,10 +353,10 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
                 return language.getLanguagePackageSizeInBytes();
             }
 
-            @Override
-            public URL getFileURL() {
-                return language.getFileURL();
-            }
+            //@Override //Eliminar
+            //public URL getFileURL() {
+            //   return language.getFileURL();
+            //}
 
             @Override
             public Version getVersion() {

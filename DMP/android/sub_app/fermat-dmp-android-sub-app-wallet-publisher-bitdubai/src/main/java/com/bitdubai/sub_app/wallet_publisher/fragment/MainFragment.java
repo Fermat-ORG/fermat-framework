@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.sub_app.wallet_publisher.R;
 
 /**
@@ -18,7 +18,7 @@ public class MainFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
-    WalletPublisherManager walletPublisherManager;
+    WalletPublisherModuleManager walletPublisherManager;
     Typeface tf;
 
     public static MainFragment newInstance(int position,SubAppsSession subAppsSession) {
@@ -40,7 +40,7 @@ public class MainFragment extends Fragment {
         return inflater.inflate(R.layout.wallet_publisher_main_fragment, container, false);
     }
 
-    public void setWalletPublisherManager(WalletPublisherManager walletPublisherManager) {
+    public void setWalletPublisherManager(WalletPublisherModuleManager walletPublisherManager) {
         this.walletPublisherManager = walletPublisherManager;
     }
 }

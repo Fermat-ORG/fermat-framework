@@ -79,8 +79,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
      * DealWithEvents Interface member variables.
      */
     private EventManager eventManager;
-
-
+    
     /**
      * DealsWithLogger interface member variable
      */
