@@ -40,7 +40,7 @@ private PluginDatabaseSystem pluginDatabaseSystem;
          * @return Database
          * @throws CantCreateDatabaseException
          */
-        protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+        public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
             Database database;
 
             /**
@@ -48,17 +48,12 @@ private PluginDatabaseSystem pluginDatabaseSystem;
              */
             try {
                 database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                /**
-                 * I can not handle this situation.
-                 */
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
-            }
+
 
             /**
              * Next, I will add the needed tables.
              */
-            try {
+
                 DatabaseTableFactory table;
                 DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
@@ -76,13 +71,16 @@ private PluginDatabaseSystem pluginDatabaseSystem;
 
                 table.addIndex(IntraUserActorDatabaseConstants.INTRA_USER_FIRST_KEY_COLUMN);
 
-                try {
+
                     //Create the table
                     databaseFactory.createTable(ownerId, table);
-                } catch (CantCreateTableException cantCreateTableException) {
+
+                return database;
+
+            } catch (CantCreateTableException cantCreateTableException) {
 
                     throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-                }
+
             } catch (InvalidOwnerIdException invalidOwnerId) {
                 /**
                  * This shouldn't happen here because I was the one who gave the owner id to the database file system,
@@ -90,8 +88,20 @@ private PluginDatabaseSystem pluginDatabaseSystem;
                  */
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
             }
-            return database;
+            catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                /**
+                 * I can not handle this situation.
+                 */
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+            }
+            catch (Exception e) {
+                /**
+                 * I can not handle this situation.
+                 */
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+            }
+    }
+
         }
 
 
-}
