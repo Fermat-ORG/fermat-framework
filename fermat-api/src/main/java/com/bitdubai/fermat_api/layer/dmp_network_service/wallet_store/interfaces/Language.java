@@ -25,7 +25,7 @@ public interface Language {
      * Language file information
      */
     public int getLanguagePackageSizeInBytes();
-    public URL getFileURL();
+    //public URL getFileURL(); //Eliminar
 
     /**
      * Version information, current, Initial and Final.

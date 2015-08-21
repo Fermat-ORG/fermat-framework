@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_core.layer.dmp_identity.intra_user;
 
-import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.IdentitySubsystem;
+import com.bitdubai.fermat_api.layer.dmp_identity.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_identity.IdentitySubsystem;
 
 
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.DeveloperBitDubai;
