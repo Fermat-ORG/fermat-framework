@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserIdentityDatabaseException;
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDatabaseObjectFactory;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +32,9 @@ public class getDatabaseTableListTest{
     private Database mockDatabase;
 
     @Mock
+    private DeveloperObjectFactory mockDeveloperObjectFactory;
+
+    @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
     private IntraUserIdentityDeveloperDatabaseFactory DatabaseFactory;
@@ -47,8 +49,7 @@ public class getDatabaseTableListTest{
 
         DatabaseFactory.initializeDatabase();
 
-        DeveloperObjectFactory developerObjectFactory = new DeveloperModuleDatabaseObjectFactory();
-        assertThat(DatabaseFactory.getDatabaseTableList(developerObjectFactory)).isInstanceOf(List.class);
+        assertThat(DatabaseFactory.getDatabaseTableList(mockDeveloperObjectFactory)).isInstanceOf(List.class);
     }
 
 }

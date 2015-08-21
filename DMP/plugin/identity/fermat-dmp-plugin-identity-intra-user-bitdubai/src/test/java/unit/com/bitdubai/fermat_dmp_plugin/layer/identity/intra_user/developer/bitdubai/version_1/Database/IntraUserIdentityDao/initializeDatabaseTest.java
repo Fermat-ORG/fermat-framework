@@ -7,12 +7,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDao;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserIdentitiesException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserIdentityPrivateKeyException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserIdentityDatabaseException;
-import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure.DeviceUserUser;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.googlecode.catchexception.CatchException;
 
@@ -46,6 +45,9 @@ public class initializeDatabaseTest{
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
     @Mock
+    private DeviceUser mockDeviceUser;
+
+    @Mock
     private PluginFileSystem mockPluginFileSystem;
 
     private UUID testOwnerId1;
@@ -68,14 +70,9 @@ public class initializeDatabaseTest{
 
         byte[] profile = new byte[10];
 
-        String publickey = eccKeyPair.getPublicKey();
 
-        DeviceUser deviceUser = new DeviceUserUser("alias", "clave", eccKeyPair.getPrivateKey(), publickey);
 
-        catchException(identityDao).getIntraUserFromCurrentDeviceUser(deviceUser);
-        assertThat(CatchException.<Exception>caughtException()).isInstanceOf(Exception.class);
-
-        catchException(identityDao).createNewUser("alias", eccKeyPair.getPublicKey(), eccKeyPair.getPrivateKey(), deviceUser, profile);
+        catchException(identityDao).createNewUser("alias", eccKeyPair.getPublicKey(), eccKeyPair.getPrivateKey(), mockDeviceUser, profile);
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
     }
 

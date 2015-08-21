@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserIdentityDatabaseException;
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDatabaseObjectFactory;
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDeveloperDatabaseTable;
+
+import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +29,13 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class getDatabaseTableContentTest{
+public class getDatabaseTableContentTest extends TestCase {
 
     @Mock
     private Database mockDatabase;
+
+    @Mock
+    private DeveloperObjectFactory developerObjectFactory;
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -53,11 +56,10 @@ public class getDatabaseTableContentTest{
         fieldNames.add("Name1");
         fieldNames.add("Name2");
         fieldNames.add("Name3");
-
-        DeveloperObjectFactory developerObjectFactory = new DeveloperModuleDatabaseObjectFactory();
+/*
         DeveloperDatabaseTable DeveloperDatabaseTable = new DeveloperModuleDeveloperDatabaseTable("tabla", fieldNames);
 
-        // assertThat(DatabaseFactory.getDatabaseTableContent(developerObjectFactory, DeveloperDatabaseTable)).isInstanceOf(List.class);
+        assertThat(DatabaseFactory.getDatabaseTableContent(developerObjectFactory, DeveloperDatabaseTable)).isInstanceOf(List.class);*/
     }
 
 }

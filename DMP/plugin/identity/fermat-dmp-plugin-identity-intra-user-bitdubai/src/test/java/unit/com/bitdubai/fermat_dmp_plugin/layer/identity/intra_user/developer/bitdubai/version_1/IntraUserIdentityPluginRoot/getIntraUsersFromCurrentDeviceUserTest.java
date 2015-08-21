@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
-import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.DeviceUserUserAddonRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.googlecode.catchexception.CatchException;
 
 import org.junit.Test;
@@ -45,6 +45,9 @@ public class getIntraUsersFromCurrentDeviceUserTest {
     private DeveloperDatabaseTable developerDatabaseTable;
 
     @Mock
+    private DeviceUserManager deviceUserManager;
+
+    @Mock
     private ErrorManager errorManager;
 
     private IntraUserIdentityPluginRoot pluginRoot;
@@ -62,11 +65,7 @@ public class getIntraUsersFromCurrentDeviceUserTest {
         pluginRoot.setPluginFileSystem(mockPluginFileSystem);
         pluginRoot.setId(testOwnerId);
         pluginRoot.setErrorManager(errorManager);
-
-        DeviceUserUserAddonRoot manager = new DeviceUserUserAddonRoot();
-        manager.setErrorManager(errorManager);
-
-        pluginRoot.setDeviceUserManager(manager);
+        pluginRoot.setDeviceUserManager(deviceUserManager);
 
         catchException(pluginRoot).getIntraUsersFromCurrentDeviceUser();
         assertThat(CatchException.<Exception>caughtException()).isNotNull();

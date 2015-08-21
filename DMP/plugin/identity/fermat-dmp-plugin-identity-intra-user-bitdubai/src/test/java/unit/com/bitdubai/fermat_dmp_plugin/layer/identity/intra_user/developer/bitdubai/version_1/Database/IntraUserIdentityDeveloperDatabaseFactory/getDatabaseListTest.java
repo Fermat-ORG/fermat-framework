@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserIdentityDatabaseException;
-import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDatabaseObjectFactory;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,12 +29,15 @@ import static org.mockito.Mockito.when;
 public class getDatabaseListTest {
 
     @Mock
+    private DeveloperObjectFactory developerObjectFactory;
+
+    @Mock
     private Database mockDatabase;
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
-    private IntraUserIdentityDeveloperDatabaseFactory DatabaseFactory;
+    private IntraUserIdentityDeveloperDatabaseFactory intraUserIdentityDeveloperDatabaseFactory;
 
     @Test
     public void initializeDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException, CantInitializeIntraUserIdentityDatabaseException {
@@ -43,12 +45,11 @@ public class getDatabaseListTest {
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
 
-        DatabaseFactory = new IntraUserIdentityDeveloperDatabaseFactory(mockPluginDatabaseSystem, testOwnerId);
+        intraUserIdentityDeveloperDatabaseFactory = new IntraUserIdentityDeveloperDatabaseFactory(mockPluginDatabaseSystem, testOwnerId);
 
-        DatabaseFactory.initializeDatabase();
+        intraUserIdentityDeveloperDatabaseFactory.initializeDatabase();
 
-        DeveloperObjectFactory developerObjectFactory = new DeveloperModuleDatabaseObjectFactory();
-        assertThat(DatabaseFactory.getDatabaseList(developerObjectFactory)).isInstanceOf(List.class);
+        assertThat(intraUserIdentityDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory)).isInstanceOf(List.class);
     }
 
 }

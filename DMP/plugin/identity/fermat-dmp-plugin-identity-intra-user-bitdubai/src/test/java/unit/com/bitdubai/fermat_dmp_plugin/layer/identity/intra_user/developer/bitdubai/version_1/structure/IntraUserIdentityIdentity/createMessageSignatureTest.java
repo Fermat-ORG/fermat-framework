@@ -33,7 +33,5 @@ public class createMessageSignatureTest{
 
         catchException(identity_1).createMessageSignature("Prueba");
         assertThat(CatchException.<Exception>caughtException()).isInstanceOf(CantSingIntraUserMessageException.class);
-        caughtException().printStackTrace();
     }
-
 }
