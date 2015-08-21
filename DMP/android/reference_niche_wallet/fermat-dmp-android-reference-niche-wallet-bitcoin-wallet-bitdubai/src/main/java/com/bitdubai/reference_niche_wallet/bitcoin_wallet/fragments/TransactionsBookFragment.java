@@ -40,9 +40,12 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionIt
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -109,7 +112,7 @@ public class TransactionsBookFragment extends Fragment{
      * Map of transactions ordered
      */
 
-    Map<Date,Set<CryptoWalletTransaction>> mapTransactionPerDate;
+    Map<String,Set<CryptoWalletTransaction>> mapTransactionPerDate;
 
     /**
      * Wallet session
@@ -156,7 +159,7 @@ public class TransactionsBookFragment extends Fragment{
             cryptoWalletManager = walletSession.getCryptoWalletManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
 
-            mapTransactionPerDate= new HashMap<Date, Set<CryptoWalletTransaction>>();
+            mapTransactionPerDate= new HashMap<String, Set<CryptoWalletTransaction>>();
 
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -191,11 +194,18 @@ public class TransactionsBookFragment extends Fragment{
             // Create the adapter to convert the array to views
 
 
-                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
+            lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
 
 
-            BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
-            lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
+            //BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
+
+            if(type==0){
+                lstTransactions=showTransactionListSelected(lstTransactions,BalanceType.BOOK);
+            }else if(type==1){
+                lstTransactions=showTransactionListSelected(lstTransactions,BalanceType.AVAILABLE);
+
+            }
+
 
             // Set the emptyView to the ListView
             TextView textViewEmptyListView = (TextView) rootView.findViewById(R.id.emptyElement);
@@ -241,9 +251,9 @@ public class TransactionsBookFragment extends Fragment{
             loadTransactionMap();
 
 
-            for (Date date: mapTransactionPerDate.keySet()){
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-                items.add(new SectionItem(sdf.format(date)));
+            for (String date: mapTransactionPerDate.keySet()){
+                //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                items.add(new SectionItem(date));
                 for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
                     items.add(new EntryItem(cryptoWalletTransaction));
                 }
@@ -290,16 +300,22 @@ public class TransactionsBookFragment extends Fragment{
      *  Order transactions in a map
      */
     private void loadTransactionMap(){
+        Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
         for(CryptoWalletTransaction transaction:lstTransactions){
             Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
-            if(!mapTransactionPerDate.containsKey(date)){
-                Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
+            if(!mapTransactionPerDate.containsKey(convertDateToString(date))){
+                cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
                 cryptoWalletTransactionSet.add(transaction);
-                mapTransactionPerDate.put(date,cryptoWalletTransactionSet);
+                mapTransactionPerDate.put(convertDateToString(date), cryptoWalletTransactionSet);
             }else{
-                mapTransactionPerDate.get(date).add(transaction);
+                mapTransactionPerDate.get(convertDateToString(date)).add(transaction);
             }
         }
+    }
+
+    private String convertDateToString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        return sdf.format(date);
     }
 
     /**
