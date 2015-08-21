@@ -590,7 +590,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getSubAppType())) {
                 subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getSubAppType());
             } else {
-                subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), getToolManager());
+                subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), getToolManager(),getWalletStoreModuleManager(),getWalletPublisherManager());
             }
         }catch (Exception e){
             //this happend when is in home screen

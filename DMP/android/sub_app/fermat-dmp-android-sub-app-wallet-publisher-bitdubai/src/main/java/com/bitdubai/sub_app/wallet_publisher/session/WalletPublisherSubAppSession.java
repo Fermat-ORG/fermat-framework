@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.wallet_publisher.session;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 public class WalletPublisherSubAppSession implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession{
+
 
 
     /**
@@ -28,7 +30,7 @@ public class WalletPublisherSubAppSession implements com.bitdubai.fermat_android
      */
     private ErrorManager errorManager;
 
-
+    private WalletPublisherManager walletPublisherManager;
     /**
      *  Projects opened
      */
@@ -42,10 +44,11 @@ public class WalletPublisherSubAppSession implements com.bitdubai.fermat_android
 
 
 
-    public WalletPublisherSubAppSession(SubApps subApps, ErrorManager errorManager){
+    public WalletPublisherSubAppSession(SubApps subApps, ErrorManager errorManager,WalletPublisherManager walletPublisherManager){
         this.subApps=subApps;
         data= new HashMap<String,Object>();
         this.errorManager=errorManager;
+        this.walletPublisherManager=walletPublisherManager;
     }
 
     public WalletPublisherSubAppSession(SubApps subApps) {
