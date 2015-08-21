@@ -380,16 +380,6 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements DatabaseManager
         }
     }
 
-    @Override
-    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin getDefaultSkin() {
-        return null;
-    }
-
-    @Override
-    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language getDefaultLanguage() {
-        return null;
-    }
-
 
     /**
      * DatabaseManagerForDevelopers Interface Implementation
