@@ -1,15 +1,16 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantCreateNewIntraUserException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
+import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.DeviceUserUserAddonRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.googlecode.catchexception.CatchException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,17 +19,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static com.googlecode.catchexception.CatchException.catchException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by angel on 18/8/15.
+ * Created by angel on 20/8/15.
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class StatusTest {
+public class createNewIntraUserTest{
 
     @Mock
     private Database mockDatabase;
@@ -48,7 +50,7 @@ public class StatusTest {
     private IntraUserIdentityPluginRoot pluginRoot;
 
     @Test
-    public void getClassTest() throws CantOpenDatabaseException, DatabaseNotFoundException, CantStartPluginException {
+    public void createNewException() throws CantOpenDatabaseException, DatabaseNotFoundException, CantCreateNewIntraUserException {
 
         UUID testOwnerId = UUID.randomUUID();
 
@@ -61,19 +63,14 @@ public class StatusTest {
         pluginRoot.setId(testOwnerId);
         pluginRoot.setErrorManager(errorManager);
 
-        assertThat(pluginRoot.getStatus()).isEqualTo(ServiceStatus.CREATED);
+        DeviceUserUserAddonRoot manager = new DeviceUserUserAddonRoot();
+        manager.setErrorManager(errorManager);
+        pluginRoot.setDeviceUserManager(manager);
 
-        pluginRoot.start();
-        assertThat(pluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
+        byte[] profile = new byte[100];
 
-        pluginRoot.resume();
-        assertThat(pluginRoot.getStatus()).isEqualTo(ServiceStatus.STARTED);
-
-        pluginRoot.pause();
-        assertThat(pluginRoot.getStatus()).isEqualTo(ServiceStatus.PAUSED);
-
-        pluginRoot.stop();
-        assertThat(pluginRoot.getStatus()).isEqualTo(ServiceStatus.STOPPED);
+        catchException(pluginRoot).createNewIntraUser("alias", profile);
+        assertThat(CatchException.<Exception>caughtException()).isNotNull();
 
     }
 }
