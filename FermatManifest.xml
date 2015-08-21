@@ -765,6 +765,21 @@
 						<certifications>
 						</certifications>
 					</addon>
+					<addon
+							name="Platform Info"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
 				</addons>
 			</layer>
 			<layer super_layer="OSA"></layer>
@@ -1584,7 +1599,25 @@
 					</plugin>
 				</plugins>
             </layer>
-
+			<layer name="License" language="java">
+				<addons>
+					<addon
+							name="Wallet"
+							description=""
+							dificulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+				</addons>
+			</layer>
         </column>
         <column code="WPD" name="Wallet Production and Distribution" logo="WPD_logo.png">
 
