@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.ImageMiddleware;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -21,7 +21,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ImageMiddlewareImpl implements ImageMiddleware {
+public class ImageMiddlewareImpl implements Image {
 
     /**
      * Represent the FileId

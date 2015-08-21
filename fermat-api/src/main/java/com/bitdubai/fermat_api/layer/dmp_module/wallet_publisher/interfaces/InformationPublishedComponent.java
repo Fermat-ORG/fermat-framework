@@ -108,9 +108,9 @@ public interface InformationPublishedComponent {
     /**
      * Get the Publisher Id
      *
-     * @return UUID
+     * @return String
      */
-    public UUID getPublisherIdentityPublicKey();
+    public String getPublisherIdentityPublicKey();
 
     /**
      * Get the Signature for this component

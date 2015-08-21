@@ -17,14 +17,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetTranslatorException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDeveloperInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
@@ -50,6 +55,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.WalletStoreNetworkServiceMonitoringAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
@@ -201,7 +208,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      */
     @Override
     public void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException {
-        getWalletStoreManager().publishWallet((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem) catalogItem);
+        getWalletStoreManager().publishWallet((CatalogItemImpl) catalogItem);
     }
 
 
@@ -218,6 +225,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     @Override
     public void publishDesigner(Designer designer) throws CantPublishDesignerInCatalogException {
         getWalletStoreManager().publishDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) designer);
+    }
+
+    @Override
+    public void publishDeveloper(Developer developer) throws CantPublishDeveloperInCatalogException
+    {
+        getWalletStoreManager().publishDeveloper((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer) developer);
     }
 
     @Override
@@ -476,27 +489,28 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         }
     }
 
+
     //todo delete - TESTING
     public void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException {
         UUID walletId = UUID.randomUUID();
         System.out.println("Id to install: " + walletId.toString());
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem catalogItem;
-        catalogItem = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem();
-        catalogItem.setId(walletId);
-        catalogItem.setDefaultSizeInBytes(100);
-        catalogItem.setName("MatiWallet");
-        catalogItem.setCategory(WalletCategory.BRANDED_NICHE_WALLET);
-        catalogItem.setDescription("Prueba de insert");
+        CatalogItemImpl catalogItemImpl;
+        catalogItemImpl = new CatalogItemImpl();
+        catalogItemImpl.setId(walletId);
+        catalogItemImpl.setDefaultSizeInBytes(100);
+        catalogItemImpl.setName("MatiWallet");
+        catalogItemImpl.setCategory(WalletCategory.BRANDED_NICHE_WALLET);
+        catalogItemImpl.setDescription("Prueba de insert");
 
         byte[] myIcon = new byte[]{114, 22};
-        catalogItem.setIcon(myIcon);
-        catalogItem.setWalletCatalogId(walletId);
+        catalogItemImpl.setIcon(myIcon);
+        catalogItemImpl.setWalletCatalogId(walletId);
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skin;
         skin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
         byte[] presentationImage = new byte[]{114, 22};
         skin.setPresentationImage(presentationImage);
-        skin.setUrl(new URL("http://example.com/pages/"));
+        //skin.setUrl(new URL("http://example.com/pages/"));
         skin.setSkinSizeInBytes(100);
         skin.setFinalWalletVersion(new Version(1, 0, 0));
         skin.setHasVideoPreview(false);
@@ -510,6 +524,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skin.setScreenSize(ScreenSize.MEDIUM);
 
 
+
+
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;
         designer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
         designer.setiD(UUID.randomUUID());
@@ -519,15 +535,15 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skin.setDesigner(designer);
 
 
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem detailedCatalogItem;
-        detailedCatalogItem = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem();
-        detailedCatalogItem.setDefaultSkin(skin);
-        detailedCatalogItem.setVersion(new Version("1.0.0"));
-        detailedCatalogItem.setPlatformInitialVersion(new Version("1.0.0"));
-        detailedCatalogItem.setPlatformFinalVersion(new Version("1.0.0"));
+        DetailedCatalogItemImpl detailedCatalogItemImpl;
+        detailedCatalogItemImpl = new DetailedCatalogItemImpl();
+        detailedCatalogItemImpl.setDefaultSkin(skin);
+        detailedCatalogItemImpl.setVersion(new Version("1.0.0"));
+        detailedCatalogItemImpl.setPlatformInitialVersion(new Version("1.0.0"));
+        detailedCatalogItemImpl.setPlatformFinalVersion(new Version("1.0.0"));
 
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language language = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language();
-        language.setUrl(new URL("http://example.com/pages/"));
+        //language.setUrl(new URL("http://example.com/pages/"));
         language.setWalletId(walletId);
         language.setId(UUID.randomUUID());
         language.setInitialWalletVersion(new Version("1.0.0"));
@@ -550,31 +566,190 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
 
 
-        detailedCatalogItem.setLanguage(language);
+        detailedCatalogItemImpl.setLanguage(language);
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
         developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
         developer.setName("Rodrigo");
         developer.setId(UUID.randomUUID());
         developer.setPublicKey("SDSDSDSDasdojasdiuahsdkasjdaskdasdk");
-        detailedCatalogItem.setDeveloper(developer);
+        detailedCatalogItemImpl.setDeveloper(developer);
 
-        catalogItem.setDetailedCatalogItem(detailedCatalogItem);
+        catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);
 
 
-        this.publishWallet(catalogItem);
+        this.publishWallet(catalogItemImpl);
 
     }
 
     /**
      * (non-Javadoc)
      * @see WalletStoreManager#constructEmptyCatalogItem()
-     */
+    */
     public CatalogItem constructEmptyCatalogItem(){
 
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem catalogItem = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem();
+        CatalogItemImpl catalogItemImpl = new CatalogItemImpl();
 
-
-
-        return catalogItem;
+        return catalogItemImpl;
     }
+
+    public Language constructLanguage(UUID languageId,
+                                      Languages nameLanguage,
+                                      String languageLabel,
+                                      UUID walletId,
+                                      Version version,
+                                      Version initalWalletVersion,
+                                      Version finalWalletVersion,
+                                      List<URL> videoPreviews,
+                                      long languageSizeInBytes,
+                                      Translator translator,
+                                      boolean isDefault)
+    {
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language languageImpl;
+        languageImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language();
+
+        languageImpl.setId(languageId);
+        languageImpl.setLanguageName(nameLanguage);
+        languageImpl.setLanguageLabel(languageLabel);
+        languageImpl.setWalletId(walletId);
+        languageImpl.setVersion(version);
+        languageImpl.setInitialWalletVersion(initalWalletVersion);
+        languageImpl.setFinalWalletVersion(finalWalletVersion);
+        languageImpl.setLanguagePackageSizeInBytes((int) languageSizeInBytes);
+        languageImpl.setTranslator((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator)translator); //Todo Implementation
+        languageImpl.setIsDefault(isDefault);
+
+        return languageImpl;
+    }
+
+    public Skin constructSkin(UUID skinId,
+                              String nameSkin,
+                              UUID walletId,
+                              ScreenSize screenSize,
+                              Version version,
+                              Version initalWalletVersion,
+                              Version finalWalletVersion,
+                              byte[] presentationImage,
+                              List<byte[]> previewImageList,
+                              boolean hasVideoPreview,
+                              List<URL> videoPreviews,
+                              int skinSizeInBytes,
+                              Designer designer,
+                              boolean isDefault ){
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skinImpl;
+
+        skinImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
+
+        skinImpl.setId(skinId);
+        skinImpl.setName(nameSkin);
+        skinImpl.setWalletId(walletId);
+        skinImpl.setScreenSize(screenSize);
+        skinImpl.setVersion(version);
+        skinImpl.setInitialWalletVersion(initalWalletVersion);
+        skinImpl.setFinalWalletVersion(finalWalletVersion);
+        skinImpl.setPresentationImage(presentationImage);
+        skinImpl.setPreviewImageList(previewImageList);
+        skinImpl.setHasVideoPreview(hasVideoPreview);
+        skinImpl.setVideoPreviews(videoPreviews);
+        skinImpl.setSkinSizeInBytes(skinSizeInBytes);
+        skinImpl.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer)designer);
+        skinImpl.setIsDefault(isDefault);
+
+        return skinImpl;
+    }
+
+    public Developer constructDeveloper(UUID developerId, String name, String PublicKey)
+    {
+        Developer developerImpl;
+        developerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
+        developerImpl.setId(developerId);
+        developerImpl.setName(name);
+        developerImpl.setPublicKey(PublicKey);
+
+        return developerImpl;
+    }
+
+    public Designer constructDesigner(UUID designerId, String name, String PublicKey){
+
+        Designer designerImpl;
+        designerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
+        designerImpl.setiD(designerId);
+        designerImpl.setName(name);
+        designerImpl.setPublicKey(PublicKey);
+
+        return designerImpl;
+    }
+
+    public Translator constructTranslator(UUID translatorId, String name, String PublicKey)
+    {
+        Translator translatorImpl;
+        translatorImpl =  new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
+        translatorImpl.setId(translatorId);
+        translatorImpl.setName(name);
+        translatorImpl.setPublicKey(PublicKey);
+
+        return translatorImpl;
+    }
+
+
+    public CatalogItem constructCatalogItem(UUID walletId,int defaultSizeInBytes,
+                                            String name, String description,
+                                            WalletCategory walletCategory,
+                                            byte[] icon,
+                                            Version version,
+                                            Version platformInitialVersion,
+                                            Version platformFinalVersion,
+                                            List<Skin> skins,
+                                            Skin skin,
+                                            Language language,
+                                            Developer developer,
+                                            List<Language> languages,
+                                            URL publisherWebsiteUrl) throws CantGetWalletIconException {
+
+        CatalogItemImpl catalogItemImpl = new CatalogItemImpl();
+        DetailedCatalogItemImpl detailedCatalogItemImpl;
+
+        detailedCatalogItemImpl = new DetailedCatalogItemImpl();
+
+        catalogItemImpl.setId(walletId);
+        catalogItemImpl.setDefaultSizeInBytes(defaultSizeInBytes);
+        catalogItemImpl.setName(name);
+        catalogItemImpl.setCategory(walletCategory);
+        catalogItemImpl.setDescription(description);
+        catalogItemImpl.setWalletCatalogId(walletId);
+        catalogItemImpl.setIcon(icon);
+        catalogItemImpl.setpublisherWebsiteUrl(publisherWebsiteUrl);
+
+        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin constructskin;
+        constructskin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
+
+        constructskin.setId(skin.getSkinId());
+        constructskin.setPresentationImage(skin.getPresentationImage());
+        constructskin.setSkinSizeInBytes((int) skin.getSkinSizeInBytes());
+        constructskin.setFinalWalletVersion(skin.getInitialWalletVersion());
+        constructskin.setHasVideoPreview(false);
+        constructskin.setInitialWalletVersion(skin.getInitialWalletVersion());
+        constructskin.setVersion(skin.getVersion());
+        constructskin.setWalletId(walletId);
+        constructskin.setId(skin.getSkinId());
+        constructskin.setName(skin.getSkinName());
+        constructskin.setIsDefault(skin.isDefault());
+        constructskin.setScreenSize(skin.getScreenSize());
+
+        constructskin.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) skin.getDesigner());
+
+        detailedCatalogItemImpl.setVersion(version);
+        detailedCatalogItemImpl.setPlatformInitialVersion(platformInitialVersion);
+        detailedCatalogItemImpl.setPlatformFinalVersion(platformFinalVersion);
+        detailedCatalogItemImpl.setDefaultSkin(skin);
+        detailedCatalogItemImpl.setSkins(skins);
+        detailedCatalogItemImpl.setDeveloper((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer) developer);
+        detailedCatalogItemImpl.setLanguage(language);
+        detailedCatalogItemImpl.setLanguages(languages);
+
+        catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);
+
+        return catalogItemImpl;
+    }
+
 }

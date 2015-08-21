@@ -20,8 +20,12 @@ import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develope
 
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletDescriptorFactoryProjectMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.IdentityDesignerPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.IdentityTranslatorPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.WalletFactoryProjectMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.WalletLanguageMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.WalletManagerMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot;
@@ -30,6 +34,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bi
 import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1.WalletStatisticsNetworkServicePluginRoot;
@@ -75,10 +80,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.ActorDeveloperPluginRoot;
-import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
-import com.bitdubai.fermat_pip_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
-import com.bitdubai.fermat_pip_plugin.layer.identity_designer.developer.bitdubai.version_1.IdentityDesignerPluginRoot;
-import com.bitdubai.fermat_pip_plugin.layer.identity_translator.developer.bitdubai.version_1.IdentityTranslatorPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.module.developer.developer.bitdubai.version_1.ModuleDeveloperPluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstalationNetworkServicePluginRoot;
 import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot;
@@ -93,7 +94,7 @@ import java.util.UUID;
  */
 public class PluginsIdentityManager {
 
-    private static final Integer AMOUNT_OF_KNOWN_PLUGINS = 63;
+    private static final Integer AMOUNT_OF_KNOWN_PLUGINS = 64;
 
     private PlatformFileSystem platformFileSystem;
     private List<UUID> pluginIds = new ArrayList<>();
@@ -372,7 +373,7 @@ public class PluginsIdentityManager {
         if (plugin instanceof ExtraUserUserAddonRoot)
             pluginIndex = 41;
 
-        if (plugin instanceof WalletDescriptorFactoryProjectMiddlewarePluginRoot)
+        if (plugin instanceof WalletFactoryProjectMiddlewarePluginRoot)
             pluginIndex = 42;
 
         if (plugin instanceof WalletManagerMiddlewarePluginRoot)
@@ -380,18 +381,6 @@ public class PluginsIdentityManager {
 
         if (plugin instanceof WalletPublisherMiddlewarePluginRoot)
             pluginIndex = 44;
-
-        if (pluginIndex == 0) {
-            try {
-                WalletDescriptorFactoryProjectMiddlewarePluginRoot tryType;
-                tryType = (WalletDescriptorFactoryProjectMiddlewarePluginRoot) plugin;
-                pluginIndex = 42;
-            } catch (Exception e) {
-                /**
-                 * If this fails, is because this is not the index for this plug in.
-                 */
-            }
-        }
 
         if (plugin instanceof WalletStoreMiddlewarePluginRoot)
             pluginIndex = 45;
@@ -446,6 +435,9 @@ public class PluginsIdentityManager {
 
         if (plugin instanceof PublisherIdentityPluginRoot)
             pluginIndex = 62;
+
+        if (plugin instanceof IntraUserNetworkServicePluginRoot)
+            pluginIndex = 63;
 
         if (pluginIndex > 0)
             return pluginIds.get(pluginIndex);

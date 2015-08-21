@@ -120,10 +120,10 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         return videoPreviews;
     }
 
-    @Override
-    public URL getSkinURL() {
-        return url;
-    }
+    //@Override Elimnar
+    //public URL getSkinURL() {
+    //    return url;
+    //}
 
     @Override
     public long getSkinSizeInBytes() {
@@ -182,9 +182,9 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         this.videoPreviews = videoPreviews;
     }
 
-    public void setUrl(URL url) {
-        this.url = url;
-    }
+    //public void setUrl(URL url) { Eliminar
+    //    this.url = url;
+    //}
 
     public void setSkinSizeInBytes(int skinSizeInBytes) {
         this.skinSizeInBytes = skinSizeInBytes;

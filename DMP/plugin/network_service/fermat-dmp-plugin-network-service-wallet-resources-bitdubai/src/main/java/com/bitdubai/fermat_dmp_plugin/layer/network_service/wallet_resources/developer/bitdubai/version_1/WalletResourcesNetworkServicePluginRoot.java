@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -89,8 +90,6 @@ import java.util.UUID;
  */
 
 
-//TODO: Rodri hay que cambiar los links al repo de recursos que se encuentran apuntando al viejo por el nuevo path que se cambió hoy. el lunes si queres lo hago yo. ahora no llego con el tiempo.
-
 public class WalletResourcesNetworkServicePluginRoot implements Service, NetworkService, WalletResourcesInstalationManager, WalletResourcesProviderManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin {
 
 
@@ -159,6 +158,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     //para testear
     private Map<String, byte[]> imagenes;
 
+
+    /**
+     * Github connection until the main repository be open source
+     */
+    private GithubConnection githubConnection;
+
     /**
      * Service Interface implementation.
      */
@@ -186,6 +191,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
             networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
             networkServicesWalletResourcesDAO.initializeDatabase(pluginId, NetworkserviceswalletresourcesDatabaseConstants.DATABASE_NAME);
+
+            /**
+             *  Connect with main repository
+             */
+            githubConnection = new GithubConnection();
 
 
 
@@ -262,14 +272,16 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     //el xml de las skin debe estar pegado a una estructura de navegacion
     @Override
-    public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion) throws WalletResourcesInstalationException {
-        String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
+    public void installCompleteWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion,String walletPublicKey) throws WalletResourcesInstalationException {
+        // this will be use when the repository be open source
+        //String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
+
+        String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
+
+        String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
 
-        String linkToResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
-
-
-        String localStoragePath=this.localStoragePath+walletCategory + "/" + walletType + "/" + developer + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+        String localStoragePath=this.localStoragePath+developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
 
         Skin skin = null;
 
@@ -280,8 +292,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         try {
 
-            skin = checkAndInstallSkinResources(linkToResources,localStoragePath);
-
+            String linkToSkinFile=linkToResources+screenSize+"/";
+            skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath);
 
 
             Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
@@ -308,15 +320,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download navigation structure
              */
 
-            String linkToNavigationStructure = linkToRepo + "versions/" + skin.getNavigationStructureCompatibility() + "/";
-            donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath);
+            String linkToNavigationStructure = linkToRepo + "navigation_structure/" + skin.getNavigationStructureCompatibility() + "/";
+            donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath,walletPublicKey);
 
 
             /**
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, localStoragePath);
+            downloadResourcesFromRepo(linkToResources, skin, localStoragePath,screenSize);
 
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
@@ -449,14 +461,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  delete navigation structure portrait
              */
 
-            String navigationStructureName="navigation_structure_portrait.xml";
+            String navigationStructureName="navigation_structure.xml";
             deleteXML(navigationStructureName,skinId,linkToNavigationStructure);
 
-            /**
-             *  delete navigation structure landscape
-             */
-            navigationStructureName="navigation_structure_landscape.xml";
-            deleteXML(navigationStructureName, skinId, linkToNavigationStructure);
 
             /**
              *  delete resources
@@ -466,7 +473,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              * delete portrait resources
              */
             String linkToPortraitResources = linkToResources + "portrait/resources/";
-            deleteResources(linkToPortraitResources, skin.getLstResources(), skin.getId());
+            deleteResources(linkToPortraitResources, skin.getResources(), skin.getId());
 
             /**
 
@@ -474,7 +481,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              * delete layouts
              */
             String linkToPortraitLayouts = linkToResources + "/layouts";
-            deleteLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId());
+            deleteLayouts(linkToPortraitLayouts, skin.getPortraitLayouts(), skin.getId());
 
 
 
@@ -488,25 +495,27 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
 
-    private void downloadResourcesFromRepo(String linkToResources, Skin skin, String localStoragePath) {
+    private void downloadResourcesFromRepo(String linkToRepo, Skin skin, String localStoragePath,String screenSize) {
 
         /**
          * download portrait resources
          */
-        String linkToPortraitResources = linkToResources + "/resources/" + "/drawables/";
-        downloadResourcesFromRepo(linkToPortraitResources, skin.getLstResources(), skin.getId(),localStoragePath);
+        String linkToResources = linkToRepo + "resources/mdpi/drawables/";
+        // this will be used when the main repository be open source
+        downloadResourcesFromRepo(linkToResources, skin.getResources(), skin.getId(),localStoragePath);
+
 
         /**
          * download portrait layouts
          */
-        String linkToPortraitLayouts = linkToResources + "portrait/resources/" + "/layouts/";
-        downloadLayouts(linkToPortraitLayouts, skin.getLstPortraitLayouts(), skin.getId(),localStoragePath);
+        String linkToPortraitLayouts = linkToRepo +screenSize+ "/portrait/layouts/";
+        downloadLayouts(linkToPortraitLayouts, skin.getPortraitLayouts(), skin.getId(),localStoragePath);
 
         /**
          * download landscape layouts
          */
-        String linkToLandscapeLayouts = linkToResources + "landscape/resources/" + "/layouts/";
-        downloadLayouts(linkToLandscapeLayouts, skin.getLstLandscapeLayouts(), skin.getId(),localStoragePath);
+        String linkToLandscapeLayouts = linkToRepo +screenSize+ "/landscape/layouts/";
+        downloadLayouts(linkToLandscapeLayouts, skin.getLandscapeLayouts(), skin.getId(),localStoragePath);
 
 
         //TODO: raise a event
@@ -527,8 +536,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
                 switch (entry.getValue().getResourceType()) {
                     case IMAGE:
-
-                        byte[] image = getRepositoryImageFile(link, entry.getValue().getFileName());
+                        // this will be used when the main repository be open source
+                        //byte[] image = getRepositoryImageFile(link, entry.getValue().getFileName());
+                        // this is used because the main repository is private
+                        byte[] image = githubConnection.getImage(link + entry.getValue().getFileName());
 
                         //testing purpose
                         imagenes.put(entry.getValue().getName(), image);
@@ -550,8 +561,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -586,7 +595,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         try {
             for (Map.Entry<String, Layout> entry : resourceMap.entrySet()) {
 
-                String layoutXML = getRepositoryStringFile(link, entry.getValue().getFilename());
+                // this will be when the repository be open source
+                //String layoutXML = getRepositoryStringFile(link, entry.getValue().getFilename());
+
+                // this is because the main repository is private
+                String layoutXML = githubConnection.getFile(link+entry.getValue().getFilename());
 
                 try {
 
@@ -600,8 +613,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -625,15 +636,20 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    private void donwloadNavigationStructure(String link, UUID skinId,String localStoragePath) {
+    private void donwloadNavigationStructure(String link, UUID skinId,String localStoragePath,String walletPublicKey) {
         try {
 
 
             /**
              *  Download portrait navigation structure
              */
-            String navigationStructureName="navigation_structure_portrait.xml";
-            String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
+            String navigationStructureName="navigation_structure.xml";
+            //this will be use when the main repository be open source
+            //String navigationStructureXML = getRepositoryStringFile(link, navigationStructureName);
+
+            // this is used because we have a private main repository
+            String navigationStructureXML = githubConnection.getFile(link+navigationStructureName);
+
             try {
 
                 recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath);
@@ -648,17 +664,16 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
             WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent=  (WalletNavigationStructureDownloadedEvent) platformEvent;
             walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
-            walletNavigationStructureDownloadedEvent.setFilename("portrait_navigation_structure.xml");
+            walletNavigationStructureDownloadedEvent.setFilename("navigation_structure.xml");
             walletNavigationStructureDownloadedEvent.setSkinId(skinId);
             walletNavigationStructureDownloadedEvent.setXmlText(navigationStructureXML);
             walletNavigationStructureDownloadedEvent.setLinkToRepo(localStoragePath);
+            walletNavigationStructureDownloadedEvent.setWalletPublicKey(walletPublicKey);
             eventManager.raiseEvent(platformEvent);
 
 
 
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -761,10 +776,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     private Skin checkAndInstallSkinResources(String linkToSkin,String localStoragePath) throws CantCheckResourcesException, CantPersistFileException {
         String repoManifest = "";
-        String skinFilename = "/skin.xml";
+        String skinFilename = "skin.xml";
         try {
-            //connect to repo and get manifest file
-            repoManifest = getRepositoryStringFile(linkToSkin, skinFilename);
+            //connect to repo and get skin file
+            // this will work when we have open source repository
+
+            //repoManifest = getRepositoryStringFile(linkToSkin, skinFilename);
+
+            //this work only for the private repository
+            repoManifest = githubConnection.getFile(linkToSkin+skinFilename);
 
 
             Skin skin = new Skin();
@@ -777,7 +797,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             return skin;
 
-        } catch (MalformedURLException | FileNotFoundException e) {
+        } catch (MalformedURLException e) {
 
             throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Http error in connection with the repository to load manifest file", "");
 

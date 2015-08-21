@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -34,11 +33,9 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraUserConnectionException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorActor;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -120,47 +117,59 @@ public class IntraUserActorDao {
         }
     }
 
-    public void createNewIntraUser (String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAddPendingIntraUserException {
+    public void createNewIntraUser (String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ContactState contactState) throws CantAddPendingIntraUserException {
 
         try {
 
+            /**
+             * if intra user exist on table
+             * change status
+             */
+            if (intraUserExists(intraUserToAddPublicKey)) {
 
-            if (aliasExists (intraUserToAddName)) {
+                this.updateIntraUserConnectionState(intraUserLoggedInPublicKey,intraUserToAddPublicKey,contactState);
 
-                throw new CantAddPendingIntraUserException ("Cant create new developer, alias exists.",null, "", "");
+            }
+            else
+            {
+                /**
+                 * Get actual date
+                 */
+                Date d = new Date();
+                long milliseconds = d.getTime();
+
+                DatabaseTable table = this.database.getTable(IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
+                DatabaseTableRecord record = table.getEmptyRecord();
+
+                record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey);
+                record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_NAME_COLUMN_NAME,intraUserToAddName );
+                record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
+                record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey);
+                record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+                record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+
+                table.insertRecord(record);
+
+
+                /**
+                 * Persist profile image on a file
+                 */
+                persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+
+                database.closeDatabase();
             }
 
-            /**
-             * Get actual date
-             */
-            Date d = new Date();
-            long milliseconds = d.getTime();
 
-            DatabaseTable table = this.database.getTable(IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
-            DatabaseTableRecord record = table.getEmptyRecord();
-
-            record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey);
-            record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_NAME_COLUMN_NAME,intraUserToAddName );
-            record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, ContactState.PENDING_HIS_ACCEPTANCE.getCode());
-            record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey);
-            record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
-            record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
-
-            table.insertRecord(record);
-
-
-            /**
-             * Persist profile image on a file
-             */
-            persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
-
-            database.closeDatabase();
 
         } catch (CantInsertRecordException e){
             database.closeDatabase();
-            // Cant insert record.
+
             throw new CantAddPendingIntraUserException("CAN'T INSERT INTRA USER", e, "", "Cant create new intra user, insert database problems.");
 
+        } catch (CantUpdateIntraUserConnectionException e) {
+            database.closeDatabase();
+
+            throw new CantAddPendingIntraUserException ("CAN'T INSERT INTRA USER", FermatException.wrapException(e), "", "Cant update exist intra user state, unknown failure.");
 
         } catch (Exception e) {
             database.closeDatabase();
@@ -258,6 +267,8 @@ public class IntraUserActorDao {
 
             // 2) Find all Intra Users.
             table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, ContactState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+
             table.loadToMemory();
 
 
@@ -492,6 +503,44 @@ public class IntraUserActorDao {
 
         return profileImage;
     }
+
+
+    /**
+     * <p>Method that check if intra user public key exists.
+     * @param intraUserToAddPublicKey
+     * @return boolean exists
+     * @throws CantCreateNewDeveloperException
+     */
+    private boolean intraUserExists (String intraUserToAddPublicKey) throws CantCreateNewDeveloperException {
+
+
+        DatabaseTable table;
+        /**
+         * Get developers identities list.
+         * I select records on table
+         */
+
+        try {
+            table = this.database.getTable (IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not  found.", "Intra User Actor", "Cant check if alias exists, table not found.");
+            }
+
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            return table.getRecords ().size () > 0;
+
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Intra User Actor", "Cant load " + IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
+
+        } catch (Exception e) {
+            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant check if alias exists, unknown failure.");
+        }
+    }
+
 
     /**
      * <p>Method that check if alias exists.

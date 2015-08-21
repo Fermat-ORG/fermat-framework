@@ -18,6 +18,8 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractPlatformEv
 
     private String filename;
 
+    private String walletPublicKey;
+
 
     public WalletNavigationStructureDownloadedEvent() {
         super(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
@@ -54,5 +56,12 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractPlatformEv
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getWalletPublicKey() {
+        return walletPublicKey;
+    }
+    public void setWalletPublicKey(String walletPublicKey){
+        this.walletPublicKey=walletPublicKey;
     }
 }

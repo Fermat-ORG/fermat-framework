@@ -1,7 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.FragmentFactory;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FragmentFactory;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceWalletFragmentFactory;
 
 
 /**
@@ -11,10 +10,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 public class WalletFragmentFactory {
 
 
-    public static FragmentFactory getFragmentFactoryByWalletType(String walletType) {
+    public static com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory getFragmentFactoryByWalletType(String walletType) {
         switch (walletType) {
             case "reference_wallet":
-                return new com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.WalletFragmentFactory();
+                return new ReferenceWalletFragmentFactory();
             default:
                 return null;
 
