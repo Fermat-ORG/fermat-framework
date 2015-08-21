@@ -768,14 +768,16 @@
 					<addon
 							name="Platform Info"
 							description=""
-							dificulty="3"
+							dificulty="1"
 							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1947,15 +1949,17 @@
                     <plugin
                             name="Bitcoin"
                             description=""
-                            dificulty="5"
+                            dificulty="10"
                             code-level="production"
                             >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                        </authors>
-                        <mantainers>
-                        </mantainers>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
                         <certifications>
                         </certifications>
                     </plugin>
@@ -2026,14 +2030,16 @@
                     <plugin
                             name="Bitcoin"
                             description=""
-                            dificulty="5"
+                            dificulty="10"
                             code-level="production"
                             >
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                        </authors>
-                        <mantainers>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
                         </mantainers>
                         <certifications>
                         </certifications>
@@ -2132,6 +2138,98 @@
                             <certification type="testing" signed-by="jorgeejgonzalez"></certification>
                         </certifications>
                     </addon>
+					<addon
+							name="Logger"
+							description=""
+							dificulty="4"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Device Location"
+							description=""
+							dificulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Device Connectivity"
+							description=""
+							dificulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Device Power"
+							description=""
+							dificulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Device Contacts"
+							description=""
+							dificulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+					<addon
+							name="Device Hardware"
+							description=""
+							dificulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
                 </addons>
             </layer>
         </super_layer>
