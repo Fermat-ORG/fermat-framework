@@ -613,24 +613,32 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
              */
             case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
                 listenersIncomingCryptoOnCryptoNetworkEvent.add(listener);
+                break;
             case INCOMING_CRYPTO_ON_BLOCKCHAIN:
                 listenersIncomingCryptoOnBlockchainEvent.add(listener);
+                break;
             case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
                 listenersIncomingCryptoReversedOnCryptoNetworkEvent.add(listener);
+                break;
             case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
                 listenersIncomingCryptoReversedOnBlockchainEvent.add(listener);
+                break;
 
             /**
              * Issue #543
              */
             case INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
                 listenersIncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent.add(listener);
+                break;
             case INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
                 listenersIncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent.add(listener);
+                break;
             case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER:
                 listenersIncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent.add(listener);
+                break;
             case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER:
                 listenersIncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent.add(listener);
+                break;
         }
     }
 
