@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,10 +40,14 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -109,12 +114,12 @@ public class TransactionsBookFragment extends Fragment{
      * Map of transactions ordered
      */
 
-    Map<Date,Set<CryptoWalletTransaction>> mapTransactionPerDate;
+    Map<String,Set<CryptoWalletTransaction>> mapTransactionPerDate;
 
     /**
      * Wallet session
      */
-    private WalletSession walletSession;
+    private ReferenceWalletSession walletSession;
 
     /**
      * Resources
@@ -125,6 +130,10 @@ public class TransactionsBookFragment extends Fragment{
     int type=0;
     private TextView textView_transactions_type;
 
+    private boolean isLoading;
+
+    private EntryAdapter adapter;
+
     /**
      *
      * @param position
@@ -132,7 +141,7 @@ public class TransactionsBookFragment extends Fragment{
      * @return
      */
 
-    public static TransactionsBookFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,int type) {
+    public static TransactionsBookFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,int type) {
         TransactionsBookFragment f = new TransactionsBookFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
@@ -156,7 +165,7 @@ public class TransactionsBookFragment extends Fragment{
             cryptoWalletManager = walletSession.getCryptoWalletManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
 
-            mapTransactionPerDate= new HashMap<Date, Set<CryptoWalletTransaction>>();
+            mapTransactionPerDate= new HashMap<String, Set<CryptoWalletTransaction>>();
 
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -171,7 +180,7 @@ public class TransactionsBookFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        UUID skinId = UUID.randomUUID();
+
         try {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
             // Get ListView object from xml
@@ -191,11 +200,18 @@ public class TransactionsBookFragment extends Fragment{
             // Create the adapter to convert the array to views
 
 
-                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
+            lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
 
 
-            BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
-            lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
+            //BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
+
+            if(type==0){
+                lstTransactions=showTransactionListSelected(lstTransactions,BalanceType.BOOK);
+            }else if(type==1){
+                lstTransactions=showTransactionListSelected(lstTransactions,BalanceType.AVAILABLE);
+
+            }
+
 
             // Set the emptyView to the ListView
             TextView textViewEmptyListView = (TextView) rootView.findViewById(R.id.emptyElement);
@@ -218,41 +234,59 @@ public class TransactionsBookFragment extends Fragment{
 
 
 
-            /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    //view.
+            listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
+                public int currentScrollState;
+                public int currentVisibleItemCount;
+                public int currentFirstVisibleItem;
+//                @Override
+//                public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                    //view.
+//                }
+//
+//                @Override
+//                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                    //showMessage("holas");
+//                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
+//                            +"first vible item:"+firstVisibleItem+"\n"
+//                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+//
+//                }
+
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    this.currentFirstVisibleItem = firstVisibleItem;
+                    this.currentVisibleItemCount = visibleItemCount;
                 }
 
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    //showMessage("holas");
-                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
-                            +"first vible item:"+firstVisibleItem+"\n"
-                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    this.currentScrollState = scrollState;
+                    this.isScrollCompleted();
+                }
 
+                private void isScrollCompleted() {
+                    if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
+                        /*** In this way I detect if there's been a scroll which has completed ***/
+                        /*** do the work for load more date! ***/
+                        if (!isLoading) {
+                            isLoading = true;
+                            //loadMoreDAta();
+                            loadNewTransactions();
+                        }
+                    }
                 }
             });
-            */
 
             /**
              * Load transactions
              */
-            loadTransactionMap();
+            loadTransactionMap(lstTransactions);
 
 
-            for (Date date: mapTransactionPerDate.keySet()){
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-                items.add(new SectionItem(sdf.format(date)));
-                for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
-                    items.add(new EntryItem(cryptoWalletTransaction));
-                }
-            }
+            convertToUIList();
 
             /**
              *
              */
-            EntryAdapter adapter = new EntryAdapter(getActivity(), items);
+            adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
@@ -289,17 +323,33 @@ public class TransactionsBookFragment extends Fragment{
     /**
      *  Order transactions in a map
      */
-    private void loadTransactionMap(){
+    private void loadTransactionMap(List<CryptoWalletTransaction> lstTransactions){
+        Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
         for(CryptoWalletTransaction transaction:lstTransactions){
             Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
-            if(!mapTransactionPerDate.containsKey(date)){
-                Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
+            if(!mapTransactionPerDate.containsKey(convertDateToString(date))){
+                cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
                 cryptoWalletTransactionSet.add(transaction);
-                mapTransactionPerDate.put(date,cryptoWalletTransactionSet);
+                mapTransactionPerDate.put(convertDateToString(date), cryptoWalletTransactionSet);
             }else{
-                mapTransactionPerDate.get(date).add(transaction);
+                mapTransactionPerDate.get(convertDateToString(date)).add(transaction);
             }
         }
+    }
+
+    private String convertDateToString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        return sdf.format(date);
+    }
+    private List convertToUIList(){
+        for (String date: mapTransactionPerDate.keySet()){
+            //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            items.add(new SectionItem(date));
+            for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
+                items.add(new EntryItem(cryptoWalletTransaction));
+            }
+        }
+        return items;
     }
 
     /**
@@ -329,12 +379,20 @@ public class TransactionsBookFragment extends Fragment{
                 loadNewTransactions();
                 //transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTransactions);
                 //listViewTransactions.setAdapter(transactionArrayAdapter);
+                swipeRefreshLayout.bringToFront();
+                swipeRefreshLayout.invalidate();
                 swipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
 
     }
-
+    private void loadTransaction(List<CryptoWalletTransaction> lstTransactions){
+        if (lstTransactions.isEmpty()){
+            loadTransactionMap(lstTransactions);
+            convertToUIList();
+            adapter.notifyDataSetChanged();
+        }
+    }
     /**
      *  Update transaction list
      */
@@ -358,7 +416,14 @@ public class TransactionsBookFragment extends Fragment{
                 }
                 pointerOffset = lstTransactions.size();
 
-                showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
+                if(type==0){
+                    lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.BOOK);
+                }else if(type==1){
+                    lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.AVAILABLE);
+                }
+
+                adapter.notifyDataSetChanged();
+
             }
         }
 
@@ -472,7 +537,7 @@ public class TransactionsBookFragment extends Fragment{
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 

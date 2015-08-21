@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,6 +40,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUti
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionItem;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 
 import android.widget.TextView;
@@ -100,7 +102,7 @@ public class TransactionsFragment extends Fragment{
      */
     //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
-    private int cantTransactions = 50;
+    private int cantTransactions = 5;
 
 
     /**
@@ -122,13 +124,15 @@ public class TransactionsFragment extends Fragment{
     /**
      * Wallet session
      */
-    private WalletSession walletSession;
+    private ReferenceWalletSession walletSession;
 
     /**
      * Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
+    private boolean isLoading=false;
 
+    private EntryAdapter adapter;
 
     /**
      *
@@ -137,7 +141,7 @@ public class TransactionsFragment extends Fragment{
      * @return
      */
 
-    public static TransactionsFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static TransactionsFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         TransactionsFragment f = new TransactionsFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
@@ -211,28 +215,53 @@ public class TransactionsFragment extends Fragment{
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    refreshTransactionsContent();
+                    //refreshTransactionsContent();
                 }
             });
 
 
 
-            /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    //view.
-                }
+            listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
+                public int currentScrollState;
+                public int currentVisibleItemCount;
+                public int currentFirstVisibleItem;
+//                @Override
+//                public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                    //view.
+//                }
+//
+//                @Override
+//                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                    //showMessage("holas");
+//                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
+//                            +"first vible item:"+firstVisibleItem+"\n"
+//                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+//
+//                }
 
-                @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    //showMessage("holas");
-                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
-                            +"first vible item:"+firstVisibleItem+"\n"
-                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+                    this.currentFirstVisibleItem = firstVisibleItem;
+                    this.currentVisibleItemCount = visibleItemCount;
+                }
 
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    this.currentScrollState = scrollState;
+                    this.isScrollCompleted();
+                }
+
+                private void isScrollCompleted() {
+                    if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
+                        /*** In this way I detect if there's been a scroll which has completed ***/
+                        /*** do the work for load more date! ***/
+                        if(!isLoading){
+                            isLoading = true;
+                            //loadMoreDAta();
+                            loadNewTransactions();
+                        }
+                    }
                 }
             });
-            */
+
 
             /**
              * Load transactions
@@ -251,7 +280,7 @@ public class TransactionsFragment extends Fragment{
             /**
              *
              */
-            EntryAdapter adapter = new EntryAdapter(getActivity(), items);
+            adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
 
         } catch (CantGetTransactionsException e) {
@@ -274,6 +303,7 @@ public class TransactionsFragment extends Fragment{
 //
 //            image=walletResourcesProviderManager.getImageResource("personIcon", skinId);
 //
+//
 //        } catch (CantGetResourcesException e) {
 //            e.printStackTrace();
 //        }
@@ -283,6 +313,9 @@ public class TransactionsFragment extends Fragment{
 
         return rootView;
     }
+
+
+
 
     /**
      *  Order transactions in a map
@@ -356,7 +389,8 @@ public class TransactionsFragment extends Fragment{
                 }
                 pointerOffset = lstTransactions.size();
 
-                showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
+                lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
+                adapter.notifyDataSetChanged();
             }
         }
 
@@ -439,7 +473,7 @@ public class TransactionsFragment extends Fragment{
                     if(textView_amount != null)
                         textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode()));
                     if(textView_time!=null){
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
                     }
                     if(textView_type!=null){
@@ -462,7 +496,7 @@ public class TransactionsFragment extends Fragment{
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 
