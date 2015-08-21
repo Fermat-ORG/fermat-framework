@@ -152,10 +152,13 @@ public class IncomingCryptoDeveloperDatabaseFactory {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
             return returnedRecords;
         } catch (Exception e){
-            throw e;
+            database.closeDatabase();
+            return returnedRecords;
         }
+        database.closeDatabase();
         return returnedRecords;
     }
 

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by franklin on 05/08/15.
  */
-public class setLoggingLevelPerClassTest {
+public class SetLoggingLevelPerClassTest {
     static final String CLASS = "ClassToTest";
     static final LogLevel LOG_LEVEL = LogLevel.MODERATE_LOGGING;
 
