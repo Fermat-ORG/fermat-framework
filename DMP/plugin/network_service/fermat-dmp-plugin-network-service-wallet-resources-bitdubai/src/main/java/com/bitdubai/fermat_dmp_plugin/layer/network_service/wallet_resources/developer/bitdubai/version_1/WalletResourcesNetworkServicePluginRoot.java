@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;

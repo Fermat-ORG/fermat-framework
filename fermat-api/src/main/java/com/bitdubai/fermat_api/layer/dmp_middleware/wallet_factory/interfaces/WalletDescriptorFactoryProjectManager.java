@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantUpdateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 
 import java.util.List;
 import java.util.UUID;
@@ -91,4 +93,5 @@ public interface WalletDescriptorFactoryProjectManager {
     void closeProject(String name) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException;
 
     void setProjectState(UUID projectId, FactoryProjectState state) throws CantUpdateWalletFactoryProjectException, ProjectNotFoundException;
+
 }
