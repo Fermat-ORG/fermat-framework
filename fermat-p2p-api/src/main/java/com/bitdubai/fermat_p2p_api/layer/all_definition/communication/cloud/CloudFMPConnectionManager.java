@@ -55,11 +55,6 @@ import java.util.zip.GZIPOutputStream;
  */
 public abstract class CloudFMPConnectionManager implements CloudConnectionManager, FMPPacketHandler, Runnable {
 
-    /**
-     * Represent the Logger
-     */
-    private static Logger LOG = Logger.getGlobal();
-
     /*
      * Represent the sleep time (1000 milliseconds)
      */
@@ -347,7 +342,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	@Override
 	public synchronized void readFromConnection(final SelectionKey connection) throws CloudCommunicationException {
 
-        LOG.info("CloudFMPConnectionManager - Starting read data from Connection ");
+        System.out.println("CloudFMPConnectionManager - Starting read data from Connection ");
 
         /*
          * Extract the socket chanel from the connection
@@ -375,7 +370,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 
             while (bytesRead > 0) {
 
-                LOG.info("CloudFMPConnectionManager - bytesRead= " + bytesRead);
+                System.out.println("CloudFMPConnectionManager - bytesRead= " + bytesRead);
 
                 /*
                  * Flips this buffer.
@@ -426,7 +421,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
             }
 
 
-            LOG.info("CloudFMPConnectionManager - Data length received = " + stringBuffer.length());
+            System.out.println("CloudFMPConnectionManager - Data length received = " + stringBuffer.length());
 
 
             /*
@@ -440,7 +435,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                 String decryptedJson = AsymmectricCryptography.decryptMessagePrivateKey(stringBuffer.toString(), identity.getPrivateKey());
 
 
-                LOG.info("CloudFMPConnectionManager - Received packet json = " + decryptedJson);
+                System.out.println("CloudFMPConnectionManager - Received packet json = " + decryptedJson);
 
                 /*
                  * Create a new FMPPacket whit the decrypted string of data
@@ -456,11 +451,11 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 
 		} catch(UnsupportedEncodingException ex){
 
-            LOG.log(Level.WARNING,  "CloudFMPConnectionManager - THIS IS NEVER GOING TO HAPPEN, Error = " + ex.getMessage());
+            System.out.println("CloudFMPConnectionManager - THIS IS NEVER GOING TO HAPPEN, Error = " + ex.getMessage());
 
 		} catch (FMPException ex) {
 
-            LOG.log(Level.WARNING, "CloudFMPConnectionManager - Error = " + ex.getMessage());
+            System.out.println("CloudFMPConnectionManager - Error = " + ex.getMessage());
 
 		}catch(IOException ex){
 
@@ -483,7 +478,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	@Override
 	public synchronized void writeToConnection(final SelectionKey connection) throws CloudCommunicationException {
 
-        LOG.info("CloudFMPConnectionManager - Starting write to Connection ");
+        System.out.println("CloudFMPConnectionManager - Starting write to Connection ");
 
         WritableByteChannel writableByteChannel = null;
 
@@ -520,16 +515,15 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                     ByteBuffer writeBuffer = ByteBuffer.allocate(FMPPacket.PACKET_MAX_BYTE_SIZE);
                     writeBuffer.clear();
 
-                    LOG.info("CloudFMPConnectionManager - Sending Packet jsom = " + dataPacketToSend.toJson());
+                    System.out.println("CloudFMPConnectionManager - Packet json to send = " + dataPacketToSend.toJson());
 
                     /*
                      * Encrypt the data packet json object string
                      */
                     String encryptedJson = AsymmectricCryptography.encryptMessagePublicKey(dataPacketToSend.toJson(), dataPacketToSend.getDestination());
 
-                    System.out.println("--- Sending encryptedJson = " + encryptedJson);
-
-                    LOG.info("CloudFMPConnectionManager - Sending encrypted packet data length = " + encryptedJson.length());
+                    System.out.println("CloudFMPConnectionManager - Encrypted packet json to send  = " + encryptedJson);
+                    System.out.println("CloudFMPConnectionManager - Packet data length = " + encryptedJson.length());
 
                     /*
                      * Get json format and convert to bytes
@@ -551,7 +545,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                      */
                     while(bytesToWrite != -1 || writeBuffer.position() > 0){
 
-                        LOG.info("CloudFMPConnectionManager - bytes to write "+bytesToWrite);
+                        System.out.println("CloudFMPConnectionManager - bytes to write " + bytesToWrite);
 
                         /*
                          * Flips this buffer.
@@ -614,7 +608,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	@Override
 	public void start() throws CloudCommunicationException {
 
-        LOG.info("CloudFMPConnectionManager - Starting in mode " + mode);
+        System.out.println("CloudFMPConnectionManager - Starting in mode " + mode);
 
         /*
          *  Validate the mode to run
@@ -742,7 +736,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 
 		}catch(FMPException fMPException){
 
-            LOG.log(Level.SEVERE, "CloudFMPConnectionManager - fMPException = " + fMPException.getMessage());
+            System.out.println("CloudFMPConnectionManager - fMPException = " + fMPException.getMessage());
 
 			String message = CloudCommunicationException.DEFAULT_MESSAGE;
 			FermatException cause = fMPException;
@@ -754,6 +748,8 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			return;
 		}
 	}
+
+
 
     /**
      * (non-Javadoc)
@@ -1132,6 +1128,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      */
     @Override
     public abstract void handleDataTransmit(final FMPPacket packet) throws FMPException;
+
+
+
 
     /**
      * Define the connection manager mode

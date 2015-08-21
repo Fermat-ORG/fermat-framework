@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.exceptions.CantInitializeWalletFactoryMiddlewareDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.DescriptorFactoryMiddlewareProject;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletDescriptorFactoryMiddlewareProject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 FactoryProjectState state = FactoryProjectState.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME));
                 String publisherIdentityKey = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLISHER_IDENTITY_KEY_COLUMN_NAME);
                 DescriptorFactoryProjectType descriptorFactoryProjectType = DescriptorFactoryProjectType.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME));
-                DescriptorFactoryMiddlewareProject walletFactoryProject = new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, state, description, publisherIdentityKey, descriptorFactoryProjectType);
+                WalletDescriptorFactoryMiddlewareProject walletFactoryProject = new WalletDescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, state, description, publisherIdentityKey, descriptorFactoryProjectType);
 
                 WalletDescriptorFactoryProjectList.add(walletFactoryProject);
             }
@@ -177,7 +178,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 String publisherIdentityKey = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLISHER_IDENTITY_KEY_COLUMN_NAME);
                 DescriptorFactoryProjectType descriptorFactoryProjectType = DescriptorFactoryProjectType.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME));
 
-                WalletDescriptorFactoryProject walletDescriptorFactoryProject = new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, state, description, publisherIdentityKey, descriptorFactoryProjectType);
+                WalletDescriptorFactoryMiddlewareProject walletDescriptorFactoryProject = new WalletDescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, state, description, publisherIdentityKey, descriptorFactoryProjectType);
 
                 walletDescriptorFactoryProjectList.add(walletDescriptorFactoryProject);
             }
@@ -223,7 +224,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 DescriptorFactoryProjectType descriptorFactoryProjectType = DescriptorFactoryProjectType.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME));
 
                 database.closeDatabase();
-                return new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, state, description, publisherIdentityKey, descriptorFactoryProjectType);
+                return new WalletDescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, state, description, publisherIdentityKey, descriptorFactoryProjectType);
             } else {
                 database.closeDatabase();
                 throw new ProjectNotFoundException(ProjectNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project with that name that belongs to the user.");
@@ -261,7 +262,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 DescriptorFactoryProjectType descriptorFactoryProjectType = DescriptorFactoryProjectType.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME));
 
                 database.closeDatabase();
-                return new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, state, description, publisherIdentityKey, descriptorFactoryProjectType);
+                return new WalletDescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, state, description, publisherIdentityKey, descriptorFactoryProjectType);
             } else {
                 database.closeDatabase();
                 throw new ProjectNotFoundException(ProjectNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a project with that name that belongs to the user.");
@@ -300,7 +301,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 String publisherIdentityKey = record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLISHER_IDENTITY_KEY_COLUMN_NAME);
                 DescriptorFactoryProjectType descriptorFactoryProjectType = DescriptorFactoryProjectType.getByCode(record.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME));
 
-                DescriptorFactoryMiddlewareProject walletFactoryProject = new DescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, factoryProjectState, description, publisherIdentityKey, descriptorFactoryProjectType);
+                WalletDescriptorFactoryMiddlewareProject walletFactoryProject = new WalletDescriptorFactoryMiddlewareProject(id, name, developerPublicKey, walletType, path, factoryProjectState, description, publisherIdentityKey, descriptorFactoryProjectType);
 
                 walletDescriptorFactoryProjectList.add(walletFactoryProject);
             }

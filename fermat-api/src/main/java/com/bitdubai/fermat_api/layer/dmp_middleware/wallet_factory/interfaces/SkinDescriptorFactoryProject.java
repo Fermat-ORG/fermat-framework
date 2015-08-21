@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
 
 import java.util.UUID;
 
@@ -11,4 +12,6 @@ import java.util.UUID;
 public interface SkinDescriptorFactoryProject extends DescriptorFactoryProject{
 
     public ScreenSize getScreenSize();
+
+    public Designer getDesigner();
 }
