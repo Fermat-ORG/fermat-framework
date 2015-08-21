@@ -379,7 +379,6 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
     Map<EventType, List<EventListener>> listenersMap = new HashMap<>();
 
-
     @Override
     public void addListener(EventListener listener) {
 
@@ -388,7 +387,6 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
         listenersList.add(listener);
 
         listenersMap.put(listener.getEventType(), listenersList);
-
     }
 
     @Override
