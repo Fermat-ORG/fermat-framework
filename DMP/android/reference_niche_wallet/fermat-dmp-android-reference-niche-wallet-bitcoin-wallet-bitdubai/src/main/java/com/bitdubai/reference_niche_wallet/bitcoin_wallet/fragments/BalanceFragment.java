@@ -115,9 +115,9 @@ public class BalanceFragment extends Fragment {
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static BalanceFragment newInstance(int position,ReferenceWalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
-        balanceFragment.setReferenceWalletSession((ReferenceWalletSession) walletSession);
+        balanceFragment.setReferenceWalletSession( walletSession);
         balanceFragment.setWalletSettingManager(walletSettingsManager);
         balanceFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return balanceFragment;

@@ -40,6 +40,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUti
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionItem;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 
 import android.widget.TextView;
@@ -123,7 +124,7 @@ public class TransactionsFragment extends Fragment{
     /**
      * Wallet session
      */
-    private WalletSession walletSession;
+    private ReferenceWalletSession walletSession;
 
     /**
      * Resources
@@ -140,7 +141,7 @@ public class TransactionsFragment extends Fragment{
      * @return
      */
 
-    public static TransactionsFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static TransactionsFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         TransactionsFragment f = new TransactionsFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
@@ -495,7 +496,7 @@ public class TransactionsFragment extends Fragment{
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 

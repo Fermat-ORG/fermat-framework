@@ -46,6 +46,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import org.apache.commons.collections.list.CursorableLinkedList;
 
@@ -68,7 +69,7 @@ public class CreateContactFragment extends Fragment {
      * Wallet session
      */
 
-    WalletSession walletSession;
+    ReferenceWalletSession walletSession;
     /**
      * Members
      */
@@ -131,12 +132,13 @@ public class CreateContactFragment extends Fragment {
      * @return
      */
 
-    public static CreateContactFragment newInstance(int position, WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static CreateContactFragment newInstance(int position, ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         CreateContactFragment f = new CreateContactFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setContactName(walletSession.getAccountName());
         f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
@@ -364,7 +366,7 @@ public class CreateContactFragment extends Fragment {
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 

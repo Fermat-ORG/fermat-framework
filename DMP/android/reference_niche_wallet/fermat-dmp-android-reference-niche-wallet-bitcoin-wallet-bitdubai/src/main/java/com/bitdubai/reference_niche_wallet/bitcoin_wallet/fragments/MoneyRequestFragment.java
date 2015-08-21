@@ -43,6 +43,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionIt
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -118,7 +119,7 @@ public class MoneyRequestFragment extends Fragment {
     /**
      * Wallet session
      */
-    private WalletSession walletSession;
+    private ReferenceWalletSession walletSession;
 
     /**
      * Wallet preference settings
@@ -142,7 +143,7 @@ public class MoneyRequestFragment extends Fragment {
      * @return
      */
 
-    public static MoneyRequestFragment newInstance(int position,WalletSession walletSession,WalletSettingsManager walletSettingsManager) {
+    public static MoneyRequestFragment newInstance(int position,ReferenceWalletSession walletSession,WalletSettingsManager walletSettingsManager) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
         f.setWalletSettingsManager(walletSettingsManager);
@@ -152,7 +153,7 @@ public class MoneyRequestFragment extends Fragment {
         return f;
     }
 
-    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, WalletSettingsManager walletSettingsManager, WalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, WalletSettingsManager walletSettingsManager, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
         f.setWalletSettingsManager(walletSettingsManager);
@@ -471,7 +472,7 @@ public class MoneyRequestFragment extends Fragment {
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 

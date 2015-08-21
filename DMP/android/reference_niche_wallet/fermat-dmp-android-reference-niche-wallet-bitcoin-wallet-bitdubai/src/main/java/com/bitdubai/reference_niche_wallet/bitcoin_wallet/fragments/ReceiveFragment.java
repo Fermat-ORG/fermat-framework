@@ -50,6 +50,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -132,7 +133,7 @@ public class ReceiveFragment extends Fragment {
     private WalletResourcesProviderManager walletResourcesProviderManager;
 
 
-    public static ReceiveFragment newInstance(int position, WalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static ReceiveFragment newInstance(int position, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
         ReceiveFragment f = new ReceiveFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
@@ -141,10 +142,10 @@ public class ReceiveFragment extends Fragment {
         f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
-    public static ReceiveFragment newInstance(int position,WalletContact walletContact,WalletSession walletSession) {
+    public static ReceiveFragment newInstance(int position,ReferenceWalletSession walletSession) {
         ReceiveFragment f = new ReceiveFragment();
         f.setWalletSession(walletSession);
-        f.setWalletContact(walletContact);
+        f.setWalletContact(walletSession.getLastContactSelected());
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

@@ -204,7 +204,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             /**
              * Get activities fragment
              */
-            Map<FermatFragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments = activity.getFragments();
+            Map<String, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments = activity.getFragments();
             /**
              * get actionBar to paint
              */
@@ -342,7 +342,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         adapter = new TabsPagerAdapter(getFragmentManager(),
                 getApplicationContext(),
-                WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getPublicKey()),
+                WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(),wallet.getWalletType(),wallet.getPublicKey()),
                 tabStrip,
                 walletSession,
                 getWalletSettingsManager(),

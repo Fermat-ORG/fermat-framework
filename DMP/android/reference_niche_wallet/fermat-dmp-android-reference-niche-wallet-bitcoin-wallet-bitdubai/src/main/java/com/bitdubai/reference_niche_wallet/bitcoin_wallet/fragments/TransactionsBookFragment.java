@@ -40,6 +40,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -118,7 +119,7 @@ public class TransactionsBookFragment extends Fragment{
     /**
      * Wallet session
      */
-    private WalletSession walletSession;
+    private ReferenceWalletSession walletSession;
 
     /**
      * Resources
@@ -140,7 +141,7 @@ public class TransactionsBookFragment extends Fragment{
      * @return
      */
 
-    public static TransactionsBookFragment newInstance(int position,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,int type) {
+    public static TransactionsBookFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,int type) {
         TransactionsBookFragment f = new TransactionsBookFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
@@ -536,7 +537,7 @@ public class TransactionsBookFragment extends Fragment{
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 
