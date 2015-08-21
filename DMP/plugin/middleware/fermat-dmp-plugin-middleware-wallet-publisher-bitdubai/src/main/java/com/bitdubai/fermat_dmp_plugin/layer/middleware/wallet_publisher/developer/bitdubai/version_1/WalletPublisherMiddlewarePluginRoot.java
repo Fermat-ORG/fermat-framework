@@ -38,6 +38,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
@@ -69,6 +71,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -311,7 +314,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             throw pluginStartException;
         }
 
-        test();
+        test2();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -513,9 +516,13 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             WalletPublisherMiddlewareManager walletPublisherMiddlewareManager = getWalletPublisherMiddlewareManagerInstance();
 
             WalletDescriptorFactoryProject walletDescriptorFactoryProject = constructWalletDescriptorFactoryProjectTest();
-            byte[] icon = null;
-            byte[] mainScreenShot = null;
+            byte[] icon = new byte[] { 0x11, 0x22, 0x33 };
+            byte[] mainScreenShot = new byte[] { 0x11, 0x22, 0x33 };
             List<byte[]> screenShotDetails = new ArrayList<>();
+
+            screenShotDetails.add(icon);
+            screenShotDetails.add(mainScreenShot);
+
             URL videoUrl = new URL("https://www.youtube.com/watch?v=pBzjx7V3Ldw");
             String observations = "Its Rock!";
             Version initialWalletVersion = new Version(1,0,0);
@@ -620,7 +627,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String getName() {
-                return "Wallet Publication Test";
+                return "Wallet Publication Test "+ System.currentTimeMillis();
             }
 
             @Override
@@ -645,7 +652,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String getDescription() {
-                return "Wallet Test Publication description";
+                return "Wallet Test Publication description "+ System.currentTimeMillis();
             }
 
             @Override
@@ -710,7 +717,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String getName() {
-                return "Skin test publication";
+                return "Skin test publication "+ System.currentTimeMillis();
             }
 
             @Override
@@ -735,7 +742,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String getDescription() {
-                return "Skin Test Publication description";
+                return "Skin Test Publication description "+ System.currentTimeMillis();
             }
 
             @Override
@@ -805,7 +812,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String getName() {
-                return "Skin test publication";
+                return "Language test publication "+ System.currentTimeMillis();
             }
 
             @Override
@@ -830,7 +837,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String getDescription() {
-                return "Skin Test Publication description";
+                return "Language Test Publication description "+ System.currentTimeMillis();
             }
 
             @Override
@@ -840,5 +847,22 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         };
 
         return language;
+    }
+
+    private void test2(){
+        WalletPublisherMiddlewareManager walletPublisherMiddlewareManager = getWalletPublisherMiddlewareManagerInstance();
+
+        try {
+
+            List<InformationPublishedComponent> list = walletPublisherMiddlewareManager.getPublishedComponents("04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80");
+
+            for (InformationPublishedComponent info:list) {
+                System.out.println(info.toString());
+            }
+
+
+        } catch (CantGetPublishedComponentInformationException e) {
+            e.printStackTrace();
+        }
     }
 }
