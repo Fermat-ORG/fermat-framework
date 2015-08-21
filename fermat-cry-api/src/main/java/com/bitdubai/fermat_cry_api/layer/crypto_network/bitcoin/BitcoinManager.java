@@ -34,7 +34,9 @@ public interface BitcoinManager {
     /**
      * Bitcoin server hosted in cloud
      */
+
     public final String REGTEST_SERVER_ADDRESS = "192.168.0.5";//"137.117.108.244";
+
     public final int REGTEST_SERVER_PORT = 18444;
 
 }
