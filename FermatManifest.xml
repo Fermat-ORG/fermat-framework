@@ -2,9 +2,9 @@
     <columns>
         <column code="PIP" name="Plug-ins Platform" logo="PIP_logo.png">
 
-            <layer name="Niche Wallet"></layer>
-            <layer name="Reference Wallet"></layer>
-            <layer name="Sub App">
+            <layer name="Niche Wallet" language="java-android"></layer>
+            <layer name="Reference Wallet" language="java-android"></layer>
+            <layer name="Sub App" language="java-android">
 				<androids>
 					<android
 							name="Shell"
@@ -39,14 +39,16 @@
 					<android
 							name="Developer"
 							description=""
-							dificulty="1"
+							dificulty="5"
 							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+                            <mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -66,6 +68,23 @@
 						<certifications>
 						</certifications>
 					</android>
+                    <android
+                            name="Sub App Manager"
+                            description=""
+                            dificulty="4"
+                            code-level="production"
+                            >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </android>
 					<android
 							name="System Monitor"
 							description=""
@@ -134,15 +153,17 @@
 					<plugin
 							name="Sub App Runtime"
 							description=""
-							dificulty="6"
+							dificulty="8"
 							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
+                        </mantainers>
 						<certifications>
 						</certifications>
 					</plugin>
@@ -362,6 +383,23 @@
 						<certifications>
 						</certifications>
 					</plugin>
+                    <plugin
+                            name="Sub App Settings"
+                            description=""
+                            dificulty="2"
+                            code-level="development"
+                            >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
 				</plugins>
 			</layer>
 
@@ -431,6 +469,23 @@
 
 			<layer name="Network Service" language="java">
 				<plugins>
+                    <plugin
+                            name="Sub App Resources"
+                            description=""
+                            dificulty="8"
+                            code-level="development"
+                            >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
 					<plugin
 							name="System Monitor"
 							description=""
@@ -521,6 +576,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
+
 				</plugins>
 			</layer>
 			<layer super_layer="P2P"></layer>
@@ -537,14 +593,16 @@
 					<android
 							name="Bitcoin Wallet"
 							description=""
-							dificulty="1"
+							dificulty="8"
 							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -552,14 +610,16 @@
 					<android
 							name="Fiat Over Crypto"
 							description=""
-							dificulty="1"
+							dificulty="8"
 							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -619,15 +679,17 @@
 					<plugin
 							name="Wallet Runtime"
 							description=""
-							dificulty="6"
+							dificulty="8"
 							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
+                        </mantainers>
 						<certifications>
 						</certifications>
 					</plugin>
@@ -774,7 +836,7 @@
 					<plugin
 							name="Wallet Contacts"
 							description=""
-							dificulty="1"
+							dificulty="2"
 							code-level="development"
 							>
 						<authors>
@@ -795,9 +857,11 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
+                        </mantainers>
 						<certifications>
 						</certifications>
 					</plugin>
@@ -816,6 +880,23 @@
 						<certifications>
 						</certifications>
 					</plugin>
+                    <plugin
+                            name="Notification"
+                            description=""
+                            dificulty="6"
+                            code-level="development"
+                            >
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
 				</plugins>
             </layer>
 
@@ -1175,18 +1256,20 @@
 					<plugin
 							name="Wallet Resources"
 							description=""
-							dificulty="5"
+							dificulty="8"
 							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <mantainers>
+                            <mantainer name="furszy"></mantainer>
+                        </mantainers>
+                        <certifications>
+                        </certifications>
+                    </plugin>
 					<plugin
 							name="Intra User"
 							description="Enables searching for Intra Users and conecting one to the other"
