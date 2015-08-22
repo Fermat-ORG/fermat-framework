@@ -24,17 +24,17 @@ import java.util.Map;
  */
 public class SubAppSessionManager implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager{
 
-    private Map<SubApps,SubAppsSession> lstSubAppSession;
+    private Map<String,SubAppsSession> lstSubAppSession;
 
 
 
     public SubAppSessionManager(){
-        lstSubAppSession= new HashMap<SubApps,SubAppsSession>();
+        lstSubAppSession= new HashMap<String,SubAppsSession>();
     }
 
 
     @Override
-    public Map<SubApps,SubAppsSession> listOpenSubApps() {
+    public Map<String,SubAppsSession> listOpenSubApps() {
         return lstSubAppSession;
     }
 
@@ -44,21 +44,21 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
         switch (subApps){
             case CWP_WALLET_FACTORY:
                 WalletFactorySubAppSession subAppSession = new WalletFactorySubAppSession(subApps,errorManager,walletFactoryManager);
-                lstSubAppSession.put(subApps, subAppSession);
+                lstSubAppSession.put(subApps.name(), subAppSession);
                 return subAppSession;
             case CWP_WALLET_STORE:
                 WalletStoreSubAppSession walletStoreSubAppSession = new WalletStoreSubAppSession(subApps,errorManager,walletStoreModuleManager);
-                lstSubAppSession.put(subApps,walletStoreSubAppSession);
+                lstSubAppSession.put(subApps.getCode(),walletStoreSubAppSession);
                 return walletStoreSubAppSession;
             case CWP_DEVELOPER_APP:
                 DeveloperSubAppSession developerSubAppSession = new DeveloperSubAppSession(subApps,errorManager,toolManager);
-                lstSubAppSession.put(subApps, developerSubAppSession);
+                lstSubAppSession.put(subApps.getCode(), developerSubAppSession);
                 return developerSubAppSession;
             case CWP_WALLET_MANAGER:
                 break;
             case CWP_WALLET_PUBLISHER:
                 WalletPublisherSubAppSession walletPublisherSubAppSession = new WalletPublisherSubAppSession(subApps,errorManager, walletPublisherManager);
-                lstSubAppSession.put(subApps,walletPublisherSubAppSession);
+                lstSubAppSession.put(subApps.getCode(),walletPublisherSubAppSession);
                 return walletPublisherSubAppSession;
             case CWP_WALLET_RUNTIME:
                 break;
@@ -90,7 +90,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
     }
 
     @Override
-    public SubAppsSession getSubAppsSession(SubApps subAppType) {
+    public SubAppsSession getSubAppsSession(String subAppType) {
         return this.lstSubAppSession.get(subAppType);
     }
 
