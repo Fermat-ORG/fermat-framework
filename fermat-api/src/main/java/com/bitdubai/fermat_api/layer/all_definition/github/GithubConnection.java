@@ -28,17 +28,19 @@ import java.util.Properties;
 
 public class GithubConnection {
 
-    final String MAIN_REPOSITORY="furszy/fermat";
+    String MAIN_REPOSITORY;
 
 
     Properties properties;
     GHRepository ghRepository;
 
     public GithubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+        MAIN_REPOSITORY="furszy/fermat";
         setUpConnection();
     }
 
-    public GithubConnection(String user, String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+    public GithubConnection(String repository, String user, String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+        this.MAIN_REPOSITORY = repository;
         setUpConnection(user,password);
     }
 
