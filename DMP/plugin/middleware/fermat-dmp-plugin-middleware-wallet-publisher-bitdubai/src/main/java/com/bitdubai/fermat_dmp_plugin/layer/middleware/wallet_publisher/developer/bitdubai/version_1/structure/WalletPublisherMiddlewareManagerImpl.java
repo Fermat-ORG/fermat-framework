@@ -292,6 +292,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             informationPublishedComponentMiddlewareImpl.setStatusTimestamp(new Timestamp(System.currentTimeMillis()));
             informationPublishedComponentMiddlewareImpl.setPublisherIdentityPublicKey(publisherIdentityPublicKey);
             informationPublishedComponentMiddlewareImpl.setSignature(signature);
+            informationPublishedComponentMiddlewareImpl.setVideoUrl(videoUrl);
+            informationPublishedComponentMiddlewareImpl.setType(walletDescriptorFactoryProject.getDescriptorProjectType());
 
             //Create the icon image
             ImageMiddlewareImpl iconImg = new ImageMiddlewareImpl();
@@ -332,20 +334,28 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             // Save into data base
             componentVersionDetailDao.create(componentVersionDetailMiddlewareImpl);
 
-            /* -------------------------------------
-             * Create all screenShots images details
-             * -------------------------------------
+            /*
+             * Validate not null
              */
-            for (byte[] screen : screenShotDetails){
+            if (screenShotDetails != null) {
 
-                ImageMiddlewareImpl screenShotImg = new ImageMiddlewareImpl();
-                screenShotImg.setFileId(UUID.randomUUID());
-                screenShotImg.setComponentId(informationPublishedComponentMiddlewareImpl.getId());
-                screenShotImg.setData(mainScreenShot);
+                /* -------------------------------------
+                 * Create all screenShots images details
+                 * -------------------------------------
+                 */
+                for (byte[] screen : screenShotDetails){
 
-                // Save into data base
-                screensShotsComponentsDao.create(screenShotImg);
+                    ImageMiddlewareImpl screenShotImg = new ImageMiddlewareImpl();
+                    screenShotImg.setFileId(UUID.randomUUID());
+                    screenShotImg.setComponentId(informationPublishedComponentMiddlewareImpl.getId());
+                    screenShotImg.setData(mainScreenShot);
+
+                    // Save into data base
+                    screensShotsComponentsDao.create(screenShotImg);
+                }
             }
+
+
 
             /* -------------------------------------
              * Publish into the wallet Store
@@ -357,6 +367,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              * If publish proccess is ok change the status and update in the database
              */
             informationPublishedComponentMiddlewareImpl.setStatus(ComponentPublishedInformationStatus.PUBLISHED);
+            informationPublishedComponentMiddlewareImpl.setStatusTimestamp(new Timestamp(System.currentTimeMillis()));
+            informationPublishedComponentMiddlewareImpl.setPublicationTimestamp(new Timestamp(System.currentTimeMillis()));
             informationPublishedComponentDao.update(informationPublishedComponentMiddlewareImpl);
 
         } catch (CantPublishWalletInCatalogException e) {
@@ -403,7 +415,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * Construct the default skin
          */
-        SkinDescriptorFactoryProject defaultSkinDescriptorFactoryProject = walletDescriptorFactoryProject.getSkins().get(0); //TODO: Get from the descriptor
+        SkinDescriptorFactoryProject defaultSkinDescriptorFactoryProject = walletDescriptorFactoryProject.getDefaultSkin();
         Skin defaultSkin = constructSkinObject(defaultSkinDescriptorFactoryProject,
                 version,
                 mainScreenShot,
@@ -442,7 +454,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * Construct the default language
          */
-        LanguageDescriptorFactoryProject defaultLanguageDescriptorFactoryProject =  walletDescriptorFactoryProject.getLanguages().get(0); //TODO: Get from the descriptor
+        LanguageDescriptorFactoryProject defaultLanguageDescriptorFactoryProject =  walletDescriptorFactoryProject.getDefaultLanguage();
         Language defaultLanguage = constructLanguageObject(defaultLanguageDescriptorFactoryProject,
                 version,
                 videoPreviews,
@@ -472,7 +484,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
          * Construct the catalog item instance
          */
         return walletStoreManager.constructCatalogItem(walletDescriptorFactoryProject.getId(),
-                                                        0, //TODO: defaultSizeInBytes
+                                                        walletDescriptorFactoryProject.getDefaultSizeInBytes(),
                                                         walletDescriptorFactoryProject.getName(),
                                                         walletDescriptorFactoryProject.getDescription(),
                                                         walletCategory,
@@ -483,9 +495,9 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         otherSkinSupportedList,
                                                         defaultSkin,
                                                         defaultLanguage,
-                                                        null,//otherLanguageSupportedList, //Todo Revisar
-                                                        null,
-                                                        null); //Coloca el ulr del publisher
+                                                        null, //TODO: walletDescriptorFactoryProject.getDeveloperIdentity()
+                                                        otherLanguageSupportedList,
+                                                        null);
     }
 
     /**
@@ -518,8 +530,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                screenShotDetails,
                                                hasVideoPreview,
                                                videoPreviews,
-                                               0,    // TODO: skinSizeInBytes
-                                               null, // TODO: designer
+                                               skinDescriptorFactoryProject.getDefaultSizeInBytes(),
+                                               null, // TODO: skinDescriptorFactoryProject.getDesigner()
                                                Boolean.TRUE);
 
    }
@@ -540,15 +552,15 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         * Construct the new instance
         */
         return walletStoreManager.constructLanguage(languageDescriptorFactoryProject.getId(),
-                                                    null, //languageDescriptorFactoryProject.getName(),//Todo Revisar
-                                                    languageDescriptorFactoryProject.getDescription(), //TODO: Get from the descriptor languageLabel
+                                                    languageDescriptorFactoryProject.getLanguagesName(),
+                                                    languageDescriptorFactoryProject.getLanguageLabel(),
                                                     languageDescriptorFactoryProject.getWalletId(),
                                                     version,
                                                     initialWalletVersion,
                                                     finalWalletVersion,
                                                     videoPreviews,
-                                                    0,    // TODO: skinSizeInBytes
-                                                    null, // TODO: designer
+                                                    languageDescriptorFactoryProject.getDefaultSizeInBytes(),
+                                                    null, // TODO: languageDescriptorFactoryProject.getTranslator(),
                                                     Boolean.TRUE);
 
     }

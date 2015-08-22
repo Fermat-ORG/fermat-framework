@@ -63,9 +63,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -204,7 +208,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             /**
              * Get activities fragment
              */
-            Map<FermatFragments, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments = activity.getFragments();
+            Map<String, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments = activity.getFragments();
             /**
              * get actionBar to paint
              */
@@ -342,7 +346,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         adapter = new TabsPagerAdapter(getFragmentManager(),
                 getApplicationContext(),
-                WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getPublicKey()),
+                WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(),wallet.getWalletType(),wallet.getPublicKey()),
                 tabStrip,
                 walletSession,
                 getWalletSettingsManager(),
@@ -809,6 +813,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
     }
     /**
+     *  Get SubAppSettingsManager
+     */
+    public SubAppSettingsManager getSubAppSettingsManager() {
+        return (SubAppSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_SUB_APP_SETTINGS_MIDDLEWARE);
+    }
+    /**
      *  Get WalletResourcesProvider
      */
     public WalletResourcesProviderManager getWalletResourcesProviderManager(){
@@ -828,6 +838,18 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (ToolManager)  ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE);
     }
 
+    /**
+     *  Get WalletStoreModuleManager
+     */
+    public WalletStoreModuleManager getWalletStoreModuleManager(){
+        return (WalletStoreModuleManager)  ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_STORE_MODULE);
+    }
+    /**
+     *  Get WalletStoreModuleManager
+     */
+    public WalletPublisherModuleManager getWalletPublisherManager(){
+        return (WalletPublisherModuleManager)  ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE);
+    }
 
 
 

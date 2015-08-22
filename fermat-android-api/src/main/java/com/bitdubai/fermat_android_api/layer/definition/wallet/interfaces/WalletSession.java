@@ -14,13 +14,43 @@ import java.util.List;
  */
 public interface WalletSession {
 
+    /**
+     *
+     * @return
+     */
     public InstalledWallet getWalletSessionType();
+
+    /**
+     *
+     * @param key
+     * @param object
+     */
     public void setData (String key,Object object);
+
+    /**
+     *
+     * @param key
+     * @return
+     */
     public Object getData (String key);
+
+    /**
+     *
+     * @return
+     */
     public CryptoWalletManager getCryptoWalletManager();
+
+    /**
+     *
+     * @return
+     */
     public ErrorManager getErrorManager();
-    public String getBalanceTypeSelected();
-    public void setBalanceTypeSelected(BalanceType balanceTypeSelected);
+
+    /**
+     *
+     * @return
+     */
     public WalletResourcesProviderManager getWalletResourcesProviderManager();
+
 
 }

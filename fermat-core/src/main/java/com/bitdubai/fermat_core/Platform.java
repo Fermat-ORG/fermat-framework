@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformLayers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.event.DealWithEventMonitor;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -41,8 +41,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.Wall
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.DealsWithIntraUsersModule;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.DealsWithWalletPublisher;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.DealsWithWalletPublisherModule;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.DealsWithWalletStoreModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
@@ -83,8 +83,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.Develop
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.DealsWithExtraUsers;
@@ -396,7 +396,6 @@ public class Platform {
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_Identity.IdentityLayer(), PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new IdentityLayer(), PlatformLayers.BITDUBAI_IDENTITY_LAYER);
 
-
             /*
              * Start all other platform layers
              */
@@ -476,7 +475,7 @@ public class Platform {
              * -------------------
              */
             Service eventManager = (Service) ((PlatformServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER)).getEventManager();
-            ((DealWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
+            ((DealsWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
             corePlatformContext.registerAddon((Addon) eventManager, Addons.EVENT_MANAGER);
             eventManager.start();
 
@@ -659,7 +658,7 @@ public class Platform {
             injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_USER_EXTRA_USER);
 
              /*
-             * Plugin Intra User
+             * Plugin Intra User PIP
              * -------------------------------
              */
             Plugin intraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorIntraUser();
@@ -1152,8 +1151,8 @@ public class Platform {
                 ((DealsWithWalletManager) plugin).setWalletManagerManager((WalletManagerManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE));
             }
 
-            if (plugin instanceof DealsWithWalletPublisher) {
-                ((DealsWithWalletPublisher) plugin).setWalletPublisherManager((WalletPublisherManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE));
+            if (plugin instanceof DealsWithWalletPublisherModule) {
+                ((DealsWithWalletPublisherModule) plugin).setWalletPublisherManager((WalletPublisherModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE));
             }
 
             if (plugin instanceof DealsWithWalletResources) {

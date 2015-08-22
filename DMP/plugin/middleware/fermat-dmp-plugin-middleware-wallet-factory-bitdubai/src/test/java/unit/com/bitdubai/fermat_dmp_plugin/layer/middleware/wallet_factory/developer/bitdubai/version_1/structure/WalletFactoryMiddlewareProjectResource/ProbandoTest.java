@@ -179,7 +179,7 @@ public class ProbandoTest {
 
             System.out.println("*****asd: - " + que.getAlias());
 
-            for (LanguageDescriptorFactoryProject lan : que.getLanguages()) {
+            for (LanguageDescriptorFactoryProject lan : que.getLanguagesName()) {
                 System.out.println("*****asd: - " + lan.getType());
             }
 

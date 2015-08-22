@@ -90,6 +90,7 @@ public class OutgoingExtraUserDeveloperDatabaseFactory {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
             return returnedRecords;
         }
 
@@ -117,6 +118,7 @@ public class OutgoingExtraUserDeveloperDatabaseFactory {
         /**
          * return the list of DeveloperRecords for the passed table.
          */
+        database.closeDatabase();
         return returnedRecords;
     }
 }
