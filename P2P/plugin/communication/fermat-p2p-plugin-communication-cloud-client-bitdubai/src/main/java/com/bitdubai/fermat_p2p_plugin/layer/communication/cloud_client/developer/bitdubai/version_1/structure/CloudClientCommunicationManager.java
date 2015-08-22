@@ -598,17 +598,8 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
             /*
              * Get the server connection from the requested connection
              */
-            SelectionKey serverConnection = requestedConnections.get(identityPublicKeyRemoteServer);
+            SelectionKey serverConnection = registeredConnections.get(identityPublicKeyRemoteServer);
 
-
-            System.out.println("CloudClientCommunicationManager - serverConnection = " + serverConnection);
-
-            /*
-             * If null get from unregistered connections
-             */
-            if (serverConnection == null){
-                serverConnection = unregisteredConnections.get(identityPublicKeyRemoteServer);
-            }
 
             System.out.println("CloudClientCommunicationManager - serverConnection = " + serverConnection);
 
@@ -765,7 +756,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
             /*
              * Get the server connection from the requested connection
              */
-            SelectionKey serverConnection = requestedConnections.get(identityPublicKeyRemoteServer);
+            SelectionKey serverConnection = registeredConnections.get(identityPublicKeyRemoteServer);
 
              /*
              * Attach the destination of the packet
