@@ -384,6 +384,9 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
         List<EventListener> listenersList = listenersMap.get(listener.getEventType());
 
+        if (listenersList == null)
+            listenersList = new ArrayList<>();
+
         listenersList.add(listener);
 
         listenersMap.put(listener.getEventType(), listenersList);
@@ -407,8 +410,10 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     public void raiseEvent(PlatformEvent platformEvent) {
         List<EventListener> listenersList = listenersMap.get(platformEvent.getEventType());
 
-        for (EventListener eventListener : listenersList) {
-            eventListener.raiseEvent(platformEvent);
+        if (listenersList != null) {
+            for (EventListener eventListener : listenersList) {
+                eventListener.raiseEvent(platformEvent);
+            }
         }
     }
 
