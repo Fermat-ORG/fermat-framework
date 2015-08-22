@@ -1187,13 +1187,13 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Ezequiel.Postan" scope="implementation" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="Ezequiel.Postan"></mantainer>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="Ezequiel.Postan" type="implementation"></certification>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -1205,13 +1205,13 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Ezequiel.Postan" scope="implementation" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="Ezequiel.Postan"></mantainer>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="Ezequiel.Postan" type="implementation"></certification>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -1253,13 +1253,13 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Ezequiel.Postan" scope="implementation" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="Ezequiel.Postan"></mantainer>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="Ezequiel.Postan" type="implementation"></certification>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -1271,13 +1271,13 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Ezequiel.Postan" scope="implementation" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="Ezequiel.Postan"></mantainer>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="Ezequiel.Postan" type="implementation"></certification>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -1335,10 +1335,10 @@
 							<author name="nattyco" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="Ezequiel.Postan"></mantainer>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification signed-by="Ezequiel.Postan" type="implementation"></certification>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
