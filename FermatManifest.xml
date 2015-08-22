@@ -847,7 +847,7 @@
 							name="Bitcoin Loss Protected"
 							description=""
 							difficulty="8"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -960,7 +960,7 @@
 							name="Crypto Loss Protected"
 							description=""
 							difficulty="4"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1367,7 +1367,7 @@
 							name="Bitcoin Loss Protected Wallet"
 							description=""
 							difficulty="8"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
