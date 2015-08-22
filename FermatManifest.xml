@@ -1931,8 +1931,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nindriago" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="nattyco"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
