@@ -16,6 +16,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 //import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -75,6 +77,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * That plugin produces the specific installation of the wallet on the user device
@@ -197,7 +200,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
         }
         catch (Exception exception){
-            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",FermatException.wrapException(exception), null, null);
+            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",FermatException.wrapException(exception), "Unexpected Exception", null);
         }
 
     }
@@ -276,7 +279,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
         this.serviceStatus = ServiceStatus.STARTED;
         //TODO:delete this line
-        testMethod();
+        //testMethod();
 
     }
     @Override
@@ -521,7 +524,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
     public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException{
         try {
 
-            eventManager.raiseEvent((PlatformEvent) new WalletInstalledEvent(EventType.WALLET_INSTALLED));
+            eventManager.raiseEvent( new WalletInstalledEvent(EventType.WALLET_INSTALLED));
             return new WalletManagerMiddlewareInstallationProcess(this.walletResources,walletCategory,walletPlatformIdentifier,this.pluginDatabaseSystem,pluginId);
 
         } catch (Exception e){
@@ -744,12 +747,21 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         database = databaseFactory.createDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
     }
 
+    //TODO:Delete this method
     private void testMethod(){
 
         UUID testUUID=UUID.randomUUID();
+        Version testVersion=new Version(1,1,0);
+        Logger LOG = Logger.getGlobal();
         try {
-            createNewWallet(testUUID,"testWallet");
-        } catch (CantCreateNewWalletException e) {
+            //createNewWallet(testUUID,"testWallet");
+            WalletCategory wc=WalletCategory.NICHE_WALLET;
+            String walletPlatformIdentifier="testID";
+            WalletInstallationProcess wIP=installWallet(wc, walletPlatformIdentifier);
+            wIP.startInstallation(WalletType.NICHE,"testWallet","123456","654321","098765",null,testUUID,testVersion, ScreenSize.MEDIUM.toString(),testUUID,testVersion,"Skin",null,testUUID,testVersion,Languages.LATIN_AMERICAN_SPANISH, "es","MAP","1.0.0");
+            LOG.info("Rastro Atómico:"+wIP.getInstallationProgress().getCode());
+        } catch (Exception e) {
+            LOG.info(e.getMessage());
             e.printStackTrace();
         }
 
