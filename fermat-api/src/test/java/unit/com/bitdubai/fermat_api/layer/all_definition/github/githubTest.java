@@ -10,11 +10,19 @@ import org.junit.Test;
  * Created by rodrigo on 8/22/15.
  */
 public class githubTest {
-    final String USERNAME="";
+    final String USERNAME="acostarodrigo";
     final String PASSWORD ="";
+    final String REPOSITORY ="acostarodrigo/testFermat";
+
     @Test
-    public void testConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        GithubConnection githubConnection = new GithubConnection(USERNAME, PASSWORD);
-        githubConnection.createGitHubTextFile("testNuevoStrin", "hola", "test");
+    public void testCreateFile() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+        GithubConnection githubConnection = new GithubConnection(REPOSITORY, USERNAME, PASSWORD);
+        githubConnection.createGitHubTextFile("testNuevoString-Path", "hola content", "test commit message");
+    }
+
+    @Test
+    public void testCreateImage() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+        GithubConnection githubConnection = new GithubConnection(REPOSITORY, USERNAME, PASSWORD);
+        githubConnection.createGitHubImageFile("NuevaImage", new byte[]{3,4}, "commit message");
     }
 }
