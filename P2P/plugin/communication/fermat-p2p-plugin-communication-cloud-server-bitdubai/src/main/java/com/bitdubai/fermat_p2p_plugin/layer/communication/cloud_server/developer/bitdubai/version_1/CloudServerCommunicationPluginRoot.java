@@ -9,12 +9,14 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.develope
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -111,6 +113,43 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
 
     /**
+     * This method initialize the network services manager supported
+     *
+     * @param cloudServiceManager
+     * @param communicationChannelAddressServer
+     * @param networkService
+     * @throws CloudCommunicationException
+     */
+    private void initializeNetworkServicesSupported(CloudServiceManager cloudServiceManager, CommunicationChannelAddress communicationChannelAddressServer, NetworkServices networkService) throws CloudCommunicationException {
+
+
+        /*
+         * Create a new communication Channel Address
+         */
+        CommunicationChannelAddress communicationChannelAddressNS = CommunicationChannelAddressFactory.constructCloudAddress(communicationChannelAddressServer.getHost(), (60000+1000));
+
+        /*
+         *  Generate 1 port available
+         */
+        List<Integer> availableVPNPorts = new ArrayList<>();
+        for (int i = 0; i <= 10; i++){
+            availableVPNPorts.add(communicationChannelAddressNS.getPort()+1);
+        }
+
+        /*
+         * Create a new identity
+         */
+        ECCKeyPair netWorkServiceIdentity = new ECCKeyPair();
+
+        /*
+         *  register the manager
+         */
+        cloudServiceManager.registerNetworkServiceManager(new CloudNetworkServiceManager(communicationChannelAddressNS, executorService, netWorkServiceIdentity, networkService, availableVPNPorts));
+
+    }
+
+
+    /**
      * (non-Javadoc)
      *
      * @see Service#start()
@@ -178,6 +217,12 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                         cloudServiceManager.start();
 
                         /*
+                         * Initialize network services manager supported
+                         */
+                       // initializeNetworkServicesSupported(cloudServiceManager, communicationChannelAddress, NetworkServices.INTRA_USER);
+                       // initializeNetworkServicesSupported(cloudServiceManager, communicationChannelAddress, NetworkServices.TEMPLATE);
+
+                        /*
                          * Put into the cache
                          */
                         cloudServiceManagersCache.put(networkInterface.getName(), cloudServiceManager);
@@ -194,6 +239,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
             }
         } catch (SocketException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }catch (CloudCommunicationException e) {
             e.printStackTrace();

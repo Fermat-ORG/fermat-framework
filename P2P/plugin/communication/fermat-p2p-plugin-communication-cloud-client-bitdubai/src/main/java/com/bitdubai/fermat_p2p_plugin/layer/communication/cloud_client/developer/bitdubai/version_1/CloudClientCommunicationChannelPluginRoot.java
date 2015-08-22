@@ -392,7 +392,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 
 
 		// I will start the connection in a new Thread to avoid interrupting the platform start up
-		new Thread(new Runnable() {
+		 new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try{
