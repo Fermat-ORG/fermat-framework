@@ -944,8 +944,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1354,16 +1356,18 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Fiat Over Crypto Wallet"
+							name="Fiat Over Crypto"
 							description=""
-							difficulty="1"
-							code-level="concept"
+							difficulty="4"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1404,7 +1408,7 @@
 			<layer name="World" language="java">
 				<plugins>
 					<plugin
-							name="Shop"
+							name="Blockchain Info"
 							description=""
 							difficulty="1"
 							code-level="concept"
@@ -1563,7 +1567,7 @@
 							name="Crypto Address"
 							description="Enables the underground exchange of crypto addresses"
 							difficulty="5"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
