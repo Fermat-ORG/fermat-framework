@@ -239,6 +239,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
             CryptoAddress deliveredCryptoAddress;
             deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletPublicKey, referenceWallet);
             createAndRegisterActor(deliveredByActorId, deliveredByActorType, deliveredToActorName, deliveredToActorType, deliveredCryptoAddress);
+            System.out.println("im a delivered address: "+deliveredCryptoAddress.getAddress());
             return deliveredCryptoAddress;
         } catch (CantCreateOrRegisterActorException e) {
             throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
@@ -255,6 +256,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
             CryptoAddress deliveredCryptoAddress;
             deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletPublicKey, referenceWallet);
             actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, deliveredCryptoAddress);
+            System.out.println("im a delivered address: " + deliveredCryptoAddress.getAddress());
             return deliveredCryptoAddress;
         } catch (CantRequestOrRegisterCryptoAddressException e) {
             throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);

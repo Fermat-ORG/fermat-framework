@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_middleware.money_request.MoneyRequestManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 //import com.bitdubai.fermat_api.layer.crypto_module.actor_address_book.exceptions.ExampleException;
 
 /**

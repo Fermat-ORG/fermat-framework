@@ -23,7 +23,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorDatabaseTool;
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorLogTool;
 

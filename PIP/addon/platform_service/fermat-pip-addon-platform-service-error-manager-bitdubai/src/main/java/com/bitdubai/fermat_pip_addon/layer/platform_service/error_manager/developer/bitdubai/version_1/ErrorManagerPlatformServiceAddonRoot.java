@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;

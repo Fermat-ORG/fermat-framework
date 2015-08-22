@@ -9,10 +9,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events.EstablishedNetworkServiceConnectionEvent;
 
 /**
