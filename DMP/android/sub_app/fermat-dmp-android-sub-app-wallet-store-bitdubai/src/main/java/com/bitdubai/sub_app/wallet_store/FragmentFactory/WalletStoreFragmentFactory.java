@@ -29,7 +29,8 @@ public class WalletStoreFragmentFactory implements com.bitdubai.fermat_android_a
      *  @param code                           the reference used to identify the fragment
      * @param subAppsSession
      * @param subAppSettingsManager
-     * @param subAppResourcesProviderManager @return the fragment referenced
+     * @param subAppResourcesProviderManager
+     * @return the fragment referenced
      */
     @Override
     public Fragment getFragment(String code, SubAppsSession subAppsSession, SubAppSettingsManager subAppSettingsManager, SubAppResourcesProviderManager subAppResourcesProviderManager) throws FragmentNotFoundException {

@@ -28,6 +28,8 @@ public class WalletStoreSubAppSession implements com.bitdubai.fermat_android_api
      */
     private ErrorManager errorManager;
 
+
+
     private WalletStoreModuleManager walletStoreModuleManager;
 
 
@@ -55,6 +57,12 @@ public class WalletStoreSubAppSession implements com.bitdubai.fermat_android_api
     public WalletStoreSubAppSession(SubApps subApps) {
         this.subApps = subApps;
     }
+
+
+    public WalletStoreModuleManager getWalletStoreModuleManager() {
+        return walletStoreModuleManager;
+    }
+
 
     @Override
     public SubApps getSubAppSessionType() {
