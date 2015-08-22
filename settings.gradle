@@ -1,6 +1,6 @@
 
 
-include ':fermat-android-core'
+include ':fermat-android-core', ':fermat-pip-plugin-network-service-subapp-resources-bitdubai', ':fermat-dmp-plugin-identity-translator-bitdubai', 'fermat-dmp-plugin-identity-translator-bitdubai'
 include ':fermat-android-api'
 
 include ':fermat-core'
@@ -8,9 +8,6 @@ include ':fermat-api'
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
 include ':fermat-cry-api'
-
-include ':fermat-pip-plugin-identity-translator-bitdubai'
-project(':fermat-pip-plugin-identity-translator-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-translator-bitdubai')
 
 
 // CRY Projects
@@ -131,6 +128,12 @@ project(':fermat-p2p-plugin-communication-cloud-server-bitdubai').projectDir = n
 include ':fermat-dmp-plugin-identity-intra-user-bitdubai'
 project(':fermat-dmp-plugin-identity-intra-user-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
 
+include ':fermat-dmp-plugin-identity-publisher-bitdubai'
+project(':fermat-dmp-plugin-identity-publisher-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-publisher-bitdubai')
+
+include ':fermat-dmp-plugin-identity-designer-bitdubai'
+project(':fermat-dmp-plugin-identity-designer-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-designer-bitdubai')
+
 include ':fermat-dmp-plugin-actor-extra-user-bitdubai'
 project(':fermat-dmp-plugin-actor-extra-user-bitdubai').projectDir = new File('DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai')
 
@@ -141,9 +144,9 @@ project(':fermat-dmp-plugin-actor-intra-user-bitdubai').projectDir = new File('D
 include ':fermat-dmp-plugin-module-intra-user-bitdubai'
 project(':fermat-dmp-plugin-module-intra-user-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai')
 
+/*
 
-
-//World layer projects on the pipeline:
+World layer projects on the pipeline:
 
 include ':fermat-dmp-plugin-world-blockchain-info-bitdubai'
 project(':fermat-dmp-plugin-world-blockchain-info-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai')
@@ -163,7 +166,7 @@ project(':fermat-dmp-plugin-world-shape-shift-bitdubai').projectDir = new File('
 include ':fermat-dmp-plugin-world-coinbase-bitdubai'
 project(':fermat-dmp-plugin-world-coinbase-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai')
 
-
+*/
 
 include ':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
 project(':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai')
@@ -376,20 +379,8 @@ include ':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai'
 project(':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-statistics-bitdubai')
 
 
-// Milestone 2 project identity:
-
 include ':fermat-pip-plugin-identity-developer-bitdubai'
 project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-developer-bitdubai')
-
-include ':fermat-pip-plugin-identity-publisher-bitdubai'
-project(':fermat-pip-plugin-identity-publisher-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-publisher-bitdubai')
-
-include ':fermat-pip-plugin-identity-traslator-developer-bitdubai'
-project(':fermat-pip-plugin-identity-traslator-developer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-traslator-developer-bitdubai')
-
-include ':fermat-pip-plugin-identity-designer-bitdubai'
-project(':fermat-pip-plugin-identity-designer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-designer-bitdubai')
-
 
 // Milestone 2 project module:
 
@@ -415,3 +406,5 @@ project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai').pr
 // FUNCTIONAL TEST PROJECT
 //include ':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
 //project(':functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')
+project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')
+project(':fermat-dmp-plugin-identity-translator-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-translator-bitdubai')

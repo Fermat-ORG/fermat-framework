@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_store.session;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -27,6 +28,8 @@ public class WalletStoreSubAppSession implements com.bitdubai.fermat_android_api
      */
     private ErrorManager errorManager;
 
+    private WalletStoreModuleManager walletStoreModuleManager;
+
 
     /**
      *  Projects opened
@@ -41,11 +44,13 @@ public class WalletStoreSubAppSession implements com.bitdubai.fermat_android_api
 
 
 
-    public WalletStoreSubAppSession(SubApps subApps, ErrorManager errorManager){
+    public WalletStoreSubAppSession(SubApps subApps, ErrorManager errorManager,WalletStoreModuleManager walletStoreModuleManager){
         this.subApps=subApps;
         data= new HashMap<String,Object>();
         this.errorManager=errorManager;
+        this.walletStoreModuleManager =walletStoreModuleManager;
     }
+
 
     public WalletStoreSubAppSession(SubApps subApps) {
         this.subApps = subApps;

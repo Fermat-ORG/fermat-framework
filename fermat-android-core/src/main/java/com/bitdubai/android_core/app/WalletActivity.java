@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app;
 
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
@@ -153,21 +155,55 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public void onBackPressed() {
+        // get actual fragment on execute
+        String frgBackType = null;
 
-        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
+        WalletRuntimeManager walletRuntimeManager = getWalletRuntimeManager();
+
+        WalletNavigationStructure walletNavigationStructure = walletRuntimeManager.getLastWallet();
+
+        Activity activity = walletNavigationStructure.getLastActivity();
+
+        com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment  = activity.getLastFragment();
+
+        if (fragment != null)  frgBackType = fragment.getBack();
+
+        if (frgBackType != null) {
+
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack =walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
+
+             //loadFragment(frgBackType);
+            changeWalletFragment(walletNavigationStructure.getWalletCategory(),walletNavigationStructure.getWalletType(),walletNavigationStructure.getPublicKey(),frgBackType);
+
+
+
+        }else if(activity!=null && activity.getBackActivity()!=null){
+            changeActivity(activity.getBackActivity().getCode());
+        }else{
             getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
             getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
             resetThisActivity();
-
-            // TODO : Esto debe ir hacia la subAppActivity en caso de querer ver el home, en un futuro cuando se quiera ver la lista de walletAbiertas va ser distinto
             Intent intent = new Intent(this, SubAppActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-        }else{
-            super.onBackPressed();
         }
+
+
+//        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
+//            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
+//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+//            resetThisActivity();
+//
+//            // TODO : Esto debe ir hacia la subAppActivity en caso de querer ver el home, en un futuro cuando se quiera ver la lista de walletAbiertas va ser distinto
+//            Intent intent = new Intent(this, SubAppActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//
+//        }else{
+//            super.onBackPressed();
+//        }
     }
 
     /**
@@ -219,11 +255,14 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.only_fragment_container));
         WalletNavigationStructure walletRuntime= getWalletRuntimeManager().getLastWallet();
         String walletPublicKey = walletRuntime.getPublicKey();
-        WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletPublicKey);
+        String walletCategory = walletRuntime.getWalletCategory();
+        String walletType = walletRuntime.getWalletType();
+
+        WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory,walletType,walletPublicKey);
 
         try {
             if(walletFragmentFactory !=null){
-                Fragments fragment = walletRuntime.getLastActivity().getLastFragment().getType();
+                String fragment = walletRuntime.getLastActivity().getLastFragment().getType();
                 WalletSession walletSession = getWalletSessionManager().getWalletSession(walletPublicKey);
                 android.app.Fragment fragmet= walletFragmentFactory.getFragment(fragment.toString(), walletSession, getWalletSettingsManager(),getWalletResourcesProviderManager());
                 FragmentTransaction FT = getFragmentManager().beginTransaction();
@@ -293,7 +332,30 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void changeScreen(String screen, Object[] objects) {
+    public void changeWalletFragment(String walletCategory, String walletType,String walletPublicKey, String fragmentType) {
+        try {
+            getWalletRuntimeManager().getLastWallet().getLastActivity().getFragment(fragmentType);
+            WalletFragmentFactory walletFragmentFactory = com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
+            Fragment fragment= walletFragmentFactory.getFragment(fragmentType, getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()), getWalletSettingsManager(), getWalletResourcesProviderManager());
+            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
+            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            FT.replace(R.id.fragment_container2, fragment);
+            FT.addToBackStack(null);
+            FT.attach(fragment);
+            FT.show(fragment);
+            FT.commit();
+        } catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void changeScreen(String fragment, Object[] objects) {
+
+
+    }
+    private void loadFragment(String fragmentType){
 
     }
 
