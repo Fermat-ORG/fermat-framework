@@ -861,16 +861,16 @@
 					<android
 							name="Discount Wallet"
 							description=""
-							difficulty="10"
+							difficulty="8"
 							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="EzequielPostan"></mantainer>
+							<mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -972,14 +972,16 @@
 					<plugin
 							name="Discount Wallet"
 							description=""
-							difficulty="1"
-							code-level="concept"
+							difficulty="8"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
