@@ -846,14 +846,16 @@
 					<android
 							name="Bitcoin Loss Protected"
 							description=""
-							difficulty="1"
+							difficulty="8"
 							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -957,14 +959,16 @@
 					<plugin
 							name="Crypto Loss Protected"
 							description=""
-							difficulty="1"
+							difficulty="4"
 							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1362,14 +1366,16 @@
 					<plugin
 							name="Bitcoin Loss Protected Wallet"
 							description=""
-							difficulty="1"
+							difficulty="8"
 							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1960,15 +1966,13 @@
 					</plugin>
 					<plugin
 							name="Wallet Statistics"
-							description="Enables the underground exchange of crypto addresses"
+							description=""
 							difficulty="5"
 							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="100"></author>
-							<author name="lnacosta" scope="unit-tests" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
