@@ -543,11 +543,11 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             TODO: Get the real values for this null objects.
             */
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
-                catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
-                walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
-                skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
-                language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
-                detailedCatalogItem.getDeveloper().getName(), version.toString());
+                    catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
+                    walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
+                    skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
+                    language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
+                    detailedCatalogItem.getDeveloper().getName(), version.toString());
 
         }catch (CantSetInstallationStatusException exception){
             throw new CantStartInstallationException(CantSetInstallationStatusException.DEFAULT_MESSAGE, exception, "Cannot set the instalation status", "Please, check the cause");
@@ -642,7 +642,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             final List<WalletStoreCatalogueItem> walletStoreCatalogueItemList = new ArrayList<WalletStoreCatalogueItem>();
             WalletCatalog walletCatalog =  walletStoreManagerNetworkService.getWalletCatalogue();
 
-            
             for (CatalogItem catalogItem :  walletCatalog.getWalletCatalog(0,0)){
                 InstallationStatus installationStatus = getWalletInstallationStatus(catalogItem);
                 WalletStoreCatalogueItem walletStoreCatalogueItem = getWalletCatalogueItem(catalogItem, installationStatus);
@@ -665,6 +664,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
                 }
             };
+            System.out.println("walletStoreCatalogue: "+walletStoreCatalogue);
 
             return walletStoreCatalogue;
         } catch (Exception exception) {

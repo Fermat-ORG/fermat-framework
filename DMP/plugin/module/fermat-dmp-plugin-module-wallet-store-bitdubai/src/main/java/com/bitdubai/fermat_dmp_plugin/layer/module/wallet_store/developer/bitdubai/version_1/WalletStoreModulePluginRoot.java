@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
@@ -7,8 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartInstallationException;
@@ -18,7 +19,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStar
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * @author ciencias
@@ -50,7 +51,7 @@ import java.util.UUID;
  * * *
  */
 
-public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService, WalletStoreModuleManager, LogManagerForDevelopers,Plugin, Service{
+public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService, WalletStoreModuleManager, LogManagerForDevelopers, Plugin, Service {
 
     /**
      * WalletStoreModulePluginRoot member variables
@@ -72,15 +73,13 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     /**
      * PlatformService Interface member variables.
      */
-    ServiceStatus serviceStatus;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-
 
     /**
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
-
 
     /**
      * DealsWithWalletStoreNetworkService interface member variable
@@ -92,27 +91,28 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
      */
     com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
 
-
     /**
      * Plugin Interface member variables.
      */
     UUID pluginId;
-
 
     /**
      * PlatformService Interface implementation.
      */
 
     @Override
-    public void start() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
+    public void start() throws CantStartPluginException {
+        try {
+            this.serviceStatus = ServiceStatus.STARTED;
+        } catch (Exception exception) {
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }    }
 
     @Override
     public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
     }
-    
+
     @Override
     public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
@@ -131,14 +131,14 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     /**
      * DealWithEvents Interface implementation.
      */
-    
+
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
     /**
-     *DealWithErrors Interface implementation. 
+     * DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -163,7 +163,6 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
         this.logManager = logManager;
     }
 
-
     /**
      * LogManagerForDevelopers Interface implementation.
      */
@@ -171,17 +170,32 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreCatalog");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreDatabaseConstants");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreDatabaseFactory");
-
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager");
         /**
          * I return the values.
          */
         return returnedClasses;
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return WalletStoreModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception exception) {
+            System.err.println("CantGetLogLevelByClass: " + exception.getMessage());
+            return LogLevel.MINIMAL_LOGGING;
+        }
+    }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
@@ -200,11 +214,11 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
                 WalletStoreModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-
     }
 
     /**
      * DealsWithWalletStoreMiddleware interface implementation
+     *
      * @param walletStoreManager
      */
     @Override
@@ -214,6 +228,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     /**
      * DEalswithWalletStoreNetworkService interface implementation
+     *
      * @param walletStoreManager
      */
     @Override
@@ -222,10 +237,10 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     }
 
     /**
-     * WalletStoreMOdule manager interface implementation
+     * WalletStoreModule manager interface implementation
      */
 
-    private com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager getWalletStoreModuleManager(){
+    public com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager getWalletStoreModuleManager() {
         if (walletStoreModuleManager == null)
             walletStoreModuleManager = new com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
 
@@ -271,7 +286,4 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
         return walletStoreModuleManager.getCatalogItemDetails(walletCatalogId);
     }
-
-
-
 }
