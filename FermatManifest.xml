@@ -148,6 +148,8 @@
 				</androids>
 			</layer>
 
+			<layer name="empty layer 1"></layer>
+
 			<layer name="Engine" language="java">
 				<plugins>
 					<plugin
@@ -584,11 +586,11 @@
 
 				</plugins>
 			</layer>
-			<layer name="empty layer 1"></layer>
-			<layer super_layer="P2P"></layer>
 			<layer name="empty layer 2"></layer>
-			<layer super_layer="CRY"></layer>
+			<layer super_layer="P2P"></layer>
 			<layer name="empty layer 3"></layer>
+			<layer super_layer="CRY"></layer>
+			<layer name="empty layer 4"></layer>
 
 			<layer name="License" language="java">
 				<addons>
@@ -792,6 +794,7 @@
 					</addon>
 				</addons>
 			</layer>
+			<layer name="empty layer 5"></layer>
 			<layer super_layer="OSA"></layer>
 		</column>
 		<column code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
