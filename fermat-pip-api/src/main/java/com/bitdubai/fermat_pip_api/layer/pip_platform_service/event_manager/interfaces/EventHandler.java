@@ -1,7 +1,6 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager;
+package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 
 /**
  * Created by ciencias on 24.01.15.
