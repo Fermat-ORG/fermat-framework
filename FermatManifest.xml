@@ -1747,10 +1747,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="nelsonalfo"></mantainer>
+							<mantainer name="fvasquezjatar"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1871,8 +1871,11 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="60"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="40"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="franklinmarcano1970"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1886,14 +1889,16 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
 					</plugin>
 					<plugin
-							name="Wallet Publisher"
+							name="Wallet Store"
 							description=""
 							difficulty="6"
 							code-level="development"
@@ -1901,8 +1906,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
