@@ -209,7 +209,7 @@
 					<plugin
 							name="Developer"
 							description=""
-							difficulty="1"
+							difficulty="4"
 							code-level="production"
 							>
 						<authors>
@@ -311,7 +311,7 @@
 					<plugin
 							name="Developer"
 							description=""
-							difficulty="1"
+							difficulty="6"
 							code-level="development"
 							>
 						<authors>
@@ -425,7 +425,7 @@
 							name="Location"
 							description=""
 							difficulty="3"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -450,8 +450,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="nattyco"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -824,7 +826,7 @@
 							name="Fiat Over Crypto"
 							description=""
 							difficulty="8"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1146,7 +1148,7 @@
 					<plugin
 							name="Money Request"
 							description=""
-							difficulty="1"
+							difficulty="8"
 							code-level="development"
 							>
 						<authors>
@@ -1430,7 +1432,7 @@
 					<plugin
 							name="Crypto Index"
 							description=""
-							difficulty="1"
+							difficulty="8"
 							code-level="development"
 							>
 						<authors>
@@ -1571,31 +1573,18 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Money"
-							description=""
-							difficulty="5"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
 							name="Money Request"
 							description=""
-							difficulty="5"
+							difficulty="8"
 							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1603,14 +1592,16 @@
 					<plugin
 							name="Crypto Transmission"
 							description=""
-							difficulty="5"
+							difficulty="8"
 							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1624,8 +1615,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1843,7 +1836,7 @@
 					<plugin
 							name="Publisher"
 							description=""
-							difficulty="1"
+							difficulty="6"
 							code-level="development"
 							>
 						<authors>
@@ -1932,7 +1925,7 @@
 					<plugin
 							name="Publisher"
 							description=""
-							difficulty="1"
+							difficulty="4"
 							code-level="development"
 							>
 						<authors>
@@ -2358,8 +2351,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="nattyco"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
