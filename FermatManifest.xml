@@ -71,7 +71,7 @@
 					<android
 							name="Sub App Manager"
 							description=""
-							difficulty=""
+							difficulty="3"
 							code-level="production"
 							>
 						<authors>
@@ -445,7 +445,7 @@
 							name="Developer"
 							description=""
 							difficulty="1"
-							code-level="development"
+							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1027,7 +1027,7 @@
 							name="Extra User"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1194,7 +1194,7 @@
 							name="Incoming Extra User"
 							description=""
 							difficulty="10"
-							code-level="development"
+							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1260,7 +1260,7 @@
 							name="Outgoing Extra User"
 							description=""
 							difficulty="10"
-							code-level="development"
+							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1339,7 +1339,7 @@
 							name="Bitcoin Wallet"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
