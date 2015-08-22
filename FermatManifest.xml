@@ -1364,7 +1364,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Bitcoin Loss Protected Wallet"
+							name="Bitcoin Loss Protected"
 							description=""
 							difficulty="8"
 							code-level="development"
