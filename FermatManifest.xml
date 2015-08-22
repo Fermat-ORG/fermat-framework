@@ -312,7 +312,7 @@
 							name="Developer"
 							description=""
 							difficulty="6"
-							code-level="development"
+							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -705,14 +705,16 @@
 					<addon
 							name="Error Manager"
 							description=""
-							difficulty="3"
+							difficulty="4"
 							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="jorgeejgonzalez"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -720,13 +722,16 @@
 					<addon
 							name="Event Manager"
 							description=""
-							difficulty="3"
+							difficulty="8"
 							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="implementation" percentage="100"></author>
 						</authors>
+						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
 						<mantainers>
 						</mantainers>
 						<certifications>
@@ -2029,14 +2034,16 @@
 					<plugin
 							name="Incomming Crypto"
 							description=""
-							difficulty="5"
+							difficulty="10"
 							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -2044,7 +2051,7 @@
 					<plugin
 							name="Outgoing Crypto"
 							description=""
-							difficulty="5"
+							difficulty="10"
 							code-level="concept"
 							>
 						<authors>
@@ -2069,8 +2076,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -2084,8 +2093,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
