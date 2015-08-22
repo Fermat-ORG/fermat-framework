@@ -276,9 +276,9 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             initializeDb();
 
             /*
-             * Register this network service whit the communicationLayerManager
+             * TODO: Register this network service whit the communicationLayerManager
              */
-            communicationLayerManager.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
+            //communicationLayerManager.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
 
 
             /*
@@ -287,10 +287,10 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             this.serviceStatus = ServiceStatus.STARTED;
 
 
-        } catch (CommunicationException e) {
+            //  } catch (CommunicationException e) {
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
-            throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
+            //throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
 
         } catch (CantInitializeNetworkTemplateDataBaseException exception) {
 
