@@ -1395,7 +1395,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Fiat Wallet" language="java">
+			<layer name="World" language="java">
 				<plugins>
 					<plugin
 							name="Shop"
@@ -1685,8 +1685,79 @@
 		<column code="WPD" name="Wallet Production and Distribution" logo="WPD_logo.png">
 
 
-			<layer name="Engine" language="java"></layer>
-			<layer name="Wallet Module" language="java"></layer>
+			<layer name="Sub App" language="java-android">
+				<androids>
+					<android
+							name="Wallet Manager"
+							description=""
+							difficulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Wallet Factory"
+							description=""
+							difficulty="10"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Wallet Publisher"
+							description=""
+							difficulty="6"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Wallet Store"
+							description=""
+							difficulty="8"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="nelsonalfo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
 
 			<layer name="Sub App Module" language="java">
 				<plugins>
