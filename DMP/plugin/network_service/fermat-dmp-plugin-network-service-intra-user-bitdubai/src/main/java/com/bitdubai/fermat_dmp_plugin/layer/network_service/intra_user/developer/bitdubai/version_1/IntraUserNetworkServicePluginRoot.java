@@ -221,9 +221,9 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 initializeDb();
 
                 /*
-                 * Register this network service whit the communicationLayerManager
+                 * TODO: Register this network service whit the communicationLayerManager
                  */
-                communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER, eccKeyPair.getPublicKey());
+               // communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER, eccKeyPair.getPublicKey());
 
 
                 /*
@@ -232,9 +232,9 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 this.serviceStatus = ServiceStatus.STARTED;
 
 
-            } catch (CommunicationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
-                throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+            //} catch (CommunicationException e) {
+                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
+                // throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
 
             } catch (CantInitializeNetworkIntraUserDataBaseException exception) {
                 /*
