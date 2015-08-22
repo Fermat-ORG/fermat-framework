@@ -584,8 +584,11 @@
 
 				</plugins>
 			</layer>
+			<layer name="empty layer 1"></layer>
 			<layer super_layer="P2P"></layer>
+			<layer name="empty layer 2"></layer>
 			<layer super_layer="CRY"></layer>
+			<layer name="empty layer 3"></layer>
 
 			<layer name="License" language="java">
 				<addons>
