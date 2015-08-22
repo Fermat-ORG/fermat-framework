@@ -113,6 +113,8 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                  */
                 //TODO: se necesita pasarle la public key de la wallet  instalar al resources
                 //walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion);
+                //TODO: erase this test line.
+                walletResources.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0","TestPublicKey");
                 /**
                  * Persist wallet info in database
                  */

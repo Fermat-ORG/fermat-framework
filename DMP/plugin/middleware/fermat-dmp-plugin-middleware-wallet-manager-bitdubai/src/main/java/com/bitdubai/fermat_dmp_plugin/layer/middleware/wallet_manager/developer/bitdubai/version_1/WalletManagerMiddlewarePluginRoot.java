@@ -15,7 +15,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+//import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
@@ -63,8 +65,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletInstalledEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
@@ -273,6 +275,8 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
+        //TODO:delete this line
+        testMethod();
 
     }
     @Override
@@ -517,7 +521,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
     public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException{
         try {
 
-            eventManager.raiseEvent(new WalletInstalledEvent(EventType.WALLET_INSTALLED));
+            eventManager.raiseEvent((PlatformEvent) new WalletInstalledEvent(EventType.WALLET_INSTALLED));
             return new WalletManagerMiddlewareInstallationProcess(this.walletResources,walletCategory,walletPlatformIdentifier,this.pluginDatabaseSystem,pluginId);
 
         } catch (Exception e){
@@ -740,6 +744,15 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         database = databaseFactory.createDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
     }
 
+    private void testMethod(){
 
+        UUID testUUID=UUID.randomUUID();
+        try {
+            createNewWallet(testUUID,"testWallet");
+        } catch (CantCreateNewWalletException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }
