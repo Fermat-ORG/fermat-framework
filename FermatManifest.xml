@@ -1691,7 +1691,7 @@
 							name="Wallet Manager"
 							description=""
 							difficulty="4"
-							code-level="concept"
+							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1708,7 +1708,7 @@
 							name="Wallet Factory"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1725,7 +1725,7 @@
 							name="Wallet Publisher"
 							description=""
 							difficulty="6"
-							code-level="production"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1742,7 +1742,7 @@
 							name="Wallet Store"
 							description=""
 							difficulty="8"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1849,8 +1849,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="Rart3001"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
