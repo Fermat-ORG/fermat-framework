@@ -28,10 +28,10 @@ public interface WalletFactoryProjectManager {
     // Edition of wallet factory project
     WalletFactoryProject createEmptyWalletFactoryProject() throws CantCreateWalletFactoryProjectException;
     void saveWalletFactoryProjectChanges(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect;
+    void uploadWalletFactoryProjectToRepository(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect;
     void deleteWalletProjectFactory(WalletFactoryProject walletFactoryProject) throws CantDeleteWalletFactoryProjectException;
 
     //repository task
-    void exportProjectToRepository() throws CantExportWalletFactoryProjectException;
-    void importProjectFromRepository(String publicKey) throws CantImportWalletFactoryProjectException;
+    void exportProjectToRepository(WalletFactoryProject walletFactoryProject, String githubRepository, String userName, String password) throws CantExportWalletFactoryProjectException;
 
 }

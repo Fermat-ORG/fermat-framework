@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -35,6 +36,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by rodrigo on 8/17/15.
@@ -165,17 +167,21 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
      * It includes persisting the information in the database and XML on files.
      * @param walletFactoryProject
      */
-    public void saveWalletFactoryProject(WalletFactoryProject walletFactoryProject) throws CantCreateWalletFactoryProjectException {
+    public void saveWalletFactoryProject(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
         try {
             saveWalletFactoryProjectDataInDatabase(walletFactoryProject);
             saveWalletFactoryProjectSkinXML(walletFactoryProject);
             saveWalletFactoryProjectLanguageXML(walletFactoryProject);
             saveWalletFactoryProjectNavigationStructureXML(walletFactoryProject);
 
+            //once I have every saved locally (both in db and XML files) I will upload them to github
+            GithubManager githubManager = new GithubManager("acostarodrigo/testFermat", "acostarodrigo", "");
+            githubManager.saveWalletFactoryProject(walletFactoryProject);
+
         } catch (DatabaseOperationException | MissingProjectDataException | CantPersistFileException | CantCreateFileException e) {
-            throw new CantCreateWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE, e, walletFactoryProject.getName(), null);
+            throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, walletFactoryProject.getName(), null);
         } catch (Exception exception){
-            throw new CantCreateWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE, exception, walletFactoryProject.getName(), null);
+            throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, exception, walletFactoryProject.getName(), null);
         }
     }
 
@@ -326,6 +332,31 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             return walletFactoryProject;
         } catch (Exception exception){
             throw new CantCreateWalletFactoryProjectException(CantCreateWalletFactoryProjectException.DEFAULT_MESSAGE, exception, "error creating new project.", null);
+        }
+    }
+
+    /**
+     * Will upload all the information to default repository
+     * @param walletFactoryProject
+     * @throws CantSaveWalletFactoryProyect
+     */
+    public void uploadWalletFactoryProjectToRepository(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
+        try{
+            //once I have every saved locally (both in db and XML files) I will upload them to github
+            GithubManager githubManager = new GithubManager("acostarodrigo/testFermat", "acostarodrigo", "");
+            githubManager.saveWalletFactoryProject(walletFactoryProject);
+        } catch (Exception e){
+            throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, "error trying to upload project to repository", null);
+        }
+    }
+
+    public void exportProjectToRepository(WalletFactoryProject walletFactoryProject, String repository, String userName, String password) throws CantSaveWalletFactoryProyect {
+        try{
+            //once I have every saved locally (both in db and XML files) I will upload them to github
+            GithubManager githubManager = new GithubManager(repository, userName, password);
+            githubManager.saveWalletFactoryProject(walletFactoryProject);
+        } catch (Exception e){
+            throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, "error trying to upload project to repository", "wrong repository, user or password");
         }
     }
 

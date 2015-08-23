@@ -279,12 +279,16 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     }
 
     @Override
-    public void exportProjectToRepository() throws CantExportWalletFactoryProjectException {
-
+    public void uploadWalletFactoryProjectToRepository(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
+        walletFactoryProjectMiddlewareManager.uploadWalletFactoryProjectToRepository((walletFactoryProject));
     }
 
     @Override
-    public void importProjectFromRepository(String publicKey) throws CantImportWalletFactoryProjectException {
-
+    public void exportProjectToRepository(WalletFactoryProject walletFactoryProject, String githubRepository, String userName, String password) throws CantExportWalletFactoryProjectException {
+        try {
+            walletFactoryProjectMiddlewareManager.exportProjectToRepository(walletFactoryProject, githubRepository, userName, password);
+        } catch (Exception e) {
+            throw new CantExportWalletFactoryProjectException(CantExportWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 }
