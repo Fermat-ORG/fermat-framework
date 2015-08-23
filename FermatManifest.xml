@@ -2634,10 +2634,44 @@
 			<layer name="Wallet" language="java">
 				<plugins>
 					<plugin
-							name="Assets Over Bitcoin"
+							name="Vouchers Over Bitcoin"
 							description=""
 							difficulty="4"
 							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			<layer name="Digital Asset Transaction" language="java">
+				<plugins>
+					<plugin
+							name="Incoming Voucher"
+							description=""
+							difficulty="6"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Outgoing Voucher"
+							description=""
+							difficulty="6"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
