@@ -1,31 +1,56 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDatabaseConstants</code>
- * keeps constants the column names of the database.<p/>
- * <p/>
- *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 28/07/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * Created by rodrigo on 8/17/15.
  */
 public class WalletFactoryMiddlewareDatabaseConstants {
+
+    static final String DATABASE_NAME = "Factory";
 
     /**
      * Project database table definition.
      */
-    static final String PROJECT_TABLE_NAME = "walle_descriptor_factory_project";
+    static final String PROJECT_TABLE_NAME = "project";
 
-    static final String PROJECT_ID_COLUMN_NAME = "id";
-    static final String PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME = "developer_public_key";
-    static final String PROJECT_NAME_COLUMN_NAME = "name";
-    static final String PROJECT_PATH_COLUMN_NAME = "path";
-    static final String PROJECT_STATE_COLUMN_NAME = "project_state";
-    static final String PROJECT_WALLET_TYPE_COLUMN_NAME = "wallet_type";
-    static final String PROJECT_DESCRIPTION_COLUMN_NAME = "description";
-    static final String PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME = "descriptor_factory_project";
-    static final String PROJECT_PUBLISHER_IDENTITY_KEY_COLUMN_NAME = "publisher_identity_public_key";
-    static final String PROJECT_FIRST_KEY_COLUMN = "id";
-    
+    public static final String PROJECT_PUBLICKEY_COLUMN_NAME = "publickey";
+    public static final String PROJECT_NAME_COLUMN_NAME = "name";
+    public static final String PROJECT_DESCRIPTION_COLUMN_NAME = "description";
+    public static final String PROJECT_STATE_COLUMN_NAME = "state";
+    public static final String PROJECT_WALLETTYPE_COLUMN_NAME = "wallettype";
+    public static final String PROJECT_CREATION_TIMESTAMP_COLUMN_NAME = "creation_timestamp";
+    public static final String PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME = "modification_timestamp";
+
+    static final String PROJECT_FIRST_KEY_COLUMN = "publickey";
+
+    /**
+     * skin database table definition.
+     */
+    static final String SKIN_TABLE_NAME = "skin";
+
+    static final String SKIN_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
+    static final String SKIN_SKIN_ID_COLUMN_NAME = "skin_id";
+    static final String SKIN_DEFAULT_COLUMN_NAME = "default";
+
+    static final String SKIN_FIRST_KEY_COLUMN = "project_publickey";
+
+    /**
+     * language database table definition.
+     */
+    static final String LANGUAGE_TABLE_NAME = "language";
+
+    static final String LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
+    static final String LANGUAGE_LANGUAGE_ID_COLUMN_NAME = "language_id";
+    static final String LANGUAGE_DEFAULT_COLUMN_NAME = "default";
+
+    static final String LANGUAGE_FIRST_KEY_COLUMN = "project_publickey";
+
+    /**
+     * navigation_structure database table definition.
+     */
+    static final String NAVIGATION_STRUCTURE_TABLE_NAME = "navigation_structure";
+
+    static final String NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
+    static final String NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME = "publicKey";
+
+    static final String NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN = "project_publickey";
 }

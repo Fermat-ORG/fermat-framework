@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletDescriptorFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager</code>
- * indicates the functionality of a WalletDescriptorFactoryProjectManager
+ * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryProjectManager</code>
+ * indicates the functionality of a WalletFactoryProjectManager
  * <p/>
  *
  *  Created by Matias Furszyfer
@@ -46,7 +46,7 @@ public interface WalletFactoryManager {
 
     public FactoryProject getProject(String name)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
-    public List<FactoryProject> getClosedProjects(FactoryProjectState state)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
+    public List<FactoryProject> getClosedProjects(WalletFactoryProjectState state)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
     public FactoryProject closeProject(String name)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.enums;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.enums.FactoryProjectState</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.enums.WalletFactoryProjectState</code>
  * enumerates type of Resources.
  * <p/>
  *

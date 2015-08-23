@@ -13,5 +13,5 @@ public interface SubAppsSession {
     public Object getData (String key);
     public ErrorManager getErrorManager();
     //public ToolManager getToolManager();
-    //public WalletDescriptorFactoryProjectManager getWalletFactoryManager();
+    //public WalletFactoryProjectManager getWalletFactoryManager();
 }

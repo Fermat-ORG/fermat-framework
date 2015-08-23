@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseVariable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -218,7 +217,7 @@ public class DeveloperGetterTest {
                         }
 
                         @Override
-                        public void setStateValue(String columnName, FactoryProjectState state) {
+                        public void setStateValue(String columnName, WalletFactoryProjectState state) {
 
                         }
 
@@ -352,7 +351,7 @@ public class DeveloperGetterTest {
                         }
 
                         @Override
-                        public void setStateValue(String columnName, FactoryProjectState state) {
+                        public void setStateValue(String columnName, WalletFactoryProjectState state) {
 
                         }
 
@@ -488,7 +487,7 @@ public class DeveloperGetterTest {
                 }
 
                 @Override
-                public void setStateFilter(String columName, FactoryProjectState factoryProjectState, DatabaseFilterType type) {
+                public void setStateFilter(String columName, WalletFactoryProjectState factoryProjectState, DatabaseFilterType type) {
 
                 }
 

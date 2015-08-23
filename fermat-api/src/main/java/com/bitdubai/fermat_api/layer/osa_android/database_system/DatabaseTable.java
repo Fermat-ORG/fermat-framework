@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -60,7 +60,7 @@ public interface DatabaseTable {
 
     public void setUUIDFilter(String columnName, UUID value,DatabaseFilterType type);
 
-    public void setStateFilter(String columName, FactoryProjectState factoryProjectState,DatabaseFilterType type);
+    public void setStateFilter(String columName, WalletFactoryProjectState walletFactoryProjectState,DatabaseFilterType type);
 
     public void setFilterOrder(String columnName, DatabaseFilterOrder direction);
 
