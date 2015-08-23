@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -539,6 +540,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		String possibleReason = "We are registring a NetworkService that has already been registered, check the invocations to this method";
 		return new NetworkServiceAlreadyRegisteredException(message, cause, context, possibleReason);
 	}
+
 
 
 
