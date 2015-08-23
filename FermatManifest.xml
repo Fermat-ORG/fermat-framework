@@ -1143,6 +1143,328 @@
 			<layer name="empty layer 5"></layer>
 			<layer super_layer="OSA"></layer>
 		</column>
+
+		<column code="WPD" name="Wallet Production and Distribution" logo="WPD_logo.png">
+
+			<layer name="Sub App" language="java-android">
+				<androids>
+					<android
+							name="Wallet Manager"
+							description=""
+							difficulty="4"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Wallet Factory"
+							description=""
+							difficulty="10"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Wallet Publisher"
+							description=""
+							difficulty="6"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Wallet Store"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
+
+			<layer name="Sub App Module" language="java">
+				<plugins>
+					<plugin
+							name="Wallet Manager"
+							description=""
+							difficulty="4"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="80"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="darkestpriest"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Wallet Factory"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="80"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="acostarodrigo" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Wallet Publisher"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="80"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="Rart3001"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="Rart3001" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Wallet Store"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="acostarodrigo" type="implementation"></certification>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Agent" language="java"></layer>
+
+
+			<layer name="Actor" language="java">
+				<plugins>
+					<plugin
+							name="Publisher"
+							description=""
+							difficulty="6"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="Rart3001"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Middleware" language="java">
+				<plugins>
+					<plugin
+							name="Wallet Manager"
+							description=""
+							difficulty="8"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="60"></author>
+							<author name="franklinmarcano1970" scope="implementation" percentage="40"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="franklinmarcano1970"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Wallet Factory"
+							description=""
+							difficulty="10"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Wallet Store"
+							description=""
+							difficulty="6"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Request" language="java"></layer>
+
+			<layer name="Business Transaction" language="java"></layer>
+			<layer name="Digital Asset Transaction" language="java"></layer>
+			<layer name="Digital Money Transaction" language="java"></layer>
+			<layer name="Cash Transaction" language="java"></layer>
+			<layer name="Contract" language="java"></layer>
+			<layer name="Composite Wallet" language="java"></layer>
+			<layer name="Fiat Wallet" language="java"></layer>
+
+			<layer name="Identity" language="java">
+				<plugins>
+					<plugin
+							name="Publisher"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nindriago" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="nattyco"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Network Service" language="java">
+				<plugins>
+					<plugin
+							name="Wallet Resources"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Wallet Store"
+							description="Enables searching for Intra Users and conecting one to the other"
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Wallet Statistics"
+							description=""
+							difficulty="5"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+		</column>
+
 		<column code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
 
 			<layer name="Niche Wallet"></layer>
@@ -1862,23 +2184,6 @@
 			<layer name="Network Service" language="java">
 				<plugins>
 					<plugin
-							name="Wallet Resources"
-							description=""
-							difficulty="8"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
 							name="Intra User"
 							description="Enables searching for Intra Users and conecting one to the other"
 							difficulty="6"
@@ -2018,310 +2323,7 @@
 				</addons>
 			</layer>
 		</column>
-		<column code="WPD" name="Wallet Production and Distribution" logo="WPD_logo.png">
 
-
-			<layer name="Sub App" language="java-android">
-				<androids>
-					<android
-							name="Wallet Manager"
-							description=""
-							difficulty="4"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="fvasquezjatar"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Wallet Factory"
-							description=""
-							difficulty="10"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="fvasquezjatar"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Wallet Publisher"
-							description=""
-							difficulty="6"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="fvasquezjatar"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Wallet Store"
-							description=""
-							difficulty="8"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nelsonalfo" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="fvasquezjatar"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-				</androids>
-			</layer>
-
-
-			<layer name="Sub App Module" language="java">
-				<plugins>
-					<plugin
-							name="Wallet Manager"
-							description=""
-							difficulty="4"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="darkestpriest" scope="implementation" percentage="80"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="darkestpriest"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Wallet Factory"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="80"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="acostarodrigo"></mantainer>
-						</mantainers>
-						<certifications>
-							<certification signed-by="acostarodrigo" type="implementation"></certification>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Wallet Publisher"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Rart3001" scope="implementation" percentage="80"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="Rart3001"></mantainer>
-						</mantainers>
-						<certifications>
-							<certification signed-by="Rart3001" type="implementation"></certification>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Wallet Store"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="acostarodrigo"></mantainer>
-						</mantainers>
-						<certifications>
-							<certification signed-by="acostarodrigo" type="implementation"></certification>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-			<layer name="Agent" language="java"></layer>
-
-
-			<layer name="Actor" language="java">
-				<plugins>
-					<plugin
-							name="Publisher"
-							description=""
-							difficulty="6"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Rart3001" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="Rart3001"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-			<layer name="Middleware" language="java">
-				<plugins>
-					<plugin
-							name="Wallet Manager"
-							description=""
-							difficulty="8"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="60"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="40"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="franklinmarcano1970"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Wallet Factory"
-							description=""
-							difficulty="10"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="acostarodrigo"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Wallet Store"
-							description=""
-							difficulty="6"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="acostarodrigo"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-			<layer name="Request" language="java"></layer>
-
-			<layer name="Business Transaction" language="java"></layer>
-			<layer name="Digital Asset Transaction" language="java"></layer>
-			<layer name="Digital Money Transaction" language="java"></layer>
-			<layer name="Cash Transaction" language="java"></layer>
-			<layer name="Contract" language="java"></layer>
-			<layer name="Composite Wallet" language="java"></layer>
-			<layer name="Fiat Wallet" language="java"></layer>
-
-			<layer name="Identity" language="java">
-				<plugins>
-					<plugin
-							name="Publisher"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nindriago" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="nattyco"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-			<layer name="Network Service" language="java">
-				<plugins>
-					<plugin
-							name="Wallet Store"
-							description="Enables searching for Intra Users and conecting one to the other"
-							difficulty="8"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="acostarodrigo"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Wallet Statistics"
-							description=""
-							difficulty="5"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-		</column>
 		<column code="DAP" name="Digital Asset Platform" logo="DAP_logo.png">
 			<layer name="Reference Wallet">
 				<androids>
