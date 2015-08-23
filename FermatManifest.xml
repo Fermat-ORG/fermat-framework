@@ -2553,7 +2553,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Bitcoin Asset"
+							name="Assets Over Bitcoin"
 							description=""
 							difficulty="10"
 							code-level="development"
@@ -2601,21 +2601,6 @@
 					</plugin>
 					<plugin
 							name="Ethereum"
-							description=""
-							difficulty="5"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Assets Over Bitcoin"
 							description=""
 							difficulty="5"
 							code-level="concept"
