@@ -2359,6 +2359,22 @@
 							name="Incoming Intra User"
 							description=""
 							difficulty="10"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Incoming Issuer"
+							description=""
+							difficulty="10"
 							code-level="development"
 							>
 						<authors>
@@ -2430,7 +2446,6 @@
 						<mantainers>
 						</mantainers>
 						<certifications>
-							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -2438,6 +2453,21 @@
 							description=""
 							difficulty="1"
 							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Asset Issuing"
+							description=""
+							difficulty="10"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
