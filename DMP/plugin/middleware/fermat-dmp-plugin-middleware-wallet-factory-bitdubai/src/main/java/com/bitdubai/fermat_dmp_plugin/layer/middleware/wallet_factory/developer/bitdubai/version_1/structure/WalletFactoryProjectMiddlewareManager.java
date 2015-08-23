@@ -326,6 +326,15 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 public void setLanguages(List<Language> languages) {
 
                 }
+
+                @Override
+                public int getSize() {
+                    return 0;
+                }
+
+                @Override
+                public void setSize(int size) {
+                }
             };
             saveWalletFactoryProject(walletFactoryProject);
 

@@ -456,6 +456,16 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             public void setLanguages(List<Language> languages) {
 
             }
+
+            @Override
+            public int getSize() {
+                return 0;
+            }
+
+            @Override
+            public void setSize(int size) {
+
+            }
         };
         return walletFactoryProject;
     }

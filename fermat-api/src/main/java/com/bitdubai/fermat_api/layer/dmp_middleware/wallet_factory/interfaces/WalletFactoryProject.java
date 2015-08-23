@@ -43,6 +43,10 @@ public interface WalletFactoryProject {
     Timestamp getLastModificationTimestamp();
     void setLastModificationTimeststamp(Timestamp timestamp);
 
+    int getSize();
+    void setSize(int size);
+
+
 
     //skin
     Skin getDefaultSkin();
@@ -56,7 +60,6 @@ public interface WalletFactoryProject {
     void setDefaultLanguage(Language language);
     List<Language> getLanguages();
     void setLanguages (List<Language> languages);
-
     void deleteLanguage (Language language);
 
     //Navigation Structure
