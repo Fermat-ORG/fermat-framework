@@ -2612,10 +2612,10 @@
 					</android>
 				</androids>
 			</layer>
-			<layer name="Voucher Module" language="java">
+			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
-							name="Asset Wallet"
+							name="Voucher Wallet"
 							description=""
 							difficulty="3"
 							code-level="development"
