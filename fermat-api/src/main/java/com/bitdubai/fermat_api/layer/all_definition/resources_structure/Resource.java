@@ -76,7 +76,6 @@ public class Resource implements Serializable {
         return fileName;
     }
 
-
     public ResourceType getResourceType() {
         return resourceType;
     }
