@@ -17,7 +17,7 @@ public class githubTest {
     @Test
     public void testCreateFile() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
         GithubConnection githubConnection = new GithubConnection(REPOSITORY, USERNAME, PASSWORD);
-        githubConnection.createGitHubTextFile("testNuevoString-Path", "hola content", "test commit message");
+        githubConnection.createGitHubTextFile("bitdubai/reference_wallet/testNuevoString-Path", "hola content", "test commit message");
     }
 
     @Test

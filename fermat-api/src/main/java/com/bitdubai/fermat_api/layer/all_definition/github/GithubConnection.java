@@ -28,20 +28,20 @@ import java.util.Properties;
 
 public class GithubConnection {
 
-    String MAIN_REPOSITORY;
+    String mainRepository;
 
 
     Properties properties;
     GHRepository ghRepository;
 
     public GithubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        MAIN_REPOSITORY="furszy/fermat";
+        mainRepository="furszy/fermat";
         setUpConnection();
     }
 
     public GithubConnection(String repository, String user, String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        this.MAIN_REPOSITORY = repository;
-        setUpConnection(user,password);
+        this.mainRepository = repository;
+        setUpConnection(user, password);
     }
 
 
@@ -52,7 +52,7 @@ public class GithubConnection {
         try {
 
             GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
-            ghRepository = gitHub.getRepository(MAIN_REPOSITORY);
+            ghRepository = gitHub.getRepository(mainRepository);
 
 
         } catch (java.io.FileNotFoundException e) {
@@ -69,7 +69,7 @@ public class GithubConnection {
         try {
 
             GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
-            ghRepository = gitHub.getRepository(MAIN_REPOSITORY);
+            ghRepository = gitHub.getRepository(mainRepository);
 
 
         } catch (java.io.FileNotFoundException e) {
@@ -176,5 +176,11 @@ public class GithubConnection {
         }
     }
 
+    public String getMainRepository() {
+        return mainRepository;
+    }
 
+    public void setMainRepository(String mainRepository) {
+        this.mainRepository = mainRepository;
+    }
 }

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 
@@ -34,6 +35,8 @@ public class Skin implements Serializable {//implements FermatSkin {
     private Map<String,Layout> portraitLayouts;
 
     private Map<String,Layout> landscapeLayouts;
+
+    private ScreenSize screenSize;
 
 
     public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, Map<String, Resource> resources, Map<String, Layout> portraitLayouts, Map<String, Layout> landscapeLayouts) {
@@ -103,6 +106,15 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     public void setLandscapeLayouts(Map<String, Layout> landscapeLayouts) {
         this.landscapeLayouts = landscapeLayouts;
+    }
+
+
+    public ScreenSize getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(ScreenSize screenSize) {
+        this.screenSize = screenSize;
     }
 
     @Override
