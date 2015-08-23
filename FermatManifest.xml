@@ -2406,7 +2406,6 @@
 						<mantainers>
 						</mantainers>
 						<certifications>
-							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -2422,7 +2421,6 @@
 						<mantainers>
 						</mantainers>
 						<certifications>
-							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -2468,7 +2466,6 @@
 						<mantainers>
 						</mantainers>
 						<certifications>
-							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -2540,7 +2537,7 @@
 							name="Assets Over Bitcoin"
 							description=""
 							difficulty="4"
-							code-level="production"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2549,7 +2546,6 @@
 						<mantainers>
 						</mantainers>
 						<certifications>
-							<certification signed-by="EzequielPostan" type="implementation"></certification>
 						</certifications>
 					</plugin>
 				</plugins>
@@ -2580,6 +2576,65 @@
 							name="Asset Transmission"
 							description=""
 							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+		</column>
+		<column code="MKT" name="Marketing" logo="MKT_logo.png">
+			<layer name="Reference Wallet">
+				<androids>
+					<android
+							name="Voucher Wallet"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+			<layer name="Voucher Module" language="java">
+				<plugins>
+					<plugin
+							name="Asset Wallet"
+							description=""
+							difficulty="3"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			<layer name="Wallet" language="java">
+				<plugins>
+					<plugin
+							name="Assets Over Bitcoin"
+							description=""
+							difficulty="4"
 							code-level="development"
 							>
 						<authors>
