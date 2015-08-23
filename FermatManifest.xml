@@ -2322,7 +2322,11 @@
 				</plugins>
 			</layer>
 		</column>
+		<column code="DAP" name="Digital Asset Platform" logo="DAP_logo.png">
+
+		</column>
 	</columns>
+
 	<super_layers>
 		<super_layer code="P2P" name="Peer to Peer Network">
 			<layer name="Communication" language="java">
@@ -2532,10 +2536,27 @@
 			<layer name="Crypto Vault" language="java">
 				<plugins>
 					<plugin
-							name="Bitcoin"
+							name="Bitcoin Currency"
 							description=""
 							difficulty="10"
-							code-level="production"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Bitcoin Asset"
+							description=""
+							difficulty="10"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2616,7 +2637,7 @@
 							name="Bitcoin"
 							description=""
 							difficulty="10"
-							code-level="production"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
