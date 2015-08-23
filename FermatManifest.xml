@@ -2323,6 +2323,25 @@
 			</layer>
 		</column>
 		<column code="DAP" name="Digital Asset Platform" logo="DAP_logo.png">
+			<layer name="Wallet Module" language="java">
+				<plugins>
+					<plugin
+							name="Asset Wallet"
+							description=""
+							difficulty="3"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
 			<layer name="Digital Asset Transaction" language="java">
 				<plugins>
 					<plugin
@@ -2507,10 +2526,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
