@@ -252,7 +252,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
     private void setOneFragmentInScreen(){
-        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.only_fragment_container));
         WalletNavigationStructure walletRuntime= getWalletRuntimeManager().getLastWallet();
         String walletPublicKey = walletRuntime.getPublicKey();
         String walletCategory = walletRuntime.getWalletCategory();
@@ -268,9 +267,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 FragmentTransaction FT = getFragmentManager().beginTransaction();
                 FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 FT.replace(R.id.only_fragment_container, fragmet);
-                FT.addToBackStack(null);
-                FT.attach(fragmet);
-                FT.show(fragmet);
+//                FT.addToBackStack(null);
+//                FT.attach(fragmet);
+//                FT.show(fragmet);
                 FT.commit();
 
             }
@@ -310,7 +309,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     public void changeActivity(String activityName, Object... objects) {
         try {
-            resetThisActivity();
+            //resetThisActivity();
 
             getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
 

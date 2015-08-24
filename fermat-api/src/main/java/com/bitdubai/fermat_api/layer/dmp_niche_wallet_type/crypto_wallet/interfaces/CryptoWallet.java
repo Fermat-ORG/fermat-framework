@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.*;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 10/06/15.
  * @version 1.0
  */
-public interface CryptoWallet {
+public interface CryptoWallet extends Serializable{
 
     /**
      * Contacts Fragment methods...
