@@ -90,6 +90,14 @@ public class IntraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
                 throw new CantInitializeIntraUserActorDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
+        catch (Exception e) {
+
+             /*
+              * The database exists but cannot be open. I can not handle this situation.
+              */
+            throw new CantInitializeIntraUserActorDatabaseException(e.getMessage());
+
+        }
     }
 
 

@@ -81,7 +81,7 @@ import java.util.regex.Pattern;
  * @since Java JDK 1.7
  */
 
-public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseManagerForDevelopers,DealsWithErrors, DealsWithEvents,DealsWithLogger,DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service  {
+public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseManagerForDevelopers,DealsWithErrors, DealsWithEvents,DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service  {
 
     private IntraUserActorDao intraUserActorDao;
 
@@ -100,7 +100,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     /**
      * DealsWithLogger interface member variable
      */
-    LogManager logManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
@@ -557,11 +557,11 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        Database database;
+
         try {
             IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
 
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
+            this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
             return dbFactory.getDatabaseTableContent(developerObjectFactory,  developerDatabaseTable);
         }catch (CantOpenDatabaseException cantOpenDatabaseException){
             /**
@@ -580,14 +580,6 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
 
 
-    /**
-     *      LogManagerForDevelopers interface implementation.
-     */
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -631,27 +623,6 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     }
 
-    /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return IntraUserActorPluginRoot.newLoggingLevel.get(correctedClass[0]);
-
-        } catch (Exception exception){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
 
 /**
  * Private methods
@@ -676,24 +647,27 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
                 switch ( notification.getNotificationDescriptor()){
                     case ACCEPTED:
-                        this.acceptIntraUser("",intraUserSedingPublicKey);
+                        this.acceptIntraUser("", intraUserSedingPublicKey);
                         /**
                          * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
                          */
                         eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
-
+                            break;
                     case DISCONNECTED:
                         this.disconnectIntraUser("", intraUserSedingPublicKey);
+                        break;
                     case RECEIVED:
                         this.receivingIntraUserRequestConnection("", "", intraUserSedingPublicKey, null);
                         /**
                          * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
                          */
                         eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
-
+                        break;
                     case DENIED:
                         this.denyConnection("",intraUserSedingPublicKey);
+                        break;
                     default:
+                        break;
 
                 }
 

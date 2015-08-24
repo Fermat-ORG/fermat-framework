@@ -25,6 +25,17 @@ dependencies {
 
 def jacocoHtmlReport = ""
 
+pmd {
+    toolVersion = '5.1.3'
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
 jacocoTestReport{
     reports{
         jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"

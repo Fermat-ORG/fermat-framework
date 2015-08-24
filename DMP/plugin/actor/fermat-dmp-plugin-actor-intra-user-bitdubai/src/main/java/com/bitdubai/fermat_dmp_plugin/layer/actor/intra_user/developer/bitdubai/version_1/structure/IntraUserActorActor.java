@@ -17,7 +17,7 @@ public class IntraUserActorActor implements ActorIntraUser {
 
     private String name;
     private String publicKey;
-    private byte[] profileImage;
+    private byte[] profileImage ;
     private long registrationDate;
     private ContactState contactState;
 
@@ -28,7 +28,7 @@ public class IntraUserActorActor implements ActorIntraUser {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage;
+        this.profileImage = (byte[])profileImage.clone();
         this.registrationDate = registrationDate;
         this.contactState = contactState;
 
@@ -71,7 +71,8 @@ public class IntraUserActorActor implements ActorIntraUser {
      */
     @Override
     public byte[] getProfileImage() {
-        return this.profileImage;
+        return (byte[])this.profileImage.clone();
+
     }
 
     /**
