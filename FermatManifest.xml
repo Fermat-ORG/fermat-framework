@@ -2433,6 +2433,21 @@
 			<layer name="Sub App" language="java-android">
 				<androids>
 					<android
+							name="Asset Issuing"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
 							name="Brand"
 							description=""
 							difficulty="6"
@@ -2486,6 +2501,21 @@
 
 			<layer name="Sub App Module" language="java">
 				<plugins>
+					<plugin
+							name="Asset Issuing"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 					<plugin
 							name="Brand"
 							description=""
@@ -3150,36 +3180,6 @@
 				<plugins>
 					<plugin
 							name="Marketer"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Brand"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Retailer"
 							description=""
 							difficulty="4"
 							code-level="development"
