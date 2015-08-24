@@ -24,7 +24,7 @@ public class CustomAdapter extends BaseAdapter implements View.OnClickListener {
          private ArrayList data;
          private static LayoutInflater inflater=null;
          public Resources res;
-         ListModel tempValues=null;
+         ListComponent tempValues=null;
          int i=0;
           
          /*************  CustomAdapter Constructor *****************/
@@ -101,7 +101,7 @@ public class CustomAdapter extends BaseAdapter implements View.OnClickListener {
              else {
                  /***** Get each Model object from Arraylist ********/
                  tempValues=null;
-                 tempValues = ( ListModel ) data.get( position );
+                 tempValues = (ListComponent) data.get( position );
                   
                  /************  Set Model values in Holder elements ***********/
  
