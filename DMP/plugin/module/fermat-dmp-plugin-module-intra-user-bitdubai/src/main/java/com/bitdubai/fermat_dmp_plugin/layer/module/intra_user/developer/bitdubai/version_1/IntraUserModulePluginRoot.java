@@ -93,9 +93,9 @@ import java.io.StringReader;
  * @since Java JDK 1.7
  */
 
-public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithIdentityIntraUser,DealsWithIntraUsersActor,DealsWithDeviceUser,DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers,  IntraUserModuleManager, Plugin, Service  {
+public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithIdentityIntraUser,DealsWithIntraUsersActor, DealsWithPluginFileSystem, LogManagerForDevelopers,  IntraUserModuleManager, Plugin, Service  {
 
-    private final String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
+    private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
 
     private String intraUserLoggedPublicKey;
 
@@ -133,15 +133,11 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
     ActorIntraUserManager actorIntraUserManager;
 
 
-    /**
-     * DealsWithDeviceUser interface member variable
-     */
-    DeviceUserManager deviceUserManager;
 
     /**
      * DealsWithLogger interface member variable
      */
-    LogManager logManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
 
@@ -651,14 +647,6 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
         this.actorIntraUserManager = actorIntraUserManager;
     }
 
-    /**
-     * DealsWithDeviceUser Interface implementation.
-     */
-
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
 
     /**
      * DealsWithPluginFileSystem Interface implementation.
@@ -673,10 +661,6 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
      */
 
 
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -722,27 +706,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
 
     }
 
-    /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return IntraUserModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
 
-        } catch (Exception exception){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
 
 
 

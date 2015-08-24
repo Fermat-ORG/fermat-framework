@@ -1,4 +1,4 @@
-package unit.com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.DeveloperBitDubai;
+package unit.com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.DeveloperBitDubai;
 
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;

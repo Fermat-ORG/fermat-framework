@@ -81,7 +81,7 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             for (IntraUser intraUser : intraUserList) {
 
                 for (IntraUserIdentity intraUserIdentity : intraUserIdentityList) {
-                   if(intraUserIdentity.getPublicKey() == intraUser.getPublicKey() )
+                   if(intraUserIdentity.getPublicKey().equals(intraUser.getPublicKey()) )
                        intraUserInformationList.add(new IntraUserModuleInformation(intraUserIdentity.getAlias(),intraUserIdentity.getPublicKey(),intraUserIdentity.getProfileImage()));
 
                 }

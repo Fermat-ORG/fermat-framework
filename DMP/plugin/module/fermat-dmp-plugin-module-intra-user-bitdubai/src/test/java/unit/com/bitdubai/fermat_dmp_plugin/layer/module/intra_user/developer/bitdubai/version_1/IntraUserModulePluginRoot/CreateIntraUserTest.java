@@ -64,11 +64,7 @@ public class CreateIntraUserTest extends TestCase {
     @Mock
     private PluginFileSystem mockPluginFileSystem;
 
-    /**
-     * DealWithDeviceUserManager Interface member variables.
-     */
-    @Mock
-    private DeviceUserManager mockDeviceUserManager;
+
 
     /**
      * DealWithIntraUserIdentityManager Interface member variables.
@@ -119,7 +115,7 @@ public class CreateIntraUserTest extends TestCase {
         pluginId= UUID.randomUUID();
         testIntraUserModulePluginRoot = new IntraUserModulePluginRoot();
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
-        testIntraUserModulePluginRoot.setDeviceUserManager(mockDeviceUserManager);
+
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
         testIntraUserModulePluginRoot.setIntraUserManager(mockIntraUserIdentityManager);
 

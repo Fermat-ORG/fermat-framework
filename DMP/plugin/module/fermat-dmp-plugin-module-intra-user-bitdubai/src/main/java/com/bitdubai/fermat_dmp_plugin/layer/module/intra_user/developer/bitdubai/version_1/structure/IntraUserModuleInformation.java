@@ -20,7 +20,7 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     {
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage;
+        this.profileImage = (byte[] )profileImage.clone();
     }
     /**
      * That method returns the public key of the represented Intra User
@@ -48,6 +48,6 @@ public class IntraUserModuleInformation implements IntraUserInformation {
      */
     @Override
     public byte[] getProfileImage() {
-        return this.profileImage;
+        return (byte[] )this.profileImage.clone();
     }
 }
