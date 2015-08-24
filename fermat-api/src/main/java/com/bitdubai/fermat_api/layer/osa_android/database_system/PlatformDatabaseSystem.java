@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 
+import java.io.Serializable;
+
 
 /**
  * Created by ciencias on 3/18/15.
@@ -21,7 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
  *  @since   18/01/15.
  * */
 
- public interface PlatformDatabaseSystem {
+ public interface PlatformDatabaseSystem extends Serializable {
 
     public Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
 

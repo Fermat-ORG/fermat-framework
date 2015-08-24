@@ -36,6 +36,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserActorDao {
+public class IntraUserActorDao implements Serializable{
 
     /**
      * Represent the Plugin Database.
