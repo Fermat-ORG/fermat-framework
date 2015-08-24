@@ -53,6 +53,8 @@ public class BalanceFragment extends Fragment {
 
     String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
+    private final String CRYPTO_WALLET_PARAM = "cryptoWalletParam";
+
     /**
      *  Screen members
      */
@@ -129,7 +131,8 @@ public class BalanceFragment extends Fragment {
      */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+
+        //setRetainInstance(true);
         /**
          *
          */
@@ -173,6 +176,20 @@ public class BalanceFragment extends Fragment {
         }
     }
 
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putSerializable(CRYPTO_WALLET_PARAM,cryptoWallet);
+            //outState.pu
+
+
+        }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 
     /**
      *
@@ -183,6 +200,10 @@ public class BalanceFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if(savedInstanceState!=null){
+            cryptoWallet =(CryptoWallet) savedInstanceState.get(CRYPTO_WALLET_PARAM);
+        }
 
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
 
