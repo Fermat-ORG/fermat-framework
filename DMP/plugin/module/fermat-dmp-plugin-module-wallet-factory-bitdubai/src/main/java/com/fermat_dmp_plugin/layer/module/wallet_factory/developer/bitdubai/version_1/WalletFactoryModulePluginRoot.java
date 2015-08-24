@@ -47,9 +47,11 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 07/08/15.
  */
-public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, LogManagerForDevelopers,WalletFactoryManager, Service {
+public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, LogManagerForDevelopers,WalletFactoryManager, Service, Plugin {
 
     WalletFactoryModuleManager  walletFactoryModuleManager ;
+    UUID pluginId;
+
 
     /**
      * DealsWithLogger interface member variable
@@ -73,6 +75,13 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
 
+    /**
+     * Plugin interface implementation
+     */
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 
     /**
      * Service Interface implementation.
