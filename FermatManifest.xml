@@ -2347,6 +2347,21 @@
 			<layer name="Sub App" language="java-android">
 				<androids>
 					<android
+							name="Shop"
+							description=""
+							difficulty="6"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
 							name="Brand"
 							description=""
 							difficulty="6"
@@ -2430,6 +2445,21 @@
 			</layer>
 			<layer name="Sub App Module" language="java">
 				<plugins>
+					<plugin
+							name="Shop"
+							description=""
+							difficulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 					<plugin
 							name="Brand"
 							description=""
@@ -2631,6 +2661,21 @@
 					</plugin>
 					<plugin
 							name="Retailer"
+							description=""
+							difficulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Purchase Transmission"
 							description=""
 							difficulty="4"
 							code-level="concept"
