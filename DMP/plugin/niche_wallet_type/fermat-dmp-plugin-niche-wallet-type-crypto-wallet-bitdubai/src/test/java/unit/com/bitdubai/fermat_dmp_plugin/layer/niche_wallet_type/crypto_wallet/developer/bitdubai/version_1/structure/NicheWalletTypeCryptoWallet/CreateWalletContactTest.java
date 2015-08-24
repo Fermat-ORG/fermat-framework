@@ -97,7 +97,6 @@ public class CreateWalletContactTest extends TestCase {
     Actors actorType;
     CryptoAddress deliveredCryptoAddress;
     ReferenceWallet referenceWallet;
-    UUID walletId;
     String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
@@ -108,7 +107,6 @@ public class CreateWalletContactTest extends TestCase {
         actorType = Actors.EXTRA_USER;
         deliveredCryptoAddress = new CryptoAddress("asdasd ", CryptoCurrency.BITCOIN);
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
-        walletId = UUID.randomUUID();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);

@@ -92,7 +92,8 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
      * DealsWithWalletContacts Interface member variables.
      */
     private WalletContactsManager walletContactsManager;
-    private UUID pluginId;
+
+    //private UUID pluginId;
 
 
 
@@ -128,6 +129,9 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
     @Override
     public CryptoWallet getCryptoWallet() throws CantGetCryptoWalletException {
         try {
+
+            logManager.log(CryptoWalletNicheWalletTypePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation started...", null, null);
+
             NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
             nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
             nicheWalletTypeCryptoWallet.setBitcoinWalletManager(bitcoinWalletManager);
@@ -138,6 +142,8 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
             nicheWalletTypeCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
             nicheWalletTypeCryptoWallet.setWalletContactsManager(walletContactsManager);
             nicheWalletTypeCryptoWallet.initialize();
+
+            logManager.log(CryptoWalletNicheWalletTypePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
 
             return nicheWalletTypeCryptoWallet;
         } catch (Exception e) {
@@ -152,7 +158,7 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
 
     @Override
     public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
+        List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.CryptoWalletNicheWalletTypePluginRoot");
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet");
 
@@ -192,7 +198,7 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
-            String[] correctedClass = className.split((Pattern.quote("$")));
+            String[] correctedClass = className.split(Pattern.quote("$"));
             return CryptoWalletNicheWalletTypePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
@@ -245,6 +251,6 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
 
     @Override
     public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+        //this.pluginId = pluginId;
     }
 }
