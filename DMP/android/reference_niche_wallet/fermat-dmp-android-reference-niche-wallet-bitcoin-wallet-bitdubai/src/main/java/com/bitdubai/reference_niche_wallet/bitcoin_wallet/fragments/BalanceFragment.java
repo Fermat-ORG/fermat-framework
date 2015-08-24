@@ -177,14 +177,12 @@ public class BalanceFragment extends Fragment {
         }
     }
 
-        @Override
-        public void onSaveInstanceState(Bundle outState) {
-            super.onSaveInstanceState(outState);
-            outState.putSerializable(CRYPTO_WALLET_PARAM,cryptoWallet);
-            //outState.pu
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
 
-        }
+    }
 
 
     @Override

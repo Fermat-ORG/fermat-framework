@@ -14,6 +14,7 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
@@ -44,7 +45,7 @@ public class DeveloperSubAppFragmentFactory implements com.bitdubai.fermat_andro
              * Executing fragments for BITCOIN REQUESTED.
              */
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT:
-                currentFragment = DatabaseToolsDatabaseListFragment.newInstance(0, subAppsSession);
+                currentFragment = DatabaseToolsDatabaseListFragment.newInstance(0,(DeveloperSubAppSession) subAppsSession);
                 break;
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT:
                 currentFragment = DatabaseToolsDatabaseTableListFragment.newInstance(0, subAppsSession);

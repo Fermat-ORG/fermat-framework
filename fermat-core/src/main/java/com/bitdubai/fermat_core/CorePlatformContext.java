@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformLayers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CorePlatformContext implements PlatformContext {
+public class CorePlatformContext implements PlatformContext,Serializable {
 
     /**
      * Hold the referent of the existing addons
