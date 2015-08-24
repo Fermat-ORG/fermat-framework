@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatLanguage;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,10 @@ public class Language implements FermatLanguage {
     private Map<String, String> strings = new HashMap<>();
 
     private Version version;
+
+    private Translator translator;
+
+    private int size;
 
 
     /**
@@ -121,5 +126,21 @@ public class Language implements FermatLanguage {
 
     public void setVersion(Version version) {
         this.version = version;
+    }
+
+    public Translator getTranslator() {
+        return translator;
+    }
+
+    public void setTranslator(Translator translator) {
+        this.translator = translator;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }
