@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
  * *
  */
 
-public class AndroidDatabase implements Database, DatabaseFactory {
+public class AndroidDatabase implements Database, DatabaseFactory,Serializable {
 
     /**
      * database Interface member variables.

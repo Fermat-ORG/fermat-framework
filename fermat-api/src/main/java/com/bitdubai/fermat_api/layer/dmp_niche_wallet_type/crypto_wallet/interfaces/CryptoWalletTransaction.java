@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interf
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 
+import java.io.Serializable;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction</code>
  * TODO WRITE DETAILS
@@ -12,7 +14,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface CryptoWalletTransaction {
+public interface CryptoWalletTransaction extends Serializable{
 
     BitcoinWalletTransaction getBitcoinWalletTransaction();
 

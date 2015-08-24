@@ -12,10 +12,12 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStarte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionDeniedEvent;
 
+import java.io.Serializable;
+
 /**
  * Created by natalia on 17/08/15.
  */
-public class IntraUserDeniedConnectionEventHandlers implements EventHandler {
+public class IntraUserDeniedConnectionEventHandlers implements EventHandler,Serializable {
     /**
      * listener  INTRA_USER_CONNECTION_DENIED event
      * Change Actor status to DENIED

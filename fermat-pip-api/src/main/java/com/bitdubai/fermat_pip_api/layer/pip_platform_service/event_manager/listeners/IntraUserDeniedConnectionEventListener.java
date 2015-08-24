@@ -6,10 +6,12 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 
+import java.io.Serializable;
+
 /**
  * Created by natalia on 17/08/15.
  */
-public class IntraUserDeniedConnectionEventListener implements EventListener {
+public class IntraUserDeniedConnectionEventListener implements EventListener,Serializable {
     EventMonitor eventMonitor;
     private EventType eventType;
     private EventHandler eventHandler;
