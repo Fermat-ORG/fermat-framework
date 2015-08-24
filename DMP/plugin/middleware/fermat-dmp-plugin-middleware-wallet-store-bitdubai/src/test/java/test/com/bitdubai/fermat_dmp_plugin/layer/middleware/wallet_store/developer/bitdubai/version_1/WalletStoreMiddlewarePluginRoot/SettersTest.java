@@ -36,50 +36,50 @@ public class SettersTest extends TestCase {
     com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager walletStoreNetworkManager;
 
     private UUID testPluginId;
-    private WalletStoreMiddlewarePluginRoot walletStoreModulePluginRoot;
+    private WalletStoreMiddlewarePluginRoot walletStoreMiddlewarePluginRoot;
 
     static final String CLASS = "ClassToTest";
     static final LogLevel LOG_LEVEL = LogLevel.MODERATE_LOGGING;
 
     @Before
     public void setUp(){
-        walletStoreModulePluginRoot = new WalletStoreMiddlewarePluginRoot();
+        walletStoreMiddlewarePluginRoot = new WalletStoreMiddlewarePluginRoot();
         testPluginId = UUID.randomUUID();
     }
 
     @Test
     public void idTest() {
-        walletStoreModulePluginRoot.setId(testPluginId);
+        walletStoreMiddlewarePluginRoot.setId(testPluginId);
     }
 
     @Test
     public void LogManagerTest() {
-        walletStoreModulePluginRoot.setLogManager(logManager);
+        walletStoreMiddlewarePluginRoot.setLogManager(logManager);
     }
 
     @Test
     public void ErrorManagerTest() {
-        walletStoreModulePluginRoot.setErrorManager(errorManager);
+        walletStoreMiddlewarePluginRoot.setErrorManager(errorManager);
     }
 
     @Test
     public void PluginDataBaseSystemTest() {
-        walletStoreModulePluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
+        walletStoreMiddlewarePluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
     }
 
     @Test
     public void LoggingLevelPerClassTest(){
         Map<String, LogLevel> data = new HashMap<String, LogLevel>();
         data.put(CLASS, LOG_LEVEL);
-        walletStoreModulePluginRoot.setLoggingLevelPerClass(data);
+        walletStoreMiddlewarePluginRoot.setLoggingLevelPerClass(data);
 
-        assertEquals(walletStoreModulePluginRoot.getLogLevelByClass(CLASS), LOG_LEVEL);
+        assertEquals(walletStoreMiddlewarePluginRoot.getLogLevelByClass(CLASS), LOG_LEVEL);
 
         data.clear();
         LogLevel newLogLevel = LogLevel.AGGRESSIVE_LOGGING;
         data.put(CLASS, newLogLevel);
-        walletStoreModulePluginRoot.setLoggingLevelPerClass(data);
+        walletStoreMiddlewarePluginRoot.setLoggingLevelPerClass(data);
 
-        assertEquals(walletStoreModulePluginRoot.getLogLevelByClass(CLASS), newLogLevel);
+        assertEquals(walletStoreMiddlewarePluginRoot.getLogLevelByClass(CLASS), newLogLevel);
     }
 }

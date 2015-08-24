@@ -35,48 +35,48 @@ public class serviceStatusTest  extends TestCase {
     PluginDatabaseSystem pluginDatabaseSystem;
 
     private UUID testPluginId;
-    private WalletStoreMiddlewarePluginRoot walletStoreModulePluginRoot;
+    private WalletStoreMiddlewarePluginRoot walletStoreMiddlewarePluginRoot;
 
     @Before
     public void setUp() {
-        walletStoreModulePluginRoot = new WalletStoreMiddlewarePluginRoot();
-        walletStoreModulePluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
+        walletStoreMiddlewarePluginRoot = new WalletStoreMiddlewarePluginRoot();
+        walletStoreMiddlewarePluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
         testPluginId = UUID.randomUUID();
     }
 
     @Test
     public void createdTest() {
-        Assert.assertEquals(CREATED, walletStoreModulePluginRoot.getStatus());
+        Assert.assertEquals(CREATED, walletStoreMiddlewarePluginRoot.getStatus());
     }
 
     @Test
     public void startedTest() throws CantStartPluginException {
         try {
             when(pluginDatabaseSystem.openDatabase(testPluginId, WalletStoreMiddlewareDatabaseConstants.DATABASE_NAME)).thenReturn(database);
-            walletStoreModulePluginRoot.start();
+            walletStoreMiddlewarePluginRoot.start();
         } catch (CantStartPluginException exception) {
             Assert.assertNotNull(exception);
         } catch (Exception exception) {
             Assert.assertNotNull(exception);
         }
-        Assert.assertEquals(STARTED, walletStoreModulePluginRoot.getStatus());
+        Assert.assertEquals(STARTED, walletStoreMiddlewarePluginRoot.getStatus());
     }
 
     @Test
     public void pausedTest() {
-        walletStoreModulePluginRoot.pause();
-        Assert.assertEquals(PAUSED, walletStoreModulePluginRoot.getStatus());
+        walletStoreMiddlewarePluginRoot.pause();
+        Assert.assertEquals(PAUSED, walletStoreMiddlewarePluginRoot.getStatus());
     }
 
     @Test
     public void resumeTest() {
-        walletStoreModulePluginRoot.resume();
-        Assert.assertEquals(STARTED, walletStoreModulePluginRoot.getStatus());
+        walletStoreMiddlewarePluginRoot.resume();
+        Assert.assertEquals(STARTED, walletStoreMiddlewarePluginRoot.getStatus());
     }
 
     @Test
     public void stopTest() {
-        walletStoreModulePluginRoot.stop();
-        Assert.assertEquals(STOPPED, walletStoreModulePluginRoot.getStatus());
+        walletStoreMiddlewarePluginRoot.stop();
+        Assert.assertEquals(STOPPED, walletStoreMiddlewarePluginRoot.getStatus());
     }
 }
