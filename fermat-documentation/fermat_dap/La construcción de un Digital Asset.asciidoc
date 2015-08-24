@@ -1,0 +1,48 @@
+== Definiciones
+
+Un Digital Asset (DA) es un conjunto de metadata asociada a un transaccion bitcoin.
+
+Cuando transmitimos un asset debemos enviar una transacción bitcoin y la metadata al destinatario.
+La transacción bitcoin viaja a través de la red bitcoin mientras que la metadata viaja a través de
+los canales de comunicación de Fermat. +
+
+En principio, los digital assets comparten las siguientes características:
+
+* Tienen un Emisor, que es alguno de los actores del sistema.
+* Tienen una fecha de expiración. (aunque en algunos casos puede ser que no expiren nunca)
+* Tienen uno o mas elementos multi-media (imagen, sonido, video, animación, etc.) destinados a representar ante el usuario final dicho asset.
+* Son de un determinado tipo.
+* Tienen una lista de condiciones que dependen de su tipo. (Las entienden cualquier wallet que maneje ese tipo de Assets)
+* Son de un determinado sub-tipo.
+* Tienen una lista de condiciones que dependen de su sub-tipo. (Las entienden cualquier wallet que maneje ese sub-tipo de Assets)
+* Tienen una lista de condiciones que dependen de su emisor. (Solo las entienden las wallets del emisor)
+
+A la lista de condiciones que aplican sobre un asset, le vamos a llamar Asset Contract.
+
+A toda la información que representa al asset, le vamos a llamar Digital Asset (DA).
+
+A la transacción que se usa para generar el asset la llamaremos genesis transactión.
+
+== Creación
+
+Si un actor desea crear un DA comenzará creando la metadata, posteriormnete se calculará en función
+a los montos necesarios para cumplir con lo que el asset requiere el hash de la transacción que se
+va a usar para crear el asset. +
+Agregaremos entonces a la metadata del asset este hash y dejaremos como información adjunta a la
+transacción que publicaremos el mensaje y firma de nuestra metadata. +
+
+Debemos definir con mayer precisión la metadata que compone al asset y también la forma de uso del
+mismo. Para ello analicemos los desafíos que queremos enfrentar.
+
+Queremos que el asset se pueda pasar de un usuario a otro:: Esto requiere pensar en quién pagará los
+fees de las transacciones.
+** Una opción es que el emisor del asset decida cuantas veces puede cambiar
+de portador dicho asset (esto puede tener sentido al manejar cupones o descuentos si el emisor no
+quiere que haya un mercado de reventa)
+** Otra opción es que no haya límites de saltos (cambios de portador), para lo cual hay que pensar
+en el pago de las fees de las transacciones.
+
+Para implementar las restricciones como las del primer caso parece ser suficiente con que en la
+metadata que se coloca en la transacción bitcoin se incluya el dato de saltos máximo que el asset
+puede realizar. +
+
