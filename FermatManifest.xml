@@ -1712,21 +1712,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-							name="Shop"
-							description=""
-							difficulty="1"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 				</plugins>
 			</layer>
 
@@ -1965,9 +1950,6 @@
 				</plugins>
 			</layer>
 
-			<layer name="Cash Transaction" language="java"></layer>
-			<layer name="Contract" language="java"></layer>
-
 			<layer name="Composite Wallet" language="java">
 				<plugins>
 					<plugin
@@ -2163,21 +2145,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-							name="Shop"
-							description=""
-							difficulty="1"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 				</plugins>
 			</layer>
 
@@ -2321,6 +2288,125 @@
 						</certifications>
 					</addon>
 				</addons>
+			</layer>
+		</column>
+
+		<column code="SHP" name="Shopping Platform" logo="SHP_logo.png">
+			<layer name="Reference Wallet">
+				<androids>
+					<android
+							name="Shop Wallet"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+			<layer name="Wallet Module" language="java">
+				<plugins>
+					<plugin
+							name="Shop Wallet"
+							description=""
+							difficulty="3"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			<layer name="Actor" language="java">
+				<plugins>
+					<plugin
+							name="Shop"
+							description=""
+							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Digital Money Transaction" language="java">
+				<plugins>
+					<plugin
+							name="Pruchase"
+							description=""
+							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Identity" language="java">
+				<plugins>
+					<plugin
+							name="Shop"
+							description=""
+							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+
+			<layer name="Network Service" language="java">
+				<plugin
+						name="Shop"
+						description=""
+						difficulty="6"
+						code-level="concept"
+						>
+					<authors>
+						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+					</authors>
+					<mantainers>
+					</mantainers>
+					<certifications>
+					</certifications>
+				</plugin>
 			</layer>
 		</column>
 
@@ -2592,7 +2678,7 @@
 				</plugins>
 			</layer>
 		</column>
-		<column code="MKT" name="Marketing" logo="MKT_logo.png">
+		<column code="MKT" name="Marketing Platform" logo="MKT_logo.png">
 			<layer name="Reference Wallet">
 				<androids>
 					<android
