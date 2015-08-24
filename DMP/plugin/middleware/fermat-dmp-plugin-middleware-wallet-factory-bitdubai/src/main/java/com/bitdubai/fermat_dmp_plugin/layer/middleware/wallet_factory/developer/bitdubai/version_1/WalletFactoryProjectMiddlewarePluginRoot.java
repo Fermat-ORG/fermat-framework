@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantChangeProjectStateException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantExportWalletFactoryProjectException;
@@ -290,5 +291,10 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
         } catch (Exception e) {
             throw new CantExportWalletFactoryProjectException(CantExportWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
         }
+    }
+
+    @Override
+    public void markProkectAsPublished(WalletFactoryProject walletFactoryProject) throws CantChangeProjectStateException {
+
     }
 }

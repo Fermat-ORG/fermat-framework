@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantChangeProjectStateException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantDeleteWalletFactoryProjectLanguageException;
@@ -30,6 +31,7 @@ public interface WalletFactoryProjectManager {
     void saveWalletFactoryProjectChanges(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect;
     void uploadWalletFactoryProjectToRepository(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect;
     void deleteWalletProjectFactory(WalletFactoryProject walletFactoryProject) throws CantDeleteWalletFactoryProjectException;
+    void markProkectAsPublished(WalletFactoryProject walletFactoryProject) throws CantChangeProjectStateException;
 
     //repository task
     void exportProjectToRepository(WalletFactoryProject walletFactoryProject, String githubRepository, String userName, String password) throws CantExportWalletFactoryProjectException;
