@@ -2310,13 +2310,162 @@
 						</certifications>
 					</android>
 				</androids>
+				<androids>
+					<android
+							name="Brand Wallet"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+				<androids>
+					<android
+							name="Retailer Wallet"
+							description=""
+							difficulty="8"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
 			</layer>
+
+			<layer name="Sub App" language="java-android">
+				<androids>
+					<android
+							name="Asset Issuing"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Brand"
+							description=""
+							difficulty="6"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Retailer"
+							description=""
+							difficulty="6"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
 							name="Shop Wallet"
 							description=""
 							difficulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Brand Wallet"
+							description=""
+							difficulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Retailer Wallet"
+							description=""
+							difficulty="3"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			<layer name="Sub App Module" language="java">
+				<plugins>
+					<plugin
+							name="Brand"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Retailer"
+							description=""
+							difficulty="4"
 							code-level="concept"
 							>
 						<authors>
@@ -2336,6 +2485,36 @@
 							name="Shop"
 							description=""
 							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Brand"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Retailer"
+							description=""
+							difficulty="4"
 							code-level="concept"
 							>
 						<authors>
@@ -2387,6 +2566,36 @@
 						<certifications>
 						</certifications>
 					</plugin>
+					<plugin
+							name="Brand"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Retailer"
+							description=""
+							difficulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
@@ -2396,6 +2605,36 @@
 						name="Shop"
 						description=""
 						difficulty="6"
+						code-level="concept"
+						>
+					<authors>
+						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+					</authors>
+					<mantainers>
+					</mantainers>
+					<certifications>
+					</certifications>
+				</plugin>
+				<plugin
+						name="Brand"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+					<authors>
+						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+					</authors>
+					<mantainers>
+					</mantainers>
+					<certifications>
+					</certifications>
+				</plugin>
+				<plugin
+						name="Retailer"
+						description=""
+						difficulty="4"
 						code-level="concept"
 						>
 					<authors>
@@ -2447,36 +2686,6 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-							name="Brand"
-							description=""
-							difficulty="6"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Retailer"
-							description=""
-							difficulty="6"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
 				</androids>
 			</layer>
 			<layer name="Wallet Module" language="java">
@@ -2516,71 +2725,12 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-							name="Brand"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Retailer"
-							description=""
-							difficulty="4"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 				</plugins>
 			</layer>
 
 			<layer name="Actor" language="java">
 				<plugins>
-					<plugin
-							name="Brand"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Retailer"
-							description=""
-							difficulty="4"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
+
 				</plugins>
 			</layer>
 
@@ -2791,36 +2941,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-							name="Brand"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Retailer"
-							description=""
-							difficulty="4"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
+
 				</plugins>
 			</layer>
 			<layer name="Network Service" language="java">
@@ -2840,36 +2961,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-							name="Brand"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Retailer"
-							description=""
-							difficulty="4"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
+
 				</plugins>
 			</layer>
 		</column>
