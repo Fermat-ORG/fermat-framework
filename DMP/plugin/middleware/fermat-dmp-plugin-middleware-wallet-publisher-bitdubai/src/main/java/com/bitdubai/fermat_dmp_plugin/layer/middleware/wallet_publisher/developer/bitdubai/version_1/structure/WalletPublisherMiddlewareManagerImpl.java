@@ -22,6 +22,9 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Info
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -269,15 +272,15 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, String, String)
+     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, String, String)
      */
     @Override
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
         try {
 
             Version defaultVersion = new Version(1, 0, 0);
-            CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion);
+            CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
 
             /* ----------------------------------------
              * Create the informationPublishedComponent
@@ -401,7 +404,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @return CatalogItem
      * @throws CantGetWalletIconException
      */
-    private CatalogItem constructCatalogItemObject(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, Version version, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion) throws CantGetWalletIconException {
+    private CatalogItem constructCatalogItemObject(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, Version version, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl) throws CantGetWalletIconException {
 
         /*
          * Construct the videos urls
@@ -480,19 +483,51 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             otherLanguageSupportedList.add(languageCatalogItem);
         }
 
-        URL url = null;
 
-        try {
-            url = new URL("www.prueba.com");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        Developer developer = new Developer() {
+            @Override
+            public UUID getId() {
+                return null;
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+
+            @Override
+            public String getPublicKey() {
+                return null;
+            }
+
+            @Override
+            public void setId(UUID id) {
+
+            }
+
+            @Override
+            public void setName(String name) {
+
+            }
+
+            @Override
+            public void setPublicKey(String publicKey) {
+
+            }
+        };
+
+
+        developer.setId(UUID.randomUUID());
+        developer.setName(walletFactoryProject.getNavigationStructure().getDeveloper().getAlias());
+        developer.setPublicKey(walletFactoryProject.getNavigationStructure().getDeveloper().getPublicKey());
+
+
 
         /*
          * Construct the catalog item instance
          */
         return walletStoreManager.constructCatalogItem(UUID.randomUUID(), //TODO: REVISAR walletFactoryProject.getId(),
-                                                        0, //TODO: REVISAR walletFactoryProject.getDefaultSizeInBytes(),
+                                                        walletFactoryProject.getSize(), //TODO: REVISAR walletFactoryProject.getDefaultSizeInBytes(),
                                                         walletFactoryProject.getName(),
                                                         walletFactoryProject.getDescription(),
                                                         walletCategory,
@@ -505,7 +540,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         defaultLanguage,
                                                         null, //TODO: walletFactoryProject.getDeveloperIdentity()
                                                         otherLanguageSupportedList,
-                                                        url);//TODO REVISAR
+                                                        publisherWebsiteUrl);//TODO REVISAR
     }
 
     /**
@@ -524,6 +559,45 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
    private com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin constructSkinObject(Skin skin, Version version, byte[] mainScreenShot, List<byte[]> screenShotDetails, boolean hasVideoPreview, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion){
 
 
+
+       Designer designer = new Designer() {
+           @Override
+           public UUID getId() {
+               return null;
+           }
+
+           @Override
+           public String getName() {
+               return null;
+           }
+
+           @Override
+           public String getPublicKey() {
+               return null;
+           }
+
+           @Override
+           public void setiD(UUID id) {
+
+           }
+
+           @Override
+           public void setName(String name) {
+
+           }
+
+           @Override
+           public void setPublicKey(String publicKey) {
+
+           }
+       };
+
+
+       designer.setiD(UUID.randomUUID());
+       designer.setName(skin.getDesigner().getAlias());
+       designer.setPublicKey(skin.getDesigner().getPublicKey());
+
+
        /*
         * Construct the new instance
         */
@@ -538,8 +612,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                screenShotDetails,
                                                hasVideoPreview,
                                                videoPreviews,
-                                               0, // TODO: REVISAR skin.getDefaultSizeInBytes(),
-                                               null, // TODO: skin.getDesigner()
+                                               skin.getSize(),
+                                               designer,
                                                Boolean.TRUE);
 
    }
@@ -556,6 +630,43 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      */
     private com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language constructLanguageObject(Language language, Version version, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion){
 
+        Translator translator = new Translator() {
+            @Override
+            public UUID getId() {
+                return null;
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+
+            @Override
+            public String getPublicKey() {
+                return null;
+            }
+
+            @Override
+            public void setId(UUID id) {
+
+            }
+
+            @Override
+            public void setName(String name) {
+
+            }
+
+            @Override
+            public void setPublicKey(String publicKey) {
+
+            }
+        };
+
+        translator.setId(UUID.randomUUID());
+        translator.setName(language.getTranslator().getAlias());
+        translator.setPublicKey(language.getTranslator().getPublicKey());
+
+
         /*
         * Construct the new instance
         */
@@ -567,8 +678,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                 initialWalletVersion,
                 finalWalletVersion,
                 videoPreviews,
-                0, //TODO: REVISAR language.getDefaultSizeInBytes(),
-                null, // TODO: languageDescriptorFactoryProject.getTranslator(),
+                language.getSize(),
+                translator,
                 Boolean.TRUE);
 
     }

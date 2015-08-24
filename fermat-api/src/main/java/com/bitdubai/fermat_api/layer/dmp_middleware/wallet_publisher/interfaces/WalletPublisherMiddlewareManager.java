@@ -129,10 +129,11 @@ public interface WalletPublisherMiddlewareManager{
      * @param finalWalletVersion
      * @param initialPlatformVersion
      * @param finalPlatformVersion
+     * @param publisherWebsiteUrl
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
 
 

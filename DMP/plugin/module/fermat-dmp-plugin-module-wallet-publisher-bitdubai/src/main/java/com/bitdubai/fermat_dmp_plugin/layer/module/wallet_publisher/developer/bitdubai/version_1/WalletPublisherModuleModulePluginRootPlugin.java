@@ -420,15 +420,15 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherModuleManager#publishWallet(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, PublisherIdentity)
+     * @see WalletPublisherModuleManager#publishWallet(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, PublisherIdentity)
      */
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
+    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             String signature = null; //TODO: This have to be generate by the PublisherIdentity method
 
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentity.getPublicKey(), signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
             //TODO: REVISAR  walletFactoryProjectManager.setProjectState(walletFactoryProject.getProjectPublicKey(), WalletFactoryProjectState.PUBLISHED);
 
         } catch (Exception exception) {
