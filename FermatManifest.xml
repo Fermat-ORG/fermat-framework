@@ -3810,6 +3810,41 @@
 				</plugins>
 			</layer>
 
+			<layer name="Contract" language="java">
+				<plugins>
+					<plugin
+							name="Broker To Broker"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Broker To Wholesaler"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
 			<layer name="Wallet" language="java">
 				<plugins>
 					<plugin
