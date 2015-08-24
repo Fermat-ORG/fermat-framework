@@ -2730,7 +2730,7 @@
 					<android
 							name="Retailer"
 							description=""
-							difficulty="8"
+							difficulty="6"
 							code-level="development"
 							>
 						<authors>
@@ -2766,7 +2766,7 @@
 							name="Coupon Wallet"
 							description=""
 							difficulty="8"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2781,7 +2781,7 @@
 							name="Discount Wallet"
 							description=""
 							difficulty="8"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
