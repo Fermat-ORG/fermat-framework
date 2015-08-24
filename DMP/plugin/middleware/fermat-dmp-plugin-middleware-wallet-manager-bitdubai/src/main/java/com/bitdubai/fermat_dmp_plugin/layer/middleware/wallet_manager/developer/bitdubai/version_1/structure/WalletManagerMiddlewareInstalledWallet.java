@@ -23,12 +23,11 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-
 public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, Serializable {
 
     private WalletCategory walletCategory;
     private List<InstalledSkin> skinsId;
-    private List<InstalledLanguage> languajesId;
+    private List<InstalledLanguage> languagesId;
     private String walletIcon;
     private String walletName;
     private String publicKey;
@@ -36,11 +35,9 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     private Version version;
     private WalletType walletType;
     private String screenSize;
-
     private String navigationStructureVersion;
     private UUID walletCatalogId;
     private String walletDeveloper;
-
     private String deviceUserPublicKey;
 
     public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
@@ -59,7 +56,7 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
-        this.languajesId = languajesId;
+        this.languagesId = languajesId;
         this.walletIcon = walletIcon;
         this.walletName = walletName;
         this.publicKey = publicKey;
@@ -83,7 +80,7 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
      */
     @Override
     public List<InstalledLanguage> getLanguagesId(){
-        return languajesId;
+        return languagesId;
     }
 
     /**
@@ -122,7 +119,6 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
         return this.screenSize;
     }
 
-
     /**
      * This method gives us the navigation structure version for this wallet
      *
@@ -131,7 +127,6 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     public String getWalletNavigationStructureVersion(){
         return this.navigationStructureVersion;
     }
-
 
     /**
      * This method gives us a codification of the wallet identifier (the identifier is an enum that

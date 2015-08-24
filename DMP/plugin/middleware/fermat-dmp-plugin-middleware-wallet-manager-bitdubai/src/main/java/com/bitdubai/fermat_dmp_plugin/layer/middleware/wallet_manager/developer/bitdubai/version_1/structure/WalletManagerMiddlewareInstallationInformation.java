@@ -18,7 +18,7 @@ public class WalletManagerMiddlewareInstallationInformation implements WalletIns
 
     private UUID catalogId;
     private UUID skinId;
-    private UUID languajeId;
+    private UUID languageId;
 
 
     /**
@@ -50,6 +50,6 @@ public class WalletManagerMiddlewareInstallationInformation implements WalletIns
      */
     @Override
     public UUID getLanguageId(){
-        return this.languajeId;
+        return this.languageId;
     }
 }
