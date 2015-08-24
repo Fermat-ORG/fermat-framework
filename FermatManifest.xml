@@ -3530,8 +3530,8 @@
 					<plugin
 							name="Crypto Initial Balance"
 							description=""
-							difficulty="10"
-							code-level="concept"
+							difficulty="4"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3545,8 +3545,8 @@
 					<plugin
 							name="Fiat Initial Balance"
 							description=""
-							difficulty="10"
-							code-level="concept"
+							difficulty="4"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3591,7 +3591,7 @@
 							name="Broker Crypto Purchase"
 							description=""
 							difficulty="10"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3621,7 +3621,7 @@
 							name="Retail Crypto Sale"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3636,7 +3636,7 @@
 							name="Retail Fiat Sale"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3651,7 +3651,7 @@
 							name="Whosale Crypto Sale"
 							description=""
 							difficulty="10"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3686,7 +3686,7 @@
 							name="Send Crypto"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3701,7 +3701,7 @@
 							name="Receive Crypto"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3721,7 +3721,7 @@
 							name="Give Cash On Hand"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3736,7 +3736,7 @@
 							name="Receive Cash On Hand"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3751,7 +3751,7 @@
 							name="Deliver Cash"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3766,7 +3766,7 @@
 							name="Receive Cash Delivered"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3781,7 +3781,7 @@
 							name="Make Deposit On Bank"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3796,7 +3796,7 @@
 							name="Receive Deposit On Bank "
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3816,7 +3816,7 @@
 							name="Broker To Broker"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3831,7 +3831,7 @@
 							name="Broker To Wholesaler"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
