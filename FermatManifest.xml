@@ -2532,7 +2532,22 @@
 			<layer name="Digital Money Transaction" language="java">
 				<plugins>
 					<plugin
-							name="Pruchase"
+							name="Purchase"
+							description=""
+							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Sale"
 							description=""
 							difficulty="1"
 							code-level="concept"
@@ -2601,51 +2616,53 @@
 
 
 			<layer name="Network Service" language="java">
-				<plugin
-						name="Shop"
-						description=""
-						difficulty="6"
-						code-level="concept"
-						>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>
-				<plugin
-						name="Brand"
-						description=""
-						difficulty="4"
-						code-level="development"
-						>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>
-				<plugin
-						name="Retailer"
-						description=""
-						difficulty="4"
-						code-level="concept"
-						>
-					<authors>
-						<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-						<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-					</authors>
-					<mantainers>
-					</mantainers>
-					<certifications>
-					</certifications>
-				</plugin>
+				<plugins>
+					<plugin
+							name="Shop"
+							description=""
+							difficulty="6"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Brand"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Retailer"
+							description=""
+							difficulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
 			</layer>
 		</column>
 
