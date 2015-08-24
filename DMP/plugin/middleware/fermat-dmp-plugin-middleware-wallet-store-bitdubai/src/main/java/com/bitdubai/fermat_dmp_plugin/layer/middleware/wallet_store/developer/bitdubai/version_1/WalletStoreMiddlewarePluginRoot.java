@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Wallet Store - MiddleWare
@@ -115,9 +116,7 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
          * I will try to open the database first, if it doesn't exists, then I create it
          */
         try {
-
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreMiddlewareDatabaseConstants.DATABASE_NAME);
-
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             try {
                 createWalletStoreMiddlewareDatabase();
@@ -142,14 +141,14 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
         }
 
 
-        //todo testing borrar
-        try {
-            UUID id = UUID.fromString("12f8ae20-4585-44a6-bacf-a09537984ab1");
-
-            this.setInstallationStatus(CatalogItems.SKIN, id, InstallationStatus.INSTALLED);
-        } catch (CantSetInstallationStatusException e) {
-            e.printStackTrace();
-        }
+//        //todo testing borrar
+//        try {
+//            UUID id = UUID.fromString("12f8ae20-4585-44a6-bacf-a09537984ab1");
+//
+//            this.setInstallationStatus(CatalogItems.SKIN, id, InstallationStatus.INSTALLED);
+//        } catch (CantSetInstallationStatusException e) {
+//            e.printStackTrace();
+//        }
 
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -223,12 +222,39 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.WalletStoreMiddlewarePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.exceptions.InconsistentDatabaseResultException");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseDao");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.CatalogItemInformation");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.WalletStoreManager");
         /**
          * I return the values.
          */
         return returnedClasses;
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return WalletStoreMiddlewarePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception exception) {
+            System.err.println("CantGetLogLevelByClass: " + exception.getMessage());
+            return LogLevel.MINIMAL_LOGGING;
+        }
+    }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
