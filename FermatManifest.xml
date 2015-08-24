@@ -1,6 +1,6 @@
 <fermat>
-	<columns>
-		<column code="COR" name="Core And Api" logo="COR_logo.png">
+	<platforms>
+		<platform code="COR" name="Core And Api" logo="COR_logo.png">
 			<layer name="Core" language="java">
 				<libraries>
 					<library
@@ -339,8 +339,8 @@
 					</library>
 				</libraries>
 			</layer>
-		</column>
-		<column code="PIP" name="Plug-ins Platform" logo="PIP_logo.png">
+		</platform>
+		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png">
 
 			<layer name="Niche Wallet" language="java-android"></layer>
 			<layer name="Reference Wallet" language="java-android"></layer>
@@ -1142,9 +1142,9 @@
 			</layer>
 			<layer name="empty layer 5"></layer>
 			<layer super_layer="OSA"></layer>
-		</column>
+		</platform>
 
-		<column code="WPD" name="Wallet Production and Distribution" logo="WPD_logo.png">
+		<platform code="WPD" name="Wallet Production and Distribution" logo="WPD_logo.png">
 
 			<layer name="Sub App" language="java-android">
 				<androids>
@@ -1463,9 +1463,9 @@
 					</plugin>
 				</plugins>
 			</layer>
-		</column>
+		</platform>
 
-		<column code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
+		<platform code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
 
 			<layer name="Niche Wallet"></layer>
 
@@ -2289,9 +2289,9 @@
 					</addon>
 				</addons>
 			</layer>
-		</column>
+		</platform>
 
-		<column code="SHP" name="Shopping Platform" logo="SHP_logo.png">
+		<platform code="SHP" name="Shopping Platform" logo="SHP_logo.png">
 			<layer name="Reference Wallet">
 				<androids>
 					<android
@@ -2739,9 +2739,9 @@
 					</plugin>
 				</plugins>
 			</layer>
-		</column>
+		</platform>
 
-		<column code="DAP" name="Digital Asset Platform" logo="DAP_logo.png">
+		<platform code="DAP" name="Digital Asset Platform" logo="DAP_logo.png">
 			<layer name="Reference Wallet">
 				<androids>
 					<android
@@ -2951,7 +2951,7 @@
 							name="Outgoing Intra User"
 							description=""
 							difficulty="10"
-							code-level="concept"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3070,9 +3070,9 @@
 
 				</plugins>
 			</layer>
-		</column>
+		</platform>
 
-		<column code="MKT" name="Marketing Platform" logo="MKT_logo.png">
+		<platform code="MKT" name="Marketing Platform" logo="MKT_logo.png">
 
 			<layer name="Sub App" language="java-android">
 				<androids>
@@ -3424,9 +3424,9 @@
 					</plugin>
 				</plugins>
 			</layer>
-		</column>
+		</platform>
 
-		<column code="CBP" name="Crypto Broker Platform" logo="CBP_logo.png">
+		<platform code="CBP" name="Crypto Broker Platform" logo="CBP_logo.png">
 			<layer name="Reference Wallet">
 				<androids>
 					<android
@@ -3905,9 +3905,9 @@
 
 				</plugins>
 			</layer>
-		</column>
+		</platform>
 
-	</columns>
+	</platforms>
 
 	<super_layers>
 		<super_layer code="P2P" name="Peer to Peer Network">
