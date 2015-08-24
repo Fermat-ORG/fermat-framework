@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.osa_android.DataBaseSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
+import java.io.Serializable;
+
 
 /**
  * Created by Natalia on 18/05/2015.
@@ -23,7 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
  * * * *
  */
 
-public class DataBaseSystemAndroidAddonRoot implements Addon,DataBaseSystemOs,Service {
+public class DataBaseSystemAndroidAddonRoot implements Addon,DataBaseSystemOs,Service,Serializable {
 
     /**
      * DataBaseSystemAndroidAddonRoot member variables.

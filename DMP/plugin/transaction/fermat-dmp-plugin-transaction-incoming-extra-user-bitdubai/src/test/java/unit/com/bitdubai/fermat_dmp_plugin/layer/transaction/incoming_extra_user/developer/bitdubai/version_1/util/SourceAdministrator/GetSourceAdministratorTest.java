@@ -35,7 +35,7 @@ public class GetSourceAdministratorTest {
     }
 
     @Test
-    public void GetSourceAdministrator(){
+    public void getSourceAdministrator(){
 
 
         testSourceAdministrator = new SourceAdministrator();

@@ -126,6 +126,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -143,7 +144,7 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class Platform {
+public class Platform  implements Serializable{
 
     /**
      * Represent the Logger

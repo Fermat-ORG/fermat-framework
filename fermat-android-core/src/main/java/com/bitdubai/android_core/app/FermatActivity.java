@@ -360,6 +360,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
          * Put tabs in pagerSlidingTabsStrp
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
+
+        pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
+
     }
 
     /**
@@ -402,6 +405,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
          * Put tabs in pagerSlidingTabsStrp
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
+
+
     }
 
     private List<android.support.v4.app.Fragment> getWalletFragments(String walletType) {
