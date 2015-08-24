@@ -2309,8 +2309,6 @@
 						<certifications>
 						</certifications>
 					</android>
-				</androids>
-				<androids>
 					<android
 							name="Brand Wallet"
 							description=""
@@ -2348,21 +2346,6 @@
 
 			<layer name="Sub App" language="java-android">
 				<androids>
-					<android
-							name="Asset Issuing"
-							description=""
-							difficulty="8"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
 					<android
 							name="Brand"
 							description=""
@@ -2613,7 +2596,6 @@
 					</plugin>
 				</plugins>
 			</layer>
-
 
 			<layer name="Network Service" language="java">
 				<plugins>
