@@ -212,8 +212,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      */
     @Override
     public void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException {
-        System.out.println("LLEGA");
-        System.out.println("catalogItem: "+catalogItem);
         getWalletStoreManager().publishWallet((CatalogItemImpl) catalogItem);
     }
 
