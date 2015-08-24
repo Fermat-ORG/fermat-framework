@@ -3525,12 +3525,12 @@
 				</plugins>
 			</layer>
 
-			<layer name="Digital Asset Transaction" language="java">
+			<layer name="Business Transaction" language="java">
 				<plugins>
 					<plugin
 							name="Crypto Initial Balance"
 							description=""
-							difficulty="1"
+							difficulty="10"
 							code-level="concept"
 							>
 						<authors>
@@ -3575,7 +3575,7 @@
 					<plugin
 							name="Broker Fiat Sale"
 							description=""
-							difficulty="1"
+							difficulty="10"
 							code-level="concept"
 							>
 						<authors>
@@ -3605,7 +3605,7 @@
 					<plugin
 							name="Broker Fiat Pruchase"
 							description=""
-							difficulty="1"
+							difficulty="10"
 							code-level="concept"
 							>
 						<authors>
@@ -3665,7 +3665,7 @@
 					<plugin
 							name="Whosale Fiat Sale"
 							description=""
-							difficulty="1"
+							difficulty="10"
 							code-level="concept"
 							>
 						<authors>
@@ -3679,6 +3679,43 @@
 					</plugin>
 				</plugins>
 			</layer>
+
+			<layer name="Digital Money Transaction" language="java">
+				<plugins>
+					<plugin
+							name="Send Crypto"
+							description=""
+							difficulty="10"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Receive Crypto"
+							description=""
+							difficulty="10"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+
 
 			<layer name="Wallet" language="java">
 				<plugins>
