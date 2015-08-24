@@ -43,6 +43,7 @@ public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.
 
     private Activities lastActivity;
 
+    private int size;
 
     /**
      * WalletNavigationStructure constructor
@@ -152,5 +153,13 @@ public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.
 
     public void setWalletType(String walletType) {
         this.walletType = walletType;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

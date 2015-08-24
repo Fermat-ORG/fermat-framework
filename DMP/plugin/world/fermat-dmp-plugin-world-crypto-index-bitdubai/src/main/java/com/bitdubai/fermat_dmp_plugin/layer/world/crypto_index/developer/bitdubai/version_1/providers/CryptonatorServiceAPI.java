@@ -6,6 +6,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,11 @@ public class CryptonatorServiceAPI {
     public String CompleteTickerURL;
     public List<String> ListTicker_btc_usd;
     public List<String> ListCompleteTicker;
-    public JSONObject jsonObject;
+    private JSONObject jsonFather;
+    private JSONObject jsonSon;
+
     JsonService jsonService = new JsonService();
+
 
     public String getCompleteTickerURL() {
         CompleteTickerURL="https://www.cryptonator.com/api/full/btc-usd";
@@ -29,19 +33,15 @@ public class CryptonatorServiceAPI {
     public String getTicker_btc_usdURL() {
         return Ticker_btc_usdURL="https://www.cryptonator.com/api/ticker/btc-usd";
     }
-    public List<String> getListTicker_btc_usd(String url) {
+    public List<String> getListTicker_btc_usd(String url) throws IOException, JSONException {
         ListTicker_btc_usd= new ArrayList<>();
-        jsonObject=jsonService.getJSONFromUrl(url);
+        jsonFather=jsonService.getJSONFromUrl(url);
 
         try {
-            ListTicker_btc_usd.add((String) jsonObject.get("ticker"));
-            ListTicker_btc_usd.add((String) jsonObject.get("base"));
-            ListTicker_btc_usd.add((String) jsonObject.get("target"));
-            ListTicker_btc_usd.add((String) jsonObject.get("price"));
-            ListTicker_btc_usd.add((String) jsonObject.get("volume"));
-            ListTicker_btc_usd.add((String) jsonObject.get("change"));
-            ListTicker_btc_usd.add((String) jsonObject.get("timestamp"));
-            ListTicker_btc_usd.add((String) jsonObject.get("success"));
+            ListTicker_btc_usd.add((String) jsonFather.get("ticker"));
+            ListTicker_btc_usd.add((String) jsonFather.get("timestamp"));
+            ListTicker_btc_usd.add((String) jsonFather.get("success"));
+            ListTicker_btc_usd.add((String) jsonFather.get("error"));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -49,19 +49,21 @@ public class CryptonatorServiceAPI {
 
         return ListTicker_btc_usd;
     }
-    public List<String> getListCompleteTicker(String url) {
+    public List<String> getListTicker_btc_usdTicker(String url) throws IOException, JSONException {
         ListTicker_btc_usd= new ArrayList<>();
-        jsonObject=jsonService.getJSONFromUrl(url);
+        jsonFather=jsonService.getJSONFromUrl(url);
+        jsonSon=jsonFather.getJSONObject("ticker");
+
        try {
 
-            ListTicker_btc_usd.add((String) jsonObject.get("ticker"));
-            ListTicker_btc_usd.add((String) jsonObject.get("base"));
-            ListTicker_btc_usd.add((String) jsonObject.get("timestamp"));
-            ListTicker_btc_usd.add((String) jsonObject.get("success"));
-            ListTicker_btc_usd.add((String) jsonObject.get("error"));
+            ListTicker_btc_usd.add(jsonSon.getString("base"));
+            ListTicker_btc_usd.add(jsonSon.getString("target"));
+            ListTicker_btc_usd.add(jsonSon.getString("price"));
+            ListTicker_btc_usd.add(jsonSon.getString("volume"));
+            ListTicker_btc_usd.add(jsonSon.getString("change"));
 
 
-        } catch (JSONException e) {
+       } catch (JSONException e) {
             e.printStackTrace();
         }
 
