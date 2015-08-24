@@ -19,29 +19,29 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.LanguageDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.SkinDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.DealsWithWalletLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguageManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -65,13 +65,12 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -108,9 +107,9 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * Represent the walletDescriptorFactoryProjectManager
+     * Represent the walletFactoryProjectManager
      */
-    private WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager;
+    private WalletFactoryProjectManager walletFactoryProjectManager;
 
     /**
      * Represent the walletStoreManager
@@ -176,14 +175,14 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         /*
          * Validate If all resources are not null
          */
-        if (logManager                                == null ||
-                errorManager                          == null ||
-                errorManager                      == null ||
-                walletDescriptorFactoryProjectManager == null ||
-                pluginFileSystem  == null ||
-                walletLanguageManager == null ||
-                walletSkinManager == null ||
-                pluginDatabaseSystem == null) {
+        if (logManager                      == null ||
+                errorManager                == null ||
+                errorManager                == null ||
+                walletFactoryProjectManager == null ||
+                pluginFileSystem            == null ||
+                walletLanguageManager       == null ||
+                walletSkinManager           == null ||
+                pluginDatabaseSystem        == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -192,7 +191,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("errorManager: " + errorManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("walletDescriptorFactoryProjectManager: " + walletDescriptorFactoryProjectManager);
+            contextBuffer.append("walletFactoryProjectManager: " + walletFactoryProjectManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("walletStoreManager: " + walletStoreManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -262,6 +261,12 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
                 throw new CantInitializeWalletPublisherMiddlewareDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
+        }finally {
+
+            //Close the database
+            if (dataBase != null){
+                dataBase.closeDatabase();
+            }
         }
 
     }
@@ -314,7 +319,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             throw pluginStartException;
         }
 
-        //test2();
+        test();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -420,11 +425,11 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
     /**
      * (non-Javadoc)
-     * @see DealsWithWalletFactory#setWalletDescriptorFactoryProjectManager(WalletDescriptorFactoryProjectManager)
+     * @see DealsWithWalletFactory#setWalletFactoryProjectManager(WalletFactoryProjectManager)
      */
     @Override
-    public void setWalletDescriptorFactoryProjectManager(WalletDescriptorFactoryProjectManager walletDescriptorFactoryProjectManager) {
-        this.walletDescriptorFactoryProjectManager = walletDescriptorFactoryProjectManager;
+    public void setWalletFactoryProjectManager(WalletFactoryProjectManager walletFactoryProjectManager) {
+        this.walletFactoryProjectManager = walletFactoryProjectManager;
     }
 
     /**
@@ -515,7 +520,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             WalletPublisherMiddlewareManager walletPublisherMiddlewareManager = getWalletPublisherMiddlewareManagerInstance();
 
-            WalletDescriptorFactoryProject walletDescriptorFactoryProject = constructWalletDescriptorFactoryProjectTest();
+            WalletFactoryProject walletFactoryProject = constructWalletFactoryProjectTest();
             byte[] icon = new byte[] { 0x11, 0x22, 0x33 };
             byte[] mainScreenShot = new byte[] { 0x11, 0x22, 0x33 };
             List<byte[]> screenShotDetails = new ArrayList<>();
@@ -533,7 +538,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             String signature = "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
 
 
-            walletPublisherMiddlewareManager.publishWallet(walletDescriptorFactoryProject, WalletCategory.REFERENCE_WALLET, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey, signature);
+            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, WalletCategory.REFERENCE_WALLET, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherIdentityPublicKey, signature);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -542,87 +547,19 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
     }
 
 
-    private WalletDescriptorFactoryProject constructWalletDescriptorFactoryProjectTest(){
+    private WalletFactoryProject constructWalletFactoryProjectTest(){
 
 
-        WalletDescriptorFactoryProject walletDescriptorFactoryProject = new WalletDescriptorFactoryProject() {
 
-            @Override
-            public List<LanguageDescriptorFactoryProject> getLanguages() {
-
-
-                List<LanguageDescriptorFactoryProject> languages = new ArrayList<>();
-                languages.add(getDefaultLanguage());
-
-                return languages;
-            }
+        WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
 
             @Override
-            public List<SkinDescriptorFactoryProject> getSkins() {
-
-                List<SkinDescriptorFactoryProject> skins = new ArrayList<>();
-                skins.add(getDefaultSkin());
-                return skins;
-            }
-
-            @Override
-            public void setLanguages(List<LanguageDescriptorFactoryProject> languages) {
-
-            }
-
-            @Override
-            public void setSkins(List<SkinDescriptorFactoryProject> skins) {
-
-            }
-
-            @Override
-            public DeveloperIdentity getDeveloperIdentity() {
-                return new DeveloperIdentity() {
-                    @Override
-                    public String getAlias() {
-                        return "R@rt3001";
-                    }
-
-                    @Override
-                    public String getPublicKey() {
-                        return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-                    }
-
-                    @Override
-                    public String createMessageSignature(String mensage) throws CantSingMessageException {
-                        return "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
-                    }
-                };
-            }
-
-            @Override
-            public SkinDescriptorFactoryProject getDefaultSkin() {
-                return constructSkinDescriptorFactoryProjectTest();
-            }
-
-            @Override
-            public LanguageDescriptorFactoryProject getDefaultLanguage() {
-                return constructLanguageDescriptorFactoryProjectTest();
-            }
-
-            @Override
-            public String getDeveloperPublicKey() {
+            public String getProjectPublicKey() {
                 return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             }
 
             @Override
-            public String getPublisherIdentityKey() {
-                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-            }
-
-            @Override
-            public UUID getId() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public UUID getWalletId() {
-                return UUID.randomUUID();
+            public void setProjectPublickKey(String publickKey) {
             }
 
             @Override
@@ -631,23 +568,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             }
 
             @Override
-            public Wallets getWalletType() {
-                return Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI;
-            }
-
-            @Override
-            public String getPath() {
-                return "";
-            }
-
-            @Override
-            public FactoryProjectState getState() {
-                return FactoryProjectState.CLOSED;
-            }
-
-            @Override
-            public DescriptorFactoryProjectType getDescriptorProjectType() {
-                return DescriptorFactoryProjectType.WALLET;
+            public void setName(String name) {
             }
 
             @Override
@@ -656,195 +577,148 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             }
 
             @Override
-            public int getDefaultSizeInBytes() {
-                return 100;
+            public void setDescription(String description) {
             }
 
+            @Override
+            public WalletType getWalletType() {
+                return null;
+            }
+
+            @Override
+            public void setWalletType(WalletType walletType) {
+
+            }
+
+            @Override
+            public WalletFactoryProjectState getProjectState() {
+                return null;
+            }
+
+            @Override
+            public void setProjectState(WalletFactoryProjectState projectState) {
+
+            }
+
+            @Override
+            public Timestamp getCreationTimestamp() {
+                return null;
+            }
+
+            @Override
+            public void setCreationTimestamp(Timestamp timestamp) {
+
+            }
+
+            @Override
+            public Timestamp getLastModificationTimestamp() {
+                return null;
+            }
+
+            @Override
+            public void setLastModificationTimeststamp(Timestamp timestamp) {
+
+            }
+
+            @Override
+            public int getSize() {
+                return 50;
+            }
+
+            @Override
+            public void setSize(int size) {
+
+            }
+
+            @Override
+            public Skin getDefaultSkin() {
+                return constructSkinTest();
+            }
+
+            @Override
+            public void setDefaultSkin(Skin skin) {
+
+            }
+
+            @Override
+            public List<Skin> getSkins() {
+                List<Skin> skins = new ArrayList<>();
+                skins.add(getDefaultSkin());
+                return skins;
+            }
+
+            @Override
+            public void setSkins(List<Skin> skins) {
+
+            }
+
+            @Override
+            public void deleteSkin(Skin skin) {
+
+            }
+
+            @Override
+            public Language getDefaultLanguage() {
+                return constructLanguageTest();
+            }
+
+            @Override
+            public void setDefaultLanguage(Language language) {
+
+            }
+
+            @Override
+            public List<Language> getLanguages() {
+                List<Language> languages = new ArrayList<>();
+                languages.add(getDefaultLanguage());
+                return languages;
+            }
+
+            @Override
+            public void setLanguages(List<Language> languages) {
+
+            }
+
+            @Override
+            public void deleteLanguage(Language language) {
+
+            }
+
+            @Override
+            public WalletNavigationStructure getNavigationStructure() {
+                return null;
+            }
+
+            @Override
+            public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
+
+            }
         };
 
-        return walletDescriptorFactoryProject;
+        return walletFactoryProject;
     }
 
 
-    private SkinDescriptorFactoryProject constructSkinDescriptorFactoryProjectTest(){
+    private Skin constructSkinTest(){
 
-        SkinDescriptorFactoryProject skin = new SkinDescriptorFactoryProject() {
+        Skin skin = new Skin();
 
-            @Override
-            public ScreenSize getScreenSize() {
-                return ScreenSize.MEDIUM;
-            }
-
-            @Override
-            public Designer getDesigner() {
-                return new Designer() {
-                    @Override
-                    public String getAlias() {
-                        return "R@rt3001";
-                    }
-
-                    @Override
-                    public String getPublicKey() {
-                        return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-                    }
-
-                    @Override
-                    public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
-                        return "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
-                    }
-                };
-            }
-
-            @Override
-            public String getDeveloperPublicKey() {
-                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-            }
-
-            @Override
-            public String getPublisherIdentityKey() {
-                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-            }
-
-            @Override
-            public UUID getId() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public UUID getWalletId() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public String getName() {
-                return "Skin test publication "+ System.currentTimeMillis();
-            }
-
-            @Override
-            public Wallets getWalletType() {
-                return Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI;
-            }
-
-            @Override
-            public String getPath() {
-                return "";
-            }
-
-            @Override
-            public FactoryProjectState getState() {
-                return FactoryProjectState.CLOSED;
-            }
-
-            @Override
-            public DescriptorFactoryProjectType getDescriptorProjectType() {
-                return DescriptorFactoryProjectType.SKIN;
-            }
-
-            @Override
-            public String getDescription() {
-                return "Skin Test Publication description "+ System.currentTimeMillis();
-            }
-
-            @Override
-            public int getDefaultSizeInBytes() {
-                return 50;
-            }
-        };
+        skin.setId(UUID.randomUUID());
+        skin.setName("Skin Publication Test " + System.currentTimeMillis());
+        skin.setScreenSize(ScreenSize.SMALL);
 
         return skin;
 
     }
 
 
-    private LanguageDescriptorFactoryProject constructLanguageDescriptorFactoryProjectTest(){
+    private Language constructLanguageTest(){
 
-        LanguageDescriptorFactoryProject language = new LanguageDescriptorFactoryProject() {
-            @Override
-            public Languages getLanguagesName() {
-                return Languages.ENGLISH;
-            }
-
-            @Override
-            public String getLanguageLabel() {
-                return Languages.ENGLISH.value();
-            }
-
-            @Override
-            public Translator getTranslator() {
-                return new Translator() {
-
-                    @Override
-                    public String getAlias() {
-                        return "R@rt3001";
-                    }
-
-                    @Override
-                    public String getPublicKey() {
-                        return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-                    }
-
-                    @Override
-                    public String createMessageSignature(String mensage) {
-                        return "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
-                    }
-                };
-            }
-
-            @Override
-            public String getDeveloperPublicKey() {
-                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-            }
-
-            @Override
-            public String getPublisherIdentityKey() {
-                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-            }
-
-            @Override
-            public UUID getId() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public UUID getWalletId() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public String getName() {
-                return "Language test publication "+ System.currentTimeMillis();
-            }
-
-            @Override
-            public Wallets getWalletType() {
-                return Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI;
-            }
-
-            @Override
-            public String getPath() {
-                return "";
-            }
-
-            @Override
-            public FactoryProjectState getState() {
-                return FactoryProjectState.CLOSED;
-            }
-
-            @Override
-            public DescriptorFactoryProjectType getDescriptorProjectType() {
-                return DescriptorFactoryProjectType.SKIN;
-            }
-
-            @Override
-            public String getDescription() {
-                return "Language Test Publication description "+ System.currentTimeMillis();
-            }
-
-            @Override
-            public int getDefaultSizeInBytes() {
-                return 50;
-            }
-        };
+        Language language = new Language();
+        language.setId(UUID.randomUUID());
+        language.setName("Language Publication Test " + System.currentTimeMillis());
+        language.setType(Languages.LATIN_AMERICAN_SPANISH);
+        language.setVersion(new Version(1,0,0));
 
         return language;
     }

@@ -8,6 +8,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.enums.InformationPublishedComponentType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
@@ -37,19 +38,19 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
     private UUID id;
 
     /**
-     * Represent the Descriptor Factory Project Id
+     * Represent the Wallet Factory Project Id
      */
-    private UUID descriptorFactoryProjectId;
+    private String walletFactoryProjectId;
 
     /**
-     * Represent the Descriptor Factory Project Name
+     * Represent the Wallet Factory Project Name
      */
-    private String descriptorFactoryProjectName;
+    private String walletFactoryProjectName;
 
     /**
      * Represent the Type
      */
-    private DescriptorFactoryProjectType type;
+    private InformationPublishedComponentType type;
 
     /**
      * Represent the Descriptions
@@ -120,8 +121,8 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      *
      * @param componentVersionDetailList
      * @param descriptions
-     * @param descriptorFactoryProjectId
-     * @param descriptorFactoryProjectName
+     * @param walletFactoryProjectId
+     * @param walletFactoryProjectName
      * @param iconImg
      * @param id
      * @param mainScreenShotImg
@@ -133,12 +134,12 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      * @param type
      * @param videoUrl
      */
-    public InformationPublishedComponentMiddlewareImpl(List<ComponentVersionDetail> componentVersionDetailList, String descriptions, UUID descriptorFactoryProjectId, String descriptorFactoryProjectName, Image iconImg, UUID id, Image mainScreenShotImg, Timestamp publicationTimestamp, String publisherIdentityPublicKey, List<Image> screensShotsComponentList, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, DescriptorFactoryProjectType type, URL videoUrl) {
+    public InformationPublishedComponentMiddlewareImpl(List<ComponentVersionDetail> componentVersionDetailList, String descriptions, String walletFactoryProjectId, String walletFactoryProjectName, Image iconImg, UUID id, Image mainScreenShotImg, Timestamp publicationTimestamp, String publisherIdentityPublicKey, List<Image> screensShotsComponentList, ComponentPublishedInformationStatus status, Timestamp statusTimestamp, InformationPublishedComponentType type, URL videoUrl) {
         super();
         this.componentVersionDetailList = componentVersionDetailList;
         this.descriptions = descriptions;
-        this.descriptorFactoryProjectId = descriptorFactoryProjectId;
-        this.descriptorFactoryProjectName = descriptorFactoryProjectName;
+        this.walletFactoryProjectId = walletFactoryProjectId;
+        this.walletFactoryProjectName = walletFactoryProjectName;
         this.iconImg = iconImg;
         this.id = id;
         this.mainScreenShotImg = mainScreenShotImg;
@@ -191,40 +192,40 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentMiddlewareImpl#getDescriptorFactoryProjectId()
+     * @see InformationPublishedComponentMiddlewareImpl#getWalletFactoryProjectId()
      */
     @Override
-    public UUID getDescriptorFactoryProjectId() {
-        return descriptorFactoryProjectId;
+    public String getWalletFactoryProjectId() {
+        return walletFactoryProjectId;
     }
 
 
     /**
-     * Set the descriptorFactoryProjectId
+     * Set the walletFactoryProjectId
      *
-     * @param descriptorFactoryProjectId
+     * @param walletFactoryProjectId
      */
-    public void setDescriptorFactoryProjectId(UUID descriptorFactoryProjectId) {
-        this.descriptorFactoryProjectId = descriptorFactoryProjectId;
+    public void setWalletFactoryProjectId(String walletFactoryProjectId) {
+        this.walletFactoryProjectId = walletFactoryProjectId;
     }
 
     /**
      * (non-Javadoc)
-     * @see InformationPublishedComponentMiddlewareImpl#getDescriptorFactoryProjectName()
+     * @see InformationPublishedComponentMiddlewareImpl#getWalletFactoryProjectName()
      */
     @Override
-    public String getDescriptorFactoryProjectName() {
-        return descriptorFactoryProjectName;
+    public String getWalletFactoryProjectName() {
+        return walletFactoryProjectName;
     }
 
 
     /**
-     * Set the descriptorFactoryProjectName
+     * Set the walletFactoryProjectName
      *
-     * @param descriptorFactoryProjectName
+     * @param walletFactoryProjectName
      */
-    public void setDescriptorFactoryProjectName(String descriptorFactoryProjectName) {
-        this.descriptorFactoryProjectName = descriptorFactoryProjectName;
+    public void setWalletFactoryProjectName(String walletFactoryProjectName) {
+        this.walletFactoryProjectName = walletFactoryProjectName;
     }
 
     /**
@@ -399,7 +400,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      * @see InformationPublishedComponentMiddlewareImpl#getType()
      */
     @Override
-    public DescriptorFactoryProjectType getType() {
+    public InformationPublishedComponentType getType() {
         return type;
     }
 
@@ -408,7 +409,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      *
      * @param type
      */
-    public void setType(DescriptorFactoryProjectType type) {
+    public void setType(InformationPublishedComponentType type) {
         this.type = type;
     }
 
@@ -460,8 +461,8 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
         return "InformationPublishedComponentMiddlewareImpl{" +
                 "componentVersionDetailList=" + componentVersionDetailList +
                 ", id=" + id +
-                ", descriptorFactoryProjectId=" + descriptorFactoryProjectId +
-                ", descriptorFactoryProjectName='" + descriptorFactoryProjectName + '\'' +
+                ", walletFactoryProjectId=" + walletFactoryProjectId +
+                ", walletFactoryProjectName='" + walletFactoryProjectName + '\'' +
                 ", type=" + type +
                 ", descriptions='" + descriptions + '\'' +
                 ", iconImg=" + iconImg +

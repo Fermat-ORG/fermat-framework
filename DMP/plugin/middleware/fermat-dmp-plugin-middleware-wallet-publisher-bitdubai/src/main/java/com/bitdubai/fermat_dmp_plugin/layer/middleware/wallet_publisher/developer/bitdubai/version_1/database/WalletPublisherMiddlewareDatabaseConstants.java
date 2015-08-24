@@ -29,8 +29,8 @@ public class WalletPublisherMiddlewareDatabaseConstants {
     public static final String INFORMATION_PUBLISHED_COMPONENTS_TABLE_NAME = "information_published_components";
 
     public static final String INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME = "id";
-    public static final String INFORMATION_PUBLISHED_COMPONENTS_DFP_ID_COLUMN_NAME = "dfp_id";
-    public static final String INFORMATION_PUBLISHED_COMPONENTS_DFP_NAME_COLUMN_NAME = "dfp_name";
+    public static final String INFORMATION_PUBLISHED_COMPONENTS_WFP_ID_COLUMN_NAME = "wfp_id";
+    public static final String INFORMATION_PUBLISHED_COMPONENTS_WFP_NAME_COLUMN_NAME = "wfp_name";
     public static final String INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME = "component_type";
     public static final String INFORMATION_PUBLISHED_COMPONENTS_DESCRIPTIONS_COLUMN_NAME = "descriptions";
     public static final String INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME = "icon_img";

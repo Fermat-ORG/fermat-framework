@@ -9,6 +9,7 @@ package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.enums.InformationPublishedComponentType;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -38,23 +39,23 @@ public interface InformationPublishedComponent {
     /**
      * Get the Descriptor Factory Project Id
      *
-     * @return UUID
+     * @return String
      */
-    public UUID getDescriptorFactoryProjectId();
+    public String getWalletFactoryProjectId();
 
     /**
      * Get the Descriptor Factory Project Name
      *
      * @return String
      */
-    public String getDescriptorFactoryProjectName();
+    public String getWalletFactoryProjectName();
 
     /**
      * Get the Type
      *
-     * @return DescriptorFactoryProjectType
+     * @return InformationPublishedComponentType
      */
-    public DescriptorFactoryProjectType getType();
+    public InformationPublishedComponentType getType();
 
     /**
      * Get the Descriptions
