@@ -46,7 +46,7 @@ import java.util.List;
  * haves all methods for the database tools activity of a developer
  * <p/>
  * <p/>
- * Created by Mati
+ * Created by Matias Furszyfer
  *
  * @version 1.0
  */
@@ -57,7 +57,6 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     View rootView;
 
     private DatabaseTool databaseTools;
-    private ErrorManager errorManager;
     private Resource resource;
 
     List<DeveloperDatabase> developerDatabaseList;
@@ -75,9 +74,9 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     DeveloperSubAppSession developerSubAppSession;
 
 
-    public static DatabaseToolsDatabaseListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppsSession) {
+    public static DatabaseToolsDatabaseListFragment newInstance(int position,DeveloperSubAppSession subAppsSession) {
         DatabaseToolsDatabaseListFragment f = new DatabaseToolsDatabaseListFragment();
-        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppsSession);
+        f.setDeveloperSubAppSession(subAppsSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -88,17 +87,16 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = developerSubAppSession.getErrorManager();
 
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
 
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            developerSubAppSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            developerSubAppSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -144,7 +142,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
             gridView.setAdapter(_adpatrer);
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            developerSubAppSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }

@@ -13,13 +13,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_hardware.Hardware;
 import com.bitdubai.fermat_pip_api.layer.pip_hardware.local_device.LocalDeviceHardwareManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by loui on 05/03/15.
  */
-public class LocalDeviceHardwareAddonRoot implements  Addon, DealsWithErrors,DealsWithEvents , DealsWithPlatformFileSystem, Hardware,LocalDeviceHardwareManager ,Service {
+public class LocalDeviceHardwareAddonRoot implements  Addon, DealsWithErrors,DealsWithEvents , DealsWithPlatformFileSystem, Hardware,LocalDeviceHardwareManager ,Service,Serializable {
 
     /**
      * DealWithEvents Interface member variables.

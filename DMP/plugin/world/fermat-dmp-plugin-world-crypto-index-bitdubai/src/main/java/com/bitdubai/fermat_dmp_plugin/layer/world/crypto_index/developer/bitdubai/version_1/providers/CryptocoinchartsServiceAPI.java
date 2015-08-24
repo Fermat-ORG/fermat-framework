@@ -1,10 +1,14 @@
 package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.JsonService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +35,10 @@ public class CryptocoinchartsServiceAPI {
     }
 
 
-    public String getTradingPair() {
-        tradingPair="http://api.cryptocoincharts.info/tradingPair/";
+    public String getTradingPair(String c, String f)  {
+
+        String pair = c + "_" + f;
+        tradingPair="http://api.cryptocoincharts.info/tradingPair/"+ pair;
         return tradingPair;
     }
 
@@ -47,7 +53,7 @@ public class CryptocoinchartsServiceAPI {
     }
 
     /** Return Many TradingPair from Cryptocoinchar **/
-    public List<String> getListTradingPair(String url){
+    public List<String> getListTradingPair(String url) throws IOException, JSONException {
         jsonList = new ArrayList<>();
         jsonObject=jsonService.getJSONFromUrl(url);
         try {
@@ -69,7 +75,7 @@ public class CryptocoinchartsServiceAPI {
         return jsonList;
     }
     /* list all coins with their data which are available on cryptocoincharts.*/
-    public List<String> getListCoin(String url){
+    public List<String> getListCoin(String url) throws IOException, JSONException {
         jsonList = new ArrayList<>();
         jsonObject=jsonService.getJSONFromUrl(url);
         try {

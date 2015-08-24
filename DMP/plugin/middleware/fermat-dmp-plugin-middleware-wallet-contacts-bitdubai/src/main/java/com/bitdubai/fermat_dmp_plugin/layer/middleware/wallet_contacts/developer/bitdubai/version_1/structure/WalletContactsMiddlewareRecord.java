@@ -68,12 +68,12 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     /**
      * Constructor with parameters
      *
-     * @param contactId contact's id
-     * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
      * @param actorId actor's id
+     * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
+     * @param contactId contact's id
      * @param actorName actor's id
      * @param actorType actor's type
-     * @param walletPublicKey wallet's id
+     * @param walletPublicKey wallet's public Key
      */
     public WalletContactsMiddlewareRecord(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, String walletPublicKey) {
         this.actorId = actorId;
