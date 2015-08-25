@@ -35,7 +35,7 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //subAppSession.getWalletDescriptorFactoryProjectManager().
+        //subAppSession.getWalletFactoryProjectManager().
     }
 
     @Override

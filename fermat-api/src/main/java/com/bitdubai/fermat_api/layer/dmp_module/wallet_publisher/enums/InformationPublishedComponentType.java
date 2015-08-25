@@ -1,24 +1,23 @@
 /*
- * @#DescriptorFactoryProjectType.java - 2015
+ * @#InformationPublishedComponentType.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums;
+package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType</code> define
- * all the types have a Descriptor Factory Project.
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.enums.InformationPublishedComponentType</code> > define
+ * all the types have a Information Published Component.
  * <p/>
- *
- * Created by Roberto Requena - (rart3001@gmail.com) on 06/08/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 24/08/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum DescriptorFactoryProjectType {
+public enum InformationPublishedComponentType {
 
     /**
      *  Definitions types
@@ -37,7 +36,7 @@ public enum DescriptorFactoryProjectType {
      *
      * @param code
      */
-    DescriptorFactoryProjectType(String code) {
+    InformationPublishedComponentType(String code) {
         this.code = code;
     }
 
@@ -52,10 +51,10 @@ public enum DescriptorFactoryProjectType {
      * Get the DescriptorFactoryProjectType representation from code
      *
      * @param code
-     * @return DescriptorFactoryProjectType
+     * @return InformationPublishedComponentType
      * @throws InvalidParameterException
      */
-    public static DescriptorFactoryProjectType getByCode(String code) throws InvalidParameterException {
+    public static InformationPublishedComponentType getByCode(String code) throws InvalidParameterException {
 
         switch(code) {
             case"W":
