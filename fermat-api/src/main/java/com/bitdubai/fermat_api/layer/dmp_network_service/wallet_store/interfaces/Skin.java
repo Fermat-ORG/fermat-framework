@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interface
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.*;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
 
