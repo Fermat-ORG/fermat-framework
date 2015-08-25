@@ -420,17 +420,18 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
              * Construct the message structure info
              */
 			JsonObject messageRespond = new JsonObject();
-            messageRespond.add("host", new JsonPrimitive(networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getHost()));
-            messageRespond.add("port", new JsonPrimitive(networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getPort()));
-            messageRespond.add("identityCloudNetworkServiceManager", new JsonPrimitive(networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getIdentityPublicKey()));
-            messageRespond.add("identityNetworkServiceRegistered", new JsonPrimitive(messageReceived.get("identityNetworkServicePublicKey").toString()));
+            messageRespond.addProperty("host", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getHost());
+            messageRespond.addProperty("port", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getPort());
+            messageRespond.addProperty("identityCloudNetworkServiceManager", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getIdentityPublicKey());
+            messageRespond.addProperty("identityNetworkServiceRegistered", messageReceived.get("identityNetworkServicePublicKey").toString());
+            String jsonMessageRespond = gson.toJson(messageRespond);
 
             /*
              * Construct a connection accept forward packet respond
              */
             responsePacket = FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(identity.getPublicKey(),      //sender
                                                                                         fMPPacketReceive.getSender(), //destination
-                                                                                        messageRespond.getAsString(),  // message
+                                                                                        jsonMessageRespond,  // message
                                                                                         FMPPacketType.CONNECTION_ACCEPT_FORWARD,
                                                                                         networkService,
                                                                                         identity.getPrivateKey());

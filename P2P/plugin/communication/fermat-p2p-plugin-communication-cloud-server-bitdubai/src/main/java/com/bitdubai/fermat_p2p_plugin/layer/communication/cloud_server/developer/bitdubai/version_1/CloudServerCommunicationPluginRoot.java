@@ -58,6 +58,26 @@ import java.util.regex.Pattern;
 public class CloudServerCommunicationPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     /**
+     * Represents the value of DISABLE_SERVER
+     */
+    public static final Boolean DISABLE_SERVER = Boolean.TRUE;
+
+    /**
+     * Represents the value of ENABLE_SERVER
+     */
+    public static final Boolean ENABLE_SERVER = Boolean.FALSE;
+
+    /**
+     * Represents the numbers of port PADDING between network services managers
+     */
+    private static final int PORTS_PADDING = 1000;
+
+    /**
+     * Represents the numbers of port to open to be available to a network services managers
+     */
+    private static final int PORTS_TO_OPEN_TO_BE_AVAILABLE = 20;
+
+    /**
      * Represents the numbers of Thread that have the pool
      */
     private static final int NUMBER_OF_THREADS = 30;
@@ -104,11 +124,24 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     private ExecutorService executorService;
 
     /**
+     * Represent the disableServerFlag
+     */
+    private Boolean disableServerFlag;
+
+    /**
+     * Represent the lastPortAssigned
+     */
+    private int lastPortAssigned;
+
+
+    /**
      * Constructor
      */
     public CloudServerCommunicationPluginRoot(){
         super();
         this.cloudServiceManagersCache = new HashMap<>();
+        this.disableServerFlag = Boolean.TRUE;
+        this.lastPortAssigned = CloudServerCommunicationPluginRoot.LISTENING_PORT;
     }
 
 
@@ -123,17 +156,28 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     private void initializeNetworkServicesSupported(CloudServiceManager cloudServiceManager, CommunicationChannelAddress communicationChannelAddressServer, NetworkServices networkService) throws CloudCommunicationException {
 
 
+        System.out.println("CloudServerCommunicationPluginRoot - initialize Network Services Supported "+networkService);
+
         /*
          * Create a new communication Channel Address
          */
-        CommunicationChannelAddress communicationChannelAddressNS = CommunicationChannelAddressFactory.constructCloudAddress(communicationChannelAddressServer.getHost(), (60000+1000));
+        CommunicationChannelAddress communicationChannelAddressNS = CommunicationChannelAddressFactory.constructCloudAddress(communicationChannelAddressServer.getHost(), (lastPortAssigned+=CloudServerCommunicationPluginRoot.PORTS_PADDING));
 
         /*
-         *  Generate 1 port available
+         *  Generate the ports available
          */
         List<Integer> availableVPNPorts = new ArrayList<>();
-        for (int i = 0; i <= 10; i++){
-            availableVPNPorts.add(communicationChannelAddressNS.getPort()+1);
+        for (int i = 0; i <= CloudServerCommunicationPluginRoot.PORTS_TO_OPEN_TO_BE_AVAILABLE; i++){
+
+            /*
+             * increase last assigned ports
+             */
+            lastPortAssigned = lastPortAssigned + i;
+
+            /*
+             * Add to the list
+             */
+            availableVPNPorts.add(lastPortAssigned);
         }
 
         /*
@@ -159,10 +203,12 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
         try {
 
-            if (true) //skip Start the server
+            if (disableServerFlag) {//skip Start the server
+                System.out.println("CloudServerCommunicationPluginRoot - Server is Disable, no started");
                 return;
+            }
 
-            System.out.println("Starting plugin CloudServerCommunicationPluginRoot");
+            System.out.println("CloudServerCommunicationPluginRoot - Starting plugin");
 
             /*
              * Create the pool of thread
@@ -219,8 +265,8 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                         /*
                          * Initialize network services manager supported
                          */
-                       // initializeNetworkServicesSupported(cloudServiceManager, communicationChannelAddress, NetworkServices.INTRA_USER);
-                       // initializeNetworkServicesSupported(cloudServiceManager, communicationChannelAddress, NetworkServices.TEMPLATE);
+                        initializeNetworkServicesSupported(cloudServiceManager, communicationChannelAddress, NetworkServices.INTRA_USER);
+                        initializeNetworkServicesSupported(cloudServiceManager, communicationChannelAddress, NetworkServices.TEMPLATE);
 
                         /*
                          * Put into the cache
@@ -231,6 +277,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                         System.out.println("Host = " + communicationChannelAddress.getHost());
                         System.out.println("Port = "     + communicationChannelAddress.getPort());
                         System.out.println("Identity Public Key = " + identity.getPublicKey());
+                        System.out.println("Last Port Assigned = " + lastPortAssigned);
                         System.out.println("Cloud Service Manager on " + networkInterface.getName() + " started.");
 
                     }
@@ -439,4 +486,21 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
        this.pluginId = pluginId;
     }
 
+    /**
+     * Get the disable server flag
+     *
+     * @return Boolean
+     */
+    public Boolean getDisableServerFlag() {
+        return disableServerFlag;
+    }
+
+    /**
+     * Set Disable Server Flag
+     *
+     * @param disableServerFlag
+     */
+    public void setDisableServerFlag(Boolean disableServerFlag) {
+        this.disableServerFlag = disableServerFlag;
+    }
 }
