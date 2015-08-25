@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
@@ -15,7 +16,7 @@ import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 /**
  * Created by natalia on 09/07/15.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
 

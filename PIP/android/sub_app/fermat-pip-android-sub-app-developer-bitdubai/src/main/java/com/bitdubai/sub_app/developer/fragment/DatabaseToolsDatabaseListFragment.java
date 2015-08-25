@@ -1,10 +1,7 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.app.AlertDialog;
-
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,16 +16,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -50,7 +47,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseListFragment extends Fragment {
+public class DatabaseToolsDatabaseListFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES.getKey();
@@ -67,16 +64,13 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
     private int database_type;
 
+    protected DeveloperSubAppSession developerSubAppSession;
 
-    /**
-     *SubApp session
-     */
-    DeveloperSubAppSession developerSubAppSession;
+
 
 
     public static DatabaseToolsDatabaseListFragment newInstance(int position,DeveloperSubAppSession subAppsSession) {
         DatabaseToolsDatabaseListFragment f = new DatabaseToolsDatabaseListFragment();
-        f.setDeveloperSubAppSession(subAppsSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -87,6 +81,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        //developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
 
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
@@ -200,7 +196,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                         params[0] = resource;
                         params[1] = developerDatabaseList.get(position);
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(com.bitdubai.sub_app.developer.FragmentFactory.Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),params);
 
 
                     }
