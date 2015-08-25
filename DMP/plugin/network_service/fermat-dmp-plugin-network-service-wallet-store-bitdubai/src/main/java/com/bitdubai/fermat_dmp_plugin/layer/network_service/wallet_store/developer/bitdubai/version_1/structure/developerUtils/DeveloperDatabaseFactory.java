@@ -171,6 +171,7 @@ public class DeveloperDatabaseFactory {
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
+
             selectedTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
