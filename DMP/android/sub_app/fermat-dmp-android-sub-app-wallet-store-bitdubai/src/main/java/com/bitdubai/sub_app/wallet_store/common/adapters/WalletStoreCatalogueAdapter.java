@@ -8,7 +8,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.sub_app.wallet_store.common.interfaces.CatalogItemListener;
 import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
 import com.wallet_store.bitdubai.R;
 
@@ -21,15 +20,8 @@ import java.util.ArrayList;
  * @author Nelson Ramirez
  */
 public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao, WalletStoreCatalogueAdapter.CatalogItemViewHolder> {
-    private CatalogItemListener listener;
-
     public WalletStoreCatalogueAdapter(Context context, ArrayList<CatalogueItemDao> dataSet) {
         super(context, dataSet);
-    }
-
-
-    public void setListener(CatalogItemListener listener) {
-        this.listener = listener;
     }
 
     @Override
@@ -64,7 +56,7 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao,
             walletPublisherName = (FermatTextView) itemView.findViewById(R.id.wallet_publisher_name);
             installStatus = (FermatTextView) itemView.findViewById(R.id.wallet_installation_status);
 
-            itemView.setOnClickListener(this);
+            this.itemView.setOnClickListener(this);
             installStatus.setOnClickListener(this);
         }
 
@@ -72,13 +64,16 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao,
         public void onClick(View view) {
             //TODO: TESTING...
             int layoutPosition = getLayoutPosition();
+            int adapterPosition = getAdapterPosition();
 
             if (view.getId() == R.id.wallet_installation_status) {
                 Toast.makeText(context,
-                        "Click en installStatus. LayoutPosition = " + layoutPosition + " - AdapterPosition = " + getAdapterPosition(),
+                        "Click en installStatus. LayoutPosition = " + layoutPosition + " - AdapterPosition = " + adapterPosition,
                         Toast.LENGTH_SHORT).show();
             } else {
-                listener.itemClicked(layoutPosition);
+                Toast.makeText(context,
+                        "Click en itemView. LayoutPosition = " + layoutPosition + " - AdapterPosition = " + adapterPosition,
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,6 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
-import com.bitdubai.sub_app.wallet_store.common.interfaces.CatalogItemListener;
 import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.wallet_store.bitdubai.R;
@@ -34,7 +32,7 @@ import java.util.List;
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MainActivityFragment extends FermatListFragment implements CatalogItemListener {
+public class MainActivityFragment extends FermatListFragment  {
     // STATIC
     private static final String ARG_POSITION = "position";
 
@@ -166,18 +164,18 @@ public class MainActivityFragment extends FermatListFragment implements CatalogI
         return layoutManager;
     }
 
-    @Override
-    public void itemClicked(int itemPos) {
-        CatalogueItemDao item = (CatalogueItemDao) adapter.getItem(itemPos);
-        if (item != null){
-            session.setCatalogItemDao(item);
-            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0, session);
-
-            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
-            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            FT.replace(R.id.activity_container, fragment);
-            FT.addToBackStack(null);
-            FT.commit();
-        }
-    }
+//    @Override
+//    public void itemClicked(int itemPos) {
+//        CatalogueItemDao item = (CatalogueItemDao) adapter.getItem(itemPos);
+//        if (item != null){
+//            session.setCatalogItemDao(item);
+//            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0, session);
+//
+//            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
+//            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//            FT.replace(R.id.activity_container, fragment);
+//            FT.addToBackStack(null);
+//            FT.commit();
+//        }
+//    }
 }
