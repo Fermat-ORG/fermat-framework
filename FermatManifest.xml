@@ -2188,15 +2188,15 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="100"></author>
-							<author name="laderuner" scope="unit-tests" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+							<author name="nattyco" scope="unit-tests" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="lnacosta"></mantainer>
+							<mantainer name="nattyco"></mantainer>
 						</mantainers>
 						<certifications>
-							<certification type="implementation" signed-by="acostarodrigo"></certification>
-							<certification type="testing" signed-by="jorgeejgonzalez"></certification>
+							<certification type="implementation" signed-by=""></certification>
+							<certification type="testing" signed-by=""></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -2208,10 +2208,11 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="100"></author>
-							<author name="lnacosta" scope="unit-tests" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+							<author name="nattyco" scope="unit-tests" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="nattyco"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
