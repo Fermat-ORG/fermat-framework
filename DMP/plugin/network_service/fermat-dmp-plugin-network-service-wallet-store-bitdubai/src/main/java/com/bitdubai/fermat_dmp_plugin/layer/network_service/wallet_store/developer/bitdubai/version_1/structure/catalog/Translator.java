@@ -1,13 +1,16 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog;
 
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException;
+
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 7/23/15.
  */
-public class Translator implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator {
+//public class Translator implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator {
+public class Translator implements com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator {
     UUID id;
-    String name;
+    String alias;
     String publicKey;
 
     /**
@@ -19,23 +22,22 @@ public class Translator implements com.bitdubai.fermat_api.layer.dmp_network_ser
     /**
      * overloaded constructor
      * @param id
-     * @param name
+     * @param alias
      * @param publicKey
      */
-    public Translator(UUID id, String name, String publicKey) {
+    public Translator(UUID id, String alias, String publicKey) {
         this.id = id;
-        this.name = name;
+        this.alias = alias;
         this.publicKey = publicKey;
     }
 
-    @Override
     public UUID getId() {
         return id;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getAlias() {
+        return alias;
     }
 
     @Override
@@ -43,12 +45,18 @@ public class Translator implements com.bitdubai.fermat_api.layer.dmp_network_ser
         return publicKey;
     }
 
+    @Override
+    public String createMessageSignature(String mensage) throws CantSingMessageException
+    {
+        return null;
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public void setPublicKey(String publicKey) {
