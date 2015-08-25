@@ -5,9 +5,11 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 
+import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
@@ -41,8 +43,6 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.E
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -52,36 +52,26 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.exceptions.CantLoadLoginsFileException;
 import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation;
 import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity;
 import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUsersModuleLoginConstants;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
-import org.jdom2.*;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.XMLOutputter;
 
-import java.io.IOException;
-import java.io.StringReader;
+
+
 
 /**
  * This plug-in provides the methods for the Intra Users sub app.
@@ -101,6 +91,9 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
 
     private PluginTextFile intraUserLoginXml;
 
+    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+
+    private XMLParser xmlParser = new XMLParser();
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -264,7 +257,6 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
             /**
              * Save on xml file the last intra user logged
              */
-            SAXBuilder builder = new SAXBuilder();
 
             /**
              * load file content
@@ -273,22 +265,11 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
             loadSettingsFile();
 
             /**
-             * Get language settings on xml
-             */
-
-            Document document = (Document) builder.build(new StringReader(this.intraUserLoginXml.getContent()));
-
-            Element rootNode = document.getRootElement();
-
-            /**
              * save logged intra user
              */
-            rootNode.getChild(IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ID_NODE).setText(this.intraUserLoggedPublicKey);
+            intraUserSettings.setLoggedInPublicKey(this.intraUserLoggedPublicKey);
 
-
-            XMLOutputter xmOut = new XMLOutputter();
-
-            intraUserLoginXml.setContent(xmOut.outputString(document));
+            intraUserLoginXml.setContent(xmlParser.parseObject(intraUserSettings));
 
             /**
              * persist xml file
@@ -719,11 +700,9 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
         {
             this.serviceStatus = ServiceStatus.STARTED;
 
-
             /**
              * Get from xml file the last intra user logged
              */
-            SAXBuilder builder = new SAXBuilder();
 
             /**
              * load file content
@@ -731,27 +710,16 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
 
             loadSettingsFile();
 
-            /**
-             * Get language settings on xml
-             */
-
-            Document document = (Document) builder.build(new StringReader(this.intraUserLoginXml.getContent()));
-
-            Element rootNode = document.getRootElement();
 
             /**
              * get last logged intra user
              */
-            this.intraUserLoggedPublicKey = rootNode.getChildText(IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ID_NODE).toString();
+            this.intraUserLoggedPublicKey = intraUserSettings.getLoggedInPublicKey();
 
         }
         catch (CantLoadLoginsFileException e)
         {
             throw new CantStartPluginException("Error load logins xml file",e);
-        }
-        catch(JDOMException| IOException e)
-        {
-            throw new CantStartPluginException("Error parse logins xml file",e);
         }
         catch(Exception e)
         {
@@ -799,7 +767,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
          */
 
         private void loadSettingsFile() throws CantLoadLoginsFileException {
-            StringBuffer strXml = new StringBuffer();
+
             try
             {
                 /**
@@ -807,6 +775,8 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
                  * If not exists I created it.
                  * * *
                  */
+
+               // pluginFileSystem.deleteTextFile(pluginId, pluginId.toString(), INTRA_USER_LOGIN_FILE_NAME,FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 intraUserLoginXml = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), INTRA_USER_LOGIN_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
                 /**
@@ -814,22 +784,11 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
                  */
                 intraUserLoginXml.loadFromMedia();
 
+                String xml = intraUserLoginXml.getContent();
 
-                //if context empty I create xml structure
+                intraUserSettings = (IntraUserSettings) xmlParser.parseXML(xml, intraUserSettings);
 
-                if(intraUserLoginXml.getContent().equals("") ){
-                    /**
-                     * make default xml structure
-                     */
-                    strXml.append("<"+ IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ROOT +">");
-                    strXml.append("<"+ IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ID_NODE +">"+ this.intraUserLoggedPublicKey +"</"+ IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ID_NODE +">");
-                      strXml.append("</"+ IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ROOT +">");
 
-                    intraUserLoginXml.setContent(strXml.toString());
-
-                    intraUserLoginXml.persistToMedia();
-
-                }
             } catch (FileNotFoundException fileNotFoundException) {
                 /**
                  * If the file did not exist it is not a problem. It only means this is the first time this plugin is running.
@@ -853,11 +812,8 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
                     /**
                      * make default xml structure
                      */
-                    strXml.append("<"+ IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ROOT +">");
-                    strXml.append("<"+ IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ID_NODE +">"+ this.intraUserLoggedPublicKey +"</"+ IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ID_NODE +">");
-                    strXml.append("</"+ IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ROOT +">");
 
-                    intraUserLoginXml.setContent(strXml.toString());
+                    intraUserLoginXml.setContent(xmlParser.parseObject(intraUserSettings));
 
                     intraUserLoginXml.persistToMedia();
                 }

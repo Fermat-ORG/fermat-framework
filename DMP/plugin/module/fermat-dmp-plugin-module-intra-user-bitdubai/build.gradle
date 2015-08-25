@@ -16,10 +16,9 @@ dependencies {
 
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
-    compile 'org.jdom:jdom:2.0.2'
+
 
     testCompile 'junit:junit:4.11'
-    testCompile 'org.robolectric:robolectric:3.0-rc3'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
