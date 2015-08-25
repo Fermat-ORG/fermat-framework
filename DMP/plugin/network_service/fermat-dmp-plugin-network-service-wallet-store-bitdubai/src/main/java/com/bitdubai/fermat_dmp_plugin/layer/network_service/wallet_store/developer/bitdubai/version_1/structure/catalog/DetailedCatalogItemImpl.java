@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
     Version version;
     Version platformInitialVersion;
     Version platformFinalVersion;
-    Developer developer;
+    DeveloperIdentity developer;
     Designer designer;
 
     /**
@@ -44,7 +45,7 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
      * @param platformInitialVersion
      * @param platformFinalVersion
      */
-    public DetailedCatalogItemImpl(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, Developer developer, Designer designer) {
+    public DetailedCatalogItemImpl(Language language, List<Language> languages, Skin defaultSkin, List<Skin> skins, Version version, Version platformInitialVersion, Version platformFinalVersion, DeveloperIdentity developer, Designer designer) {
         this.language = language;
         this.languages = languages;
         this.defaultSkin = defaultSkin;
@@ -92,7 +93,7 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
     }
 
     @Override
-    public Developer getDeveloper() { return developer; }
+    public DeveloperIdentity getDeveloper() { return developer; }
 
     @Override
     public Designer getDesigner() {return designer; }
@@ -125,7 +126,7 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
         this.platformFinalVersion = platformFinalVersion;
     }
 
-    public void setDeveloper(Developer developer) {
+    public void setDeveloper(DeveloperIdentity developer) {
         this.developer= developer;
     }
 }
