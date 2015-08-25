@@ -208,6 +208,7 @@ public class AndroidDatabase implements Database, DatabaseFactory,Serializable {
 
             database.setTransactionSuccessful();
             database.endTransaction();
+
         }catch(Exception exception) {
 
             /**
@@ -221,6 +222,9 @@ public class AndroidDatabase implements Database, DatabaseFactory,Serializable {
             String possibleReason = "The most reasonable thing to do here is check the cause as this is a triggered exception that can come from many situations";
 
             throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
+
+        }finally {
+            closeDatabase();
         }
     }
 
