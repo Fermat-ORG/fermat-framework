@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_store.Model.App;
 import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
@@ -35,7 +36,7 @@ import java.util.List;
 
 
 
-public class AllFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class AllFragment extends FermatFragment implements SearchView.OnQueryTextListener {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;

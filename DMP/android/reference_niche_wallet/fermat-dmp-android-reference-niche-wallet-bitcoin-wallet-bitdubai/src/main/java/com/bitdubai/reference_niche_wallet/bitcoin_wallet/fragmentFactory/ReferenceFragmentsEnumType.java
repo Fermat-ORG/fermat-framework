@@ -1,11 +1,11 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.WalletFragments;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
-public enum Fragments implements WalletFragments {
+public enum ReferenceFragmentsEnumType implements FermatFragmentsEnumType<ReferenceFragmentsEnumType> {
 
 
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND("CWRWBTCABS"),
@@ -23,26 +23,31 @@ public enum Fragments implements WalletFragments {
 
     private String key;
 
-    Fragments(String key) {
+    ReferenceFragmentsEnumType(String key) {
         this.key = key;
     }
 
+    @Override
     public String getKey()   { return this.key; }
 
 
-
+    @Override
     public String toString(){
         return key;
     }
 
-    public static Fragments getValueFromString(String name) {
-        for (Fragments fragments : Fragments.values()) {
+    public static ReferenceFragmentsEnumType getValue(String name) {
+        for (ReferenceFragmentsEnumType fragments : ReferenceFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {
                 return fragments;
             }
         }
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
+
+
         return null;
     }
+
+
 }

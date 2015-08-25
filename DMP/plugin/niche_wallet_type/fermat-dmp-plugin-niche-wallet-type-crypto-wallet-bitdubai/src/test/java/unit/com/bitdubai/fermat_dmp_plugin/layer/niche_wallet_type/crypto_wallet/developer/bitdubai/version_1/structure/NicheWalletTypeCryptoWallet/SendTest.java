@@ -72,7 +72,6 @@ public class SendTest extends TestCase {
 
     long cryptoAmount;
     CryptoAddress destinationAddress;
-    UUID walletId;
     String walletPublicKey;
     String notes;
     UUID deliveredByActorId;
@@ -86,7 +85,6 @@ public class SendTest extends TestCase {
     public void setUp() throws Exception {
         cryptoAmount = 1;
         destinationAddress = new CryptoAddress("asdasd", CryptoCurrency.BITCOIN);
-        walletId = UUID.randomUUID();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         notes = "NOTE";
         deliveredByActorId = UUID.randomUUID();
