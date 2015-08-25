@@ -12,11 +12,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_factory.R;
 
 
-public  class SendFragment extends Fragment {
+public  class SendFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
 

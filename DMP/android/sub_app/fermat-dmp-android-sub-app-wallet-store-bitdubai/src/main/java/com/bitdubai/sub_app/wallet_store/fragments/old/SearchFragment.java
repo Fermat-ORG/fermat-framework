@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_store.common.models.old.App;
 import com.bitdubai.sub_app.wallet_store.common.models.old.ItemsBD;
@@ -29,7 +30,7 @@ import java.util.List;
 //import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;

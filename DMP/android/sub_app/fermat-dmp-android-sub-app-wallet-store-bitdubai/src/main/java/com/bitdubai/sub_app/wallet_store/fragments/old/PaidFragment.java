@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_store.common.models.old.App;
 import com.bitdubai.sub_app.wallet_store.common.models.old.ItemsBD;
@@ -27,7 +28,7 @@ import java.util.List;
 
 
 
-public class PaidFragment extends Fragment {
+public class PaidFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;

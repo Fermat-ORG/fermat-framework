@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
@@ -59,6 +60,12 @@ public class GetCryptoWalletTest extends TestCase {
     ExtraUserManager extraUserManager;
 
     /**
+     * LogManagerForDevelopers interface Mocked
+     */
+    @Mock
+    LogManager logManager;
+
+    /**
      * DealsWithOutgoingExtraUser interface Mocked
      */
     @Mock
@@ -87,6 +94,7 @@ public class GetCryptoWalletTest extends TestCase {
         cryptoWalletNicheWalletTypePluginRoot.setCryptoVaultManager(cryptoVaultManager);
         cryptoWalletNicheWalletTypePluginRoot.setErrorManager(errorManager);
         cryptoWalletNicheWalletTypePluginRoot.setExtraUserManager(extraUserManager);
+        cryptoWalletNicheWalletTypePluginRoot.setLogManager(logManager);
         cryptoWalletNicheWalletTypePluginRoot.setOutgoingExtraUserManager(outgoingExtraUserManager);
         cryptoWalletNicheWalletTypePluginRoot.setWalletAddressBookManager(walletAddressBookManager);
         cryptoWalletNicheWalletTypePluginRoot.setWalletContactsManager(walletContactsManager);

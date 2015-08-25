@@ -136,7 +136,8 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
                     case EXTRA_USER:
                         image = extraUserManager.getPhoto(r.getActorId());
                         break;
-                    default: throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+                    default:
+                        throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
                 }
                 r.setPhoto(image);
                 finalRecordList.add(r);
@@ -241,7 +242,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         switch (actor) {
             case EXTRA_USER:
                 this.extraUserManager.setPhoto(actorId,photo);
-            default: throw new CantUpdateWalletContactException("Actor not expected",null,"The actor type is:" + actor.getCode(),"Incomplete switch");
+                break;
+            default:
+                throw new CantUpdateWalletContactException("Actor not expected",null,"The actor type is:" + actor.getCode(),"Incomplete switch");
         }
     }
 
@@ -254,7 +257,8 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
                 case EXTRA_USER:
                     image = extraUserManager.getPhoto(walletContactRecord.getActorId());
                     break;
-                default: throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+                default:
+                    throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
             }
             walletContactRecord.setPhoto(image);
             return walletContactRecord;

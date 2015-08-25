@@ -65,14 +65,12 @@ public class GetAvailableBalanceTest extends TestCase {
     @Mock
     BitcoinWalletWallet bitcoinWalletWallet;
 
-    UUID walletId;
     String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
-        walletId = UUID.randomUUID();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);

@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.fragments.old;
+package com.bitdubai.sub_app.wallet_store.fragment;
 
 import android.app.Fragment;
 import android.app.Service;
@@ -19,6 +19,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_store.common.models.old.App;
 import com.bitdubai.sub_app.wallet_store.common.models.old.ItemsBD;
@@ -30,7 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AllFragment extends Fragment implements SearchView.OnQueryTextListener {
+
+public class AllFragment extends FermatFragment implements SearchView.OnQueryTextListener {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
