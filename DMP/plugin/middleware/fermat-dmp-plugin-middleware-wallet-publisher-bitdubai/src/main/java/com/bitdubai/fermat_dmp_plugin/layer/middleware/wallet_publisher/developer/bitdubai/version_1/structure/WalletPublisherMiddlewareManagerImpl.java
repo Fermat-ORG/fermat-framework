@@ -313,9 +313,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
             informationPublishedComponentMiddlewareImpl.setMainScreenShotImg(mainScreenShotImg);
 
-            // Save into data base
-            informationPublishedComponentDao.create(informationPublishedComponentMiddlewareImpl);
-
             /* --------------------------
              * Create the version details
              * --------------------------
@@ -333,8 +330,11 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             componentVersionDetailMiddlewareImpl.setComponentId(informationPublishedComponentMiddlewareImpl.getId());
             componentVersionDetailMiddlewareImpl.setCatalogId(catalogItem.getId());
 
-            // Save into data base
-            componentVersionDetailDao.create(componentVersionDetailMiddlewareImpl);
+            /*--------------------------
+             * Create the images
+             * --------------------------
+             */
+            List<ImageMiddlewareImpl> images = new ArrayList<>();
 
             /*
              * Validate not null
@@ -351,12 +351,13 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                     screenShotImg.setFileId(UUID.randomUUID());
                     screenShotImg.setComponentId(informationPublishedComponentMiddlewareImpl.getId());
                     screenShotImg.setData(mainScreenShot);
-
-                    // Save into data base
-                    screensShotsComponentsDao.create(screenShotImg);
+                    images.add(screenShotImg);
                 }
             }
 
+
+            // Save into data base
+            informationPublishedComponentDao.create(informationPublishedComponentMiddlewareImpl, componentVersionDetailMiddlewareImpl, images);
 
 
             /* -------------------------------------
