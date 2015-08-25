@@ -9,17 +9,19 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.develope
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
@@ -54,6 +56,26 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 public class CloudServerCommunicationPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+
+    /**
+     * Represents the value of DISABLE_SERVER
+     */
+    public static final Boolean DISABLE_SERVER = Boolean.TRUE;
+
+    /**
+     * Represents the value of ENABLE_SERVER
+     */
+    public static final Boolean ENABLE_SERVER = Boolean.FALSE;
+
+    /**
+     * Represents the numbers of port PADDING between network services managers
+     */
+    private static final int PORTS_PADDING = 1000;
+
+    /**
+     * Represents the numbers of port to open to be available to a network services managers
+     */
+    private static final int PORTS_TO_OPEN_TO_BE_AVAILABLE = 20;
 
     /**
      * Represents the numbers of Thread that have the pool
@@ -102,11 +124,72 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     private ExecutorService executorService;
 
     /**
+     * Represent the disableServerFlag
+     */
+    private Boolean disableServerFlag;
+
+    /**
+     * Represent the lastPortAssigned
+     */
+    private int lastPortAssigned;
+
+
+    /**
      * Constructor
      */
     public CloudServerCommunicationPluginRoot(){
         super();
         this.cloudServiceManagersCache = new HashMap<>();
+        this.disableServerFlag = Boolean.TRUE;
+        this.lastPortAssigned = CloudServerCommunicationPluginRoot.LISTENING_PORT;
+    }
+
+
+    /**
+     * This method initialize the network services manager supported
+     *
+     * @param cloudServiceManager
+     * @param communicationChannelAddressServer
+     * @param networkService
+     * @throws CloudCommunicationException
+     */
+    private void initializeNetworkServicesSupported(CloudServiceManager cloudServiceManager, CommunicationChannelAddress communicationChannelAddressServer, NetworkServices networkService) throws CloudCommunicationException {
+
+
+        System.out.println("CloudServerCommunicationPluginRoot - initialize Network Services Supported "+networkService);
+
+        /*
+         * Create a new communication Channel Address
+         */
+        CommunicationChannelAddress communicationChannelAddressNS = CommunicationChannelAddressFactory.constructCloudAddress(communicationChannelAddressServer.getHost(), (lastPortAssigned+=CloudServerCommunicationPluginRoot.PORTS_PADDING));
+
+        /*
+         *  Generate the ports available
+         */
+        List<Integer> availableVPNPorts = new ArrayList<>();
+        for (int i = 0; i <= CloudServerCommunicationPluginRoot.PORTS_TO_OPEN_TO_BE_AVAILABLE; i++){
+
+            /*
+             * increase last assigned ports
+             */
+            lastPortAssigned = lastPortAssigned + i;
+
+            /*
+             * Add to the list
+             */
+            availableVPNPorts.add(lastPortAssigned);
+        }
+
+        /*
+         * Create a new identity
+         */
+        ECCKeyPair netWorkServiceIdentity = new ECCKeyPair();
+
+        /*
+         *  register the manager
+         */
+        cloudServiceManager.registerNetworkServiceManager(new CloudNetworkServiceManager(communicationChannelAddressNS, executorService, netWorkServiceIdentity, networkService, availableVPNPorts));
+
     }
 
 
@@ -120,10 +203,12 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
         try {
 
-            if (true) //skip Start the server
+            if (disableServerFlag) {//skip Start the server
+                System.out.println("CloudServerCommunicationPluginRoot - Local Server is Disable, no started");
                 return;
+            }
 
-            System.out.println("Starting plugin CloudServerCommunicationPluginRoot");
+            System.out.println("CloudServerCommunicationPluginRoot - Starting plugin");
 
             /*
              * Create the pool of thread
@@ -178,6 +263,12 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                         cloudServiceManager.start();
 
                         /*
+                         * Initialize network services manager supported
+                         */
+                        initializeNetworkServicesSupported(cloudServiceManager, communicationChannelAddress, NetworkServices.INTRA_USER);
+                        initializeNetworkServicesSupported(cloudServiceManager, communicationChannelAddress, NetworkServices.TEMPLATE);
+
+                        /*
                          * Put into the cache
                          */
                         cloudServiceManagersCache.put(networkInterface.getName(), cloudServiceManager);
@@ -186,6 +277,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                         System.out.println("Host = " + communicationChannelAddress.getHost());
                         System.out.println("Port = "     + communicationChannelAddress.getPort());
                         System.out.println("Identity Public Key = " + identity.getPublicKey());
+                        System.out.println("Last Port Assigned = " + lastPortAssigned);
                         System.out.println("Cloud Service Manager on " + networkInterface.getName() + " started.");
 
                     }
@@ -194,6 +286,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
             }
         } catch (SocketException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }catch (CloudCommunicationException e) {
             e.printStackTrace();
@@ -393,4 +486,21 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
        this.pluginId = pluginId;
     }
 
+    /**
+     * Get the disable server flag
+     *
+     * @return Boolean
+     */
+    public Boolean getDisableServerFlag() {
+        return disableServerFlag;
+    }
+
+    /**
+     * Set Disable Server Flag
+     *
+     * @param disableServerFlag
+     */
+    public void setDisableServerFlag(Boolean disableServerFlag) {
+        this.disableServerFlag = disableServerFlag;
+    }
 }

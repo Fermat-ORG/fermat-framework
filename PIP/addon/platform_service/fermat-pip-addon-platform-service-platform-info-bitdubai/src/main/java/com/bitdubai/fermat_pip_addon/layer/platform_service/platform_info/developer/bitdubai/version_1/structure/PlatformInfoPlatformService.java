@@ -13,12 +13,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by natalia on 29/07/15.
  */
-public class PlatformInfoPlatformService implements DealsWithPlatformFileSystem{
+public class PlatformInfoPlatformService implements DealsWithPlatformFileSystem,Serializable {
     PlatformInfo platformInfo;
 
     /**

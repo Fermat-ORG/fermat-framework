@@ -85,6 +85,7 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.dev
 import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.WalletNavigationStructureManagerMiddlewarePluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -92,7 +93,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 02.02.15.
  */
-public class PluginsIdentityManager {
+public class PluginsIdentityManager implements Serializable{
 
     private static final Integer AMOUNT_OF_KNOWN_PLUGINS = 64;
 

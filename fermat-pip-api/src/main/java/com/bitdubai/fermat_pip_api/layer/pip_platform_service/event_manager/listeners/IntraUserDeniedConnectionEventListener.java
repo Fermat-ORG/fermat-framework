@@ -1,15 +1,17 @@
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners;
 
-import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventMonitor;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+
+import java.io.Serializable;
 
 /**
  * Created by natalia on 17/08/15.
  */
-public class IntraUserDeniedConnectionEventListener implements EventListener {
+public class IntraUserDeniedConnectionEventListener implements EventListener,Serializable {
     EventMonitor eventMonitor;
     private EventType eventType;
     private EventHandler eventHandler;

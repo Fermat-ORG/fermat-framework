@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
@@ -21,8 +21,8 @@ import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.v
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -41,7 +41,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFa
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by ciencias on 22.01.15.

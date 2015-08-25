@@ -63,6 +63,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
@@ -359,6 +360,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
          * Put tabs in pagerSlidingTabsStrp
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
+
+        pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
+
     }
 
     /**
@@ -401,6 +405,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
          * Put tabs in pagerSlidingTabsStrp
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
+
+
     }
 
     private List<android.support.v4.app.Fragment> getWalletFragments(String walletType) {
@@ -810,6 +816,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     public WalletSettingsManager getWalletSettingsManager() {
         return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
+    }
+    /**
+     *  Get SubAppSettingsManager
+     */
+    public SubAppSettingsManager getSubAppSettingsManager() {
+        return (SubAppSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_SUB_APP_SETTINGS_MIDDLEWARE);
     }
     /**
      *  Get WalletResourcesProvider

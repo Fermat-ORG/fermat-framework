@@ -102,8 +102,6 @@ UUID pluginId;
         public void startTest_IntraUserModulePluginRootCanStarted_throwsCantStartPluginException() throws Exception {
 
             when(mockIntraUserLoginXml.getContent()).thenReturn("");
-            testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
-            testIntraUserModulePluginRoot.setId(pluginId);
 
             catchException(testIntraUserModulePluginRoot).start();
 

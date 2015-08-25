@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -35,10 +35,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
@@ -360,7 +360,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Wallet Store");
-            runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN);
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
             runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
@@ -639,7 +639,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 //            listSubApp.put(SubApps.CWP_WALLET_STORE, runtimeSubApp);
 
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN);
+            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
             runtimeSubApp.addActivity(runtimeActivity);
 
 
@@ -731,12 +731,14 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
         /*-- wallet store --*/
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
-            listSubApp.put(SubApps.CWP_WALLET_STORE,runtimeSubApp);
+            listSubApp.put(SubApps.CWP_WALLET_STORE, runtimeSubApp);
 
+
+            //Activity 1
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN);
-            runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN);
-
+            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+            runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+            runtimeSubApp.addActivity(runtimeActivity);
             runtimeActivity.setColor("#b46a54");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
@@ -748,11 +750,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
-            runtimeTabStrip = new TabStrip();
-            runtimeTabStrip.setTabsColor("#d07b62");
-            runtimeTabStrip.setTabsTextColor("#FFFFFF");
-            runtimeTabStrip.setTabsIndicateColor("#b46a54");
-            runtimeSubApp.addActivity(runtimeActivity);
+//            runtimeTabStrip = new TabStrip();
+//            runtimeTabStrip.setTabsColor("#d07b62");
+//            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+//            runtimeTabStrip.setTabsIndicateColor("#b46a54");
+
 
 
             //mati
@@ -762,48 +764,89 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
-            runtimeTabStrip = new TabStrip();
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("All");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Free");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Paid");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Accepted nearby");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT);
-            runtimeTabStrip.addTab(runtimeTab);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
+
+            //Activity 2
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setColor("#b46a54");
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#b46a54");
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Wallet Store");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeSearchView = new SearchView();
+            runtimeSearchView.setLabel("Search");
+            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey(), runtimeFragment);
+
+            //Activity 3
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY);
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setColor("#b46a54");
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#b46a54");
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Wallet Store");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeSearchView = new SearchView();
+            runtimeSearchView.setLabel("Search");
+            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
+
+
+
+
+//            runtimeTabStrip = new TabStrip();
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("All");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT);
+//            runtimeTabStrip.addTab(runtimeTab);
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("Free");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT);
+//            runtimeTabStrip.addTab(runtimeTab);
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("Paid");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT);
+//            runtimeTabStrip.addTab(runtimeTab);
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("Accepted nearby");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT);
+//            runtimeTabStrip.addTab(runtimeTab);
             /*runtimeTab = new Tab();
             runtimeTab.setLabel("Search gone");
             runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_SEARCH_MODE);
             runtimeTabStrip.addTab(runtimeTab);*/
 
 
-            runtimeActivity.setTabStrip(runtimeTabStrip);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey(), runtimeFragment);
+            //runtimeActivity.setTabStrip(runtimeTabStrip);
 
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey(), runtimeFragment);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
-
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT.getKey(), runtimeFragment);
+//            runtimeFragment = new Fragment();
+//            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey(), runtimeFragment);
+//
+//            runtimeFragment = new Fragment();
+//            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
+//
+//
+//            runtimeFragment = new Fragment();
+//            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT.getKey(), runtimeFragment);
 
             /*runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_STORE_SEARCH_MODE);

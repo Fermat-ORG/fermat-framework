@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +44,10 @@ public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.
 
     private Activities lastActivity;
 
+    private int size;
+
+
+    private DeveloperIdentity developer;
 
     /**
      * WalletNavigationStructure constructor
@@ -57,8 +62,6 @@ public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.
     public WalletNavigationStructure(Map<Activities, Activity> activities) {
         this.activities = activities;
     }
-
-
 
 
     /**
@@ -154,5 +157,21 @@ public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.
 
     public void setWalletType(String walletType) {
         this.walletType = walletType;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public DeveloperIdentity getDeveloper() {
+        return developer;
+    }
+
+    public void setDeveloper(DeveloperIdentity developer) {
+        this.developer = developer;
     }
 }

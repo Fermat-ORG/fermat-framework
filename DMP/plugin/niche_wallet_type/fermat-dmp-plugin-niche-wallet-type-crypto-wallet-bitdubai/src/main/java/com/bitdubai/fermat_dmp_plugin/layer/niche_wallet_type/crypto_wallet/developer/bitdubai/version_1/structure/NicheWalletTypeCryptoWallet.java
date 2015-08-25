@@ -7,12 +7,18 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.*;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantDeleteWalletContactException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantUpdateWalletContactException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWithOutgoingExtraUser;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
@@ -144,7 +150,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException {
+    public List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey,
+                                                                 Integer max,
+                                                                 Integer offset) throws CantGetAllWalletContactsException {
         try {
             List<WalletContactRecord> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
@@ -169,8 +177,12 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
 
 
     @Override
-    public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType,
-                                                   ReferenceWallet referenceWallet, String walletPublicKey, byte[] photo) throws CantCreateWalletContactException {
+    public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress,
+                                                   String actorName,
+                                                   Actors actorType,
+                                                   ReferenceWallet referenceWallet,
+                                                   String walletPublicKey,
+                                                   byte[] photo) throws CantCreateWalletContactException {
         try{
             WalletContactRecord walletContactRecord;
             walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletPublicKey(actorName, walletPublicKey);
@@ -234,11 +246,34 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
+    public WalletContactRecord findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException {
+        try {
+            WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByContactId(contactId);
+            byte[] image;
+            switch (walletContactRecord.getActorType()) {
+                case EXTRA_USER:
+                    image = extraUserManager.getPhoto(walletContactRecord.getActorId());
+                    break;
+                default: throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+            }
+            walletContactRecord.setPhoto(image);
+            return walletContactRecord;
+        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
+            throw new CantFindWalletContactException(CantFindWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
+            throw new WalletContactNotFoundException(WalletContactNotFoundException.DEFAULT_MESSAGE, e);
+        } catch (Exception e) {
+            throw new CantFindWalletContactException(CantFindWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
     public CryptoAddress requestAddress(UUID deliveredByActorId, Actors deliveredByActorType, String deliveredToActorName, Actors deliveredToActorType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
             deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletPublicKey, referenceWallet);
             createAndRegisterActor(deliveredByActorId, deliveredByActorType, deliveredToActorName, deliveredToActorType, deliveredCryptoAddress);
+            System.out.println("im a delivered address: "+deliveredCryptoAddress.getAddress());
             return deliveredCryptoAddress;
         } catch (CantCreateOrRegisterActorException e) {
             throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
@@ -255,6 +290,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
             CryptoAddress deliveredCryptoAddress;
             deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletPublicKey, referenceWallet);
             actorAddressBookRegistry.registerActorAddressBook(deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType, deliveredCryptoAddress);
+            System.out.println("im a delivered address: " + deliveredCryptoAddress.getAddress());
             return deliveredCryptoAddress;
         } catch (CantRequestOrRegisterCryptoAddressException e) {
             throw new CantRequestCryptoAddressException(CantRequestCryptoAddressException.DEFAULT_MESSAGE, e);
@@ -509,8 +545,11 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
                 break;
             case DEBIT:
                 try {
-                    WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorId(bitcoinWalletTransaction.getActorTo());
-                    involvedActorName = walletContactRecord.getActorName();
+                    List<WalletContactRecord> walletContactRecordList = walletContactsRegistry.getWalletContactsByActorId(bitcoinWalletTransaction.getActorTo());
+                    if (!walletContactRecordList.isEmpty())
+                        involvedActorName = walletContactRecordList.get(0).getActorName();
+                    else
+                        throw new FermatException("Contact for that actor not found", null, null, null);
                 } catch(Exception e) {
                     involvedActorName = getActorNameByActorIdAndType(bitcoinWalletTransaction.getActorTo(), bitcoinWalletTransaction.getActorToType());
                 }

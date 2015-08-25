@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.NetworkServiceAlreadyRegisteredException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 /**
@@ -413,23 +415,25 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
              * Get identity of the remote network service in the value of the message
              */
             Gson gson = new Gson();
-            JsonObject messageReceived = gson.fromJson(fMPPacketReceive.getMessage(), JsonObject.class);
+            JsonParser parser = new JsonParser();
+            JsonObject messageReceived = parser.parse(fMPPacketReceive.getMessage()).getAsJsonObject();
 
             /*
              * Construct the message structure info
              */
 			JsonObject messageRespond = new JsonObject();
-            messageRespond.add("host", new JsonPrimitive(networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getHost()));
-            messageRespond.add("port", new JsonPrimitive(networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getPort()));
-            messageRespond.add("identityCloudNetworkServiceManager", new JsonPrimitive(networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getIdentityPublicKey()));
-            messageRespond.add("identityNetworkServiceRegistered", new JsonPrimitive(messageReceived.get("identityNetworkServicePublicKey").toString()));
+            messageRespond.addProperty("host", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getHost());
+            messageRespond.addProperty("port", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getPort());
+            messageRespond.addProperty("identityCloudNetworkServiceManager", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getIdentityPublicKey());
+            messageRespond.addProperty("identityNetworkServiceRegistered", messageReceived.get("identityNetworkServicePublicKey").toString());
+            String jsonMessageRespond = gson.toJson(messageRespond);
 
             /*
              * Construct a connection accept forward packet respond
              */
             responsePacket = FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(identity.getPublicKey(),      //sender
                                                                                         fMPPacketReceive.getSender(), //destination
-                                                                                        messageRespond.getAsString(),  // message
+                                                                                        jsonMessageRespond,  // message
                                                                                         FMPPacketType.CONNECTION_ACCEPT_FORWARD,
                                                                                         networkService,
                                                                                         identity.getPrivateKey());
@@ -539,6 +543,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		String possibleReason = "We are registring a NetworkService that has already been registered, check the invocations to this method";
 		return new NetworkServiceAlreadyRegisteredException(message, cause, context, possibleReason);
 	}
+
 
 
 

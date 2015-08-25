@@ -1,68 +1,33 @@
 package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BterServiceAPI;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
 
 /**
  * Created by francisco on 13/08/15.
  */
 public class JsonService {
 
-    static InputStream is = null;
-    static JSONObject jObj = null;
-    static String json = "";
-
-    BterServiceAPI bterServiceAPI = new BterServiceAPI();
-
-    public static JSONObject getJSONFromUrl(String url) {
-
-        try {
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
-
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-            HttpEntity httpEntity = httpResponse.getEntity();
-            is = httpEntity.getContent();
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "iso-8859-1"), 8);
+       public String readAll(Reader rd) throws IOException {
             StringBuilder sb = new StringBuilder();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-                System.out.println(line);
+            int cp;
+            while ((cp = rd.read()) != -1) {
+                sb.append((char) cp);
             }
-            is.close();
-            json = sb.toString();
-
-        } catch (Exception e) {
+            return sb.toString();
         }
 
-        try {
-            jObj = new JSONObject(json);
-        } catch (JSONException e) {
+        public JSONObject getJSONFromUrl(String url) throws JSONException, IOException {
+                InputStream is = new URL(url).openStream();
+                BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                String jsonText = readAll(rd);
+                JSONObject json = new JSONObject(jsonText);
+                return json;
         }
-
-        return jObj;
 
     }
 
-
-}

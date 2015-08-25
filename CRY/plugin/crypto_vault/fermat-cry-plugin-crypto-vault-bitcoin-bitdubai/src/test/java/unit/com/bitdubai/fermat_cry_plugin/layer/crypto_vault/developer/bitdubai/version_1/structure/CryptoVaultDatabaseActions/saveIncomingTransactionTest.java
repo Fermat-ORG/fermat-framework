@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -26,7 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
@@ -185,7 +185,7 @@ public class saveIncomingTransactionTest {
                                 }
 
                                 @Override
-                                public void setStateValue(String columnName, FactoryProjectState state) {
+                                public void setStateValue(String columnName, WalletFactoryProjectState state) {
 
                                 }
 
@@ -268,7 +268,7 @@ public class saveIncomingTransactionTest {
                         }
 
                         @Override
-                        public void setStateFilter(String columName, FactoryProjectState factoryProjectState, DatabaseFilterType type) {
+                        public void setStateFilter(String columName, WalletFactoryProjectState factoryProjectState, DatabaseFilterType type) {
 
                         }
 

@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -29,7 +29,6 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.Wallet
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -50,10 +49,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 
 import java.util.ArrayList;
@@ -1233,7 +1232,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     @Override
     public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure){
         String publiKey=walletNavigationStructure.getPublicKey();
-        System.out.println("HOLAAAAAAAAAAAAAAAAAAAA MATIIIIIIIIII");
         try {
             String navigationStructureXml = parseNavigationStructureXml(walletNavigationStructure);
             String navigationStructureName=publiKey+".xml";

@@ -2,9 +2,9 @@ package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.eve
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 import java.util.UUID;
 

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.*;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatResource;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -31,6 +32,8 @@ public class Resource implements Serializable {
     private ResourceType resourceType;
 
     private ResourceDensity resourceDensity;
+
+    File resourceFile;
 
 
     /**
@@ -73,7 +76,6 @@ public class Resource implements Serializable {
         return fileName;
     }
 
-
     public ResourceType getResourceType() {
         return resourceType;
     }
@@ -95,5 +97,21 @@ public class Resource implements Serializable {
 
     public void setResourceType(ResourceType resourceType) {
         this.resourceType = resourceType;
+    }
+
+    public ResourceDensity getResourceDensity() {
+        return resourceDensity;
+    }
+
+    public void setResourceDensity(ResourceDensity resourceDensity) {
+        this.resourceDensity = resourceDensity;
+    }
+
+    public File getResourceFile() {
+        return resourceFile;
+    }
+
+    public void setResourceFile(File resourceFile) {
+        this.resourceFile = resourceFile;
     }
 }

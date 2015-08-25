@@ -3,20 +3,21 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventMonitor;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionDeniedEvent;
+
+import java.io.Serializable;
 
 /**
  * Created by natalia on 17/08/15.
  */
-public class IntraUserDeniedConnectionEventHandlers implements EventHandler {
+public class IntraUserDeniedConnectionEventHandlers implements EventHandler,Serializable {
     /**
      * listener  INTRA_USER_CONNECTION_DENIED event
      * Change Actor status to DENIED

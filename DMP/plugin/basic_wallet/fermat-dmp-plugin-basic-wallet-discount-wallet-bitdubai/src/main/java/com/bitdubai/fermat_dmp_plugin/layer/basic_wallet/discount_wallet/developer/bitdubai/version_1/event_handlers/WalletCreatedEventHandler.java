@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletCreatedEvent;
 
 import java.util.UUID;
