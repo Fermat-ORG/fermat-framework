@@ -1618,7 +1618,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
+							<author name="laderuner" scope="implementation" percentage="60"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="furszy"></mantainer>
@@ -1635,7 +1635,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
+							<author name="laderuner" scope="implementation" percentage="60"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="furszy"></mantainer>
@@ -1652,7 +1652,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
+							<author name="laderuner" scope="implementation" percentage="60"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="furszy"></mantainer>
