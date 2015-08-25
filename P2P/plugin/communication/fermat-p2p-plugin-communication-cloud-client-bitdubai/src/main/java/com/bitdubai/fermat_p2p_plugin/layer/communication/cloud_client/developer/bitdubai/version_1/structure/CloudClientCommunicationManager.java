@@ -36,6 +36,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSignatureException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 
@@ -241,7 +242,8 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
              * Get the JsonObject structure from the message
              */
             Gson gson = new Gson();
-            JsonObject messageReceived = gson.fromJson(decryptedMessage, JsonObject.class);
+            JsonParser parser = new JsonParser();
+            JsonObject messageReceived = parser.parse(decryptedMessage).getAsJsonObject();
 
             /*
              * Construct the CommunicationChannelAddress

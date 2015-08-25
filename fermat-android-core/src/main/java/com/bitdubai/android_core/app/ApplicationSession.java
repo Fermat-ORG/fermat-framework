@@ -1,9 +1,13 @@
 package com.bitdubai.android_core.app;
 
 
+import android.support.multidex.MultiDexApplication;
+
 import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
 import com.bitdubai.fermat_core.Platform;
+
+import java.io.Serializable;
 
 
 /**
@@ -18,7 +22,7 @@ import com.bitdubai.fermat_core.Platform;
  */
 
 
-public class ApplicationSession extends android.support.multidex.MultiDexApplication {
+public class ApplicationSession extends MultiDexApplication implements Serializable {
 
     /**
      * Application states

@@ -17,7 +17,6 @@ import java.util.UUID;
  */
 public class WalletManagerMiddlewareInstalledLanguage implements InstalledLanguage {
 
-
     private Languages languages;
     private UUID id;
     private String label;
@@ -26,7 +25,6 @@ public class WalletManagerMiddlewareInstalledLanguage implements InstalledLangua
     /**
      * Constructor
      */
-
     public WalletManagerMiddlewareInstalledLanguage(UUID id,Languages languages, String label,Version version){
         this.id = id;
         this.languages = languages;
@@ -56,7 +54,6 @@ public class WalletManagerMiddlewareInstalledLanguage implements InstalledLangua
         return this.languages;
     }
 
-
     /**
      * This method gives us the label of the language package. </p></>
      * E.g: the language could be english and the label UK.
@@ -71,7 +68,6 @@ public class WalletManagerMiddlewareInstalledLanguage implements InstalledLangua
      * This method gives us the version of the language package
      *
     */
-
     @Override
     public Version getVersion() {
         return version;

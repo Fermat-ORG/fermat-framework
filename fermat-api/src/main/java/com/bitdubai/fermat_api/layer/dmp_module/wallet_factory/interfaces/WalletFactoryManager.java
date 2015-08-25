@@ -4,13 +4,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletDescriptorFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantRemoveWalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableDevelopersException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableProjectsException;
@@ -21,8 +22,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletDescriptorFactoryProjectManager</code>
- * indicates the functionality of a WalletDescriptorFactoryProjectManager
+ * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryProjectManager</code>
+ * indicates the functionality of a WalletFactoryProjectManager
  * <p/>
  *
  *  Created by Matias Furszyfer
@@ -32,26 +33,18 @@ public interface WalletFactoryManager {
 
     WalletFactoryDeveloper getLoggedDeveloper();
 
-    List<WalletFactoryDeveloper> getAvailableDevelopers() throws CantGetAvailableDevelopersException;
+    List<WalletFactoryProject> getAvailableProjects() throws CantGetAvailableProjectsException;
 
-    List<FactoryProject> getAvailableProjects() throws CantGetAvailableProjectsException;
+    public WalletFactoryProject createEmptyProject()throws CantCreateWalletDescriptorFactoryProjectException;
 
-    public FactoryProject createEmptyProject(String name, WalletCategory walletCategory,WalletType walletType)throws CantCreateWalletDescriptorFactoryProjectException;
+    public void saveProject(WalletFactoryProject walletFactoryProject)throws CantSaveWalletFactoryProyect;
 
-    public void saveProject(FactoryProject walletFactoryProject)throws CantSaveWalletFactoryProyect;
+    public void removeProject(WalletFactoryProject walletFactoryProject) throws CantRemoveWalletFactoryProject;
 
-    public void removeyProject(FactoryProject walletFactoryProject) throws CantRemoveWalletFactoryProject;
+    public WalletFactoryProject getProject(String publicKey)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
-    public void importProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException;
+    public List<WalletFactoryProject> getClosedProjects() throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
-    public FactoryProject getProject(String name)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
-
-    public List<FactoryProject> getClosedProjects(FactoryProjectState state)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
-
-    public FactoryProject closeProject(String name)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
-
-    public Skin getSkin(UUID skinId) throws CantGetSkinException;
-
-    public Language getLanguage(UUID languageId) throws CantGetLanguageException;
+    public void closeProject(WalletFactoryProject walletFactoryProject)throws CantGetWalletFactoryProjectException;
 
 }

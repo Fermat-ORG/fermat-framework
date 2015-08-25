@@ -80,10 +80,6 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         return languagePackageSizeInBytes;
     }
 
-    //@Override Eliminar
-    //public URL getFileURL() {
-    //    return url;
-    //}
 
     @Override
     public Version getVersion() {
@@ -130,9 +126,6 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         this.languagePackageSizeInBytes = languagePackageSizeInBytes;
     }
 
-    //public void setUrl(URL url) { Eliminar
-    //    this.url = url;
-    //}
 
     public void setVersion(Version version) {
         this.version = version;

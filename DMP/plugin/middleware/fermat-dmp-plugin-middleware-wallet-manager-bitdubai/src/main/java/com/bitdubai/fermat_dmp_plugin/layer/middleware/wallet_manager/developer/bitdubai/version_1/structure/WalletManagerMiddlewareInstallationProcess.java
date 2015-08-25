@@ -44,7 +44,6 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
     /**
      * Constructor
      */
-
     public WalletManagerMiddlewareInstallationProcess(WalletResourcesInstalationManager walletResources, WalletCategory walletCategory, String walletPlatformIdentifier, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.walletResources = walletResources;
         this.walletCategory = walletCategory;
@@ -68,7 +67,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
 
         try {
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
-            walletManagerDao.getInstalletWalletByCatalogueId(walletCatalogueId);
+            walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
             return true;
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantExecuteDatabaseOperationException(exception,"Error checking if the wallet is installed","Please, check the cause");
@@ -114,6 +113,8 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                  */
                 //TODO: se necesita pasarle la public key de la wallet  instalar al resources
                 //walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion);
+                //TODO: erase this test line.
+                walletResources.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0","TestPublicKey");
                 /**
                  * Persist wallet info in database
                  */

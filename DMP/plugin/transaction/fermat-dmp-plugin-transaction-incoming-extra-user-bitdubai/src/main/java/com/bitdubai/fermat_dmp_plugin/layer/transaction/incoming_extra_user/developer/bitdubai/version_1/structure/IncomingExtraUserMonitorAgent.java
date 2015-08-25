@@ -263,9 +263,6 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
                 return;
             }
-            if(eventWrapper != null){
-
-            }
         }
 
         private void processEvent(IncomingExtraUserRegistry.EventWrapper eventWrapper) {

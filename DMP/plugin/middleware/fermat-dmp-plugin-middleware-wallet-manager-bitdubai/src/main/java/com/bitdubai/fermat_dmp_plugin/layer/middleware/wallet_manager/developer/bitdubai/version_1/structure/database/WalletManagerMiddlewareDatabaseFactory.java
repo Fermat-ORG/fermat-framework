@@ -56,8 +56,6 @@ public class WalletManagerMiddlewareDatabaseFactory implements DealsWithPluginDa
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-
-
         /**
          * Next, I will add the needed tables.
          */

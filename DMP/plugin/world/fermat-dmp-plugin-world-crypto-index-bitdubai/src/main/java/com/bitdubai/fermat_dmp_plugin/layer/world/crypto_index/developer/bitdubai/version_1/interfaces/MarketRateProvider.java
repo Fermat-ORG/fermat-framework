@@ -13,15 +13,9 @@ import java.util.List;
  */
 public interface MarketRateProvider {
 
-    double getMarketExchangeRate(String pair, long time,String url, String jsonField);
-    //double getMarketExchangeRate();
-    JSONObject jsonInterface(String url);
-    /**Interface Pair Crypto Fiat**/
-    String pairCryptoFiat (CryptoCurrency c, FiatCurrency f);
-    /**Interface Pair Fiat Crypto**/
-    String pairFiatCrypto (CryptoCurrency c, FiatCurrency f);
-    /**Interface Pair Crypto Crypto**/
-    String pairCryptoCrypto(CryptoCurrency c1, CryptoCurrency c2);
-    /**Interface Pair Fiat Fiat**/
-    String pairFiatFiat(FiatCurrency f1, FiatCurrency f2);
+    double getHistoricalExchangeRate(CryptoCurrency c, FiatCurrency f , long time);
+
+
+
+
 }
