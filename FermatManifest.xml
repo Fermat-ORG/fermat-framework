@@ -440,21 +440,7 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-							name="Device Private Network"
-							description=""
-							difficulty="1"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
+
 					<android
 							name="Feedback"
 							description=""
@@ -595,21 +581,6 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Device Private Network"
-							description=""
-							difficulty="1"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
 							name="Feedback"
 							description=""
 							difficulty="1"
@@ -643,8 +614,6 @@
 			</layer>
 
 			<layer name="Agent" language="java"></layer>
-
-			<layer super_layer="DPN"></layer>
 
 			<layer name="Actor" language="java">
 				<plugins>
@@ -884,21 +853,6 @@
 					</plugin>
 					<plugin
 							name="Error Manager"
-							description=""
-							difficulty="5"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Device Private Network"
 							description=""
 							difficulty="5"
 							code-level="concept"
@@ -4891,6 +4845,96 @@
 			</layer>
 
 		</platform>
+
+		<platform code="DPN" name="Device Private Network" logo="DPN_logo.png">
+
+			<layer name="Sub App" language="java-android">
+				<androids>
+					<android
+							name="Device Private Network"
+							description=""
+							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
+			<layer name="Sub App Module" language="java">
+				<plugins>
+
+					<plugin
+							name="Device Private Network"
+							description=""
+							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+				</plugins>
+			</layer>
+
+			<layer name="Middleware" language="java">
+				<plugins>
+
+					<plugin
+							name="Device Private Network"
+							description=""
+							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+				</plugins>
+			</layer>
+
+			<layer name="Network Service" language="java">
+				<plugins>
+
+					<plugin
+							name="Device Private Network"
+							description=""
+							difficulty="5"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+				</plugins>
+			</layer>
+		</platform>
+
 
 </platforms>
 
