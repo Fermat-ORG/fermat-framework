@@ -3980,7 +3980,7 @@
 							name="Crypto Wholesaler"
 							description=""
 							difficulty="8"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3996,7 +3996,7 @@
 							name="Crypto Distributor"
 							description=""
 							difficulty="8"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4012,7 +4012,7 @@
 							name="Top Up Point"
 							description=""
 							difficulty="8"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4028,7 +4028,7 @@
 							name="Cash Out Point"
 							description=""
 							difficulty="8"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4048,7 +4048,7 @@
 							name="Crypto Wholesaler"
 							description=""
 							difficulty="5"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4064,7 +4064,7 @@
 							name="Crypto Distributor"
 							description=""
 							difficulty="5"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4080,7 +4080,7 @@
 							name="Top Up Point"
 							description=""
 							difficulty="5"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4096,7 +4096,7 @@
 							name="Cash Out Point"
 							description=""
 							difficulty="5"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
