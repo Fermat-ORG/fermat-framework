@@ -588,7 +588,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeTab = new Tab();
             runtimeTab.setLabel("Wallet Publisher");
-            runtimeTab.setFragment(Fragments. CWP_WALLET_PUBLISHER_MAIN_FRAGMENT);
+            runtimeTab.setFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT);
 
             runtimeTabStrip.addTab(runtimeTab);
 
@@ -596,10 +596,12 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeSubApp.addActivity(runtimeActivity);
 
+
+
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey(), runtimeFragment);
-
+            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey());
 
 
             /**End Wallet Publisher*/

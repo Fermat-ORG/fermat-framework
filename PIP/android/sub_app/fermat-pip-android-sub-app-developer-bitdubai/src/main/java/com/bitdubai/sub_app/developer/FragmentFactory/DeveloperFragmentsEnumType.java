@@ -1,12 +1,12 @@
 package com.bitdubai.sub_app.developer.FragmentFactory;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.WalletFragments;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public enum Fragments implements WalletFragments {
+public enum DeveloperFragmentsEnumType implements FermatFragmentsEnumType<DeveloperFragmentsEnumType> {
 
 
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT("CWDTDLF"),
@@ -22,20 +22,22 @@ public enum Fragments implements WalletFragments {
 
     private String key;
 
-    Fragments(String key) {
+    DeveloperFragmentsEnumType(String key) {
         this.key = key;
     }
 
+    @Override
     public String getKey()   { return this.key; }
 
 
-
+    @Override
     public String toString(){
         return key;
     }
 
-    public static Fragments getValueFromString(String name) {
-        for (Fragments fragments : Fragments.values()) {
+    //@Override
+    public static DeveloperFragmentsEnumType getValue(String name) {
+        for (DeveloperFragmentsEnumType fragments : DeveloperFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {
                 return fragments;
             }

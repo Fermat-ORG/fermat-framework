@@ -24,7 +24,7 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
     {
         this.alias = alias;
         this.publicKey = publicKey;
-        this.profileImage = profileImage;
+        this.profileImage = (byte[] )profileImage.clone();
     }
     /**
      * That method returns the alias of the intra user identity
@@ -54,6 +54,6 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
      */
     @Override
     public byte[] getProfileImage() {
-        return this.profileImage;
+        return (byte[] )this.profileImage.clone();
     }
 }
