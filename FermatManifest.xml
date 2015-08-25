@@ -5472,6 +5472,12 @@
 						</mantainers>
 						<certifications>
 						</certifications>
+						<life_cycle>
+							<status name="concept" reached="2015-06-01"></status>
+							<status name="development" target="2015-09-01" reached="2015-07-01" ></status>
+							<status name="qa" target="2015-09-01" reached="2015-07-01" ></status>
+							<status name="production" target="2015-09-01" reached="2015-07-01" ></status>
+						</life_cycle>
 					</addon>
 				</addons>
 			</layer>
