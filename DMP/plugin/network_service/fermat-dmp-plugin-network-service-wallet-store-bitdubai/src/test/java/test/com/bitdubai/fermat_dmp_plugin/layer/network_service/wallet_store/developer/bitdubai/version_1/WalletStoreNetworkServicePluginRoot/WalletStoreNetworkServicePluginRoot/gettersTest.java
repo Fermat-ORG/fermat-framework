@@ -73,11 +73,12 @@ public class gettersTest extends TestCase {
     public void idTest() {
         walletStoreNetworkServicePluginRoot.getId();
     }
-@Ignore
+
+    @Ignore
     @Test
     public void publishWalletTest() {
         try {
-            walletStoreNetworkServicePluginRoot.publishWallet((CatalogItemImpl)catalogItem);
+            walletStoreNetworkServicePluginRoot.publishWallet((CatalogItemImpl) catalogItem);
         } catch (CantPublishWalletInCatalogException e) {
             e.printStackTrace();
         }
