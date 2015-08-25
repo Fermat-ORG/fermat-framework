@@ -3912,10 +3912,55 @@
 			<layer name="Reference Wallet">
 				<androids>
 					<android
-							name="Crypto Netword"
+							name="Crypto Wholesaler"
 							description=""
-							difficulty="8"
-							code-level="development"
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Crypto Distributor"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Top Up Point"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Cash Out Point"
+							description=""
+							difficulty="0"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3997,7 +4042,7 @@
 				</androids>
 			</layer>
 
-			<layer name="Sub App Module" language="java">
+			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
 							name="Crypto Wholesaler"
@@ -4052,6 +4097,74 @@
 							description=""
 							difficulty="5"
 							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Sub App Module" language="java">
+				<plugins>
+					<plugin
+							name="Crypto Wholesaler"
+							description=""
+							difficulty="5"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+					<plugin
+							name="Crypto Distributor"
+							description=""
+							difficulty="5"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+					<plugin
+							name="Top Up Point"
+							description=""
+							difficulty="5"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+					<plugin
+							name="Cash Out Point"
+							description=""
+							difficulty="5"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4071,7 +4184,7 @@
 							name="Crypto Wholesaler"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4087,7 +4200,7 @@
 							name="Crypto Distributor"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4103,7 +4216,7 @@
 							name="Top Up Point"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4119,7 +4232,7 @@
 							name="Cash Out Point"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4136,7 +4249,7 @@
 			<layer name="Business Transaction" language="java">
 				<plugins>
 					<plugin
-							name="Wholesale Broker Crypto Purchase"
+							name="Wholesaler Broker Crypto Purchase"
 							description=""
 							difficulty="10"
 							code-level="concept"
@@ -4152,7 +4265,7 @@
 					</plugin>
 
 					<plugin
-							name="Wholesale Broker Fiat Purchase"
+							name="Wholesaler Broker Fiat Purchase"
 							description=""
 							difficulty="10"
 							code-level="concept"
@@ -4168,7 +4281,7 @@
 					</plugin>
 
 					<plugin
-							name="Wholesale Distributor Crypto Sale"
+							name="Wholesaler Distributor Crypto Sale"
 							description=""
 							difficulty="10"
 							code-level="concept"
@@ -4184,7 +4297,7 @@
 					</plugin>
 
 					<plugin
-							name="Wholesale Distributor Fiat Sale"
+							name="Wholesaler Distributor Fiat Sale"
 							description=""
 							difficulty="10"
 							code-level="concept"
@@ -4462,7 +4575,7 @@
 			<layer name="Contract" language="java">
 				<plugins>
 					<plugin
-							name="Broker Wholesaler Contract"
+							name="Wholesaler Broker"
 							description=""
 							difficulty="4"
 							code-level="concept"
@@ -4478,7 +4591,7 @@
 					</plugin>
 
 					<plugin
-							name="Wholesaler Distributor Contrac"
+							name="Wholesaler Distributor"
 							description=""
 							difficulty="4"
 							code-level="concept"
@@ -4494,7 +4607,7 @@
 					</plugin>
 
 					<plugin
-							name="Distributor Distributor Contract"
+							name="Distributor Distributor"
 							description=""
 							difficulty="4"
 							code-level="concept"
@@ -4510,7 +4623,7 @@
 					</plugin>
 
 					<plugin
-							name="Distributor Top Up Contract"
+							name="Distributor Top Up Point"
 							description=""
 							difficulty="4"
 							code-level="concept"
@@ -4526,7 +4639,7 @@
 					</plugin>
 
 					<plugin
-							name="Broker Broker Contract"
+							name="Top Up Point Cash Out Point"
 							description=""
 							difficulty="4"
 							code-level="concept"
@@ -4542,23 +4655,7 @@
 					</plugin>
 
 					<plugin
-							name="Top Up Point Cash Out Point Contract"
-							description=""
-							difficulty="4"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-
-					<plugin
-							name="Top Up Point Shop Contract"
+							name="Top Up Point Shop"
 							description=""
 							difficulty="4"
 							code-level="concept"
@@ -4578,10 +4675,10 @@
 			<layer name="Wallet" language="java">
 				<plugins>
 					<plugin
-							name="Crypto Wholesaler Wallet"
+							name="Crypto Wholesaler"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4594,10 +4691,10 @@
 					</plugin>
 
 					<plugin
-							name="Crypto Distributor Wallet"
+							name="Crypto Distributor"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4610,10 +4707,10 @@
 					</plugin>
 
 					<plugin
-							name="Crypto Top Up Wallet"
+							name="Crypto Top Up"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4626,10 +4723,10 @@
 					</plugin>
 
 					<plugin
-							name="Crypto Cash Out Wallet"
+							name="Crypto Cash Out"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4645,7 +4742,7 @@
 							name="Crypto POS Wallet"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4665,7 +4762,7 @@
 							name="Crypto Wholesaler"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4680,7 +4777,7 @@
 							name="Crypto Distributor"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4696,7 +4793,7 @@
 							name="Top Up Point"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4712,7 +4809,7 @@
 							name="Cash Out Point"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4731,10 +4828,55 @@
 			<layer name="Network Service" language="java">
 				<plugins>
 					<plugin
-							name="Contract Negotiation"
+							name="Crypto Wholesaler"
 							description=""
 							difficulty="8"
-							code-level="development"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Crypto Distributor"
+							description=""
+							difficulty="8"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Top Up Point"
+							description=""
+							difficulty="8"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Cash Out Point"
+							description=""
+							difficulty="8"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
