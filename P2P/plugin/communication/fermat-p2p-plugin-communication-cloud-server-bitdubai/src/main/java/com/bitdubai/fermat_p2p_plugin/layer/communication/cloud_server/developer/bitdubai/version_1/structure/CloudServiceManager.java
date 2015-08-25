@@ -28,6 +28,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.NetworkServiceAlreadyRegisteredException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 /**
@@ -414,7 +415,8 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
              * Get identity of the remote network service in the value of the message
              */
             Gson gson = new Gson();
-            JsonObject messageReceived = gson.fromJson(fMPPacketReceive.getMessage(), JsonObject.class);
+            JsonParser parser = new JsonParser();
+            JsonObject messageReceived = parser.parse(fMPPacketReceive.getMessage()).getAsJsonObject();
 
             /*
              * Construct the message structure info

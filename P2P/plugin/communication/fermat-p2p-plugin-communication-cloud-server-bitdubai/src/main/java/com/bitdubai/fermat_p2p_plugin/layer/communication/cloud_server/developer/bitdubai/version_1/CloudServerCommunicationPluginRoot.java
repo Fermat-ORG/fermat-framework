@@ -204,7 +204,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
         try {
 
             if (disableServerFlag) {//skip Start the server
-                System.out.println("CloudServerCommunicationPluginRoot - Server is Disable, no started");
+                System.out.println("CloudServerCommunicationPluginRoot - Local Server is Disable, no started");
                 return;
             }
 
