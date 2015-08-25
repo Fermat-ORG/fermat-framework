@@ -97,7 +97,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
     }
 
     @Override
-    public Translator getTranslator() {
+    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator() {
         return translator;
     }
 

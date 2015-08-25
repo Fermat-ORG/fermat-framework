@@ -205,7 +205,7 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
 
         table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.DEVELOPER_FIRST_KEY_COLUMN);
 
@@ -268,7 +268,7 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
 
         table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.TRANSLATOR_FIRST_KEY_COLUMN);
 
@@ -335,7 +335,7 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
 
         table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.DESIGNER_FIRST_KEY_COLUMN);
 
