@@ -58,7 +58,6 @@ public class ListWalletContactsScrollingTest extends TestCase {
     @Mock
     WalletContactsRegistry walletContactsRegistry;
 
-    UUID walletId;
     String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
@@ -66,7 +65,6 @@ public class ListWalletContactsScrollingTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
-        walletId = UUID.randomUUID();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);

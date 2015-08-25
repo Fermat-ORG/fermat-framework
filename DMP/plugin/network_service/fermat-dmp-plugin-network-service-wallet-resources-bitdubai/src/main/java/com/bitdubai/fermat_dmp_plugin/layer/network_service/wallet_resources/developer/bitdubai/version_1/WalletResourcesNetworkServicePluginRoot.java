@@ -330,6 +330,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             downloadResourcesFromRepo(linkToResources, skin, localStoragePath,screenSize);
 
+            /**
+             *  download language
+             */
+            String linkToLanguage = linkToRepo + "languages/";
+            downloadLanguageFromRepo(linkToLanguage, skin.getName(),languageName, localStoragePath, screenSize);
+
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
             throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
@@ -351,6 +357,54 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
     @Override
     public void installSkinForWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String navigationStructureVersion) throws WalletResourcesInstalationException {
+        String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
+
+        String linkToResources = linkToRepo + "skins/" + skinName + "/";
+
+
+        String localStoragePath=this.localStoragePath+developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+
+        Skin skin = null;
+
+        /**
+         * add progress
+         */
+        addProgress(WalletInstalationProgress.INSTALATION_START);
+
+        try {
+
+            String linkToSkinFile = linkToResources + screenSize + "/";
+            skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath);
+
+
+            Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
+
+            /*NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
+
+            try {
+
+                networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
+
+            } catch (CantCreateRepositoryException e) {
+                e.printStackTrace();
+            }
+            */
+
+
+            /**
+             *  download resources
+             */
+
+            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize);
+
+
+
+        }catch (CantCheckResourcesException cantCheckResourcesException){
+            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
+        } catch (CantPersistFileException cantPersistFileException) {
+            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantPersistFileException,"Error persisting file","");
+        }
+
 
     }
 
@@ -365,6 +419,22 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
     @Override
     public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName) throws WalletResourcesInstalationException {
+
+        String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
+        /**
+         *  download language
+         */
+        String linkToLanguage = linkToRepo + "languages/";
+        downloadLanguageFromRepo(linkToLanguage, skinName, languageName, localStoragePath, screenSize);
+
+        /**
+         *  Fire event Wallet language installed
+         */
+
+        /*PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_UNINSTALLED);
+        WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) platformEvent;
+        walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+        eventManager.raiseEvent(platformEvent);*/
 
     }
 
@@ -525,8 +595,26 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         eventManager.raiseEvent(platformEvent);
         */
 
+    }
+
+    private void downloadLanguageFromRepo(String linkToLanguage, String skinName,String languajeName, String localStoragePath,String screenSize) {
+
+        /**
+         * download language
+         */
+        String linkToLanguageRepo = linkToLanguage+languajeName+".xml";
+        downloadLanguage(linkToLanguageRepo, languajeName, skinName, localStoragePath);
+
+
+        //TODO: raise a event
+        // fire event Wallet resource installed
+        /*PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
+        ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+        */
 
     }
+
 
 
     private void downloadResourcesFromRepo(String link, Map<String, Resource> resourceMap, UUID skinId,String localStoragePath) {
@@ -615,6 +703,22 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void downloadLanguage(String link,String languageName, String skinName,String localStoragePath) {
+        try {
+            String languageXML = githubConnection.getFile(link);
+
+            recordXML(languageXML, languageName, skinName, localStoragePath);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CantCheckResourcesException e) {
+            e.printStackTrace();
+        } catch (CantPersistFileException e) {
             e.printStackTrace();
         }
     }
@@ -737,8 +841,31 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             }
         }
 
+    }
 
+    private void recordXML(String xml, String name, String skinName, String reponame) throws CantCheckResourcesException, CantPersistFileException {
 
+        PluginTextFile layoutFile = null;
+
+        String filename = skinName + "_" + name;
+
+        try {
+
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            try {
+
+                layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                layoutFile.setContent(xml);
+                layoutFile.persistToMedia();
+
+            } catch (CantCreateFileException cantPersistFileException) {
+                throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", cantPersistFileException, "Error persist image file " + filename, "");
+            }
+        }
     }
     private void deleteXML( String name, UUID skinId, String reponame) throws CantCheckResourcesException, CantPersistFileException {
 

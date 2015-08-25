@@ -1,12 +1,12 @@
 package com.bitdubai.sub_app.wallet_publisher.FragmentFactory;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.WalletFragments;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public enum Fragments implements WalletFragments {
+public enum WalletPublisherFragmentsEnumType implements FermatFragmentsEnumType<WalletPublisherFragmentsEnumType> {
 
 
     CWP_WALLET_PUBLISHER_MAIN_FRAGMENT("CWPMF"),
@@ -15,20 +15,22 @@ public enum Fragments implements WalletFragments {
 
     private String key;
 
-    Fragments(String key) {
+    WalletPublisherFragmentsEnumType(String key) {
         this.key = key;
     }
 
+
+    @Override
     public String getKey()   { return this.key; }
 
-
-
+    @Override
     public String toString(){
         return key;
     }
 
-    public static Fragments getValueFromString(String name) {
-        for (Fragments fragments : Fragments.values()) {
+
+    public static WalletPublisherFragmentsEnumType getValue(String name) {
+        for (WalletPublisherFragmentsEnumType fragments : WalletPublisherFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {
                 return fragments;
             }
