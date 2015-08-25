@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
@@ -55,25 +56,25 @@ import java.util.List;
 
         private SubAppFragmentFactory subAppFragmentFactory;
 
-        private SubAppSettingsManager subAppSettingsManager;
+        private SubAppSettings subAppSettings;
 
         private SubAppResourcesProviderManager subAppResourcesProviderManager;
 
         private SubAppsSession subAppsSession;
 
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,SubAppsSession SubAppSession,ErrorManager errorManager,SubAppFragmentFactory subAppFragmentFactory,SubAppSettingsManager subAppSettingsManager,SubAppResourcesProviderManager subAppResourcesProviderManager) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,SubAppsSession subAppSession,ErrorManager errorManager,SubAppFragmentFactory subAppFragmentFactory,SubAppSettings subAppSettings,SubAppResourcesProviderManager subAppResourcesProviderManager) {
             super(fm);
             this.context=context;
 
 
-            this.subAppsSession = SubAppSession;
+            this.subAppsSession = subAppSession;
 
             this.errorManager=errorManager;
             this.activity=activity;
             tabStrip=activity.getTabStrip();
             this.subAppFragmentFactory=subAppFragmentFactory;
-            this.subAppSettingsManager = subAppSettingsManager;
+            this.subAppSettings = subAppSettings;
             this.subAppResourcesProviderManager = subAppResourcesProviderManager;
 
 
@@ -145,10 +146,6 @@ import java.util.List;
 
 
 
-            /**
-             * SubApp Session
-             */
-            SubAppsSession subAppSession=null;
 
             Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
@@ -176,7 +173,7 @@ import java.util.List;
 
             try {
                 if(subAppFragmentFactory !=null){
-                    currentFragment= subAppFragmentFactory.getFragment(fragmentType.getKey(),subAppsSession,subAppSettingsManager,subAppResourcesProviderManager);
+                    currentFragment= subAppFragmentFactory.getFragment(fragmentType.getKey(),subAppsSession,subAppSettings,subAppResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();

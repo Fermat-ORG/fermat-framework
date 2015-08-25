@@ -2,48 +2,51 @@ package com.bitdubai.sub_app.wallet_publisher.FragmentFactory;
 
 import android.app.Fragment;
 
+import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment;
+import com.bitdubai.sub_app.wallet_publisher.preference_settings.WalletPublisherPreferenceSettings;
+import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class WalletPublisherFragmentFactory implements SubAppFragmentFactory {
+public class WalletPublisherFragmentFactory extends FermatSubAppFragmentFactory<WalletPublisherSubAppSession,WalletPublisherPreferenceSettings,WalletPublisherFragmentsEnumType> {
 
 
     public WalletPublisherFragmentFactory(){
 
     }
 
-
-    /**
-     * This method takes a reference (string) to a fragment and returns the corresponding fragment.
-     *  @param code                           the reference used to identify the fragment
-     * @param subAppsSession
-     * @param subAppSettingsManager
-     * @param subAppResourcesProviderManager @return the fragment referenced
-     */
     @Override
-    public Fragment getFragment(String code, SubAppsSession subAppsSession, SubAppSettingsManager subAppSettingsManager, SubAppResourcesProviderManager subAppResourcesProviderManager) throws FragmentNotFoundException {
-        Fragment currentFragment = null;
+    public FermatFragment getFermatFragment(WalletPublisherFragmentsEnumType fragments) throws FragmentNotFoundException {
+        FermatFragment currentFragment = null;
 
-        Fragments fragment = Fragments.getValueFromString(code);
-        switch (fragment){
+        switch (fragments){
             /**
              * Executing fragments for BITCOIN REQUESTED.
              */
             case CWP_WALLET_PUBLISHER_MAIN_FRAGMENT:
-                currentFragment =  MainFragment.newInstance(0,subAppsSession);
+                currentFragment =  MainFragment.newInstance(0,null);
                 break;
             default:
-                throw new FragmentNotFoundException("Fragment not found",new Exception(),code,"Swith failed");
+                throw new FragmentNotFoundException("Fragment not found",new Exception(),fragments.toString(),"Swith failed");
         }
         return currentFragment;
     }
+
+    @Override
+    public WalletPublisherFragmentsEnumType getFermatFragmentEnumType(String key) {
+        return WalletPublisherFragmentsEnumType.getValue(key);
+    }
+
+
+
 
 }
