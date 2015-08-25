@@ -1528,7 +1528,44 @@
 				</androids>
 			</layer>
 
-			<layer name="Sub App"></layer>
+			<layer name="Sub App">
+				<androids>
+					<android
+							name="Intra User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Extra User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
 
 			<layer name="Engine" language="java">
 				<plugins>
@@ -1641,7 +1678,45 @@
 				</plugins>
 			</layer>
 
-			<layer name="Sub App Module" language="java"></layer>
+			<layer name="Sub App Module" language="java">
+				<plugins>
+					<plugin
+							name="Intra User"
+							description=""
+							difficulty="2"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="lnacosta" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Extra User"
+							description=""
+							difficulty="2"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
 
 			<layer name="Agent" language="java"></layer>
 
