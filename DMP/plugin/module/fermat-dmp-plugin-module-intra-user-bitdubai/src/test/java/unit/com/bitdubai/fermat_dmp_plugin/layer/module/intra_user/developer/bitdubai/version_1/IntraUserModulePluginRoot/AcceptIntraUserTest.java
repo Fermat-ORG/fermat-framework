@@ -1,5 +1,7 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
@@ -67,6 +69,8 @@ public class AcceptIntraUserTest extends TestCase {
     @Mock
     private PluginTextFile mockIntraUserLoginXml;
 
+    @Mock
+    IntraUserSettings intraUserSettings = new IntraUserSettings();
 
     private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
 
@@ -102,14 +106,9 @@ public class AcceptIntraUserTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-        StringBuffer strXml = new StringBuffer();
-
-        strXml.append("<" + IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ROOT + ">");
-        strXml.append("<" + IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ID_NODE + ">" + UUID.randomUUID().toString() + "</" + IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ID_NODE + ">");
-        strXml.append("</" + IntraUsersModuleLoginConstants.INTRA_USER_MODULE_XML_ROOT + ">");
 
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
-        when(mockIntraUserLoginXml.getContent()).thenReturn(strXml.toString());
+        when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
 
     }

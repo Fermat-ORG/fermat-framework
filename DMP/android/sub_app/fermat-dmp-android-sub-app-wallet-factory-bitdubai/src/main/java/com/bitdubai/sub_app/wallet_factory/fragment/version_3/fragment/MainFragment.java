@@ -36,7 +36,7 @@ public class MainFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //subAppSession.getWalletDescriptorFactoryProjectManager().
+        //subAppSession.getWalletFactoryProjectManager().
     }
 
     @Override

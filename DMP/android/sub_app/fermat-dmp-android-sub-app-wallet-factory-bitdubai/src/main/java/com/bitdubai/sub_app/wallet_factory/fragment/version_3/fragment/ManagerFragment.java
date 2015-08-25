@@ -58,9 +58,9 @@ public class ManagerFragment extends FermatFragment {
         balances_available = new String[]{"$1,970.00 available"};
 
         /*try {
-            //List<DescriptorFactoryProject> lstFactoryProjects= subAppSession.getWalletDescriptorFactoryProjectManager().getAllWalletFactoryProjects();
+            //List<WalletFactoryProject> lstFactoryProjects= subAppSession.getWalletFactoryProjectManager().getAllWalletFactoryProjects();
 
-            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletDescriptorFactoryProjectManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
+            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletFactoryProjectManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
 
             //List<WalletFactoryProjectProposal> walletFactoryProjectProposal= walletFactoryProjectProposalManager.getProposals();
 
