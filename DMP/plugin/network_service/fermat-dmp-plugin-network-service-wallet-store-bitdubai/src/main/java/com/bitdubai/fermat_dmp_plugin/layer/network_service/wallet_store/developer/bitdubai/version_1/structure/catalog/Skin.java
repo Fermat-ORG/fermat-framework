@@ -182,10 +182,6 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         this.videoPreviews = videoPreviews;
     }
 
-    //public void setUrl(URL url) { Eliminar
-    //    this.url = url;
-    //}
-
     public void setSkinSizeInBytes(int skinSizeInBytes) {
         this.skinSizeInBytes = skinSizeInBytes;
     }

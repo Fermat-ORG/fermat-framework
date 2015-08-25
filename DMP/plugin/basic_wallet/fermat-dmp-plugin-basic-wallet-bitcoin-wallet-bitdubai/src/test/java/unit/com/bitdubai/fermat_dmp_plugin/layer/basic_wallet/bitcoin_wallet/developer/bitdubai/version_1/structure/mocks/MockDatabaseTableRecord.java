@@ -1,14 +1,12 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.mocks;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletDatabaseConstants;
 
 import java.util.List;
@@ -117,7 +115,7 @@ public class MockDatabaseTableRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public void setStateValue(String columnName, FactoryProjectState state) {
+    public void setStateValue(String columnName, WalletFactoryProjectState state) {
 
     }
 

@@ -9,11 +9,13 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import java.io.Serializable;
+
 /**
  * The event monitor is called when an Event Handler cant handle an Exception.
  */
 
-public class PlatformEventMonitor implements DealsWithErrors, EventMonitor {
+public class PlatformEventMonitor implements DealsWithErrors, EventMonitor,Serializable {
 
     private ErrorManager errorManager;
 

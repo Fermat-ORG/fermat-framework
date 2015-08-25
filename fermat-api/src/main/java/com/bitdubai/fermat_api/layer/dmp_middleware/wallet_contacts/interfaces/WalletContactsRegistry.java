@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.C
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import java.util.List;
@@ -37,5 +38,7 @@ public interface WalletContactsRegistry {
 
     List<WalletContactRecord>  getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException;
 
-    WalletContactRecord getWalletContactByActorId(UUID actorId) throws CantGetWalletContactException;
+    List<WalletContactRecord> getWalletContactsByActorId(UUID actorId) throws CantGetAllWalletContactsException;
+
+    WalletContactRecord getWalletContactByContactId(UUID contactId) throws CantGetWalletContactException, WalletContactNotFoundException;
 }
