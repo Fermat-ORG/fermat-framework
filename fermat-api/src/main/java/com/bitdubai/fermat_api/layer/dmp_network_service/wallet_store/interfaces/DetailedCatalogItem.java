@@ -2,10 +2,12 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interface
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.*;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguagesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinsException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +37,7 @@ public interface DetailedCatalogItem {
     public Version getPlatformInitialVersion();
     public Version getPlatformFinalVersion();
 
-    public Developer getDeveloper();
-    public Designer getDesigner();
+    public DeveloperIdentity getDeveloper();
+    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner();
 
 }

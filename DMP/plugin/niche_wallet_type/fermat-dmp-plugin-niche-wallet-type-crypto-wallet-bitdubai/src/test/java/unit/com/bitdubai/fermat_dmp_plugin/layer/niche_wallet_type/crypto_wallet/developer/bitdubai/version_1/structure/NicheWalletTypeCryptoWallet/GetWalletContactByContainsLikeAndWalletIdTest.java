@@ -57,7 +57,6 @@ public class GetWalletContactByContainsLikeAndWalletIdTest extends TestCase {
     @Mock
     WalletContactsRegistry walletContactsRegistry;
 
-    UUID walletId;
     String walletPublicKey;
     String actorName;
 
@@ -66,7 +65,6 @@ public class GetWalletContactByContainsLikeAndWalletIdTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
-        walletId = UUID.randomUUID();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         actorName = "Leonardo Dicaprio";
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();

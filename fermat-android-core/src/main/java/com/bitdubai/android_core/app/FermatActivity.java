@@ -406,6 +406,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
 
+        pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
+
 
     }
 

@@ -10,11 +10,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
 
-public class ManagerFragment extends  Fragment {
+public class ManagerFragment extends FermatFragment {
     View rootView;
     ExpandableListView lv;
     String[] contacts;

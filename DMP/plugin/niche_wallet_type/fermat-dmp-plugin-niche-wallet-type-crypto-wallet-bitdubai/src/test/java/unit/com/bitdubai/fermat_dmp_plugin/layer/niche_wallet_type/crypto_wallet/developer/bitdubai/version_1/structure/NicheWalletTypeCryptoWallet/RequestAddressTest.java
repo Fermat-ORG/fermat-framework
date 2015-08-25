@@ -86,23 +86,19 @@ public class RequestAddressTest extends TestCase {
     @Mock
     CryptoAddress cryptoAddress;
 
-    String actorName;
     UUID actorId;
     Actors actorType;
     ReferenceWallet referenceWallet;
-    UUID walletId;
     String walletPublicKey;
 
     NicheWalletTypeCryptoWallet nicheWalletTypeCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
-        actorName = "Ricardo Darin";
         actorId = UUID.randomUUID();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         actorType = Actors.EXTRA_USER;
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
-        walletId = UUID.randomUUID();
         nicheWalletTypeCryptoWallet = new NicheWalletTypeCryptoWallet();
         nicheWalletTypeCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         nicheWalletTypeCryptoWallet.setErrorManager(errorManager);
