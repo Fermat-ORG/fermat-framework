@@ -2208,11 +2208,11 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="100"></author>
-							<author name="nattyco" scope="unit-tests" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
+							<author name="lnacosta" scope="unit-tests" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="nattyco"></mantainer>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
