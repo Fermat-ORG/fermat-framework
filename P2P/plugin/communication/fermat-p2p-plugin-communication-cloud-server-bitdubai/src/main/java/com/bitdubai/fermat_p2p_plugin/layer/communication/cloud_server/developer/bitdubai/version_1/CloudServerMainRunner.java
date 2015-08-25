@@ -47,6 +47,12 @@ public class CloudServerMainRunner {
             cloudServerCommunicationPluginRoot = new CloudServerCommunicationPluginRoot();
 
             /*
+             * By default the server is configure to be disable (NOT START),
+             * then set to enable to start
+             */
+            cloudServerCommunicationPluginRoot.setDisableServerFlag(CloudServerCommunicationPluginRoot.ENABLE_SERVER);
+
+            /*
              * Start the process
              */
             cloudServerCommunicationPluginRoot.start();
