@@ -319,7 +319,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             throw pluginStartException;
         }
 
-        //test();
+        test();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -528,7 +528,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             screenShotDetails.add(icon);
             screenShotDetails.add(mainScreenShot);
 
-            URL videoUrl = new URL("https://www.youtube.com/watch?v=pBzjx7V3Ldw");
+            URL videoUrl = new URL("http://www.youtube.com/watch?v=pBzjx7V3Ldw");
             String observations = "Its Rock!";
             Version initialWalletVersion = new Version(1,0,0);
             Version finalWalletVersion = new Version(1,0,0);;
@@ -536,7 +536,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             Version finalPlatformVersion = new Version(1,0,0);;
             String publisherIdentityPublicKey = "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             String signature = "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
-            URL publisherWebsiteUrl = new URL("www.publishertest.com");
+            URL publisherWebsiteUrl = new URL("http://www.publishertest.com");
 
             walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, WalletCategory.REFERENCE_WALLET, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
@@ -592,7 +592,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public WalletFactoryProjectState getProjectState() {
-                return null;
+                return WalletFactoryProjectState.CLOSED;
             }
 
             @Override
@@ -602,7 +602,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public Timestamp getCreationTimestamp() {
-                return null;
+                return new Timestamp(System.currentTimeMillis());
             }
 
             @Override
@@ -612,7 +612,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public Timestamp getLastModificationTimestamp() {
-                return null;
+                return new Timestamp(System.currentTimeMillis());
             }
 
             @Override
@@ -686,7 +686,27 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public WalletNavigationStructure getNavigationStructure() {
-                return null;
+
+                WalletNavigationStructure walletNavigationStructure = new WalletNavigationStructure();
+                walletNavigationStructure.setDeveloper(new DeveloperIdentity() {
+                    @Override
+                    public String getAlias() {
+                        return "Rart3001";
+                    }
+
+                    @Override
+                    public String getPublicKey() {
+                        return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
+                    }
+
+                    @Override
+                    public String createMessageSignature(String mensage) throws CantSingMessageException {
+                        return null;
+                    }
+                });
+
+
+                return walletNavigationStructure;
             }
 
             @Override
@@ -706,6 +726,22 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         skin.setId(UUID.randomUUID());
         skin.setName("Skin Publication Test " + System.currentTimeMillis());
         skin.setScreenSize(ScreenSize.SMALL);
+        skin.setDesigner(new Designer() {
+            @Override
+            public String getAlias() {
+                return "Rart3001";
+            }
+
+            @Override
+            public String getPublicKey() {
+                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
+            }
+
+            @Override
+            public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                return null;
+            }
+        });
 
         return skin;
 
@@ -718,7 +754,23 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         language.setId(UUID.randomUUID());
         language.setName("Language Publication Test " + System.currentTimeMillis());
         language.setType(Languages.LATIN_AMERICAN_SPANISH);
-        language.setVersion(new Version(1,0,0));
+        language.setVersion(new Version(1, 0, 0));
+        language.setTranslator(new Translator() {
+            @Override
+            public String getAlias() {
+                return "Rart3001";
+            }
+
+            @Override
+            public String getPublicKey() {
+                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
+            }
+
+            @Override
+            public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                return null;
+            }
+        });
 
         return language;
     }

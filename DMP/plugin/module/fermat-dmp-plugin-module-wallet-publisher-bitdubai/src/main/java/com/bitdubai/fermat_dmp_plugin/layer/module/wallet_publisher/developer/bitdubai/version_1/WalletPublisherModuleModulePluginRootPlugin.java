@@ -429,7 +429,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
             String signature = null; //TODO: This have to be generate by the PublisherIdentity method
 
             walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
-            //TODO: REVISAR  walletFactoryProjectManager.setProjectState(walletFactoryProject.getProjectPublicKey(), WalletFactoryProjectState.PUBLISHED);
+            walletFactoryProjectManager.markProkectAsPublished(walletFactoryProject);
 
         } catch (Exception exception) {
             throw new CantPublishComponentException(CantPublishComponentException.DEFAULT_MESSAGE, exception, "WalletPublisherModuleModulePluginRootPlugin", "unknown");

@@ -40,7 +40,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -484,50 +483,13 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         }
 
 
-        Developer developer = new Developer() {
-            @Override
-            public UUID getId() {
-                return null;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-
-            @Override
-            public String getPublicKey() {
-                return null;
-            }
-
-            @Override
-            public void setId(UUID id) {
-
-            }
-
-            @Override
-            public void setName(String name) {
-
-            }
-
-            @Override
-            public void setPublicKey(String publicKey) {
-
-            }
-        };
-
-
-        developer.setId(UUID.randomUUID());
-        developer.setName(walletFactoryProject.getNavigationStructure().getDeveloper().getAlias());
-        developer.setPublicKey(walletFactoryProject.getNavigationStructure().getDeveloper().getPublicKey());
-
-
+        Developer developer = walletStoreManager.constructDeveloper(UUID.randomUUID(), walletFactoryProject.getNavigationStructure().getDeveloper().getAlias(), walletFactoryProject.getNavigationStructure().getDeveloper().getPublicKey());
 
         /*
          * Construct the catalog item instance
          */
         return walletStoreManager.constructCatalogItem(UUID.randomUUID(), //TODO: REVISAR walletFactoryProject.getId(),
-                                                        walletFactoryProject.getSize(), //TODO: REVISAR walletFactoryProject.getDefaultSizeInBytes(),
+                                                        walletFactoryProject.getSize(),
                                                         walletFactoryProject.getName(),
                                                         walletFactoryProject.getDescription(),
                                                         walletCategory,
@@ -538,9 +500,9 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         otherSkinSupportedList,
                                                         defaultSkin,
                                                         defaultLanguage,
-                                                        null, //TODO: walletFactoryProject.getDeveloperIdentity()
+                                                        developer,
                                                         otherLanguageSupportedList,
-                                                        publisherWebsiteUrl);//TODO REVISAR
+                                                        publisherWebsiteUrl);
     }
 
     /**
@@ -560,43 +522,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
 
 
-       Designer designer = new Designer() {
-           @Override
-           public UUID getId() {
-               return null;
-           }
-
-           @Override
-           public String getName() {
-               return null;
-           }
-
-           @Override
-           public String getPublicKey() {
-               return null;
-           }
-
-           @Override
-           public void setiD(UUID id) {
-
-           }
-
-           @Override
-           public void setName(String name) {
-
-           }
-
-           @Override
-           public void setPublicKey(String publicKey) {
-
-           }
-       };
-
-
-       designer.setiD(UUID.randomUUID());
-       designer.setName(skin.getDesigner().getAlias());
-       designer.setPublicKey(skin.getDesigner().getPublicKey());
-
+       Designer designer = walletStoreManager.constructDesigner(UUID.randomUUID(), skin.getDesigner().getAlias(), skin.getDesigner().getPublicKey());
 
        /*
         * Construct the new instance
@@ -630,42 +556,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      */
     private com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language constructLanguageObject(Language language, Version version, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion){
 
-        Translator translator = new Translator() {
-            @Override
-            public UUID getId() {
-                return null;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-
-            @Override
-            public String getPublicKey() {
-                return null;
-            }
-
-            @Override
-            public void setId(UUID id) {
-
-            }
-
-            @Override
-            public void setName(String name) {
-
-            }
-
-            @Override
-            public void setPublicKey(String publicKey) {
-
-            }
-        };
-
-        translator.setId(UUID.randomUUID());
-        translator.setName(language.getTranslator().getAlias());
-        translator.setPublicKey(language.getTranslator().getPublicKey());
-
+        Translator translator = walletStoreManager.constructTranslator(UUID.randomUUID(), language.getTranslator().getAlias(), language.getTranslator().getPublicKey());
 
         /*
         * Construct the new instance
