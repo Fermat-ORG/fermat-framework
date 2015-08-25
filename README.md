@@ -30,13 +30,17 @@ What is Fermat?
 
 Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
 
-Technically Fermat is an open-source P2P digital wallet platform that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+Technically Fermat is an open-source P2P system that handles a stack of multiple platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
 What makes Fermat different from other wallet platforms or services?
 
 * **Fermat is P2P.** This makes it censorship resistent and difficult to be attacked.
 
+* **Fermat is built with plugins.** This enables a high level or functionality to be reused and opens the door to any developer to participate.
+
 * **Fermat runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party. 
+
+* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat user base. 
 
 * **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
 
@@ -54,7 +58,7 @@ Mission / purpose:
 ------------------------------------------------
 
 
-> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allowing them to choose which currency to use, regardless of the place they live or where they were born.
+> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.
 
 
 Fermat principles:
@@ -82,7 +86,7 @@ Fermat principles:
 * No centralized point to be attacked.
 * Multiple identities and roles per user.
 * Device Private Network (DPN) concept.
-* Pocket Money concept and a Multi-Signature Vault owned by the DPN concept.
+* Pocket Money concept and a Multi-Signature Vault owned by the DPN.
 * Reviews and Reputation concepts. 
 
 
