@@ -6,7 +6,7 @@
 					<library
 							name="Fermat Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -21,7 +21,7 @@
 					<library
 							name="OSA Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -36,7 +36,7 @@
 					<library
 							name="CRY Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -51,7 +51,7 @@
 					<library
 							name="P2P Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -66,7 +66,7 @@
 					<library
 							name="DPN Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -81,7 +81,7 @@
 					<library
 							name="PIP Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -96,7 +96,7 @@
 					<library
 							name="DMP Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -111,7 +111,7 @@
 					<library
 							name="WPD Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -126,7 +126,7 @@
 					<library
 							name="DAP Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -141,7 +141,7 @@
 					<library
 							name="MKT Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -156,7 +156,7 @@
 					<library
 							name="CDN Core"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -175,7 +175,7 @@
 					<library
 							name="Fermat Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -190,7 +190,7 @@
 					<library
 							name="OSA Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -205,7 +205,7 @@
 					<library
 							name="CRY Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -220,7 +220,7 @@
 					<library
 							name="P2P Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -235,7 +235,7 @@
 					<library
 							name="DPN Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -250,7 +250,7 @@
 					<library
 							name="PIP Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -265,7 +265,7 @@
 					<library
 							name="DMP Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -280,7 +280,7 @@
 					<library
 							name="WPD Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -295,7 +295,7 @@
 					<library
 							name="DAP Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -310,7 +310,7 @@
 					<library
 							name="MKT Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -325,7 +325,7 @@
 					<library
 							name="CDN Api"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -349,7 +349,7 @@
 					<android
 							name="Shell"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -364,7 +364,7 @@
 					<android
 							name="Designer"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -396,7 +396,7 @@
 					<android
 							name="Technical Support"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -428,7 +428,7 @@
 					<android
 							name="System Monitor"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -444,7 +444,7 @@
 					<android
 							name="Feedback"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -459,7 +459,7 @@
 					<android
 							name="Reviews"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -505,7 +505,7 @@
 					<plugin
 							name="Shell"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -520,7 +520,7 @@
 					<plugin
 							name="Designer"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -553,7 +553,7 @@
 					<plugin
 							name="Technical Support"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -568,7 +568,7 @@
 					<plugin
 							name="System Monitor"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -583,7 +583,7 @@
 					<plugin
 							name="Feedback"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -598,7 +598,7 @@
 					<plugin
 							name="Reviews"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -637,7 +637,7 @@
 					<plugin
 							name="Designer"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -657,7 +657,7 @@
 					<plugin
 							name="Intra User Technical Support"
 							description=""
-							difficulty="7"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -672,7 +672,7 @@
 					<plugin
 							name="Developer Technical Support"
 							description=""
-							difficulty="7"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -687,7 +687,7 @@
 					<plugin
 							name="Developer Error Manager"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -750,7 +750,7 @@
 					<plugin
 							name="Location"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -787,7 +787,7 @@
 					<plugin
 							name="Designer"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -824,7 +824,7 @@
 					<plugin
 							name="System Monitor"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -839,7 +839,7 @@
 					<plugin
 							name="Developer"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -854,7 +854,7 @@
 					<plugin
 							name="Error Manager"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -869,7 +869,7 @@
 					<plugin
 							name="Messanger"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -884,7 +884,7 @@
 					<plugin
 							name="Technical Support"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -910,7 +910,7 @@
 					<addon
 							name="Plugin"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -929,7 +929,7 @@
 					<addon
 							name="Identity"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -944,7 +944,7 @@
 					<addon
 							name="Dependency"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -963,7 +963,7 @@
 					<addon
 							name="Device User"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -982,7 +982,7 @@
 					<addon
 							name="Local Device"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -997,7 +997,7 @@
 					<addon
 							name="Device Network"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1050,7 +1050,7 @@
 					<addon
 							name="Connectivity Subsystem"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1065,7 +1065,7 @@
 					<addon
 							name="Location Subsystem"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1080,7 +1080,7 @@
 					<addon
 							name="Power Subsystem"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1095,7 +1095,7 @@
 					<addon
 							name="Platform Info"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1420,7 +1420,7 @@
 					<plugin
 							name="Wallet Statistics"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1513,7 +1513,7 @@
 					<android
 							name="Bank Notes"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1626,7 +1626,7 @@
 					<plugin
 							name="Bank Notes Wallet"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1726,7 +1726,7 @@
 					<plugin
 							name="Bank Notes"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1823,7 +1823,7 @@
 					<plugin
 							name="Intra Wallet"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1838,7 +1838,7 @@
 					<plugin
 							name="Outgoing Device User"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1889,7 +1889,7 @@
 					<plugin
 							name="Inter Account"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1909,7 +1909,7 @@
 					<plugin
 							name="Multi Account Wallet"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2003,7 +2003,7 @@
 					<plugin
 							name="Blockchain Info"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2018,7 +2018,7 @@
 					<plugin
 							name="Coinapult"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2050,7 +2050,7 @@
 					<plugin
 							name="Shape Shift"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2065,7 +2065,7 @@
 					<plugin
 							name="Coinbase"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2195,7 +2195,7 @@
 					<plugin
 							name="Wallet Community"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2210,7 +2210,7 @@
 					<plugin
 							name="Bank Notes"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2229,7 +2229,7 @@
 					<addon
 							name="Wallet"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2251,7 +2251,7 @@
 					<android
 							name="Shop Wallet"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2281,7 +2281,7 @@
 					<android
 							name="Retailer Wallet"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2301,7 +2301,7 @@
 					<android
 							name="Shop"
 							description=""
-							difficulty="6"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2331,7 +2331,7 @@
 					<android
 							name="Retailer"
 							description=""
-							difficulty="6"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2351,7 +2351,7 @@
 					<plugin
 							name="Shop Wallet"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2381,7 +2381,7 @@
 					<plugin
 							name="Retailer Wallet"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2400,7 +2400,7 @@
 					<plugin
 							name="Shop"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2430,7 +2430,7 @@
 					<plugin
 							name="Retailer"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2449,7 +2449,7 @@
 					<plugin
 							name="Shop"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2479,7 +2479,7 @@
 					<plugin
 							name="Retailer"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2499,7 +2499,7 @@
 					<plugin
 							name="Purchase"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2514,7 +2514,7 @@
 					<plugin
 							name="Sale"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2534,7 +2534,7 @@
 					<plugin
 							name="Shop Wallet"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2564,7 +2564,7 @@
 					<plugin
 							name="Retailer Wallet"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2584,7 +2584,7 @@
 					<plugin
 							name="Shop"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2614,7 +2614,7 @@
 					<plugin
 							name="Retailer"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2634,7 +2634,7 @@
 					<plugin
 							name="Shop"
 							description=""
-							difficulty="6"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2664,7 +2664,7 @@
 					<plugin
 							name="Retailer"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2679,7 +2679,7 @@
 					<plugin
 							name="Purchase Transmission"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2799,7 +2799,7 @@
 					<plugin
 							name="Incoming Device User"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2814,7 +2814,7 @@
 					<plugin
 							name="Incoming Extra User"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2829,7 +2829,7 @@
 					<plugin
 							name="Incoming Intra User"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2859,7 +2859,7 @@
 					<plugin
 							name="Intra Wallet"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2874,7 +2874,7 @@
 					<plugin
 							name="Outgoing Device User"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2889,7 +2889,7 @@
 					<plugin
 							name="Outgoing Extra User"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -2934,7 +2934,7 @@
 					<plugin
 							name="Inter Account"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3083,7 +3083,7 @@
 					<android
 							name="Coupon Wallet"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3186,7 +3186,7 @@
 					<plugin
 							name="Coupon Wallet"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3201,7 +3201,7 @@
 					<plugin
 							name="Discount Wallet"
 							description=""
-							difficulty="3"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3251,7 +3251,7 @@
 					<plugin
 							name="Incoming Coupon"
 							description=""
-							difficulty="6"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3266,7 +3266,7 @@
 					<plugin
 							name="Outgoing Coupon"
 							description=""
-							difficulty="6"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3281,7 +3281,7 @@
 					<plugin
 							name="Incoming Discount"
 							description=""
-							difficulty="6"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3296,7 +3296,7 @@
 					<plugin
 							name="Outgoing Discount"
 							description=""
-							difficulty="6"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3330,7 +3330,7 @@
 					<plugin
 							name="Coupon"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3345,7 +3345,7 @@
 					<plugin
 							name="Discount"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3514,7 +3514,7 @@
 					<plugin
 							name="Broker Crypto Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3529,7 +3529,7 @@
 					<plugin
 							name="Broker Fiat Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3544,7 +3544,7 @@
 					<plugin
 							name="Broker Crypto Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3559,7 +3559,7 @@
 					<plugin
 							name="Broker Fiat Pruchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3604,7 +3604,7 @@
 					<plugin
 							name="Whosale Crypto Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3619,7 +3619,7 @@
 					<plugin
 							name="Whosale Fiat Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3769,7 +3769,7 @@
 					<plugin
 							name="Broker To Broker"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3784,7 +3784,7 @@
 					<plugin
 							name="Broker To Wholesaler"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3933,7 +3933,7 @@
 					<android
 							name="Crypto Wholesaler"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3949,7 +3949,7 @@
 					<android
 							name="Crypto Distributor"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3965,7 +3965,7 @@
 					<android
 							name="Top Up Point"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -3981,7 +3981,7 @@
 					<android
 							name="Cash Out Point"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4001,7 +4001,7 @@
 					<plugin
 							name="Crypto Wholesaler"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4017,7 +4017,7 @@
 					<plugin
 							name="Crypto Distributor"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4033,7 +4033,7 @@
 					<plugin
 							name="Top Up Point"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4049,7 +4049,7 @@
 					<plugin
 							name="Cash Out Point"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4069,7 +4069,7 @@
 					<plugin
 							name="Crypto Wholesaler"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4085,7 +4085,7 @@
 					<plugin
 							name="Crypto Distributor"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4101,7 +4101,7 @@
 					<plugin
 							name="Top Up Point"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4117,7 +4117,7 @@
 					<plugin
 							name="Cash Out Point"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4137,7 +4137,7 @@
 					<plugin
 							name="Crypto Wholesaler"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4153,7 +4153,7 @@
 					<plugin
 							name="Crypto Distributor"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4169,7 +4169,7 @@
 					<plugin
 							name="Top Up Point"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4185,7 +4185,7 @@
 					<plugin
 							name="Cash Out Point"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4205,7 +4205,7 @@
 					<plugin
 							name="Wholesaler Broker Crypto Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4221,7 +4221,7 @@
 					<plugin
 							name="Wholesaler Broker Fiat Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4237,7 +4237,7 @@
 					<plugin
 							name="Wholesaler Distributor Crypto Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4253,7 +4253,7 @@
 					<plugin
 							name="Wholesaler Distributor Fiat Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4269,7 +4269,7 @@
 					<plugin
 							name="Distributor Wholesaler Crypto Purchare"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4285,7 +4285,7 @@
 					<plugin
 							name="Distributor Wholesaler Fiat Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4301,7 +4301,7 @@
 					<plugin
 							name="Distributor Distributor Crypto Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4317,7 +4317,7 @@
 					<plugin
 							name="Distributor Distributor Fiat Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4333,7 +4333,7 @@
 					<plugin
 							name="Distributor Distributor Crypto Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4349,7 +4349,7 @@
 					<plugin
 							name="Distributor Distributor Fiat Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4365,7 +4365,7 @@
 					<plugin
 							name="Distributor Top Up Point Crypto Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4382,7 +4382,7 @@
 					<plugin
 							name="Distributor Top Up Point Fiat Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4399,7 +4399,7 @@
 					<plugin
 							name="Top Up Point Distributor Crypto Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4415,7 +4415,7 @@
 					<plugin
 							name="Top Up Point Distributor Fiat Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4431,7 +4431,7 @@
 					<plugin
 							name="Top Up Point Intra User Crypto Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4447,7 +4447,7 @@
 					<plugin
 							name="Cash Out Point Intra User Fiat Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4463,7 +4463,7 @@
 					<plugin
 							name="Top Up Point Cash Out Point Crypto Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4479,7 +4479,7 @@
 					<plugin
 							name="Cash Out Point Top Up Point Crypto Sell"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4495,7 +4495,7 @@
 					<plugin
 							name="Shop Top Up Point Crypto Sale"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4511,7 +4511,7 @@
 					<plugin
 							name="Top Up Point Shop Crypto Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4531,7 +4531,7 @@
 					<plugin
 							name="Wholesaler Broker"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4547,7 +4547,7 @@
 					<plugin
 							name="Wholesaler Distributor"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4563,7 +4563,7 @@
 					<plugin
 							name="Distributor Distributor"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4579,7 +4579,7 @@
 					<plugin
 							name="Distributor Top Up Point"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4595,7 +4595,7 @@
 					<plugin
 							name="Top Up Point Cash Out Point"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4611,7 +4611,7 @@
 					<plugin
 							name="Top Up Point Shop"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4631,7 +4631,7 @@
 					<plugin
 							name="Crypto Wholesaler"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4647,7 +4647,7 @@
 					<plugin
 							name="Crypto Distributor"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4663,7 +4663,7 @@
 					<plugin
 							name="Crypto Top Up"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4679,7 +4679,7 @@
 					<plugin
 							name="Crypto Cash Out"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4695,7 +4695,7 @@
 					<plugin
 							name="Crypto POS Wallet"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4715,7 +4715,7 @@
 					<plugin
 							name="Crypto Wholesaler"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4730,7 +4730,7 @@
 					<plugin
 							name="Crypto Distributor"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4746,7 +4746,7 @@
 					<plugin
 							name="Top Up Point"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4762,7 +4762,7 @@
 					<plugin
 							name="Cash Out Point"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4784,7 +4784,7 @@
 					<plugin
 							name="Crypto Wholesaler"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4799,7 +4799,7 @@
 					<plugin
 							name="Crypto Distributor"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4814,7 +4814,7 @@
 					<plugin
 							name="Top Up Point"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4829,7 +4829,7 @@
 					<plugin
 							name="Cash Out Point"
 							description=""
-							difficulty="8"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4853,7 +4853,7 @@
 					<android
 							name="Device Private Network"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4874,7 +4874,7 @@
 					<plugin
 							name="Device Private Network"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4896,7 +4896,7 @@
 					<plugin
 							name="Device Private Network"
 							description=""
-							difficulty="1"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -4918,7 +4918,7 @@
 					<plugin
 							name="Device Private Network"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5092,7 +5092,7 @@
 					<plugin
 							name="Outgoing Crypto"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5183,7 +5183,7 @@
 					<plugin
 							name="Litecoin"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5198,7 +5198,7 @@
 					<plugin
 							name="Ripple"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5213,7 +5213,7 @@
 					<plugin
 							name="Ethereum"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5249,7 +5249,7 @@
 					<plugin
 							name="Litecoin"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5264,7 +5264,7 @@
 					<plugin
 							name="Ripple"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5279,7 +5279,7 @@
 					<plugin
 							name="Ethereum"
 							description=""
-							difficulty="5"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5416,7 +5416,7 @@
 					<addon
 							name="Device Connectivity"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5431,7 +5431,7 @@
 					<addon
 							name="Device Power"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5446,7 +5446,7 @@
 					<addon
 							name="Device Contacts"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -5461,7 +5461,7 @@
 					<addon
 							name="Device Hardware"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							due-date="2015-09-01"
 							>
