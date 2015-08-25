@@ -16,9 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.sub_app.wallet_store.common.model.old.App;
-import com.bitdubai.sub_app.wallet_store.common.model.old.ItemsBD;
-import com.bitdubai.sub_app.wallet_store.common.model.old.ViewHolder;
+import com.bitdubai.sub_app.wallet_store.common.models.old.App;
+import com.bitdubai.sub_app.wallet_store.common.models.old.ItemsBD;
+import com.bitdubai.sub_app.wallet_store.common.models.old.ViewHolder;
 import com.wallet_store.bitdubai.R;
 //import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 

@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.common.model;
+package com.bitdubai.sub_app.wallet_store.common.models;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -14,6 +14,7 @@ import com.wallet_store.bitdubai.R;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created on 22/08/15.
@@ -21,9 +22,12 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class CatalogItemDao implements Serializable {
+public class CatalogueItemDao implements Serializable {
     private static final long serialVersionUID = -8730067026050196759L;
 
+
+
+    private WalletStoreCatalogueItem catalogueItem;
     private String developerName;
     private String installationStatusText;
     private String walletName;
@@ -31,13 +35,15 @@ public class CatalogItemDao implements Serializable {
 
 
     /**
-     * Crea un nuevo CatalogItemDao
+     * Crea un nuevo CatalogueItemDao
      *
      * @param catalogueItem un item del catalogo
      * @throws DatailedInformationNotFoundException
      * @throws CantGetWalletIconException
      */
-    public CatalogItemDao(WalletStoreCatalogueItem catalogueItem) throws DatailedInformationNotFoundException, CantGetWalletIconException {
+    public CatalogueItemDao(WalletStoreCatalogueItem catalogueItem) throws DatailedInformationNotFoundException, CantGetWalletIconException {
+
+        this.catalogueItem = catalogueItem;
 
         walletName = catalogueItem.getName();
 
@@ -51,6 +57,10 @@ public class CatalogItemDao implements Serializable {
         byte[] iconBytes = catalogueItem.getIcon();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(iconBytes);
         walletIcon = Drawable.createFromStream(inputStream, "walletIcon");
+    }
+
+    public WalletStoreCatalogueItem getSrcObj() {
+        return catalogueItem;
     }
 
     public String getDeveloperName() {
@@ -70,14 +80,14 @@ public class CatalogItemDao implements Serializable {
     }
 
 
-    private CatalogItemDao(String walletName, String developerName, String installationStatusText, Drawable walletIcon) {
+    private CatalogueItemDao(String walletName, String developerName, String installationStatusText, Drawable walletIcon) {
         this.walletName = walletName;
         this.developerName = developerName;
         this.installationStatusText = installationStatusText;
         this.walletIcon = walletIcon;
     }
 
-    public static ArrayList<CatalogItemDao> getTestData(Resources res) {
+    public static ArrayList<CatalogueItemDao> getTestData(Resources res) {
 
         String[] walletNames = {"Girl's wallet", "Boy's wallet", "Ladies", "Young", "Boca Junior's wallet",
                 "Carrefour's wallet", "Gucci's wallet", "Bank Itau's wallet", "Mc donal's wallet", "Van's wallet",
@@ -104,14 +114,26 @@ public class CatalogItemDao implements Serializable {
                 R.drawable.wallet_store_cover_photo_hp, R.drawable.wallet_store_cover_photo_billabong,
                 R.drawable.wallet_store_cover_photo_starbucks};
 
-        ArrayList<CatalogItemDao> testItems = new ArrayList<>();
+        ArrayList<CatalogueItemDao> testItems = new ArrayList<>();
         for (int i = 0; i < walletIcons.length && i < installed.length && i < prices.length && i < developerNames.length && i < walletNames.length; i++) {
             String installedStr = installed[i] ? "INSTALLED" : prices[i];
             Drawable icon = res.getDrawable(walletIcons[i]);
-            CatalogItemDao item = new CatalogItemDao(walletNames[i], developerNames[i], installedStr, icon);
+            CatalogueItemDao item = new CatalogueItemDao(walletNames[i], developerNames[i], installedStr, icon);
             testItems.add(item);
         }
 
         return testItems;
+    }
+
+    public static ArrayList<CatalogueItemDao> getDataFromCatalogueItemList(List<WalletStoreCatalogueItem> catalogueItems)
+            throws DatailedInformationNotFoundException, CantGetWalletIconException {
+
+        ArrayList<CatalogueItemDao> data = new ArrayList<>();
+        for (WalletStoreCatalogueItem catalogItem : catalogueItems) {
+            CatalogueItemDao item = new CatalogueItemDao(catalogItem);
+            data.add(item);
+        }
+
+        return data;
     }
 }

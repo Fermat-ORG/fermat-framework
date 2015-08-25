@@ -19,24 +19,14 @@ import com.wallet_store.bitdubai.R;
  * @version 1.0
  */
 public class MoreDetailsActivityFragment extends Fragment {
-    /**
-     * STATIC
-     */
+    // STATIC
     private static final String ARG_POSITION = "position";
 
-    /**
-     * MODULE
-     */
+    // MANAGERS
     private WalletStoreModuleManager moduleManager;
-
-    /**
-     * ERROR MANAGER
-     */
     private ErrorManager errorManager;
 
-    /**
-     * SESSION
-     */
+     // SESSION
     private WalletStoreSubAppSession session;
 
 
@@ -100,6 +90,4 @@ public class MoreDetailsActivityFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.wallet_store_fragment_more_details_activity, container, false);
     }
-
-
 }

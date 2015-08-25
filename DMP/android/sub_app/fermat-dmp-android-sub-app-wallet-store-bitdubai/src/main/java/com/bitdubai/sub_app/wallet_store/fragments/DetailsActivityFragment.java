@@ -19,24 +19,14 @@ import com.wallet_store.bitdubai.R;
  * @version 1.0
  */
 public class DetailsActivityFragment extends Fragment {
-    /**
-     * STATIC
-     */
+    // STATIC
     private static final String ARG_POSITION = "position";
 
-    /**
-     * MODULE
-     */
+    // MANAGERS
     private WalletStoreModuleManager moduleManager;
-
-    /**
-     * ERROR MANAGER
-     */
     private ErrorManager errorManager;
 
-    /**
-     * SESSION
-     */
+    // SESSION
     private WalletStoreSubAppSession session;
 
 

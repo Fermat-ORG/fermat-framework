@@ -1,20 +1,32 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsFromCatalogueException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DatailedInformationNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.wallet_store.common.adapters.CatalogAdapter;
-import com.bitdubai.sub_app.wallet_store.common.model.CatalogItemDao;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
+import com.bitdubai.sub_app.wallet_store.common.interfaces.CatalogItemListener;
+import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment que luce como un Activity donde se muestra la lista de Wallets disponibles en el catalogo de la Wallet Store
@@ -22,26 +34,15 @@ import java.util.ArrayList;
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MainActivityFragment extends FermatListFragment {
-
-    /**
-     * STATIC
-     */
+public class MainActivityFragment extends FermatListFragment implements CatalogItemListener {
+    // STATIC
     private static final String ARG_POSITION = "position";
 
-    /**
-     * MODULE
-     */
+    // MANAGERS
     private WalletStoreModuleManager moduleManager;
-
-    /**
-     * ERROR MANAGER
-     */
     private ErrorManager errorManager;
 
-    /**
-     * SESSION
-     */
+    // SESSION
     private WalletStoreSubAppSession session;
 
 
@@ -79,6 +80,7 @@ public class MainActivityFragment extends FermatListFragment {
     public void setModuleManager(WalletStoreModuleManager moduleManager) {
         this.moduleManager = moduleManager;
     }
+
 
     /**
      * Set session of this subapp
@@ -119,9 +121,39 @@ public class MainActivityFragment extends FermatListFragment {
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            //// TODO: 19/08/15 Create an adapter instance
-            ArrayList<CatalogItemDao> testData = CatalogItemDao.getTestData(getResources());
-            adapter = new CatalogAdapter(getActivity(), testData);
+            ArrayList<CatalogueItemDao> data = CatalogueItemDao.getTestData(getResources());
+
+            try {
+                WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
+                List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
+                data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems);
+
+            } catch (CantGetRefinedCatalogException e) {
+                Log.e("NELSON", "CantGetRefinedCatalogException", e);
+                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+            } catch (NullPointerException e) {
+                Log.e("NELSON", "NullPointerException", e);
+                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+            } catch (CantGetWalletsFromCatalogueException e) {
+                Log.e("NELSON", "CantGetWalletsFromCatalogueException", e);
+                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (CantGetWalletIconException e) {
+                Log.e("NELSON", "CantGetWalletIconException", e);
+                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+            } catch (DatailedInformationNotFoundException e) {
+                Log.e("NELSON", "DatailedInformationNotFoundException", e);
+                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+
+            adapter = new WalletStoreCatalogueAdapter(getActivity(), data);
         }
         return adapter;
     }
@@ -134,5 +166,18 @@ public class MainActivityFragment extends FermatListFragment {
         return layoutManager;
     }
 
+    @Override
+    public void itemClicked(int itemPos) {
+        CatalogueItemDao item = (CatalogueItemDao) adapter.getItem(itemPos);
+        if (item != null){
+            session.setCatalogItemDao(item);
+            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0, session);
 
+            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
+            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            FT.replace(R.id.activity_container, fragment);
+            FT.addToBackStack(null);
+            FT.commit();
+        }
+    }
 }

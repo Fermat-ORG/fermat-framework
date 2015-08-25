@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.common.model.old;
+package com.bitdubai.sub_app.wallet_store.common.models.old;
 
 import java.io.Serializable;
 

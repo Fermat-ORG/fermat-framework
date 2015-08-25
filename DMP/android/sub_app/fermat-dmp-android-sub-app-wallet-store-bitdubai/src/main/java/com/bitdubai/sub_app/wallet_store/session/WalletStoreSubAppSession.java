@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_store.session;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class WalletStoreSubAppSession implements com.bitdubai.fermat_android_api
      * Wallet Store Module
      */
     private WalletStoreModuleManager walletStoreModuleManager;
+    private CatalogueItemDao selectedCatalogItem;
 
 
     /**
@@ -122,5 +124,9 @@ public class WalletStoreSubAppSession implements com.bitdubai.fermat_android_api
     @Override
     public int hashCode() {
         return subApps.hashCode();
+    }
+
+    public void setCatalogItemDao(CatalogueItemDao item) {
+        selectedCatalogItem = item;
     }
 }
