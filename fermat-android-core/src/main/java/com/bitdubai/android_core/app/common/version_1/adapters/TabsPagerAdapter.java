@@ -5,42 +5,23 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.widget.Toast;
 
-import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
-import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
-import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.EditableWalletFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ManagerFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ProjectsFragment;
-import com.bitdubai.sub_app.wallet_store.fragment.AcceptedNearbyFragment;
-import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
-import com.bitdubai.sub_app.wallet_store.fragment.FreeFragment;
-import com.bitdubai.sub_app.wallet_store.fragment.PaidFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+
 import java.util.List;
 
 /**

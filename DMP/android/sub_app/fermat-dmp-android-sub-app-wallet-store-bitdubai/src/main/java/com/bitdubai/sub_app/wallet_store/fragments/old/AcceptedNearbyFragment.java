@@ -1,14 +1,13 @@
-package com.bitdubai.sub_app.wallet_store.fragment;
+package com.bitdubai.sub_app.wallet_store.fragments.old;
 
 /**
- * MATIAS 13/5/2015
+ * Created by Natalia on 23/04/2015.
  */
-
-import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,26 +17,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.sub_app.wallet_store.Model.App;
-import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
-import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
+import com.bitdubai.sub_app.wallet_store.common.model.old.App;
+import com.bitdubai.sub_app.wallet_store.common.model.old.ItemsBD;
+import com.bitdubai.sub_app.wallet_store.common.model.old.ViewHolder;
 import com.wallet_store.bitdubai.R;
+//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
-public class SearchFragment extends Fragment {
+public class AcceptedNearbyFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static SearchFragment newInstance(int position,SubAppsSession subAppsSession) {
-        SearchFragment f = new SearchFragment();
+    public static AcceptedNearbyFragment newInstance(int position,SubAppsSession subAppsSession) {
+        AcceptedNearbyFragment f = new AcceptedNearbyFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -46,16 +45,19 @@ public class SearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         ItemsBD itemsBD = new ItemsBD();
-        //query de busqueda que viene de la activity
-        String query_search = getArguments().getString("query");
+
+
+
 
 
         if (mlist == null)
         {
+            //se busca por cercania, en este caso vamos a suponer que estamos en la region 1
+            int region =1;
+            mlist=itemsBD.nearbyWalletsItems(region);
 
-            //aca van las de discount
-            mlist=itemsBD.cargarDatosPorQueryBusqueda(query_search);
         }
 
 
@@ -73,8 +75,6 @@ public class SearchFragment extends Fragment {
         gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallet_store_activity_store_front_grid_item, mlist));
 
 
-
-
 /*
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -86,10 +86,16 @@ public class SearchFragment extends Fragment {
                 return ;
             }
         });
-*/
 
+*/
         return gridView;
     }
+
+
+
+
+
+
 
 
 
@@ -137,7 +143,7 @@ public class SearchFragment extends Fragment {
 
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);
-
+                holder.downloadIcon = (ImageView) convertView.findViewById(R.id.download);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();

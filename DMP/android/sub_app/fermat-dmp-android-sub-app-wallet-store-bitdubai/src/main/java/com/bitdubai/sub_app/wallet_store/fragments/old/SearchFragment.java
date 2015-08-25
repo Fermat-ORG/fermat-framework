@@ -1,13 +1,15 @@
-package com.bitdubai.sub_app.wallet_store.fragment;
+package com.bitdubai.sub_app.wallet_store.fragments.old;
 
 /**
-     * MATIAS 13/5/2016
+ * MATIAS 13/5/2015
  */
+
+import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.app.Fragment;import android.view.LayoutInflater;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -16,26 +18,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.sub_app.wallet_store.Model.App;
-import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
-import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
+import com.bitdubai.sub_app.wallet_store.common.model.old.App;
+import com.bitdubai.sub_app.wallet_store.common.model.old.ItemsBD;
+import com.bitdubai.sub_app.wallet_store.common.model.old.ViewHolder;
 import com.wallet_store.bitdubai.R;
-//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
-public class PaidFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static PaidFragment newInstance(int position,SubAppsSession subAppsSession) {
-        PaidFragment f = new PaidFragment();
+    public static SearchFragment newInstance(int position,SubAppsSession subAppsSession) {
+        SearchFragment f = new SearchFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -44,14 +46,16 @@ public class PaidFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         ItemsBD itemsBD = new ItemsBD();
+        //query de busqueda que viene de la activity
+        String query_search = getArguments().getString("query");
+
 
         if (mlist == null)
         {
 
             //aca van las de discount
-            mlist=itemsBD.cargarDatosPorTipoApp(ItemsBD.REGULAR_WALLETS);
+            mlist=itemsBD.cargarDatosPorQueryBusqueda(query_search);
         }
 
 
@@ -133,7 +137,7 @@ public class PaidFragment extends Fragment {
 
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);
-                holder.downloadIcon = (ImageView) convertView.findViewById(R.id.download);
+
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
