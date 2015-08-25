@@ -6,6 +6,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -15,7 +16,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.Su
  * @author Matias Furszyfer
  */
 
-public interface SubAppFragmentFactory {
+public interface SubAppFragmentFactory<S extends SubAppsSession,J extends SubAppSettings>{
 
     /**
      * This method takes a reference (string) to a fragment and returns the corresponding fragment.
@@ -24,6 +25,6 @@ public interface SubAppFragmentFactory {
      * @return the fragment referenced
      */
 
-    public android.app.Fragment getFragment(String code, SubAppsSession subAppsSession, SubAppSettingsManager subAppSettingsManager, SubAppResourcesProviderManager subAppResourcesProviderManager) throws FragmentNotFoundException;
+    public android.app.Fragment getFragment(String code, S subAppsSession, J subAppSettingsManager,SubAppResourcesProviderManager subAppResourcesProviderManager) throws FragmentNotFoundException;
 
 }
