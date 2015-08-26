@@ -484,7 +484,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         }
 
 
-        DeveloperIdentity developer = walletStoreManager.constructDeveloper(walletFactoryProject.getNavigationStructure().getDeveloper().getAlias(), walletFactoryProject.getNavigationStructure().getDeveloper().getPublicKey());
+        //DeveloperIdentity developer = walletStoreManager.constructDeveloper(walletFactoryProject.getNavigationStructure().getDeveloper().getAlias(), walletFactoryProject.getNavigationStructure().getDeveloper().getPublicKey()); //Todo: Revisar
 
         /*
          * Construct the catalog item instance
@@ -501,7 +501,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         otherSkinSupportedList,
                                                         defaultSkin,
                                                         defaultLanguage,
-                                                        developer,
+                                                        null, //Todo Revisar
                                                         otherLanguageSupportedList,
                                                         publisherWebsiteUrl);
     }
@@ -523,7 +523,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
 
 
-       com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = walletStoreManager.constructDesigner(skin.getDesigner().getAlias(), skin.getDesigner().getPublicKey());
+       //com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = walletStoreManager.constructDesigner(skin.getDesigner().getAlias(), skin.getDesigner().getPublicKey()); //Todo: Revisar
 
        /*
         * Construct the new instance
@@ -540,7 +540,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                hasVideoPreview,
                                                videoPreviews,
                                                skin.getSize(),
-                                               designer, //Todo: Revisar
+                                               null, //Todo: Revisar
                                                Boolean.TRUE);
 
    }
@@ -557,7 +557,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      */
     private com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language constructLanguageObject(Language language, Version version, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion){
 
-        com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = walletStoreManager.constructTranslator(language.getTranslator().getAlias(), language.getTranslator().getPublicKey());
+        //com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = walletStoreManager.constructTranslator(language.getTranslator().getAlias(), language.getTranslator().getPublicKey()); //Todo: Revisar
 
         /*
         * Construct the new instance
@@ -571,7 +571,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                 finalWalletVersion,
                 videoPreviews,
                 language.getSize(),
-                translator, //Todo: Revisar
+                null, //Todo: Revisar
                 Boolean.TRUE);
 
     }
