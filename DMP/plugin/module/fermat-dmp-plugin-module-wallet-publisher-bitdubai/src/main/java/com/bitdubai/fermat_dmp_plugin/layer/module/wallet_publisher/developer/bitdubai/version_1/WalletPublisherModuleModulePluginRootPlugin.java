@@ -17,8 +17,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
@@ -309,21 +311,10 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
      * @see WalletPublisherModuleManager#getProjectsReadyToPublish()
      */
     @Override
-    public List<WalletFactoryProject> getProjectsReadyToPublish() {
+    public List<WalletFactoryProject> getProjectsReadyToPublish() throws CantGetWalletFactoryProjectException {
 
-     /*   try {
+        return (List<WalletFactoryProject>) walletFactoryProjectManager.getWalletFactoryProjectByState(WalletFactoryProjectState.CLOSED);
 
-            return (List<DescriptorFactoryProject>) walletDescriptorFactoryProjectManager.getClosedDescriptorFactoryProject(FactoryProjectState.CLOSED);
-
-        } catch (CantGetWalletFactoryProjectException e) {
-            e.printStackTrace();
-        } catch (ProjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-       */
-
-        return null;
     }
 
     /**
@@ -426,14 +417,76 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
         try {
 
-            String signature = null; //TODO: This have to be generate by the PublisherIdentity method
+            /**
+             * Create the signature
+             */
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity);
 
+            /*
+             * Publish the wallet
+             */
             walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
+
+            /*
+             * Mark the project like publish
+             */
             walletFactoryProjectManager.markProkectAsPublished(walletFactoryProject);
 
         } catch (Exception exception) {
             throw new CantPublishComponentException(CantPublishComponentException.DEFAULT_MESSAGE, exception, "WalletPublisherModuleModulePluginRootPlugin", "unknown");
         }
     }
+
+
+    /**
+     * Create a signature that represent all data pass by parameters
+     *
+     * @param walletFactoryProject
+     * @param icon
+     * @param mainScreenShot
+     * @param screenShotDetails
+     * @param videoUrl
+     * @param observations
+     * @param initialWalletVersion
+     * @param finalWalletVersion
+     * @param initialPlatformVersion
+     * @param finalPlatformVersion
+     * @param publisherWebsiteUrl
+     * @param publisherIdentity
+     * @return String signature
+     */
+    private String createSignature(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantSingMessageException {
+
+        /*
+         * Construct a string with all the data
+         */
+        StringBuffer stringDataToSing =  new StringBuffer("");
+
+        stringDataToSing.append(walletFactoryProject.getProjectPublicKey());
+        stringDataToSing.append(walletFactoryProject.getName());
+        stringDataToSing.append(icon);
+        stringDataToSing.append(mainScreenShot);
+
+        for (byte[] data :screenShotDetails){
+            stringDataToSing.append(data);
+        }
+
+        stringDataToSing.append(videoUrl);
+        stringDataToSing.append(observations);
+        stringDataToSing.append(initialWalletVersion);
+        stringDataToSing.append(finalWalletVersion);
+        stringDataToSing.append(initialPlatformVersion);
+        stringDataToSing.append(finalWalletVersion);
+        stringDataToSing.append(finalPlatformVersion);
+        stringDataToSing.append(publisherWebsiteUrl);
+
+        /*
+         * Sing the data and return
+         */
+        return publisherIdentity.createMessageSignature(stringDataToSing.toString());
+    }
+
+
+
 
 }

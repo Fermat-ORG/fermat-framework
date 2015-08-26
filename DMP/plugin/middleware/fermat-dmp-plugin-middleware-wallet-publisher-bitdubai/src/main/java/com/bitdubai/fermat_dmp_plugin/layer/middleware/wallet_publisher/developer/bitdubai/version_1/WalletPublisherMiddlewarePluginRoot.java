@@ -786,6 +786,9 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
                 System.out.println(info.toString());
             }
 
+            InformationPublishedComponent infoWithDetails = walletPublisherMiddlewareManager.getInformationPublishedComponentWithDetails(list.get(0).getId());
+            System.out.println(infoWithDetails.toString());
+
 
         } catch (CantGetPublishedComponentInformationException e) {
             e.printStackTrace();

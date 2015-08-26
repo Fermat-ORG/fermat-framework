@@ -61,7 +61,7 @@ public class ImageManager {
      */
     public void saveImageFile(ImageMiddlewareImpl image) throws CantCreateFileException, CantPersistFileException {
 
-        PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginOwnerId, ImageManager.PATH_DIRECTORY, image.getFileId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginOwnerId, ImageManager.PATH_DIRECTORY, image.getFileId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
         imageFile.setContent(image.getData());
         imageFile.persistToMedia();
 
@@ -77,7 +77,7 @@ public class ImageManager {
      */
     public byte[] loadImageFile(String fileId) throws FileNotFoundException, CantCreateFileException {
 
-        PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginOwnerId, ImageManager.PATH_DIRECTORY, fileId, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginOwnerId, ImageManager.PATH_DIRECTORY, fileId, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
         return imageFile.getContent();
     }
 

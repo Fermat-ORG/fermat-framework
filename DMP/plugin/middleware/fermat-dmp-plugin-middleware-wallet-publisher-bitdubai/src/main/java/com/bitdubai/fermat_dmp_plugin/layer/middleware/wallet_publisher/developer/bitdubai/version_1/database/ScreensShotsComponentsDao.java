@@ -133,7 +133,7 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -152,6 +152,17 @@ public class ScreensShotsComponentsDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -222,7 +233,8 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
-        }catch (DatabaseNotFoundException e) {
+
+        } catch (DatabaseNotFoundException e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -241,6 +253,17 @@ public class ScreensShotsComponentsDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -325,7 +348,7 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -344,6 +367,17 @@ public class ScreensShotsComponentsDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        } catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -460,6 +494,17 @@ public class ScreensShotsComponentsDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -611,29 +656,18 @@ public class ScreensShotsComponentsDao {
      * @param record with values from the table
      * @return ImageMiddlewareImpl setters the values from table
      */
-    private ImageMiddlewareImpl constructFrom(DatabaseTableRecord record){
+    private ImageMiddlewareImpl constructFrom(DatabaseTableRecord record) throws FileNotFoundException, CantCreateFileException {
 
-        try {
+        /*
+         * Construct object
+         */
+        ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
+        imageMiddleware.setFileId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME)));
+        imageMiddleware.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME)));
+        imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
 
-            /*
-             * Construct object
-             */
-            ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
-            imageMiddleware.setFileId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME)));
-            imageMiddleware.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME)));
-            imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
+        return imageMiddleware;
 
-
-            return imageMiddleware;
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        }
-
-
-        return null;
     }
 
     /**

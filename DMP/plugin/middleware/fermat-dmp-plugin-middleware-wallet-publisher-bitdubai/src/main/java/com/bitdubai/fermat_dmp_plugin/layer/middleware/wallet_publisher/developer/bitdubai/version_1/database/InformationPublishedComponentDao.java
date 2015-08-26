@@ -181,6 +181,17 @@ public class InformationPublishedComponentDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
         }finally {
 
             if (getDataBase() != null){
@@ -249,7 +260,7 @@ public class InformationPublishedComponentDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -268,6 +279,17 @@ public class InformationPublishedComponentDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -372,6 +394,17 @@ public class InformationPublishedComponentDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -490,6 +523,17 @@ public class InformationPublishedComponentDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -769,45 +813,29 @@ public class InformationPublishedComponentDao {
      * @param record with values from the table
      * @return InformationPublishedComponentMiddlewareImpl setters the values from table
      */
-    private InformationPublishedComponentMiddlewareImpl constructInformationPublishedComponentMiddlewareFrom(DatabaseTableRecord record){
+    private InformationPublishedComponentMiddlewareImpl constructInformationPublishedComponentMiddlewareFrom(DatabaseTableRecord record) throws InvalidParameterException, MalformedURLException, FileNotFoundException, CantCreateFileException {
 
         InformationPublishedComponentMiddlewareImpl informationPublishedComponent = new InformationPublishedComponentMiddlewareImpl();
 
-        try {
+        informationPublishedComponent.setId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME)));
+        informationPublishedComponent.setWalletFactoryProjectId(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_ID_COLUMN_NAME));
+        informationPublishedComponent.setWalletFactoryProjectName(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_NAME_COLUMN_NAME));
+        informationPublishedComponent.setType(InformationPublishedComponentType.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME)));
+        informationPublishedComponent.setDescriptions(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DESCRIPTIONS_COLUMN_NAME));
+        informationPublishedComponent.setVideoUrl(new URL(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME)));
+        informationPublishedComponent.setStatus(ComponentPublishedInformationStatus.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME)));
+        informationPublishedComponent.setStatusTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME)));
+        informationPublishedComponent.setPublicationTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME)));
+        informationPublishedComponent.setPublisherIdentityPublicKey(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+        informationPublishedComponent.setSignature(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME));
 
-            informationPublishedComponent.setId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME)));
-            informationPublishedComponent.setWalletFactoryProjectId(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_ID_COLUMN_NAME));
-            informationPublishedComponent.setWalletFactoryProjectName(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_NAME_COLUMN_NAME));
-            informationPublishedComponent.setType(InformationPublishedComponentType.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME)));
-            informationPublishedComponent.setDescriptions(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME));
-
-            /*
-             * Image File deserialize into the object image
-             */
-            String fileIdIconImg = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME);
-            String fileIdMainScreenShot = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME);
-            informationPublishedComponent.setIconImg(constructImageMiddlewareFrom(fileIdIconImg, informationPublishedComponent.getId()));
-            informationPublishedComponent.setMainScreenShotImg(constructImageMiddlewareFrom(fileIdMainScreenShot, informationPublishedComponent.getId()));
-
-            informationPublishedComponent.setVideoUrl(new URL(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME)));
-            informationPublishedComponent.setStatus(ComponentPublishedInformationStatus.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME)));
-            informationPublishedComponent.setStatusTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME)));
-            informationPublishedComponent.setPublicationTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME)));
-            informationPublishedComponent.setPublisherIdentityPublicKey(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
-            informationPublishedComponent.setSignature(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME));
-
-        } catch (InvalidParameterException e) {
-
-            //this should not happen, but if it happens return null
-            return null;
-
-        } catch (MalformedURLException e) {
-
-            //this should not happen, but if it happens return null
-            return null;
-
-        }
-
+        /*
+         * Image File deserialize into the object image
+         */
+        String fileIdIconImg = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME);
+        String fileIdMainScreenShot = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME);
+        informationPublishedComponent.setIconImg(constructImageMiddlewareFrom(fileIdIconImg, informationPublishedComponent.getId()));
+        informationPublishedComponent.setMainScreenShotImg(constructImageMiddlewareFrom(fileIdMainScreenShot, informationPublishedComponent.getId()));
 
         return informationPublishedComponent;
     }
@@ -863,30 +891,21 @@ public class InformationPublishedComponentDao {
      * @param record with values from the table
      * @return ComponentVersionDetailImpl setters the values from table
      */
-    private ComponentVersionDetailMiddlewareImpl constructComponentVersionDetailMiddlewareFrom(DatabaseTableRecord record){
+    private ComponentVersionDetailMiddlewareImpl constructComponentVersionDetailMiddlewareFrom(DatabaseTableRecord record) throws InvalidParameterException {
 
         ComponentVersionDetailMiddlewareImpl componentVersionDetailImpl = new ComponentVersionDetailMiddlewareImpl();
 
-        try {
-
-            componentVersionDetailImpl.setId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME)));
-            componentVersionDetailImpl.setScreenSize(ScreenSize.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_SCREEN_SIZE_COLUMN_NAME)));
-            componentVersionDetailImpl.setVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_COLUMN_NAME)));
-            componentVersionDetailImpl.setVersionTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_TIMESTAMP_COLUMN_NAME)));
-            componentVersionDetailImpl.setInitialWalletVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_WALLET_VERSION_COLUMN_NAME)));
-            componentVersionDetailImpl.setFinalWalletVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_WALLET_VERSION_COLUMN_NAME)));
-            componentVersionDetailImpl.setInitialPlatformVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_PLATFORM_VERSION_COLUMN_NAME)));
-            componentVersionDetailImpl.setFinalPlatformVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_PLATFORM_VERSION_COLUMN_NAME)));
-            componentVersionDetailImpl.setObservations(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_OBSERVATIONS_COLUMN_NAME));
-            componentVersionDetailImpl.setCatalogId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_CATALOG_ID_COLUMN_NAME)));
-            componentVersionDetailImpl.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_COMPONENT_ID_COLUMN_NAME)));
-
-        } catch (InvalidParameterException e) {
-
-            //this should not happen, but if it happens return null
-            return null;
-        }
-
+        componentVersionDetailImpl.setId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME)));
+        componentVersionDetailImpl.setScreenSize(ScreenSize.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_SCREEN_SIZE_COLUMN_NAME)));
+        componentVersionDetailImpl.setVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_COLUMN_NAME)));
+        componentVersionDetailImpl.setVersionTimestamp(new Timestamp(record.getLongValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_TIMESTAMP_COLUMN_NAME)));
+        componentVersionDetailImpl.setInitialWalletVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_WALLET_VERSION_COLUMN_NAME)));
+        componentVersionDetailImpl.setFinalWalletVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_WALLET_VERSION_COLUMN_NAME)));
+        componentVersionDetailImpl.setInitialPlatformVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_PLATFORM_VERSION_COLUMN_NAME)));
+        componentVersionDetailImpl.setFinalPlatformVersion(new Version(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_PLATFORM_VERSION_COLUMN_NAME)));
+        componentVersionDetailImpl.setObservations(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_OBSERVATIONS_COLUMN_NAME));
+        componentVersionDetailImpl.setCatalogId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_CATALOG_ID_COLUMN_NAME)));
+        componentVersionDetailImpl.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_COMPONENT_ID_COLUMN_NAME)));
 
         return componentVersionDetailImpl;
     }
@@ -909,9 +928,9 @@ public class InformationPublishedComponentDao {
          * Set the entity values
          */
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME,      componentVersionDetailImpl.getId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_SCREEN_SIZE_COLUMN_NAME, componentVersionDetailImpl.getScreenSize().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_SCREEN_SIZE_COLUMN_NAME, componentVersionDetailImpl.getScreenSize().getCode());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_COLUMN_NAME, componentVersionDetailImpl.getVersion().toString());
-        entityRecord.setLongValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_TIMESTAMP_COLUMN_NAME, componentVersionDetailImpl.getVersionTimestamp().getTime());
+        entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_TIMESTAMP_COLUMN_NAME, componentVersionDetailImpl.getVersionTimestamp().getTime());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_WALLET_VERSION_COLUMN_NAME, componentVersionDetailImpl.getInitialWalletVersion().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_WALLET_VERSION_COLUMN_NAME, componentVersionDetailImpl.getFinalWalletVersion().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_PLATFORM_VERSION_COLUMN_NAME, componentVersionDetailImpl.getInitialPlatformVersion().toString());
@@ -934,29 +953,18 @@ public class InformationPublishedComponentDao {
      * @param record with values from the table
      * @return ImageMiddlewareImpl setters the values from table
      */
-    private ImageMiddlewareImpl constructImageMiddlewareFrom(DatabaseTableRecord record){
+    private ImageMiddlewareImpl constructImageMiddlewareFrom(DatabaseTableRecord record) throws FileNotFoundException, CantCreateFileException {
 
-        try {
+        /*
+         * Construct object
+         */
+        ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
+        imageMiddleware.setFileId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME)));
+        imageMiddleware.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME)));
+        imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
 
-            /*
-             * Construct object
-             */
-            ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
-            imageMiddleware.setFileId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME)));
-            imageMiddleware.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME)));
-            imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
+        return imageMiddleware;
 
-
-            return imageMiddleware;
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        }
-
-
-        return null;
     }
 
     /**
@@ -994,29 +1002,18 @@ public class InformationPublishedComponentDao {
      * @param componentId
      * @return
      */
-    private ImageMiddlewareImpl constructImageMiddlewareFrom(String fileId, UUID componentId){
+    private ImageMiddlewareImpl constructImageMiddlewareFrom(String fileId, UUID componentId) throws FileNotFoundException, CantCreateFileException {
 
-        try {
-
-            /*
-             * Construct object
-             */
-            ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
-            imageMiddleware.setFileId(UUID.fromString(fileId));
-            imageMiddleware.setComponentId(componentId);
-            imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
+        /*
+         * Construct object
+         */
+        ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
+        imageMiddleware.setFileId(UUID.fromString(fileId));
+        imageMiddleware.setComponentId(componentId);
+        imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
 
 
-            return imageMiddleware;
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        }
-
-
-        return null;
+        return imageMiddleware;
     }
 
 

@@ -26,13 +26,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ComponentVersionDetailDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao;
@@ -277,7 +271,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         try {
 
             Version defaultVersion = new Version(1, 0, 0);
-          //  CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
+            CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
 
             /* ----------------------------------------
              * Create the informationPublishedComponent
@@ -326,8 +320,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             componentVersionDetailMiddlewareImpl.setObservations(observations);
             componentVersionDetailMiddlewareImpl.setScreenSize(walletFactoryProject.getSkins().get(0).getScreenSize());
             componentVersionDetailMiddlewareImpl.setComponentId(informationPublishedComponentMiddlewareImpl.getId());
-            componentVersionDetailMiddlewareImpl.setCatalogId(UUID.randomUUID());
-          //  componentVersionDetailMiddlewareImpl.setCatalogId(catalogItem.getId());
+            componentVersionDetailMiddlewareImpl.setCatalogId(catalogItem.getId());
 
             /*--------------------------
              * Create the images
@@ -363,7 +356,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              * Publish into the wallet Store
              * -------------------------------------
              */
-         //   walletStoreManager.publishWallet(catalogItem);
+            walletStoreManager.publishWallet(catalogItem);
 
             /*
              * If publish process is ok change the status and update in the database
@@ -373,15 +366,15 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             informationPublishedComponentMiddlewareImpl.setPublicationTimestamp(new Timestamp(System.currentTimeMillis()));
             informationPublishedComponentDao.update(informationPublishedComponentMiddlewareImpl);
 
-       /* } catch (CantPublishWalletInCatalogException e) {
-            e.printStackTrace(); */
+       } catch (CantPublishWalletInCatalogException e) {
+            e.printStackTrace();
         } catch (CantInsertRecordDataBaseException e) {
             e.printStackTrace();
         } catch (CantUpdateRecordDataBaseException e) {
             e.printStackTrace();
-        }/* catch (CantGetWalletIconException e) {
+        } catch (CantGetWalletIconException e) {
             e.printStackTrace();
-        }*/
+        }
 
     }
 
