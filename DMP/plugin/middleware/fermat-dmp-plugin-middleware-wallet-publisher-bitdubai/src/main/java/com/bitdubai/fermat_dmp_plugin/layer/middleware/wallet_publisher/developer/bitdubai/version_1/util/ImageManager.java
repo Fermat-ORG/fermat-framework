@@ -6,15 +6,14 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util;
 
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageMiddlewareImpl;
 
 import java.util.UUID;
 
@@ -54,58 +53,33 @@ public class ImageManager {
     }
 
     /**
-     * Method that save the imageMiddleware object pass a parameter into a .xml file representation in
-     * the file system
+     * Save the image into a file in the file system
      *
-     * @param imageMiddleware
+     * @param image
+     * @throws CantCreateFileException
+     * @throws CantPersistFileException
      */
-    public void persist(Image imageMiddleware) throws CantCreateFileException, CantPersistFileException {
+    public void saveImageFile(ImageMiddlewareImpl image) throws CantCreateFileException, CantPersistFileException {
 
-        /*
-         * Obtain the xml representation of the object
-         */
-        String xmlContent =XMLParser.parseObject(imageMiddleware);
-
-        /*
-         * Create the file
-         */
-        PluginTextFile xmlFile = pluginFileSystem.createTextFile(pluginOwnerId, ImageManager.PATH_DIRECTORY, imageMiddleware.getFileId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-
-        /*
-         * Set the content
-         */
-        xmlFile.setContent(xmlContent);
-
-        /*
-         * Persist the file
-         */
-        xmlFile.persistToMedia();
+        PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginOwnerId, ImageManager.PATH_DIRECTORY, image.getFileId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        imageFile.setContent(image.getData());
+        imageFile.persistToMedia();
 
     }
 
     /**
-     * Method that load a image from a .xml file saved in the file system
+     * Load the image file from the file system
      *
-     *   file_id = file name
-     *
-     * @return Image
+     * @param fileId
+     * @return byte[]
+     * @throws FileNotFoundException
+     * @throws CantCreateFileException
      */
-    public Image load(String file_id) throws FileNotFoundException, CantCreateFileException {
+    public byte[] loadImageFile(String fileId) throws FileNotFoundException, CantCreateFileException {
 
-        /*
-         * Load the file
-         */
-        PluginTextFile xmlFile = pluginFileSystem.getTextFile(pluginOwnerId, ImageManager.PATH_DIRECTORY, file_id, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-
-        /**
-         * Parse the xml into the object
-         */
-        Image imageMiddleware = (Image) XMLParser.parseXML(xmlFile.getContent(), Image.class);
-
-        /**
-         * Return the imageMiddleware
-         */
-        return imageMiddleware;
+        PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginOwnerId, ImageManager.PATH_DIRECTORY, fileId, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        return imageFile.getContent();
     }
+
 
 }

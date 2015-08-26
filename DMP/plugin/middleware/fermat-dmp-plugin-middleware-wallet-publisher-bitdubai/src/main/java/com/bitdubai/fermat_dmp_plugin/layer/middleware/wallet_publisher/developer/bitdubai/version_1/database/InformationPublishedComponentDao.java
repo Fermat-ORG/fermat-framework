@@ -547,11 +547,11 @@ public class InformationPublishedComponentDao {
             /*
              * 3.- Serialize the objects images into the xml file
              */
-            imageManager.persist(informationPublishedComponentMiddleware.getIconImg());
-            imageManager.persist(informationPublishedComponentMiddleware.getMainScreenShotImg());
+            imageManager.saveImageFile((ImageMiddlewareImpl) informationPublishedComponentMiddleware.getIconImg());
+            imageManager.saveImageFile((ImageMiddlewareImpl) informationPublishedComponentMiddleware.getMainScreenShotImg());
             for (ImageMiddlewareImpl imageMiddleware:images){
 
-                imageManager.persist(imageMiddleware);
+                imageManager.saveImageFile(imageMiddleware);
             }
 
 
@@ -639,8 +639,8 @@ public class InformationPublishedComponentDao {
             /*
              * 3.- Serialize the objects images into the xml file
              */
-            imageManager.persist(entity.getIconImg());
-            imageManager.persist(entity.getMainScreenShotImg());
+            imageManager.saveImageFile((ImageMiddlewareImpl) entity.getIconImg());
+            imageManager.saveImageFile((ImageMiddlewareImpl) entity.getMainScreenShotImg());
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -782,12 +782,12 @@ public class InformationPublishedComponentDao {
             informationPublishedComponent.setDescriptions(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME));
 
             /*
-             * Xml File deserialize into the object image
+             * Image File deserialize into the object image
              */
             String fileIdIconImg = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME);
             String fileIdMainScreenShot = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME);
-            informationPublishedComponent.setIconImg(imageManager.load(fileIdIconImg));
-            informationPublishedComponent.setMainScreenShotImg(imageManager.load(fileIdMainScreenShot));
+            informationPublishedComponent.setIconImg(constructImageMiddlewareFrom(fileIdIconImg, informationPublishedComponent.getId()));
+            informationPublishedComponent.setMainScreenShotImg(constructImageMiddlewareFrom(fileIdMainScreenShot, informationPublishedComponent.getId()));
 
             informationPublishedComponent.setVideoUrl(new URL(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME)));
             informationPublishedComponent.setStatus(ComponentPublishedInformationStatus.getByCode(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME)));
@@ -806,15 +806,6 @@ public class InformationPublishedComponentDao {
             //this should not happen, but if it happens return null
             return null;
 
-        } catch (FileNotFoundException e) {
-
-            //this should not happen, but if it happens return null
-            return null;
-
-        } catch (CantCreateFileException e) {
-
-            //this should not happen, but if it happens return null
-            return null;
         }
 
 
@@ -843,8 +834,8 @@ public class InformationPublishedComponentDao {
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_NAME_COLUMN_NAME,              walletPublishedMiddlewareInformation.getWalletFactoryProjectName());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME,        walletPublishedMiddlewareInformation.getType().getCode());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DESCRIPTIONS_COLUMN_NAME,          walletPublishedMiddlewareInformation.getDescriptions());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME,              walletPublishedMiddlewareInformation.getIconImg().getFileId().toString());
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME,  walletPublishedMiddlewareInformation.getMainScreenShotImg().getFileId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME,              ((ImageMiddlewareImpl) walletPublishedMiddlewareInformation.getIconImg()).getFileId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME,  ((ImageMiddlewareImpl) walletPublishedMiddlewareInformation.getMainScreenShotImg()).getFileId().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME,             walletPublishedMiddlewareInformation.getVideoUrl().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME,                walletPublishedMiddlewareInformation.getStatus().getCode());
         entityRecord.setLongValue  (WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME,      walletPublishedMiddlewareInformation.getStatusTimestamp().getTime());
@@ -947,12 +938,16 @@ public class InformationPublishedComponentDao {
 
         try {
 
-            String fileIdImg = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME);
-
             /*
-             * Xml File deserialize into the object image
+             * Construct object
              */
-            return (ImageMiddlewareImpl) imageManager.load(fileIdImg);
+            ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
+            imageMiddleware.setFileId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME)));
+            imageMiddleware.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME)));
+            imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
+
+
+            return imageMiddleware;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -989,6 +984,39 @@ public class InformationPublishedComponentDao {
          */
         return entityRecord;
 
+    }
+
+
+    /**
+     *  Construct a ImageMiddlewareImpl whit the values of the pass parameters
+     *
+     * @param fileId
+     * @param componentId
+     * @return
+     */
+    private ImageMiddlewareImpl constructImageMiddlewareFrom(String fileId, UUID componentId){
+
+        try {
+
+            /*
+             * Construct object
+             */
+            ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
+            imageMiddleware.setFileId(UUID.fromString(fileId));
+            imageMiddleware.setComponentId(componentId);
+            imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
+
+
+            return imageMiddleware;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
     }
 
 

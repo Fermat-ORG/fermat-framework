@@ -319,7 +319,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             throw pluginStartException;
         }
 
-        test();
+        test2();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }

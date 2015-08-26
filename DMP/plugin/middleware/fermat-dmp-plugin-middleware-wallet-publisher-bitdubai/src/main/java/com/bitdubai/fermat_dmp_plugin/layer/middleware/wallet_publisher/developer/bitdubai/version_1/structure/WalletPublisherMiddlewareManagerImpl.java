@@ -26,7 +26,13 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ComponentVersionDetailDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao;
@@ -55,6 +61,8 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMiddlewareManager {
+
+    public static final String IMAGE_PATH_DIRECTORY = "wallet_publisher/images";
 
     /**
      * Represent the logManager
@@ -108,16 +116,9 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         try {
 
             /*
-             * Prepare the filters
-             */
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publisherIdentityPublicKey);
-
-
-            /*
              * Load the data from data base
              */
-            return informationPublishedComponentDao.findAll(filters);
+            return informationPublishedComponentDao.findAll(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publisherIdentityPublicKey);
 
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
