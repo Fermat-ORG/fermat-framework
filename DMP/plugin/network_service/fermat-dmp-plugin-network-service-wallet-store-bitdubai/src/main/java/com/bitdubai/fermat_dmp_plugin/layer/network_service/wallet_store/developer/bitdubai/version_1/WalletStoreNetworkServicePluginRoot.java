@@ -287,8 +287,10 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
          * I will try to open the database first, if it doesn't exists, then I create it
          */
         try {
-            TestPublishWallet(); //Todo: Solo para testear luego eliminar
+
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
+
+            TestPublishWallet(); //Todo: Solo para testear luego eliminar
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             try {
@@ -712,87 +714,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skinImpl.setIsDefault(isDefault);
 
         return skinImpl;
-    }
-
-    public DeveloperIdentity constructDeveloper(final String alias, final String PublicKey)
-    {
-        //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developerImpl;
-        //developerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
-
-        //developerImpl.setAlias(alias);
-        //developerImpl.setPublicKey(PublicKey);
-        DeveloperIdentity developerIdentityImpl = new DeveloperIdentity() {
-            @Override
-            public String getAlias() {
-                return alias;
-            }
-
-            @Override
-            public String getPublicKey() {
-                return PublicKey;
-            }
-
-            @Override
-            public String createMessageSignature(String mensage) throws CantSingMessageException {
-                return null;
-            }
-        };
-
-        return developerIdentityImpl;
-    }
-
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer constructDesigner(final String alias, final String PublicKey){
-
-        //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designerImpl;
-        //designerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
-
-        //designerImpl.setAlias(alias);
-        //designerImpl.setPublicKey(PublicKey);
-        com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designerImpl = new com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer() {
-            @Override
-            public String getAlias() {
-                return alias;
-            }
-
-            @Override
-            public String getPublicKey() {
-                return PublicKey;
-            }
-
-            @Override
-            public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
-                return null;
-            }
-        };
-
-        return designerImpl;
-    }
-
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator constructTranslator(final String alias, final String PublicKey)
-    {
-        //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translatorImpl;
-        //translatorImpl =  new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
-
-        //translatorImpl.setAlias(alias);
-        //translatorImpl.setPublicKey(PublicKey);
-        com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translatorImpl = new com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator() {
-            @Override
-            public String getAlias() {
-                return alias;
-            }
-
-            @Override
-            public String getPublicKey() {
-                return PublicKey;
-            }
-
-            @Override
-            public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
-                return null;
-            }
-        };
-
-        return translatorImpl;
     }
 
 

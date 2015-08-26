@@ -174,7 +174,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
             saveCatalogItemIconFile(catalogItemImpl);
         } catch (Exception exception) {
             exception.printStackTrace();
-            throw new CantPublishWalletInCatalogException(CantPublishWalletInCatalogException.DEFAULT_MESSAGE, exception, null, null);
+            throw new CantPublishWalletInCatalogException(CantPublishWalletInCatalogException.DEFAULT_MESSAGE, exception, "Publish Wallet", "Wallet Store");
         }
     }
 
