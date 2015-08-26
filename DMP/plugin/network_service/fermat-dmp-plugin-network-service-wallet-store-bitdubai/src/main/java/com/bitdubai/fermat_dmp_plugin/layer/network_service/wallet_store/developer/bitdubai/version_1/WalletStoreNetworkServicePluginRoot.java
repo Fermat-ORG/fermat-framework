@@ -286,7 +286,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
          * I will try to open the database first, if it doesn't exists, then I create it
          */
         try {
-            TestPublishWallet();
+
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -327,8 +327,17 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         /**
          * I will initialize the handling of platform events.
          */
-        EventListener eventListener;
+/*        EventListener eventListener;
         EventHandler eventHandler;
+
+        try {
+            TestPublishWallet();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (CantPublishWalletInCatalogException e) {
+            e.printStackTrace();
+        }
+    */
 
 
         this.serviceStatus = ServiceStatus.STARTED;

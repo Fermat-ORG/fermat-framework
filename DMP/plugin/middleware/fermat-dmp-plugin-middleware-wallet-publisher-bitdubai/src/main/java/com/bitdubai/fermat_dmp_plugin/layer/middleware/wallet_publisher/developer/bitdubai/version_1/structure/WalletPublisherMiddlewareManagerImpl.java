@@ -22,16 +22,12 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Info
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ComponentVersionDetailDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ScreensShotsComponentsDao;
@@ -280,7 +276,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         try {
 
             Version defaultVersion = new Version(1, 0, 0);
-            CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
+          //  CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
 
             /* ----------------------------------------
              * Create the informationPublishedComponent
@@ -329,7 +325,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             componentVersionDetailMiddlewareImpl.setObservations(observations);
             componentVersionDetailMiddlewareImpl.setScreenSize(walletFactoryProject.getSkins().get(0).getScreenSize());
             componentVersionDetailMiddlewareImpl.setComponentId(informationPublishedComponentMiddlewareImpl.getId());
-            componentVersionDetailMiddlewareImpl.setCatalogId(catalogItem.getId());
+            componentVersionDetailMiddlewareImpl.setCatalogId(UUID.randomUUID());
+          //  componentVersionDetailMiddlewareImpl.setCatalogId(catalogItem.getId());
 
             /*--------------------------
              * Create the images
@@ -365,25 +362,25 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              * Publish into the wallet Store
              * -------------------------------------
              */
-            walletStoreManager.publishWallet(catalogItem);
+         //   walletStoreManager.publishWallet(catalogItem);
 
             /*
-             * If publish proccess is ok change the status and update in the database
+             * If publish process is ok change the status and update in the database
              */
             informationPublishedComponentMiddlewareImpl.setStatus(ComponentPublishedInformationStatus.PUBLISHED);
             informationPublishedComponentMiddlewareImpl.setStatusTimestamp(new Timestamp(System.currentTimeMillis()));
             informationPublishedComponentMiddlewareImpl.setPublicationTimestamp(new Timestamp(System.currentTimeMillis()));
             informationPublishedComponentDao.update(informationPublishedComponentMiddlewareImpl);
 
-        } catch (CantPublishWalletInCatalogException e) {
-            e.printStackTrace();
+       /* } catch (CantPublishWalletInCatalogException e) {
+            e.printStackTrace(); */
         } catch (CantInsertRecordDataBaseException e) {
             e.printStackTrace();
         } catch (CantUpdateRecordDataBaseException e) {
             e.printStackTrace();
-        } catch (CantGetWalletIconException e) {
+        }/* catch (CantGetWalletIconException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -484,9 +481,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             otherLanguageSupportedList.add(languageCatalogItem);
         }
 
-
-        DeveloperIdentity developer = walletStoreManager.constructDeveloper(walletFactoryProject.getNavigationStructure().getDeveloper().getAlias(), walletFactoryProject.getNavigationStructure().getDeveloper().getPublicKey());
-
         /*
          * Construct the catalog item instance
          */
@@ -502,7 +496,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                         otherSkinSupportedList,
                                                         defaultSkin,
                                                         defaultLanguage,
-                                                        developer,
+                                                        walletFactoryProject.getNavigationStructure().getDeveloper(),
                                                         otherLanguageSupportedList,
                                                         publisherWebsiteUrl);
     }
@@ -522,10 +516,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      */
    private com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin constructSkinObject(Skin skin, Version version, byte[] mainScreenShot, List<byte[]> screenShotDetails, boolean hasVideoPreview, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion){
 
-
-
-       com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = walletStoreManager.constructDesigner(skin.getDesigner().getAlias(), skin.getDesigner().getPublicKey());
-
        /*
         * Construct the new instance
         */
@@ -541,7 +531,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                                                hasVideoPreview,
                                                videoPreviews,
                                                skin.getSize(),
-                                               designer, //Todo: Revisar
+                                               skin.getDesigner(),
                                                Boolean.TRUE);
 
    }
@@ -558,8 +548,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      */
     private com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language constructLanguageObject(Language language, Version version, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion){
 
-        com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = walletStoreManager.constructTranslator(language.getTranslator().getAlias(), language.getTranslator().getPublicKey());
-
         /*
         * Construct the new instance
         */
@@ -572,7 +560,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
                 finalWalletVersion,
                 videoPreviews,
                 language.getSize(),
-                translator, //Todo: Revisar
+                language.getTranslator(),
                 Boolean.TRUE);
 
     }
