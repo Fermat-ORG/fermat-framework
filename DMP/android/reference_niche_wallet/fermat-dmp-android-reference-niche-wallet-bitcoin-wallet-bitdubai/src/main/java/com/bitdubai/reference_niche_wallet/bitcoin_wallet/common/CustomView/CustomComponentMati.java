@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -25,6 +26,7 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 
 import java.util.ArrayList;
@@ -35,7 +37,7 @@ import java.util.List;
  */
 
 
-public class CustomComponentMati extends LinearLayout {
+public class CustomComponentMati extends LinearLayout implements Animation.AnimationListener {
 
     private static final String DEBUG_TAG = "MATTIIIIIIIII";
     /**
@@ -82,6 +84,8 @@ public class CustomComponentMati extends LinearLayout {
     Animation animationNext;
     Animation animationPrev;
 
+
+    CustomComponentsObjects transactionInScreen;
 
     private Activity activity;
 
@@ -160,6 +164,8 @@ public class CustomComponentMati extends LinearLayout {
         linearLayout_container = (LinearLayout) findViewById(R.id.linearLayout_container);
         animationNext =    AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
         animationPrev = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
+        animationNext.setAnimationListener(this);
+        animationPrev.setAnimationListener(this);
 
 
     }
@@ -175,38 +181,36 @@ public class CustomComponentMati extends LinearLayout {
 
     private void load(int position){
         if(!lstData.isEmpty() && lstData.size()>listPosition  && listPosition>-1) {
-
-            CustomComponentsObjects customComponentsObjects = lstData.get(position);
-
-            txtViewTitleTransaction.setText(customComponentsObjects.getTitle());
-            txtViewDetailTransaction.setText(customComponentsObjects.getDetail());
+            //if()
+            transactionInScreen = lstData.get(position);
+//            txtViewTitleTransaction.setText(customComponentsObjects.getTitle());
+//            txtViewDetailTransaction.setText(customComponentsObjects.getDetail());
             //imageView_transaction.setImageDrawable();
 //            imageView_transaction.setImageResource(
 //                    resources.getIdentifier(
 //                            "com.bitdubai.reference_niche_wallet.bitcoin_wallet:drawable/" + customComponentsObjects.getImageUrl()
 //                            , null, null));
-            byte[] image = customComponentsObjects.getImage();
-            Drawable drawableImage = null;
-            if(image!=null){
-                drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
-            }else{
-                if(walletSettings!=null){
-                    try {
-                        image = walletResourcesProviderManager.getImageResource("unknown",walletSettings.getDefaultSkin());
-                    } catch (CantGetResourcesException e) {
-                        e.printStackTrace();
-                    } catch (CantGetDefaultSkinException e) {
-                        e.printStackTrace();
-                    }
-                    drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
-                }
-
-            }
-
-            imageView_transaction.setImageDrawable(drawableImage);
+//            byte[] image = customComponentsObjects.getImage();
+//            Drawable drawableImage = null;
+//            if(image!=null){
+//                drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+//            }else{
+//                if(walletSettings!=null){
+//                    try {
+//                        image = walletResourcesProviderManager.getImageResource("unknown",walletSettings.getDefaultSkin());
+//                    } catch (CantGetResourcesException e) {
+//                        e.printStackTrace();
+//                    } catch (CantGetDefaultSkinException e) {
+//                        e.printStackTrace();
+//                    }
+//                    drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+//                }
+//            }
+//
+//            imageView_transaction.setImageDrawable(drawableImage);
         }
 
-        invalidate();
+        //invalidate();
     }
 
 
@@ -227,5 +231,50 @@ public class CustomComponentMati extends LinearLayout {
 
     public void setWalletSettings(ReferenceWalletPreferenceSettings walletSettings) {
         this.walletSettings = walletSettings;
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        txtViewTitleTransaction.setText(transactionInScreen.getTitle());
+        txtViewDetailTransaction.setText(transactionInScreen.getDetail());
+        byte[] image = transactionInScreen.getImage();
+        Bitmap imageBitmap = null;
+            Drawable drawableImage = null;
+            if(image!=null){
+                //drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+                imageBitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+                imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);
+            }else{
+                if(walletSettings!=null){
+                    try {
+                        image = walletResourcesProviderManager.getImageResource("unknown",walletSettings.getDefaultSkin());
+                        imageBitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+                        imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);
+                    } catch (CantGetResourcesException e) {
+                        e.printStackTrace();
+                    } catch (CantGetDefaultSkinException e) {
+                        e.printStackTrace();
+                    }
+                    //drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+                }
+
+            }
+            //imageView_transaction.setImageDrawable(imageBitmap);
+        if(imageBitmap!=null){
+            imageView_transaction.setBackground(new RoundedDrawable(imageBitmap, imageView_transaction));
+            imageView_transaction.setImageDrawable(null);
+        }
+
+        invalidate();
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 }
