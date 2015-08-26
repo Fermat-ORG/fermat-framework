@@ -17,25 +17,35 @@ public class ListComponent implements CustomComponentsObjects{
 
     public ListComponent(CryptoWalletTransaction cryptoWalletTransaction,WalletContactRecord walletContactRecord) {
         //this.titleTransaction = cryptoWalletTransaction.getBitcoinWalletTransaction().;
+        this.cryptoWalletTransaction = cryptoWalletTransaction;
+        this.walletContactRecord = walletContactRecord;
         generateTitle();
         generateDetailTransaction();
-        this.walletContactRecord = walletContactRecord;
+
     }
 
     private void generateTitle(){
-        if(cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.CREDIT)){
-            titleTransaction+= "Receive from "+cryptoWalletTransaction.getInvolvedActorName();
-        }else if (cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.DEBIT)){
-            titleTransaction+= "Send from "+cryptoWalletTransaction.getInvolvedActorName();
+        try {
+            if (cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.CREDIT)) {
+                titleTransaction += "Receive from " + cryptoWalletTransaction.getInvolvedActorName();
+            } else if (cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.DEBIT)) {
+                titleTransaction += "Send from " + cryptoWalletTransaction.getInvolvedActorName();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     private void generateDetailTransaction(){
+        try {
         String textBody = cryptoWalletTransaction.getBitcoinWalletTransaction().getMemo();
         if(textBody.length() != 0){
             detailTransaction+= textBody;
         }else{
             detailTransaction+= "Add memo to this transaction";
+        }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

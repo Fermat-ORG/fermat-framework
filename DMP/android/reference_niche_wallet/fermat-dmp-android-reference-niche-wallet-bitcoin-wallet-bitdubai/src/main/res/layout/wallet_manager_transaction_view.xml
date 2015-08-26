@@ -53,7 +53,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="#727272"
                 android:text="See all"
-                android:textSize="15dp"
+                android:textSize="17dp"
                 android:gravity="center"
                 android:paddingLeft="10dp"
                 android:layout_weight="0.7"/>

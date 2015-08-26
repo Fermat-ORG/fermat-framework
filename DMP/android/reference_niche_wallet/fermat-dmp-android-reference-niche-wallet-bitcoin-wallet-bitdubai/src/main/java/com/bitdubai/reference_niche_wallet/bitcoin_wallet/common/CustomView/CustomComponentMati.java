@@ -22,6 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +84,13 @@ public class CustomComponentMati extends LinearLayout {
 
 
     private Activity activity;
+
+    private WalletResourcesProviderManager walletResourcesProviderManager;
+
+    /**
+     * Wallet settings
+     */
+    private ReferenceWalletPreferenceSettings walletSettings;
 
     /**
      *
@@ -150,36 +161,6 @@ public class CustomComponentMati extends LinearLayout {
         animationNext =    AnimationUtils.loadAnimation(context, R.anim.slide_out_right);
         animationPrev = AnimationUtils.loadAnimation(context, R.anim.slide_in_left);
 
-        linearLayout_container.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-
-                int action = MotionEventCompat.getActionMasked(event);
-
-                switch(action) {
-                    case (MotionEvent.ACTION_DOWN) :
-                        Log.d(DEBUG_TAG, "Action was DOWN");
-                        return true;
-                    case (MotionEvent.ACTION_MOVE) :
-                        Log.d(DEBUG_TAG,"Action was MOVE");
-                        return true;
-                    case (MotionEvent.ACTION_UP) :
-                        Log.d(DEBUG_TAG,"Action was UP");
-                        return true;
-                    case (MotionEvent.ACTION_CANCEL) :
-                        Log.d(DEBUG_TAG,"Action was CANCEL");
-                        return true;
-                    case (MotionEvent.ACTION_OUTSIDE) :
-                        Log.d(DEBUG_TAG,"Movement occurred outside bounds " +
-                                "of current screen element");
-                        return true;
-                    default :
-                        return activity.onTouchEvent(event);
-                }
-                // ... Respond to touch events
-
-            }
-        });
-
 
     }
 
@@ -204,8 +185,25 @@ public class CustomComponentMati extends LinearLayout {
 //                    resources.getIdentifier(
 //                            "com.bitdubai.reference_niche_wallet.bitcoin_wallet:drawable/" + customComponentsObjects.getImageUrl()
 //                            , null, null));
-            Drawable image = new BitmapDrawable(BitmapFactory.decodeByteArray(customComponentsObjects.getImage(), 0, customComponentsObjects.getImage().length));
-            imageView_transaction.setImageDrawable(image);
+            byte[] image = customComponentsObjects.getImage();
+            Drawable drawableImage = null;
+            if(image!=null){
+                drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+            }else{
+                if(walletSettings!=null){
+                    try {
+                        image = walletResourcesProviderManager.getImageResource("unknown",walletSettings.getDefaultSkin());
+                    } catch (CantGetResourcesException e) {
+                        e.printStackTrace();
+                    } catch (CantGetDefaultSkinException e) {
+                        e.printStackTrace();
+                    }
+                    drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+                }
+
+            }
+
+            imageView_transaction.setImageDrawable(drawableImage);
         }
 
         invalidate();
@@ -219,9 +217,15 @@ public class CustomComponentMati extends LinearLayout {
         this.txtSeeAlltransactions.setOnClickListener(onClickListener);
     }
 
+    public void setWalletResources(WalletResourcesProviderManager walletResourcesProviderManager){
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
+    }
 
     public void setActivity(Activity activity){
         this.activity=activity;
     }
 
+    public void setWalletSettings(ReferenceWalletPreferenceSettings walletSettings) {
+        this.walletSettings = walletSettings;
+    }
 }
