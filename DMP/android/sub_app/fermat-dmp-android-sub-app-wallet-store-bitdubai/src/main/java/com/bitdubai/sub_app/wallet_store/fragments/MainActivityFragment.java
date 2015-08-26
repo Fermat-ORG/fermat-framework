@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -38,29 +39,28 @@ public class MainActivityFragment extends FermatListFragment  {
 
     // MANAGERS
     private WalletStoreModuleManager moduleManager;
-    private ErrorManager errorManager;
-
-    // SESSION
-    private WalletStoreSubAppSession session;
+//    private ErrorManager errorManager;
+//
+//    // SESSION
+//    private WalletStoreSubAppSession session;
 
 
     /**
      * Create a new instance of this fragment
      *
      * @param position tab position
-     * @param session  WalletStoreSubAppSession instance object. This contains references to WalletStoreModuleManager and ErrorManager
      * @return InstalledFragment instance object
      */
-    public static MainActivityFragment newInstance(int position, WalletStoreSubAppSession session) {
+    public static MainActivityFragment newInstance(int position) {
         MainActivityFragment f = new MainActivityFragment();
 
-        f.setSession(session);
-
-        WalletStoreModuleManager moduleManager = session.getWalletStoreModuleManager();
-        f.setModuleManager(moduleManager);
-
-        ErrorManager errorManager = session.getErrorManager();
-        f.setErrorManager(errorManager);
+//        f.setSession(session);
+//
+//        WalletStoreModuleManager moduleManager = session.getWalletStoreModuleManager();
+//        f.setModuleManager(moduleManager);
+//
+//        ErrorManager errorManager = session.getErrorManager();
+//        f.setErrorManager(errorManager);
 
         Bundle args = new Bundle();
         args.putInt(ARG_POSITION, position);
@@ -70,32 +70,41 @@ public class MainActivityFragment extends FermatListFragment  {
     }
 
 
-    /**
-     * Set module moduleManager
-     *
-     * @param moduleManager WalletStoreModuleManager object
-     */
-    public void setModuleManager(WalletStoreModuleManager moduleManager) {
-        this.moduleManager = moduleManager;
-    }
+//    /**
+//     * Set module moduleManager
+//     *
+//     * @param moduleManager WalletStoreModuleManager object
+//     */
+//    public void setModuleManager(WalletStoreModuleManager moduleManager) {
+//        this.moduleManager = moduleManager;
+//    }
+//
+//
+//    /**
+//     * Set session of this subapp
+//     *
+//     * @param session WalletStoreSubAppSession object
+//     */
+//    public void setSession(WalletStoreSubAppSession session) {
+//        this.session = session;
+//    }
+//
+//    /**
+//     * Set the error manager to handle the errors of this subapp
+//     *
+//     * @param errorManager ErrorManager object
+//     */
+//    public void setErrorManager(ErrorManager errorManager) {
+//        this.errorManager = errorManager;
+//    }
 
 
-    /**
-     * Set session of this subapp
-     *
-     * @param session WalletStoreSubAppSession object
-     */
-    public void setSession(WalletStoreSubAppSession session) {
-        this.session = session;
-    }
+    @Override
+    public void setSubAppsSession(SubAppsSession subAppsSession) {
+        super.setSubAppsSession(subAppsSession);
 
-    /**
-     * Set the error manager to handle the errors of this subapp
-     *
-     * @param errorManager ErrorManager object
-     */
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
+        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
+        moduleManager = session.getWalletStoreModuleManager();
     }
 
     @Override
@@ -119,6 +128,7 @@ public class MainActivityFragment extends FermatListFragment  {
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
+            ErrorManager errorManager = subAppsSession.getErrorManager();
             ArrayList<CatalogueItemDao> data = CatalogueItemDao.getTestData(getResources());
 
             try {

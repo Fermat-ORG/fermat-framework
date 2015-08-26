@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.fragment;
+package com.bitdubai.sub_app.wallet_store.fragments.old;
 
 import android.app.Fragment;
 import android.app.Service;

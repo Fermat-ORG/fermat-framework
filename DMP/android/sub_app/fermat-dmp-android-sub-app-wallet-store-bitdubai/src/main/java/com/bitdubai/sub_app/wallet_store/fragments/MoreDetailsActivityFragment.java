@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
@@ -18,16 +20,12 @@ import com.wallet_store.bitdubai.R;
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MoreDetailsActivityFragment extends Fragment {
+public class MoreDetailsActivityFragment extends FermatFragment {
     // STATIC
     private static final String ARG_POSITION = "position";
 
     // MANAGERS
     private WalletStoreModuleManager moduleManager;
-    private ErrorManager errorManager;
-
-     // SESSION
-    private WalletStoreSubAppSession session;
 
 
     /**
@@ -37,17 +35,8 @@ public class MoreDetailsActivityFragment extends Fragment {
      * @param session  WalletStoreSubAppSession instance object. This contains references to WalletStoreModuleManager and ErrorManager
      * @return InstalledFragment instance object
      */
-    public static MoreDetailsActivityFragment newInstance(int position, WalletStoreSubAppSession session) {
+    public static MoreDetailsActivityFragment newInstance(int position) {
         MoreDetailsActivityFragment f = new MoreDetailsActivityFragment();
-
-        f.setSession(session);
-
-        WalletStoreModuleManager moduleManager = session.getWalletStoreModuleManager();
-        f.setModuleManager(moduleManager);
-
-        ErrorManager errorManager = session.getErrorManager();
-        f.setErrorManager(errorManager);
-
         Bundle args = new Bundle();
         args.putInt(ARG_POSITION, position);
         f.setArguments(args);
@@ -56,33 +45,13 @@ public class MoreDetailsActivityFragment extends Fragment {
     }
 
 
-    /**
-     * Set module moduleManager
-     *
-     * @param moduleManager WalletStoreModuleManager object
-     */
-    public void setModuleManager(WalletStoreModuleManager moduleManager) {
-        this.moduleManager = moduleManager;
-    }
+    @Override
+    public void setSubAppsSession(SubAppsSession subAppsSession) {
+        super.setSubAppsSession(subAppsSession);
 
-    /**
-     * Set session of this subapp
-     *
-     * @param session WalletStoreSubAppSession object
-     */
-    public void setSession(WalletStoreSubAppSession session) {
-        this.session = session;
+        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
+        moduleManager = session.getWalletStoreModuleManager();
     }
-
-    /**
-     * Set the error manager to handle the errors of this subapp
-     *
-     * @param errorManager ErrorManager object
-     */
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
