@@ -173,157 +173,9 @@
 
 			<layer name="Niche Wallet" language="java-android"></layer>
 			<layer name="Reference Wallet" language="java-android"></layer>
-			<layer name="Sub App" language="java-android">
-				<androids>
-					<android
-							name="Shell"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Designer"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Developer"
-							description=""
-							difficulty="5"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Technical Support"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Sub App Manager"
-							description=""
-							difficulty="3"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="System Monitor"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-
-					<android
-							name="Feedback"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
-							name="Reviews"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-				</androids>
-			</layer>
+			<layer name="Sub App" language="java-android"></layer>
 			<layer name="empty layer 1"></layer>
-			<layer name="Engine" language="java">
-				<plugins>
-					<plugin
-							name="Sub App Runtime"
-							description=""
-							difficulty="8"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
+			<layer name="Engine" language="java"></layer>
 			<layer name="Wallet Module" language="java"></layer>
 			<layer name="Sub App Module" language="java"></layer>
 			<layer name="Agent" language="java"></layer>
@@ -525,8 +377,6 @@
 		</platform>
 		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png">
 
-			<layer name="Niche Wallet" language="java-android"></layer>
-			<layer name="Reference Wallet" language="java-android"></layer>
 			<layer name="Sub App" language="java-android">
 				<androids>
 					<android
@@ -657,8 +507,6 @@
 				</androids>
 			</layer>
 
-			<layer name="empty layer 1"></layer>
-
 			<layer name="Engine" language="java">
 				<plugins>
 					<plugin
@@ -680,8 +528,6 @@
 					</plugin>
 				</plugins>
 			</layer>
-
-			<layer name="Wallet Module" language="java"></layer>
 
 			<layer name="Sub App Module" language="java">
 				<plugins>
@@ -795,8 +641,6 @@
 					</plugin>
 				</plugins>
 			</layer>
-
-			<layer name="Agent" language="java"></layer>
 
 			<layer name="Actor" language="java">
 				<plugins>
@@ -918,15 +762,6 @@
 					</plugin>
 				</plugins>
 			</layer>
-
-			<layer name="Request" language="java"></layer>
-			<layer name="Business Transaction" language="java"></layer>
-			<layer name="Digital Asset Transaction" language="java"></layer>
-			<layer name="Digital Money Transaction" language="java"></layer>
-			<layer name="Cash Transaction" language="java"></layer>
-			<layer name="Contract" language="java"></layer>
-			<layer name="Composite Wallet" language="java"></layer>
-			<layer name="Wallet" language="java"></layer>
 
 			<layer name="World" language="java">
 				<plugins>
@@ -1082,11 +917,6 @@
 
 				</plugins>
 			</layer>
-			<layer name="empty layer 2"></layer>
-			<layer super_layer="P2P"></layer>
-			<layer name="empty layer 3"></layer>
-			<layer super_layer="CRY"></layer>
-			<layer name="empty layer 4"></layer>
 
 			<layer name="License" language="java">
 				<addons>
@@ -1107,6 +937,7 @@
 					</addon>
 				</addons>
 			</layer>
+
 			<layer name="Plugin" language="java">
 				<addons>
 					<addon
@@ -1141,6 +972,7 @@
 					</addon>
 				</addons>
 			</layer>
+
 			<layer name="User" language="java">
 				<addons>
 					<addon
@@ -1160,6 +992,7 @@
 					</addon>
 				</addons>
 			</layer>
+
 			<layer name="Hardware" language="java">
 				<addons>
 					<addon
@@ -1194,6 +1027,7 @@
 					</addon>
 				</addons>
 			</layer>
+
 			<layer name="Platform Service" language="java">
 				<addons>
 					<addon
@@ -1294,8 +1128,7 @@
 					</addon>
 				</addons>
 			</layer>
-			<layer name="empty layer 5"></layer>
-			<layer super_layer="OSA"></layer>
+
 		</platform>
 
 		<platform code="WPD" name="Wallet Production and Distribution" logo="WPD_logo.png">
@@ -1373,7 +1206,6 @@
 				</androids>
 			</layer>
 
-
 			<layer name="Sub App Module" language="java">
 				<plugins>
 					<plugin
@@ -1449,9 +1281,6 @@
 					</plugin>
 				</plugins>
 			</layer>
-
-			<layer name="Agent" language="java"></layer>
-
 
 			<layer name="Actor" language="java">
 				<plugins>
@@ -1532,16 +1361,6 @@
 				</plugins>
 			</layer>
 
-			<layer name="Request" language="java"></layer>
-
-			<layer name="Business Transaction" language="java"></layer>
-			<layer name="Digital Asset Transaction" language="java"></layer>
-			<layer name="Digital Money Transaction" language="java"></layer>
-			<layer name="Cash Transaction" language="java"></layer>
-			<layer name="Contract" language="java"></layer>
-			<layer name="Composite Wallet" language="java"></layer>
-			<layer name="Fiat Wallet" language="java"></layer>
-
 			<layer name="Identity" language="java">
 				<plugins>
 					<plugin
@@ -1617,11 +1436,10 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 		</platform>
 
 		<platform code="DMP" name="Digital Money Platform" logo="DMP_logo.png">
-
-			<layer name="Niche Wallet"></layer>
 
 			<layer name="Reference Wallet">
 				<androids>
@@ -1900,9 +1718,6 @@
 				</plugins>
 			</layer>
 
-			<layer name="Agent" language="java"></layer>
-
-
 			<layer name="Actor" language="java">
 				<plugins>
 					<plugin
@@ -2020,9 +1835,6 @@
 					</plugin>
 				</plugins>
 			</layer>
-
-			<layer name="Business Transaction" language="java"></layer>
-			<layer name="Digital Asset Transaction" language="java"></layer>
 
 			<layer name="Digital Money Transaction" language="java">
 				<plugins>
@@ -2482,6 +2294,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="License" language="java">
 				<addons>
 					<addon
@@ -2501,9 +2314,11 @@
 					</addon>
 				</addons>
 			</layer>
+
 		</platform>
 
 		<platform code="SHP" name="Shopping Platform" logo="SHP_logo.png">
+
 			<layer name="Reference Wallet">
 				<androids>
 					<android
@@ -2656,6 +2471,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="Sub App Module" language="java">
 				<plugins>
 					<plugin
@@ -2706,6 +2522,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="Actor" language="java">
 				<plugins>
 					<plugin
@@ -2959,9 +2776,11 @@
 					</plugin>
 				</plugins>
 			</layer>
-		</platform>
+
+			</platform>
 
 		<platform code="DAP" name="Digital Asset Platform" logo="DAP_logo.png">
+
 			<layer name="Reference Wallet">
 				<androids>
 					<android
@@ -2982,6 +2801,7 @@
 					</android>
 				</androids>
 			</layer>
+
 			<layer name="Sub App" language="java-android">
 				<androids>
 					<android
@@ -3002,6 +2822,7 @@
 					</android>
 				</androids>
 			</layer>
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
@@ -3279,6 +3100,7 @@
 
 				</plugins>
 			</layer>
+
 			<layer name="Network Service" language="java">
 				<plugins>
 					<plugin
@@ -3300,6 +3122,7 @@
 
 				</plugins>
 			</layer>
+
 		</platform>
 
 		<platform code="MKT" name="Marketing Platform" logo="MKT_logo.png">
@@ -3391,6 +3214,7 @@
 					</android>
 				</androids>
 			</layer>
+
 			<layer name="Sub App Module" language="java">
 				<plugins>
 					<plugin
@@ -3425,6 +3249,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="Actor" language="java">
 				<plugins>
 					<plugin
@@ -3592,6 +3417,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="Wallet" language="java">
 				<plugins>
 					<plugin
@@ -3642,6 +3468,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="Identity" language="java">
 				<plugins>
 					<plugin
@@ -3662,9 +3489,11 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 		</platform>
 
 		<platform code="CBP" name="Crypto Broker Platform" logo="CBP_logo.png">
+
 			<layer name="Reference Wallet">
 				<androids>
 					<android
@@ -3685,6 +3514,7 @@
 					</android>
 				</androids>
 			</layer>
+
 			<layer name="Sub App" language="java-android">
 				<androids>
 					<android
@@ -3705,6 +3535,7 @@
 					</android>
 				</androids>
 			</layer>
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
@@ -4125,6 +3956,7 @@
 
 				</plugins>
 			</layer>
+
 			<layer name="Network Service" language="java">
 				<plugins>
 					<plugin
@@ -4145,6 +3977,7 @@
 
 				</plugins>
 			</layer>
+
 		</platform>
 
 		<platform code="CDN" name="Crypto Distribution Netword" logo="CDN_logo.png">
@@ -5219,8 +5052,8 @@
 
 				</plugins>
 			</layer>
-		</platform>
 
+		</platform>
 
 </platforms>
 
