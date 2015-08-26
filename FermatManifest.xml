@@ -170,6 +170,189 @@
 					</library>
 				</libraries>
 			</layer>
+
+			<layer name="Niche Wallet" language="java-android"></layer>
+			<layer name="Reference Wallet" language="java-android"></layer>
+			<layer name="Sub App" language="java-android">
+				<androids>
+					<android
+							name="Shell"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Designer"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Developer"
+							description=""
+							difficulty="5"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Technical Support"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Sub App Manager"
+							description=""
+							difficulty="3"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="System Monitor"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+
+					<android
+							name="Feedback"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Reviews"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+			<layer name="empty layer 1"></layer>
+			<layer name="Engine" language="java">
+				<plugins>
+					<plugin
+							name="Sub App Runtime"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+			<layer name="Wallet Module" language="java"></layer>
+			<layer name="Sub App Module" language="java"></layer>
+			<layer name="Agent" language="java"></layer>
+			<layer name="Actor" language="java"></layer>
+			<layer name="Middleware" language="java"></layer>
+			<layer name="Request" language="java"></layer>
+			<layer name="Business Transaction" language="java"></layer>
+			<layer name="Digital Asset Transaction" language="java"></layer>
+			<layer name="Digital Money Transaction" language="java"></layer>
+			<layer name="Cash Transaction" language="java"></layer>
+			<layer name="Contract" language="java"></layer>
+			<layer name="Composite Wallet" language="java"></layer>
+			<layer name="Wallet" language="java"></layer>
+			<layer name="World" language="java"></layer>
+			<layer name="Identity" language="java"></layer>
+			<layer name="Network Service" language="java"></layer>
+			<layer name="empty layer 2"></layer>
+			<layer super_layer="P2P"></layer>
+			<layer name="empty layer 3"></layer>
+			<layer super_layer="CRY"></layer>
+			<layer name="empty layer 4"></layer>
+			<layer name="License" language="java"></layer>
+			<layer name="Plugin" language="java"></layer>
+			<layer name="User" language="java"></layer>
+			<layer name="Hardware" language="java"></layer>
+			<layer name="Platform Service" language="java"></layer>
+			<layer name="empty layer 5"></layer>
+			<layer super_layer="OSA"></layer>
+
 			<layer name="Api" language="java">
 				<libraries>
 					<library
