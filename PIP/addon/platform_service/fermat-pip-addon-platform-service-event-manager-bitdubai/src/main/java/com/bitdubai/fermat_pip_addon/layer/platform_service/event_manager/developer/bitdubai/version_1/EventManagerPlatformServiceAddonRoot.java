@@ -10,6 +10,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.Map;
  * Created by ciencias on 23.01.15.
  * Updated by Leon Acosta (laion.cj91@gmail.com) on 22-08-2015.
  */
-public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager, DealsWithEventMonitor, Service {
+public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager, DealsWithEventMonitor, Service,Serializable {
 
     /**
      * Service Interface member variables.

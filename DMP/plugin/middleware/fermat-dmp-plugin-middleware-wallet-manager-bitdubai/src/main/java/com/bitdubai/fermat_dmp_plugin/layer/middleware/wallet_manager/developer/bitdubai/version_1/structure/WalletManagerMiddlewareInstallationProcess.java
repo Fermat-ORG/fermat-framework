@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallWalletException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
@@ -19,7 +20,9 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.exceptions.CantPersistWalletSkinException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database.WalletManagerMiddlewareDao;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationProcess</code>
@@ -64,11 +67,12 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
     }
 
     private boolean isWalletInstalled(UUID walletCatalogueId) throws CantExecuteDatabaseOperationException {
-
+        //Logger LOG = Logger.getGlobal();
         try {
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
-            walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
-            return true;
+            InstalledWallet installedWallet=walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
+            if (installedWallet != null) return true;
+            else return false;
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantExecuteDatabaseOperationException(exception,"Error checking if the wallet is installed","Please, check the cause");
         } catch (CantGetInstalledWalletsException exception) {
@@ -100,6 +104,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                                   String languageLabel,
                                   String developerName,
                                   String navigationStructureVersion) throws CantInstallWalletException {
+        //Logger LOG = Logger.getGlobal();
         try {
             /**
              * Start the installation process
@@ -107,14 +112,13 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
             installationProgress = InstallationStatus.INSTALLING;
 
             if(!isWalletInstalled(walletCatalogueId)){
-
                 /**
                  * Send wallet info to Wallet Resource
                  */
                 //TODO: se necesita pasarle la public key de la wallet  instalar al resources
-                //walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion);
+                walletResources.installCompleteWallet(walletCategory.getCode(), walletType.getCode(), developerName, screenSize, skinName, language.value(), navigationStructureVersion, walletPublicKey);
                 //TODO: erase this test line.
-                walletResources.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0","TestPublicKey");
+                //walletResources.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0","TestPublicKey");
                 /**
                  * Persist wallet info in database
                  */
@@ -124,12 +128,11 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
 
                 walletManagerDao.persistWalletSkin(walletCatalogueId,skinId,skinName,skinPreview, skinVersion);
 
-                walletManagerDao.persistWalletLanguage( walletCatalogueId,languageId, language, languageLabel, languageVersion);
+                walletManagerDao.persistWalletLanguage(walletCatalogueId,languageId, language, languageLabel, languageVersion);
                 /**
                  * Set status installed
                  */
                 installationProgress = InstallationStatus.INSTALLED;
-
             }
 
         // TODO: Le tendria que pasar la wallet public key

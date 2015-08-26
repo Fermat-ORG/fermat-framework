@@ -2,10 +2,12 @@ package com.bitdubai.fermat_api.layer.all_definition.money;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
+import java.io.Serializable;
+
 /**
  * Created by ciencias on 02.02.15.
  */
-public class CryptoAddress {
+public class CryptoAddress implements Serializable {
 
     CryptoCurrency cryptoCurrency;
     String address;

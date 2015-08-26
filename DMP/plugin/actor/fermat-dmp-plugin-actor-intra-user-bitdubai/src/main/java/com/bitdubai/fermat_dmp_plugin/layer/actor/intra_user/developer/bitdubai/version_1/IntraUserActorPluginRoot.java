@@ -62,6 +62,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +74,7 @@ import java.util.regex.Pattern;
 /**
  * This plugin manages connections between users of the platform..
  * Provides contact information of Intra User
- *
+ * <p/>
  * Created by loui on 22/02/15.
  * modified by Natalia on 11/08/2015
  *
@@ -81,7 +82,8 @@ import java.util.regex.Pattern;
  * @since Java JDK 1.7
  */
 
-public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseManagerForDevelopers,DealsWithErrors, DealsWithEvents,DealsWithLogger,DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service  {
+
+public class IntraUserActorPluginRoot implements ActorIntraUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service, Serializable {
 
     private IntraUserActorDao intraUserActorDao;
 
@@ -100,7 +102,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     /**
      * DealsWithLogger interface member variable
      */
-    LogManager logManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
@@ -150,17 +152,12 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     @Override
     public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException {
-        try
-        {
-            this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey,profileImage,ContactState.PENDING_REMOTELY_ACCEPTANCE);
-        }
-        catch(CantAddPendingIntraUserException e)
-        {
-            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER CONNECTION",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        try {
+            this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ContactState.PENDING_REMOTELY_ACCEPTANCE);
+        } catch (CantAddPendingIntraUserException e) {
+            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
         }
 
     }
@@ -177,20 +174,14 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     @Override
     public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws CantAcceptIntraUserException {
-        try
-        {
+        try {
             this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ContactState.CONNECTED);
-        }
-        catch(CantUpdateIntraUserConnectionException e)
-        {
-            throw new CantAcceptIntraUserException("CAN'T ACCEPT INTRA USER CONNECTION",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantAcceptIntraUserException("CAN'T ACCEPT INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        } catch (CantUpdateIntraUserConnectionException e) {
+            throw new CantAcceptIntraUserException("CAN'T ACCEPT INTRA USER CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantAcceptIntraUserException("CAN'T ACCEPT INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
-
 
 
     /**
@@ -203,40 +194,30 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     @Override
     public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws CantDenyConnectionException {
 
-        try
-        {
+        try {
             this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ContactState.DENIED_LOCALLY);
-        }
-        catch(CantUpdateIntraUserConnectionException e)
-        {
-            throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        } catch (CantUpdateIntraUserConnectionException e) {
+            throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
 
     /**
      * That method disconnect an intra user from the connections registry
      *
-     * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+     * @param intraUserLoggedInPublicKey     The public key of the intra user identity that is the receptor of the request
      * @param intraUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
      * @throws CantDisconnectIntraUserException
      */
     @Override
     public void disconnectIntraUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraUserException {
-        try
-        {
+        try {
             this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ContactState.DISCONNECTED_REMOTELY);
-        }
-        catch(CantUpdateIntraUserConnectionException e)
-        {
-            throw new CantDisconnectIntraUserException("CAN'T CANCEL INTRA USER CONNECTION",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantDisconnectIntraUserException("CAN'T CANCEL INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        } catch (CantUpdateIntraUserConnectionException e) {
+            throw new CantDisconnectIntraUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantDisconnectIntraUserException("CAN'T CANCEL INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -250,17 +231,12 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
      */
     @Override
     public void cancelIntraUser(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws CantCancelIntraUserException {
-        try
-        {
+        try {
             this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToCancelPublicKey, ContactState.CANCELLED);
-        }
-        catch(CantUpdateIntraUserConnectionException e)
-        {
-            throw new CantCancelIntraUserException("CAN'T CANCEL INTRA USER CONNECTION",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantCancelIntraUserException("CAN'T CANCEL INTRA USER CONNECTION",FermatException.wrapException(e),"","");
+        } catch (CantUpdateIntraUserConnectionException e) {
+            throw new CantCancelIntraUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantCancelIntraUserException("CAN'T CANCEL INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -273,17 +249,12 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
      */
     @Override
     public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
-        try
-        {
+        try {
             return this.intraUserActorDao.getAllIntraUsers(intraUserLoggedInPublicKey);
-        }
-        catch(CantGetIntraUsersListException e)
-        {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS",FermatException.wrapException(e),"","");
+        } catch (CantGetIntraUsersListException e) {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -299,17 +270,12 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     @Override
     public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
-        try
-        {
+        try {
             return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_LOCALLY_ACCEPTANCE);
-        }
-        catch(CantGetIntraUsersListException e)
-        {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS",FermatException.wrapException(e),"","");
+        } catch (CantGetIntraUsersListException e) {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -325,40 +291,30 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     @Override
     public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
-        try
-        {
+        try {
             return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_REMOTELY_ACCEPTANCE);
-        }
-        catch(CantGetIntraUsersListException e)
-        {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS",FermatException.wrapException(e),"","");
+        } catch (CantGetIntraUsersListException e) {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
 
 
     @Override
     public void receivingIntraUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException {
-        try
-        {
+        try {
             this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ContactState.PENDING_LOCALLY_ACCEPTANCE);
-        }
-        catch(CantAddPendingIntraUserException e)
-        {
-            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION",e,"","");
-        }
-        catch(Exception e)
-        {
-            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION",FermatException.wrapException(e),"","");
+        } catch (CantAddPendingIntraUserException e) {
+            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantCreateIntraUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", FermatException.wrapException(e), "", "");
         }
 
     }
 
     /**
-     *DealsWithEvents Interface implementation.
+     * DealsWithEvents Interface implementation.
      */
 
 
@@ -368,14 +324,13 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     }
 
     /**
-     *DealsWithErrors Interface implementation.
+     * DealsWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
-
 
 
     /**
@@ -385,7 +340,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     @Override
     public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
 
-        this.intraUserNetworkServiceManager= intraUserManager;
+        this.intraUserNetworkServiceManager = intraUserManager;
     }
 
     /**
@@ -402,11 +357,11 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
      */
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem  = pluginFileSystem;
+        this.pluginFileSystem = pluginFileSystem;
 
     }
 
-      /**
+    /**
      * Service Interface implementation.
      */
     @Override
@@ -416,65 +371,65 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
              * I created instance of IntraUserActorDao
              * and initialize Database
              */
-            this.intraUserActorDao = new IntraUserActorDao(pluginDatabaseSystem,this.pluginFileSystem, this.pluginId);
+            this.intraUserActorDao = new IntraUserActorDao(pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
             this.intraUserActorDao.initializeDatabase();
 
-         /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
+            /**
+             * I will initialize the handling of com.bitdubai.platform events.
+             */
 
-        EventListener eventListener;
-        EventHandler eventHandler;
+            EventListener eventListener;
+            EventHandler eventHandler;
 
 
-        /**
-         * Listener Accepted connection event
-         */
-       eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
-        eventHandler = new IntraUserConnectionAcceptedEventHandlers();
-        ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setActorIntraUserManager(this);
-        ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setEventManager(eventManager);
-        ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+            /**
+             * Listener Accepted connection event
+             */
+            eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
+            eventHandler = new IntraUserConnectionAcceptedEventHandlers();
+            ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setActorIntraUserManager(this);
+            ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setEventManager(eventManager);
+            ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
 
-        /**
-         * Listener Cancelled connection event
-         */
-       eventListener = eventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
-        eventHandler = new IntraUserDisconnectionEventHandlers();
-        ((IntraUserDisconnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
-        ((IntraUserDisconnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+            /**
+             * Listener Cancelled connection event
+             */
+            eventListener = eventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+            eventHandler = new IntraUserDisconnectionEventHandlers();
+            ((IntraUserDisconnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
+            ((IntraUserDisconnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
 
-        /**
-         * Listener Request connection event
-         */
-        eventListener = eventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION);
-        eventHandler = new IntraUserRequestConnectionEventHandlers();
-        ((IntraUserRequestConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
-        ((IntraUserRequestConnectionEventHandlers) eventHandler).setEventManager(this.eventManager);
-         ((IntraUserRequestConnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            /**
+             * Listener Request connection event
+             */
+            eventListener = eventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION);
+            eventHandler = new IntraUserRequestConnectionEventHandlers();
+            ((IntraUserRequestConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
+            ((IntraUserRequestConnectionEventHandlers) eventHandler).setEventManager(this.eventManager);
+            ((IntraUserRequestConnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
 
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
 
-        /**
-         * Listener Denied connection event
-         */
-        eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED);
-        eventHandler = new IntraUserDeniedConnectionEventHandlers();
-        ((IntraUserDeniedConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
-        ((IntraUserDeniedConnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-        eventListener.setEventHandler(eventHandler);
+            /**
+             * Listener Denied connection event
+             */
+            eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED);
+            eventHandler = new IntraUserDeniedConnectionEventHandlers();
+            ((IntraUserDeniedConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
+            ((IntraUserDeniedConnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            eventListener.setEventHandler(eventHandler);
 
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
 
 
             /**
@@ -484,7 +439,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
             this.processNotifications();
 
             // set plugin status Started
-        this.serviceStatus = ServiceStatus.STARTED;
+            this.serviceStatus = ServiceStatus.STARTED;
 
 
         } catch (CantProcessNotificationsExceptions e) {
@@ -494,8 +449,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         } catch (CantInitializeIntraUserActorDatabaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
-        }
-       catch (Exception e) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
         }
@@ -537,13 +491,12 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     }
 
 
-
     /**
      * DatabaseManagerForDevelopers Interface implementation.
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+        IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
 
 
@@ -551,43 +504,29 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+        IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        Database database;
-        try {
-            IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
 
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
-            return dbFactory.getDatabaseTableContent(developerObjectFactory,  developerDatabaseTable);
-        }catch (CantOpenDatabaseException cantOpenDatabaseException){
+        try {
+            IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeIntraUserActorDatabaseException e) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        }
-        catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
     }
 
-
-
-    /**
-     *      LogManagerForDevelopers interface implementation.
-     */
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -607,7 +546,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
          * Modify by Manuel on 25/07/2015
          * I will wrap all this method within a try, I need to catch any generic java Exception
          */
-        try{
+        try {
 
             /**
              * I will check the current values and update the LogLevel in those which is different
@@ -624,34 +563,13 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
                 }
             }
 
-        }catch (Exception exception){
-            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ IntraUserActorPluginRoot.newLoggingLevel ,"Check the cause");
+        } catch (Exception exception) {
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + IntraUserActorPluginRoot.newLoggingLevel, "Check the cause");
             this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
         }
 
     }
 
-    /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return IntraUserActorPluginRoot.newLoggingLevel.get(correctedClass[0]);
-
-        } catch (Exception exception){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
 
 /**
  * Private methods
@@ -660,12 +578,12 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     /**
      * Procces the list o f notifications from Intra User Network Services
      * And update intra user actor contact state
+     *
      * @throws CantProcessNotificationsExceptions
      */
     private void processNotifications() throws CantProcessNotificationsExceptions {
 
-        try
-        {
+        try {
 
             List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getNotifications();
 
@@ -674,26 +592,29 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
                 String intraUserSedingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
 
-                switch ( notification.getNotificationDescriptor()){
+                switch (notification.getNotificationDescriptor()) {
                     case ACCEPTED:
-                        this.acceptIntraUser("",intraUserSedingPublicKey);
+                        this.acceptIntraUser("", intraUserSedingPublicKey);
                         /**
                          * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
                          */
                         eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
-
+                        break;
                     case DISCONNECTED:
                         this.disconnectIntraUser("", intraUserSedingPublicKey);
+                        break;
                     case RECEIVED:
                         this.receivingIntraUserRequestConnection("", "", intraUserSedingPublicKey, null);
                         /**
                          * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
                          */
                         eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
-
+                        break;
                     case DENIED:
-                        this.denyConnection("",intraUserSedingPublicKey);
+                        this.denyConnection("", intraUserSedingPublicKey);
+                        break;
                     default:
+                        break;
 
                 }
 
@@ -704,25 +625,17 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
             }
 
 
-        }
-        catch(CantAcceptIntraUserException e)
-        {
-            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS",e,"","Error Update Contact State to Accepted");
+        } catch (CantAcceptIntraUserException e) {
+            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Accepted");
 
-        }
-        catch(CantDisconnectIntraUserException e)
-        {
-            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS",e,"","Error Update Contact State to Disconnected");
+        } catch (CantDisconnectIntraUserException e) {
+            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Disconnected");
 
-        }
-        catch(CantDenyConnectionException e)
-        {
-            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS",e,"","Error Update Contact State to Denied");
+        } catch (CantDenyConnectionException e) {
+            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Denied");
 
-        }
-        catch(Exception e)
-        {
-            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS",FermatException.wrapException(e),"","");
+        } catch (Exception e) {
+            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
 
         }
     }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,7 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
 
     protected ArrayList<M> dataSet;
     protected Context context;
+    protected FermatListItemListeners<M> eventListeners;
 
     protected FermatAdapter(Context context) {
         this.context = context;
@@ -37,7 +39,26 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
     }
 
     @Override
-    public void onBindViewHolder(H holder, int position) {
+    public void onBindViewHolder(H holder, final int position) {
+        // setting up custom listeners
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (eventListeners != null) {
+                    eventListeners.onItemClickListener(getItem(position), position);
+                }
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (eventListeners != null) {
+                    eventListeners.onLongItemClickListener(getItem(position), position);
+                    return true;
+                }
+                return false;
+            }
+        });
         bindHolder(holder, getItem(position), position);
     }
 
@@ -77,6 +98,10 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
         int position = dataSet.size();
         dataSet.add(item);
         notifyItemInserted(position);
+    }
+
+    public void setFermatListEventListener(FermatListItemListeners<M> onEventListeners) {
+        this.eventListeners = onEventListeners;
     }
 
     /**

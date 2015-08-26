@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
@@ -25,7 +26,7 @@ import java.security.MessageDigest;
  * The Platform File System is the implementation of the file system that is handled to external plugins not requires the plug in to identify itself.
  */
 
-public class AndroidPlatformFileSystem implements PlatformFileSystem {
+public class AndroidPlatformFileSystem implements PlatformFileSystem,Serializable {
 
     private static final String CHARSET_NAME = "UTF-8";
     private static final String DIGEST_ALGORITHM = "SHA-256";

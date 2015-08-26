@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.*;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 
@@ -120,10 +121,6 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         return videoPreviews;
     }
 
-    //@Override Elimnar
-    //public URL getSkinURL() {
-    //    return url;
-    //}
 
     @Override
     public long getSkinSizeInBytes() {
@@ -131,7 +128,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     }
 
     @Override
-    public Designer getDesigner() {
+    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner() {
         return designer;
     }
 
@@ -181,10 +178,6 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     public void setVideoPreviews(List<URL> videoPreviews) {
         this.videoPreviews = videoPreviews;
     }
-
-    //public void setUrl(URL url) { Eliminar
-    //    this.url = url;
-    //}
 
     public void setSkinSizeInBytes(int skinSizeInBytes) {
         this.skinSizeInBytes = skinSizeInBytes;

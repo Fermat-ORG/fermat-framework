@@ -9,5 +9,5 @@ public interface CustomComponentsObjects {
 
     public String getDetail();
 
-    public String getImageUrl();
+    public byte[] getImage();
 }

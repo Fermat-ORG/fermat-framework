@@ -37,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by natalia on 04/08/15.
@@ -132,10 +133,14 @@ public class WalletManagerMiddlewareDao {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
             databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletIdInThisDevice.toString(), DatabaseFilterType.EQUAL);
-
             databaseTable.loadToMemory();
-
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+
+                database.closeDatabase();
+                throw new CantGetInstalledWalletsException(CantGetInstalledWalletsException.DEFAULT_MESSAGE,null,"Can't find the walled with ID:"+walletIdInThisDevice,"Please, check the cause");
+
+            }
             for (DatabaseTableRecord record : records){
 
                 installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME)),
@@ -153,19 +158,17 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)
                 );
-
-
             }
 
             database.closeDatabase();
         }
         catch (CantLoadTableToMemoryException e){
             database.closeDatabase();
-            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",e, null, null);
+            throw new CantGetInstalledWalletsException("ERROR GET INSTALLED WALLETS FROM DATABASE",e, null, null);
         }
         catch (Exception exception){
             database.closeDatabase();
-            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",FermatException.wrapException(exception), null, null);
+            throw new CantGetInstalledWalletsException("ERROR GET INSTALLED WALLETS FROM DATABASE",FermatException.wrapException(exception), null, null);
         }
 
         return installedWallet;
@@ -174,14 +177,25 @@ public class WalletManagerMiddlewareDao {
     public  InstalledWallet  getInstalledWalletByCatalogueId(UUID walletCatalogueId) throws CantGetInstalledWalletsException {
 
         InstalledWallet installedWallet = null;
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("DENTRO DEL DAO:...");
         try{
             database = openDatabase();
+
+            //LOG.info("DB:"+database.toString());
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
+            //LOG.info("TABLE:" + databaseTable.isTableExists());
             databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
-
             databaseTable.loadToMemory();
-
+            //LOG.info("TABLE loaded:");
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            //LOG.info("Records:"+records.size());
+            if(records.isEmpty()){
+
+                database.closeDatabase();
+                throw new CantGetInstalledWalletsException(CantGetInstalledWalletsException.DEFAULT_MESSAGE,null,"Can't find the walled with ID:"+walletCatalogueId,"Please, check the cause");
+
+            }
             for (DatabaseTableRecord record : records){
 
                 installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME)),
@@ -199,21 +213,19 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)
                 );
-
-
+                //LOG.info("record:"+record);
             }
 
             database.closeDatabase();
         }
         catch (CantLoadTableToMemoryException e){
-            database.closeDatabase();
+             database.closeDatabase();
             throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",e, null, null);
         }
         catch (Exception exception){
-            database.closeDatabase();
+           database.closeDatabase();
             throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE",FermatException.wrapException(exception), null, null);
         }
-
         return installedWallet;
     }
 
@@ -235,19 +247,26 @@ public class WalletManagerMiddlewareDao {
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME, developerName);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME, screenSize);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME, navigationVersion);
-
+            //Logger LOG = Logger.getGlobal();
+            //LOG.info("RECORD:" + record);
             databaseTable.insertRecord(record);
+            //TODO: BORRAR
+            /*databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME,walletPublicKey,DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            LOG.info("RECORDs:"+records.size());
+            LOG.info("LEIDO:"+records.get(0));*/
 
             database.closeDatabase();
 
         }
         catch (CantInsertRecordException e){
             database.closeDatabase();
-            throw new CantPersistWalletException("ERROR PERSISTING WALLET SKIN",e, null, null);
+            throw new CantPersistWalletException("ERROR PERSISTING WALLET",e, null, null);
         }
         catch (Exception exception){
             database.closeDatabase();
-            throw new CantPersistWalletException("ERROR PERSISTING WALLET SKIN",FermatException.wrapException(exception), null, null);
+            throw new CantPersistWalletException("ERROR PERSISTING WALLET",FermatException.wrapException(exception), null, null);
         }
     }
 
