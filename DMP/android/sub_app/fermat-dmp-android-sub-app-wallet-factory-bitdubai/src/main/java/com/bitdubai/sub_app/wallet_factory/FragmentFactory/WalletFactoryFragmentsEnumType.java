@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public enum WaletFactoryFragmentsEnumType implements FermatFragmentsEnumType<WaletFactoryFragmentsEnumType> {
+public enum WalletFactoryFragmentsEnumType implements FermatFragmentsEnumType<WalletFactoryFragmentsEnumType> {
 
 
     CWP_WALLET_FACTORY_MANAGER_FRAGMENT("CWFMF"),
@@ -19,7 +19,7 @@ public enum WaletFactoryFragmentsEnumType implements FermatFragmentsEnumType<Wal
 
     private String key;
 
-    WaletFactoryFragmentsEnumType(String key) {
+    WalletFactoryFragmentsEnumType(String key) {
         this.key = key;
     }
 
@@ -32,8 +32,8 @@ public enum WaletFactoryFragmentsEnumType implements FermatFragmentsEnumType<Wal
     }
 
 
-    public static WaletFactoryFragmentsEnumType getValue(String name) {
-        for (WaletFactoryFragmentsEnumType fragments : WaletFactoryFragmentsEnumType.values()) {
+    public static WalletFactoryFragmentsEnumType getValue(String name) {
+        for (WalletFactoryFragmentsEnumType fragments : WalletFactoryFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {
                 return fragments;
             }

@@ -15,14 +15,14 @@ import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<WalletFactorySubAppSession,WalletFactoryPreferenceSettings,WaletFactoryFragmentsEnumType> {
+public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<WalletFactorySubAppSession,WalletFactoryPreferenceSettings,WalletFactoryFragmentsEnumType> {
 
 
     public WalletFactoryFragmentFactory(){}
 
 
     @Override
-    public FermatFragment getFermatFragment(WaletFactoryFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public FermatFragment getFermatFragment(WalletFactoryFragmentsEnumType fragments) throws FragmentNotFoundException {
         FermatFragment currentFragment = null;
 
         switch (fragments){
@@ -52,8 +52,8 @@ public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<Wa
     }
 
     @Override
-    public WaletFactoryFragmentsEnumType getFermatFragmentEnumType(String key) {
-        return WaletFactoryFragmentsEnumType.getValue(key);
+    public WalletFactoryFragmentsEnumType getFermatFragmentEnumType(String key) {
+        return WalletFactoryFragmentsEnumType.getValue(key);
     }
 
 
