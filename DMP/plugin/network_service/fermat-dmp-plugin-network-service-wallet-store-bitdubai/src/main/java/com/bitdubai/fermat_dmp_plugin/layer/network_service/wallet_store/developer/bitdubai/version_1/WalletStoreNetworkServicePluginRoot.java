@@ -291,7 +291,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
          * I will try to open the database first, if it doesn't exists, then I create it
          */
         try {
-            TestPublishWallet();
+          //  TestPublishWallet();
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             try {
