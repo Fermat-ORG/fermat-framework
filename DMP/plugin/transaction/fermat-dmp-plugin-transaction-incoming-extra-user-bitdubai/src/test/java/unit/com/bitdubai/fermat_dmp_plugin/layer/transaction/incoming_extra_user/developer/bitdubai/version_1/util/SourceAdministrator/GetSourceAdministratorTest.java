@@ -41,6 +41,6 @@ public class GetSourceAdministratorTest {
         testSourceAdministrator = new SourceAdministrator();
         testSourceAdministrator.setIncomingCryptoManager(mockIncomingCryptoManager);
 
-        assertThat(testSourceAdministrator.getSourceAdministrator(EventSource.CRYPTO_VAULT)).isNotNull();
+        assertThat(testSourceAdministrator.getSourceAdministrator(EventSource.CRYPTO_ROUTER)).isNotNull();
     }
 }
