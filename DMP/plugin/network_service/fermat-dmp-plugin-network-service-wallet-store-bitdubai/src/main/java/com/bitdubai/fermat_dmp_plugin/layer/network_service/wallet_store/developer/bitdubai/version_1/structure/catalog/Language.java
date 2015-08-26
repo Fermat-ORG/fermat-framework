@@ -19,7 +19,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
     Version version;
     Version initialWalletVersion;
     Version finalWalletVersion;
-    Translator translator;
+    com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator;
     boolean isDefault;
 
     /**
@@ -139,7 +139,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         this.finalWalletVersion = finalWalletVersion;
     }
 
-    public void setTranslator(Translator translator) {
+    public void setTranslator(com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator) {
         this.translator = translator;
     }
 

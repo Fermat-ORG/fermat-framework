@@ -285,21 +285,21 @@
                 <package>com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.event_handlers</package>
                 <package>com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai</package>
                 <package>com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.bank_notes_wallet.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.bank_notes_wallet.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_loss_protected_wallet.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_loss_protected_wallet.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.discount_wallet.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.discount_wallet.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.fiat_over_crypto_loss_protected_wallet.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.fiat_over_crypto_loss_protected_wallet.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.fiat_over_crypto_wallet.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.fiat_over_crypto_wallet.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.multi_account_wallet.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.multi_account_wallet.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.bank_notes_wallet.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.bank_notes_wallet.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_loss_protected_wallet.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_loss_protected_wallet.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.discount_wallet.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.discount_wallet.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.fiat_over_crypto_loss_protected_wallet.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.fiat_over_crypto_loss_protected_wallet.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.multi_account_wallet.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.multi_account_wallet.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_device_user.developer.bitdubai</package>
                 <package>com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_device_user.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers</package>

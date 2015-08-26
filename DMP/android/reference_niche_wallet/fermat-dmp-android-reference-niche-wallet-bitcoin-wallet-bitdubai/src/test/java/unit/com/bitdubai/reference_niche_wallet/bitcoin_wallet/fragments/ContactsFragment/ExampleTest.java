@@ -3,16 +3,6 @@ package unit.com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.Contac
 import static org.mockito.Mockito.*;
 import static org.fest.assertions.api.Assertions.*;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v13.BuildConfig;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,8 +11,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
-
-import java.util.UUID;
 
 /**
  * Created by jorgegonzalez on 2015.06.28..
