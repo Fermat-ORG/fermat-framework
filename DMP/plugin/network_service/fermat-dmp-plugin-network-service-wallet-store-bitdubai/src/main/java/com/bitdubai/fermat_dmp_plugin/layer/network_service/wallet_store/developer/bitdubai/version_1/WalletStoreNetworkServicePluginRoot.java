@@ -52,6 +52,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
@@ -286,7 +287,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
          * I will try to open the database first, if it doesn't exists, then I create it
          */
         try {
-            TestPublishWallet();
+            TestPublishWallet(); //Todo: Solo para testear luego eliminar
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -525,11 +526,29 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             skin.setScreenSize(ScreenSize.MEDIUM);
 
 
-            com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;
-            designer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
-            designer.setiD(UUID.randomUUID());
-            designer.setAlias("Diseñador");
-            designer.setPublicKey("DFSDFKSDFPSDFJSDFsdkfjskdf");
+            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;
+            //designer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
+            ////
+            com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = new com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer() {
+                @Override
+                public String getAlias() {
+                    return "Diseñador";
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return "DFSDFKSDFPSDFJSDFsdkfjskdf";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                    return null;
+                }
+            };
+            ////
+            //designer.setiD(UUID.randomUUID());
+            //designer.setAlias("Diseñador");
+            //designer.setPublicKey("DFSDFKSDFPSDFJSDFsdkfjskdf");
 
             skin.setDesigner(designer);
 
@@ -553,22 +572,59 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             language.setLanguagePackageSizeInBytes(100);
 
 
-            com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translator;
-            translator = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
+            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translator;
+            //translator = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
+            ////
+            com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = new com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator() {
+                @Override
+                public String getAlias() {
+                    return "Traductor";
+                }
 
-            translator.setId(UUID.randomUUID());
-            translator.setAlias("Traductor");
-            translator.setPublicKey("SDSDFSDFskdmfskdjfsdkjf");
+                @Override
+                public String getPublicKey() {
+                    return "SDSDFSDFskdmfskdjfsdkjf";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                    return null;
+                }
+            };
+            ////
+
+            //translator.setId(UUID.randomUUID());
+            //translator.setAlias("Traductor");
+            //translator.setPublicKey("SDSDFSDFskdmfskdjfsdkjf");
             language.setTranslator(translator);
 
 
             detailedCatalogItemImpl.setLanguage(language);
-            com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
-            developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
-            developer.setAlias("Franklin");
-            developer.setId(UUID.randomUUID());
-            developer.setPublicKey("SDSDSDSDasdojasdiuahsdkasjdaskdasdk");
-            detailedCatalogItemImpl.setDeveloper(developer);
+            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
+            //developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
+            ////
+            DeveloperIdentity developerIdentity = new DeveloperIdentity() {
+                @Override
+                public String getAlias() {
+                    return "Franklin";
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return "SDSDSDSDasdojasdiuahsdkasjdaskdasdk";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws CantSingMessageException {
+                    return null;
+                }
+            };
+            ///
+
+            //developer.setAlias(developerIdentity.getAlias());
+            //developer.setId(UUID.randomUUID());
+            //developer.setPublicKey(developerIdentity.getPublicKey());
+            detailedCatalogItemImpl.setDeveloper(developerIdentity);
 
             catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);
 
@@ -616,7 +672,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         languageImpl.setInitialWalletVersion(initialWalletVersion);
         languageImpl.setFinalWalletVersion(finalWalletVersion);
         languageImpl.setLanguagePackageSizeInBytes((int) languageSizeInBytes);
-        languageImpl.setTranslator((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator) translator); //Todo: Revisar
+        languageImpl.setTranslator(translator);
         languageImpl.setIsDefault(isDefault);
 
         return languageImpl;
@@ -652,42 +708,89 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skinImpl.setHasVideoPreview(hasVideoPreview);
         skinImpl.setVideoPreviews(videoPreviews);
         skinImpl.setSkinSizeInBytes(skinSizeInBytes);
-        skinImpl.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) designer); //Todo Revisar
+        skinImpl.setDesigner(designer);
         skinImpl.setIsDefault(isDefault);
 
         return skinImpl;
     }
 
-    public DeveloperIdentity constructDeveloper(String alias, String PublicKey)
+    public DeveloperIdentity constructDeveloper(final String alias, final String PublicKey)
     {
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developerImpl;
-        developerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
+        //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developerImpl;
+        //developerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
 
-        developerImpl.setAlias(alias);
-        developerImpl.setPublicKey(PublicKey);
+        //developerImpl.setAlias(alias);
+        //developerImpl.setPublicKey(PublicKey);
+        DeveloperIdentity developerIdentityImpl = new DeveloperIdentity() {
+            @Override
+            public String getAlias() {
+                return alias;
+            }
 
-        return developerImpl;
+            @Override
+            public String getPublicKey() {
+                return PublicKey;
+            }
+
+            @Override
+            public String createMessageSignature(String mensage) throws CantSingMessageException {
+                return null;
+            }
+        };
+
+        return developerIdentityImpl;
     }
 
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer constructDesigner(String alias, String PublicKey){
+    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer constructDesigner(final String alias, final String PublicKey){
 
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designerImpl;
-        designerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
+        //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designerImpl;
+        //designerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
 
-        designerImpl.setAlias(alias);
-        designerImpl.setPublicKey(PublicKey);
+        //designerImpl.setAlias(alias);
+        //designerImpl.setPublicKey(PublicKey);
+        com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designerImpl = new com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer() {
+            @Override
+            public String getAlias() {
+                return alias;
+            }
+
+            @Override
+            public String getPublicKey() {
+                return PublicKey;
+            }
+
+            @Override
+            public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                return null;
+            }
+        };
 
         return designerImpl;
     }
 
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator constructTranslator(String alias, String PublicKey)
+    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator constructTranslator(final String alias, final String PublicKey)
     {
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translatorImpl;
-        translatorImpl =  new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
-        //translatorImpl.setId(translatorId);
+        //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translatorImpl;
+        //translatorImpl =  new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
 
-        translatorImpl.setAlias(alias);
-        translatorImpl.setPublicKey(PublicKey);
+        //translatorImpl.setAlias(alias);
+        //translatorImpl.setPublicKey(PublicKey);
+        com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translatorImpl = new com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator() {
+            @Override
+            public String getAlias() {
+                return alias;
+            }
+
+            @Override
+            public String getPublicKey() {
+                return PublicKey;
+            }
+
+            @Override
+            public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                return null;
+            }
+        };
 
         return translatorImpl;
     }
@@ -737,14 +840,14 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         constructskin.setIsDefault(skin.isDefault());
         constructskin.setScreenSize(skin.getScreenSize());
 
-        constructskin.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) skin.getDesigner());
+        constructskin.setDesigner(skin.getDesigner());
 
         detailedCatalogItemImpl.setVersion(version);
         detailedCatalogItemImpl.setPlatformInitialVersion(platformInitialVersion);
         detailedCatalogItemImpl.setPlatformFinalVersion(platformFinalVersion);
         detailedCatalogItemImpl.setDefaultSkin(skin);
         detailedCatalogItemImpl.setSkins(skins);
-        detailedCatalogItemImpl.setDeveloper((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer) developer);
+        detailedCatalogItemImpl.setDeveloper(developer);
         detailedCatalogItemImpl.setLanguage(language);
         detailedCatalogItemImpl.setLanguages(languages);
 

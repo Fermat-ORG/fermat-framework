@@ -44,7 +44,7 @@ public interface Skin {
     /**
      * Skin resource information
      */
-    //public URL getSkinURL(); //Eliminar
+
     public long getSkinSizeInBytes();
 
     /**
