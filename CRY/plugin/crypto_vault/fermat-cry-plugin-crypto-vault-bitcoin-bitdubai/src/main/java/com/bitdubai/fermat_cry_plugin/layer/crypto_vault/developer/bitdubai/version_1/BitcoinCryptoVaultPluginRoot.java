@@ -455,6 +455,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     @Override
     public void connectToBitcoin() throws VaultNotConnectedToNetworkException {
         try {
+
             vault.connectVault();
         } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
             throw new VaultNotConnectedToNetworkException();
