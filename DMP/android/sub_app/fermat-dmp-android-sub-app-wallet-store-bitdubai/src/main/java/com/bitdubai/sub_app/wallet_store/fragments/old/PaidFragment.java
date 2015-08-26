@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.fragment;
+package com.bitdubai.sub_app.wallet_store.fragments.old;
 
 /**
      * MATIAS 13/5/2016
@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.sub_app.wallet_store.Model.App;
-import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
-import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
+import com.bitdubai.sub_app.wallet_store.common.models.old.App;
+import com.bitdubai.sub_app.wallet_store.common.models.old.ItemsBD;
+import com.bitdubai.sub_app.wallet_store.common.models.old.ViewHolder;
 import com.wallet_store.bitdubai.R;
 //import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 

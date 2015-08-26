@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragment;
 
@@ -19,7 +20,7 @@ import java.util.concurrent.Executors;
 /**
  * RecyclerView Fragment
  */
-public abstract class FermatListFragment extends Fragment implements RecyclerListFragment {
+public abstract class FermatListFragment extends FermatFragment implements RecyclerListFragment {
 
     protected final String TAG = "Recycler Base";
     /**

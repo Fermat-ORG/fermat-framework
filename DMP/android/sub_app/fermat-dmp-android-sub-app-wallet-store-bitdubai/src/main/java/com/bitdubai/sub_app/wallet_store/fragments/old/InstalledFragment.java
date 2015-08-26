@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.fragment;
+package com.bitdubai.sub_app.wallet_store.fragments.old;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,12 +12,12 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 
 /**
- * Wallet Store Tab
+ * List of Installed Wallets Fragment
  *
- * @author Francisco Vásquez
+ * @author Francisco Vasquez
  * @version 1.0
  */
-public class WalletsFragment extends FermatListFragment {
+public class InstalledFragment extends FermatListFragment {
 
     /**
      * STATIC
@@ -47,8 +47,8 @@ public class WalletsFragment extends FermatListFragment {
      * @param manager  WalletStoreModuleManager instance object
      * @return InstalledFragment instance object
      */
-    public static WalletsFragment newInstance(int position, @Nullable WalletStoreModuleManager manager) {
-        WalletsFragment f = new WalletsFragment();
+    public static InstalledFragment newInstance(int position, @Nullable WalletStoreModuleManager manager) {
+        InstalledFragment f = new InstalledFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

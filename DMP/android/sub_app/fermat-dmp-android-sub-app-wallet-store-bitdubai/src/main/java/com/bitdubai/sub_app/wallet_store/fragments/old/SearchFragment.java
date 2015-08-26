@@ -1,13 +1,14 @@
-package com.bitdubai.sub_app.wallet_store.fragment;
+package com.bitdubai.sub_app.wallet_store.fragments.old;
 
 /**
  * MATIAS 13/5/2015
  */
+
+import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,26 +19,26 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.sub_app.wallet_store.Model.App;
-import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
-import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
+import com.bitdubai.sub_app.wallet_store.common.models.old.App;
+import com.bitdubai.sub_app.wallet_store.common.models.old.ItemsBD;
+import com.bitdubai.sub_app.wallet_store.common.models.old.ViewHolder;
 import com.wallet_store.bitdubai.R;
-//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
-public class FreeFragment extends FermatFragment {
+public class SearchFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static FreeFragment newInstance(int position,SubAppsSession subAppsSession) {
-        FreeFragment f = new FreeFragment();
+    public static SearchFragment newInstance(int position,SubAppsSession subAppsSession) {
+        SearchFragment f = new SearchFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -46,16 +47,16 @@ public class FreeFragment extends FermatFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         ItemsBD itemsBD = new ItemsBD();
+        //query de busqueda que viene de la activity
+        String query_search = getArguments().getString("query");
 
 
         if (mlist == null)
         {
 
             //aca van las de discount
-            mlist=itemsBD.cargarDatosPorTipoApp(ItemsBD.DISCOUNT_WALLETS);
+            mlist=itemsBD.cargarDatosPorQueryBusqueda(query_search);
         }
 
 
@@ -74,8 +75,8 @@ public class FreeFragment extends FermatFragment {
 
 
 
-/*
 
+/*
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -90,7 +91,6 @@ public class FreeFragment extends FermatFragment {
 
         return gridView;
     }
-
 
 
 
@@ -138,8 +138,6 @@ public class FreeFragment extends FermatFragment {
 
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);
-
-                holder.downloadIcon = (ImageView) convertView.findViewById(R.id.download);
 
                 convertView.setTag(holder);
             } else {
@@ -285,8 +283,7 @@ public class FreeFragment extends FermatFragment {
 
 
 
-
-
     }
 
 }
+
