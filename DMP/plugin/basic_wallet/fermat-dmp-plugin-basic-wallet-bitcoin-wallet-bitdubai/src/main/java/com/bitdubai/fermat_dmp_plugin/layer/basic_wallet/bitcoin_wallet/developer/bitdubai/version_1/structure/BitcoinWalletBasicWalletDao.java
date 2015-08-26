@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_except
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterCreditException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -287,6 +288,7 @@ public class BitcoinWalletBasicWalletDao {
         DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
         bitcoinWalletTable.setFilterTop(String.valueOf(max));
         bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
+        bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
         bitcoinWalletTable.loadToMemory();
         return bitcoinWalletTable;
     }
