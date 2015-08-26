@@ -36,7 +36,6 @@ public class DetailsActivityFragment extends FermatFragment {
      * Create a new instance of this fragment
      *
      * @param position tab position
-     * @param session  WalletStoreSubAppSession instance object. This contains references to WalletStoreModuleManager and ErrorManager
      * @return InstalledFragment instance object
      */
     public static DetailsActivityFragment newInstance(int position) {
