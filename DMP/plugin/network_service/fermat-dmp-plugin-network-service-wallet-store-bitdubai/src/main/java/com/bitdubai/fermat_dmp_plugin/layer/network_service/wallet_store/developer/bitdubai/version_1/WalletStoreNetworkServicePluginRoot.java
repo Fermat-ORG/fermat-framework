@@ -737,7 +737,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                               List<byte[]> previewImageList,
                               boolean hasVideoPreview,
                               List<URL> videoPreviews,
-                              int skinSizeInBytes,
+                              long skinSizeInBytes,
                               com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer,
                               boolean isDefault )
     {

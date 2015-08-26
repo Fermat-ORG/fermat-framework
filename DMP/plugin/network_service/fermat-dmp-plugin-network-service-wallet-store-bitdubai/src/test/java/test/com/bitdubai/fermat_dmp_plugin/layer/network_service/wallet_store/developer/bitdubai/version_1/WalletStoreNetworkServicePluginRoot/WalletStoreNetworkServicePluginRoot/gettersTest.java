@@ -1,22 +1,25 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot.WalletStoreNetworkServicePluginRoot;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.InvalidResultReturnedByDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 
 import junit.framework.TestCase;
 
@@ -33,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.when;
 
 /**
@@ -42,6 +44,10 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class gettersTest extends TestCase {
 
+    @Mock
+    Developer developer;
+    @Mock
+    Skin skin;
     @Mock
     WalletStoreManager walletStoreManager;
     @Mock
@@ -56,10 +62,12 @@ public class gettersTest extends TestCase {
     PluginFileSystem pluginFileSystem;
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
-@Mock
-WalletStoreCatalogDatabaseDao walletStoreCatalogDatabaseDao;
     @Mock
     Database database;
+    @Mock
+    DatabaseTable databaseTable;
+    @Mock
+    DatabaseTableRecord databaseTablerecord;
     final char DOT = '.';
     final char SLASH = '/';
     final String CLASS_SUFFIX = ".class";
@@ -67,38 +75,28 @@ WalletStoreCatalogDatabaseDao walletStoreCatalogDatabaseDao;
 
     CatalogItem catalogItem;
     private WalletStoreNetworkServicePluginRoot walletStoreNetworkServicePluginRoot;
-    private UUID testPluginId;
-    private UUID languageId;
-    private UUID walletId;
-    private Version version;
-    private Version initialWalletVersion;
-    private Version finalWalletVersion;
-    List<URL> videoPreviews;
-    long languageSizeInBytes;
+    @Mock
+    WalletStoreCatalogDatabaseDao walletStoreCatalogDatabaseDao;
 
-    com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translator;
+    private UUID testPluginId;
 
     @Before
     public void setUp() {
         testPluginId = UUID.randomUUID();
-        languageId = UUID.randomUUID();
-        walletId = UUID.randomUUID();
-        version = new Version("1.0.0");
-        initialWalletVersion = new Version("1.0.0");
-        finalWalletVersion = new Version("1.0.0");
-        languageSizeInBytes = 100;
-        translator = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
-        translator.setId(UUID.randomUUID());
-        translator.setName("Traductor");
-        translator.setPublicKey("SDSDFSDFskdmfskdjfsdkjf");
-        //language.setTranslator(translator);
         walletStoreNetworkServicePluginRoot = new WalletStoreNetworkServicePluginRoot();
         walletStoreNetworkServicePluginRoot.setId(testPluginId);
         walletStoreNetworkServicePluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
         walletStoreNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
         walletStoreNetworkServicePluginRoot.setErrorManager(errorManager);
         walletStoreNetworkServicePluginRoot.setLogManager(logManager);
-
+/*        try {
+            walletStoreCatalogDatabaseDao = new WalletStoreCatalogDatabaseDao(errorManager,logManager,pluginDatabaseSystem,testPluginId,testPluginId.toString());
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
+        walletStoreCatalogDatabaseDao.setLogManager(logManager);
+        walletStoreCatalogDatabaseDao.setPluginDatabaseSystem(pluginDatabaseSystem);
+        walletStoreCatalogDatabaseDao.setErrorManager(errorManager);*/
     }
 
     @Test
@@ -106,26 +104,30 @@ WalletStoreCatalogDatabaseDao walletStoreCatalogDatabaseDao;
         walletStoreNetworkServicePluginRoot.getId();
     }
 
+    @Ignore
     @Test
     public void publishWalletTest() {
         try {
+            //when(walletStoreCatalogDatabaseDao.getCatalogItems()).thenReturn(database);
+            //catalogItem = walletStoreNetworkServicePluginRoot.constructEmptyCatalogItem();
             walletStoreNetworkServicePluginRoot.publishWallet(catalogItem);
         } catch (CantPublishWalletInCatalogException e) {
             e.printStackTrace();
         }
     }
 
+    @Ignore
     @Test
-    public void constructEmptyCatalogItemTest()  throws CantGetWalletsCatalogException {
-        //when(walletStoreCatalogDatabaseDao.getCatalogItems()).thenReturn(database);
-        walletStoreNetworkServicePluginRoot.constructEmptyCatalogItem();
+    public void getSkinTest() throws CantGetSkinException, InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException {
+        //when(walletStoreCatalogDatabaseDao.getSkinFromDatabase(testPluginId)).thenReturn(skin);
+        walletStoreNetworkServicePluginRoot.getSkin(testPluginId);
     }
 
+    @Ignore
     @Test
-    public void constructLanguageTest()  throws CantGetWalletsCatalogException {
-        walletStoreNetworkServicePluginRoot.constructLanguage(languageId,
-                Languages.SPANISH,"Espanol",walletId,version,initialWalletVersion,finalWalletVersion,
-                videoPreviews,languageSizeInBytes,translator,true);
+    public void getDeveloperTest() throws CantGetDeveloperException, CantExecuteDatabaseOperationException {
+        when(walletStoreCatalogDatabaseDao.getDeveloper(testPluginId)).thenReturn(developer);
+        walletStoreNetworkServicePluginRoot.getDeveloper(testPluginId);
     }
 
     @Test
