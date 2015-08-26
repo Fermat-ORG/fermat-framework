@@ -7,7 +7,7 @@
 					<library
 							name="Fermat Core"
 							description=""
-							difficulty="0"
+							difficulty="10"
 							code-level="development"
 							>
 						<authors>
@@ -25,7 +25,7 @@
 					<library
 							name="Android Core"
 							description=""
-							difficulty="0"
+							difficulty="10"
 							code-level="development"
 							>
 						<authors>
@@ -232,7 +232,7 @@
 					<library
 							name="Fermat Api"
 							description=""
-							difficulty="0"
+							difficulty="10"
 							code-level="development"
 							>
 						<authors>
@@ -248,7 +248,7 @@
 					<library
 							name="Android Api"
 							description=""
-							difficulty="0"
+							difficulty="10"
 							code-level="development"
 							>
 						<authors>
@@ -279,7 +279,7 @@
 					<library
 							name="CRY Api"
 							description=""
-							difficulty="0"
+							difficulty="10"
 							code-level="development"
 							>
 						<authors>
@@ -295,7 +295,7 @@
 					<library
 							name="P2P Api"
 							description=""
-							difficulty="0"
+							difficulty="10"
 							code-level="development"
 							>
 						<authors>
@@ -326,7 +326,7 @@
 					<library
 							name="PIP Api"
 							description=""
-							difficulty="0"
+							difficulty="10"
 							code-level="development"
 							>
 						<authors>
