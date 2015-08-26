@@ -1157,7 +1157,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
             if(walletNavigationStructure==null){
-                // testing purpose mati
                 setNavigationStructureXml(startWalletNavigationStructure());
                 walletNavigationStructure= getNavigationStructure(publicKey);
             }
