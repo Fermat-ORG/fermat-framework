@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantPublishItemInCatalogException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
@@ -129,7 +131,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         return dbDAO;
     }
 
-    private void publishItemInDB (CatalogItemImpl catalogItemImpl, Developer developer, Language language, Translator translator, Skin skin, Designer designer) throws CantPublishItemInCatalogException {
+    private void publishItemInDB (CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator, Skin skin, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer) throws CantPublishItemInCatalogException {
         try {
             getDatabaseDAO().catalogDatabaseOperation(DatabaseOperations.INSERT, catalogItemImpl, developer, language, translator, skin, designer);
         } catch (CantExecuteDatabaseOperationException e) {
@@ -162,20 +164,17 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      */
     public void publishWallet (CatalogItemImpl catalogItemImpl) throws CantPublishWalletInCatalogException {
         try {
-            System.out.println("developer:"+catalogItemImpl);
-
-            Developer developer = (Developer) catalogItemImpl.getDetailedCatalogItemImpl().getDeveloper();
-            System.out.println("developer:"+developer);
+            DeveloperIdentity developer = catalogItemImpl.getDetailedCatalogItemImpl().getDeveloper();
             Language language = (Language) catalogItemImpl.getDetailedCatalogItemImpl().getDefaultLanguage();
-            Translator translator = (Translator) catalogItemImpl.getDetailedCatalogItemImpl().getDefaultLanguage().getTranslator();
+            com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = catalogItemImpl.getDetailedCatalogItemImpl().getDefaultLanguage().getTranslator();
             Skin skin = (Skin) catalogItemImpl.getDetailedCatalogItemImpl().getDefaultSkin();
-            Designer designer = skin.getDesigner();
+            com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = skin.getDesigner();
             this.publishItemInDB(catalogItemImpl, developer, language, translator, skin, designer);
 
             saveCatalogItemIconFile(catalogItemImpl);
         } catch (Exception exception) {
             exception.printStackTrace();
-            throw new CantPublishWalletInCatalogException(CantPublishWalletInCatalogException.DEFAULT_MESSAGE, exception, null, null);
+            throw new CantPublishWalletInCatalogException(CantPublishWalletInCatalogException.DEFAULT_MESSAGE, exception, "Publish Wallet", "Wallet Store");
         }
     }
 
@@ -341,7 +340,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
 
 
     /**
-     * gets the language for the specified wallet id
+     * gets the language for the specified wallsi let id
      * @param walletId
      * @return
      * @throws CantGetWalletLanguageException

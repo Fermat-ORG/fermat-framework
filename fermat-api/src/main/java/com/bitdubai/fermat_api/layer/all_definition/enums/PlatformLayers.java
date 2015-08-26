@@ -41,7 +41,7 @@ public enum PlatformLayers {
     BITDUBAI_MODULE_LAYER("BMODL", Developers.BITDUBAI),
     BITDUBAI_AGENT_LAYER("BAGL", Developers.BITDUBAI),
     BITDUBAI_BASIC_WALLET_LAYER("BWALL", Developers.BITDUBAI),
-    BITDUBAI_NICHE_WALLET_TYPE_LAYER("BNWALTL", Developers.BITDUBAI),
+    BITDUBAI_WALLET_MODULE_LAYER("BWALML", Developers.BITDUBAI),
     BITDUBAI_ACTOR_LAYER("BACTL", Developers.BITDUBAI),
     BITDUBAI_PIP_ACTOR_LAYER("BPACTL", Developers.BITDUBAI),
     BITDUBAI_IDENTITY_LAYER("BIDL", Developers.BITDUBAI),
@@ -135,8 +135,8 @@ public enum PlatformLayers {
                 return PlatformLayers.BITDUBAI_AGENT_LAYER;
             case "BWALL":
                 return PlatformLayers.BITDUBAI_BASIC_WALLET_LAYER;
-            case "BNWALTL":
-                return PlatformLayers.BITDUBAI_NICHE_WALLET_TYPE_LAYER;
+            case "BWALML":
+                return PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER;
             case "BACTL":
                 return PlatformLayers.BITDUBAI_ACTOR_LAYER;
             case "BPACTL":

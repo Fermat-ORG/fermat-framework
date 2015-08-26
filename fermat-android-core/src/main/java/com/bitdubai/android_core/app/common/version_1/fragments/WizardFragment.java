@@ -59,7 +59,7 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
     private FermatTextView next;
 
     /**
-     * Set Wizard Fragments
+     * Set Wizard FragmentsEnumType
      *
      * @param wizard
      */

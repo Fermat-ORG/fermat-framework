@@ -203,9 +203,9 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table = databaseFactory.newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME);
 //        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME);
 
-        table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.DEVELOPER_FIRST_KEY_COLUMN);
 
@@ -231,7 +231,7 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table = databaseFactory.newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.ITEM_TABLE_NAME);
 //        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.ITEM_TABLE_NAME);
 
-        table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
@@ -239,7 +239,7 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.ITEM_FIRST_KEY_COLUMN);
@@ -266,9 +266,9 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table = databaseFactory.newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME);
 //        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME);
 
-        table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.TRANSLATOR_FIRST_KEY_COLUMN);
 
@@ -296,15 +296,15 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table = databaseFactory.newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
 //        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
 
-        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 12, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FIRST_KEY_COLUMN);
@@ -333,9 +333,9 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table = databaseFactory.newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME);
 //        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME);
 
-        table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
         table.addIndex(WalletStoreCatalogDatabaseConstants.DESIGNER_FIRST_KEY_COLUMN);
 
@@ -363,14 +363,14 @@ public class WalletStoreCatalogDatabaseFactory implements DealsWithErrors, Deals
         table = databaseFactory.newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME);
 //        table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME);
 
-        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, DatabaseDataType.STRING, 8, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 12, Boolean.FALSE);
-        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+        table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
         //New column on 06/08/2015
         table.addColumn(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SCREEN_SIZE, DatabaseDataType.STRING,10,Boolean.FALSE);

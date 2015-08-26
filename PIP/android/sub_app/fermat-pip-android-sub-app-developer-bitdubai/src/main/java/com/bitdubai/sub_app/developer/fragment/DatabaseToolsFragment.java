@@ -1,10 +1,8 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -12,12 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
@@ -28,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.Databas
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -46,7 +47,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends Fragment {
+public class DatabaseToolsFragment extends FermatFragment {
 
 
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES.getKey();
@@ -69,9 +70,8 @@ public class DatabaseToolsFragment extends Fragment {
 
     private GridView gridView;
 
-    public static DatabaseToolsFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
+    public static DatabaseToolsFragment newInstance(int position) {
         DatabaseToolsFragment f = new DatabaseToolsFragment();
-        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -83,16 +83,21 @@ public class DatabaseToolsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = developerSubAppSession.getErrorManager();
+        developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+        if (developerSubAppSession != null)
+            errorManager = developerSubAppSession.getErrorManager();
         try {
 
             ToolManager toolManager = developerSubAppSession.getToolManager();
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            if (errorManager != null)
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            if (errorManager != null)
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -106,22 +111,21 @@ public class DatabaseToolsFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.start, container, false);
         rootView.setTag(1);
-        gridView=(GridView) rootView.findViewById(R.id.gridView);
+        gridView = (GridView) rootView.findViewById(R.id.gridView);
         try {
 
             List<Plugins> plugins = databaseTools.getAvailablePluginList();
             List<Addons> addons = databaseTools.getAvailableAddonList();
 
 
-
-            mlist=new ArrayList<Resource>();
+            mlist = new ArrayList<Resource>();
 
             for (int i = 0; i < plugins.size(); i++) {
                 Resource item = new Resource();
                 item.picture = "plugin";
                 item.label = plugins.get(i).toString().toLowerCase().replace("_", " ");
                 item.resource = plugins.get(i).getKey();
-                item.type=Resource.TYPE_PLUGIN;
+                item.type = Resource.TYPE_PLUGIN;
                 mlist.add(item);
             }
             for (int i = 0; i < addons.size(); i++) {
@@ -129,7 +133,7 @@ public class DatabaseToolsFragment extends Fragment {
                 item.picture = "addon";
                 item.label = addons.get(i).toString().replace("_", " ");
                 item.resource = addons.get(i).getCode();
-                item.type=Resource.TYPE_ADDON;
+                item.type = Resource.TYPE_ADDON;
                 mlist.add(item);
             }
 
@@ -140,10 +144,10 @@ public class DatabaseToolsFragment extends Fragment {
                 gridView.setNumColumns(3);
             }
             AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
-            adapter.notifyDataSetChanged();
             gridView.setAdapter(adapter);
         } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            if (errorManager != null)
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -152,62 +156,67 @@ public class DatabaseToolsFragment extends Fragment {
     }
 
 
-
     public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
         this.developerSubAppSession = developerSubAppSession;
     }
 
 
-    public class AppListAdapter extends ArrayAdapter<Resource> {
+    public class AppListAdapter extends BaseAdapter {
 
+        private List<Resource> dataSet;
+        private Context context;
+        private int textViewResourceId;
 
         public AppListAdapter(Context context, int textViewResourceId, List<Resource> objects) {
-            super(context, textViewResourceId, objects);
+            this.context = context;
+            this.dataSet = objects;
+            this.textViewResourceId = textViewResourceId;
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public int getCount() {
+            return dataSet != null ? dataSet.size() : 0;
+        }
 
-            Resource item = getItem(position);
+        @Override
+        public Object getItem(int position) {
+            return dataSet.get(position);
+        }
 
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup viewGroup) {
+            final Resource item = dataSet.get(position);
             ViewHolder holder;
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
-
-
+            if (view == null) {
+                view = LayoutInflater.from(context).inflate(R.layout.developer_app_grid_item, viewGroup, false);
                 holder = new ViewHolder();
-
-                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
-
-                holder.imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        Resource item=(Resource) gridView.getItemAtPosition(position);
-
-                        //set the next fragment and params
-                        Object[] params = new Object[1];
-                        params[0] = item;
-                        ((FermatScreenSwapper)getActivity()).changeScreen(com.bitdubai.sub_app.developer.FragmentFactory.Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),params);
-
-                    }
-                });
-
-                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+                holder.imageView = (ImageView) view.findViewById(R.id.image_view);
+                TextView textView = (TextView) view.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;
-
-
-                convertView.setTag(holder);
+                view.setTag(holder);
             } else {
-                holder = (ViewHolder) convertView.getTag();
+                holder = (ViewHolder) view.getTag();
             }
 
             holder.companyTextView.setText(item.label);
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                    //set the next fragment and params
+                    Object[] params = new Object[1];
+                    params[0] = item;
+                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), params);
 
+                }
+            });
             switch (item.picture) {
                 case "plugin":
                     holder.imageView.setImageResource(R.drawable.addon);
@@ -223,17 +232,14 @@ public class DatabaseToolsFragment extends Fragment {
                     break;
             }
 
-
-
-            return convertView;
+            return view;
         }
-
     }
+
     /**
      * ViewHolder.
      */
     private class ViewHolder {
-
 
 
         public ImageView imageView;

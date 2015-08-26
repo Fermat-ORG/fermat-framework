@@ -1,13 +1,16 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog;
 
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException;
+
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 7/22/15.
  */
-public class Designer implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer {
+//public class Designer implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer {
+public class Designer implements com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer {
     UUID id;
-    String name;
+    String alias;
     String publicKey;
 
     /**
@@ -19,36 +22,49 @@ public class Designer implements com.bitdubai.fermat_api.layer.dmp_network_servi
     /**
      * Overloaded constructor
      * @param id
-     * @param name
+     * @param alias
      * @param publicKey
      */
-    public Designer(UUID id, String name, String publicKey) {
+    public Designer(UUID id, String alias, String publicKey) {
         this.id = id;
-        this.name = name;
+        this.alias = alias;
         this.publicKey = publicKey;
     }
 
     @Override
-    public UUID getId() {
-        return this.id;
-    }
+    public String getAlias() { return alias; }
 
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
+    /**
+     * Get the public key of the represented designer
+     * @return String publicKey
+     */
     @Override
     public String getPublicKey() {
         return this.publicKey;
+    }
+    /**
+     Sign a message with designer private key
+     * @param  mensage to sign
+     * @return string signed message
+     * @throws CantSingMessageException
+     */
+
+    @Override
+    public String createMessageSignature(String mensage) throws CantSingMessageException
+    {
+        return null;
+    }
+
+    public UUID getId() {
+        return this.id;
     }
 
     public void setiD(UUID id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public void setPublicKey(String publicKey) {

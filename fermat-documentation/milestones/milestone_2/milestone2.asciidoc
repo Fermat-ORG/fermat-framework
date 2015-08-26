@@ -112,10 +112,10 @@ Usaremos la plataforma misma para comunicarnos con el Desarrollador, evitando el
 
 Supongamos que queremos crear una wallet a partir de la Bitcoin Reference Wallet. Procedemos entonces
 a hacer un fork del repositorio de fermat de bitDubai y lo clonamos en nuestra computadora. +
-Una vez clonado creamos un nuevo paquete en fermat/DMP/android/niche_wallet y otro en
-fermat/DMP/plugin/niche_wallet_type con nombres adecuados como por ejemplo:
-`/home/eze/Escritorio/fermat/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-myDeveloperName` y
-`/home/eze/Escritorio/fermat/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-myDeveloperName`. +
+Una vez clonado creamos un nuevo paquete en fermat/DMP/android/reference_wallet y otro en
+fermat/DMP/plugin/wallet_module con nombres adecuados como por ejemplo:
+`/home/eze/Escritorio/fermat/DMP/android/reference_wallet/fermat-dmp-android-reference-wallet-bitcoin-wallet-myDeveloperName` y
+`/home/eze/Escritorio/fermat/DMP/plugin/wallet_module/fermat-dmp-plugin-wallet-module-crypto-wallet-myDeveloperName`. +
 En el folder de android se coloca el código dependiente de android (de haber otras plataformas disponibles
 se agregan directorios en las locaciones análogas), mientras que en el plugin se coloca la lógica de
 la wallet, la cual es un proyecto java. Cuando querramos exportar nuestra wallet a otra plataforma sólo

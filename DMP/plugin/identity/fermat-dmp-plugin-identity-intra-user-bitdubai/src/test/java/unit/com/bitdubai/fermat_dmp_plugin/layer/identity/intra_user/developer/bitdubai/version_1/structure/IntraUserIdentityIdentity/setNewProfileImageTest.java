@@ -10,9 +10,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityIdentity;
 
+import junit.framework.TestCase;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import static org.mockito.Mockito.*;
 
 import java.util.UUID;
@@ -22,8 +27,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * Created by angel on 19/8/15.
  */
-
-public class setNewProfileImageTest {
+@RunWith(MockitoJUnitRunner.class)
+public class setNewProfileImageTest extends TestCase {
 
     @Mock
     private PluginFileSystem mockPluginFileSystem;

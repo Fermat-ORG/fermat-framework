@@ -52,6 +52,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseFactory;
@@ -267,17 +269,17 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
     @Override
-    public Developer getDeveloper(UUID developerId) throws CantGetDeveloperException {
+    public DeveloperIdentity getDeveloper(UUID developerId) throws CantGetDeveloperException {
         return getWalletStoreManager().getDeveloper(developerId);
     }
 
     @Override
-    public Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner(UUID designerId) throws CantGetDesignerException {
         return getWalletStoreManager().getDesigner(designerId);
     }
 
     @Override
-    public Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
+    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
         return getWalletStoreManager().getTranslator(translatorId);
     }
 
@@ -293,6 +295,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         try {
           //  TestPublishWallet();
             database = pluginDatabaseSystem.openDatabase(pluginId, WalletStoreCatalogDatabaseConstants.WALLET_STORE_DATABASE);
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             try {
                 createWalletStoreNetworkServiceDatabase();
@@ -330,8 +333,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
     /**
+<<<<<<< HEAD
      * Creates the database with the Database Factory
      *
+=======
+     * Creates the database with the Database Factory                                                                                                                                                                                                                                                                                                                                                                   
+>>>>>>> d68ac24c2a7845bb590065fab0cc874c5ba4c227
      * @throws CantCreateDatabaseException
      */
     private void createWalletStoreNetworkServiceDatabase() throws CantCreateDatabaseException {
@@ -535,7 +542,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     public void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException {
         try {
             UUID walletId = UUID.randomUUID();
-            System.out.println("Id to install: " + walletId.toString());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    System.out.println("Id to install: " + walletId.toString());
             CatalogItemImpl catalogItemImpl;
             catalogItemImpl = new CatalogItemImpl();
             catalogItemImpl.setId(walletId);
@@ -567,11 +574,29 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             skin.setScreenSize(ScreenSize.MEDIUM);
 
 
-            com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;
-            designer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
-            designer.setiD(UUID.randomUUID());
-            designer.setName("Diseñador");
-            designer.setPublicKey("DFSDFKSDFPSDFJSDFsdkfjskdf");
+            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;
+            //designer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
+            ////
+            com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = new com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer() {
+                @Override
+                public String getAlias() {
+                    return "Diseñador";
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return "DFSDFKSDFPSDFJSDFsdkfjskdf";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                    return null;
+                }
+            };
+            ////
+            //designer.setiD(UUID.randomUUID());
+            //designer.setAlias("Diseñador");
+            //designer.setPublicKey("DFSDFKSDFPSDFJSDFsdkfjskdf");
 
             skin.setDesigner(designer);
 
@@ -595,22 +620,59 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             language.setLanguagePackageSizeInBytes(100);
 
 
-            com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translator;
-            translator = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
+            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translator;
+            //translator = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
+            ////
+            com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = new com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator() {
+                @Override
+                public String getAlias() {
+                    return "Traductor";
+                }
 
-            translator.setId(UUID.randomUUID());
-            translator.setName("Traductor");
-            translator.setPublicKey("SDSDFSDFskdmfskdjfsdkjf");
+                @Override
+                public String getPublicKey() {
+                    return "SDSDFSDFskdmfskdjfsdkjf";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                    return null;
+                }
+            };
+            ////
+
+            //translator.setId(UUID.randomUUID());
+            //translator.setAlias("Traductor");
+            //translator.setPublicKey("SDSDFSDFskdmfskdjfsdkjf");
             language.setTranslator(translator);
 
 
             detailedCatalogItemImpl.setLanguage(language);
-            com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
-            developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
-            developer.setName("Franklin");
-            developer.setId(UUID.randomUUID());
-            developer.setPublicKey("SDSDSDSDasdojasdiuahsdkasjdaskdasdk");
-            detailedCatalogItemImpl.setDeveloper(developer);
+            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
+            //developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
+            ////
+            DeveloperIdentity developerIdentity = new DeveloperIdentity() {
+                @Override
+                public String getAlias() {
+                    return "Franklin";
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return "SDSDSDSDasdojasdiuahsdkasjdaskdasdk";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws CantSingMessageException {
+                    return null;
+                }
+            };
+            ///
+
+            //developer.setAlias(developerIdentity.getAlias());
+            //developer.setId(UUID.randomUUID());
+            //developer.setPublicKey(developerIdentity.getPublicKey());
+            detailedCatalogItemImpl.setDeveloper(developerIdentity);
 
             catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);
 
@@ -644,8 +706,9 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                                       Version finalWalletVersion,
                                       List<URL> videoPreviews,
                                       long languageSizeInBytes,
-                                      Translator translator,
-                                      boolean isDefault) {
+                                      com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator,
+                                      boolean isDefault)
+    {
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language languageImpl;
         languageImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language();
 
@@ -657,7 +720,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         languageImpl.setInitialWalletVersion(initialWalletVersion);
         languageImpl.setFinalWalletVersion(finalWalletVersion);
         languageImpl.setLanguagePackageSizeInBytes((int) languageSizeInBytes);
-        languageImpl.setTranslator((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator)translator); //Todo: Revisar
+        languageImpl.setTranslator(translator);
         languageImpl.setIsDefault(isDefault);
 
         return languageImpl;
@@ -675,9 +738,9 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                               boolean hasVideoPreview,
                               List<URL> videoPreviews,
                               int skinSizeInBytes,
-                              Designer designer,
-                              boolean isDefault) {
-
+                              com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer,
+                              boolean isDefault )
+    {
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skinImpl;
         skinImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
 
@@ -693,45 +756,11 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         skinImpl.setHasVideoPreview(hasVideoPreview);
         skinImpl.setVideoPreviews(videoPreviews);
         skinImpl.setSkinSizeInBytes(skinSizeInBytes);
-        skinImpl.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) designer); //Todo Revisar
+        skinImpl.setDesigner(designer);
         skinImpl.setIsDefault(isDefault);
 
         return skinImpl;
     }
-
-    public Developer constructDeveloper(UUID developerId, String name, String PublicKey)
-    {
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developerImpl;
-        developerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
-        developerImpl.setId(developerId);
-        developerImpl.setName(name);
-        developerImpl.setPublicKey(PublicKey);
-
-        return developerImpl;
-    }
-
-    public Designer constructDesigner(UUID designerId, String name, String PublicKey) {
-
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designerImpl;
-        designerImpl = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
-        designerImpl.setiD(designerId);
-        designerImpl.setName(name);
-        designerImpl.setPublicKey(PublicKey);
-
-        return designerImpl;
-    }
-
-    public Translator constructTranslator(UUID translatorId, String name, String PublicKey)
-    {
-        com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translatorImpl;
-        translatorImpl =  new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
-        translatorImpl.setId(translatorId);
-        translatorImpl.setName(name);
-        translatorImpl.setPublicKey(PublicKey);
-
-        return translatorImpl;
-    }
-
 
     public CatalogItem constructCatalogItem(UUID walletId, int defaultSizeInBytes,
                                             String name, String description,
@@ -743,7 +772,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                                             List<Skin> skins,
                                             Skin skin,
                                             Language language,
-                                            Developer developer,
+                                            DeveloperIdentity developer,
                                             List<Language> languages,
                                             URL publisherWebsiteUrl) throws CantGetWalletIconException {
 
@@ -777,14 +806,14 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         constructskin.setIsDefault(skin.isDefault());
         constructskin.setScreenSize(skin.getScreenSize());
 
-        constructskin.setDesigner((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer) skin.getDesigner());
+        constructskin.setDesigner(skin.getDesigner());
 
         detailedCatalogItemImpl.setVersion(version);
         detailedCatalogItemImpl.setPlatformInitialVersion(platformInitialVersion);
         detailedCatalogItemImpl.setPlatformFinalVersion(platformFinalVersion);
         detailedCatalogItemImpl.setDefaultSkin(skin);
         detailedCatalogItemImpl.setSkins(skins);
-        detailedCatalogItemImpl.setDeveloper((com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer) developer);
+        detailedCatalogItemImpl.setDeveloper(developer);
         detailedCatalogItemImpl.setLanguage(language);
         detailedCatalogItemImpl.setLanguages(languages);
 
