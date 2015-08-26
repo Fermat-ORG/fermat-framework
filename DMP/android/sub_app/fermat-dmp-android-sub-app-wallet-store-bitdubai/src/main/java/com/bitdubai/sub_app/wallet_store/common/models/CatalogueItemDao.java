@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletSt
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.wallet_store.bitdubai.R;
 
 import java.io.ByteArrayInputStream;
@@ -51,8 +52,8 @@ public class CatalogueItemDao implements Serializable {
         installationStatusText = installationStatus.toString();
 
         WalletStoreDetailedCatalogItem detailedCatalogItem = catalogueItem.getWalletDetailedCatalogItem();
-        Developer developer = detailedCatalogItem.getDeveloper();
-        developerName = developer.getName();
+        DeveloperIdentity developer = detailedCatalogItem.getDeveloper();
+        developerName = developer.getAlias();
 
         byte[] iconBytes = catalogueItem.getIcon();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(iconBytes);
