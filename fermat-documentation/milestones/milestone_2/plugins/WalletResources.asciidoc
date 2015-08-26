@@ -11,7 +11,7 @@ wallet. +
 En términos generales esta DAPP hace lo siguiente:
 
 .A nivel de Recursos
-* Le da servicios a las NicheWalletType para obtener los recursos que necesitan las NicheWallets que
+* Le da servicios a las WalletModule para obtener los recursos que necesitan las ReferenceWallets que
 corren encima de ellas.
 * Almacena los recursos de las wallets instaladas. Para esto lleva la cuenta de cuantas walles hay
 instaladas de cada tipo, y mientras la cuenta sea mayor que cero garantiza de que los recursos

@@ -103,7 +103,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     UUID pluginId;
 
 
-    public void addToNavigationStructure(/*String NavigationStructure, NicheWalletType*/) {
+    public void addToNavigationStructure(/*String NavigationStructure, WalletModule*/) {
 
         /*
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
