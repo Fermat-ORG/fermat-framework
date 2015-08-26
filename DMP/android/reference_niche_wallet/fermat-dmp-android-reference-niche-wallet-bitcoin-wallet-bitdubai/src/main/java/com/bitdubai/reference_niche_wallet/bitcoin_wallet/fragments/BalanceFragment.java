@@ -20,6 +20,7 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
@@ -199,9 +200,6 @@ public class BalanceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if(savedInstanceState!=null){
-            cryptoWallet =(CryptoWallet) savedInstanceState.get(CRYPTO_WALLET_PARAM);
-        }
         try {
 
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
@@ -293,7 +291,7 @@ public class BalanceFragment extends Fragment {
             custonMati.setSeeAlltransactionsEvent(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((FermatScreenSwapper) getActivity()).changeActivity("CWRWBWBV1T");
+                            ((FermatScreenSwapper) getActivity()).changeActivity("CWRWBWBV1T");
                 }
             });
         } catch (CantGetTransactionsException e){
