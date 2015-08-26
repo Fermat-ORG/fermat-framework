@@ -82,13 +82,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8">
 
+
                     <ImageView
                         android:id="@+id/imageView_transaction"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:src="@drawable/balance_transactions_image"
-                        android:paddingRight="7sp"
+                        android:layout_margin="7dip"
+                        android:layout_weight="0"
+                        android:background="@drawable/rounded_button_green_selector"
+                        android:src="@drawable/ic_camera_green"
+                        android:elevation="2dip"
                         android:layout_marginTop="5dp"
                         />
 

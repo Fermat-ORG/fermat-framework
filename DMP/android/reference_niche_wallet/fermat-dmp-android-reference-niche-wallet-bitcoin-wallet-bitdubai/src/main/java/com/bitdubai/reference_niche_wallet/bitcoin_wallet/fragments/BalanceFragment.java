@@ -249,10 +249,6 @@ public class BalanceFragment extends FermatWalletFragment {
             });
 
 
-            List<CryptoWalletTransaction> cryptoWalletTransactions = null;
-            cryptoWalletTransactions = cryptoWallet.getTransactions(5, 0, walletPublicKey);
-
-
             List<CustomComponentsObjects> lstData = new ArrayList<CustomComponentsObjects>();
 
             //when we have transactions
@@ -273,9 +269,10 @@ public class BalanceFragment extends FermatWalletFragment {
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
                 //TODO: este metodo va a desaparecer y se va a reemplazar por el metodo de getWalletContactById
-                List<WalletContactRecord> lstWalletContact = cryptoWallet.getWalletContactByNameContainsAndWalletPublicKey(cryptoWalletTransaction.getInvolvedActorName(), walletPublicKey);
-                WalletContactRecord walletContactRecord = lstWalletContact.get(0);
-                ListComponent listComponent = new ListComponent(cryptoWalletTransaction,walletContactRecord);
+
+                //List<WalletContactRecord> lstWalletContact = cryptoWallet.getWalletContactByNameContainsAndWalletPublicKey(cryptoWalletTransaction.getInvolvedActorName(), walletPublicKey);
+
+                ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
                 lstData.add(listComponent);
             }
 
@@ -305,8 +302,6 @@ public class BalanceFragment extends FermatWalletFragment {
             });
         } catch (CantGetTransactionsException e){
             e.printStackTrace();
-        } catch (CantGetWalletContactException e) {
-            e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -315,6 +310,19 @@ public class BalanceFragment extends FermatWalletFragment {
         return rootView;
     }
 
+    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
+        if (cryptoWalletTransaction.getContactId() != null) {
+            try {
+                WalletContactRecord walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
+                return walletContactRecord.getActorName();
+            } catch (Exception e) {
+                System.out.println("esta es para vos mati.");
+            }
+        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
+            return cryptoWalletTransaction.getInvolvedActor().getName();
+        }
+        return "Unknow";
+    }
 
     /*
         Method to change the balance type

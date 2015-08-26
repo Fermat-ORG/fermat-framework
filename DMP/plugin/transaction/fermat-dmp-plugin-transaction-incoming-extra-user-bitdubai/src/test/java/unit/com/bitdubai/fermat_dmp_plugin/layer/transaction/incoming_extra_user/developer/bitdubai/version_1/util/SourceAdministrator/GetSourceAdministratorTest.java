@@ -35,12 +35,12 @@ public class GetSourceAdministratorTest {
     }
 
     @Test
-    public void getSourceAdministrator(){
+    public void getSourceAdministrator() throws Exception {
 
 
         testSourceAdministrator = new SourceAdministrator();
         testSourceAdministrator.setIncomingCryptoManager(mockIncomingCryptoManager);
 
-        assertThat(testSourceAdministrator.getSourceAdministrator(EventSource.CRYPTO_VAULT)).isNotNull();
+        assertThat(testSourceAdministrator.getSourceAdministrator(EventSource.CRYPTO_ROUTER)).isNotNull();
     }
 }
