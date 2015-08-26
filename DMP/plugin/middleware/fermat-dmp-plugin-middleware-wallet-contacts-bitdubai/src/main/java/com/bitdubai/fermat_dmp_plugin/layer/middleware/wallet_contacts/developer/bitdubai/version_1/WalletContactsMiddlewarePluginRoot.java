@@ -55,10 +55,7 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         List<DeveloperDatabase> developerDatabaseList = null;
         try {
             WalletContactsMiddlewareDeveloperDatabaseFactory dbFactory = new WalletContactsMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            dbFactory.initializeDatabase();
             developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
-        } catch (CantInitializeWalletContactsDatabaseException we) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
@@ -77,10 +74,7 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         List<DeveloperDatabaseTable> developerDatabaseTableList = null;
         try {
             WalletContactsMiddlewareDeveloperDatabaseFactory dbFactory = new WalletContactsMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            dbFactory.initializeDatabase();
             developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
-        } catch (CantInitializeWalletContactsDatabaseException we) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
