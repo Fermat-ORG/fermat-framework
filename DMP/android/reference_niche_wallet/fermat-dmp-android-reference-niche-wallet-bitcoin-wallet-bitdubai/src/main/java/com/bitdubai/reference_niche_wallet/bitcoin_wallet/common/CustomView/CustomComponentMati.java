@@ -251,15 +251,15 @@ public class CustomComponentMati extends LinearLayout implements Animation.Anima
                 imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);
             }else{
                 if(walletSettings!=null){
-                    try {
-                        image = walletResourcesProviderManager.getImageResource("unknown",walletSettings.getDefaultSkin());
-                        imageBitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
-                        imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);
-                    } catch (CantGetResourcesException e) {
-                        e.printStackTrace();
-                    } catch (CantGetDefaultSkinException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        //image = walletResourcesProviderManager.getImageResource("unknown",walletSettings.getDefaultSkin());
+//                        imageBitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+//                        imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);
+//                    } catch (CantGetResourcesException e) {
+//                        e.printStackTrace();
+//                    } catch (CantGetDefaultSkinException e) {
+//                        e.printStackTrace();
+//                    }
                     //drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
                 }
 
