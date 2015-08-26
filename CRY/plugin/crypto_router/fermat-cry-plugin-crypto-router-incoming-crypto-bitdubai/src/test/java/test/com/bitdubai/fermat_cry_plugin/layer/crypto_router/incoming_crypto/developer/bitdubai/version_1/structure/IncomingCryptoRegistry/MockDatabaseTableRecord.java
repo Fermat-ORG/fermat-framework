@@ -1,6 +1,6 @@
 package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 
@@ -89,7 +89,7 @@ public class MockDatabaseTableRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public void setStateValue(String columnName, FactoryProjectState state) {
+    public void setStateValue(String columnName, WalletFactoryProjectState state) {
 
     }
 

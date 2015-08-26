@@ -43,7 +43,7 @@ public class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsW
     NetworkParameters networkParameters;
     SPVBlockStore spvStore;
     MemoryBlockStore memoryStore;
-    UUID userId;
+    String userPublicKey;
 
 
     /**
@@ -92,26 +92,26 @@ public class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsW
     /**
      * constructor
      * @param wallet the BitcoinJ wallet with the addresses used to listen to the network
-     * @param UserID The if of the user requesting the syncronization
+     * @param userPublicKey The if of the user requesting the syncronization
      * @throws CantInitializeMonitorAgentException
      */
-    public StoredBlockChain (Wallet wallet, UUID UserID) {
+    public StoredBlockChain (Wallet wallet, String userPublicKey) {
         this.networkParameters = getNetworkConfiguration();
         this.wallet = wallet;
-        this.userId = UserID;
+        this.userPublicKey = userPublicKey;
     }
 
     /**
      * creates the blockchain object and the repository
      */
     public void createBlockChain() throws CantCreateBlockStoreFileException {
-        String blockChainFileName = userId.toString() + ".spv";
+        String blockChainFileName = userPublicKey.toString() + ".spv";
         try {
             /**
              * I will save the blockchain into disk.
              */
 
-            PluginTextFile blockchainFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile blockchainFile = pluginFileSystem.createTextFile(pluginId, userPublicKey.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             blockchainFile.persistToMedia();
 
             //todo this needs to be fixed
@@ -121,13 +121,13 @@ public class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsW
             chain = new BlockChain(this.networkParameters, this.wallet, spvStore);
         } catch (CantPersistFileException e) {
             StringBuilder context = new StringBuilder();
-            context.append("userId: " + userId);
+            context.append("userPublicKey: " + userPublicKey);
             context.append(CantCreateBlockStoreFileException.CONTEXT_CONTENT_SEPARATOR);
             context.append("blockChainFileName: " + blockChainFileName.toString());
             throw new CantCreateBlockStoreFileException("Blockstore file could not be persisted into disk.", e, context.toString(), "Not enought space on disk.");
         } catch (CantCreateFileException e) {
             StringBuilder context = new StringBuilder();
-            context.append("userId: " + userId);
+            context.append("userPublicKey: " + userPublicKey);
             context.append(CantCreateBlockStoreFileException.CONTEXT_CONTENT_SEPARATOR);
             context.append("blockChainFileName: " + blockChainFileName.toString());
             throw new CantCreateBlockStoreFileException("Blockstore file could not be created.", e, context.toString(), "Not enought space on disk.");
@@ -140,9 +140,9 @@ public class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsW
                 chain = new BlockChain(this.networkParameters, this.wallet, memoryStore);
             } catch (BlockStoreException e1) {
                 StringBuilder context = new StringBuilder();
-                context.append("userId: " + userId);
+                context.append("userPublicKey: " + userPublicKey);
                 context.append(CantCreateBlockStoreFileException.CONTEXT_CONTENT_SEPARATOR);
-                context.append("blockChainFileName: " + blockChainFileName.toString());
+                context.append("blockChainFileName: " + blockChainFileName);
                 throw new CantCreateBlockStoreFileException("Could not save blockchain in disk and in memory", e, context.toString(), "Not enought space on disk.");
             }
         }catch (Exception exception){

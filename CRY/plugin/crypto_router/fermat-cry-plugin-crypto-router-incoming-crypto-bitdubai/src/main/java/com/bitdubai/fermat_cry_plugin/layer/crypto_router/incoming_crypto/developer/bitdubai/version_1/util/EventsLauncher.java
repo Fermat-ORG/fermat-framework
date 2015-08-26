@@ -1,15 +1,19 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CryptoStatusNotHandledException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.SpecialistNotRegisteredException;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Created by eze on 12/06/15.
@@ -20,46 +24,58 @@ import java.util.EnumSet;
  */
 public class EventsLauncher implements DealsWithEvents {
 
+    private final EventSource eventSource = EventSource.CRYPTO_ROUTER;
+
     /*
      * DealsWithEvents Interface member variabñes
      */
     private EventManager eventManager;
 
-    public void sendEvents(EnumSet<Specialist> specialists) throws SpecialistNotRegisteredException {
-        for(Specialist specialist : specialists) {
-// TODO WHEN THE SPECIALIST IS NOT FOUNDED I RAISE AN EXCEPTION BUT WHAT DO I DO WHIT THE REST OF SPECIALISTS?
-            switch (specialist) {
-                case EXTRA_USER_SPECIALIST:
-                    /**
-                     * Issue #553
-                     */
-                    //PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
-                    //platformEvent.setSource(EventSource.CRYPTO_ROUTER);
-                    //eventManager.raiseEvent(platformEvent);
-
-                    PlatformEvent platformEventOnCryptoNetwork = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
-                    platformEventOnCryptoNetwork.setSource(EventSource.CRYPTO_ROUTER);
-                    eventManager.raiseEvent(platformEventOnCryptoNetwork);
-
-                    PlatformEvent platformEventOnBlockchain = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
-                    platformEventOnBlockchain.setSource(EventSource.CRYPTO_ROUTER);
-                    eventManager.raiseEvent(platformEventOnBlockchain);
-
-                    PlatformEvent platformEventReversedOnCryptoNetwork = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
-                    platformEventReversedOnCryptoNetwork.setSource(EventSource.CRYPTO_ROUTER);
-                    eventManager.raiseEvent(platformEventReversedOnCryptoNetwork);
-
-                    PlatformEvent platformEventReversedOnBlockChain = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
-                    platformEventReversedOnBlockChain.setSource(EventSource.CRYPTO_ROUTER);
-                    eventManager.raiseEvent(platformEventReversedOnBlockChain);
-
-
-                    System.out.println("TTF - INCOMING CRYPTO RELAY: EVENTSLAUNCHER - EVENTS RAISED");
-                    break;
-                default:
-                    throw new SpecialistNotRegisteredException("I could not found the event for this specialist", null,"Soecialist: " + specialist.name() +" with code: " + specialist.getCode(),"Specialist not considered in switch statement");
-            }
+    public void sendEvents(Set<SpecialistAndCryptoStatus> specialists) throws SpecialistNotRegisteredException, CryptoStatusNotHandledException {
+        for (SpecialistAndCryptoStatus specialistAndCryptoStatus : specialists) {
+        // TODO WHEN THE SPECIALIST IS NOT FOUNDED I RAISE AN EXCEPTION BUT WHAT DO I DO WITH THE REST OF SPECIALISTS?
+            Specialist specialist = specialistAndCryptoStatus.getSpecialist();
+            CryptoStatus cryptoStatus = specialistAndCryptoStatus.getCryptoStatus();
+            decideTheEventToRaiseAndRaiseIt(specialist, cryptoStatus);
         }
+        System.out.println("TTF - INCOMING CRYPTO RELAY: EVENTSLAUNCHER - EVENTS RAISED");
+    }
+
+    private void decideTheEventToRaiseAndRaiseIt(Specialist specialist, CryptoStatus cryptoStatus) throws CryptoStatusNotHandledException, SpecialistNotRegisteredException {
+        switch (specialist) {
+            case EXTRA_USER_SPECIALIST:
+                switch (cryptoStatus) {
+                    case ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+                        break;
+                    case ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+                        break;
+                    case REVERSED_ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+                        break;
+                    case REVERSED_ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+                        break;
+                    default:
+                        String message = "I could not find the event for this crypto status";
+                        String context = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+                        String possibleCause = "Crypto Status not considered in switch statement";
+                        throw new CryptoStatusNotHandledException(message, null, context , possibleCause);
+                }
+                break;
+            default:
+                String message = "I could not find the event for this specialist";
+                String context = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+                String possibleCause = "Specialist not considered in switch statement";
+                throw new SpecialistNotRegisteredException(message, null, context, possibleCause);
+        }
+    }
+
+    private void raiseEvent(EventType eventType){
+        PlatformEvent eventToRaise = eventManager.getNewEvent(eventType);
+        eventToRaise.setSource(this.eventSource);
+        eventManager.raiseEvent(eventToRaise);
     }
 
     /*

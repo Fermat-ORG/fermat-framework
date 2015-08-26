@@ -6,11 +6,13 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CryptoStatusNotHandledException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistAndCryptoStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.SpecialistNotRegisteredException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
@@ -22,6 +24,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -289,7 +292,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             for (Transaction<CryptoTransaction> transaction : responsibleTransactionList) {
                 try {
                     this.registry.setToNotify(transaction.getTransactionID(),
-                            this.specialistSelector.getSpecialist(transaction.getInformation()));
+                                              this.specialistSelector.getSpecialist(transaction.getInformation()));
                     System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST SETTED");
                 } catch (CantSelectSpecialistException e) {
                     // TODO: MANAGE EXCEPTION
@@ -301,7 +304,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             Cuando termina de recorrer la lista recorre ahora todas las que están con TransactonStatus RESPONSIBLE y ProtocolStatus TO_BE_NOTIFIED o SENDING_NOTIFIED. Registra todos los especialistas que vio en este recoorido (no intentar optimizar usando el recorrido anterior porque puede perderse si el sistema se cae) y realiza los siguente pasos en el orden enunciado:
             Por cada Specialist registrado en el recorrido anterior lanza el evento correspondiente (IncomingCryptTransactionsWaitingTransferenceSpecalistEvent)
             */
-            EnumSet<Specialist> specialistSet;
+            Set<SpecialistAndCryptoStatus> specialistSet;
             try {
                 specialistSet = this.registry.getSpecialists();
             } catch (InvalidParameterException e) {
@@ -316,7 +319,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
 
             try {
                 this.eventsLauncher.sendEvents(specialistSet);
-            } catch (SpecialistNotRegisteredException e) {
+            } catch (SpecialistNotRegisteredException | CryptoStatusNotHandledException e) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
                 return;
             }

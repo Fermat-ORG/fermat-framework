@@ -132,17 +132,17 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
 
 
-    private UUID walletId;
+    private String walletPublicKey;
     private TransactionState state;
     private CryptoStatus cryptoStatus;
 
 
-    public UUID getWalletId() {
-        return walletId;
+    public String getWalletPublicKey() {
+        return walletPublicKey;
     }
 
-    public void setWalletId(UUID walletId) {
-        this.walletId = walletId;
+    public void setWalletPublicKey(String walletPublicKey) {
+        this.walletPublicKey = walletPublicKey;
     }
 
     public TransactionState getState() {

@@ -7,7 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_store.Model.App;
 import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
 import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
@@ -27,14 +29,14 @@ import java.util.List;
 
 
 
-public class FreeFragment extends Fragment {
+public class FreeFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static FreeFragment newInstance(int position) {
+    public static FreeFragment newInstance(int position,SubAppsSession subAppsSession) {
         FreeFragment f = new FreeFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);

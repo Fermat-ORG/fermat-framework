@@ -2,20 +2,30 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * Created by Matias Furszyfer on 2015.07.21..
  */
-public class FermatFragment extends Fragment {
+public class FermatFragment extends Fragment{
 
     /**
      * FLAGS
      */
     protected boolean isAttached;
+
+    /**
+     * Platform
+     */
+    protected SubAppsSession subAppsSession;
+    protected SubAppSettings subAppSettings;
+    protected SubAppResourcesProviderManager subAppResourcesProviderManager;
 
     /**
      * REFERENCES
@@ -54,6 +64,18 @@ public class FermatFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         isAttached = false;
+    }
+
+    public void setSubAppsSession(SubAppsSession subAppsSession) {
+        this.subAppsSession = subAppsSession;
+    }
+
+    public void setSubAppSettings(SubAppSettings subAppSettings) {
+        this.subAppSettings = subAppSettings;
+    }
+
+    public void setSubAppResourcesProviderManager(SubAppResourcesProviderManager subAppResourcesProviderManager) {
+        this.subAppResourcesProviderManager = subAppResourcesProviderManager;
     }
 }
 

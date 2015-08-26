@@ -15,6 +15,24 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraU
 
 public class IntraUserActorActor implements ActorIntraUser {
 
+    private String name;
+    private String publicKey;
+    private byte[] profileImage ;
+    private long registrationDate;
+    private ContactState contactState;
+
+    /**
+     * Constructor
+     */
+    public IntraUserActorActor(String name,String publicKey,byte[] profileImage,long registrationDate, ContactState contactState){
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = (byte[])profileImage.clone();
+        this.registrationDate = registrationDate;
+        this.contactState = contactState;
+
+    }
     /**
      * Gives us the public key of the represented intra user
      *
@@ -22,7 +40,7 @@ public class IntraUserActorActor implements ActorIntraUser {
      */
     @Override
     public String getPublicKey() {
-        return null;
+        return this.publicKey;
     }
 
     /**
@@ -32,7 +50,7 @@ public class IntraUserActorActor implements ActorIntraUser {
      */
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
     /**
@@ -43,7 +61,7 @@ public class IntraUserActorActor implements ActorIntraUser {
      */
     @Override
     public long getContactRegistrationDate() {
-        return 0;
+        return this.registrationDate;
     }
 
     /**
@@ -53,7 +71,8 @@ public class IntraUserActorActor implements ActorIntraUser {
      */
     @Override
     public byte[] getProfileImage() {
-        return new byte[0];
+        return (byte[])this.profileImage.clone();
+
     }
 
     /**
@@ -65,6 +84,6 @@ public class IntraUserActorActor implements ActorIntraUser {
 
     @Override
     public ContactState getContactState() {
-        return null;
+        return this.contactState;
     }
 }

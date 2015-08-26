@@ -27,9 +27,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
@@ -63,7 +62,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -83,7 +81,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     /**
      * CryptoVault interface member variable
      */
-    UUID userId;
+    String userPublicKey;
     Wallet vault;
 
     /**
@@ -126,11 +124,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
     /**
      * CryptoVault interface implementations
-     * @param UserId
+     * @param userPublicKey
      */
     @Override
-    public void setUserId(UUID UserId) {
-        this.userId = UserId;
+    public void setUserPublicKey(String userPublicKey) {
+        this.userPublicKey = userPublicKey;
     }
 
     /**
@@ -138,8 +136,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @return
      */
     @Override
-    public UUID getUserId() {
-        return this.userId;
+    public String getUserPublicKey() {
+        return this.userPublicKey;
     }
 
     /**
@@ -220,14 +218,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
     /**
      * Constructor
-     * @param UserId the Id of the user of the platform.
+     * @param userPublicKey the Id of the user of the platform.
      */
-    public BitcoinCryptoVault (UUID UserId) throws CantCreateCryptoWalletException {
+    public BitcoinCryptoVault (String userPublicKey) throws CantCreateCryptoWalletException {
         try{
-            this.userId = UserId;
+            this.userPublicKey = userPublicKey;
             this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
 
-            this.vaultFileName = userId.toString() + ".vault";
+            this.vaultFileName = userPublicKey.toString() + ".vault";
             //todo this needs to be fixed. I need to find a better way to get the file
             this.vaultFile = new File("/data/data/com.bitdubai.fermat/files", vaultFileName);
         }catch(Exception exception){
@@ -260,7 +258,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private void createNewVault() throws CantCreateCryptoWalletException {
         vault = new Wallet(networkParameters);
         try {
-            PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userPublicKey.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             vaultFile.persistToMedia();
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault created into file " + vaultFileName, null, null);
@@ -636,17 +634,22 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
 
+        /*
         long timestamp =tx.getLockTime();
         if (timestamp == 0)
-        /**
-         * If the transaction doesn't have a locktime, I will return the current timestamp
-         */
-            return System.currentTimeMillis() / 1000L;
+
+         // If the transaction doesn't have a locktime, I will return the current timestamp
+
+            return System.currentTimeMillis();
         else
-        /**
-         * I get the current timestamp
-         */
-        return tx.getLockTime();
+        // I get the current timestamp
+
+        return tx.getLockTime() * 1000;
+        */
+
+        // Changed be Ezequiel Postan <ezequiel.postan@gmail.com>
+        // August 20th 2015
+        return tx.getUpdateTime().getTime();
     }
 
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {

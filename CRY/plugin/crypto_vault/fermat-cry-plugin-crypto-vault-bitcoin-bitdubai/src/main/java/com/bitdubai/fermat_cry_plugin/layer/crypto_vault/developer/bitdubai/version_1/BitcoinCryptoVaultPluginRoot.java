@@ -30,9 +30,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
@@ -69,7 +70,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
      * BitcoinCryptoVaultPluginRoot member variables
      */
     BitcoinCryptoVault vault;
-    UUID userId;
     TransactionNotificationAgent transactionNotificationAgent;
 
     /**
@@ -185,9 +185,14 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(userId.toString(), pluginId.toString());
-        return dbFactory.getDatabaseList(developerObjectFactory);
-
+        try {
+            String userPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(userPublicKey, pluginId.toString());
+            return dbFactory.getDatabaseList(developerObjectFactory);
+        } catch (CantGetLoggedInDeviceUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -289,17 +294,22 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault Starting...", null, null);
 
         /**
-         * I get the userId from the deviceUserManager
+         * I get the userPublicKey from the deviceUserManager
          */
-        //userId = deviceUserManager.getLoggedInUser().getId();
-        userId = UUID.fromString("4c4322c7-8c73-4633-956d-96991f413e93"); //todo fix deviceUser Implementation
+        String userPublicKey;
+        try {
+            userPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+        } catch (CantGetLoggedInDeviceUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "Cant get LoggedIn Device User", "");
+        }
 
         /**
          * I will try to open the database first, if it doesn't exists, then I create it
          */
         try {
 
-            database = pluginDatabaseSystem.openDatabase(pluginId, userId.toString());
+            database = pluginDatabaseSystem.openDatabase(pluginId, userPublicKey);
 
         } catch (CantOpenDatabaseException e) {
             /**
@@ -310,7 +320,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 cryptoVaultDatabaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
                 cryptoVaultDatabaseFactory.setErrorManager(errorManager);
 
-                database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userId.toString());
+                database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userPublicKey);
             } catch (CantCreateDatabaseException e1) {
                 /**
                  * something went wrong creating the db, I can't handle this.
@@ -327,7 +337,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 cryptoVaultDatabaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
                 cryptoVaultDatabaseFactory.setErrorManager(errorManager);
 
-                database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userId.toString());
+                database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userPublicKey);
             } catch (CantCreateDatabaseException e1) {
                 /**
                  * something went wrong creating the db, I can't handle this.
@@ -340,7 +350,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              * I will start the loading creation of the wallet from the user Id
              */
             try {
-                vault = new BitcoinCryptoVault(this.userId);
+                vault = new BitcoinCryptoVault(userPublicKey);
                 vault.setLogManager(logManager);
                 vault.setErrorManager(errorManager);
                 vault.setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -378,7 +388,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             /**
              * now I will start the TransactionNotificationAgent to monitor
              */
-            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userId);
+            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userPublicKey);
             transactionNotificationAgent.setLogManager(this.logManager);
             try {
                 transactionNotificationAgent.start();
@@ -484,8 +494,10 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         return addresses;
     }
 
+    // changed wallet id from UUID to Strubg representing a public key
+    // Ezequiel Postan August 15th 2015
     @Override
-    public String sendBitcoins(UUID walletId, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
         return vault.sendBitcoins(FermatTrId, addressTo, satoshis);
     }
 

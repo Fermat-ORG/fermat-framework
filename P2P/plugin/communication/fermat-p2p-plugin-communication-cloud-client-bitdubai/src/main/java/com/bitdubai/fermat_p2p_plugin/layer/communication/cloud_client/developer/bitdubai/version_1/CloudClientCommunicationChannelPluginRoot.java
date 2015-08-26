@@ -17,12 +17,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
@@ -55,14 +57,34 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
+public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, CommunicationLayerManager, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
-    public static final String HOST_CLOUD_SERVER = "192.168.1.6";
+    public static final String HOST_CLOUD_SERVER = "192.168.1.3";
 
     public static final int PORT_CLOUD_SERVER = 9090;
 
 
-    /**
+	@Override
+	public void requestConnectionTo(NetworkServices networkServices, String remoteNetworkService) throws CommunicationException {
+
+	}
+
+	@Override
+	public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
+
+	}
+
+	@Override
+	public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationException {
+
+	}
+
+	@Override
+	public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
+		return null;
+	}
+
+	/**
      * CommunicationChannel Interface member variables.
      */
 	private CommunicationChannelAddress serverAddress;
@@ -368,23 +390,29 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	String clientKey = AsymmectricCryptography.createPrivateKey();
 		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
 
-		try{
 
-    		cloudClient.start();
+		// I will start the connection in a new Thread to avoid interrupting the platform start up
+		 new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					cloudClient.start();
+				} catch(CommunicationException ex){
+					StringBuilder contextBuilder = new StringBuilder();
+					contextBuilder.append("Client Public Key: " + cloudClient.getIdentityPublicKey());
+					contextBuilder.append(FermatException.CONTEXT_CONTENT_SEPARATOR);
+					contextBuilder.append("Server Address: " + cloudClient.getCommunicationChannelAddress().toString());
 
-    		this.serviceStatus = ServiceStatus.STARTED;
-    	} catch(CommunicationException ex){
-			StringBuilder contextBuilder = new StringBuilder();
-			contextBuilder.append("Client Public Key: " + cloudClient.getIdentityPublicKey());
-			contextBuilder.append(FermatException.CONTEXT_CONTENT_SEPARATOR);
-			contextBuilder.append("Server Address: " + cloudClient.getCommunicationChannelAddress().toString());
+					CantStartPluginException pluginException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, ex, contextBuilder.toString(), "The Cloud Client Failed To Initialize");
 
-			CantStartPluginException pluginException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, ex, contextBuilder.toString(), "The Cloud Client Failed To Initialize");
+					errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CLOUD_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginException);
+					stop();
+				}
+			}
+		}).start();
 
-			this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CLOUD_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginException);
 
-			stop();
-    	}
+		this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override

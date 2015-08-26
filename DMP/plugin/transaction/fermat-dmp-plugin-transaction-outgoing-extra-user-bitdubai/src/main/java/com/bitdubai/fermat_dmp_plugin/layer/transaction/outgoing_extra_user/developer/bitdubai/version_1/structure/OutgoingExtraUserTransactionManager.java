@@ -100,11 +100,12 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
      * TransactionManager Interface methods implementation
      */
 
+
     @Override
-    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException {
+    public void send(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException {
         /*
          * TODO: Create a class fir tge selection of the correct wallet
-         *       We will have as parameter the walletId and walletType
+         *       We will have as parameter the walletPublicKey and walletType
          *       The class will have a reference to all the basicwallet managers
          *       implemented that could be a destination of the transactions managed
          *       by an extra user.
@@ -117,12 +118,12 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
         long funds;
         try {
             dao.initialize(this.pluginId);
-            bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletID);
+            bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
             funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
             if (cryptoAmount > funds) {
                 throw new InsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
             }
-            dao.registerNewTransaction(walletID, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
         } catch (InsufficientFundsException exception) {
             throw exception;
         } catch (CantInitializeDaoException e) {
@@ -130,7 +131,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
             throw new CantSendFundsException("I coundn't initialize dao", e, "Plug-in id: " + this.pluginId.toString(), "");
         } catch (CantLoadWalletException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantSendFundsException("I couldn't load the wallet", e, "WalletId: " + walletID.toString(), "");
+            throw new CantSendFundsException("I couldn't load the wallet", e, "walletPublicKey: " + walletPublicKey, "");
         } catch (CantCalculateBalanceException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendFundsException("I couldn't calculate balance", e, "", "");

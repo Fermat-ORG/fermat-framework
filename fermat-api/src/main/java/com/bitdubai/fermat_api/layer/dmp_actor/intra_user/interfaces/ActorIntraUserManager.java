@@ -18,7 +18,7 @@ public interface ActorIntraUserManager {
 
     /**
      * The method <code>askIntraUserForAcceptance</code> registers a new intra user in the list
-     * managed by this plugin with ContactState PENDING_HIS_ACCEPTANCE until the other intra user
+     * managed by this plugin with ContactState PENDING_REMOTELY_ACCEPTANCE until the other intra user
      * accepts the connection request sent also by this method.
      *
      * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
@@ -30,27 +30,28 @@ public interface ActorIntraUserManager {
     void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException;
 
     /**
-     * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts
-     * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
-     *
-     * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
-     * @param intraUserToAddName         The name of the intra user to add
-     * @param intraUserToAddPublicKey    The public key of the intra user to add
-     * @param profileImage               The profile image that the intra user has
-     * @throws CantAcceptIntraUserException
+     * * The method <code>receivingIntraUserRequestConnection</code> registers a new intra user in the list
+     * managed by this plugin with ContactState PENDING_LOCALLY_ACCEPTANCE  until the other intra user
+     * accepts the connection request sent also by this method.
+     * @param intraUserLoggedInPublicKey
+     * @param intraUserToAddName
+     * @param intraUserToAddPublicKey
+     * @param profileImage
+     * @throws CantCreateIntraUserException
      */
-    void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptIntraUserException;
+  void receivingIntraUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException ;
 
-    /**
-     * The method <code>decideAcceptanceLater</code> adds an intra user registry with state PENDING_YOUR_ACCEPTANCE
-     *
-     * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
-     * @param intraUserToAddName         The name of the intra user to add
-     * @param intraUserToAddPublicKey    The public key of the intra user to add
-     * @param profileImage               The profile image that the intra user has
-     * @throws CantDecideAcceptanceLaterException
-     */
-    void decideAcceptanceLater(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantDecideAcceptanceLaterException;
+
+        /**
+         * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts
+         * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
+         *
+         * @param intraUserLoggedInPublicKey The public key of the intra user sending the connection request.
+         * @param intraUserToAddPublicKey    The public key of the intra user to add
+         * @throws CantAcceptIntraUserException
+         */
+    void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws CantAcceptIntraUserException;
+
 
     /**
      * The method <code>denyConnection</code> rejects a connection request from another intra user

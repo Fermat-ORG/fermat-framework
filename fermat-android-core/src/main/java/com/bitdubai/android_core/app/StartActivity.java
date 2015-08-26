@@ -78,7 +78,13 @@ public class StartActivity extends FragmentActivity {
                         Toast.LENGTH_LONG).show();
             }
 
-            new GetTask(this).execute();
+            int applicationState = ((ApplicationSession)getApplication()).getApplicationState();
+
+            if(applicationState==ApplicationSession.STATE_NOT_CREATED) {
+                new GetTask(this).execute();
+            }else if (applicationState == ApplicationSession.STATE_STARTED ){
+                fermatInit();
+            }
 
 
     }

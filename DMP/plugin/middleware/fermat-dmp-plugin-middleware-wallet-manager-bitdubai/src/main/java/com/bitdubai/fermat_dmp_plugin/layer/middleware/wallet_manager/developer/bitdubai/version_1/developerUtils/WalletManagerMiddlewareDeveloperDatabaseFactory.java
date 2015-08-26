@@ -27,7 +27,6 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
 
     }
 
-
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
          * I only have one database on my plugin. I will return its name.
@@ -35,8 +34,6 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE, pluginId));
         return databases;
-
-
     }
 
     public static List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
@@ -122,10 +119,12 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
             return returnedRecords;
         }
 
@@ -139,7 +138,7 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

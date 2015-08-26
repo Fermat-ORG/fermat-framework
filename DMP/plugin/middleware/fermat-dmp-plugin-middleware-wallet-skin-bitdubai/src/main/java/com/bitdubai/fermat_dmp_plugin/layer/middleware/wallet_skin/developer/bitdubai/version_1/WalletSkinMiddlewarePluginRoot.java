@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -204,7 +205,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             VersionCompatibility versionCompatibility = new VersionCompatibility(version, version);
             WalletSkin walletSkin = new WalletSkinMiddlewareWalletSkin(pluginId, skinId, name, "alias", WALLET_SKINS_PATH, state, designerPublicKey, version, versionCompatibility);
 
-            Skin skin = new Skin(walletSkin.getId(), walletSkin.getName(), walletSkin.getVersion(), walletSkin.getVersionCompatibility(), lstResources, lstPortraitLayouts, lstLandscapeLayouts);
+            Skin skin = new Skin(walletSkin.getId(), walletSkin.getName(), walletSkin.getVersion(), walletSkin.getVersionCompatibility(),lstResources, lstPortraitLayouts, lstLandscapeLayouts);
 //            Skin skin = new Skin(name, type, new Version("1.0.0"));
             saveSkinStructureXml(skin, walletSkin);
             try {

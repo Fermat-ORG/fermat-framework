@@ -26,6 +26,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,117 +49,204 @@ import ae.javax.xml.bind.Unmarshaller;*/
 /**
  * Created by Matias Furszyfer
  */
+
 public class xmlConversionTest extends TestCase {
 
+// TODO COMMENTED: NOT COMPILING.
+    public void testCreateNAvigationStructure() {
+//        Activity runtimeActivity;
+//        Fragment runtimeFragment;
+//        WalletNavigationStructure runtimeWalletNavigationStructure;
+//        TitleBar runtimeTitleBar;
+//        SideMenu runtimeSideMenu;
+//        MainMenu runtimeMainMenu;
+//        MenuItem runtimeMenuItem;
+//        TabStrip runtimeTabStrip;
+//        StatusBar runtimeStatusBar;
+//
+//        Tab runtimeTab;
+//
+//        String publicKey;
+//
+//        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+//        publicKey="reference_wallet";
+//        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+//        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
+//
+//        runtimeActivity= new Activity();
+//        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+//        runtimeActivity.setColor("#8bba9e");
+//        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+//        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
+//
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
+//        runtimeActivity.setColor("#72af9c");
+//        //runtimeActivity.setColor("#d07b62");
+//
+//
+//        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+//        runtimeStatusBar.setColor("#72af9c");
+//
+//        runtimeActivity.setStatusBar(runtimeStatusBar);
+//
+//
+//        runtimeTabStrip = new TabStrip();
+//
+//        runtimeTabStrip.setTabsColor("#8bba9e");
+//
+//        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+//
+//        runtimeTabStrip.setTabsIndicateColor("#72af9c");
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Balance");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        /*runtimeTab = new Tab();
+//        runtimeTab.setLabel("Send");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Receive");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Transactions");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Money request");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        */
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Contacts");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//
+//
+//
+//
+//        runtimeTabStrip.setDividerColor(0x72af9c);
+//        //runtimeTabStrip.setBackgroundColor("#72af9c");
+//        runtimeActivity.setTabStrip(runtimeTabStrip);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE, runtimeFragment);
+//
+//
+//        /*
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND,runtimeFragment);
+//
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE,runtimeFragment);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
+//
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST, runtimeFragment);
+//
+//        */
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS, runtimeFragment);
+//
+//
+//        /**
+//         * Transaction Activity
+//         */
+//
+//        runtimeActivity= new Activity();
+//        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+//        runtimeActivity.setColor("#8bba9e");
+//        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
+//        runtimeActivity.setColor("#72af9c");
+//        //runtimeActivity.setColor("#d07b62");
+//
+//
+//        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+//        runtimeStatusBar.setColor("#72af9c");
+//
+//        runtimeActivity.setStatusBar(runtimeStatusBar);
+//
+//        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS, runtimeFragment);
+//
+//
+//
+//        String xml = XMLParser.parseObject(runtimeWalletNavigationStructure);
+//
+//        System.out.println(xml);
+    }
 
-    public void testcreateResult() {
-        Activity runtimeActivity;
-        Fragment runtimeFragment;
-        WalletNavigationStructure runtimeWalletNavigationStructure;
-        TitleBar runtimeTitleBar;
-        SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
-        MenuItem runtimeMenuItem;
-        TabStrip runtimeTabStrip;
-        StatusBar runtimeStatusBar;
-
-        Tab runtimeTab;
-
-        String publicKey;
-
-        runtimeWalletNavigationStructure = new WalletNavigationStructure();
-        publicKey="reference_wallet";
-        runtimeWalletNavigationStructure.setPublicKey(publicKey);
-        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
-
-        runtimeActivity= new Activity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeActivity.setColor("#8bba9e");
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
-
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
-        //runtimeActivity.setColor("#d07b62");
-
-
-        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        runtimeStatusBar.setColor("#72af9c");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-
-        runtimeTabStrip = new TabStrip();
-
-        runtimeTabStrip.setTabsColor("#8bba9e");
-
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-
-        runtimeTabStrip.setTabsIndicateColor("#72af9c");
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Balance");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Send");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Receive");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Transactions");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Contacts");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
-        runtimeTabStrip.addTab(runtimeTab);
+    @Test
+    public void testCreateSkin(){
 
 
 
 
+            try {
 
-        runtimeTabStrip.setDividerColor(0x72af9c);
-        //runtimeTabStrip.setBackgroundColor("#72af9c");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
+                Version version = new Version(1,0,0);
+                VersionCompatibility versionCompatibility = new VersionCompatibility(version,version);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE,runtimeFragment);
+                Map<String, Resource> resources  =new HashMap<String, Resource>();
 
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND,runtimeFragment);
+                //public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE,runtimeFragment);
+                Resource resource = new Resource(UUID.randomUUID(),"personIcon","person1.png",ResourceType.IMAGE,ResourceDensity.MDPI);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
+                resources.put(resource.getName(),resource);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
+                Map<String, Layout> portraitLayouts = new HashMap<String, Layout>();
 
+                Layout layout_portrait_1 = new Layout(UUID.randomUUID(),"reference_wallet_contact_fragment.xml","reference_wallet_contact_fragment");
 
+                portraitLayouts.put(layout_portrait_1.getName(),layout_portrait_1);
 
-        String xml = XMLParser.parseObject(runtimeWalletNavigationStructure);
+                Map<String, Layout> landscapeLayouts = new HashMap<String, Layout>();
 
-        System.out.println(xml);
+                Layout layout_landscape_1 = new Layout(UUID.randomUUID(),"reference_wallet_contact_fragment.xml","reference_wallet_contact_fragment");
+
+                landscapeLayouts.put(layout_landscape_1.getName(), layout_landscape_1);
+
+                Skin skin = new Skin(UUID.randomUUID(),"reference_wallet",version,versionCompatibility,resources,portraitLayouts,landscapeLayouts);
+
+                System.out.println(XMLParser.parseObject(skin));
+
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
+
     }
 
     /*    @Test

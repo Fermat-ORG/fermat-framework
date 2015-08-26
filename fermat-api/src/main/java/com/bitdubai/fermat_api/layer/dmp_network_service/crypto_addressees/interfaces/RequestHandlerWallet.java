@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
  * list the information of a wallet that can handle the request
  */
 public interface RequestHandlerWallet {
+
+    // TODO THIS INFORMATION MUST BE PROVIDED BY THE WALLET MANAGER TO THE WALLET WHEN INTERFACE WHEN IS NEEDED
     /**
      * The method <code>getPublicKey</code> gives us the public key of the represented wallet
      *

@@ -11,13 +11,24 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserI
  */
 public class IntraUserModuleInformation implements IntraUserInformation {
 
+    private String name;
+    private String publicKey;
+    private byte[] profileImage;
+
+
+    public IntraUserModuleInformation(String name,String publicKey,byte[] profileImage)
+    {
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = (byte[] )profileImage.clone();
+    }
     /**
      * That method returns the public key of the represented Intra User
      * @return the public key of the intra user
      */
     @Override
     public String getPublicKey() {
-        return null;
+        return this.publicKey;
     }
 
     /**
@@ -27,7 +38,7 @@ public class IntraUserModuleInformation implements IntraUserInformation {
      */
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
     /**
@@ -37,6 +48,6 @@ public class IntraUserModuleInformation implements IntraUserInformation {
      */
     @Override
     public byte[] getProfileImage() {
-        return new byte[0];
+        return (byte[] )this.profileImage.clone();
     }
 }

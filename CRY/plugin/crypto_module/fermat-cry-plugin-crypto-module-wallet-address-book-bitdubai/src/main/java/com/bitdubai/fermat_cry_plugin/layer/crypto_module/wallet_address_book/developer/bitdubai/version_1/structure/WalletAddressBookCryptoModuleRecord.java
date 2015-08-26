@@ -19,16 +19,16 @@ public class WalletAddressBookCryptoModuleRecord implements WalletAddressBookRec
 
     ReferenceWallet referenceWallet;
 
-    UUID walletId;
+    String walletPublicKey;
 
-    public WalletAddressBookCryptoModuleRecord(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, UUID walletId) {
+    public WalletAddressBookCryptoModuleRecord(CryptoAddress cryptoAddress, ReferenceWallet referenceWallet, String walletPublicKey) {
         this.cryptoAddress = cryptoAddress;
         this.referenceWallet = referenceWallet;
-        this.walletId = walletId;
+        this.walletPublicKey = walletPublicKey;
     }
 
-    public UUID getWalletId() {
-        return walletId;
+    public String getWalletPublicKey() {
+        return walletPublicKey;
     }
 
     public ReferenceWallet getWalletType() {

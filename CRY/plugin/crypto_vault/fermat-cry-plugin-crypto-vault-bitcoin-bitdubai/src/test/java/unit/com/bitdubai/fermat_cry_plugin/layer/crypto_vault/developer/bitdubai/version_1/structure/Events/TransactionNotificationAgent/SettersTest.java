@@ -3,7 +3,7 @@ package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitduba
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -47,13 +47,13 @@ public class SettersTest {
     @Test
     public void constructorTest(){
         pluginFileSystem = new MockedPluginFileSystem();
-        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, UUID.randomUUID(), UUID.randomUUID());
+        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, UUID.randomUUID(),  "replace_device_user_key");
     }
 
     @Test
     public void settersTest(){
         pluginFileSystem = new MockedPluginFileSystem();
-        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, UUID.randomUUID(), UUID.randomUUID());
+        TransactionNotificationAgent transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, UUID.randomUUID(),  "replace_device_user_key");
         transactionNotificationAgent.setErrorManager(errorManager);
         transactionNotificationAgent.setEventManager(eventManager);
         transactionNotificationAgent.setPluginId(UUID.randomUUID());

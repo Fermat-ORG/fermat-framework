@@ -2,14 +2,12 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.*;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnBlockchainEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.IncomingCryptoReversedOnBlockchainEventListener;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnBlockchainEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnBlockchainEventHandler;
@@ -18,6 +16,9 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ import java.util.List;
  * * * * * * * *
  */
 
-public class IncomingCryptoEventRecorderService implements DealsWithEvents, DealsWithRegistry, TransactionService {
+public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents, DealsWithRegistry, TransactionService {
 
     /**
      * DealsWithEvents Interface member variables.
@@ -64,7 +65,7 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
      * DealWithEvents Interface implementation.
      */
     @Override
-    public void setEventManager(EventManager eventManager) {
+    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
@@ -119,12 +120,6 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
         EventListener eventListener;
         EventHandler eventHandler;
 
-        /*eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
-        eventHandler = new IncomingCryptoTransactionsWaitingTransferenceEventHandler();
-        ((IncomingCryptoTransactionsWaitingTransferenceEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);*/
 
         /**
          * Issue #543
@@ -165,18 +160,15 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
 
     @Override
     public void stop() {
+        removeRegisteredListeners();
+        this.serviceStatus = ServiceStatus.STOPPED;
+    }
 
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
+    private void removeRegisteredListeners(){
         for (EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }
-
         listenersAdded.clear();
-        
-        this.serviceStatus = ServiceStatus.STOPPED;
-        
     }
 
     @Override

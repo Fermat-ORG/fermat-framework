@@ -28,13 +28,13 @@ public enum Plugins {
     BITDUBAI_INTRA_USER_FACTORY_MODULE("BINUSFACM", Developers.BITDUBAI),
     BITDUBAI_INTRA_USER_ACTOR("BINUSERA", Developers.BITDUBAI),
     BITDUBAI_INTRA_USER_IDENTITY("BINUSERI", Developers.BITDUBAI),
-    BITDUBAI_BANK_NOTES_WALLET_NICHE_WALLET_TYPE("BBNWNWT", Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE("BCLPWNWT", Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE("BCWNWT", Developers.BITDUBAI),
-    BITDUBAI_DISCOUNT_WALLET_NICHE_WALLET_TYPE("BDWNWT", Developers.BITDUBAI),
-    BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE("BFOCLPWNWT", Developers.BITDUBAI),
-    BITDUBAI_FIAT_OVER_CRYPTO_WALLET_NICHE_WALLET_TYPE("BFOCWNWT", Developers.BITDUBAI),
-    BITDUBAI_MULTI_ACCOUNT_WALLET_NICHE_WALLET_TYPE("BMAWNWT", Developers.BITDUBAI),
+    BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE("BBNWWM", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE("BCLPWWM", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_WALLET_WALLET_MODULE("BCWWM", Developers.BITDUBAI),
+    BITDUBAI_DISCOUNT_WALLET_WALLET_MODULE("BDWWM", Developers.BITDUBAI),
+    BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE("BFOCLPWWM", Developers.BITDUBAI),
+    BITDUBAI_FIAT_OVER_CRYPTO_WALLET_WALLET_MODULE("BFOCWWM", Developers.BITDUBAI),
+    BITDUBAI_MULTI_ACCOUNT_WALLET_WALLET_MODULE("BMAWWM", Developers.BITDUBAI),
     BITDUBAI_INCOMING_INTRA_USER_TRANSACTION("BININUST", Developers.BITDUBAI),
     BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION("BOUINUST", Developers.BITDUBAI),
     BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION("BINDEVUT", Developers.BITDUBAI),
@@ -43,7 +43,7 @@ public enum Plugins {
     BITDUBAI_BANK_NOTES_MIDDLEWARE("BBNMIDD", Developers.BITDUBAI),
     BITDUBAI_BANK_NOTES_NETWORK_SERVICE("BBNNETSER", Developers.BITDUBAI),
     BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE("BWRNETSER", Developers.BITDUBAI),
-    BITDUBAI_WALLET_STORE_NETWORK_SERVICE("BWSNETSER", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STORE_NETWORK_SERVICE("BWSTONETSER", Developers.BITDUBAI),
     BITDUBAI_WALLET_CONTACTS_MIDDLEWARE("BWALLCMIDD", Developers.BITDUBAI),
     BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE("BWCNETSER", Developers.BITDUBAI),
     BITDUBAI_USER_ADDRESS_BOOK_CRYPTO("BUADDBCRY", Developers.BITDUBAI),
@@ -55,8 +55,8 @@ public enum Plugins {
     BITDUBAI_USER_EXTRA_USER("BUEXU", Developers.BITDUBAI),
     BITDUBAI_USER_INTRA_USER("BUINU", Developers.BITDUBAI),
     BITDUBAI_COINBASE_WORLD("BCOINW", Developers.BITDUBAI),
-    BITDUBAI_BITCOIN_WALLET_BASIC_WALLET("BBTCWBW", Developers.BITDUBAI ),
-    BITDUBAI_DEVICE_CONNECTIVITY("BBTCDEVC", Developers.BITDUBAI ),
+    BITDUBAI_BITCOIN_WALLET_BASIC_WALLET("BBTCWBW", Developers.BITDUBAI),
+    BITDUBAI_DEVICE_CONNECTIVITY("BBTCDEVC", Developers.BITDUBAI),
     BITDUBAI_LOCATION_WORLD("BLOCW", Developers.BITDUBAI),
     BITDUBAI_ACTOR_DEVELOPER("BACTORD", Developers.BITDUBAI),
     BITDUBAI_WALLET_FACTORY_MIDDLEWARE("BWFMIDD", Developers.BITDUBAI),
@@ -69,12 +69,13 @@ public enum Plugins {
     BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE("BWNSMIDD", Developers.BITDUBAI),
     BITDUBAI_WALLET_STORE_MODULE("BWSM", Developers.BITDUBAI),
     BITDUBAI_WALLET_SETTINGS_MIDDLEWARE("BWSEMIDD", Developers.BITDUBAI),
-    BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("BWSNETSER", Developers.BITDUBAI),
+    BITDUBAI_SUB_APP_SETTINGS_MIDDLEWARE("BSASEMIDD", Developers.BITDUBAI),
+    BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE("BWSTANETSER", Developers.BITDUBAI),
     BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE("BSRNETSER", Developers.BITDUBAI),
     BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE("BCTNSER", Developers.BITDUBAI),
     BITDUBAI_REQUEST_MONEY_REQUEST("BRMR", Developers.BITDUBAI),
-
     BITDUBAI_DEVELOPER_IDENTITY("BDEVID", Developers.BITDUBAI),
+    BITDUBAI_PUBLISHER_IDENTITY("BPUBID", Developers.BITDUBAI),
     BITDUBAI_TRANSLATOR_IDENTITY("BDTRAID", Developers.BITDUBAI),
     BITDUBAI_IDENTITY_MANAGER("BIDMAN", Developers.BITDUBAI),
     BITDUBAI_DESIGNER_IDENTITY("BDDESID", Developers.BITDUBAI),
@@ -89,10 +90,12 @@ public enum Plugins {
         this.developer = developer;
     }
 
-    public String getKey()   { return this.code; }
+    public String getKey() {
+        return this.code;
+    }
 
     public static Plugins getByKey(String code) throws InvalidParameterException {
-        switch(code){
+        switch (code) {
             case "BLICM":
                 return Plugins.BITDUBAI_LICENSE_MANAGER;
             case "BBLOCKIW":
@@ -123,20 +126,20 @@ public enum Plugins {
                 return Plugins.BITDUBAI_WALLET_FACTORY_MODULE;
             case "BBTCCRYV":
                 return Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT;
-            case "BBNWNWT":
-                return Plugins.BITDUBAI_BANK_NOTES_WALLET_NICHE_WALLET_TYPE;
-            case "BCLPWNWT":
-                return Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE;
-            case "BCWNWT":
-                return Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE;
-            case "BDWNWT":
-                return Plugins.BITDUBAI_DISCOUNT_WALLET_NICHE_WALLET_TYPE;
-            case "BFOCLPWNWT":
-                return Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE;
-            case "BFOCWNWT":
-                return Plugins.BITDUBAI_FIAT_OVER_CRYPTO_WALLET_NICHE_WALLET_TYPE;
-            case "BMAWNWT":
-                return Plugins.BITDUBAI_MULTI_ACCOUNT_WALLET_NICHE_WALLET_TYPE;
+            case "BBNWWM":
+                return Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE;
+            case "BCLPWWM":
+                return Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE;
+            case "BCWWM":
+                return Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE;
+            case "BDWWM":
+                return Plugins.BITDUBAI_DISCOUNT_WALLET_WALLET_MODULE;
+            case "BFOCLPWWM":
+                return Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE;
+            case "BFOCWWM":
+                return Plugins.BITDUBAI_FIAT_OVER_CRYPTO_WALLET_WALLET_MODULE;
+            case "BMAWWM":
+                return Plugins.BITDUBAI_MULTI_ACCOUNT_WALLET_WALLET_MODULE;
             case "BININUST":
                 return Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION;
             case "BOUINUST":
@@ -153,10 +156,12 @@ public enum Plugins {
                 return Plugins.BITDUBAI_BANK_NOTES_NETWORK_SERVICE;
             case "BWRNETSER":
                 return Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE;
-            case "BWSNETSER":
+            case "BWSTONETSER":
                 return Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE;
             case "BWSMIDD":
                 return Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE;
+            case "BWSM":
+                return Plugins.BITDUBAI_WALLET_STORE_MODULE;
             case "BWFMIDD":
                 return Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE;
             case "BWLMIDD":
@@ -201,14 +206,48 @@ public enum Plugins {
                 return Plugins.BITDUBAI_ACTOR_DEVELOPER;
             case "BIDMAN":
                 return Plugins.BITDUBAI_IDENTITY_MANAGER;
-            case "BWSM":
-                return Plugins.BITDUBAI_WALLET_STORE_MODULE;
+            case "BDEVID":
+                return Plugins.BITDUBAI_DEVELOPER_IDENTITY;
+            case "BPUBID":
+                return Plugins.BITDUBAI_PUBLISHER_IDENTITY;
+            case "BDTRAID":
+                return Plugins.BITDUBAI_TRANSLATOR_IDENTITY;
+            case "BTEMNETS":
+                return Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE;
+            case "BINUSERNS":
+                return Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE;
+            case "BINUSFACM":
+                return Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE;
+            case "BINUSERA":
+                return Plugins.BITDUBAI_INTRA_USER_ACTOR;
+            case "BINUSERI":
+                return Plugins.BITDUBAI_INTRA_USER_IDENTITY;
+            case "BWNSMIDD":
+                return Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE;
+            case "BWSEMIDD":
+                return Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE;
+            case "BSASEMIDD":
+                return BITDUBAI_SUB_APP_SETTINGS_MIDDLEWARE;
+            case "BWSTANETSER":
+                return Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE;
+            case "BSRNETSER":
+                return Plugins.BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE;
+            case "BCTNSER":
+                return Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE;
+            case "BRMR":
+                return Plugins.BITDUBAI_REQUEST_MONEY_REQUEST;
+            case "BDDESID":
+                return Plugins.BITDUBAI_DESIGNER_IDENTITY;
+            case "BDEVMOD":
+                return Plugins.BITDUBAI_DEVELOPER_MODULE;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
     }
 
-    public Developers getDeveloper()   { return this.developer; }
+    public Developers getDeveloper() {
+        return this.developer;
+    }
 
 
 }

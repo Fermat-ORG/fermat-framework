@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class sendBitcoinsTest {
 
-    final UUID id = UUID.randomUUID();
+    final String userPublicKey =  "replace_device_user_key";
     @Mock
     Database database;
 
@@ -72,12 +72,14 @@ public class sendBitcoinsTest {
 
     @Mock DatabaseTableRecord record;
 
+    private UUID pluginId = UUID.randomUUID();
+
     @Test (expected = CouldNotSendMoneyException.class)
     public void sendBitcoins_RaiseInsufficientFundsException() throws CantCreateCryptoWalletException, InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException, CantCreateFileException {
-       BitcoinCryptoVault vault = new BitcoinCryptoVault(id);
+       BitcoinCryptoVault vault = new BitcoinCryptoVault(userPublicKey);
         List<DatabaseTableRecord> records = mock(ArrayList.class);
 
-        when(pluginFileSystem.createTextFile(eq(id), anyString(), anyString(), eq(FilePrivacy.PRIVATE), eq(FileLifeSpan.PERMANENT))).thenReturn(pluginTextFile);
+        when(pluginFileSystem.createTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(pluginTextFile);
         when(database.getTable(anyString())).thenReturn(table);
         when(table.getRecords()).thenReturn(records);
         when(records.isEmpty()).thenReturn(true);
@@ -85,9 +87,9 @@ public class sendBitcoinsTest {
         vault.setDatabase(database);
         vault.setErrorManager(errorManager);
         vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
-        vault.setUserId(id);
+        vault.setUserPublicKey(userPublicKey);
         vault.setLogManager(logManager);
-        vault.setPluginId(id);
+        vault.setPluginId(pluginId);
         vault.setEventManager(eventManager);
         vault.setPluginDatabaseSystem(pluginDatabaseSystem);
         vault.setPluginFileSystem(pluginFileSystem);
@@ -99,10 +101,10 @@ public class sendBitcoinsTest {
 
     @Test (expected = InvalidSendToAddressException.class)
     public void sendBitcoins_InvalidAddressException() throws CantCreateCryptoWalletException, InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException, CantCreateFileException {
-        BitcoinCryptoVault vault = new BitcoinCryptoVault(UUID.randomUUID());
+        BitcoinCryptoVault vault = new BitcoinCryptoVault(userPublicKey);
         List<DatabaseTableRecord> records = mock(ArrayList.class);
 
-        when(pluginFileSystem.createTextFile(eq(id), anyString(), anyString(), eq(FilePrivacy.PRIVATE), eq(FileLifeSpan.PERMANENT))).thenReturn(pluginTextFile);
+        when(pluginFileSystem.createTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(pluginTextFile);
         when(database.getTable(anyString())).thenReturn(table);
         when(table.getRecords()).thenReturn(records);
         when(records.isEmpty()).thenReturn(true);
@@ -110,7 +112,7 @@ public class sendBitcoinsTest {
         vault.setDatabase(database);
         vault.setErrorManager(errorManager);
         vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
-        vault.setUserId(UUID.randomUUID());
+        vault.setUserPublicKey(userPublicKey);
         vault.setLogManager(logManager);
         vault.setPluginId(UUID.randomUUID());
         vault.setEventManager(eventManager);

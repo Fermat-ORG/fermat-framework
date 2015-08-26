@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,26 +31,29 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private VersionCompatibility navigationStructureCompatibility;
 
-    private Map<String,Resource> lstResources;
+    private Map<String,Resource> resources;
 
-    private Map<String,Layout> lstPortraitLayouts;
+    private Map<String,Layout> portraitLayouts;
 
-    private Map<String,Layout> lstLandscapeLayouts;
+    private Map<String,Layout> landscapeLayouts;
 
+    private ScreenSize screenSize;
 
-    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, Map<String, Resource> lstResources, Map<String, Layout> lstPortraitLayouts, Map<String, Layout> lstLandscapeLayouts) {
+    private Designer designer;
+
+    private int size;
+
+    public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, Map<String, Resource> resources, Map<String, Layout> portraitLayouts, Map<String, Layout> landscapeLayouts) {
         this.id = id;
         this.name = name;
         this.version = version;
         this.setNavigationStructureCompatibility(navigationStructureCompatibility);
-        this.setLstResources(lstResources);
-        this.setLstPortraitLayouts(lstPortraitLayouts);
-        this.setLstLandscapeLayouts(lstLandscapeLayouts);
+        this.setResources(resources);
+        this.setPortraitLayouts(portraitLayouts);
+        this.setLandscapeLayouts(landscapeLayouts);
     }
 
-    public Skin() {
-
-    }
+    public Skin(){};
 
     public UUID getId() {
         return id;
@@ -85,28 +88,53 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.navigationStructureCompatibility = navigationStructureCompatibility;
     }
 
-    public Map<String, Resource> getLstResources() {
-        return lstResources;
+    public Map<String, Resource> getResources() {
+        return resources;
     }
 
-    public void setLstResources(Map<String, Resource> lstResources) {
-        this.lstResources = lstResources;
+    public void setResources(Map<String, Resource> resources) {
+        this.resources = resources;
     }
 
-    public Map<String, Layout> getLstPortraitLayouts() {
-        return lstPortraitLayouts;
+    public Map<String, Layout> getPortraitLayouts() {
+        return portraitLayouts;
     }
 
-    public void setLstPortraitLayouts(Map<String, Layout> lstPortraitLayouts) {
-        this.lstPortraitLayouts = lstPortraitLayouts;
+    public void setPortraitLayouts(Map<String, Layout> portraitLayouts) {
+        this.portraitLayouts = portraitLayouts;
     }
 
-    public Map<String, Layout> getLstLandscapeLayouts() {
-        return lstLandscapeLayouts;
+    public Map<String, Layout> getLandscapeLayouts() {
+        return landscapeLayouts;
     }
 
-    public void setLstLandscapeLayouts(Map<String, Layout> lstLandscapeLayouts) {
-        this.lstLandscapeLayouts = lstLandscapeLayouts;
+    public void setLandscapeLayouts(Map<String, Layout> landscapeLayouts) {
+        this.landscapeLayouts = landscapeLayouts;
+    }
+
+
+    public ScreenSize getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(ScreenSize screenSize) {
+        this.screenSize = screenSize;
+    }
+
+    public Designer getDesigner() {
+        return designer;
+    }
+
+    public void setDesigner(Designer designer) {
+        this.designer = designer;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override
@@ -116,9 +144,9 @@ public class Skin implements Serializable {//implements FermatSkin {
                 ", name='" + name + '\'' +
                 ", version=" + version +
                 ", navigationStructureCompatibility=" + navigationStructureCompatibility +
-                ", lstResources=" + lstResources +
-                ", lstPortraitLayouts=" + lstPortraitLayouts +
-                ", lstLandscapeLayouts=" + lstLandscapeLayouts +
+                ", resources=" + resources +
+                ", portraitLayouts=" + portraitLayouts +
+                ", landscapeLayouts=" + landscapeLayouts +
                 '}';
     }
 }

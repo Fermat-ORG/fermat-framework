@@ -2,38 +2,38 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
 import android.content.Context;
-
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.Item;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionItem;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 
 import android.widget.TextView;
@@ -48,9 +48,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-
-import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 
 /**
@@ -61,10 +58,10 @@ public class TransactionsFragment extends Fragment{
     private static final String ARG_POSITION = "position";
 
 
-    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
     /**
-     * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
+     * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
     private CryptoWalletManager cryptoWalletManager;
     private CryptoWallet cryptoWallet;
@@ -80,7 +77,7 @@ public class TransactionsFragment extends Fragment{
     private View rootView;
     private ListView listViewTransactions;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private TextView textView_transactions_type;
 
     /**
      * List transactions
@@ -93,7 +90,7 @@ public class TransactionsFragment extends Fragment{
      */
     //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
-    private int cantTransactions = 10;
+    private int cantTransactions = 5;
 
 
     /**
@@ -115,15 +112,30 @@ public class TransactionsFragment extends Fragment{
     /**
      * Wallet session
      */
-    private WalletSession walletSession;
+    private ReferenceWalletSession walletSession;
 
+    /**
+     * Resources
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
+    private boolean isLoading=false;
 
-    public static TransactionsFragment newInstance(int position,WalletSession walletSession) {
+    private EntryAdapter adapter;
+
+    /**
+     *
+     * @param position
+     * @param walletSession
+     * @return
+     */
+
+    public static TransactionsFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         TransactionsFragment f = new TransactionsFragment();
         f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -131,9 +143,10 @@ public class TransactionsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = walletSession.getErrorManager();
+
         try {
 
+            errorManager = walletSession.getErrorManager();
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
             cryptoWalletManager = walletSession.getCryptoWalletManager();
@@ -154,6 +167,7 @@ public class TransactionsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         try {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
             // Get ListView object from xml
@@ -162,11 +176,13 @@ public class TransactionsFragment extends Fragment{
 
             //adapter.
 
+            textView_transactions_type = (TextView) rootView.findViewById(R.id.textView_transactions_type);
+            textView_transactions_type.setText(walletSession.getBalanceTypeSelected());
 
             // Create the adapter to convert the array to views
 
 
-                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+            lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
 
 
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
@@ -187,28 +203,53 @@ public class TransactionsFragment extends Fragment{
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    refreshTransactionsContent();
+                    //refreshTransactionsContent();
                 }
             });
 
 
 
-            /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    //view.
-                }
+            listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
+                public int currentScrollState;
+                public int currentVisibleItemCount;
+                public int currentFirstVisibleItem;
+//                @Override
+//                public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                    //view.
+//                }
+//
+//                @Override
+//                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                    //showMessage("holas");
+//                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
+//                            +"first vible item:"+firstVisibleItem+"\n"
+//                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+//
+//                }
 
-                @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    //showMessage("holas");
-                    Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
-                            +"first vible item:"+firstVisibleItem+"\n"
-                            +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+                    this.currentFirstVisibleItem = firstVisibleItem;
+                    this.currentVisibleItemCount = visibleItemCount;
+                }
 
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    this.currentScrollState = scrollState;
+                    this.isScrollCompleted();
+                }
+
+                private void isScrollCompleted() {
+                    if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
+                        /*** In this way I detect if there's been a scroll which has completed ***/
+                        /*** do the work for load more date! ***/
+                        if(!isLoading){
+                            isLoading = true;
+                            //loadMoreDAta();
+                            loadNewTransactions();
+                        }
+                    }
                 }
             });
-            */
+
 
             /**
              * Load transactions
@@ -227,7 +268,7 @@ public class TransactionsFragment extends Fragment{
             /**
              *
              */
-            EntryAdapter adapter = new EntryAdapter(getActivity(), items);
+            adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
 
         } catch (CantGetTransactionsException e) {
@@ -239,8 +280,30 @@ public class TransactionsFragment extends Fragment{
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
+
+
+//        ImageView imageView = (ImageView) rootView.findViewById(R.id.imageView_test);
+//
+//        // ESTO ES SOLO TESTEO
+//
+//        byte[] image=null;
+//        try {
+//
+//            image=walletResourcesProviderManager.getImageResource("personIcon", skinId);
+//
+//
+//        } catch (CantGetResourcesException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
+//        imageView.setImageDrawable(drawable);
+
         return rootView;
     }
+
+
+
 
     /**
      *  Order transactions in a map
@@ -298,7 +361,7 @@ public class TransactionsFragment extends Fragment{
         try {
             if (lstTransactions.isEmpty()){
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
 
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
@@ -306,7 +369,7 @@ public class TransactionsFragment extends Fragment{
             }
             else{
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
 
@@ -314,7 +377,8 @@ public class TransactionsFragment extends Fragment{
                 }
                 pointerOffset = lstTransactions.size();
 
-                showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
+                lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
+                adapter.notifyDataSetChanged();
             }
         }
 
@@ -330,6 +394,10 @@ public class TransactionsFragment extends Fragment{
         }
 
 
+    }
+
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
 
@@ -384,19 +452,14 @@ public class TransactionsFragment extends Fragment{
                      * Setting values and validations
                      */
                     if (textView_contact_name != null) {
-                        String actorName = entryItem.cryptoWalletTransaction.getInvolvedActorName();
-                        if(actorName!=null)
+                        String actorName = getActorNameProvisorio(entryItem.cryptoWalletTransaction);
                         textView_contact_name.setText(actorName);
-                        else textView_contact_name.setText(R.string.nullActorName);
                     }
 
                     if(textView_amount != null)
-                        if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(), ShowMoneyType.BITCOIN.getCode()));
-                        }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode())
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode()));
+                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode()));
                     if(textView_time!=null){
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
                     }
                     if(textView_type!=null){
@@ -414,12 +477,26 @@ public class TransactionsFragment extends Fragment{
 
     }
 
+    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
+        if (cryptoWalletTransaction.getContactId() != null) {
+            try {
+                WalletContactRecord walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
+                return walletContactRecord.getActorName();
+            } catch (Exception e) {
+                System.out.println("esta es para vos mati.");
+            }
+        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
+            return cryptoWalletTransaction.getInvolvedActor().getName();
+        }
+        return "Unknow";
+    }
+
     /**
      *  Set wallet session inside the fragment when is created
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 

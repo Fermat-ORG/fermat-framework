@@ -38,19 +38,19 @@ public class NewTransactionExecutorTest {
 
     @Test
     public void newTransactionExecutor_PlatformWalletTypeNotSupported_TransactionExecutorCreated() throws Exception{
-        when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWallet);
+        when(mockBitcoinWalletManager.loadWallet(anyString())).thenReturn(mockBitcoinWallet);
 
         testExecutorFactory = new TransactionExecutorFactory(mockBitcoinWalletManager, mockActorAddressBookManager);
-        testExecutor = testExecutorFactory.newTransactionExecutor(ReferenceWallet.COMPOSITE_WALLET_MULTI_ACCOUNT, UUID.randomUUID());
+        testExecutor = testExecutorFactory.newTransactionExecutor(ReferenceWallet.COMPOSITE_WALLET_MULTI_ACCOUNT, "replace_by_wallet_public_key");
         assertThat(testExecutor).isNull();
     }
 
     @Test
     public void newTransactionExecutor_WalletRecognizedByManager_TransactionExecutorCreated() throws Exception{
-        when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenReturn(mockBitcoinWallet);
+        when(mockBitcoinWalletManager.loadWallet(anyString())).thenReturn(mockBitcoinWallet);
 
         testExecutorFactory = new TransactionExecutorFactory(mockBitcoinWalletManager, mockActorAddressBookManager);
-        testExecutor = testExecutorFactory.newTransactionExecutor(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, UUID.randomUUID());
+        testExecutor = testExecutorFactory.newTransactionExecutor(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, "replace_by_wallet_public_key");
         assertThat(testExecutor)
                 .isNotNull()
                 .isInstanceOf(BitcoinBasicWalletTransactionExecutor.class);
@@ -58,10 +58,10 @@ public class NewTransactionExecutorTest {
 
     @Test
     public void newTransactionExecutor_WalletNotRecognizedByManager_ThrowsCantLoadWalletException() throws Exception{
-        when(mockBitcoinWalletManager.loadWallet(any(UUID.class))).thenThrow(new CantLoadWalletException("MOCK", null, null, null));
+        when(mockBitcoinWalletManager.loadWallet(anyString())).thenThrow(new CantLoadWalletException("MOCK", null, null, null));
 
         testExecutorFactory = new TransactionExecutorFactory(mockBitcoinWalletManager, mockActorAddressBookManager);
-        catchException(testExecutorFactory).newTransactionExecutor(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, UUID.randomUUID());
+        catchException(testExecutorFactory).newTransactionExecutor(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, "replace_by_wallet_public_key");
 
         assertThat(caughtException())
                 .isNotNull()

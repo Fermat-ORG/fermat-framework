@@ -26,7 +26,7 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
     /**
      * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
      * and we must have enought funds to send this money
-     * @param walletId
+     * @param walletPublicKey
      * @param FermatTrId internal transaction Id - used to validate that it was not send previously.
      * @param addressTo the valid address we are sending to
      * @param satoshis the amount in long of satoshis
@@ -35,7 +35,7 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      * @throws InvalidSendToAddressException
      * @throws CouldNotSendMoneyException
      */
-    public String sendBitcoins (UUID walletId, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
 
 
     /**

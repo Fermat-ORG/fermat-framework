@@ -2,7 +2,6 @@ package com.bitdubai.fermat_api.layer.osa_android.logger_system;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
-import sun.rmi.runtime.Log;
 
 /**
  * Created by ciencias on 6/25/15.

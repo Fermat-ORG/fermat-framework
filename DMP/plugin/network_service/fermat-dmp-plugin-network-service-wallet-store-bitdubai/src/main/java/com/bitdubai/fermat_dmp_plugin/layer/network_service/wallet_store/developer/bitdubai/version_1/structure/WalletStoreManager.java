@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
@@ -9,6 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDeveloperInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
@@ -28,9 +30,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantPublishItemInCatalogException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItem;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItem;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin;
@@ -128,17 +130,17 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         return dbDAO;
     }
 
-    private void publishItemInDB (CatalogItem catalogItem, Developer developer, Language language, Translator translator, Skin skin, Designer designer) throws CantPublishItemInCatalogException {
+    private void publishItemInDB (CatalogItemImpl catalogItemImpl, Developer developer, Language language, Translator translator, Skin skin, Designer designer) throws CantPublishItemInCatalogException {
         try {
-            getDatabaseDAO().catalogDatabaseOperation(DatabaseOperations.INSERT, catalogItem, developer, language, translator, skin, designer);
+            getDatabaseDAO().catalogDatabaseOperation(DatabaseOperations.INSERT, catalogItemImpl, developer, language, translator, skin, designer);
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantPublishItemInCatalogException(CantPublishItemInCatalogException.DEFAULT_MESSAGE, e, null, null);
         }
     }
 
-    private void saveCatalogItemIconFile(CatalogItem catalogItem) throws CantPublishWalletInCatalogException {
+    private void saveCatalogItemIconFile(CatalogItemImpl catalogItemImpl) throws CantPublishWalletInCatalogException {
         try {
-            saveImageIntoFile(catalogItem.getId().toString(), catalogItem.getName(), catalogItem.getIcon());
+            saveImageIntoFile(catalogItemImpl.getId().toString(), catalogItemImpl.getName(), catalogItemImpl.getIcon());
         } catch (CantPublishItemInCatalogException | CantGetWalletIconException  e) {
             throw new CantPublishWalletInCatalogException(CantPublishWalletInCatalogException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -156,20 +158,21 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
 
     /**
      * Saves the catalog Item information into database and the icon file into disk.
-     * @param catalogItem
+     * @param catalogItemImpl
      * @throws CantPublishWalletInCatalogException
      */
-    public void publishWallet (CatalogItem catalogItem) throws CantPublishWalletInCatalogException {
+    public void publishWallet (CatalogItemImpl catalogItemImpl) throws CantPublishWalletInCatalogException {
         try {
-            Developer developer = (Developer) catalogItem.getDetailedCatalogItem().getDeveloper();
-            Language language = (Language) catalogItem.getDetailedCatalogItem().getDefaultLanguage();
-            Translator translator = (Translator) catalogItem.getDetailedCatalogItem().getDefaultLanguage().getTranslator();
-            Skin skin = (Skin) catalogItem.getDetailedCatalogItem().getDefaultSkin();
-            Designer designer = skin.getDesigner();
-            this.publishItemInDB(catalogItem, developer, language, translator, skin, designer);
+            Developer developer = (Developer) catalogItemImpl.getDetailedCatalogItemImpl().getDeveloper();
+            Language language = (Language) catalogItemImpl.getDetailedCatalogItemImpl().getDefaultLanguage();
+            Translator translator = (Translator) catalogItemImpl.getDetailedCatalogItemImpl().getDefaultLanguage().getTranslator();
+            Skin skin = (Skin) catalogItemImpl.getDetailedCatalogItemImpl().getDefaultSkin();
+            Designer designer = (Designer) skin.getDesigner();
+            this.publishItemInDB(catalogItemImpl, developer, language, translator, skin, designer);
 
-            saveCatalogItemIconFile(catalogItem);
+            saveCatalogItemIconFile(catalogItemImpl);
         } catch (Exception exception) {
+            exception.printStackTrace();
             throw new CantPublishWalletInCatalogException(CantPublishWalletInCatalogException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
@@ -220,6 +223,19 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
     }
 
     /**
+     * saves the designer in DB
+     * @param developer
+     * @throws CantPublishDesignerInCatalogException
+     */
+    public void publishDeveloper(Developer developer) throws CantPublishDeveloperInCatalogException {
+        try{
+            publishItemInDB(null, developer, null, null, null, null);
+        } catch (Exception e) {
+            throw new CantPublishDeveloperInCatalogException (CantPublishDeveloperInCatalogException.DEFAULT_MESSAGE, e, null, null);
+        }
+    }
+
+    /**
      * saves the translator in DB
      * @param translator
      * @throws CantPublishTranslatorInCatalogException
@@ -233,7 +249,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
     }
 
 
-    private DetailedCatalogItem getDetailedCatalogItemFromDatabase (UUID walletId) throws CantGetCatalogItemException {
+    private DetailedCatalogItemImpl getDetailedCatalogItemFromDatabase (UUID walletId) throws CantGetCatalogItemException {
         try {
             return getDatabaseDAO().getDetailedCatalogItem(walletId);
         } catch (Exception e) {
@@ -257,15 +273,15 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      * @return
      * @throws CantGetCatalogItemException
      */
-    public DetailedCatalogItem getDetailedCatalogItem (UUID walletId) throws CantGetCatalogItemException {
+    public DetailedCatalogItemImpl getDetailedCatalogItem (UUID walletId) throws CantGetCatalogItemException {
         try{
-            DetailedCatalogItem detailedCatalogItem;
-            detailedCatalogItem = getDetailedCatalogItemFromDatabase (walletId);
-            Skin defaultSkin = (Skin) detailedCatalogItem.getDefaultSkin();
+            DetailedCatalogItemImpl detailedCatalogItemImpl;
+            detailedCatalogItemImpl = getDetailedCatalogItemFromDatabase (walletId);
+            Skin defaultSkin = (Skin) detailedCatalogItemImpl.getDefaultSkin();
             defaultSkin.setPresentationImage(getSkinContent(pluginId.toString(), defaultSkin.getSkinName()));
-            detailedCatalogItem.setDefaultSkin(defaultSkin);
+            detailedCatalogItemImpl.setDefaultSkin(defaultSkin);
 
-            return detailedCatalogItem;
+            return detailedCatalogItemImpl;
         } catch (Exception exception){
             throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, null, null);
         }
@@ -277,16 +293,16 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      * @return
      * @throws CantGetCatalogItemException
      */
-    public CatalogItem getCatalogItem(UUID walletId) throws CantGetCatalogItemException{
-        CatalogItem catalogItem;
+    public CatalogItemImpl getCatalogItem(UUID walletId) throws CantGetCatalogItemException{
+        CatalogItemImpl catalogItemImpl;
         try {
-            catalogItem = getDatabaseDAO().getCatalogItem(walletId);
-            catalogItem.setDetailedCatalogItem(getDetailedCatalogItem(walletId));
+            catalogItemImpl = getDatabaseDAO().getCatalogItem(walletId);
+            catalogItemImpl.setDetailedCatalogItemImpl(getDetailedCatalogItem(walletId));
         } catch (Exception e) {
             throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, e, null, null);
         }
 
-        return catalogItem;
+        return catalogItemImpl;
     }
 
     /**
@@ -297,9 +313,9 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
     public WalletCatalog getWalletCatalogue() throws CantGetWalletsCatalogException {
         WalletCatalog walletCatalog = new WalletCatalog();
         try {
-            List<CatalogItem> catalogItemList = getDatabaseDAO().getCatalogItems();
-            walletCatalog.setCatalogItems(catalogItemList);
-            walletCatalog.setCatalogSize(catalogItemList.size());
+            List<CatalogItemImpl> catalogItemImplList = getDatabaseDAO().getCatalogItems();
+            walletCatalog.setCatalogItems(catalogItemImplList);
+            walletCatalog.setCatalogSize(catalogItemImplList.size());
         } catch (Exception e) {
             throw new CantGetWalletsCatalogException(CantGetWalletsCatalogException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -323,7 +339,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
 
 
     /**
-     * gets the language for the specified wallet id
+     * gets the language for the specified wallsi let id
      * @param walletId
      * @return
      * @throws CantGetWalletLanguageException

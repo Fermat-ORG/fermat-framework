@@ -20,9 +20,15 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      */
     Activities type;
 
-    Map<FermatFragments, Fragment> fragments = new HashMap<FermatFragments, Fragment>();
+    /**
+     *  the String is the fragments enum value corresponding to each plugin
+     */
 
-    Fragments lastFragment;
+    Map<String, Fragment> fragments = new HashMap<String, Fragment>();
+
+    String lastFragment;
+
+    String startFragment;
 
     TitleBar titleBar;
 
@@ -37,6 +43,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     StatusBar statusBar;
 
     Map<WizardTypes, Wizard> wizards;
+
+    Activities backActivity;
 
     public Activity() {
     }
@@ -53,8 +61,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.type = type;
     }
 
-    public void addFragment(FermatFragments fermatFragments, Fragment fragment) {
-        fragments.put(fermatFragments, fragment);
+    public void addFragment(String fragmentsType, Fragment fragment) {
+        fragments.put(fragmentsType, fragment);
     }
 
     public void setTitleBar(TitleBar titleBar) {
@@ -75,6 +83,19 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setStatusBar(StatusBar statusBar) {
         this.statusBar = statusBar;
+    }
+
+
+    public void setLastFragment(String lastFragment) {
+        this.lastFragment = lastFragment;
+    }
+
+    public void setStartFragment(String startFragment) {
+        this.startFragment = startFragment;
+    }
+
+    public void setBackActivity(Activities activity){
+        this.backActivity=activity;
     }
 
     /**
@@ -114,22 +135,30 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         return statusBar;
     }
 
+    @Override
+    public Activities getBackActivity() {
+        return this.backActivity;
+    }
+
     // TODO VER COMO HACER ESTO
     @Override
-    public Map<FermatFragments, Fragment> getFragments() {
+    public Map<String, Fragment> getFragments() {
         return fragments;
     }
 
     @Override
     public Fragment getLastFragment() {
+        if(lastFragment==null){
+            lastFragment = startFragment;
+        }
         return fragments.get(lastFragment);
     }
 
     @Override
-    public Fragment getFragment(Fragments fragment) {
-        Iterator<Map.Entry<FermatFragments, Fragment>> eSubApp = fragments.entrySet().iterator();
+    public Fragment getFragment(String fragment) {
+        Iterator<Map.Entry<String, Fragment>> eSubApp = fragments.entrySet().iterator();
         while (eSubApp.hasNext()) {
-            Map.Entry<FermatFragments, Fragment> fragmentEntryEntry = eSubApp.next();
+            Map.Entry<String, Fragment> fragmentEntryEntry = eSubApp.next();
             Fragment subApp = (Fragment) fragmentEntryEntry.getValue();
             if (subApp.getType().equals(fragment)) {
                 lastFragment = fragment;

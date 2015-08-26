@@ -49,8 +49,8 @@
                 <package>com.sun.javafx.iio.ios</package>
                 <package>com.sun.javafx.iio.jpeg</package>
                 <package>com.sun.javafx.iio.png</package>
-                <package>com.sun.javafx.image</package>
-                <package>com.sun.javafx.image.impl</package>
+                <package>com.sun.javafx.imageMiddleware</package>
+                <package>com.sun.javafx.imageMiddleware.impl</package>
                 <package>com.sun.javafx.jmx</package>
                 <package>com.sun.javafx.logging</package>
                 <package>com.sun.javafx.media</package>
@@ -106,7 +106,7 @@
                 <package>com.sun.pisces</package>
                 <package>com.sun.prism</package>
                 <package>com.sun.prism.d3d</package>
-                <package>com.sun.prism.image</package>
+                <package>com.sun.prism.imageMiddleware</package>
                 <package>com.sun.prism.impl</package>
                 <package>com.sun.prism.impl.packrect</package>
                 <package>com.sun.prism.impl.paint</package>
@@ -167,7 +167,7 @@
                 <package>javafx.scene.control</package>
                 <package>javafx.scene.control.cell</package>
                 <package>javafx.scene.effect</package>
-                <package>javafx.scene.image</package>
+                <package>javafx.scene.imageMiddleware</package>
                 <package>javafx.scene.input</package>
                 <package>javafx.scene.layout</package>
                 <package>javafx.scene.media</package>

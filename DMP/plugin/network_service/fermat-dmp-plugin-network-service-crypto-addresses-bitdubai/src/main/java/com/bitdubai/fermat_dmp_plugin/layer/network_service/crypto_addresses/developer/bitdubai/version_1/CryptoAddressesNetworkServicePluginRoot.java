@@ -3,27 +3,24 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.enums.AddressExchangeState;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantAcceptAddressExchangeException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCryptoAddessException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCurrentStateException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.enums.ContactRequestState;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantAcceptContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantConfirmContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantCreateContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantDenyContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestsListException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRegisterCompatibleListException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRejectAddressExchangeException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantStartAddressExchangeException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.PendingContactRequest;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.RequestHandlerWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
@@ -57,6 +54,36 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
      */
     UUID pluginId;
 
+
+    @Override
+    public void createContactRequest(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressToSend, String intraUserToContactPublicKey, String requesterIntraUserPublicKey, String requesterIntraUserName, String requesterIntraUserProfileImage) throws CantCreateContactRequestException {
+
+    }
+
+    @Override
+    public void acceptContactRequest(UUID requestId, String walletAcceptingTheRequestPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressReceived, String intraUserAcceptingTheRequestPublicKey) throws CantAcceptContactRequestException {
+
+    }
+
+    @Override
+    public void denyContactRequest(UUID requestId) throws CantDenyContactRequestException {
+
+    }
+
+    @Override
+    public List<PendingContactRequest> listPendingRequests(String intraUserLoggedInPublicKey, String walletPublicKey, ContactRequestState contactRequestState) throws CantGetPendingContactRequestsListException {
+        return null;
+    }
+
+    @Override
+    public PendingContactRequest getPendingRequest(UUID requestId) throws CantGetPendingContactRequestException {
+        return null;
+    }
+
+    @Override
+    public void confirmContactRequest(UUID requestId) throws CantConfirmContactRequestException {
+
+    }
 
     /**
      * Service Interface implementation.
@@ -160,47 +187,4 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
     }
 
 
-
-    /*
-     * CryptoAddressesManager interface method implementation
-     */
-    @Override
-    public void exchangeAddressesAndAddContact(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressSent, String intraUserToContactPublicKey, String intraUserAskingAddressPublicKey, String intraUserAskingAddressName, byte[] intraUserAskingAddressProfileImage) throws CantStartAddressExchangeException {
-
-    }
-
-    @Override
-    public void exchangeAddresses(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressSent, String intraUserToContactPublicKey, String intraUserAskingAddressName) {
-
-    }
-
-    @Override
-    public void acceptAddressExchange(UUID exchangeId, String walletAcceptingTheRequestPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressSent, String intraUserAcceptingTheRequestPublicKey, String intraUserToInformAcceptancePublicKey) throws CantAcceptAddressExchangeException {
-
-    }
-
-    @Override
-    public void rejectAddressExchange(UUID exchangeId, String walletThatAskedTheExchangePublicKey, String intraUserThatSentTheRequestPublicKey, String intraUserRejectingTheRequest) throws CantRejectAddressExchangeException {
-
-    }
-
-    @Override
-    public void setCompatibleWallets(UUID requestId, List<RequestHandlerWallet> compatibleWallets) throws CantRegisterCompatibleListException {
-
-    }
-
-    @Override
-    public List<PendingContactRequest> getPendingRequests(String intraUserLoggedInPublicKey) throws CantGetPendingContactRequestsListException {
-        return null;
-    }
-
-    @Override
-    public AddressExchangeState getCurrentExchangeState(String walletPublicKey, String intraUserAskingAddressPublicKey, String intraUserToContactPublicKey) throws CantGetCurrentStateException {
-        return null;
-    }
-
-    @Override
-    public CryptoAddress getReceivedAddress(String walletPublicKey, String intraUserAskingAddressPublicKey, String intraUserToContactPublicKey) throws CantGetCryptoAddessException {
-        return null;
-    }
 }

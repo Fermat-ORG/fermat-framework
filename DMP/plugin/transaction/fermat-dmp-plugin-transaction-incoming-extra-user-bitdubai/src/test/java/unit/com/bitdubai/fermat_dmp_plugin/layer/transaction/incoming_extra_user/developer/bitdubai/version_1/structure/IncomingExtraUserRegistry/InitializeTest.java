@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
@@ -82,7 +83,7 @@ public class InitializeTest {
     }
 
     @Test
-    public void Initialize_DatabaseNotFoundAndCreateDatabaseFailed_MethodSuccesfullyInvoked() throws Exception{
+    public void Initialize_DatabaseNotFoundAndCreateDatabaseFailed_ThrowsCantInitializeCryptoRegistryException() throws Exception{
         when(mockPluginDatabaseSystem.openDatabase(testId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE)).thenThrow(new DatabaseNotFoundException("MOCK", null, null, null));
         when(mockPluginDatabaseSystem.createDatabase(testId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE)).thenThrow(new CantCreateDatabaseException("MOCK", null, null, null));
         testRegistry = new IncomingExtraUserRegistry();
@@ -91,5 +92,17 @@ public class InitializeTest {
         catchException(testRegistry).initialize(testId);
         assertThat(caughtException()).isInstanceOf(CantInitializeCryptoRegistryException.class);
     }
+
+    @Test
+    public void Initialize_CantOpenDatabase_ThrowsCantInitializeCryptoRegistryException() throws Exception{
+        when(mockPluginDatabaseSystem.openDatabase(testId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE)).thenThrow(new CantOpenDatabaseException("MOCK", null, null, null));
+        testRegistry = new IncomingExtraUserRegistry();
+        testRegistry.setErrorManager(mockErrorManager);
+        testRegistry.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        catchException(testRegistry).initialize(testId);
+        assertThat(caughtException()).isInstanceOf(CantInitializeCryptoRegistryException.class);
+    }
+
+    
 
 }

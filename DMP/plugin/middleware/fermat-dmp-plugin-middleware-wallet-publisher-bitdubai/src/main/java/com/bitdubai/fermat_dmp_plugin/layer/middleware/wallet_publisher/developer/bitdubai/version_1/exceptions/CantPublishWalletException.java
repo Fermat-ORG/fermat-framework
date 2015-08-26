@@ -10,7 +10,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develop
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantPublishComponetException</code> is
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantPublishComponentMiddlewareException</code> is
  * throw when error occurred publishing a wallet
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/08/15.

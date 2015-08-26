@@ -15,7 +15,6 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.de
 import junit.framework.TestCase;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -35,10 +34,13 @@ public class GetWalletAddressBookRegistryTest extends TestCase {
     PluginDatabaseSystem pluginDatabaseSystem;
 
     @Mock
-    Database database;
+    DatabaseTableFactory mockTable;
 
     @Mock
-    DatabaseTableFactory table;
+    Database mockDatabase;
+
+    @Mock
+    DatabaseFactory mockDatabaseFactory;
 
     UUID pluginId;
 
@@ -55,7 +57,7 @@ public class GetWalletAddressBookRegistryTest extends TestCase {
 
     @Test
     public void testGetWalletAddressBookRegistryTest_NotNull() throws Exception {
-        when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(database);
+        when(pluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         WalletAddressBookRegistry walletAddressBookRegistry = walletAddressBookCryptoModulePluginRoot.getWalletAddressBookRegistry();
         assertNotNull(walletAddressBookRegistry);
     }
@@ -67,14 +69,12 @@ public class GetWalletAddressBookRegistryTest extends TestCase {
         walletAddressBookCryptoModulePluginRoot.getWalletAddressBookRegistry();
     }
 
-    @Ignore
+    @Test
     public void testGetWalletAddressBookRegistryTest_DatabaseNotFoundException() throws Exception {
-         /*
-         * TODO This test should pass but there is a wrong design decision that makes a cast of the Database interface into the DatabaseFactory; we should really look into that
-         */
-        when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenThrow(new DatabaseNotFoundException());
-        when(pluginDatabaseSystem.createDatabase(pluginId, pluginId.toString())).thenReturn(database);
-        when(((DatabaseFactory) database).newTableFactory(pluginId, anyString())).thenReturn(table);
+        when(pluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenThrow(new DatabaseNotFoundException());
+        when(pluginDatabaseSystem.createDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
+        when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
+        when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTable);
 
         WalletAddressBookRegistry walletAddressBookRegistry = walletAddressBookCryptoModulePluginRoot.getWalletAddressBookRegistry();
         assertNotNull(walletAddressBookRegistry);

@@ -1,9 +1,11 @@
 package com.bitdubai.android_core.app.common.version_1.adapters;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
+
 import java.util.List;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
 /**
  * Created by Matias on 23/07/2015.
  */

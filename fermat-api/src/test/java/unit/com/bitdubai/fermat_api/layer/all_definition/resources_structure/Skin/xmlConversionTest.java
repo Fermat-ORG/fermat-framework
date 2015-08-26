@@ -1,6 +1,20 @@
 package unit.com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 
+
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -10,125 +24,162 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+
 
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-/*
+
 import org.junit.Test;
 
-import java.io.StringReader;
-import java.util.Map;
-import java.util.UUID;
-
-import ae.com.sun.xml.bind.v2.model.annotation.RuntimeInlineAnnotationReader;
-import ae.com.sun.xml.bind.v2.model.annotation.XmlSchemaMine;
-import ae.javax.xml.bind.JAXBContext;
-import ae.javax.xml.bind.Marshaller;
-import ae.javax.xml.bind.Unmarshaller;*/
 
 /**
- * Created by lnacosta on 2015.07.24..
+ * Created by rodrigo on 2015.07.24..
  */
 public class xmlConversionTest extends TestCase {
 
-
     public void testcreateResult() {
-        Map<String,Resource> lstRecursosPortrait = new HashMap<String,Resource>();
-        lstRecursosPortrait.put("person1", new Resource(UUID.randomUUID(), "person1", "person1.png", ResourceType.IMAGE, ResourceDensity.MDPI));
 
-        Map<String,Resource> lstRecursosLandscape = new HashMap<String,Resource>();
-        lstRecursosLandscape.put("person1", new Resource(UUID.randomUUID(), "person1", "person1.png", ResourceType.IMAGE, ResourceDensity.MDPI));
+//        RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
+//        runtimeSubApp.setType(SubApps.CWP_SHELL);
+//        TitleBar runtimeTitleBar;
+//        SideMenu runtimeSideMenu;
+//        MainMenu runtimeMainMenu;
+//        MenuItem runtimeMenuItem;
+//        TabStrip runtimeTabStrip;
+//        StatusBar statusBar;
+//
+//        Tab runtimeTab;
+//
+//
+//        //wallet factory app
+//        runtimeSubApp = new RuntimeSubApp();
+//        runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
+//        runtimeApp.addSubApp(runtimeSubApp);
+//        listSubApp.put(SubApps.CWP_WALLET_FACTORY, runtimeSubApp);
+//
+//        runtimeActivity = new Activity();
+//        runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
+//        runtimeActivity.setColor("#b46a54");
+//        //runtimeActivity.setStatusBarColor("");
+//
+//        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+//        statusBar.setColor("#b46a54");
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setLabel("Wallet Factory");
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//        runtimeTabStrip = new TabStrip();
+//        runtimeTabStrip.setTabsColor("#d07b62");
+//        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+//        runtimeTabStrip.setTabsIndicateColor("#b46a54");
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Developer Projects");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_MANAGER);
+//
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Wallet Projects");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_PROJECTS);
+//
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("EditMode");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_EDIT_MODE);
+//
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeActivity.setTabStrip(runtimeTabStrip);
+//        runtimeSubApp.addActivity(runtimeActivity);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MANAGER);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_MANAGER, runtimeFragment);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_PROJECTS);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_PROJECTS, runtimeFragment);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_EDIT_MODE);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_EDIT_MODE, runtimeFragment);
+//
+//    /* Adding WizardTypes */
+//        Wizard runtimeWizard = new Wizard();
+//        // step 1 wizard create from scratch
+//        WizardPage runtimeWizardPage = new WizardPage();
+//        runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_FACTORY_CREATE_STEP_1);
+//        runtimeWizard.addPage(runtimeWizardPage);
+//        //step 2 wizard
+//        runtimeWizardPage = new WizardPage();
+//        runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_FACTORY_CREATE_STEP_2);
+//        runtimeWizard.addPage(runtimeWizardPage);
+//            /* Adding wizard */
+//        runtimeActivity.addWizard(WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT, runtimeWizard);
+//
+//        /**
+//         *  Edit Activity
+//         */
+//        runtimeActivity = new Activity();
+//        runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_EDIT_WALLET);
+//        runtimeActivity.setColor("#b46a54");
+//
+//        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+//        statusBar.setColor("#b46a54");
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setLabel("Edit Wallet");
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//        runtimeTabStrip = new TabStrip();
+//
+//        runtimeTabStrip.setTabsColor("#8bba9e");
+//
+//        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+//
+//        runtimeTabStrip.setTabsIndicateColor("#72af9c");
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Balance");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Contacts");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeTabStrip.setDividerColor(0x72af9c);
+//        //runtimeTabStrip.setBackgroundColor("#72af9c");
+//        runtimeActivity.setTabStrip(runtimeTabStrip);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE, runtimeFragment);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS, runtimeFragment);
+//
+//
+//        runtimeSubApp.addActivity(runtimeActivity);
 
-        Map<String,Layout> lstLayoutsPortrait = new HashMap<String,Layout>();
-        lstLayoutsPortrait.put("wallets_bitcoin_fragment_balance", new Layout(UUID.randomUUID(), "wallets_bitcoin_fragment_balance.xml"));
-        lstLayoutsPortrait.put("wallets_bitcoin_fragment_transactions", new Layout(UUID.randomUUID(), "wallets_bitcoin_fragment_transactions.xml"));
-
-        Map<String,Layout> lstLayoutsLandscape = new HashMap<String,Layout>();
-        lstLayoutsLandscape.put("wallets_bitcoin_fragment_balance", new Layout(UUID.randomUUID(), "wallets_bitcoin_fragment_balance.xml"));
-        lstLayoutsLandscape.put("wallets_bitcoin_fragment_transactions", new Layout(UUID.randomUUID(), "wallets_bitcoin_fragment_transactions.xml"));
-
-        Version minVersion = new Version(1,0,0);
-
-        Version maxVersion = new Version(1,0,0);
-
-        VersionCompatibility compatibility = null;
-        try {
-
-            compatibility = new VersionCompatibility(minVersion,maxVersion);
-
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        }
 
 
-        Skin skin = new Skin(UUID.randomUUID(),"basic_wallet_default",new Version(1,1,1),compatibility, ScreenSize.MEDIUM,lstRecursosPortrait,lstRecursosLandscape,lstLayoutsPortrait,lstLayoutsLandscape);
-
-        String xml = XMLParser.parseObject(skin);
-
-        System.out.println(xml);
+        /**End Wallet Factory*/
     }
 
-    /*    @Test
-    public void testXmlToClassStructureAndInverseConversion() {
-        try {
-            StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append("<skin id=\"e2864045-d0bb-4254-88a0-4ce53b99fb34\">");
-            stringBuffer.append("<name>skin1</name>");
-            stringBuffer.append(" <resources>");
-            stringBuffer.append("<resource id=\"31c5724c-876e-4a5b-8bcd-62d63ad033e4\" resourceType=\"layout\">");
-            stringBuffer.append("<name>main</name>");
-            stringBuffer.append("<fileName>main.xml</fileName>");
-            stringBuffer.append("</resource>");
-            stringBuffer.append("<resource id=\"31c5724c-876e-4a5b-8bcd-62d63ad033e5\" resourceType=\"layout\">");
-            stringBuffer.append("<name>main1</name>");
-            stringBuffer.append("<fileName>main1.xml</fileName>");
-            stringBuffer.append("</resource>");
-            stringBuffer.append("<resource id=\"31c5724c-876e-4a5b-8bcd-62d63ad033e3\" resourceType=\"layout\">");
-            stringBuffer.append("<name>main2</name>");
-            stringBuffer.append("<fileName>main2.xml</fileName>");
-            stringBuffer.append("</resource>");
-            stringBuffer.append("</resources>");
-            stringBuffer.append("<version>1.0.0</version>");
-            stringBuffer.append("</skin>");
-
-            StringReader reader = new StringReader(stringBuffer.toString());
-
-            RuntimeInlineAnnotationReader.cachePackageAnnotation(Skin.class.getPackage(), new XmlSchemaMine(""));
-
-            JAXBContext jaxbContext = JAXBContext.newInstance(Skin.class);
-
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
-            Skin skin = (Skin) jaxbUnmarshaller.unmarshal(reader);
-
-            StringBuilder skinBuilder = new StringBuilder();
-            skinBuilder.append("I'm a skin, these are my attributes: \n");
-            skinBuilder.append("\nID: "+skin.getId());
-            skinBuilder.append("\nName: "+skin.getName());
-            skinBuilder.append("\nVersion: "+skin.getVersion());
-            skinBuilder.append("\n\nThese are my resources: \n\n");
-            for (Map.Entry<UUID, FermatResource> resource : skin.getResources().entrySet()) {
-                skinBuilder.append("  Resource: ID: " + resource.getValue().getId() + "\n");
-                skinBuilder.append("            Name: " + resource.getValue().getName() + "\n");
-                skinBuilder.append("            FileName: " + resource.getValue().getFileName() + "\n");
-                skinBuilder.append("            ResourceType: " + resource.getValue().getResourceType() + "\n");
-            }
-            System.out.println(skinBuilder.toString());
-
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
-
-            jaxbMarshaller.marshal(skin, System.out);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 }

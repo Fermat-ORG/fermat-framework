@@ -30,11 +30,24 @@ public interface IntraUser {
     public String getAddress();
 
     /**
+     *
+     * @return
+     */
+    public String getPublicKey();
+
+    /**
+     *
+     * @return
+     */
+    public byte[]  getProfileImage();
+
+    /**
      * Return the userName
      *
      * @return String
      */
-    public String getUserName ();
+    public String getName ();
+
 
     /**
      * Return the lastLocation

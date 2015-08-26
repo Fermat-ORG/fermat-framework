@@ -18,5 +18,12 @@ public interface ExtraUserManager {
 
     public Actor getActor(UUID id);
 
+    public void setPhoto(UUID id, byte[] photo);
+
+    public byte[] getPhoto(UUID id);
+
     public Actor createActor(String userName);
+
+    public Actor createActor(String userName, byte[] photo);
+
 }

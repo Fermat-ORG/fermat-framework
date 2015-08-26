@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetContactProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
@@ -32,7 +33,7 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     /**
      * Represent the id of the wallet
      */
-    UUID walletId;
+    String walletPublicKey;
 
     /**
      * Represent the actorId
@@ -49,6 +50,7 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
      */
     Actors actorType;
 
+    private byte[] photo = null;
 
     /**
      * Constructor with parameters
@@ -66,21 +68,31 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     /**
      * Constructor with parameters
      *
-     * @param contactId contact's id
-     * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
      * @param actorId actor's id
+     * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
+     * @param contactId contact's id
      * @param actorName actor's id
      * @param actorType actor's type
-     * @param walletId wallet's id
+     * @param walletPublicKey wallet's public Key
      */
-    public WalletContactsMiddlewareRecord(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, UUID walletId) {
+    public WalletContactsMiddlewareRecord(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, String walletPublicKey) {
         this.actorId = actorId;
         this.actorName = actorName;
         this.actorType = actorType;
         this.contactId = contactId;
         this.receivedCryptoAddress = receivedCryptoAddress;
-        this.walletId = walletId;
+        this.walletPublicKey = walletPublicKey;
+    }
 
+    // TODO: IMPLEMENT THIS METHOD
+    @Override
+    public void setPhoto(byte[] photo){
+        this.photo = photo;
+    }
+
+    @Override
+    public byte[] getContactProfileImage() {
+        return this.photo;
     }
 
     /**
@@ -94,13 +106,13 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     }
 
     /**
-     * Return the walletId
+     * Return the walletPublicKey
      *
-     * @return UUID
+     * @return String
      */
     @Override
-    public UUID getWalletId() {
-        return walletId;
+    public String getWalletPublicKey() {
+        return walletPublicKey;
     }
 
     /**

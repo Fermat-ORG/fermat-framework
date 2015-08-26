@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.*;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatResource;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -32,6 +33,8 @@ public class Resource implements Serializable {
 
     private ResourceDensity resourceDensity;
 
+    File resourceFile;
+
 
     /**
      * Resource Class Constructors
@@ -39,12 +42,14 @@ public class Resource implements Serializable {
     public Resource() {
     }
 
-    public Resource(String name, String fileName, ResourceType resourceType) {
+    public Resource(String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.fileName = fileName;
         this.resourceType = resourceType;
+        this.resourceDensity = resourceDensity;
     }
+
 
     public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
         this.id = id;
@@ -53,6 +58,8 @@ public class Resource implements Serializable {
         this.resourceType = resourceType;
         this.resourceDensity=resourceDensity;
     }
+
+
 
     /**
      * Resource Class getters
@@ -68,7 +75,6 @@ public class Resource implements Serializable {
     public String getFileName() {
         return fileName;
     }
-
 
     public ResourceType getResourceType() {
         return resourceType;
@@ -91,5 +97,21 @@ public class Resource implements Serializable {
 
     public void setResourceType(ResourceType resourceType) {
         this.resourceType = resourceType;
+    }
+
+    public ResourceDensity getResourceDensity() {
+        return resourceDensity;
+    }
+
+    public void setResourceDensity(ResourceDensity resourceDensity) {
+        this.resourceDensity = resourceDensity;
+    }
+
+    public File getResourceFile() {
+        return resourceFile;
+    }
+
+    public void setResourceFile(File resourceFile) {
+        this.resourceFile = resourceFile;
     }
 }

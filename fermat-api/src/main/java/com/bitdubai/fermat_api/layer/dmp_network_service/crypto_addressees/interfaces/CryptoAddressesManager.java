@@ -2,137 +2,97 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.inte
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.enums.AddressExchangeState;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantAcceptAddressExchangeException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCryptoAddessException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetCurrentStateException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.enums.ContactRequestState;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantAcceptContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantConfirmContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantCreateContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantDenyContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestsListException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRegisterCompatibleListException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantRejectAddressExchangeException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantStartAddressExchangeException;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.CryptoAddressesManager</code>
- * provide the methods to manage the exchange of crypto addresses between wallets.
+ * provide the methods to negotiate contact relationships.
+ *
+ * Created by Ezequiel Postan
+ * Modified by Leon Acosta - (laion.cj91@gmail.com) on 14/08/15.
  */
 public interface CryptoAddressesManager {
 
     /**
-     * The method <code>exchangeAddressesAndAddContact</code> send a request of exchange of addresses to the intra
-     * user to add as contact
+     * The method <code>createContactRequest</code> sends a contact request to an intra-user actor
      *
-     * @param walletPublicKey                    The public key of the wallet sending the request
-     * @param referenceWallet                    The type of reference wallet the wallet sending the request is associated to
-     * @param cryptoAddressSent                  The crypto address sent by the sender of the request
-     * @param intraUserToContactPublicKey        The public key of the intra user to ask for an addresses exchange
-     * @param intraUserAskingAddressPublicKey    The public key of the intra user sending the request
-     * @param intraUserAskingAddressName         The name of the intra user sending the request
-     * @param intraUserAskingAddressProfileImage The profile image of the intra user sending the request
-     * @throws CantStartAddressExchangeException
+     * @param walletPublicKey                wallet which is sending the request
+     * @param referenceWallet                type of reference wallet that is sending the request
+     * @param cryptoAddressToSend            a cryptoaddress generated that is sended to the actor
+     * @param intraUserToContactPublicKey    the intra-user with whom is wanted to be contacts
+     * @param requesterIntraUserPublicKey    the intra-user public key that is sending the request
+     * @param requesterIntraUserName         the intra-user name that is sending the request
+     * @param requesterIntraUserProfileImage the intra-user profile image that is sending the request
+     * @throws CantCreateContactRequestException
      */
-    public void exchangeAddressesAndAddContact(String walletPublicKey,
-                                               ReferenceWallet referenceWallet,
-                                               CryptoAddress cryptoAddressSent,
-                                               String intraUserToContactPublicKey,
-                                               String intraUserAskingAddressPublicKey,
-                                               String intraUserAskingAddressName,
-                                               byte[] intraUserAskingAddressProfileImage) throws CantStartAddressExchangeException;
-
-
+    void createContactRequest(String walletPublicKey,
+                              ReferenceWallet referenceWallet,
+                              CryptoAddress cryptoAddressToSend,
+                              String intraUserToContactPublicKey,
+                              String requesterIntraUserPublicKey,
+                              String requesterIntraUserName,
+                              String requesterIntraUserProfileImage) throws CantCreateContactRequestException;
 
     /**
-     * The method <code>exchangeAddresses</code> send a request of exchange of addresses to the intra
-     * user to add as contact
+     * The method <code>acceptContactRequest</code> is used to accept a contact request
      *
-     * @param walletPublicKey                 The public key of the wallet sending the request
-     * @param referenceWallet                 The type of reference wallet the wallet sending the request is associated to
-     * @param cryptoAddressSent               The crypto address sent by the sender of the request
-     * @param intraUserToContactPublicKey     The public key of the intra user to ask for an addresses exchange
-     * @param intraUserAskingAddressPublicKey The public key of the intra user sending the request
-     * @throws CantStartAddressExchangeException
+     * @param requestId                             the id of the request sended before
+     * @param walletAcceptingTheRequestPublicKey    wallet which is accepting the request
+     * @param referenceWallet                       type of reference wallet which is accepting the request
+     * @param cryptoAddressReceived                 a cryptoaddress that is received
+     * @param intraUserAcceptingTheRequestPublicKey the intra-user public key that is accepting the request
+     * @throws CantAcceptContactRequestException
      */
-    public void exchangeAddresses(String walletPublicKey,
-                                  ReferenceWallet referenceWallet,
-                                  CryptoAddress cryptoAddressSent,
-                                  String intraUserToContactPublicKey,
-                                  String intraUserAskingAddressPublicKey) throws CantStartAddressExchangeException;
-
+    void acceptContactRequest(UUID requestId,
+                              String walletAcceptingTheRequestPublicKey,
+                              ReferenceWallet referenceWallet,
+                              CryptoAddress cryptoAddressReceived,
+                              String intraUserAcceptingTheRequestPublicKey) throws CantAcceptContactRequestException;
 
     /**
-     * The method <code>acceptAddressExchange</code> send an address accepting a contact request
+     * The method <code>denyContactRequest</code> is used to deny a contact request
      *
-     * @param exchangeId                            The identifier of the exchange generated by the sender
-     * @param walletAcceptingTheRequestPublicKey    The public key of the wallet answering the request
-     * @param referenceWallet                       The type of reference wallet the wallet answering the request is associated to
-     * @param cryptoAddressSent                     The crypto address sent by the intra user accepting the request
-     * @param intraUserAcceptingTheRequestPublicKey The public key of the intra user accepting the exchange
-     * @param intraUserToInformAcceptancePublicKey  The public key of the intra user that sent the request
-     * @throws CantAcceptAddressExchangeException
+     * @param requestId the id of the request denied
+     * @throws CantDenyContactRequestException
      */
-    public void acceptAddressExchange(UUID exchangeId,
-                                      String walletAcceptingTheRequestPublicKey,
-                                      ReferenceWallet referenceWallet,
-                                      CryptoAddress cryptoAddressSent,
-                                      String intraUserAcceptingTheRequestPublicKey,
-                                      String intraUserToInformAcceptancePublicKey) throws CantAcceptAddressExchangeException;
+    void denyContactRequest(UUID requestId) throws CantDenyContactRequestException;
 
     /**
-     * The method <code>rejectAddressExchange</code> send a rejection message to the sender of a contact request
-     *
-     * @param exchangeId                           The identifier of the exchange generated by the sender
-     * @param walletThatAskedTheExchangePublicKey  The public key of the wallet that sent the request
-     * @param intraUserThatSentTheRequestPublicKey The public key of the intra user that sent the request
-     * @param intraUserRejectingTheRequest         The public key of the intra user rejecting the request
-     * @throws CantRejectAddressExchangeException
-     */
-    public void rejectAddressExchange(UUID exchangeId,
-                                      String walletThatAskedTheExchangePublicKey,
-                                      String intraUserThatSentTheRequestPublicKey,
-                                      String intraUserRejectingTheRequest) throws CantRejectAddressExchangeException;
-
-    /**
-     * The method <code>setCompatibleWallets</code> registers in the plugin database the information
-     * of a the compatible wallets for a particular request.
-     *
-     * @param requestId         The identifier of the request.
-     * @param compatibleWallets The list of compatible wallets of the request identified with the parameter requsetId
-     * @throws CantRegisterCompatibleListException
-     */
-    public void setCompatibleWallets(UUID requestId, List<RequestHandlerWallet> compatibleWallets) throws CantRegisterCompatibleListException;
-
-    /**
-     * The method <code>getPendingRequests</code> return the list of requests
+     * The method <code>listPendingRequests</code> return the list of requests
      *
      * @param intraUserLoggedInPublicKey The public key of the intra user asking for the pending requests directed to him
+     * @param walletPublicKey            is the public Key of the wallet IN where the user is working
+     * @param contactRequestState        is the State of the contact requests that you want to list, if is null, the return all.
      * @return a list a request that can be handled by the intra user
      * @throws CantGetPendingContactRequestsListException
      */
-    public List<PendingContactRequest> getPendingRequests(String intraUserLoggedInPublicKey) throws CantGetPendingContactRequestsListException;
+    List<PendingContactRequest> listPendingRequests(String intraUserLoggedInPublicKey,
+                                                    String walletPublicKey,
+                                                    ContactRequestState contactRequestState) throws CantGetPendingContactRequestsListException;
 
     /**
-     * The method <code>getCurrentExchangeState</code> returns the state of a crypto addresses exchange
-     * request
+     * The method <code>getPendingRequest</code> return the PendingContactRequest that is needed to work with
      *
-     * @param walletPublicKey                 The public key of the wallet sending the request
-     * @param intraUserAskingAddressPublicKey The public key of the intra user we used to send the request
-     * @param intraUserToContactPublicKey     The public key of the contact we sent a request
-     * @return the state of the address exchange
-     * @throws CantGetCurrentStateException
+     * @param requestId the id of the request to retrieve.
+     * @return a PendingContactRequest with the request information
+     * @throws CantGetPendingContactRequestException
      */
-    public AddressExchangeState getCurrentExchangeState(String walletPublicKey, String intraUserAskingAddressPublicKey, String intraUserToContactPublicKey) throws CantGetCurrentStateException;
+    PendingContactRequest getPendingRequest(UUID requestId) throws CantGetPendingContactRequestException;
 
     /**
-     * The method <code>getReceivedAddress</code> is used to consult the crypto address received in
-     * an exchange
+     * The method <code>confirmContactRequest</code> deletes the finalized requests
      *
-     * @param walletPublicKey                 The public key of the wallet sending the request
-     * @param intraUserAskingAddressPublicKey The public key of the intra user we used to send the request
-     * @param intraUserToContactPublicKey     The public key of the contact we sent a request
-     * @return the crypto address received in the exchange
-     * @throws CantGetCryptoAddessException
+     * @param requestId the id of the request to delete.
+     * @throws CantConfirmContactRequestException
      */
-    public CryptoAddress getReceivedAddress(String walletPublicKey, String intraUserAskingAddressPublicKey, String intraUserToContactPublicKey) throws CantGetCryptoAddessException;
+    void confirmContactRequest(UUID requestId) throws CantConfirmContactRequestException;
 }

@@ -11,7 +11,7 @@ public class WalletAddressBookCryptoModuleDatabaseConstants {
 
     public static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME = "wallet_crypto_address_book_registry";
     public static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID = "id";
-    public static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID = "wallet_id";
+    public static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_PUBLIC_KEY = "wallet_public_key";
     public static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE = "wallet_type";
     public static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS = "crypto_address";
     public static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY = "crypto_currency";

@@ -22,6 +22,9 @@
     <!-- Permission to read Google Services -->
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
+    <!-- Permission to boot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <!-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -56,13 +59,20 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.bitdubai.sub_app.wallet_factory.fragment.version_1.activity.FactoryActivity"
-            android:label="Factory" >
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
-        </activity>
+        <!--
+        <receiver android:name="com.bitdubai.android_core.app.BootupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        -->
+
+        <!-- Falta darle el permiso a alguien para que pueda o no apagar el servicio este -->
+        <service android:name="com.bitdubai.android_core.app.LoaderService"
+            android:enabled="true" />
+
+
         <activity
             android:name="com.bitdubai.android_core.app.SubAppActivity"
             android:label="Fermat" >
@@ -70,61 +80,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.StartActivity" />
         </activity>
-        <activity android:name="com.bitdubai.android_core.app.WalletFactoryActivity"
+        <activity android:name="com.bitdubai.android_core.app.EditableWalletActivity"
             android:label="Factory">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity"></meta-data>
         </activity>
         <activity
-            android:name="com.bitdubai.sub_app.wallet_publisher.activity.PublisherActivity"
-            android:label="Publisher" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
-        </activity>
-        <activity
-            android:name="com.bitdubai.sub_app.wallet_publisher.activity.ShopsActivity"
-            android:label="Stores" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.sub_app.wallet_publisher.activity.PublisherActivity" />
-        </activity>
-        <activity
-            android:name="com.bitdubai.sub_app.wallet_publisher.activity.ShopActivity"
-            android:label="Shop" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.sub_app.wallet_publisher.activity.ShopsActivity" />
-        </activity>
-        <activity
-            android:name="com.bitdubai.android_core.app.FragmentActivity"
-            android:label="Desktop" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.SubAppActivity" />
-        </activity>
-
-        <activity
             android:name="com.bitdubai.android_core.app.WalletActivity"
             android:label="Wallet" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity" />
-        </activity>
-
-        <activity
-            android:name="com.bitdubai.android_core.app.subapp.shop.version_1.activity.ShopActivity"
-            android:label="Wallet Store" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
-        </activity>
-        <activity android:name="com.bitdubai.sub_app.wallet_factory.fragment.version_3.activity.FactoryActivity"
-            android:label="Wallet Factory">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
         </activity>
 
     </application>

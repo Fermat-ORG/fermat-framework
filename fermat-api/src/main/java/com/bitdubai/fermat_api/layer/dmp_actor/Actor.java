@@ -14,13 +14,17 @@ import java.util.UUID;
 
 public interface Actor {
 
-    public void setName(String name);
+    UUID getId();
 
-    public void setId(UUID id);
+    String getName();
 
-    public String getName();
+    Actors getType();
 
-    public UUID getId();
+    byte[] getPhoto();
 
-    public Actors getType();
+    void setId(UUID id);
+
+    void setName(String name);
+
+    void setPhoto(byte[] photo);
 }

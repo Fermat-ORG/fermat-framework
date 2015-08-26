@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
@@ -21,8 +21,8 @@ import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.v
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -41,7 +41,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.LoginFa
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by ciencias on 22.01.15.
@@ -105,21 +104,42 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
     /**
      * DeviceUserManager Interface implementation.
      */
+    // TODO MODIFY WALLET MANAGER MODULE TOO
+    // TODO DELETE AFTER CREATING CORRECTLY A DEVICE USER
+    String userPublicKey = "a423701d8fcee339376a0c055c9cd80506f71f789b3fc3125b3c7f01c27cc12d";
+
 
     @Override
-    public DeviceUser getLoggedInDeviceUser() throws CantGetLoggedInDeviceUserException{
-        if (mLoggedInDeviceUser == null)
+    public DeviceUser getLoggedInDeviceUser() throws CantGetLoggedInDeviceUserException {
+        // TODO while we are not creating a user or logging in with one i create one in the moment
+        /*if (mLoggedInDeviceUser == null)
             throw new CantGetLoggedInDeviceUserException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, null, "There's no device user logged in.", "");
-        return mLoggedInDeviceUser;
+        return mLoggedInDeviceUser;*/
+        try {
+            userPublicKey = createNewDeviceUser("test1", "test1");
+            DeviceUser deviceUser = getDeviceUser(userPublicKey);
+            System.out.println("soy una direccion "+deviceUser.getPublicKey());
+            return getDeviceUser(userPublicKey);
+        } catch (Exception e) {
+            try {
+                return getDeviceUser(userPublicKey);
+            } catch (Exception t) {
+                throw new CantGetLoggedInDeviceUserException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, t, "", "");
+            }
+        }
     }
 
     @Override
     public String createNewDeviceUser(String alias, String password) throws CantCreateNewDeviceUserException {
         try {
             ECCKeyPair keyPair = new ECCKeyPair();
-            DeviceUserUser deviceUser = new DeviceUserUser(alias, password, keyPair.getPrivateKey(), keyPair.getPublicKey());
+            // TODO UNCOMMENT AFTER CREATING CORRECTLY A DEVICE USER
+            //DeviceUserUser deviceUser = new DeviceUserUser(alias, password, keyPair.getPrivateKey(), keyPair.getPublicKey());
+            DeviceUserUser deviceUser = new DeviceUserUser(alias, password, keyPair.getPrivateKey(), userPublicKey);
             try {
-                persistNewUserInDeviceUserPublicKeysFile(deviceUser.getPublicKey());
+                // TODO UNCOMMENT AFTER CREATING CORRECTLY A DEVICE USER
+                //persistNewUserInDeviceUserPublicKeysFile(deviceUser.getPublicKey());
+                persistNewUserInDeviceUserPublicKeysFile(userPublicKey);
                 persistUser(deviceUser);
             } catch (CantPersistDeviceUserException e) {
                 errorManager.reportUnexpectedAddonsException(Addons.DEVICE_USER, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
@@ -171,7 +191,7 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
 
     private void persistNewUserInDeviceUserPublicKeysFile(String deviceUserPublicKey) throws CantPersistDeviceUserException {
         try {
-            PlatformTextFile file = this.platformFileSystem.getFile(
+            PlatformTextFile file = this.platformFileSystem.createFile(
                     DeviceDirectory.LOCAL_USERS.getName(),
                     DEVICE_USER_PUBLIC_KEYS_FILE_NAME,
                     FilePrivacy.PRIVATE,
@@ -180,7 +200,7 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
             String deviceUserPublicKeysFile = file.getContent();
             file.setContent((deviceUserPublicKeysFile != null ? deviceUserPublicKeysFile : "")+ deviceUserPublicKey + ";");
 
-        } catch (FileNotFoundException|CantCreateFileException e) {
+        } catch (CantCreateFileException e) {
             throw new CantPersistDeviceUserException(CantPersistDeviceUserException.DEFAULT_MESSAGE, e, "Error getting device user public keys file.", null);
         }
     }
@@ -285,7 +305,7 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
             } catch (CantGetDeviceUserPersonalImageException e) {
                 // TODO QUE HAGO SI NO CONSIGO IMAGEN?
             }
-            return new DeviceUserUser(deviceUserStringSplit[0], deviceUserStringSplit[1], deviceUserStringSplit[2], personalImage);
+            return new DeviceUserUser(deviceUserStringSplit[0], deviceUserStringSplit[1], deviceUserStringSplit[2], publicKey, personalImage);
 
         } catch (FileNotFoundException|CantCreateFileException e) {
             errorManager.reportUnexpectedAddonsException(Addons.DEVICE_USER, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
@@ -327,7 +347,7 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
                 } catch (CantGetDeviceUserPersonalImageException e) {
                     // TODO QUE HAGO SI NO CONSIGO IMAGEN?
                 }
-                mLoggedInDeviceUser = new DeviceUserUser(deviceUserStringSplit[0], deviceUserStringSplit[1], deviceUserStringSplit[2], personalImage);
+                mLoggedInDeviceUser = new DeviceUserUser(deviceUserStringSplit[0], deviceUserStringSplit[1], deviceUserStringSplit[2], publicKey, personalImage);
 
                 /**
                  * If all goes ok i send the event of User logged in

@@ -5,15 +5,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
@@ -39,6 +41,11 @@ public class StartTest {
     DeviceUserManager deviceUserManager;
 
     @Mock
+    DeviceUser mockDeviceUser;
+
+    private String userPublicKey = "replace_user_public_key";
+
+    @Mock
     BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
     @Mock
@@ -48,7 +55,7 @@ public class StartTest {
 
 
     @Test
-    public void testValidStart() throws CantStartPluginException {
+    public void testValidStart() throws Exception {
         BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         root.setErrorManager(errorManager);
@@ -59,6 +66,10 @@ public class StartTest {
         root.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
         root.setPluginDatabaseSystem(pluginDatabaseSystem);
         root.setPluginFileSystem(pluginFileSystem);
+
+        when(deviceUserManager.getLoggedInDeviceUser()).thenReturn(mockDeviceUser);
+
+        when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
 
         /**
          * I will start it and get a valid address from the vault.
@@ -72,7 +83,7 @@ public class StartTest {
      * @throws CantStartPluginException
      */
     @Test (expected = CantStartPluginException.class)
-    public void testStartWithError() throws CantStartPluginException {
+    public void testStartWithError() throws Exception {
         BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
         MockedPluginFileSystemWithError pluginFileSystemWithError = new MockedPluginFileSystemWithError();
         root.setErrorManager(errorManager);
@@ -84,6 +95,9 @@ public class StartTest {
         root.setPluginDatabaseSystem(pluginDatabaseSystem);
         root.setPluginFileSystem(pluginFileSystemWithError);
 
+        when(deviceUserManager.getLoggedInDeviceUser()).thenReturn(mockDeviceUser);
+
+        when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
         /**
          * I will start it and get a valid address from the vault.
          */
@@ -91,7 +105,7 @@ public class StartTest {
     }
 
     @Test
-    public void getAddressTest() throws CantStartPluginException {
+    public void getAddressTest() throws Exception {
         BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         root.setErrorManager(errorManager);
@@ -103,6 +117,10 @@ public class StartTest {
         root.setPluginDatabaseSystem(pluginDatabaseSystem);
         root.setPluginFileSystem(pluginFileSystem);
 
+
+        when(deviceUserManager.getLoggedInDeviceUser()).thenReturn(mockDeviceUser);
+
+        when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
         /**
          * I will start it and get a valid address from the vault.
          */
@@ -111,7 +129,8 @@ public class StartTest {
         Assert.assertEquals(root.getAddresses(5).size(), 5);
     }
 
-    public void testTransactionProtocolManager() throws CantStartPluginException {
+    @Test
+    public void testTransactionProtocolManager() throws Exception {
         BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         root.setErrorManager(errorManager);
@@ -123,6 +142,9 @@ public class StartTest {
         root.setPluginDatabaseSystem(pluginDatabaseSystem);
         root.setPluginFileSystem(pluginFileSystem);
 
+        when(deviceUserManager.getLoggedInDeviceUser()).thenReturn(mockDeviceUser);
+
+        when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
         /**
          * I will start it and get a valid address from the vault.
          */
@@ -131,7 +153,7 @@ public class StartTest {
     }
 
     @Test
-    public void stopTest() throws CantStartPluginException {
+    public void stopTest() throws Exception {
         BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
         pluginFileSystem = new MockedPluginFileSystem();
         root.setErrorManager(errorManager);
@@ -142,6 +164,10 @@ public class StartTest {
         root.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
         root.setPluginDatabaseSystem(pluginDatabaseSystem);
         root.setPluginFileSystem(pluginFileSystem);
+
+        when(deviceUserManager.getLoggedInDeviceUser()).thenReturn(mockDeviceUser);
+
+        when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
 
         /**
          * I will start it and get a valid address from the vault.

@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -20,11 +21,10 @@ import java.util.UUID;
 public class StartAgentTest {
 
     static final NetworkParameters NETWORK_PARAMETERS = RegTestParams.get();
-    static final UUID userId = UUID.randomUUID();
+    static final String userPublicKey = new ECCKeyPair().getPublicKey();
     @Mock
     LogManager logManager;
-
-
+    
     @Mock
     PluginFileSystem pluginFileSystem;
 
@@ -36,13 +36,13 @@ public class StartAgentTest {
         CryptoVault cryptoVault = new CryptoVault() {
             Wallet vault = new Wallet(NETWORK_PARAMETERS );
             @Override
-            public void setUserId(UUID UserId) {
+            public void setUserPublicKey(String userPublicKey) {
 
             }
 
             @Override
-            public UUID getUserId() {
-                return userId;
+            public String getUserPublicKey() {
+                return userPublicKey;
             }
 
             @Override
@@ -50,10 +50,14 @@ public class StartAgentTest {
                 return vault;
             }
         };
-        BitcoinCryptoNetworkMonitoringAgent agent = new BitcoinCryptoNetworkMonitoringAgent((Wallet) cryptoVault.getWallet(), UUID.randomUUID());
+
+        BitcoinCryptoNetworkMonitoringAgent agent = new BitcoinCryptoNetworkMonitoringAgent((Wallet) cryptoVault.getWallet(), userPublicKey);
+
         agent.setErrorManager(errorManager);
         agent.setLogManager(logManager);
+
         agent.setPluginFileSystem(pluginFileSystem);
+
         agent.setPluginId(UUID.randomUUID());
     }
 

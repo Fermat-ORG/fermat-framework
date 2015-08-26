@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStarte
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoTransactionsWaitingTransferenceEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,10 +22,13 @@ public class HandleEventTest {
     @Mock
     private EventManager mockEventManager;
 
+    @Mock
     private IncomingCryptoRegistry mockRegistry;
 
+    @Mock
     private IncomingCryptoEventRecorderService testRecorderService;
 
+    @Mock
     private IncomingCryptoTransactionsWaitingTransferenceEventHandler testEventHandler;
 
     @Before

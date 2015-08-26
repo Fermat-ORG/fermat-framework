@@ -11,6 +11,21 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserL
  */
 public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
 
+    private String alias;
+    private String publicKey;
+    private byte[] profileImage;
+
+
+    /**
+     * Constructor
+     */
+
+    public IntraUserModuleLoginIdentity(String alias,String publicKey,byte[] profileImage)
+    {
+        this.alias = alias;
+        this.publicKey = publicKey;
+        this.profileImage = (byte[] )profileImage.clone();
+    }
     /**
      * That method returns the alias of the intra user identity
      *
@@ -18,7 +33,7 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
      */
     @Override
     public String getAlias() {
-        return null;
+        return this.alias;
     }
 
     /**
@@ -28,7 +43,7 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
      */
     @Override
     public String getPublicKey() {
-        return null;
+        return this.publicKey;
     }
 
 
@@ -39,6 +54,6 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
      */
     @Override
     public byte[] getProfileImage() {
-        return new byte[0];
+        return (byte[] )this.profileImage.clone();
     }
 }

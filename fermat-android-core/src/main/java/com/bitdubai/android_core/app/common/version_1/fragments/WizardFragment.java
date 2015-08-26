@@ -2,10 +2,11 @@ package com.bitdubai.android_core.app.common.version_1.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +48,7 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
      * DATA
      */
     private Wizard wizard;
-    private List<android.support.v4.app.Fragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
     private int position = -1;
     /**
      * UI
@@ -58,7 +59,7 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
     private FermatTextView next;
 
     /**
-     * Set Wizard Fragments
+     * Set Wizard FragmentsEnumType
      *
      * @param wizard
      */

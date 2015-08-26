@@ -23,9 +23,10 @@ public class DeviceUserUser implements DeviceUser {
 
     byte[] personalImage;
 
-    public DeviceUserUser(String alias, String password, String publicKey, byte[] personalImage) {
+    public DeviceUserUser(String alias, String password, String privateKey, String publicKey, byte[] personalImage) {
         this.alias = alias;
         this.password = password;
+        this.privateKey = privateKey;
         this.publicKey = publicKey;
         this.personalImage = personalImage;
     }

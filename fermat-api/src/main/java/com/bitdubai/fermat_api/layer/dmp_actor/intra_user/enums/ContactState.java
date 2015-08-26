@@ -7,10 +7,14 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * list the states an intra user can be asigned
  */
 public enum ContactState {
-    PENDING_YOUR_ACCEPTANCE("PYA"),
+    PENDING_LOCALLY_ACCEPTANCE("PYA"),
     BLOCKED ("BCK"),
-    CONTACT ("CTC"),
-    PENDING_HIS_ACCEPTANCE ("PHA");
+    DENIED_LOCALLY ("DEN"),
+    CANCELLED ("CAN"),
+    CONNECTED ("CTC"),
+    DISCONNECTED_LOCALLY("DSL"),
+    DISCONNECTED_REMOTELY("DSR"),
+    PENDING_REMOTELY_ACCEPTANCE ("PRA");
 
     private String code;
 
@@ -24,10 +28,14 @@ public enum ContactState {
 
     public static ContactState getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "PYA": return ContactState.PENDING_YOUR_ACCEPTANCE;
+            case "PYA": return ContactState.PENDING_LOCALLY_ACCEPTANCE;
             case "BCK": return ContactState.BLOCKED;
-            case "CTC": return ContactState.CONTACT;
-            case "PHA": return ContactState.PENDING_HIS_ACCEPTANCE;
+            case "DEN": return ContactState.DENIED_LOCALLY;
+            case "CAN": return ContactState.CANCELLED;
+            case "CTC": return ContactState.CONNECTED;
+            case "DIS": return ContactState.DISCONNECTED_LOCALLY;
+            case "DSR": return ContactState.DISCONNECTED_REMOTELY;
+            case "PRA": return ContactState.PENDING_REMOTELY_ACCEPTANCE;
             //Modified by Manuel Perez on 05/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }

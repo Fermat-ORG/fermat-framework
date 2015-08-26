@@ -1,18 +1,16 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 
 
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -33,13 +33,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
@@ -60,7 +60,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel1 extends Fragment {
+public class LogToolsFragmentLevel1 extends FermatFragment {
 
     private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS.getKey();
 
@@ -95,6 +95,8 @@ public class LogToolsFragmentLevel1 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        //developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
         errorManager = developerSubAppSession.getErrorManager();
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
@@ -261,7 +263,7 @@ public class LogToolsFragmentLevel1 extends Fragment {
                         params[0] = lst;
                         params[1] = level;
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS,params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(),params);
 
 
                     }
@@ -270,50 +272,6 @@ public class LogToolsFragmentLevel1 extends Fragment {
                     @Override
                     public boolean onLongClick(View view) {
                         String loggerText = holder.companyTextView.getText().toString();
-                        /*PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                boolean result = false;
-                                int itemId = menuItem.getItemId();
-                                if (itemId == R.id.menu_no_logging) {
-                                    //TODO: HAcer el cambio acá para que haga el changelevel
-                                    changeLogLevel(item.pluginKey, LogLevel.NOT_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    //changeLogLevel();
-                                    result = true;
-                                } else if (itemId == R.id.menu_minimal) {
-                                    changeLogLevel(item.pluginKey, LogLevel.MINIMAL_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-                                } else if (itemId == R.id.menu_moderate) {
-                                    changeLogLevel(item.pluginKey, LogLevel.MODERATE_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-                                } else if (itemId == R.id.menu_aggresive) {
-                                    changeLogLevel(item.pluginKey, LogLevel.AGGRESSIVE_LOGGING, item.classHierarchyLevels.getFullPath());
-                                    result = true;
-
-                                }
-
-                                return result;
-                            }
-                        });
-
-                        //popupMenu.getMenu().add();
-
-
-
-                        popupMenu.inflate(R.menu.popup_menu);
-                        /*boolean founded=false;
-                        int counter=0;
-                        while(!founded && counter<popupMenu.getMenu().size()){
-                            MenuItem menuItem = popupMenu.getMenu().getItem(counter);
-                            menuItem.setIcon(R.drawable.ic_action_accept_grey);
-                            menuItem.setIcon(R.drawable.icono_banco_2);
-                            //menuItem.
-                            counter++;
-                        }*/
-
-                        //popupMenu.show();
 
                         CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
                         cdd.show();
@@ -340,9 +298,6 @@ public class LogToolsFragmentLevel1 extends Fragment {
             String stringToShowLevel="Nada cargado";
             switch (loggerLevel){
                 case ArrayListLoggers.LEVEL_1:{
-                    //String[] level1_splitted=item.level1.split(".");
-                    //tringToShowLevel=level1_splitted[level1_splitted.length-1];
-                    //Toast.makeText(getActivity(),item.level1,Toast.LENGTH_SHORT);
 
 
                     stringToShowLevel=item.classHierarchyLevels.getLevel1();

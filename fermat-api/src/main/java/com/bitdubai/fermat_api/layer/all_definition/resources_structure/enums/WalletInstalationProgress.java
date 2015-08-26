@@ -8,6 +8,7 @@ public enum WalletInstalationProgress {
 
     INSTALATION_START("IS"),
     SKIN_DOWNLOADED ("SK"),
+    LANGUAGE_DOWNLOADED("LD"),
     NAVIGATION_STRUCTURE_PORTRAIT_DOWNLOADED("NSPD"),
     NAVIGATION_STRUCTURE_LANDSCAPE_DOWNLOADED ("NSLD"),
     RESOURCES_DOWNLOADED ("RD"),
@@ -34,6 +35,7 @@ public enum WalletInstalationProgress {
             case "LPD": return WalletInstalationProgress.LAYOUTS_PORTRAIT_DOWNLOADED;
             case "LLD": return WalletInstalationProgress.LAYOUTS_LANDSCAPE_DOWNLOADED;
             case "IF": return WalletInstalationProgress.INSTALATION_FINISH;
+            case "LD": return WalletInstalationProgress.LANGUAGE_DOWNLOADED;
         }
 
         /**

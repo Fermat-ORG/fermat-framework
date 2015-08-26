@@ -106,7 +106,7 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
          */
         List<String> walletAddressBookTableColumns = new ArrayList<String>();
         walletAddressBookTableColumns.add(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID);
-        walletAddressBookTableColumns.add(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID);
+        walletAddressBookTableColumns.add(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_PUBLIC_KEY);
         walletAddressBookTableColumns.add(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE);
         walletAddressBookTableColumns.add(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
         walletAddressBookTableColumns.add(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY);
@@ -123,7 +123,6 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            database.openDatabase();
             DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
@@ -133,7 +132,7 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
             for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 for (DatabaseRecord field : row.getValues()) {
-                    developerRow.add(field.getValue().toString());
+                    developerRow.add(field.getValue());
                 }
                 returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
             }

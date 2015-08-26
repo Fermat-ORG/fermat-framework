@@ -17,7 +17,7 @@ public class isValidAddressTest {
 
     @Test
     public void test() throws CantCreateCryptoWalletException {
-        BitcoinCryptoVault vault = new BitcoinCryptoVault(UUID.randomUUID());
+        BitcoinCryptoVault vault = new BitcoinCryptoVault("replace_device_user_key");
         CryptoAddress badAddress = new CryptoAddress("sdfkjsdfkjsdflksdf", CryptoCurrency.BITCOIN);
         Assert.assertFalse(vault.isValidAddress(badAddress));
 

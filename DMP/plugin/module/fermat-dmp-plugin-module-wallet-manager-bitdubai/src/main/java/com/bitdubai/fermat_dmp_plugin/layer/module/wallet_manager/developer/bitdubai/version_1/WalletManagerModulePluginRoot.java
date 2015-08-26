@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
@@ -10,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCreateWalletException;
 
@@ -20,11 +20,9 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.De
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantEnableWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.NewWalletCreationFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletRemovalFailedException;
@@ -54,7 +52,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,18 +74,18 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
+public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
 
 
     /**
      * WalletManager Interface member variables.
      */
     String deviceUserPublicKey = "";
-    UUID walletId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+    String walletId = "25428311-deb3-4064-93b2-69093e859871";
 
     List<InstalledWallet> userWallets;
 
-    private Map<String, UUID> walletIds = new HashMap<>();
+    private Map<String, String> walletIds = new HashMap<>();
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -107,7 +104,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -124,7 +121,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     /**
      * DealWithEvents Interface member variables.
      */
-    EventManager eventManager;
+    com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager;
 
 
     /**
@@ -211,8 +208,8 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
-        EventListener eventListener;
-        EventHandler eventHandler;
+        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener;
+        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler eventHandler;
 
        /* eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
         eventHandler = new UserCreatedEventHandler();
@@ -269,7 +266,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
+        for (com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }
 
@@ -325,7 +322,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
             List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> installetMiddlewareWallets = walletMiddlewareManager.getInstalledWallets();
             for (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet : installetMiddlewareWallets){
 
-                InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),
+                InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),wallet.getWalletType(),
                         wallet.getSkinsId(),
                         wallet.getLanguagesId(),
                         wallet.getWalletIcon(),
@@ -409,7 +406,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     }
 
 
-    public void persistWallet(UUID walletId) throws CantPersistWalletException {
+    public void persistWallet(String walletId) throws CantPersistWalletException {
         /**
          * Now I will add this wallet to the list of wallets managed by the plugin.
          */
@@ -485,7 +482,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
      */
 
     @Override
-    public void setEventManager(EventManager eventManager) {
+    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
@@ -572,6 +569,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     public List<InstalledWallet> getUserWallets() {
         // Harcoded para testear el circuito más arriba
         InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",
@@ -593,10 +591,10 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
          * By now I will create only a new wallet, In the future there will be more than one default wallets.
          */
 
-      //  Wallet wallet = new WalletManagerWallet();
+        //  Wallet wallet = new WalletManagerWallet();
 
-      //  ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
-       // ((DealsWithEvents) wallet).setEventManager(eventManager);
+        //  ((DealsWithPluginFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
+        // ((DealsWithEvents) wallet).setEventManager(eventManager);
         //((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
 
         //try {
@@ -671,7 +669,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
                         //put wallets of this user
                         if (idPair[0].equals(deviceUserPublicKey))
-                            walletIds.put(idPair[0], UUID.fromString(idPair[1]));
+                            walletIds.put(idPair[0], idPair[1]);
 
                         /**
                          * Great, now the wallet list is in memory.

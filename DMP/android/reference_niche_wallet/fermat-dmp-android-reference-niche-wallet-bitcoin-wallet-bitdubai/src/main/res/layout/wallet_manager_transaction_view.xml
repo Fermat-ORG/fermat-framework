@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/myrect3"
+    android:orientation="horizontal"
     >
 
     <LinearLayout
@@ -73,6 +74,8 @@
                 android:layout_weight="0.2"
                 android:src="@drawable/ic_action_previous_item_grey"
                 />
+
+
             <LinearLayout
                 android:id="@+id/linearLayout_container"
                 android:layout_width="wrap_content"
@@ -137,6 +140,7 @@
 
 
         </LinearLayout>
+
 
     </LinearLayout>
 

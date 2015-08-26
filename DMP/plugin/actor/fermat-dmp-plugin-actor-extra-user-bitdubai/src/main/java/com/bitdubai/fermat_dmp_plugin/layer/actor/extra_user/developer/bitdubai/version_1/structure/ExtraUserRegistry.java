@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -19,6 +20,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -37,12 +46,14 @@ import java.util.UUID;
  * Created by ciencias on 3/18/15.
  * Modified by natalia
  */
-public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity, UserRegistry {
+public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithPluginIdentity, UserRegistry {
 
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
+
+    PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
@@ -59,6 +70,7 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
 
     private Database database;
 
+    private final String NO_IMAGE = "NoImageProvided";
 
     /**
      * DealsWithErrors Interface implementation.
@@ -161,6 +173,7 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
 
             actor.setId(userId);
             actor.setName(userName);
+            actor.setPhoto(null);
             /**
              * Here I create a new Extra User record .
              */
@@ -171,6 +184,7 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
 
             extrauserRecord.setUUIDValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId);
             extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, userName);
+            extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, NO_IMAGE);
             extrauserRecord.setLongValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
             extrauserTable.insertRecord(extrauserRecord);
 
@@ -194,6 +208,95 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
         }catch(Exception exception){
 
             FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "PluginID: "+pluginId ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+
+
+        }
+
+        return actor;
+    }
+
+    @Override
+    public Actor createUser(String userName, byte[] photo) throws CantCreateExtraUserRegistry {
+
+        /**
+         *  I create new ExtraUser instance
+         */
+
+        Actor actor = new ExtraUser();
+        //Modified by Manuel Pérez on 26/07/2015
+        DatabaseTable extrauserTable=null;
+        DatabaseTableRecord extrauserRecord=null;
+        try{
+
+            UUID userId = UUID.randomUUID();
+
+            actor.setId(userId);
+            actor.setName(userName);
+            actor.setPhoto(photo);
+            /**
+             * Here I create a new Extra User record .
+             */
+            long unixTime = System.currentTimeMillis() / 1000L;
+
+            extrauserTable = database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            extrauserRecord = extrauserTable.getEmptyRecord();
+
+            extrauserRecord.setUUIDValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId);
+            extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, userName);
+            extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, userId.toString());
+            extrauserRecord.setLongValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
+            extrauserTable.insertRecord(extrauserRecord);
+
+            // Now we create the file to store the image
+            PluginBinaryFile imageFile;
+
+            String filename = userId.toString();
+
+
+            try {
+
+                imageFile = pluginFileSystem.getBinaryFile(pluginId,DeviceDirectory.LOCAL_USERS.getName(), filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+            } catch (CantCreateFileException cantPersistFileException) {
+                throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+            } catch (FileNotFoundException e) {
+
+                try {
+                    imageFile = pluginFileSystem.createBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName() , filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    imageFile.setContent(photo);
+                    try {
+                        imageFile.persistToMedia();
+                    } catch (CantPersistFileException cantPersistFileException) {
+                        throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+
+                    }
+                } catch (CantCreateFileException cantPersistFileException) {
+                    throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                }
+            }
+
+        }catch (CantInsertRecordException cantInsertRecord) {
+            /**
+             * I can not solve this situation.
+             */
+        /*Francisco Arce
+        Exception in the context Fermat Context
+        *
+        * */
+            String message = CantCreateExtraUserRegistry.DEFAULT_MESSAGE;
+            FermatException cause = cantInsertRecord.getCause();
+            String context = "Extra User Record: " + cantInsertRecord.getContext();
+            String possibleReason = "The exception occurred when recording the Extra User extrauserTable.insertRecord(extrauserRecord): " + cantInsertRecord.getPossibleReason();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInsertRecord);
+            /*
+          modified by Francisco Arce
+            */
+            throw new CantCreateExtraUserRegistry(message, cause, context, possibleReason);
+        }catch (CantCreateExtraUserRegistry e){
+            throw e;
+        }catch(Exception exception){
+            FermatException e = new CantCreateExtraUserRegistry("UNEXPECTED EXCEPTION", FermatException.wrapException(exception), "PluginID: "+pluginId ,"Check the cause");
             this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
 
 
@@ -233,7 +336,17 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
             actor.setId(userId);
             for (DatabaseTableRecord record : table.getRecords()) {
                 actor.setName(record.getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME));
+                if(record.getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN).equals(NO_IMAGE))
+                    actor.setPhoto(null);
+                else {
+                    PluginBinaryFile imageFile;
 
+                    String filename= userId.toString();
+
+                    String path = DeviceDirectory.LOCAL_USERS.getName();
+                    imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    actor.setPhoto(imageFile.getContent());
+                }
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
@@ -251,20 +364,129 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantGetExtraUserRegistry(message, cause, context, possibleReason);
-        }catch(Exception exception){
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetExtraUserRegistry(CantGetExtraUserRegistry.DEFAULT_MESSAGE, e, null, null);
+        }catch(Exception exception) {
 
-            throw new CantGetExtraUserRegistry(CantGetExtraUserRegistry.DEFAULT_MESSAGE,FermatException.wrapException(exception), null, null);
-
+            throw new CantGetExtraUserRegistry(CantGetExtraUserRegistry.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-
-
 
 
         return actor;
     }
 
     @Override
+    public byte[] getPhoto(UUID id) throws CantGetExtraUserRegistry {
+        DatabaseTable table;
+        try {
+            table = this.database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            table.setUUIDFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            String fileName =  table.getRecords().get(0).getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN);
+            if(fileName.equals(NO_IMAGE))
+                return null;
+
+            PluginBinaryFile imageFile;
+
+            String filename= id.toString();
+
+            String path = DeviceDirectory.LOCAL_USERS.getName();
+            imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+            return imageFile.getContent();
+        } catch (CantLoadTableToMemoryException | FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetExtraUserRegistry("",e,"","");
+        } catch (Exception e) {
+            throw new CantGetExtraUserRegistry("",FermatException.wrapException(e),"","");
+        }
+    }
+
+    @Override
+    public void setPhoto(UUID id, byte[] photo) throws CantGetExtraUserRegistry {
+        try {
+            /**
+             *  I will load the information of table into a memory structure, filter by user id .
+             */
+            DatabaseTable table = this.database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            table.setUUIDFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            /**
+             * Will go through the records getting each extra user.
+             */
+            String oldPhotoFileName;
+            for (DatabaseTableRecord record : table.getRecords()) {
+                oldPhotoFileName = record.getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN);
+                record.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, id.toString());
+                table.updateRecord(record);
+                if (oldPhotoFileName.equals(NO_IMAGE)) {
+
+                    // Now we create the file to store the image
+                    PluginBinaryFile imageFile;
+
+                    String filename = id.toString();
+
+                    try {
+                        imageFile = pluginFileSystem.getBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    } catch (CantCreateFileException cantPersistFileException) {
+                        throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                    } catch (FileNotFoundException e) {
+                        try {
+                            imageFile = pluginFileSystem.createBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                            imageFile.setContent(photo);
+                            try {
+                                imageFile.persistToMedia();
+                            } catch (CantPersistFileException cantPersistFileException) {
+                                throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                            }
+                        } catch (CantCreateFileException cantPersistFileException) {
+                            throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                        }
+                    }
+                } else {
+                    PluginBinaryFile imageFile;
+                    String filename = id.toString();
+                    try {
+                        imageFile = this.pluginFileSystem.getBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                        imageFile.setContent(photo);
+                        imageFile.persistToMedia();
+                    } catch (CantPersistFileException | CantCreateFileException | FileNotFoundException e) {
+                        throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", e, "Error persist image file " + filename, "");
+                    }
+                }
+            }
+
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            /**
+             * I can not solve this situation.
+             */
+            /*Francisco Arce
+            Exception in the context Fermat Context
+            *
+            * */
+            String message = CantGetExtraUserRegistry.DEFAULT_MESSAGE;
+            FermatException cause = cantLoadTableToMemory.getCause();
+            String context = "table Memory: " + cantLoadTableToMemory.getContext();
+            String possibleReason = "The exception occurred when calling table.loadToMemory (): " + cantLoadTableToMemory.getPossibleReason();
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantGetExtraUserRegistry(message, cause, context, possibleReason);
+        }catch (CantGetExtraUserRegistry e){
+            throw e;
+        } catch(Exception exception) {
+            throw new CantGetExtraUserRegistry(CantGetExtraUserRegistry.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 }

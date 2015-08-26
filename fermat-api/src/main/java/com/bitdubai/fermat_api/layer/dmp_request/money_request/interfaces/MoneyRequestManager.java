@@ -63,10 +63,9 @@ public interface MoneyRequestManager {
      * @param requestDescription          A text describing the payment request (what is it paying?)
      * @param addressToSendThePayment     The crypto address to send the payment to
      * @param cryptoAmount                The amount of crypto to send
-     * @return an identifier of the request
      * @throws CryptoRequestUnexpectedErrorException
      */
-    public UUID sendCryptoRequest(String senderWalletPublicKey,
+    public void sendCryptoRequest(String senderWalletPublicKey,
                                   String requestSenderPublicKey,
                                   String requestDestinationPublicKey,
                                   String requestDescription,
@@ -85,10 +84,9 @@ public interface MoneyRequestManager {
      * @param addressToSendThePayment     The crypto address to send the payment to
      * @param fiatCurrency                The fiat currency of the request
      * @param fiatAmount                  The amount of fiat currency to pay
-     * @return an identifier of the request
      * @throws FiatRequestUnexpectedErrorException
      */
-    public UUID sendMoneyRequest(String senderWalletPublicKey,
+    public void sendMoneyRequest(String senderWalletPublicKey,
                                  String requestSenderPublicKey,
                                  String requestDestinationPublicKey,
                                  String requestDescription,
@@ -99,6 +97,7 @@ public interface MoneyRequestManager {
 
     /**
      * The method <code>rejectRequest</code> informs the rejection of a request to its creator.
+     *
      * @param requestId  The identifier of the request to reject
      * @throws FailedToRejectTheRequestException
      */

@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDao;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -31,9 +32,6 @@ import static org.mockito.Mockito.*;
 public class RegisterWalletAddressBookTest extends TestCase {
 
     @Mock
-    ErrorManager errorManager;
-
-    @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
 
     @Mock
@@ -45,7 +43,7 @@ public class RegisterWalletAddressBookTest extends TestCase {
     @Mock
     DatabaseTableRecord databaseTableRecord;
 
-    UUID walletId;
+    String walletPublicKey;
 
     ReferenceWallet referenceWallet;
 
@@ -58,11 +56,11 @@ public class RegisterWalletAddressBookTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        walletId = UUID.randomUUID();
+        walletPublicKey = new ECCKeyPair().getPublicKey();
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
         cryptoAddress = new CryptoAddress("asdadas", CryptoCurrency.BITCOIN);
         pluginId = UUID.randomUUID();
-        dao = new WalletAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
+        dao = new WalletAddressBookCryptoModuleDao(pluginDatabaseSystem, pluginId);
         when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(database);
         dao.initialize();
 
@@ -72,7 +70,7 @@ public class RegisterWalletAddressBookTest extends TestCase {
     public void testRegister_NotNull() throws Exception {
         when(database.getTable(anyString())).thenReturn(databaseTable);
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
-        dao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletId);
+        dao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletPublicKey);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
@@ -81,21 +79,21 @@ public class RegisterWalletAddressBookTest extends TestCase {
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
         doThrow(new CantInsertRecordException()).when(databaseTable).insertRecord(any(DatabaseTableRecord.class));
 
-        dao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletId);
+        dao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, walletPublicKey);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
-    public void testRegister_walletIdNull_CantRegisterWalletAddressBookException() throws Exception {
+    public void testRegister_walletPublicKeyNull_CantRegisterWalletAddressBookException() throws Exception {
         dao.registerWalletAddressBookModule(cryptoAddress, referenceWallet, null);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
     public void testRegister_walletTypeNull_CantRegisterWalletAddressBookException() throws Exception {
-        dao.registerWalletAddressBookModule(cryptoAddress, null, walletId);
+        dao.registerWalletAddressBookModule(cryptoAddress, null, walletPublicKey);
     }
 
     @Test(expected=CantRegisterWalletAddressBookException.class)
     public void testRegister_cryptoAddressNull_CantRegisterWalletAddressBookException() throws Exception {
-        dao.registerWalletAddressBookModule(null, referenceWallet, walletId);
+        dao.registerWalletAddressBookModule(null, referenceWallet, walletPublicKey);
     }
 }

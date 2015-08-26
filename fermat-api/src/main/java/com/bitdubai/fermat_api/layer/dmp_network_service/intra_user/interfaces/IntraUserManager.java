@@ -34,11 +34,11 @@ public interface IntraUserManager {
      * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.
      *
      * @param intraUserLoggedInPublicKey The public key of the intra user sending the request
-     * @param intraUserLoggedInName      The name of the intra user sending the request
+     * @param intraUserToAddNameName      The name of the intra user sending the request
      * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
      * @param myProfileImage             The profile image of the user sending the request
      */
-    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage);
+    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddNameName, String intraUserToAddPublicKey, byte[] myProfileImage);
 
     /**
      * The method <code>acceptIntraUser</code> send an acceptance message of a connection request.
@@ -74,7 +74,19 @@ public interface IntraUserManager {
      */
     void cancelIntraUSer(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws ErrorCancellingIntraUserException;
 
+    /**
+     * The method <coda>getNotifications</coda> returns all pending notifications
+     * of responses to requests for connection
+     *
+     * @return List of IntraUserNotification
+     */
+    public List<IntraUserNotification> getNotifications();
 
-    public IntraUserNotification getNotifications(String intraUserLogedInPublicKey);
+
+    /**
+     *
+     * @param intraUserLogedInPublicKey
+     * @param intraUserInvolvedPublicKey
+     */
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey);
 }

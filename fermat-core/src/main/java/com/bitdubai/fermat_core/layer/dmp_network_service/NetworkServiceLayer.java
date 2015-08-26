@@ -38,6 +38,7 @@ public class NetworkServiceLayer implements PlatformLayer {
 
     private Plugin mCryptoTransmission;
 
+    private Plugin mIntraUser;
 
     public Plugin getBankNotesPlugin() {
         return mBankNotesPlugin;
@@ -74,6 +75,10 @@ public class NetworkServiceLayer implements PlatformLayer {
 
     public Plugin getCryptoTransmission(){
         return mCryptoTransmission;
+    }
+
+    public Plugin getIntraUser(){
+        return mIntraUser;
     }
 
     @Override
@@ -248,6 +253,26 @@ public class NetworkServiceLayer implements PlatformLayer {
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+            throw new CantStartLayerException();
+        }
+
+        /**
+         * Let's try to start the Intra User subsystem.
+         */
+
+        NetworkSubsystem intraUserSubsystem = new IntraUserSubsystem();
+
+        try {
+
+            intraUserSubsystem.start();
+            mIntraUser = (intraUserSubsystem).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartIntraUserNetworkException: " + e.getMessage());
 
             /**
              * Since this is the only implementation, if this does not start, then the layer can't start either.

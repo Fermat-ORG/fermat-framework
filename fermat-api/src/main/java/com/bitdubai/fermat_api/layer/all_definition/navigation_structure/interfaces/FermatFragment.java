@@ -7,9 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
  */
 public interface FermatFragment {
 
-    public Fragments getType();
+    public String getType();
 
-    public Fragments getBack();
+    public String getBack();
 
     public void setContext(Object... objects);
 

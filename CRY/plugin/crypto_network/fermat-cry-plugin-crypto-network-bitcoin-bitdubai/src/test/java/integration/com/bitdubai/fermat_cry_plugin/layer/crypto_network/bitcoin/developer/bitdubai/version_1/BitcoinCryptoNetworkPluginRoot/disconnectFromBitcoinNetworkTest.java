@@ -1,5 +1,6 @@
 package integration.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -31,7 +32,7 @@ import java.util.UUID;
 @RunWith(MockitoJUnitRunner.class)
 public class disconnectFromBitcoinNetworkTest {
     static final NetworkParameters NETWORK_PARAMETERS = RegTestParams.get();
-    static final UUID userId = UUID.randomUUID();
+    static final String userPublicKey = new ECCKeyPair().getPublicKey();
     @Mock
     LogManager logManager;
 
@@ -48,15 +49,15 @@ public class disconnectFromBitcoinNetworkTest {
          */
         CryptoVault cryptoVault = new CryptoVault() {
             Wallet vault = new Wallet(NETWORK_PARAMETERS );
-            UUID userId = disconnectFromBitcoinNetworkTest.userId;
+            String userPublicKey = connectToBitcoinNetworkTest.userPublicKey;
             @Override
-            public void setUserId(UUID UserId) {
-                this.userId = userId;
+            public void setUserPublicKey(String userPublicKey) {
+                this.userPublicKey = userPublicKey;
             }
 
             @Override
-            public UUID getUserId() {
-                return userId;
+            public String getUserPublicKey() {
+                return userPublicKey;
             }
 
             @Override

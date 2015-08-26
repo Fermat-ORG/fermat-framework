@@ -28,7 +28,7 @@ public interface IntraUserIdentity {
      * @return the profile image of the represented intra user
      * @throws CantShowProfileImageException
      */
-    byte[] getProfileImage() throws CantShowProfileImageException;
+    byte[] getProfileImage();
 
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image

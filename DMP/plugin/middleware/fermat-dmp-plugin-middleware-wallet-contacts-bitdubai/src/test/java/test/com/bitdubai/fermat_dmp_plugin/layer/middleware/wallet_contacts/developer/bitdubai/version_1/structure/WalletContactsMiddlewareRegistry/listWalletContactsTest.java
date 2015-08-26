@@ -1,5 +1,6 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -43,12 +44,15 @@ public class listWalletContactsTest {
 
     private UUID testPluginId;
 
+    private String testWalletPublicKey;
+
     WalletContactsMiddlewareDao walletContactsMiddlewareDao;
     WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
     @Before
     public void setUp() throws Exception {
         testPluginId = UUID.randomUUID();
+        testWalletPublicKey = new ECCKeyPair().getPublicKey();
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem);
         walletContactsMiddlewareRegistry = new WalletContactsMiddlewareRegistry();
         walletContactsMiddlewareRegistry.setPluginDatabaseSystem(mockPluginDatabaseSystem);
@@ -66,7 +70,7 @@ public class listWalletContactsTest {
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
-        walletContactsMiddlewareRegistry.listWalletContacts(testPluginId);
+        walletContactsMiddlewareRegistry.listWalletContacts(testWalletPublicKey);
     }
 
     @Test
@@ -79,6 +83,6 @@ public class listWalletContactsTest {
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(Actors.DEVICE_USER.getCode());
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
-        walletContactsMiddlewareRegistry.listWalletContactsScrolling(testPluginId, 1, 0);
+        walletContactsMiddlewareRegistry.listWalletContactsScrolling(testWalletPublicKey, 1, 0);
     }
 }

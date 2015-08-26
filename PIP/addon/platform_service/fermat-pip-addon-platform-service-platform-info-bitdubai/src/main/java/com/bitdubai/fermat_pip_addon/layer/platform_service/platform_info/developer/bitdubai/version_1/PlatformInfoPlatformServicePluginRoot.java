@@ -20,6 +20,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.UUID;
 /**
  * Created by natalia on 29/07/15.
  */
-public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithErrors, DealsWithPlatformFileSystem, LogManagerForDevelopers,PlatformInfoManager,Service {
+public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithErrors, DealsWithPlatformFileSystem, LogManagerForDevelopers,PlatformInfoManager,Service,Serializable {
     PlatformInfoPlatformService platformInfoPlatformService;
 
     /**

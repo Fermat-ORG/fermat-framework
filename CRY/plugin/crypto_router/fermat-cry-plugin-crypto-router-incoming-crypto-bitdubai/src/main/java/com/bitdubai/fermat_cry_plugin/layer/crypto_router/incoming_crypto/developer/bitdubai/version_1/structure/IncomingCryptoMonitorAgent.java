@@ -244,94 +244,97 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
         private void doTheMainTask() {
 
-            // TODO: delete this. Every tune registry is initialized we add a new transaction
-            // this.registry.proofTransaction();
-
             IncomingCryptoRegistry.EventWrapper eventWrapper = null;
             try {
+                // TODO (lnacosta) change this for processing all pending events and not to wait until the next agent wake up
                 eventWrapper = this.registry.getNextPendingEvent();
+                while(eventWrapper != null) {
+                    processEvent(eventWrapper);
+                    eventWrapper = this.registry.getNextPendingEvent();
+                }
             } catch (CantReadEvent cantReadEvent) {
                 // we can report the exception and try again in next call.
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
                 return;
             }
-            if(eventWrapper != null){
-                System.out.println("TTF - INCOMING CRYPTO MONITOR: NEW EVENT READ");
+        }
 
-                // We have here new pending transactions, we will check the source and ask for the right
-                // TransactionSender
+        private void processEvent(IncomingCryptoRegistry.EventWrapper eventWrapper) {
+            System.out.println("TTF - INCOMING CRYPTO MONITOR: NEW EVENT READ");
 
-                TransactionProtocolManager<CryptoTransaction> source = null;
+            // We have here new pending transactions, we will check the source and ask for the right
+            // TransactionSender
+
+            TransactionProtocolManager<CryptoTransaction> source = null;
+            try {
+                source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
+            } catch (InvalidParameterException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                return;
+            } catch (CantIdentifyEventSourceException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                return;
+            }
+
+            System.out.println("TTF - INCOMING CRYPTO MONITOR: Source Identified");
+
+            // Now we ask for the pending transactions
+            List<Transaction<CryptoTransaction>> transactionList = null;
+
+            try {
+                transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER_SPECIALIST);
+            } catch (CantDeliverPendingTransactionsException e) {
+                System.out.println("TTF - INCOMING CRYPTO MONITOR: cryptoVault raised CantDeliverPendingTransactionsException");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                //if somethig wrong happenned we try in the next round
+                return;
+            }
+
+            // Now we save the list in the registry
+            if(transactionList != null){
+                this.registry.acknowledgeTransactions(transactionList);
+                System.out.println("TTF - INCOMING CRYPTO MONITOR: " + transactionList.size() +" TRANSACTION(S) ACKNOWLEDGE");
+
+            } else {
+                // if sombething failed we try in next round
+                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, );
+                return;
+            }
+
+            // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
+            // Remember that this list can be more extensive than the one we saved, this is
+            // because the system could have shut down in this step of the protocol making old
+            // transactions to be stored but not precessed.
+            List<Transaction<CryptoTransaction>> acknowledgedTransactions = null;
+            try {
+                acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
+            } catch (InvalidParameterException e) {
+                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                return;
+            }
+
+
+            // An finally, for each transaction we confirm it and then register responsibility.
+            for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
                 try {
-                    source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
-                } catch (InvalidParameterException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
-                } catch (CantIdentifyEventSourceException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
-                }
-
-                System.out.println("TTF - INCOMING CRYPTO MONITOR: Source Identified");
-
-                // Now we ask for the pending transactions
-                List<Transaction<CryptoTransaction>> transactionList = null;
-
-                try {
-                    transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER_SPECIALIST);
-                } catch (CantDeliverPendingTransactionsException e) {
-                    System.out.println("TTF - INCOMING CRYPTO MONITOR: cryptoVault raised CantDeliverPendingTransactionsException");
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    //if somethig wrong happenned we try in the next round
-                    return;
-                }
-
-                // Now we save the list in the registry
-                if(transactionList != null){
-                    this.registry.acknowledgeTransactions(transactionList);
-                    System.out.println("TTF - INCOMING CRYPTO MONITOR: " + transactionList.size() +" TRANSACTION(S) ACKNOWLEDGE");
-
-                } else {
-                  // if sombething failed we try in next round
-                    //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, );
-                    return;
-                }
-
-                // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
-                // Remember that this list can be more extensive than the one we saved, this is
-                // because the system could have shut down in this step of the protocol making old
-                // transactions to be stored but not precessed.
-                List<Transaction<CryptoTransaction>> acknowledgedTransactions = null;
-                try {
-                    acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
-                } catch (InvalidParameterException e) {
-                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-                    return;
-                }
-
-
-                // An finally, for each transaction we confirm it and then register responsibility.
-                for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
-                    try {
-                        source.confirmReception(transaction.getTransactionID());
-                        System.out.println("TTF - INCOMING CRYPTO MONITOR: RESPONSIBILITY ACQUIRED");
-                        this.registry.acquireResponsibility(transaction);
-                    } catch (CantConfirmTransactionException e) {
-                        // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
-                        //       la transacción
-                        // We will inform the exception and try again in the next round
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    }
-                }
-                // After finishing all the steps we mark the event as seen.
-                try {
-                    this.registry.disableEvent(eventWrapper.eventId);
-                    System.out.println("TTF - INCOMING CRYPTO MONITR: EVENT DISABLED");
-
-                } catch (Exception e) { // There are two exceptions and we react in the same way to both
+                    source.confirmReception(transaction.getTransactionID());
+                    System.out.println("TTF - INCOMING CRYPTO MONITOR: RESPONSIBILITY ACQUIRED");
+                    this.registry.acquireResponsibility(transaction);
+                } catch (CantConfirmTransactionException e) {
+                    // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
+                    //       la transacción
                     // We will inform the exception and try again in the next round
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
+            }
+            // After finishing all the steps we mark the event as seen.
+            try {
+                this.registry.disableEvent(eventWrapper.eventId);
+                System.out.println("TTF - INCOMING CRYPTO MONITR: EVENT DISABLED");
+
+            } catch (Exception e) { // There are two exceptions and we react in the same way to both
+                // We will inform the exception and try again in the next round
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
 

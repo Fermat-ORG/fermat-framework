@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public interface WalletAddressBookRecord {
 
-    UUID getWalletId();
+    String getWalletPublicKey();
 
     ReferenceWallet getWalletType();
 

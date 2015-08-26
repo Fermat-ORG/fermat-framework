@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +10,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
 
-public class ManagerFragment extends  Fragment {
+public class ManagerFragment extends FermatFragment {
     View rootView;
     ExpandableListView lv;
     String[] contacts;
@@ -57,9 +58,9 @@ public class ManagerFragment extends  Fragment {
         balances_available = new String[]{"$1,970.00 available"};
 
         /*try {
-            //List<DescriptorFactoryProject> lstFactoryProjects= subAppSession.getWalletFactoryManager().getAllWalletFactoryProjects();
+            //List<WalletFactoryProject> lstFactoryProjects= subAppSession.getWalletFactoryProjectManager().getAllWalletFactoryProjects();
 
-            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletFactoryManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
+            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletFactoryProjectManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
 
             //List<WalletFactoryProjectProposal> walletFactoryProjectProposal= walletFactoryProjectProposalManager.getProposals();
 

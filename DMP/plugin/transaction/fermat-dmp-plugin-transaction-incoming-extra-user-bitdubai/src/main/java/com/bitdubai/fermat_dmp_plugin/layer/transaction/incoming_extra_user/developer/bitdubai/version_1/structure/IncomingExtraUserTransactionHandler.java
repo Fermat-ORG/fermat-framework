@@ -72,10 +72,10 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
         try{
             WalletAddressBookRecord walletAddressBookRecord = walletAddressBookRegistry.getWalletCryptoAddressBookByCryptoAddress(transaction.getInformation().getAddressTo());
             ReferenceWallet referenceWallet = walletAddressBookRecord.getWalletType();
-            UUID walletID = walletAddressBookRecord.getWalletId();
+            String walletPublicKey = walletAddressBookRecord.getWalletPublicKey();
 
             TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager,actorAddressBookManager);
-            TransactionExecutor executor = executorFactory.newTransactionExecutor(referenceWallet, walletID);
+            TransactionExecutor executor = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
 
             executor.executeTransaction(transaction);
         } catch(WalletAddressBookNotFoundException exception){

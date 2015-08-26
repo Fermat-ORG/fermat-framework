@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import android.app.Dialog;
 
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentTransaction;
 import android.app.Service;
 import android.content.Context;
 
@@ -12,7 +12,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -59,7 +60,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel3 extends Fragment {
+public class LogToolsFragmentLevel3 extends FermatFragment {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
 
@@ -92,6 +93,7 @@ public class LogToolsFragmentLevel3 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
         try {
             errorManager = developerSubAppSession.getErrorManager();
             logTool = developerSubAppSession.getToolManager().getLogTool();

@@ -222,7 +222,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             for(TransactionWrapper transaction : transactionList) {
 
                 try {
-                    bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletId());
+                    bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
                     funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
                     if (funds < transaction.getAmount()) {
                         dao.cancelTransaction(transaction);
@@ -266,7 +266,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             for(TransactionWrapper transaction : transactionList) {
                 // Now we apply it in the vault
                 try {
-                    String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletId(), transaction.getIdTransaction(), transaction.getAddressTo(), transaction.getAmount());
+                    String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getIdTransaction(), transaction.getAddressTo(), transaction.getAmount());
                     dao.setTransactionHash(transaction,hash);
                     dao.setToSTCV(transaction);
                 } catch (InsufficientMoneyException e) {
@@ -334,7 +334,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             for(TransactionWrapper transaction : transactionList){
 
                 try {
-                    bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletId());
+                    bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
                     CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getIdTransaction());
                     TransactionHandler.handleTransaction(transaction, cryptoStatus, bitcoinWalletWallet, this.dao,this.errorManager);
                 } catch (CantLoadWalletException e) {

@@ -1,9 +1,13 @@
 package com.bitdubai.android_core.app;
 
 
+import android.support.multidex.MultiDexApplication;
+
 import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
 import com.bitdubai.fermat_core.Platform;
+
+import java.io.Serializable;
 
 
 /**
@@ -18,7 +22,13 @@ import com.bitdubai.fermat_core.Platform;
  */
 
 
-public class ApplicationSession extends android.support.multidex.MultiDexApplication {
+public class ApplicationSession extends MultiDexApplication implements Serializable {
+
+    /**
+     * Application states
+     */
+    public static final int STATE_NOT_CREATED=0;
+    public static final int STATE_STARTED=1;
 
 
     /**
@@ -38,6 +48,11 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
      */
 
     private WalletSessionManager walletSessionManager;
+
+    /**
+     *  Application state
+     */
+    private int applicationState=STATE_NOT_CREATED;
 
 
     /**
@@ -76,6 +91,26 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
 
     public WalletSessionManager getWalletSessionManager(){
         return walletSessionManager;
+    }
+
+    /**
+     *  Method to change the application state from services or activities
+     *
+     * @param applicationState  is an application state constant from ApplicationSession class
+     */
+
+    public void changeApplicationState(int applicationState){
+        this.applicationState=applicationState;
+    }
+
+    /**
+     * Method to get the application state from services or activities
+     *
+     * @return application state constant from ApplicationSession class
+     */
+
+    public int getApplicationState(){
+        return applicationState;
     }
 
 }

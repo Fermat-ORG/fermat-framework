@@ -20,8 +20,8 @@ public interface WalletAddressBookRegistry {
 
     WalletAddressBookRecord getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException;
 
-    List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException;
+    List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletPublicKey(String walletPublicKey) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException;
 
-    void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, ReferenceWallet walletType, UUID walletId) throws CantRegisterWalletAddressBookException;
+    void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, ReferenceWallet walletType, String walletPublicKey) throws CantRegisterWalletAddressBookException;
 
 }

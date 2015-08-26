@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
@@ -21,8 +21,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNotificationAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
@@ -42,7 +42,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
      * TransactionNotificationAgent variables
      */
     Database database;
-    UUID walletId;
+    String userPublicKey;
 
     /**
      * Agent interface member variables
@@ -81,12 +81,12 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
     /**
      * Constructor
      */
-    public TransactionNotificationAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, UUID walletId){
+    public TransactionNotificationAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, String userPublicKey){
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.walletId = walletId;
+        this.userPublicKey = userPublicKey;
     }
 
     /**
@@ -208,7 +208,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
              */
             try {
 
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, walletId.toString());
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, userPublicKey);
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
                 /**
@@ -222,7 +222,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  */
                 try {
 
-                    database =  databaseFactory.createDatabase(pluginId, walletId.toString());
+                    database =  databaseFactory.createDatabase(pluginId, userPublicKey);
 
                 }
                 catch (CantCreateDatabaseException cantCreateDatabaseException){
