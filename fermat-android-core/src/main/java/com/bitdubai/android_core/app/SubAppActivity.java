@@ -566,9 +566,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      * Method that loads the UI
      */
 
-    protected void loadUI(SubAppsSession subAppSession){
+    protected void loadUI(SubAppsSession subAppSession) {
 
-        try{
+        try {
             /**
              * Get current activity to paint
              */
@@ -579,23 +579,26 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             /**
              * Paint the screenPager
              */
-            if(activity.getTabStrip() == null && activity.getFragments().size() > 1){
+            if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
             /**
              * Paint tabs
              */
-            if (activity.getTabStrip() !=null ){
+            if (activity.getTabStrip() != null) {
                 setPagerTabs(getSubAppRuntimeMiddleware().getLastSubApp(), activity.getTabStrip(), subAppSession);
             }
             /**
              * Paint single screen
              */
-            if(activity.getFragments().size() == 1){
+            if (activity.getFragments().size() == 1) {
                 setOneFragmentInScreen();
             }
-        }
-        catch (Exception e) {
+        }catch (NullPointerException e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
@@ -637,16 +640,23 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         SubAppsSession subAppSession = null;
         try {
             Bundle bundle = getIntent().getExtras();
-
-            InstalledSubApp installedSubApp = (InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP);
-
-
-            if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getSubAppType())) {
-                subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getSubAppType().getCode());
-            } else {
-                subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), getToolManager(),getWalletStoreModuleManager(),getWalletPublisherManager());
+            InstalledSubApp installedSubApp=null;
+            if(bundle!=null){
+                if(bundle.containsKey(INSTALLED_SUB_APP)){
+                    installedSubApp  = (InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP);
+                }
             }
-        }catch (Exception e){
+            if(installedSubApp!=null){
+                if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getSubAppType())) {
+                    subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getSubAppType().getCode());
+                } else {
+                    subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), getToolManager(),getWalletStoreModuleManager(),getWalletPublisherManager());
+                }
+            }
+
+        } catch (NullPointerException nullPointerException){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(nullPointerException));
+        } catch (Exception e){
             //this happend when is in home screen
         }
         return subAppSession;

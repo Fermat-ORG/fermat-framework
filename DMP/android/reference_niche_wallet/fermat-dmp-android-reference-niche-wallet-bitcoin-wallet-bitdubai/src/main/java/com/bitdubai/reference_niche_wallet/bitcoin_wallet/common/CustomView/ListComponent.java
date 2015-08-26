@@ -2,8 +2,10 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
@@ -14,45 +16,38 @@ public class ListComponent implements CustomComponentsObjects{
     private  String titleTransaction="";
     private  String detailTransaction="";
     private CryptoWalletTransaction cryptoWalletTransaction;
-    private WalletContactRecord walletContactRecord;
-    private CryptoWallet cryptoWallet;
 
-    public ListComponent(CryptoWalletTransaction cryptoWalletTransaction,WalletContactRecord walletContactRecord, CryptoWallet cryptoWallet) {
+    public ListComponent(CryptoWalletTransaction cryptoWalletTransaction) {
         //this.titleTransaction = cryptoWalletTransaction.getBitcoinWalletTransaction().;
+        this.cryptoWalletTransaction = cryptoWalletTransaction;
         generateTitle();
         generateDetailTransaction();
-        this.walletContactRecord = walletContactRecord;
-        this.cryptoWallet = cryptoWallet;
+
     }
 
     private void generateTitle(){
-        if(cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.CREDIT)){
-            titleTransaction+= "Receive from "+getActorNameProvisorio(cryptoWalletTransaction);
-        }else if (cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.DEBIT)){
-            titleTransaction+= "Send from "+getActorNameProvisorio(cryptoWalletTransaction);
-        }
-    }
-
-    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
-        if (cryptoWalletTransaction.getContactId() != null) {
-            try {
-                WalletContactRecord walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
-                return walletContactRecord.getActorName();
-            } catch (Exception e) {
-                System.out.println("esta es para vos mati.");
+        try {
+            if (cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.CREDIT)) {
+                titleTransaction += "Receive from " + cryptoWalletTransaction.getInvolvedActor().getName();
+            } else if (cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.DEBIT)) {
+                titleTransaction += "Send from " + cryptoWalletTransaction.getInvolvedActor().getName();
             }
-        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
-            return cryptoWalletTransaction.getInvolvedActor().getName();
+            titleTransaction+= " "+formatBalanceString(cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode());
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return "Unknow";
     }
 
     private void generateDetailTransaction(){
+        try {
         String textBody = cryptoWalletTransaction.getBitcoinWalletTransaction().getMemo();
         if(textBody.length() != 0){
             detailTransaction+= textBody;
         }else{
             detailTransaction+= "Add memo to this transaction";
+        }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -89,6 +84,6 @@ public class ListComponent implements CustomComponentsObjects{
     }
 
     public byte[] getImage() {
-        return walletContactRecord.getContactProfileImage();
+        return cryptoWalletTransaction.getInvolvedActor().getPhoto();
     }
 }
