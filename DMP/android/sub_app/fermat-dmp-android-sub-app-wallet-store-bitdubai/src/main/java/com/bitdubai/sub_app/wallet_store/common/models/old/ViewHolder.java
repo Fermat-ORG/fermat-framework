@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.Model;
+package com.bitdubai.sub_app.wallet_store.common.models.old;
 
 import android.widget.ImageView;
 import android.widget.RatingBar;
