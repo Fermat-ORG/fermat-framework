@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleTransaction</code>
@@ -14,11 +17,14 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
 
     BitcoinWalletTransaction bitcoinWalletTransaction;
 
-    String involvedActorName;
+    Actor involvedActor;
 
-    public CryptoWalletWalletModuleTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, String involvedActorName) {
+    UUID contactId;
+
+    public CryptoWalletWalletModuleTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, Actor involvedActor, UUID contactId) {
         this.bitcoinWalletTransaction = bitcoinWalletTransaction;
-        this.involvedActorName = involvedActorName;
+        this.involvedActor = involvedActor;
+        this.contactId = contactId;
     }
 
     @Override
@@ -27,7 +33,12 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
     }
 
     @Override
-    public String getInvolvedActorName() {
-        return involvedActorName;
+    public Actor getInvolvedActor() {
+        return involvedActor;
+    }
+
+    @Override
+    public UUID getContactId() {
+        return contactId;
     }
 }

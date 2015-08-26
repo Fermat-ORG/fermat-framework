@@ -269,8 +269,8 @@ public class BalanceFragment extends Fragment {
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
                 //TODO: este metodo va a desaparecer y se va a reemplazar por el metodo de getWalletContactById
-                List<WalletContactRecord> lstWalletContact = cryptoWallet.getWalletContactByNameContainsAndWalletPublicKey(cryptoWalletTransaction.getInvolvedActorName(), walletPublicKey);
-                lstData.add(new ListComponent(cryptoWalletTransaction,lstWalletContact.get(0)));
+                List<WalletContactRecord> lstWalletContact = cryptoWallet.getWalletContactByNameContainsAndWalletPublicKey(getActorNameProvisorio(cryptoWalletTransaction), walletPublicKey);
+                lstData.add(new ListComponent(cryptoWalletTransaction,lstWalletContact.get(0), cryptoWallet));
             }
 
 
@@ -308,6 +308,19 @@ public class BalanceFragment extends Fragment {
         return rootView;
     }
 
+    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
+        if (cryptoWalletTransaction.getContactId() != null) {
+            try {
+                WalletContactRecord walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
+                return walletContactRecord.getActorName();
+            } catch (Exception e) {
+                System.out.println("esta es para vos mati.");
+            }
+        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
+            return cryptoWalletTransaction.getInvolvedActor().getName();
+        }
+        return "Unknow";
+    }
 
     /*
         Method to change the balance type
