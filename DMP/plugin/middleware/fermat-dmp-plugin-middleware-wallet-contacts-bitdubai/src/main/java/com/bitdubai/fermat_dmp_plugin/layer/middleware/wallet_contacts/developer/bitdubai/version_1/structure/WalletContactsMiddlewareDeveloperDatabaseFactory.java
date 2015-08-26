@@ -70,6 +70,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -91,6 +92,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
                    * We create the new database
                    */
                 database = walletContactsDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -154,6 +156,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
         try {
             selectedTable = database.getTable(developerDatabaseTable.getName());
             selectedTable.loadToMemory();
+            database.closeDatabase();
 
             List<DatabaseTableRecord> records = selectedTable.getRecords();
             List<String> developerRow = new ArrayList<String>();
@@ -165,7 +168,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
                     /**
                      * I get each row and save them into a List<String>
                      */
-                    developerRow.add(field.getValue().toString());
+                    developerRow.add(field.getValue());
                 }
                 /**
                  * I create the Developer Database record
@@ -174,11 +177,13 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
             /**
              * if there was an error, I will returned an empty list.
              */
             return returnedRecords;
         } catch (Exception e) {
+            database.closeDatabase();
             return returnedRecords;
         }
         /**

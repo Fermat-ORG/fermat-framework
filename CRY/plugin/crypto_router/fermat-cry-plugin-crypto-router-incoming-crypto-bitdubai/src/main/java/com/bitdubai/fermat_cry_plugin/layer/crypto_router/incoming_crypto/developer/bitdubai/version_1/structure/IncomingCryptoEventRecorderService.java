@@ -16,6 +16,9 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +45,8 @@ public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_p
     /**
      * DealsWithEvents Interface member variables.
      */
-    private com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager;
-    private List<com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener> listenersAdded = new ArrayList<>();
+    private EventManager eventManager;
+    private List<EventListener> listenersAdded = new ArrayList<>();
 
     /*
      * DealsWithRegistry Interface member variables.
@@ -114,15 +117,9 @@ public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_p
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener;
-        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler eventHandler;
+        EventListener eventListener;
+        EventHandler eventHandler;
 
-        /*eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
-        eventHandler = new IncomingCryptoTransactionsWaitingTransferenceEventHandler();
-        ((IncomingCryptoTransactionsWaitingTransferenceEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);*/
 
         /**
          * Issue #543
@@ -163,18 +160,15 @@ public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_p
 
     @Override
     public void stop() {
+        removeRegisteredListeners();
+        this.serviceStatus = ServiceStatus.STOPPED;
+    }
 
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-        for (com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener : listenersAdded) {
+    private void removeRegisteredListeners(){
+        for (EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }
-
         listenersAdded.clear();
-        
-        this.serviceStatus = ServiceStatus.STOPPED;
-        
     }
 
     @Override
