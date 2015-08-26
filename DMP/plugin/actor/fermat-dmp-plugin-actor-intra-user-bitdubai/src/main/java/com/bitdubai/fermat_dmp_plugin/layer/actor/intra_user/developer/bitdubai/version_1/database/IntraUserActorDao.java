@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -34,11 +33,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraUserConnectionException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorActor;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +52,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserActorDao {
+public class IntraUserActorDao implements Serializable{
 
     /**
      * Represent the Plugin Database.
@@ -97,9 +95,13 @@ public class IntraUserActorDao {
               */
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
             database.closeDatabase();
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        }
+        catch (CantOpenDatabaseException cantOpenDatabaseException)
+        {
             throw new CantInitializeIntraUserActorDatabaseException(CantInitializeIntraUserActorDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        } catch (DatabaseNotFoundException e) {
+        }
+        catch (DatabaseNotFoundException e)
+        {
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
@@ -117,6 +119,10 @@ public class IntraUserActorDao {
                    */
                 throw new CantInitializeIntraUserActorDatabaseException(CantInitializeIntraUserActorDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
             }
+        }
+        catch (Exception e)
+        {
+            throw new CantInitializeIntraUserActorDatabaseException(CantInitializeIntraUserActorDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a unknown problem and i cannot open the database.");
         }
     }
 
@@ -270,6 +276,8 @@ public class IntraUserActorDao {
 
             // 2) Find all Intra Users.
             table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, ContactState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+
             table.loadToMemory();
 
 
@@ -368,86 +376,9 @@ public class IntraUserActorDao {
         return list;
     }
 
-    public List<ActorIntraUser> getYourPendingConnections (String intraUserLoggedInPublicKey, ContactState contactState) throws CantGetIntraUsersListException {
-
-
-        // Setup method.
-        List<ActorIntraUser> list = new ArrayList<ActorIntraUser>(); // Intra User Actor list.
-        DatabaseTable table;
-
-        // Get Intra Users identities list.
-        try {
-
-            /**
-             * 1) Get the table.
-             */
-            table = this.database.getTable (IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
-
-            if (table == null) {
-                /**
-                 * Table not found.
-                 */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
-            }
-
-
-            // 2) Find  Intra Users by state.
-            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode(), DatabaseFilterType.EQUAL);
-
-            table.loadToMemory();
-
-
-            // 3) Get Intra Users Recorod.
-            for (DatabaseTableRecord record : table.getRecords ()) {
-
-                // Add records to list.
-                list.add(new IntraUserActorActor(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_NAME_COLUMN_NAME),
-                        record.getStringValue (IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getIntraUserProfileImagePrivateKey(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ContactState.valueOf(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME))));
-            }
-
-            database.closeDatabase();
-        }
-        catch (CantLoadTableToMemoryException e) {
-            database.closeDatabase();
-            throw new CantGetIntraUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
-        }
-        catch (CantGetIntraUserActorProfileImageException e) {
-            database.closeDatabase();
-            // Failure unknown.
-            throw new CantGetIntraUsersListException (e.getMessage(), e, "Intra User Actor", "Can't get profile Image.");
-
-        } catch (Exception e) {
-            database.closeDatabase();
-            throw new CantGetIntraUsersListException (e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant get Intra User Actor list, unknown failure.");
-        }
-
-
-        // Return the list values.
-        return list;
-    }
-
-
-    /**
+     /**
      * Private Methods
      */
-
-
-    private Database openDatabase() throws CantExecuteDatabaseOperationException {
-        try {
-            return pluginDatabaseSystem.openDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw  new CantExecuteDatabaseOperationException("ERROR OPEN DATABASE",exception,"", "Error in database plugin.");
-
-        }
-        catch (Exception e) {
-            throw  new CantExecuteDatabaseOperationException("ERROR OPEN DATABASE",FermatException.wrapException(e),"", "Error in database plugin.");
-        }
-    }
-
 
 
 
@@ -476,7 +407,7 @@ public class IntraUserActorDao {
 
 
 
-    public byte[] getIntraUserProfileImagePrivateKey(String publicKey) throws CantGetIntraUserActorProfileImageException {
+    private byte[] getIntraUserProfileImagePrivateKey(String publicKey) throws CantGetIntraUserActorProfileImageException {
         byte[] profileImage;
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
@@ -543,40 +474,6 @@ public class IntraUserActorDao {
     }
 
 
-    /**
-     * <p>Method that check if alias exists.
-     * @param alias
-     * @return boolean exists
-     * @throws CantCreateNewDeveloperException
-     */
-    private boolean aliasExists (String alias) throws CantCreateNewDeveloperException {
 
-
-        DatabaseTable table;
-        /**
-         * Get developers identities list.
-         * I select records on table
-         */
-
-        try {
-            table = this.database.getTable (IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
-
-            if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not  found.", "Intra User Actor", "Cant check if alias exists, table not found.");
-            }
-
-            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_NAME_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
-            table.loadToMemory();
-
-            return table.getRecords ().size () > 0;
-
-
-        } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException (em.getMessage(), em, "Intra User Actor", "Cant load " + IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
-
-        } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant check if alias exists, unknown failure.");
-        }
-    }
 
 }

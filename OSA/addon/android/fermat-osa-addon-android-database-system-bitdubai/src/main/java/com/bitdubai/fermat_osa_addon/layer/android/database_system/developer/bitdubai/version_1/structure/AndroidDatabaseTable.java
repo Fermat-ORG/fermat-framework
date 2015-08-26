@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -535,14 +535,14 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     }
 
     @Override
-    public void setStateFilter(String columName, FactoryProjectState factoryProjectState, DatabaseFilterType type) {
+    public void setStateFilter(String columName, WalletFactoryProjectState walletFactoryProjectState, DatabaseFilterType type) {
         if(this.tableFilter == null)
             this.tableFilter = new ArrayList<DatabaseTableFilter>();
 
         DatabaseTableFilter filter = new AndroidDatabaseTableFilter();
 
         filter.setColumn(columName);
-        filter.setValue(factoryProjectState.toString());
+        filter.setValue(walletFactoryProjectState.toString());
         filter.setType(type);
 
         this.tableFilter.add(filter);

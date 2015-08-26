@@ -10,11 +10,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
 
-public class ManagerFragment extends  Fragment {
+public class ManagerFragment extends FermatFragment {
     View rootView;
     ExpandableListView lv;
     String[] contacts;
@@ -57,9 +58,9 @@ public class ManagerFragment extends  Fragment {
         balances_available = new String[]{"$1,970.00 available"};
 
         /*try {
-            //List<DescriptorFactoryProject> lstFactoryProjects= subAppSession.getWalletDescriptorFactoryProjectManager().getAllWalletFactoryProjects();
+            //List<WalletFactoryProject> lstFactoryProjects= subAppSession.getWalletFactoryProjectManager().getAllWalletFactoryProjects();
 
-            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletDescriptorFactoryProjectManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
+            //WalletFactoryProjectProposalManager walletFactoryProjectProposalManager= subAppSession.getWalletFactoryProjectManager().getWalletFactoryProjectProposalManager(lstFactoryProjects.get(0));
 
             //List<WalletFactoryProjectProposal> walletFactoryProjectProposal= walletFactoryProjectProposalManager.getProposals();
 

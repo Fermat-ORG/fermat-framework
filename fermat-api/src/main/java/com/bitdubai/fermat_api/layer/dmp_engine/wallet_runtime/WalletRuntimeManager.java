@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRe
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRecordOpenedWalletException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ import java.util.UUID;
 public interface WalletRuntimeManager {
 
 
-    public void recordNavigationStructure(String xmlText,String linkToRepo,String name,UUID skinId) throws CantRecordInstalledWalletNavigationStructureException;
+    public void recordNavigationStructure(String xmlText,String linkToRepo,String name,UUID skinId,String walletPublicKey) throws CantRecordInstalledWalletNavigationStructureException, CantCheckResourcesException;
 
     public boolean removeNavigationStructure(String publicKey) throws CantRemoveWalletNavigationStructureException;
 

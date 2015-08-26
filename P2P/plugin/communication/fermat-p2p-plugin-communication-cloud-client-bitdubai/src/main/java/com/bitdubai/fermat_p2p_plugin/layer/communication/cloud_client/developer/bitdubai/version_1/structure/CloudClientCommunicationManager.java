@@ -10,10 +10,15 @@ import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -31,6 +36,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSignatureException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 
@@ -77,6 +83,78 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		networkServiceRegistry.clear();
 		requestedConnections = new ConcurrentHashMap<>();
 	}
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see CloudFMPConnectionManager#processDataPackets()
+     */
+    @Override
+    public void processDataPackets() throws CloudCommunicationException {
+
+        FMPPacket dataPacket = null;
+
+        try {
+
+            /**
+             * Validate are pending incoming messages
+             */
+            if (!pendingIncomingPackets.isEmpty()){
+
+                dataPacket = pendingIncomingPackets.remove();
+
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST) {
+                    handleConnectionRequest(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT){
+                    handleConnectionAccept(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT_FORWARD) {
+                    handleConnectionAcceptForward(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_DENY) {
+                    handleConnectionDeny(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_REGISTER) {
+                    handleConnectionRegister(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_DEREGISTER) {
+                    handleConnectionDeregister(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.CONNECTION_END) {
+                    handleConnectionEnd(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT) {
+                    handleDataTransmit(dataPacket);
+                }
+
+                if(dataPacket.getType() == FMPPacketType.REGISTER_NETWORK_SERVICES_LIST_REQUEST){
+                    handleRegisteredNetworkServicesListRequest(dataPacket);
+                }
+
+            }
+
+        }catch(FMPException fMPException){
+
+            System.out.println("CloudFMPConnectionManager - fMPException = " + fMPException.getMessage());
+
+            String message = CloudCommunicationException.DEFAULT_MESSAGE;
+            FermatException cause = fMPException;
+            String context = "Packet Data: " + dataPacket.toString();
+            String possibleReason = "Something failed in the processing of one of the different PacketType, you should check the FMPException that is linked below";
+            throw new CloudCommunicationException(message, cause, context, possibleReason);
+
+        }catch(NoSuchElementException ex){
+            return;
+        }
+    }
 
     /**
      * (non-Javadoc)
@@ -164,7 +242,8 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
              * Get the JsonObject structure from the message
              */
             Gson gson = new Gson();
-            JsonObject messageReceived = gson.fromJson(decryptedMessage, JsonObject.class);
+            JsonParser parser = new JsonParser();
+            JsonObject messageReceived = parser.parse(decryptedMessage).getAsJsonObject();
 
             /*
              * Construct the CommunicationChannelAddress
@@ -290,6 +369,30 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		registeredConnections.put(dataPacket.getSender(), serverConnection);
 	}
 
+
+    /**
+     * This method return the list of identity of network services registered
+     * @param dataPacketReceived
+     */
+    private void handleRegisteredNetworkServicesListRequest(FMPPacket dataPacketReceived) throws FMPException {
+
+        /*
+         * Obtain the list of  identities by the network service type
+         */
+        Gson gson = new Gson();
+        String[] identitiesList = gson.fromJson(dataPacketReceived.getMessage(), String[].class);
+
+        /*
+         * Convert to list collection
+         */
+        List<String> remoteNetworkServicesIdentities =  Arrays.asList(identitiesList);
+
+        System.out.print("remoteNetworkServicesIdentities = "+remoteNetworkServicesIdentities);
+
+        //TODO: How to retrieve this list to the network service that request? fire a event with the list???
+
+    }
+
     /**
      * (non-Javadoc)
      *
@@ -347,7 +450,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
             while(clientChannel.isConnectionPending()) {
 
                 /*
-                 * try the finish to connect
+                 * try finish to connect
                  */
                 clientChannel.finishConnect();
             }
@@ -463,12 +566,16 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 
         System.out.println("CloudClientCommunicationManager - registerNetworkService");
 
-
 		/*
          * Construct the message structure info
          */
         JsonObject message = new JsonObject();
-        message.add("identityNetworkServicePublicKey", new JsonPrimitive(networkServicePublicKey));
+        message.addProperty("identityNetworkServicePublicKey", networkServicePublicKey);
+        Gson gson = new Gson();
+        String jsonMessage = gson.toJson(message);
+
+
+        System.out.println("CloudClientCommunicationManager - jsonMessage = "+jsonMessage);
 
 		try{
 
@@ -477,13 +584,13 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
              */
             FMPPacket requestPacket = FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(identity.getPublicKey(),         //sender
                                                                                                   identityPublicKeyRemoteServer,  //destination
-                                                                                                  message.getAsString(),          // message
+                                                                                                  jsonMessage,          // message
                                                                                                   FMPPacketType.CONNECTION_REQUEST,
                                                                                                   networkService,
                                                                                                   identity.getPrivateKey());
 
 
-            System.out.println("CloudClientCommunicationManager - requestPacketNetworkService = "+requestPacket.toJson());
+            System.out.println("CloudClientCommunicationManager - requestPacketNetworkService = " + requestPacket.toJson());
 
             /*
              * Put the packet into PendingOutgoingPacketCache
@@ -493,7 +600,10 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
             /*
              * Get the server connection from the requested connection
              */
-            SelectionKey serverConnection = requestedConnections.get(requestPacket.getSender());
+            SelectionKey serverConnection = registeredConnections.get(identityPublicKeyRemoteServer);
+
+
+            System.out.println("CloudClientCommunicationManager - serverConnection = " + serverConnection);
 
              /*
              * Attach the destination of the packet
@@ -614,5 +724,62 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		return new CloudCommunicationException(message, cause, context, possibleReason);
 	}
 
+    /**
+     * This method request a Registered Network Services List in the cloud client
+     *
+     * @param networkServicesType
+     * @exception CloudCommunicationException
+     */
+    public void requestRegisteredNetworkServicesList(NetworkServices networkServicesType) throws CloudCommunicationException {
+
+        System.out.println("CloudClientCommunicationManager - requestRegisteredNetworkServicesList");
+
+
+        try{
+
+            /*
+             * Create the request packet
+             */
+            FMPPacket requestPacket = FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(identity.getPublicKey(),      //sender
+                                                                                                identityPublicKeyRemoteServer, //destination
+                                                                                                "",                            // message
+                                                                                                FMPPacketType.REGISTER_NETWORK_SERVICES_LIST_REQUEST,
+                                                                                                networkServicesType,
+                                                                                                identity.getPrivateKey());
+
+
+            System.out.println("CloudClientCommunicationManager - requestPacket = " + requestPacket.toJson());
+
+            /*
+             * Put the packet into PendingOutgoingPacketCache
+             */
+            putIntoPendingOutgoingPacketCache(requestPacket.getDestination(), requestPacket);
+
+            /*
+             * Get the server connection from the requested connection
+             */
+            SelectionKey serverConnection = registeredConnections.get(identityPublicKeyRemoteServer);
+
+             /*
+             * Attach the destination of the packet
+             */
+            serverConnection.attach(requestPacket.getDestination());
+
+            /*
+             * Mark the connection to write
+             */
+            serverConnection.interestOps(SelectionKey.OP_WRITE);
+
+        } catch(FMPException ex){
+
+            /*
+             * Throw new CloudCommunicationException
+             */
+            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmectricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
+        }
+
+
+
+    }
 	
 }

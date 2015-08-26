@@ -27,9 +27,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
@@ -635,17 +634,22 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
 
+        /*
         long timestamp =tx.getLockTime();
         if (timestamp == 0)
-        /**
-         * If the transaction doesn't have a locktime, I will return the current timestamp
-         */
-            return System.currentTimeMillis() / 1000L;
+
+         // If the transaction doesn't have a locktime, I will return the current timestamp
+
+            return System.currentTimeMillis();
         else
-        /**
-         * I get the current timestamp
-         */
-        return tx.getLockTime();
+        // I get the current timestamp
+
+        return tx.getLockTime() * 1000;
+        */
+
+        // Changed be Ezequiel Postan <ezequiel.postan@gmail.com>
+        // August 20th 2015
+        return tx.getUpdateTime().getTime();
     }
 
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {

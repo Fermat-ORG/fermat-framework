@@ -5,21 +5,22 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_hardware.Hardware;
 import com.bitdubai.fermat_pip_api.layer.pip_hardware.local_device.LocalDeviceHardwareManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by loui on 05/03/15.
  */
-public class LocalDeviceHardwareAddonRoot implements  Addon, DealsWithErrors,DealsWithEvents , DealsWithPlatformFileSystem, Hardware,LocalDeviceHardwareManager ,Service {
+public class LocalDeviceHardwareAddonRoot implements  Addon, DealsWithErrors,DealsWithEvents , DealsWithPlatformFileSystem, Hardware,LocalDeviceHardwareManager ,Service,Serializable {
 
     /**
      * DealWithEvents Interface member variables.

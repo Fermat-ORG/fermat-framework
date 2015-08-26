@@ -2,14 +2,12 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.*;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnBlockchainEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.IncomingCryptoReversedOnBlockchainEventListener;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnBlockchainEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnBlockchainEventHandler;
@@ -39,13 +37,13 @@ import java.util.List;
  * * * * * * * *
  */
 
-public class IncomingCryptoEventRecorderService implements DealsWithEvents, DealsWithRegistry, TransactionService {
+public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents, DealsWithRegistry, TransactionService {
 
     /**
      * DealsWithEvents Interface member variables.
      */
-    private EventManager eventManager;
-    private List<EventListener> listenersAdded = new ArrayList<>();
+    private com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager;
+    private List<com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener> listenersAdded = new ArrayList<>();
 
     /*
      * DealsWithRegistry Interface member variables.
@@ -64,7 +62,7 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
      * DealWithEvents Interface implementation.
      */
     @Override
-    public void setEventManager(EventManager eventManager) {
+    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
@@ -116,8 +114,8 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-        EventListener eventListener;
-        EventHandler eventHandler;
+        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener;
+        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler eventHandler;
 
         /*eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
         eventHandler = new IncomingCryptoTransactionsWaitingTransferenceEventHandler();
@@ -169,7 +167,7 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
         /**
          * I will remove all the event listeners registered with the event manager.
          */
-        for (EventListener eventListener : listenersAdded) {
+        for (com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }
 

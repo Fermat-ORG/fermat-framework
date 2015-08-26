@@ -34,7 +34,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdub
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserIdentitiesException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserIdentityDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityIdentity;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -102,6 +102,8 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    public static final String INTRA_USERS_PROFILE_IMAGE_FILE_NAME = "intraUserIdentityProfileImage";
+    public static final String INTRA_USERS_PRIVATE_KEYS_FILE_NAME = "intraUserIdentityPrivateKey";
 
     /**
      * List Intra Users linked to current Device User
@@ -163,7 +165,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
             intraUserIdentityDao.createNewUser(alias,publicKey,privateKey,loggedUser,profileImage);
 
-            return new IntraUserIdentityIdentity(alias,publicKey,privateKey,profileImage);
+            return new IntraUserIdentityIdentity(alias,publicKey,privateKey,profileImage, pluginFileSystem, pluginId);
         }
         catch(CantGetLoggedInDeviceUserException e)
         {
@@ -270,45 +272,6 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
     }
 
     /**
-     * DealWithDeviceUser Interface implementation.
-     */
-
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-
-    }
-
-    /**
-     * DealWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem  = pluginFileSystem;
-
-    }
-
-
-
-
-    /**
      * LogManagerForDevelopers Interface implementation.
      */
     @Override
@@ -343,6 +306,42 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
                 IntraUserIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+    }
+
+    /**
+     * DealWithDeviceUser Interface implementation.
+     */
+
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
+    }
+
+    /**
+     * DealWithErrors Interface implementation.
+     */
+
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+
+    }
+
+    /**
+     * DealWithPluginFileSystem Interface implementation.
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem  = pluginFileSystem;
+
     }
 
     /**

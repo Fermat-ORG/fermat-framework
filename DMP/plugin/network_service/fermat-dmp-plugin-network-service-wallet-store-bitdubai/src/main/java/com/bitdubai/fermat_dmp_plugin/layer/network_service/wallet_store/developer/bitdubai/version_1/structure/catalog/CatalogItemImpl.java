@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
 
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -18,6 +19,7 @@ public class CatalogItemImpl implements CatalogItem {
     String description;
     int defaultSizeInBytes;
     byte[] icon;
+    URL publisherWebsiteUrl;
     DetailedCatalogItemImpl detailedCatalogItemImpl;
 
     /**
@@ -36,13 +38,14 @@ public class CatalogItemImpl implements CatalogItem {
      * @param icon
      * @param detailedCatalogItemImpl
      */
-    public CatalogItemImpl(UUID id, String name, WalletCategory category, String description, int defaultSizeInBytes, byte[] icon, DetailedCatalogItemImpl detailedCatalogItemImpl) {
+    public CatalogItemImpl(UUID id, String name, WalletCategory category, String description, int defaultSizeInBytes, byte[] icon, DetailedCatalogItemImpl detailedCatalogItemImpl, URL publisherWebsiteUrl) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.description = description;
         this.defaultSizeInBytes = defaultSizeInBytes;
         this.icon = icon;
+        this.publisherWebsiteUrl = publisherWebsiteUrl;
         this.detailedCatalogItemImpl = detailedCatalogItemImpl;
     }
 
@@ -77,6 +80,11 @@ public class CatalogItemImpl implements CatalogItem {
     }
 
     @Override
+    public URL getpublisherWebsiteUrl(){
+        return publisherWebsiteUrl;
+    }
+
+    @Override
     public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException {
         return detailedCatalogItemImpl;
     }
@@ -103,6 +111,10 @@ public class CatalogItemImpl implements CatalogItem {
 
         public void setDetailedCatalogItemImpl(DetailedCatalogItemImpl detailedCatalogItemImpl) {
         this.detailedCatalogItemImpl = detailedCatalogItemImpl;
+    }
+
+    public void setpublisherWebsiteUrl(URL publisherWebsiteUrl){
+        this.publisherWebsiteUrl = publisherWebsiteUrl;
     }
 
     public void setId(UUID id) {

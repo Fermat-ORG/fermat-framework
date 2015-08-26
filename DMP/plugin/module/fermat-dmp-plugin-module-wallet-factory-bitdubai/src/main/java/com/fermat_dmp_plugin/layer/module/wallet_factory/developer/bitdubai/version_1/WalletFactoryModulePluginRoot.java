@@ -8,13 +8,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletDescriptorFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantImportWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantRemoveWalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableDevelopersException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableProjectsException;
@@ -29,10 +32,11 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryModuleManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +47,10 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 07/08/15.
  */
-public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin,WalletFactoryManager {
+public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, LogManagerForDevelopers,WalletFactoryManager, Service, Plugin {
+
+    WalletFactoryModuleManager  walletFactoryModuleManager ;
+    UUID pluginId;
 
 
     /**
@@ -54,25 +61,27 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
+     * DealsWithWalletFactory interface variable and implementation
+     */
+    WalletFactoryProjectManager walletFactoryProjectManager;
+    @Override
+    public void setWalletFactoryProjectManager(WalletFactoryProjectManager walletFactoryProjectManager) {
+        this.walletFactoryProjectManager = walletFactoryProjectManager;
+    }
+
+    /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
 
     /**
-     * UsesFileSystem Interface member variables.
+     * Plugin interface implementation
      */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 
     /**
      * Service Interface implementation.
@@ -80,13 +89,7 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
 
     @Override
     public void start() {
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-
-        EventListener eventListener;
-        EventHandler eventHandler;
-
+        walletFactoryModuleManager = new WalletFactoryModuleManager(walletFactoryProjectManager);
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -106,17 +109,6 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
 
     @Override
     public void stop() {
-
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
-        }
-
-        listenersAdded.clear();
-
         this.serviceStatus = ServiceStatus.STOPPED;
 
     }
@@ -124,44 +116,6 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
-    }
-
-
-
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     *DealWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
 
@@ -209,67 +163,68 @@ public class WalletFactoryModulePluginRoot implements Service, DealsWithEvents, 
 
     }
 
+
     @Override
     public WalletFactoryDeveloper getLoggedDeveloper() {
         return null;
     }
 
     @Override
-    public List<WalletFactoryDeveloper> getAvailableDevelopers() throws CantGetAvailableDevelopersException {
-        return null;
+    public List<WalletFactoryProject> getAvailableProjects() throws CantGetAvailableProjectsException {
+        try{
+            return walletFactoryModuleManager.getAllFactoryProjects();
+        } catch (Exception e){
+            throw new CantGetAvailableProjectsException(CantGetAvailableProjectsException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     @Override
-    public List<FactoryProject> getAvailableProjects() throws CantGetAvailableProjectsException {
-        return null;
+    public WalletFactoryProject createEmptyProject() throws CantCreateWalletDescriptorFactoryProjectException {
+        try{
+            return walletFactoryModuleManager.createEmptyProject();
+        } catch (Exception e){
+            throw new CantCreateWalletDescriptorFactoryProjectException(CantCreateWalletDescriptorFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     @Override
-    public FactoryProject createEmptyProject(String name, WalletCategory walletCategory, WalletType walletType) throws CantCreateWalletDescriptorFactoryProjectException {
-        return null;
-    }
-
-
-    @Override
-    public void saveProject(FactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
-
+    public void saveProject(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
+        try{
+             walletFactoryModuleManager.saveProject(walletFactoryProject);
+        } catch (Exception e){
+            throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     @Override
-    public void removeyProject(FactoryProject walletFactoryProject) throws CantRemoveWalletFactoryProject {
-
-    }
-
-
-
-    @Override
-    public void importProjectFromRepository(String newName, String repository) throws CantImportWalletFactoryProjectException {
+    public void removeProject(WalletFactoryProject walletFactoryProject) throws CantRemoveWalletFactoryProject {
 
     }
 
     @Override
-    public FactoryProject getProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
-        return null;
+    public WalletFactoryProject getProject(String publicKey) throws CantGetWalletFactoryProjectException {
+        try{
+            return walletFactoryModuleManager.getProject(publicKey);
+        } catch (Exception e){
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     @Override
-    public List<FactoryProject> getClosedProjects(FactoryProjectState state) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
-        return null;
+    public List<WalletFactoryProject> getClosedProjects() throws CantGetWalletFactoryProjectException {
+        try{
+            return walletFactoryModuleManager.getClosedProjects();
+        } catch (Exception e){
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     @Override
-    public FactoryProject closeProject(String name) throws CantGetWalletFactoryProjectException, ProjectNotFoundException {
-        return null;
-    }
-
-
-    @Override
-    public Skin getSkin(UUID skinId) throws CantGetSkinException {
-        return null;
-    }
-
-    @Override
-    public Language getLanguage(UUID languageId) throws CantGetLanguageException {
-        return null;
+    public void closeProject(WalletFactoryProject walletFactoryProject) throws CantGetWalletFactoryProjectException {
+        try{
+             walletFactoryModuleManager.closeProject(walletFactoryProject);
+        } catch (Exception e){
+            throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 }

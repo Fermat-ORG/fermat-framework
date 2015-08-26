@@ -1,13 +1,11 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 
 
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -25,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -33,13 +33,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
@@ -60,7 +60,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel1 extends Fragment {
+public class LogToolsFragmentLevel1 extends FermatFragment {
 
     private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS.getKey();
 
@@ -95,6 +95,8 @@ public class LogToolsFragmentLevel1 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        //developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
         errorManager = developerSubAppSession.getErrorManager();
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
@@ -261,7 +263,7 @@ public class LogToolsFragmentLevel1 extends Fragment {
                         params[0] = lst;
                         params[1] = level;
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS,params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(),params);
 
 
                     }

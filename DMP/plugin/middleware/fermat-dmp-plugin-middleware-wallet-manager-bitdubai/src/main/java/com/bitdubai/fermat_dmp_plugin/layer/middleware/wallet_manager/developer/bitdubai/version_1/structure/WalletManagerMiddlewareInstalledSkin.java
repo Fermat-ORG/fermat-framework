@@ -24,7 +24,6 @@ public class WalletManagerMiddlewareInstalledSkin implements InstalledSkin {
     /**
      * Constructor
      */
-
     public WalletManagerMiddlewareInstalledSkin(UUID id,String alias,String preview, Version version){
         this.alias = alias;
         this.preview = preview;
@@ -35,7 +34,6 @@ public class WalletManagerMiddlewareInstalledSkin implements InstalledSkin {
     /**
      * InstalledSkin Interface implementation.
      */
-
 
     /**
      * This method gives us the name (alias) of an skin

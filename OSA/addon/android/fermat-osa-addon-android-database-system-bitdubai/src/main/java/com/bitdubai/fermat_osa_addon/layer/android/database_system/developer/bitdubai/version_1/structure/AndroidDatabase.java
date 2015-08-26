@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
  * *
  */
 
-public class AndroidDatabase implements Database, DatabaseFactory {
+public class AndroidDatabase implements Database, DatabaseFactory,Serializable {
 
     /**
      * database Interface member variables.
@@ -207,6 +208,7 @@ public class AndroidDatabase implements Database, DatabaseFactory {
 
             database.setTransactionSuccessful();
             database.endTransaction();
+
         }catch(Exception exception) {
 
             /**
@@ -220,6 +222,9 @@ public class AndroidDatabase implements Database, DatabaseFactory {
             String possibleReason = "The most reasonable thing to do here is check the cause as this is a triggered exception that can come from many situations";
 
             throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
+
+        }finally {
+            closeDatabase();
         }
     }
 
