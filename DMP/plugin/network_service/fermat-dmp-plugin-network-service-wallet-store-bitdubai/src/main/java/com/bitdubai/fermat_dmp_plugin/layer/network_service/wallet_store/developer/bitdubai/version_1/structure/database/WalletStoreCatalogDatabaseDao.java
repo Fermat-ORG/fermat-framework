@@ -419,7 +419,6 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
     private List<CatalogItemImpl> getAllCatalogItemsFromDatabase() throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException{
         List<CatalogItemImpl> catalogItemImpls = new ArrayList<CatalogItemImpl>();
 
-
         List<DatabaseTableRecord> records = getAllRecordsFromDatabase(WalletStoreCatalogDatabaseConstants.ITEM_TABLE_NAME);
 
         for (DatabaseTableRecord record : records){

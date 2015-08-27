@@ -131,6 +131,10 @@ project(':fermat-dmp-plugin-identity-intra-user-bitdubai').projectDir = new File
 include ':fermat-dmp-plugin-identity-publisher-bitdubai'
 project(':fermat-dmp-plugin-identity-publisher-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-publisher-bitdubai')
 
+
+include ':fermat-dmp-plugin-identity-translator-bitdubai'
+project(':fermat-dmp-plugin-identity-translator-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-translator-bitdubai')
+
 include ':fermat-dmp-plugin-identity-designer-bitdubai'
 project(':fermat-dmp-plugin-identity-designer-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-designer-bitdubai')
 
