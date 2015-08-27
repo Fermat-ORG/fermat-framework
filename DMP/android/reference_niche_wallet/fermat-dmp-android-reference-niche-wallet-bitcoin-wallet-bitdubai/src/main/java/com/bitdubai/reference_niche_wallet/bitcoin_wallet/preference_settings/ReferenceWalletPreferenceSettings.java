@@ -18,10 +18,13 @@ import java.util.UUID;
  */
 public class ReferenceWalletPreferenceSettings extends PreferenceWalletSettings{
 
+    private int transactionToShow;
+
     BalanceType balanceType;
+    private int transactionsToShow;
 
     ReferenceWalletPreferenceSettings(){
-
+        transactionToShow=6;
     }
 
     public BalanceType getBalanceType() {
@@ -30,5 +33,9 @@ public class ReferenceWalletPreferenceSettings extends PreferenceWalletSettings{
 
     public void setBalanceType(BalanceType balanceType) {
         this.balanceType = balanceType;
+    }
+
+    public int getTransactionsToShow() {
+        return transactionsToShow;
     }
 }
