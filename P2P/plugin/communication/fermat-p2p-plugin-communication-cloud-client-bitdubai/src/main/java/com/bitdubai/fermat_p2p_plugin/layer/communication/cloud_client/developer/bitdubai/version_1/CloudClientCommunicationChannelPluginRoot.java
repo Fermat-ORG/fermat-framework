@@ -22,9 +22,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerMan
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
@@ -59,7 +59,7 @@ import java.util.regex.Pattern;
  */
 public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, CommunicationLayerManager, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
-    public static final String HOST_CLOUD_SERVER = "137.117.108.244";
+    public static final String HOST_CLOUD_SERVER = "192.168.1.3";
 
     public static final int PORT_CLOUD_SERVER = 9090;
 
@@ -392,7 +392,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 
 
 		// I will start the connection in a new Thread to avoid interrupting the platform start up
-		new Thread(new Runnable() {
+		 new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try{

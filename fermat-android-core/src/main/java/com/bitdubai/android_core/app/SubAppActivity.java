@@ -6,8 +6,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -18,8 +24,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantLoadSubAppSettings;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppNavigationStructure;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Resource;
@@ -33,9 +43,10 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bitdubai.fermat.R;
-
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 
 /**
@@ -45,11 +56,13 @@ import com.bitdubai.fermat.R;
 
 public class SubAppActivity extends FermatActivity implements FermatScreenSwapper {
 
+    private static final String INSTALLED_SUB_APP = "sub_app";
     /**
      * Members used by back button
      */
     private String actionKey;
     private Object[] screenObjects;
+
 
 
     /**
@@ -65,7 +78,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
         try {
 
-            loadUI();
+            loadUI(createOrCallSubAppSession());
 
         } catch (Exception e) {
 
@@ -103,20 +116,22 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      * @param fragmentType Type Id of fragment to show
      */
 
-    private void loadFragment(Fragments fragmentType){
+    private void loadFragment(String fragmentType){
 
 
         FragmentTransaction transaction;
         com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment=null;
 
         SubAppSessionManager subAppSessionManager=((ApplicationSession) getApplication()).getSubAppSessionManager();
-        switch (fragmentType) {
+        SubAppsSession subAppsSession = subAppSessionManager.getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getType().getCode());
+        switch (Fragments.getValueFromString(fragmentType)) {
 
 
             //developer app fragments
-            case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
-                fragment = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
-                    DatabaseToolsFragment frag= DatabaseToolsFragment.newInstance(0,subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
+            case CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT:
+                fragment = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+                    DatabaseToolsFragment frag= DatabaseToolsFragment.newInstance(0);
+                    frag.setDeveloperSubAppSession((DeveloperSubAppSession)subAppsSession);
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
 
@@ -127,12 +142,14 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                 break;
 
-            case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES:
-                fragment = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES);
+            case CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT:
+                fragment = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
 
-                    DatabaseToolsDatabaseListFragment fragd= DatabaseToolsDatabaseListFragment.newInstance(0,subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
-                    fragd.setResource((Resource)screenObjects[0]);
-                    //set data pass to fragment
+                    DatabaseToolsDatabaseListFragment fragd= DatabaseToolsDatabaseListFragment.newInstance(0,(DeveloperSubAppSession)subAppsSession);
+                    fragd.setDeveloperSubAppSession((DeveloperSubAppSession)subAppsSession);
+                    fragd.setResource((Resource) screenObjects[0]);
+
+                    //set data pass to fragmentg
                     fragment.setContext(screenObjects);
 
                     transaction = getFragmentManager().beginTransaction();
@@ -140,14 +157,13 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     // Commit the transaction
                     transaction.commit();
 
-
                 break;
-            case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES:
+            case CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT:
 
-                fragment = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES);
+                fragment = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
 
-                    DatabaseToolsDatabaseTableListFragment fragt= DatabaseToolsDatabaseTableListFragment.newInstance(0,subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
-
+                    DatabaseToolsDatabaseTableListFragment fragt= DatabaseToolsDatabaseTableListFragment.newInstance(0);
+                    fragt.setDeveloperSubAppSession((DeveloperSubAppSession) subAppsSession);
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
                     fragt.setResource((Resource) screenObjects[0]);
@@ -159,11 +175,13 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     transaction.commit();
 
                 break;
-            case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS:
+            case CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT:
 
-                fragment = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS);
+                fragment = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
 
-                DatabaseToolsDatabaseTableRecordListFragment fragr= DatabaseToolsDatabaseTableRecordListFragment.newInstance(0,subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
+                DatabaseToolsDatabaseTableRecordListFragment fragr= DatabaseToolsDatabaseTableRecordListFragment.newInstance(0,subAppsSession);
+                fragr.setDeveloperSubAppSession((DeveloperSubAppSession) subAppsSession);
+
 
 
                 //set data pass to fragment
@@ -178,11 +196,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 transaction.commit();
                 break;
 
-            case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
-                fragment = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+            case CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT:
+                fragment = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
 
-                    LogToolsFragment frag1= LogToolsFragment.newInstance(0, subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
-
+                    LogToolsFragment frag1= LogToolsFragment.newInstance(0);
+                    frag1.setDeveloperSubAppSession((DeveloperSubAppSession) subAppsSession);
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
 
@@ -192,12 +210,13 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     transaction1.commit();
                 break;
 
-            case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS:
+            case CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT:
 
-                fragment = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+                fragment = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
 
-                LogToolsFragmentLevel1 fragl= LogToolsFragmentLevel1.newInstance(0,subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
+                LogToolsFragmentLevel1 fragl= LogToolsFragmentLevel1.newInstance(0,subAppsSession);
                 fragl.setLoggers((ArrayListLoggers) screenObjects[0]);
+                fragl.setDeveloperSubAppSession((DeveloperSubAppSession) subAppsSession);
                 //set data pass to fragment
                 fragment.setContext(screenObjects);
 
@@ -207,13 +226,14 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 transaction.commit();
                 break;
 
-            case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS:
+            case CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT:
 
-                fragment = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+                fragment = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
 
-                LogToolsFragmentLevel2 fragl2= LogToolsFragmentLevel2.newInstance(0,subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
+                LogToolsFragmentLevel2 fragl2= LogToolsFragmentLevel2.newInstance(0,subAppsSession);
                 fragl2.setLoggers((ArrayListLoggers) screenObjects[0]);
-                fragl2.setLoggerLevel((int)screenObjects[1]);
+                fragl2.setLoggerLevel((int) screenObjects[1]);
+                fragl2.setDeveloperSubAppSession((DeveloperSubAppSession) subAppsSession);
 
                     //set data pass to fragment
                     fragment.setContext(screenObjects);
@@ -224,17 +244,18 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     transaction.commit();
                 break;
 
-            case CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS:
+            case CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT:
 
-                fragment = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+                fragment = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
 
-                LogToolsFragmentLevel3 fragl3= LogToolsFragmentLevel3.newInstance(0,subAppSessionManager.listOpenSubApps().get(SubApps.CWP_DEVELOPER_APP));
+                LogToolsFragmentLevel3 fragl3= LogToolsFragmentLevel3.newInstance(0,subAppsSession);
                 fragl3.setLoggers((ArrayListLoggers) screenObjects[0]);
                 fragl3.setLoggerLevel((int) screenObjects[1]);
+                fragl3.setDeveloperSubAppSession((DeveloperSubAppSession) subAppsSession);
                 //set data pass to fragment
                 fragment.setContext(screenObjects);
 
-              transaction = getFragmentManager().beginTransaction();
+                transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.logContainer, fragl3);
                 // Commit the transaction
                 transaction.commit();
@@ -303,9 +324,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
 
         // get actual fragment on execute
-        Fragments frgBackType = null;
+        String frgBackType = null;
         try {
-            SubAppRuntimeManager subAppRuntimeManager = getAppRuntimeMiddleware();
+            SubAppRuntimeManager subAppRuntimeManager = getSubAppRuntimeMiddleware();
 
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment=null;
 
@@ -328,21 +349,21 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             if (frgBackType != null) {
 
-                com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = getAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(frgBackType); //set back fragment to actual fragment to run
+                com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(frgBackType); //set back fragment to actual fragment to run
 
 
                 this.loadFragment(frgBackType);
             } else {
                 // set Desktop current activity
-                Activity activity = getAppRuntimeMiddleware().getLastSubApp().getLastActivity();
+                Activity activity = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
                 if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
                     resetThisActivity();
-                    //getAppRuntimeMiddleware().getHomeScreen();
-                    getAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-                    getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+                    //getSubAppRuntimeMiddleware().getHomeScreen();
+                    getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
+                    getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
                     //cleanWindows();
 
-                    loadUI();
+                    loadUI(createOrCallSubAppSession());
                 } else {
                     super.onBackPressed();
                 }
@@ -389,8 +410,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     case CWP_SUB_APP_ALL_DEVELOPER: //Developer manager
 
 
-                        getAppRuntimeMiddleware().getSubApp(SubApps.CWP_DEVELOPER_APP);
-                        getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
+                        getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_DEVELOPER_APP);
+                        getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
 
                         intent = new Intent(this, SubAppActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -413,8 +434,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     //wallet factory
                     case CWP_WALLET_FACTORY_MAIN:
 
-                        getAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_FACTORY);
-                        getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+                        getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_FACTORY);
+                        getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
 
                         intent = new Intent(this, SubAppActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -425,8 +446,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     //wallet publisher
                     case CWP_WALLET_PUBLISHER_MAIN:
 
-                        getAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_PUBLISHER);
-                        getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
+                        getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_PUBLISHER);
+                        getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -434,8 +455,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         break;
 
                     case CWP_WALLET_RUNTIME_STORE_MAIN:
-                        getAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_STORE);
-                        getAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+                        getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_STORE);
+                        getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -446,8 +467,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             }
             else{
 
-                Fragments fragmentType = Fragments.getValueFromString(actionKey);
-
+                //String fragmentType = FragmentsEnumType.getValueFromString(actionKey);
+                String fragmentType = actionKey;
                 if(fragmentType != null){
                     this.loadFragment(fragmentType);
                 }
@@ -513,12 +534,39 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
+    @Override
+    public void selectSubApp(InstalledSubApp installedSubApp) {
+        Intent intent;
+
+        try {
+
+            //Activities activityType = Activities.getValueFromString(this.actionKey);
+
+            SubApp subAppNavigationStructure= getSubAppRuntimeMiddleware().getSubApp(installedSubApp.getSubAppType());
+
+            intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
+            intent.putExtra(SubAppActivity.INSTALLED_SUB_APP, installedSubApp);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+        }catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
+
+    }
+
 
     /**
      * Method that loads the UI
      */
 
-    protected void loadUI(){
+    protected void loadUI(SubAppsSession subAppSession){
 
         try{
             /**
@@ -533,13 +581,18 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
              */
             if(activity.getTabStrip() == null && activity.getFragments().size() > 1){
                 initialisePaging();
-            }else{
-                /**
-                 * Paint tabs
-                 */
-
-                // el runtime SubApp es para tener la base de como debe ir el metodo, falta poder obtenerlo desde el AppRuntime
-                setPagerTabs(new RuntimeSubApp(),activity.getTabStrip());
+            }
+            /**
+             * Paint tabs
+             */
+            if (activity.getTabStrip() !=null ){
+                setPagerTabs(getSubAppRuntimeMiddleware().getLastSubApp(), activity.getTabStrip(), subAppSession);
+            }
+            /**
+             * Paint single screen
+             */
+            if(activity.getFragments().size() == 1){
+                setOneFragmentInScreen();
             }
         }
         catch (Exception e) {
@@ -547,6 +600,56 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void setOneFragmentInScreen(){
+        RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.only_fragment_container));
+        SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
+        String subAppType = subAppRuntimeManager.getLastSubApp().getType().getCode();
+
+        com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
+
+
+        try {
+            if(subAppFragmentFactory !=null){
+                //TODO está linea está tirando error
+                String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
+                SubAppsSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subAppType);
+
+                android.app.Fragment fragmet= subAppFragmentFactory.getFragment(fragment.toString(), subAppsSession, null,getSubAppResourcesProviderManager());
+                FragmentTransaction FT = getFragmentManager().beginTransaction();
+                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                FT.replace(R.id.only_fragment_container, fragmet);
+//                FT.addToBackStack(null);
+//                FT.attach(fragmet);
+//                FT.show(fragmet);
+                FT.commit();
+
+            }
+        } catch (FragmentNotFoundException e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+    private SubAppsSession createOrCallSubAppSession(){
+        SubAppsSession subAppSession = null;
+        try {
+            Bundle bundle = getIntent().getExtras();
+
+            InstalledSubApp installedSubApp = (InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP);
+
+
+            if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getSubAppType())) {
+                subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getSubAppType().getCode());
+            } else {
+                subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), getToolManager(),getWalletStoreModuleManager(),getWalletPublisherManager());
+            }
+        }catch (Exception e){
+            //this happend when is in home screen
+        }
+        return subAppSession;
     }
 
 }

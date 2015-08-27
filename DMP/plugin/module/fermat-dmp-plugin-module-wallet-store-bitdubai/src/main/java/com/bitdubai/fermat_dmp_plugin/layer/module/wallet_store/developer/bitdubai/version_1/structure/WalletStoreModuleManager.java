@@ -55,6 +55,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalog;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
@@ -216,6 +217,11 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
+            public URL getpublisherWebsiteUrl(){
+                return catalogItem.getpublisherWebsiteUrl();
+            }
+
+            @Override
             public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException {
                 return catalogItem.getDetailedCatalogItemImpl();
             }
@@ -224,7 +230,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         return walletStoreCatalogueItem;
     }
 
-    private Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+    private com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner(UUID designerId) throws CantGetDesignerException {
         return walletStoreManagerNetworkService.getDesigner(designerId);
     }
 
@@ -286,17 +292,12 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public URL getSkinURL() {
-                return skin.getSkinURL();
-            }
-
-            @Override
             public long getSkinSizeInBytes() {
                 return skin.getSkinSizeInBytes();
             }
 
             @Override
-            public Designer getDesigner() {
+            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner() {
                 return skin.getDesigner();
             }
 
@@ -349,11 +350,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public URL getFileURL() {
-                return language.getFileURL();
-            }
-
-            @Override
             public Version getVersion() {
                 return language.getVersion();
             }
@@ -369,7 +365,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public Translator getTranslator() {
+            public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator() {
                 return language.getTranslator();
             }
 
@@ -420,18 +416,18 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public Developer getDeveloper() {
+            public DeveloperIdentity getDeveloper() {
                 return detailedCatalogItem.getDeveloper();
             }
 
             @Override
-            public Designer getDesigner() {return  detailedCatalogItem.getDesigner(); }
+            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner() {return  detailedCatalogItem.getDesigner(); }
         };
 
         return walletStoreDetailedCatalogItem;
     }
 
-    private Developer getDeveloper (UUID developerId) throws CantGetDeveloperException {
+    private DeveloperIdentity getDeveloper (UUID developerId) throws CantGetDeveloperException {
         return walletStoreManagerNetworkService.getDeveloper(developerId);
     }
 
@@ -542,7 +538,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
                 walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
                 skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
                 language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
-                detailedCatalogItem.getDeveloper().getName(), version.toString());
+                detailedCatalogItem.getDeveloper().getAlias(), version.toString());
 
         }catch (CantSetInstallationStatusException exception){
             throw new CantStartInstallationException(CantSetInstallationStatusException.DEFAULT_MESSAGE, exception, "Cannot set the instalation status", "Please, check the cause");
@@ -574,7 +570,16 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.UNINSTALLING);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLING);
+            walletManagerManager.uninstallLanguage(walletCatalogueId, languageId);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.UNINSTALLED);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLED);
         } catch (Exception exception) {
+            try{
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.NOT_UNINSTALLED);
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.NOT_UNINSTALLED);
+            } catch (CantSetInstallationStatusException e) {
+                throw new CantStartUninstallLanguageException(CantStartUninstallLanguageException.DEFAULT_MESSAGE, e, null, null);
+            }
             throw new CantStartUninstallLanguageException(CantStartUninstallLanguageException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
@@ -590,7 +595,17 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.UNINSTALLING);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLING);
+            walletManagerManager.uninstallSkin(walletCatalogueId, skinId);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.UNINSTALLED);
+            walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLED);
+
         } catch (Exception exception) {
+            try{
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.NOT_UNINSTALLED);
+                walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.NOT_UNINSTALLED);
+            } catch (CantSetInstallationStatusException e) {
+                throw new CantStartUninstallSkinException(CantStartUninstallSkinException.DEFAULT_MESSAGE, e, null, null);
+            }
             throw new CantStartUninstallSkinException (CantStartUninstallSkinException .DEFAULT_MESSAGE, exception, null, null);
         }
     }

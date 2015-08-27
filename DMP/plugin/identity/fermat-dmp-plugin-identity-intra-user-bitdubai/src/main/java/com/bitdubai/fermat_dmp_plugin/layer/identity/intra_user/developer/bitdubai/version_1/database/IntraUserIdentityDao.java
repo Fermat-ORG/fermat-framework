@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserIdentitiesException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserIdentityPrivateKeyException;
@@ -31,8 +32,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdub
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityIdentity;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_pip_api.layer.pip_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -55,9 +56,6 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
     /**
      * Represent the Plugin Database.
      */
-
-    String INTRA_USERS_PRIVATE_KEYS_FILE_NAME = "intraUserIdentityPrivateKey";
-    String INTRA_USERS_PROFILE_IMAGE_FILE_NAME = "intraUserIdentityProfileImage";
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     private PluginFileSystem pluginFileSystem;
@@ -116,33 +114,36 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
+    /**
+     * first i persist private key on a file
+     * second i insert the record in database
+     * third i save the profile image file
+     *
+     * @param alias
+     * @param publicKey
+     * @param privateKey
+     * @param deviceUser
+     * @param profileImage
+     * @throws CantCreateNewDeveloperException
+     */
     public void createNewUser (String alias, String publicKey,String privateKey, DeviceUser deviceUser,byte[] profileImage) throws CantCreateNewDeveloperException {
 
         try {
-
-
             if (aliasExists (alias)) {
-
                 throw new CantCreateNewDeveloperException ("Cant create new Intra User, alias exists.", "Intra User Identity", "Cant create new Intra User, alias exists.");
             }
+
+            persistNewUserPrivateKeysFile(publicKey, privateKey);
 
             DatabaseTable table = this.database.getTable(IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
 
             record.setStringValue(IntraUserIdentityDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, publicKey);
-            record.setStringValue(IntraUserIdentityDatabaseConstants.INTRA_USER_ALIAS_COLUMN_NAME,alias );
+            record.setStringValue(IntraUserIdentityDatabaseConstants.INTRA_USER_ALIAS_COLUMN_NAME, alias);
             record.setStringValue(IntraUserIdentityDatabaseConstants.INTRA_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
 
             table.insertRecord(record);
 
-           /**
-             * Persist private key on a file
-             */
-            persistNewUserPrivateKeysFile(publicKey, privateKey);
-
-            /**
-             * Persist profile image on a file
-             */
             persistNewUserProfileImage(publicKey, profileImage);
 
             database.closeDatabase();
@@ -162,8 +163,6 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
             // Failure unknown.
             throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Intra User Identity", "Cant create new Intra User, unknown failure.");
         }
-
-
     }
 
 
@@ -202,7 +201,9 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
                 list.add(new IntraUserIdentityIdentity(record.getStringValue(IntraUserIdentityDatabaseConstants.INTRA_USER_ALIAS_COLUMN_NAME),
                         record.getStringValue (IntraUserIdentityDatabaseConstants.INTRA_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
                         getIntraUserIdentiyPrivateKey(record.getStringValue(IntraUserIdentityDatabaseConstants.INTRA_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
-                        getIntraUserProfileImagePrivateKey(record.getStringValue(IntraUserIdentityDatabaseConstants.INTRA_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME))));
+                        getIntraUserProfileImagePrivateKey(record.getStringValue(IntraUserIdentityDatabaseConstants.INTRA_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        pluginFileSystem,
+                        pluginId));
             }
 
             database.closeDatabase();
@@ -257,7 +258,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    INTRA_USERS_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    IntraUserIdentityPluginRoot.INTRA_USERS_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -281,7 +282,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    INTRA_USERS_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    IntraUserIdentityPluginRoot.INTRA_USERS_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -306,7 +307,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    INTRA_USERS_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    IntraUserIdentityPluginRoot.INTRA_USERS_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -335,7 +336,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    INTRA_USERS_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    IntraUserIdentityPluginRoot.INTRA_USERS_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );

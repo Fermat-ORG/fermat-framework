@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
@@ -46,7 +46,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
+public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -67,11 +67,11 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     /**
      * SubApp session
      */
-    DeveloperSubAppSession subAppsSession;
+    DeveloperSubAppSession developerSubAppSession;
 
     public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
         DatabaseToolsDatabaseTableRecordListFragment f = new DatabaseToolsDatabaseTableRecordListFragment();
-        f.setSubAppsSession((DeveloperSubAppSession) subAppSession);
+        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -82,9 +82,11 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        errorManager = subAppsSession.getErrorManager();
+        //developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+        errorManager = developerSubAppSession.getErrorManager();
         try {
-            ToolManager toolManager = subAppsSession.getToolManager();
+            ToolManager toolManager = developerSubAppSession.getToolManager();
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -218,7 +220,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         this.resource = resource;
     }
 
-    public void setSubAppsSession(DeveloperSubAppSession subAppsSession) {
-        this.subAppsSession = subAppsSession;
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
 }

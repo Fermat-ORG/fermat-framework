@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -93,6 +94,11 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     @Override
     public void reportUnexpectedUIException(UISource exceptionSource, UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
+    }
+
+    @Override
+    public void reportUnexpectedEventException(PlatformEvent exceptionSource, Exception exception) {
+        processException(exceptionSource.toString(), "Unknow", exception);
     }
 
     /**

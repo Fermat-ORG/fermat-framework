@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -27,21 +28,12 @@ public interface CatalogItem {
     public String getDescription();
     public int getDefaultSizeInBytes();
     public byte[] getIcon() throws CantGetWalletIconException;
-
+    public URL getpublisherWebsiteUrl();
 
     /**
      * Detailed information of the item
      */
     public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException;
 
-    //public void setWalletName(String name);
-
-    //public void setWalletCatalogId(UUID id);
-
-    //public void setCategory(WalletCategory category);
-
-    //public void setDefaultSizeInBytes(int defaultSizeInBytes);
-
-    //public void setIcon(byte[] icon);
 
 }

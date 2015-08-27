@@ -3,21 +3,23 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 
+import java.io.Serializable;
+
 /**
  * Created by rodrigo on 2015.07.17..
  */
-public class Fragment implements FermatFragment {
+public class Fragment implements FermatFragment,Serializable {
 
-    Fragments type;
-    Fragments fragmentBack;
+    String type;
+    String fragmentBack;
     Object[] context;
 
-    public void setBack(Fragments fragmentBack)
+    public void setBack(String fragmentBack)
     {
         this.fragmentBack = fragmentBack;
     }
 
-    public void setType(Fragments type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -25,11 +27,11 @@ public class Fragment implements FermatFragment {
      * Fragment interface implementation.
      */
     @Override
-    public Fragments getType() {
+    public String getType() {
         return type;
     }
 
-    public Fragments getBack(){
+    public String getBack(){
         return this.fragmentBack;
     }
 
