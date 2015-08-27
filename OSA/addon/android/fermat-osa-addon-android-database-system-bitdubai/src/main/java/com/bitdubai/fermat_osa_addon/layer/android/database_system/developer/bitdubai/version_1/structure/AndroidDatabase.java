@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
@@ -23,6 +25,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseVariable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantSelectRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
@@ -169,54 +174,36 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
 
         if (transaction == null) {
             String message = DatabaseTransactionFailedException.DEFAULT_MESSAGE;
-            FermatException cause = null;
             String context = "Transaction: null";
             String possibleReason = "The passed transaction can't be null";
-            throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
+            throw new DatabaseTransactionFailedException(message, null, context, possibleReason);
         }
 
-        List<DatabaseVariable> variablesResult = null;
+        List<DatabaseVariable> variablesResult = new ArrayList<>();
 
-        /**
-         * I get tablets and records to insert or update
-         * then make sql sentences
-         */
         List<DatabaseTable> selectTables = transaction.getTablesToSelect();
         List<DatabaseTable> insertTables = transaction.getTablesToInsert();
         List<DatabaseTable> updateTables = transaction.getTablesToUpdate();
         List<DatabaseTableRecord> updateRecords = transaction.getRecordsToUpdate();
         List<DatabaseTableRecord> selectRecords = transaction.getRecordsToSelect();
         List<DatabaseTableRecord> insertRecords = transaction.getRecordsToInsert();
+        SQLiteDatabase database = null;
         try {
-            if (!database.isOpen())
-                openDatabase();
+            database = getWritableDatabase();
 
-            database.beginTransaction(); // EXCLUSIVE
+            database.beginTransaction();
 
-            DatabaseVariable variables;
-            //select
             if (selectTables != null)
-                for (int i = 0; i < selectTables.size(); ++i) {
+                for (int i = 0; i < selectTables.size(); ++i)
+                    variablesResult = selectTransactionRecord(database, selectTables.get(i), selectRecords.get(i));
 
-                    selectTables.get(i).selectTransactionRecord(selectRecords.get(i));
-                    //get list of variables and this values to pass at update and insert
-                    //I assume that only a select defined
-                    variablesResult = selectTables.get(i).getVariablesResult();
-                }
-
-            //update
             if (updateTables != null)
-                for (int i = 0; i < updateTables.size(); ++i) {
-                    updateTables.get(i).setVarialbesResult(variablesResult);
-                    updateTables.get(i).updateTransactionRecord(updateRecords.get(i));
-                }
+                for (int i = 0; i < updateTables.size(); ++i)
+                    updateTransactionRecord(database, updateTables.get(i), updateRecords.get(i), variablesResult);
 
-            //insert
             if (insertTables != null)
-                for (int i = 0; i < insertTables.size(); ++i) {
-                    insertTables.get(i).setVarialbesResult(variablesResult);
-                    insertTables.get(i).insertTransactionRecord(insertRecords.get(i));
-                }
+                for (int i = 0; i < insertTables.size(); ++i)
+                    insertTransactionRecord(database, insertTables.get(i), insertRecords.get(i), variablesResult);
 
             database.setTransactionSuccessful();
 
@@ -235,11 +222,192 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
             throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
 
         } finally {
-            database.endTransaction();
-            closeDatabase();
+            if(database != null) {
+                database.endTransaction();
+                database.close();
+            }
         }
     }
 
+    public List<DatabaseVariable> selectTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record) throws CantSelectRecordException {
+        List<DatabaseVariable> variablesResult = new ArrayList<>();
+        try {
+            StringBuilder strRecords = new StringBuilder("");
+
+            List<DatabaseRecord> records = record.getValues();
+
+            List<DatabaseSelectOperator> tableSelectOperator = table.getTableSelectOperator();
+
+            //check if declared operators to apply on select or only define some fields
+
+            if (tableSelectOperator != null) {
+
+                for (int i = 0; i < tableSelectOperator.size(); ++i) {
+
+                    if (strRecords.length() > 0)
+                        strRecords.append(",");
+
+                    switch (tableSelectOperator.get(i).getType()) {
+                        case SUM:
+                            strRecords.append(" SUM (")
+                                    .append(tableSelectOperator.get(i).getColumn())
+                                    .append(") AS ")
+                                    .append(tableSelectOperator.get(i).getAliasColumn());
+                            break;
+                        case COUNT:
+                            strRecords.append(" COUNT (")
+                                    .append(tableSelectOperator.get(i).getColumn())
+                                    .append(") AS ")
+                                    .append(tableSelectOperator.get(i).getAliasColumn());
+                            break;
+                        default:
+                            strRecords.append(" ");
+                            break;
+                    }
+                }
+            } else {
+                for (int i = 0; i < records.size(); ++i) {
+
+                    if (strRecords.length() > 0)
+                        strRecords.append(",");
+                    strRecords.append(records.get(i).getName());
+
+                }
+            }
+
+            Cursor c = database.rawQuery("SELECT " + strRecords + " FROM " + table.getTableName() + " " + table.makeFilter(), null);
+            int columnsCant = 0;
+
+            if (c.moveToFirst()) {
+                do {
+                    /**
+                     * Get columns name to read values of files
+                     *
+                     */
+                    DatabaseVariable variable = new AndroidVariable();
+
+                    variable.setName("@" + c.getColumnName(columnsCant));
+                    variable.setValue(c.getString(columnsCant));
+
+                    variablesResult.add(variable);
+                    columnsCant++;
+                } while (c.moveToNext());
+            }
+            c.close();
+            return variablesResult;
+        } catch (Exception exception) {
+            throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        }
+    }
+
+    private void updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<DatabaseVariable> variablesResult) throws CantUpdateRecordException {
+
+        try {
+            List<DatabaseRecord> records = record.getValues();
+            StringBuilder strRecords = new StringBuilder();
+
+            for (DatabaseRecord dbRecord : records) {
+
+                if (dbRecord.getChange()) {
+
+                    if (strRecords.length() > 0)
+                        strRecords.append(",");
+
+                    if (dbRecord.getUseValueofVariable()) {
+                        for (int j = 0; j < variablesResult.size(); ++j) {
+
+                            if (variablesResult.get(j).getName().equals(dbRecord.getValue())){
+                                strRecords.append(dbRecord.getName())
+                                        .append(" = '")
+                                        .append(variablesResult.get(j).getValue())
+                                        .append("'");
+                            }
+                        }
+                    } else {
+                        strRecords.append(dbRecord.getName())
+                                .append(" = '")
+                                .append(dbRecord.getValue())
+                                .append("'");
+                    }
+                }
+            }
+
+            database.execSQL("UPDATE " + table.getTableName() + " SET " + strRecords + " " + table.makeFilter());
+
+        } catch (Exception exception) {
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        }
+    }
+
+    private void insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<DatabaseVariable> variableResultList) throws CantInsertRecordException {
+
+        try {
+            StringBuilder strRecords = new StringBuilder("");
+            StringBuilder strValues = new StringBuilder("");
+
+            List<DatabaseRecord> records = record.getValues();
+
+
+            for (int i = 0; i < records.size(); ++i) {
+
+                if (strRecords.length() > 0)
+                    strRecords.append(",");
+                strRecords.append(records.get(i).getName());
+
+                if (strValues.length() > 0)
+                    strValues.append(",");
+
+                if (records.get(i).getUseValueofVariable()) {
+                    for (DatabaseVariable variableResult :  variableResultList) {
+
+                        if (variableResult.getName().equals(records.get(i).getValue())) {
+                            strValues.append("'")
+                                    .append(variableResult.getValue())
+                                    .append("'");
+                        }
+                    }
+                } else {
+                    strValues.append("'")
+                            .append(records.get(i).getValue())
+                            .append("'");
+                }
+            }
+
+            database.execSQL("INSERT INTO " + table.getTableName() + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+        } catch (Exception exception) {
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        }
+    }
+
+    public SQLiteDatabase getWritableDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
+        String databasePath;
+
+        if (ownerId != null)
+            databasePath = context.getFilesDir().getPath() + "/databases/" + ownerId.toString();
+        else
+            databasePath = context.getFilesDir().getPath() + "/databases/";
+
+        databasePath += "/" + databaseName.replace("-", "") + ".db";
+
+        if (!(new File(databasePath)).exists()) {
+            String message = DatabaseNotFoundException.DEFAULT_MESSAGE;
+            String context = "database Constructed Path: " + databasePath;
+            String possibleReason = "Check if the constructed path is valid";
+            throw new DatabaseNotFoundException(message, null, context, possibleReason);
+        }
+
+        try {
+            return SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READWRITE, null);
+        } catch (SQLiteException exception) {
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(exception);
+            String context = "database Constructed Path: " + databasePath;
+            String possibleReason = "Check the cause for this error as we have already checked that the database exists";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        } catch (Exception e) {
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause for this error as we have already checked that the database exists");
+        }
+    }
 
     /**
      * Private methods implementation.

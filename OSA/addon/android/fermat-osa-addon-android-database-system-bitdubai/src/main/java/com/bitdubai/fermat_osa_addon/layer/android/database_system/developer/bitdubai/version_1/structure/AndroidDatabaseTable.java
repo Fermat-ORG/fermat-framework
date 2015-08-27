@@ -2,6 +2,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
@@ -106,10 +107,9 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * @return List<String> of columns names
      */
 
-    @Override
-    public List<String> getColumns() {
+    public List<String> getColumns(SQLiteDatabase database) {
         List<String> columns = new ArrayList<>();
-        Cursor c = this.database.rawQuery("SELECT * FROM " + tableName, null);
+        Cursor c = database.rawQuery("SELECT * FROM " + tableName, null);
         String[] columnNames = c.getColumnNames();
         c.close();
 
@@ -279,79 +279,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
-    @Override
-    public void selectTransactionRecord(DatabaseTableRecord record) throws CantSelectRecordException {
-        /**
-         * First I get the table records with values.
-         * and construct de ContentValues array for SqlLite
-         */
-        try {
-            StringBuilder strRecords = new StringBuilder("");
-
-            List<DatabaseRecord> records = record.getValues();
-
-            //check if declared operators to apply on select or only define some fields
-
-            if (this.tableSelectOperator != null) {
-
-                for (int i = 0; i < tableSelectOperator.size(); ++i) {
-
-                    if (strRecords.length() > 0)
-                        strRecords.append(",");
-
-                    switch (tableSelectOperator.get(i).getType()) {
-                        case SUM:
-                            strRecords.append(" SUM (")
-                                    .append(tableSelectOperator.get(i).getColumn())
-                                    .append(") AS ")
-                                    .append(tableSelectOperator.get(i).getAliasColumn());
-                            break;
-                        case COUNT:
-                            strRecords.append(" COUNT (")
-                                    .append(tableSelectOperator.get(i).getColumn())
-                                    .append(") AS ")
-                                    .append(tableSelectOperator.get(i).getAliasColumn());
-                            break;
-                        default:
-                            strRecords.append(" ");
-                            break;
-                    }
-                }
-            } else {
-                for (int i = 0; i < records.size(); ++i) {
-
-                    if (strRecords.length() > 0)
-                        strRecords.append(",");
-                    strRecords.append(records.get(i).getName());
-
-                }
-            }
-
-            Cursor c = this.database.rawQuery("SELECT " + strRecords + " FROM " + tableName + " " + makeFilter(), null);
-            int columnsCant = 0;
-
-            this.variablesResult = new ArrayList<>();
-            if (c.moveToFirst()) {
-                do {
-                    /**
-                     * Get columns name to read values of files
-                     *
-                     */
-                    DatabaseVariable variable = new AndroidVariable();
-
-                    variable.setName("@" + c.getColumnName(columnsCant));
-                    variable.setValue(c.getString(columnsCant));
-
-                    this.variablesResult.add(variable);
-                    columnsCant++;
-                } while (c.moveToNext());
-            }
-            c.close();
-        } catch (Exception exception) {
-            throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
-        }
-    }
-
     /**
      * <p>This method update a table record in the database
      *
@@ -408,56 +335,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
             this.database.closeDatabase();
-        }
-    }
-
-    @Override
-    public void updateTransactionRecord(DatabaseTableRecord record) throws CantUpdateRecordException {
-
-        try {
-            List<DatabaseRecord> records = record.getValues();
-            StringBuilder strRecords = new StringBuilder();
-            // ContentValues recordUpdateList = new ContentValues();
-
-            /**
-             * I update only the fields marked as modified
-             *
-             */
-
-            for (int i = 0; i < records.size(); ++i) {
-
-                if (records.get(i).getChange()) {
-
-                    if (strRecords.length() > 0)
-                        strRecords.append(",");
-
-                    //I check if the value to change what I have to take a variable,
-                    // and look that at the result of the select
-
-                    if (records.get(i).getUseValueofVariable()) {
-                        for (int j = 0; j < variablesResult.size(); ++j) {
-
-                            if (variablesResult.get(j).getName().equals(records.get(i).getValue())){
-                                strRecords.append(records.get(i).getName())
-                                        .append(" = '")
-                                        .append(variablesResult.get(j).getValue())
-                                        .append("'");
-                            }
-                        }
-
-                    } else {
-                        strRecords.append(records.get(i).getName())
-                                .append(" = '")
-                                .append(records.get(i).getValue())
-                                .append("'");
-                    }
-                }
-            }
-
-            this.database.execSQL("UPDATE " + tableName + " SET " + strRecords + " " + makeFilter());
-
-        } catch (Exception exception) {
-            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
     }
 
@@ -519,56 +396,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
-    @Override
-    public void insertTransactionRecord(DatabaseTableRecord record) throws CantInsertRecordException {
-
-        /**
-         * First I get the table records with values.
-         * and construct de ContentValues array for SqlLite
-         */
-        try {
-            StringBuilder strRecords = new StringBuilder("");
-            StringBuilder strValues = new StringBuilder("");
-
-            List<DatabaseRecord> records = record.getValues();
-
-
-            for (int i = 0; i < records.size(); ++i) {
-                //initialValues.put(records.get(i).getName(),records.get(i).getValue());
-
-                if (strRecords.length() > 0)
-                    strRecords.append(",");
-                strRecords.append(records.get(i).getName());
-
-                if (strValues.length() > 0)
-                    strValues.append(",");
-
-                //I check if the value to insert what I have to take a variable,
-                // and look that at the result of the select
-
-                if (records.get(i).getUseValueofVariable()) {
-                    for (int j = 0; j < variablesResult.size(); ++j) {
-
-                        if (variablesResult.get(j).getName().equals(records.get(i).getValue())) {
-                            strValues.append("'")
-                                    .append(variablesResult.get(j).getValue())
-                                    .append("'");
-                        }
-                    }
-                } else {
-                    strValues.append("'")
-                            .append(records.get(i).getValue())
-                            .append("'");
-                }
-
-            }
-
-            this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
-        } catch (Exception exception) {
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
-        }
-    }
-
     /**
      * <p>This method load all table records in a List of DatabaseTableRecord object
      * <p>Then use the method getRecords() to to retrieve.
@@ -594,10 +421,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
          * Get columns name to read values of files
          *
          */
+        SQLiteDatabase database = null;
         try {
-            this.database.openDatabase();
-            List<String> columns = getColumns();
-            cursor = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
+            database = this.database.getWritableDatabase();
+            List<String> columns = getColumns(database);
+            cursor = database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
                 List<DatabaseRecord> recordValues = new ArrayList<>();
@@ -620,7 +448,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 cursor.close();
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
         } finally {
-            this.database.closeDatabase();
+            if(database != null)
+                database.close();
         }
     }
 
@@ -806,7 +635,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         this.context = (Context) context;
     }
 
-    private String makeFilter() {
+    public String makeFilter() {
 
         // I check the definition for the filter object, filter type, filter columns names
         // and build the WHERE statement
@@ -1029,11 +858,12 @@ public class AndroidDatabaseTable implements DatabaseTable {
     //testear haber si funciona así de abstracto o hay que hacerlo más especifico
     @Override
     public DatabaseTableRecord getRecordFromPk(String pk) throws Exception {
+        SQLiteDatabase database = null;
         try {
-            this.database.openDatabase();
+            database = this.database.getWritableDatabase();
             Cursor c = database.rawQuery(" SELECT * from " + tableName + " WHERE pk=" + pk, null);
 
-            List<String> columns = getColumns();
+            List<String> columns = getColumns(database);
             DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
             if (c.moveToFirst()) {
                 /**
@@ -1065,7 +895,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
         } catch (Exception e) {
             return null;
         } finally {
-            this.database.closeDatabase();
+            if(database != null)
+                database.close();
         }
     }
 
@@ -1074,5 +905,14 @@ public class AndroidDatabaseTable implements DatabaseTable {
         return tableName;
     }
 
+    @Override
+    public String getTableName() {
+        return tableName;
+    }
+
+    @Override
+    public List<DatabaseSelectOperator> getTableSelectOperator() {
+        return tableSelectOperator;
+    }
 }
 
