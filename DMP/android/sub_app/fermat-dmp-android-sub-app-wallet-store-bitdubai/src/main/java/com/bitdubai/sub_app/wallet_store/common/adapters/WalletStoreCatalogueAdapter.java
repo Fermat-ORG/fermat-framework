@@ -66,15 +66,10 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao,
             int layoutPosition = getLayoutPosition();
             int adapterPosition = getAdapterPosition();
 
-            if (view.getId() == R.id.wallet_installation_status) {
-                Toast.makeText(context,
-                        "Click en installStatus. LayoutPosition = " + layoutPosition + " - AdapterPosition = " + adapterPosition,
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context,
-                        "Click en itemView. LayoutPosition = " + layoutPosition + " - AdapterPosition = " + adapterPosition,
-                        Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(context,
+                    "Click en installStatus. LayoutPosition = " + layoutPosition + " - AdapterPosition = " + adapterPosition,
+                    Toast.LENGTH_SHORT).show();
+
         }
     }
 }

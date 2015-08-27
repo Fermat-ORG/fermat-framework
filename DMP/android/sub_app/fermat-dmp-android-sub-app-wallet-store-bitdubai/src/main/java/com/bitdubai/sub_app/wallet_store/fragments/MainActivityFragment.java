@@ -118,7 +118,7 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
             }
 
             adapter = new WalletStoreCatalogueAdapter(getActivity(), data);
-            ((WalletStoreCatalogueAdapter) adapter).setFermatListEventListener(this); // setting up event listeners
+            adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
     }
@@ -133,13 +133,15 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
 
     @Override
     public void onItemClickListener(CatalogueItemDao data, int position) {
+        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
         if (data != null) {
-            /*setting up fragment instance*/
+            session.setCatalogItemDao(data);
+
             DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0);
-            fragment.setSubAppsSession(subAppsSession);
+            fragment.setSubAppsSession(session);
             fragment.setSubAppSettings(subAppSettings);
             fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
-            /*transactions*/
+
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             FT.replace(R.id.activity_container, fragment);
