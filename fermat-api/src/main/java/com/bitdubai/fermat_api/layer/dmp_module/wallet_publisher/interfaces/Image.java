@@ -20,23 +20,10 @@ import java.util.UUID;
 public interface Image {
 
     /**
-     * Get the FileId
-     *
-     * @return UUID
-     */
-    public UUID getFileId();
-
-    /**
-     * Get the Component Id
-     *
-     * @return UUID
-     */
-    public UUID getComponentId();
-
-    /**
      * Get the data
      *
      * @return byte []
      */
     public byte [] getData();
+
 }

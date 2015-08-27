@@ -76,6 +76,7 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+            database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -97,6 +98,7 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
                    * We create the new database
                    */
                 database = walletPublisherMiddlewareDatabaseFactory.createDatabase(pluginId, WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+                database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -198,10 +200,13 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
             return returnedRecords;
         }
 
@@ -215,7 +220,7 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

@@ -24,6 +24,9 @@ public class xmlConversionTest {
         String xml = XMLParser.parseObject(language);
         System.out.println(xml);
 
+        Language language2 = null;
+        XMLParser.parseXML(xml, language2);
+
         Assert.assertNotNull(xml);
 
     }

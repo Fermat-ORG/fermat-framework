@@ -83,6 +83,7 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
         try {
 
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, "ExtraUser");
+            this.database.closeDatabase();
             /**
              * Modified by Manuel Perez on 27/07/2015
              * */
@@ -209,6 +210,7 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
             selectedTable = database.getTable(developerDatabaseTable.getName());
 
             selectedTable.loadToMemory();
+            database.closeDatabase();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
             for (DatabaseTableRecord row : records) {
                 /**
@@ -219,7 +221,7 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
                     /**
                      * I get each row and save them into a List<String>
                      */
-                    developerRow.add(field.getValue().toString());
+                    developerRow.add(field.getValue());
                 }
                 /**
                  * I create the Developer Database record
@@ -228,13 +230,13 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
             }
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadTableToMemory);
-
+            database.closeDatabase();
             /**
              * if there was an error, I will returned an empty list.
              */
             return returnedRecords;
-        }catch (Exception exception){
-
+        } catch (Exception exception) {
+            database.closeDatabase();
             FermatException e = new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "getDatabaseTableContent: "+developerObjectFactory ,"Check the cause");
             this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
 

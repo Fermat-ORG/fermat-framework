@@ -18,11 +18,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.*;
-
 import java.util.UUID;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by angel on 19/8/15.
@@ -50,6 +51,9 @@ public class setNewProfileImageTest extends TestCase {
 
         ECCKeyPair eccKeyPair = new ECCKeyPair();
         IntraUserIdentityIdentity identity_1 = new IntraUserIdentityIdentity("alias_1", eccKeyPair.getPrivateKey(), eccKeyPair.getPublicKey(), new byte[10], mockPluginFileSystem, pluginId);
+
+        identity_1.setPluginId(pluginId);
+        identity_1.setPluginFileSystem(mockPluginFileSystem);
 
         identity_1.setNewProfileImage(ProfileImage);
 
