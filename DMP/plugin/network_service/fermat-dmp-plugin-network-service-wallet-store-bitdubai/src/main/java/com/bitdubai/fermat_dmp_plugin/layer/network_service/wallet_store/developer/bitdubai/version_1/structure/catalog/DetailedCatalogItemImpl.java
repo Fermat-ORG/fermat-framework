@@ -37,6 +37,7 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
 
     /**
      * Overloaded constructor
+     *
      * @param language
      * @param languages
      * @param defaultSkin
@@ -93,10 +94,14 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
     }
 
     @Override
-    public DeveloperIdentity getDeveloper() { return developer; }
+    public DeveloperIdentity getDeveloper() {
+        return developer;
+    }
 
     @Override
-    public Designer getDesigner() {return designer; }
+    public Designer getDesigner() {
+        return designer;
+    }
 
     public void setLanguage(Language language) {
         this.language = language;
@@ -127,6 +132,6 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
     }
 
     public void setDeveloper(DeveloperIdentity developer) {
-        this.developer= developer;
+        this.developer = developer;
     }
 }
