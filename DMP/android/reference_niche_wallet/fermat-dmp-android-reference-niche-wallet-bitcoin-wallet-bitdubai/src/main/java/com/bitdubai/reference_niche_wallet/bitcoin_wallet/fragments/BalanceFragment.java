@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
@@ -97,11 +98,6 @@ public class BalanceFragment extends FermatWalletFragment {
 
     private ReferenceWalletSession referenceWalletSession;
 
-    /**
-     * Preference setting
-     */
-    WalletSettingsManager walletSettingsManager;
-
     ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings;
 
     /**
@@ -122,10 +118,9 @@ public class BalanceFragment extends FermatWalletFragment {
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,ReferenceWalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static BalanceFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
         balanceFragment.setReferenceWalletSession( walletSession);
-        balanceFragment.setWalletSettingManager(walletSettingsManager);
         balanceFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return balanceFragment;
     }
@@ -421,10 +416,6 @@ public class BalanceFragment extends FermatWalletFragment {
      */
     public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
-    }
-
-    public void setWalletSettingManager(WalletSettingsManager walletSettingManager) {
-        this.walletSettingsManager = walletSettingManager;
     }
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {

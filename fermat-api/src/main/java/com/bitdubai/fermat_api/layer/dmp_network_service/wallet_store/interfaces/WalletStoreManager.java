@@ -106,11 +106,11 @@ public interface WalletStoreManager {
                                             List<Language> languages,
                                             URL publisherWebsiteUrl) throws CantGetWalletIconException;
 
-    public DeveloperIdentity constructDeveloper(String name, String PublicKey);
+    //public DeveloperIdentity constructDeveloper(String name, String PublicKey);
 
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer constructDesigner(String alias, String PublicKey);
+    //public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer constructDesigner(String alias, String PublicKey);
 
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator constructTranslator(String alias, String PublicKey);
+    //public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator constructTranslator(String alias, String PublicKey);
 
 }
 

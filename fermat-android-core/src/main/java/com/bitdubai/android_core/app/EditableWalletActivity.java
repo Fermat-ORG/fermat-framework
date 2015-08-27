@@ -44,6 +44,8 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     public static final String INSTALLED_WALLET="installedWallet";
 
 
+    InstalledWallet lastWallet;
+
     /**
      *  Called when the activity is first created
      * @param savedInstanceState
@@ -226,7 +228,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
             if(walletFragmentFactory !=null){
                 String fragment = walletRuntime.getLastActivity().getLastFragment().getType();
                 WalletSession walletSession = getWalletSessionManager().getWalletSession(walletPublicKey);
-                android.app.Fragment fragmet= walletFragmentFactory.getFragment(fragment.toString(), walletSession, getWalletSettingsManager(),getWalletResourcesProviderManager());
+                android.app.Fragment fragmet= walletFragmentFactory.getFragment(fragment.toString(), walletSession,getWalletResourcesProviderManager());
                 FragmentTransaction FT = getFragmentManager().beginTransaction();
                 FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 FT.replace(R.id.only_fragment_container, fragmet);
@@ -244,7 +246,8 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     private WalletSession createOrCallWalletSession(){
         try {
 
-            return getWalletSessionManager().openWalletSession(WalletCategory.REFERENCE_WALLET,getCryptoWalletManager(), getWalletResourcesProviderManager(), getErrorManager());
+            //getWalletSettingsManager().getSettings(getWalletRuntimeManager().getLastWallet().getPublicKey());
+            return getWalletSessionManager().openWalletSession(WalletCategory.REFERENCE_WALLET,getCryptoWalletManager(),null, getWalletResourcesProviderManager(), getErrorManager());
 
 
         }catch (Exception e){

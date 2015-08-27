@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragment;
 
@@ -19,13 +20,12 @@ import java.util.concurrent.Executors;
 /**
  * RecyclerView Fragment
  */
-public abstract class FermatListFragment extends Fragment implements RecyclerListFragment {
+public abstract class FermatListFragment extends FermatFragment implements RecyclerListFragment {
 
-    protected final String TAG = "Recycler Base";
     /**
-     * FLAGS
+     * CONSTANTS
      */
-    protected boolean isAttached;
+    protected final String TAG = "Recycler Base";
     /**
      * Executor
      */
@@ -53,18 +53,6 @@ public abstract class FermatListFragment extends Fragment implements RecyclerLis
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        isAttached = true;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        isAttached = false;
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         if (_executor != null) {
@@ -88,7 +76,10 @@ public abstract class FermatListFragment extends Fragment implements RecyclerLis
     protected abstract int getLayoutResource();
 
     /**
-     * Setup views with layout root view
+     * <p>Setup views with layout root view
+     * Override this function and write the code after call super.initViews(layout) method if you
+     * want to initializer your others views reference on your own class derived of this
+     * base class<p/>
      *
      * @param layout View root
      */

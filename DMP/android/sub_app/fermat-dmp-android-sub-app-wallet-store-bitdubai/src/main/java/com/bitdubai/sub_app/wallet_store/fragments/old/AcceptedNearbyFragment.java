@@ -1,139 +1,69 @@
-package com.bitdubai.sub_app.wallet_store.fragment;
+package com.bitdubai.sub_app.wallet_store.fragments.old;
 
 /**
- * MATIAS 13/5/2015
+ * Created by Natalia on 23/04/2015.
  */
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-//import android.support.v7.widget.SearchView;
-import android.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.sub_app.wallet_store.Model.App;
-import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
-import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
+import com.bitdubai.sub_app.wallet_store.common.models.old.App;
+import com.bitdubai.sub_app.wallet_store.common.models.old.ItemsBD;
+import com.bitdubai.sub_app.wallet_store.common.models.old.ViewHolder;
 import com.wallet_store.bitdubai.R;
+//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class AllFragment extends FermatFragment implements SearchView.OnQueryTextListener {
+public class AcceptedNearbyFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
-    private static int tabId;
 
     private int position;
 
-    private SearchView mSearchView;
-
-    AppListAdapter _adpatrer;
-    GridView gridView;
-
-    public static AllFragment newInstance(int position,SubAppsSession subAppsSession) {
-        AllFragment f = new AllFragment();
+    public static AcceptedNearbyFragment newInstance(int position,SubAppsSession subAppsSession) {
+        AcceptedNearbyFragment f = new AcceptedNearbyFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
-        tabId = position;
         return f;
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstance){
-
-        super.onCreate(savedInstance);
-        setHasOptionsMenu(true);
-    }
-    @Override
-    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
-        //inflater.inflate(R.menu.wallet_store_activity_wallet_menu, menu);
-        inflater.inflate(R.menu.wallet_store_activity_wallet_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        MenuItemCompat.setShowAsAction(searchItem,MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        mSearchView.setOnQueryTextListener(this);
-
-        //mSearchView.setIconifiedByDefault(false);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-
-        int id = item.getItemId();
-        if(id == R.id.action_search) {
-            //Toast.makeText(getActivity(),"holaa431",Toast.LENGTH_LONG);
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //Mati
-        //setHasOptionsMenu(true);
-        //super.onCreateView();
-
-        //clase que luego se cambiara por la llamada a la base de datos
         ItemsBD itemsBD = new ItemsBD();
+
+
+
 
 
         if (mlist == null)
         {
-            //tab = 0 all, tab = 1 discount, tab = 2 regular, tab 3 =  cercanas
-            mlist = new ArrayList<App>();
+            //se busca por cercania, en este caso vamos a suponer que estamos en la region 1
+            int region =1;
+            mlist=itemsBD.nearbyWalletsItems(region);
 
-            if(tabId == 0) {
-                //acá se carga la mList con todos los datos
-                mlist=itemsBD.cargarDatosPorTipoApp(ItemsBD.ALL_WALLETS);
-            }
-
-            if(tabId == 1) {
-                //aca van las de discount
-                mlist=itemsBD.cargarDatosPorTipoApp(ItemsBD.DISCOUNT_WALLETS);
-            }
-
-            if(tabId == 2) {
-                //aca van las regulars
-                mlist=itemsBD.cargarDatosPorTipoApp(ItemsBD.REGULAR_WALLETS);
-            }
-
-            if(tabId == 3) {
-                //se busca por cercania, en este caso vamos a suponer que estamos en la region 1
-                int region =1;
-                mlist=itemsBD.nearbyWalletsItems(region);
-            }
         }
 
 
+        GridView gridView = new GridView(getActivity());
 
-        gridView = new GridView(getActivity());
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             gridView.setNumColumns(3);
@@ -143,11 +73,7 @@ public class AllFragment extends FermatFragment implements SearchView.OnQueryTex
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        _adpatrer = new AppListAdapter(getActivity(), R.layout.wallet_store_activity_store_front_grid_item, mlist);
-        _adpatrer.notifyDataSetChanged();
-        gridView.setAdapter(_adpatrer);
-
-
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallet_store_activity_store_front_grid_item, mlist));
 
 
 /*
@@ -155,7 +81,7 @@ public class AllFragment extends FermatFragment implements SearchView.OnQueryTex
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Intent intent;
-                intent = new Intent(getActivity(), WalletActivity.class);
+                intent = new Intent(getActivity(), StoreActivity.class);
                 startActivity(intent);
 
                 return ;
@@ -168,34 +94,10 @@ public class AllFragment extends FermatFragment implements SearchView.OnQueryTex
 
 
 
-    //ACÁ HAY QUE IMPLEMENTAR EL SEARCH
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(getActivity(),"Probando busqueda completa",Toast.LENGTH_SHORT).show();
 
-        /*ItemsBD itemsBD = new ItemsBD();
-        mlist=itemsBD.buscarPorNombreCompania(mlist,query);
-        Toast.makeText(getActivity(),mlist.get(0).toString(),Toast.LENGTH_SHORT).show();
-        _adpatrer.notifyDataSetChanged();
 
-        */
-        //_adpatrer.clear();
-        //_adpatrer.addAll(mlist);
 
-        //_adpatrer = new AppListAdapter(getActivity(), R.layout.wallet_store_activity_store_front_grid_item, mlist);
-        //_adpatrer.notifyDataSetChanged();
 
-        //_adpatrer.notifyAll();
-        //gridView.setAdapter(_adpatrer);
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        Toast.makeText(getActivity(),"Probando cambio busqueda",Toast.LENGTH_SHORT).show();
-        return false;
-    }
 
 
     public class AppListAdapter extends ArrayAdapter<App> {
@@ -242,9 +144,7 @@ public class AllFragment extends FermatFragment implements SearchView.OnQueryTex
 
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);
-
                 holder.downloadIcon = (ImageView) convertView.findViewById(R.id.download);
-
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -387,9 +287,6 @@ public class AllFragment extends FermatFragment implements SearchView.OnQueryTex
             return convertView;
         }
 
-        /**
-         * ViewHolder.
-         */
 
 
     }

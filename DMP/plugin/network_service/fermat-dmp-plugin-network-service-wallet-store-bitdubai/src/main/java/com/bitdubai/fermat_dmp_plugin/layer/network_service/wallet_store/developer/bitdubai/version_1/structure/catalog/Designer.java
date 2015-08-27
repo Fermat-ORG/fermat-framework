@@ -32,7 +32,7 @@ public class Designer implements com.bitdubai.fermat_api.layer.dmp_identity.desi
     }
 
     @Override
-    public String getAlias() { return null; }
+    public String getAlias() { return alias; }
 
     /**
      * Get the public key of the represented designer

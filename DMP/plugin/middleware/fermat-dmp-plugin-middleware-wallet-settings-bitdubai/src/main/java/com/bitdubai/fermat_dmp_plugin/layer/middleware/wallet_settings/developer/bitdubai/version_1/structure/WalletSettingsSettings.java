@@ -73,19 +73,19 @@ public class WalletSettingsSettings implements WalletSettings {
     }
 
     @Override
-    public UUID getDefaultLanguage(String walletPublicKey) throws CantGetDefaultLanguageException, CantLoadWalletSettings {
+    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException, CantLoadWalletSettings {
         List<UUID> lstUUID = new ArrayList<UUID>();
         return  ((List<UUID>) XMLParser.parseXML(getStringXML(LANGUAGE_FILENAME+"_"+walletPublicKey,WALLET_SETTIGS_DIRECTORY),lstUUID)).get(DEFAULT_POSITION);
     }
 
     @Override
-    public UUID getDefaultSkin(String walletPublicKey) throws CantGetDefaultSkinException, CantLoadWalletSettings {
+    public UUID getDefaultSkin() throws CantGetDefaultSkinException, CantLoadWalletSettings {
         List<UUID> lstUUID = new ArrayList<UUID>();
         return  ((List<UUID>) XMLParser.parseXML(getStringXML(SKIN_FILENAME,WALLET_SETTIGS_DIRECTORY),lstUUID)).get(DEFAULT_POSITION);
     }
 
     @Override
-    public void setDefaultLanguage(UUID languageId,String walletPublicKey) throws CantSetDefaultLanguageException, CantLoadWalletSettings {
+    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException, CantLoadWalletSettings {
         List<UUID> lstUUID = new ArrayList<UUID>();
         lstUUID =(List<UUID>) XMLParser.parseXML(getStringXML(LANGUAGE_FILENAME+"_"+walletPublicKey,WALLET_SETTIGS_DIRECTORY),lstUUID);
 
@@ -99,7 +99,7 @@ public class WalletSettingsSettings implements WalletSettings {
     }
 
     @Override
-    public void setDefaultSkin(UUID skinId,String walletPublicKey) throws CantSetDefaultSkinException, CantLoadWalletSettings {
+    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException, CantLoadWalletSettings {
         List<UUID> lstUUID = new ArrayList<UUID>();
         lstUUID =(List<UUID>) XMLParser.parseXML(getStringXML(SKIN_FILENAME,WALLET_SETTIGS_DIRECTORY),lstUUID);
 
@@ -118,7 +118,7 @@ public class WalletSettingsSettings implements WalletSettings {
      * @throws CantSetDefaultSkinException
      */
     @Override
-    public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings,String walletPublicKey) throws CantSaveWalletSettings {
+    public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantSaveWalletSettings {
         String xml = XMLParser.parseObject(preferenceWalletSettings);
         recordStringXML(xml,PREFERENCE_FILENAME+"_"+walletPublicKey,WALLET_SETTIGS_DIRECTORY);
     }
@@ -172,7 +172,7 @@ public class WalletSettingsSettings implements WalletSettings {
      * @throws CantGetDefaultSkinException
      */
     @Override
-    public String getPreferenceSettings(String walletPublicKey,PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings {
+    public String getPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings {
        return (String)XMLParser.parseXML(getStringXML(WALLET_SETTINGS_FILE_NAME+"_"+walletPublicKey,WALLET_SETTIGS_DIRECTORY),preferenceWalletSettings);
     }
 
