@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
  * Created by rodrigo on 2015.07.15..
  */
 @RunWith(MockitoJUnitRunner.class)
-public class persistnewFermatTransactionTest {
+public class PersistnewFermatTransactionTest {
     @Mock
     Database database;
 

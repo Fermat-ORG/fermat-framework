@@ -99,14 +99,22 @@ public class IsValidAddressTest {
 
         when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
 
-        //TODO: no valida la address como bien formada porque no coincide la version del NetworkParameters cuando valida en el constructor de la clase Address
-        when(mockCryptoAddress.getAddress()).thenReturn("17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL");
+        when(mockCryptoAddress.getAddress()).thenReturn("mwTdg897T6WEFRnFVm87APwpUeQb6jMgi6");
 
         bitcoinCryptoVaultPluginRoot.start();
     }
 
     @Test
     public void isValidAddressTest_ValidFalse() throws Exception {
+
+        when(mockCryptoAddress.getAddress()).thenReturn("xxx");
+        boolean isvalid = bitcoinCryptoVaultPluginRoot.isValidAddress(mockCryptoAddress);
+
+        System.out.println(isvalid);
+    }
+
+    @Test
+    public void isValidAddressTest_ValidTrue() throws Exception {
 
         boolean isvalid = bitcoinCryptoVaultPluginRoot.isValidAddress(mockCryptoAddress);
 
