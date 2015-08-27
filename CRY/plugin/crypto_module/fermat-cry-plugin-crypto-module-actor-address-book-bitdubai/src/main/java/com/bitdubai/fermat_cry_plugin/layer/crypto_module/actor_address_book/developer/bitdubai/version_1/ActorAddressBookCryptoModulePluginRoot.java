@@ -50,8 +50,14 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        return dbFactory.getDatabaseList(developerObjectFactory);
+        List<DeveloperDatabase> developerDatabaseList = new ArrayList<>();
+        try {
+            ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
+        } catch (Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return developerDatabaseList;
     }
 
     /**
@@ -63,8 +69,14 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        return dbFactory.getDatabaseTableList(developerObjectFactory);
+        List<DeveloperDatabaseTable> developerDatabaseTableList = new ArrayList<>();
+        try {
+            ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
+        } catch (Exception e){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return developerDatabaseTableList;
     }
 
     /**
@@ -77,13 +89,13 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = new ArrayList<>();
         try {
+            ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             dbFactory.initializeDatabase();
             developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return developerDatabaseTableRecordList;
     }
@@ -119,6 +131,8 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
      */
     @Override
     public ActorAddressBookRegistry getActorAddressBookRegistry() throws CantGetActorAddressBookRegistryException {
+        logManager.log(ActorAddressBookCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Getting ActorAddressBookRegistry...", null, null);
+
         /**
          * I created instance of ActorCryptoAddressBookRegistry
          */
@@ -130,10 +144,15 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
 
         try {
             actorCryptoAddressBookRegistry.initialize();
+            logManager.log(ActorAddressBookCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Initializing ActorAddressBookRegistry successfully...", null, null);
+
             return actorCryptoAddressBookRegistry;
         } catch (CantInitializeActorAddressBookCryptoModuleException cantInitializeActorCryptoAddressBookException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeActorCryptoAddressBookException);
-            throw new CantGetActorAddressBookRegistryException(CantGetActorAddressBookRegistryException.DEFAULT_MESSAGE, cantInitializeActorCryptoAddressBookException);
+            throw new CantGetActorAddressBookRegistryException(CantGetActorAddressBookRegistryException.DEFAULT_MESSAGE, cantInitializeActorCryptoAddressBookException, "", "Error initializing database");
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetActorAddressBookRegistryException(CantGetActorAddressBookRegistryException.DEFAULT_MESSAGE, e);
         }
     }
 

@@ -267,19 +267,12 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
 
             // Aquí termina su tarea, será el receptor de las transacciones quien las confirmará
             // al recibirlas
-
         }
 
         private void cleanResources() {
-
             /**
              * Disconnect from database and explicitly set all references to null.
              */
-
         }
-
-
-
     }
-
 }

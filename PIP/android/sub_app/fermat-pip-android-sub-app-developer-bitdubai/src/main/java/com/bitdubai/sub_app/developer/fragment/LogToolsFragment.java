@@ -96,7 +96,10 @@ public class LogToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession)super.subAppsSession;
+        }
+
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         if (developerSubAppSession != null)

@@ -244,9 +244,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
         private void doTheMainTask() {
 
-            // TODO: delete this. Every tune registry is initialized we add a new transaction
-            // this.registry.proofTransaction();
-
             IncomingCryptoRegistry.EventWrapper eventWrapper = null;
             try {
                 // TODO (lnacosta) change this for processing all pending events and not to wait until the next agent wake up
