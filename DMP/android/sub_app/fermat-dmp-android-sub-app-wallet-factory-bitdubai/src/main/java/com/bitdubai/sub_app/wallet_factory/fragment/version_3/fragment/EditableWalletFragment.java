@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragmen
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
@@ -21,27 +23,21 @@ import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
 //TODO: Fransisco, no se como pensas abrir la wallet. esto es solo un testeo, hay que hablar de q es lo que queda
 
-public class EditableWalletFragment extends FermatFragment{
-
-
-    private static final String ARG_POSITION = "position";
-
-    private WalletFactorySubAppSession subAppSession;
-
+public class EditableWalletFragment extends FermatFragment {
 
     /**
      * Flag used if the user create a new navigation structure
      */
     private boolean withNewNavigationStructure;
-    private InstalledWallet installedWallet;
+    /**
+     * Manager
+     */
+    private WalletFactoryManager manager;
 
-    public static EditableWalletFragment newInstance(int position,SubAppsSession subAppSession,boolean withNewNavigationStructure,InstalledWallet installedWallet) {
+    public static EditableWalletFragment newInstance(boolean withNewNavigationStructure) {
         EditableWalletFragment f = new EditableWalletFragment();
-        f.setSubAppSession((WalletFactorySubAppSession) subAppSession);
         f.setWithNewNavigationStructure(withNewNavigationStructure);
-        f.setInstalledWallet(installedWallet);
         Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
         f.setArguments(b);
         return f;
     }
@@ -50,8 +46,12 @@ public class EditableWalletFragment extends FermatFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //subAppSession.getWalletDescriptorFactoryProjectManager().
+        try {
+            /*setting up manager*/
+            manager = ((WalletFactorySubAppSession) subAppsSession).getWalletFactoryManager();
+        } catch (Exception ex) {
+            Log.getStackTraceString(ex);
+        }
     }
 
     @Override
@@ -64,23 +64,15 @@ public class EditableWalletFragment extends FermatFragment{
         btnEditWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((FermatScreenSwapper)getActivity()).changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode());
+                ((FermatScreenSwapper) getActivity()).changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode());
             }
         });
 
         return rootView;
     }
 
-    public void setSubAppSession(WalletFactorySubAppSession subAppSession) {
-        this.subAppSession = subAppSession;
-    }
-
 
     public void setWithNewNavigationStructure(boolean withNewNavigationStructure) {
         this.withNewNavigationStructure = withNewNavigationStructure;
-    }
-
-    public void setInstalledWallet(InstalledWallet installedWallet) {
-        this.installedWallet = installedWallet;
     }
 }

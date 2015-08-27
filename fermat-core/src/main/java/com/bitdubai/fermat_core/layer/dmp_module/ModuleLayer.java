@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_factory.WalletFactorySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_manager.WalletManagerSubsystem;
+import com.bitdubai.fermat_core.layer.dmp_module.wallet_publisher.WalletPublisherSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_runtime.WalletRuntimeSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_store.WalletStoreSubsystem;
 /*
@@ -16,8 +17,10 @@ import com.bitdubai.wallet_platform_core.layer._11_module.wallet_publisher.Walle
 import com.bitdubai.wallet_platform_draft.layer._11_module.wallet_runtime.WalletRuntimeSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_store.WalletStoreSubsystem;
 */
+
 /**
  * Created by ciencias on 03.01.15.
+ * Updated by Francisco on 08.27.15.
  */
 public class ModuleLayer implements PlatformLayer {
 
@@ -27,15 +30,17 @@ public class ModuleLayer implements PlatformLayer {
     Plugin mWalletFactory;
     Plugin mIntraUser;
 
-  //  Plugin mWalletPublisher;
+    Plugin mWalletPublisher;
     Plugin mWalletStore;
 
     public Plugin getWalletRuntime() {
         return mWalletRuntime;
     }
+
     public Plugin getWalletFactory() {
         return mWalletFactory;
     }
+
     public Plugin getWalletManager() {
         return mWalletManager;
     }
@@ -43,17 +48,17 @@ public class ModuleLayer implements PlatformLayer {
     public Plugin getIntraUser() {
         return mIntraUser;
     }
-/*    
-    public Plugin getmWalletPublisher() {
+
+    public Plugin getWalletPublisher() {
         return mWalletPublisher;
     }
-    */
+
     public Plugin getWalletStore() {
-        return mWalletStore;      
+        return mWalletStore;
     }
 
     @Override
-    public void start()  throws CantStartLayerException {
+    public void start() throws CantStartLayerException {
 
         /**
          * Let's try to start the wallet factory subsystem.
@@ -63,7 +68,7 @@ public class ModuleLayer implements PlatformLayer {
 
         try {
             walletFactorySubsystem.start();
-            mWalletRuntime = walletFactorySubsystem.getPlugin();
+            mWalletFactory = walletFactorySubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -116,16 +121,16 @@ public class ModuleLayer implements PlatformLayer {
          * Let's try to start the wallet publisher subsystem.
          */
 
-      /*  ModuleSubsystem walletPublisherSubsystem = new WalletPublisherSubsystem();
-        
+        ModuleSubsystem walletPublisherSubsystem = new WalletPublisherSubsystem();
+
         try {
             walletPublisherSubsystem.start();
             mWalletPublisher = ((ModuleSubsystem) walletPublisherSubsystem).getPlugin();
-                        
-        }catch (CantStartSubsystemException e) {
+
+        } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
-            
-        }*/
+
+        }
 
 
         /**
@@ -133,14 +138,14 @@ public class ModuleLayer implements PlatformLayer {
          */
 
         ModuleSubsystem walletStoreSubsystem = new WalletStoreSubsystem();
-        
+
         try {
             walletStoreSubsystem.start();
-            mWalletStore  = ((ModuleSubsystem) walletStoreSubsystem).getPlugin();
-            
-        }catch (CantStartSubsystemException e){
+            mWalletStore = ((ModuleSubsystem) walletStoreSubsystem).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
-            
+
         }
 
 

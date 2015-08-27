@@ -2,16 +2,19 @@ package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
 import java.util.List;
 import java.util.UUID;
+
 import android.app.Fragment;
 
 
@@ -25,21 +28,28 @@ public class ProjectsFragment extends FermatFragment {
      * UI
      */
     private View rootView;
+
     /**
-     * PLATFORM
+     * Wallet Manager
      */
-    private WalletFactorySubAppSession subAppSession;
+    private WalletFactoryManager manager;
 
 
-    public static ProjectsFragment newInstance(int position, com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
+    public static ProjectsFragment newInstance() {
         ProjectsFragment f = new ProjectsFragment();
-        f.setSubAppSession((WalletFactorySubAppSession) subAppSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
         return f;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            /*setting up manager*/
+            manager = ((WalletFactorySubAppSession) subAppsSession).getWalletFactoryManager();
+        } catch (Exception ex) {
+            Log.getStackTraceString(ex);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,10 +61,6 @@ public class ProjectsFragment extends FermatFragment {
             }
         });*/
         return rootView;
-    }
-
-    public void setSubAppSession(WalletFactorySubAppSession subAppSession) {
-        this.subAppSession = subAppSession;
     }
 
 }
