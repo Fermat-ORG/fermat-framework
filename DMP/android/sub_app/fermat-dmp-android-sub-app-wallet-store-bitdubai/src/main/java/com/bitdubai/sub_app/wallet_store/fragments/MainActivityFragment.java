@@ -38,9 +38,6 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @version 1.0
  */
 public class MainActivityFragment extends FermatListFragment implements FermatListItemListeners<CatalogueItemDao> {
-    // STATIC
-    private static final String ARG_POSITION = "position";
-
     // MANAGERS
     private WalletStoreModuleManager moduleManager;
 
@@ -48,14 +45,10 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
     /**
      * Create a new instance of this fragment
      *
-     * @param position tab position
      * @return InstalledFragment instance object
      */
-    public static MainActivityFragment newInstance(int position) {
+    public static MainActivityFragment newInstance() {
         MainActivityFragment f = new MainActivityFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, position);
-        f.setArguments(args);
         return f;
     }
 
@@ -88,7 +81,7 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             ErrorManager errorManager = subAppsSession.getErrorManager();
-            ArrayList<CatalogueItemDao> data;
+            ArrayList<CatalogueItemDao> data = CatalogueItemDao.getTestData(getResources());
 
             try {
                 WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
@@ -96,35 +89,25 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
                 data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems);
 
             } catch (CantGetRefinedCatalogException e) {
-                data = CatalogueItemDao.getTestData(getResources());
-
                 Log.e("NELSON", "CantGetRefinedCatalogException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
             } catch (NullPointerException e) {
-                data = CatalogueItemDao.getTestData(getResources());
-
                 Log.e("NELSON", "NullPointerException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
             } catch (CantGetWalletsFromCatalogueException e) {
-                data = CatalogueItemDao.getTestData(getResources());
-
                 Log.e("NELSON", "CantGetWalletsFromCatalogueException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             } catch (CantGetWalletIconException e) {
-                data = CatalogueItemDao.getTestData(getResources());
-
                 Log.e("NELSON", "CantGetWalletIconException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
             } catch (DatailedInformationNotFoundException e) {
-                data = CatalogueItemDao.getTestData(getResources());
-
                 Log.e("NELSON", "DatailedInformationNotFoundException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -150,7 +133,7 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
         if (data != null) {
             session.setData(CATALOG_ITEM, data);
 
-            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0);
+            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
             fragment.setSubAppsSession(session);
             fragment.setSubAppSettings(subAppSettings);
             fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);

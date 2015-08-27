@@ -27,28 +27,17 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @version 1.0
  */
 public class DetailsActivityFragment extends FermatFragment {
-    /**
-     * STATIC
-     */
-    private static final String ARG_POSITION = "position";
-
-    /**
-     * MODULE
-     */
+    // MODULE
     private WalletStoreModuleManager moduleManager;
 
 
     /**
      * Create a new instance of this fragment
      *
-     * @param position tab position
      * @return InstalledFragment instance object
      */
-    public static DetailsActivityFragment newInstance(int position) {
+    public static DetailsActivityFragment newInstance() {
         DetailsActivityFragment f = new DetailsActivityFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, position);
-        f.setArguments(args);
         return f;
     }
 
