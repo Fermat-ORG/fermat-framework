@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.Datailed
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
@@ -88,27 +89,13 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
                 List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
                 data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems);
 
-            } catch (CantGetRefinedCatalogException e) {
-                Log.e("NELSON", "CantGetRefinedCatalogException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (CantGetRefinedCatalogException
+                    | NullPointerException
+                    | CantGetWalletsFromCatalogueException
+                    | CantGetWalletIconException
+                    | DatailedInformationNotFoundException
+                    | CantGetSkinsException e) {
 
-            } catch (NullPointerException e) {
-                Log.e("NELSON", "NullPointerException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
-            } catch (CantGetWalletsFromCatalogueException e) {
-                Log.e("NELSON", "CantGetWalletsFromCatalogueException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            } catch (CantGetWalletIconException e) {
-                Log.e("NELSON", "CantGetWalletIconException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
-            } catch (DatailedInformationNotFoundException e) {
-                Log.e("NELSON", "DatailedInformationNotFoundException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }

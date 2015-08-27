@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +15,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.wallet_store.bitdubai.R;
 
+import java.util.ArrayList;
+
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.CATALOG_ITEM;
+import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 
 
 /**
@@ -82,13 +87,22 @@ public class DetailsActivityFragment extends FermatFragment {
         FermatTextView shortDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
         shortDescription.setText("Una descripcion"); // TODO Verificar si es larga o corta la descripcion
 
-        RecyclerView screenshotsRecylerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
+        ArrayList<Drawable> screenshotImgs = new ArrayList<>();
+        screenshotImgs.add(getResources().getDrawable(R.drawable.wallet_screenshot_1));
+        screenshotImgs.add(getResources().getDrawable(R.drawable.wallet_screenshot_2));
+        screenshotImgs.add(getResources().getDrawable(R.drawable.wallet_screenshot_3));
 
-        LinearLayoutManager layout = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        screenshotsRecylerView.setLayoutManager(layout);
+        RecyclerView screenshotsRecyclerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
+
+        LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);
+        screenshotsRecyclerView.setLayoutManager(layout);
+
+        ImagesAdapter adapter = new ImagesAdapter(getActivity(), screenshotImgs);
+        screenshotsRecyclerView.setAdapter(adapter);
+
 
         return rootView;
     }
-
-
 }
+
+
