@@ -12,6 +12,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionService;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 
 import java.util.ArrayList;
@@ -94,27 +95,27 @@ public class IncomingExtraUserEventRecorderService implements com.bitdubai.ferma
          * I will initialize the handling of com.bitdubai.platform events.
          */
         try{
-        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener onBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
-        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener onCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
-        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener reversedOnBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
-        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener reversedOnCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+            EventListener onBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+            EventListener onCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+            EventListener reversedOnBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+            EventListener reversedOnCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
 
-        onBlockchainEventListener.setEventHandler(new IncomingCryptoOnBlockchainNetworkWaitingTransferenceExtraUserEventHandler(this));
-        onCryptoNetworkEventListener.setEventHandler(new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
-        reversedOnBlockchainEventListener.setEventHandler(new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventHandler(this));
-        reversedOnCryptoNetworkEventListener.setEventHandler(new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
+            onBlockchainEventListener.setEventHandler(new IncomingCryptoOnBlockchainNetworkWaitingTransferenceExtraUserEventHandler(this));
+            onCryptoNetworkEventListener.setEventHandler(new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
+            reversedOnBlockchainEventListener.setEventHandler(new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventHandler(this));
+            reversedOnCryptoNetworkEventListener.setEventHandler(new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
 
-        eventManager.addListener(onBlockchainEventListener);
-        eventManager.addListener(onCryptoNetworkEventListener);
-        eventManager.addListener(reversedOnBlockchainEventListener);
-        eventManager.addListener(reversedOnCryptoNetworkEventListener);
+            eventManager.addListener(onBlockchainEventListener);
+            eventManager.addListener(onCryptoNetworkEventListener);
+            eventManager.addListener(reversedOnBlockchainEventListener);
+            eventManager.addListener(reversedOnCryptoNetworkEventListener);
 
-        listenersAdded.add(onBlockchainEventListener);
-        listenersAdded.add(onCryptoNetworkEventListener);
-        listenersAdded.add(reversedOnBlockchainEventListener);
-        listenersAdded.add(reversedOnCryptoNetworkEventListener);
+            listenersAdded.add(onBlockchainEventListener);
+            listenersAdded.add(onCryptoNetworkEventListener);
+            listenersAdded.add(reversedOnBlockchainEventListener);
+            listenersAdded.add(reversedOnCryptoNetworkEventListener);
 
-        this.serviceStatus = ServiceStatus.STARTED;
+            this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception e){
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, FermatException.wrapException(e),null,"Check the cause of this error");
         }

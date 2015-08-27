@@ -1,1 +1,1 @@
-# fermat-pip-addon-os-android-database-system-bitdubai
+# fermat-osa-addon-os-android-database-system-bitdubai
