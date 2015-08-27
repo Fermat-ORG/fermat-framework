@@ -534,11 +534,11 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             TODO: Get the real values for this null objects.
             */
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
-                catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
-                walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
-                skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
-                language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
-                detailedCatalogItem.getDeveloper().getAlias(), version.toString());
+                    catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
+                    walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
+                    skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
+                    language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
+                    detailedCatalogItem.getDeveloper().getAlias(), version.toString());
 
         }catch (CantSetInstallationStatusException exception){
             throw new CantStartInstallationException(CantSetInstallationStatusException.DEFAULT_MESSAGE, exception, "Cannot set the instalation status", "Please, check the cause");
@@ -635,7 +635,14 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
             
             for (CatalogItem catalogItem :  walletCatalog.getWalletCatalog(0,0)){
-                InstallationStatus installationStatus = getWalletInstallationStatus(catalogItem);
+
+                InstallationStatus installationStatus;
+                try{
+                    installationStatus = getWalletInstallationStatus(catalogItem);
+                } catch (Exception e){
+                    installationStatus = InstallationStatus.NOT_INSTALLED;
+                }
+
                 WalletStoreCatalogueItem walletStoreCatalogueItem = getWalletCatalogueItem(catalogItem, installationStatus);
                 walletStoreCatalogueItemList.add(walletStoreCatalogueItem);
             }
