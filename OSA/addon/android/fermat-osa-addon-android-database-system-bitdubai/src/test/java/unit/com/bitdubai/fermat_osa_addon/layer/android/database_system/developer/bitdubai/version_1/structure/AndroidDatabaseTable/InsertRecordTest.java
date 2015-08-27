@@ -28,13 +28,14 @@ import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Shadows.shadowOf;
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
  * Created by natalia on 15/07/15.
  */
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = CustomBuildConfig.class, sdk = 21)
 public class InsertRecordTest {
 
 

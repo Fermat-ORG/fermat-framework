@@ -6,6 +6,8 @@ import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +26,7 @@ import static org.robolectric.Shadows.shadowOf;
  * Created by jorgegonzalez on 2015.07.06..
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = CustomBuildConfig.class)
 public class CloseDatabaseTest {
 
     private Activity mockActivity;
