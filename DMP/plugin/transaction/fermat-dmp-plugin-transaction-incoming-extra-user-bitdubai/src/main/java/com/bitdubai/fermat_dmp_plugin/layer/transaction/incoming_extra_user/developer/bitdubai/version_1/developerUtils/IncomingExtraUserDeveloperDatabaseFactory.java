@@ -96,6 +96,7 @@ public class IncomingExtraUserDeveloperDatabaseFactory {
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
@@ -126,7 +127,6 @@ public class IncomingExtraUserDeveloperDatabaseFactory {
         /**
          * return the list of DeveloperRecords for the passed table.
          */
-        database.closeDatabase();
         return returnedRecords;
     }
 }

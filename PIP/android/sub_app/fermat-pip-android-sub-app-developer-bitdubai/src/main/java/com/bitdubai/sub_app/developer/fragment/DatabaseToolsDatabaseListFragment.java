@@ -82,7 +82,7 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        //developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
 
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();

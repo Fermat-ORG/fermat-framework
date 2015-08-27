@@ -35,7 +35,6 @@ public enum DeveloperFragmentsEnumType implements FermatFragmentsEnumType<Develo
         return key;
     }
 
-    //@Override
     public static DeveloperFragmentsEnumType getValue(String name) {
         for (DeveloperFragmentsEnumType fragments : DeveloperFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {

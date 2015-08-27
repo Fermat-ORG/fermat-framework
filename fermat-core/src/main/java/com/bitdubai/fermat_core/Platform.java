@@ -19,9 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformLayers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.DealsWithModuleWalletFactory;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletModule;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
@@ -136,8 +133,8 @@ import java.util.logging.Logger;
 /**
  * The Class <code>com.bitdubai.fermat_core.CorePlatformContext</code> start all
  * component of the platform and manage it
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * Created by ciencias on 20/01/15.
  * Update by Roberto Requena - (rart3001@gmail.com) on 24/07/15.
  *
@@ -786,6 +783,15 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(walletPublisherMiddleware, Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE);
 
             /*
+             * Plugin Wallet publisher Module
+             * ----------------------------------
+             */
+
+            Plugin walletPublisherModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletStore();
+            injectPluginReferencesAndStart(walletPublisherModule, Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE);
+
+
+            /*
              * Plugin Wallet Store Middleware
              * ----------------------------------
              */
@@ -802,11 +808,6 @@ public class Platform implements Serializable {
             Plugin walletStoreModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletStore();
             injectPluginReferencesAndStart(walletStoreModule, Plugins.BITDUBAI_WALLET_STORE_MODULE);
 
-            /**
-             * Plugin Wallet Publisher Module
-             */
-            Plugin walletPublisherModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletPublisher();
-            injectPluginReferencesAndStart(walletPublisherModule, Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE);
 
               /*
              * Plugin Wallet Navigation Structure Middleware
@@ -937,8 +938,8 @@ public class Platform implements Serializable {
              * Plugin Wallet factory
              * -----------------------------
              */
-            Plugin walletFactoryModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletFactory();
-            injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
+              Plugin walletFactoryModule =  ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletFactory();
+              injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
 
             /*
              * Plugin Wallet Manager
@@ -955,7 +956,7 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
             /*
-             * Plugin Network Service
+             * Plugin Wallet Runtime
              * -----------------------------
              */
             Plugin subAppResourcesNetworkService = ((com.bitdubai.fermat_core.layer.pip_network_service.NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_NETWORK_SERVICE_LAYER)).getSubAppResources();
@@ -968,6 +969,13 @@ public class Platform implements Serializable {
             //TODO lo comente porque la variable cryptoLossProtectedWalletWalletModule es null y da error al inicializar la APP (Natalia)
             //Plugin cryptoLossProtectedWalletWalletModule = ((WalletModuleLayer) mWalletModuleLayer).getmCryptoLossProtectedWallet();
             //injectPluginReferencesAndStart(cryptoLossProtectedWalletWalletModule, Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE);
+
+            /*
+             * Plugin Wallet factory
+             * -----------------------------
+             */
+            //  Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
+            //  injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
 
              /*
              * Plugin Intra User NetWorkService
@@ -1212,9 +1220,6 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithIntraUsersNetworkService) {
                 ((DealsWithIntraUsersNetworkService) plugin).setIntraUserNetworkServiceManager((IntraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE));
             }
-            if (plugin instanceof DealsWithModuleWalletFactory) {
-                ((DealsWithModuleWalletFactory) plugin).setWalletFactoryManager((WalletFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MODULE));
-            }
 
             /*
              * Register the plugin into the platform context
@@ -1261,7 +1266,7 @@ public class Platform implements Serializable {
     /**
      * This method is responsible to inject PlatformLayer referent object, since in special cases some plugin interact
      * directly with a layer instance. For example in the case of Network Services
-     * <p/>
+     * <p>
      * NOTE: This method should always call before @see Platform#injectPluginReferencesAndStart(Plugin, Plugins)
      * always and when it is required by the plugin
      *
