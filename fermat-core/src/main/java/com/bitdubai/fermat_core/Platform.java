@@ -929,8 +929,8 @@ public class Platform implements Serializable {
              * Plugin Wallet factory
              * -----------------------------
              */
-            //  Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
-            //  injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
+              Plugin walletFactoryModule =  ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletFactory();
+              injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
 
             /*
              * Plugin Wallet Manager

@@ -22,7 +22,7 @@ public interface WalletSettings {
      * @return the identifier of the default language of the wallet
      * @throws CantGetDefaultLanguageException
      */
-    public UUID getDefaultLanguage(String walletPublicKey) throws CantGetDefaultLanguageException, CantLoadWalletSettings;
+    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException, CantLoadWalletSettings;
 
     /**
      * This method let us know the default skin of a wallet
@@ -30,7 +30,7 @@ public interface WalletSettings {
      * @return the identifier of the default skin of the wallet
      * @throws CantGetDefaultSkinException
      */
-    public UUID getDefaultSkin(String walletPublicKey) throws CantGetDefaultSkinException, CantLoadWalletSettings;
+    public UUID getDefaultSkin() throws CantGetDefaultSkinException, CantLoadWalletSettings;
 
     /**
      * This method let us set the default language for a wallet
@@ -38,7 +38,7 @@ public interface WalletSettings {
      * @param languageId the identifier of the language to set as default
      * @throws CantSetDefaultLanguageException
      */
-    public void setDefaultLanguage(UUID languageId,String walletPublicKey) throws CantSetDefaultLanguageException, CantLoadWalletSettings;
+    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException, CantLoadWalletSettings;
 
     /**
      * This method let us set the default skin for a wallet
@@ -46,7 +46,7 @@ public interface WalletSettings {
      * @param skinId the identifier of the skin to set as default
      * @throws CantSetDefaultSkinException
      */
-    public void setDefaultSkin(UUID skinId,String walletPublicKey) throws CantSetDefaultSkinException, CantLoadWalletSettings;
+    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException, CantLoadWalletSettings;
 
     /**
      * This method let us set the preference settings for a wallet
@@ -54,7 +54,7 @@ public interface WalletSettings {
      * @param preferenceWalletSettings
      * @throws CantSetDefaultSkinException
      */
-    public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings,String walletPublicKey) throws CantSaveWalletSettings;
+    public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantSaveWalletSettings;
 
     /**
      * This method let us get the preference settings for a wallet
@@ -62,7 +62,7 @@ public interface WalletSettings {
      * @return preference settings of a wallet
      * @throws CantGetDefaultSkinException
      */
-    public String getPreferenceSettings(String walletPublicKey,PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings;
+    public String getPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings;
 
 
 

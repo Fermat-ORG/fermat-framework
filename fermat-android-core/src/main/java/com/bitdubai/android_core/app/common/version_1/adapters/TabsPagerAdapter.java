@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStri
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_core.Platform;
@@ -50,7 +51,7 @@ import java.util.List;
         private Platform platform;
         private ErrorManager errorManager;
 
-        private WalletSettingsManager walletSettingsManager;
+        private WalletSettings walletSettings;
 
         private WalletResourcesProviderManager walletResourcesProviderManager;
 
@@ -89,7 +90,7 @@ import java.util.List;
 
         }
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
+        public TabsPagerAdapter(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
             super(fm);
             this.context=context;
 
@@ -97,7 +98,6 @@ import java.util.List;
             this.errorManager=errorManager;
             this.walletFragmentFactory = walletFragmentFactory;
             this.tabStrip=tabStrip;
-            this.walletSettingsManager=walletSettingsManager;
             this.walletResourcesProviderManager =walletResourcesProviderManager;
 
             if(tabStrip != null){
@@ -164,7 +164,7 @@ import java.util.List;
 
             try {
                 if(walletFragmentFactory !=null){
-                    currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettingsManager,walletResourcesProviderManager);
+                    currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -178,18 +178,6 @@ import java.util.List;
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
             }
-
-
-
-//
-//            }
-//            catch(Exception ex)
-//            {
-//                errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
-//
-//                Toast.makeText(context, "Error in ScreenPagerAdapter GetItem " + ex.getMessage(),
-//                        Toast.LENGTH_LONG).show();
-//            }
 
 
             return currentFragment;
