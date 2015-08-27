@@ -22,6 +22,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 import junit.framework.TestCase;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -112,7 +113,7 @@ public class AcceptIntraUserTest extends TestCase {
 
 
     }
-
+    @Ignore
     @Test
     public void acceptIntraUserConnectionTest_AcceptedOk_throwsCantAcceptRequestException() throws Exception{
 
@@ -123,7 +124,7 @@ public class AcceptIntraUserTest extends TestCase {
 
     }
 
-
+    @Ignore
     @Test
     public void acceptIntraUserConnectionTest_AcceptedError_throwsCantAcceptRequestException() throws Exception{
 

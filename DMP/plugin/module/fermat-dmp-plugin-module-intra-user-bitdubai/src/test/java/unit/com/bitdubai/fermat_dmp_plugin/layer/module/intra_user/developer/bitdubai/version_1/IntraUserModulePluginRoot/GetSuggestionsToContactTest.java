@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -111,7 +112,7 @@ public class GetSuggestionsToContactTest extends TestCase {
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
     }
-
+    @Ignore
     @Test
     public void getSuggestionsToContactTest_GetOk_throwsCantGetIntraUsersListException() throws Exception{
 
@@ -123,7 +124,7 @@ public class GetSuggestionsToContactTest extends TestCase {
 
     }
 
-
+    @Ignore
     @Test
     public void getSuggestionsToContactTest_GetError_throwsCantGetIntraUsersListException() throws Exception{
 

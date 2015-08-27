@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -108,7 +109,7 @@ public class SetNewProfileImageTest extends TestCase {
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
-
+    @Ignore
     @Test
     public void getSuggestionsToContactTest_GetOk_throwsCantSaveProfileImageException() throws Exception{
 
@@ -119,7 +120,7 @@ public class SetNewProfileImageTest extends TestCase {
 
     }
 
-
+    @Ignore
     @Test
     public void getSuggestionsToContactTest_GetError_throwsCantSaveProfileImageException() throws Exception{
 
