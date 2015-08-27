@@ -2,6 +2,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
@@ -106,10 +107,9 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * @return List<String> of columns names
      */
 
-    @Override
-    public List<String> getColumns() {
+    public List<String> getColumns(SQLiteDatabase database) {
         List<String> columns = new ArrayList<>();
-        Cursor c = this.database.rawQuery("SELECT * FROM " + tableName, null);
+        Cursor c = database.rawQuery("SELECT * FROM " + tableName, null);
         String[] columnNames = c.getColumnNames();
         c.close();
 
@@ -421,10 +421,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
          * Get columns name to read values of files
          *
          */
+        SQLiteDatabase database = null;
         try {
-            this.database.openDatabase();
-            List<String> columns = getColumns();
-            cursor = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
+            database = this.database.getWritableDatabase();
+            List<String> columns = getColumns(database);
+            cursor = database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
                 List<DatabaseRecord> recordValues = new ArrayList<>();
@@ -447,7 +448,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 cursor.close();
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
         } finally {
-            this.database.closeDatabase();
+            if(database != null)
+                database.close();
         }
     }
 
@@ -856,11 +858,12 @@ public class AndroidDatabaseTable implements DatabaseTable {
     //testear haber si funciona así de abstracto o hay que hacerlo más especifico
     @Override
     public DatabaseTableRecord getRecordFromPk(String pk) throws Exception {
+        SQLiteDatabase database = null;
         try {
-            this.database.openDatabase();
+            database = this.database.getWritableDatabase();
             Cursor c = database.rawQuery(" SELECT * from " + tableName + " WHERE pk=" + pk, null);
 
-            List<String> columns = getColumns();
+            List<String> columns = getColumns(database);
             DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
             if (c.moveToFirst()) {
                 /**
@@ -892,7 +895,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
         } catch (Exception e) {
             return null;
         } finally {
-            this.database.closeDatabase();
+            if(database != null)
+                database.close();
         }
     }
 

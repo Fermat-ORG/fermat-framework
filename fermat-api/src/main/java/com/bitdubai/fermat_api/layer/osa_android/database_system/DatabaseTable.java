@@ -26,8 +26,6 @@ public interface DatabaseTable {
 
     public DatabaseTableColumn newColumn();
 
-    public List<String> getColumns();
-
     public List<DatabaseTableRecord> getRecords();
 
     public List<DatabaseVariable> getVariablesResult();
