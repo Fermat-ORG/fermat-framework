@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="false"
+    android:background="@color/wallet_store_activities_background"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,7 +14,7 @@
 
         <!-- Banner de la wallet -->
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/wallet_banner"
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:adjustViewBounds="true"
@@ -43,7 +44,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/wallet_icon_image"
+                    android:id="@+id/wallet_icon"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_margin="3dp"
@@ -101,7 +102,7 @@
                     </LinearLayout>
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                        android:id="@+id/wallet_installation_status"
+                        android:id="@+id/wallet_install_button"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
@@ -123,6 +124,7 @@
                 android:orientation="vertical">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/wallet_total_installs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

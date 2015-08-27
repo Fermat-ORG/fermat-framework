@@ -7,6 +7,6 @@
     <color name="wallet_store_link">#69b07f</color>
     <color name="wallet_install_button">#69b07f</color>
     <color name="wallet_name_black">#66000000</color>
-    <color name="wallet_store_catalog_background">#f4f4f4</color>
+    <color name="wallet_store_activities_background">#fbf7ed</color>
 
 </resources>

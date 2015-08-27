@@ -29,6 +29,8 @@ import com.wallet_store.bitdubai.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.CATALOG_ITEM;
+
 /**
  * Fragment que luce como un Activity donde se muestra la lista de Wallets disponibles en el catalogo de la Wallet Store
  *
@@ -135,7 +137,7 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
     public void onItemClickListener(CatalogueItemDao data, int position) {
         WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
         if (data != null) {
-            session.setCatalogItemDao(data);
+            session.setData(CATALOG_ITEM, data);
 
             DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0);
             fragment.setSubAppsSession(session);
