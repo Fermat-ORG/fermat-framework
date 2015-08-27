@@ -20,11 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -56,7 +59,7 @@ import java.util.Set;
 /**
  * Created by Matias Furszyfer
  */
-public class MoneyRequestFragment extends Fragment {
+public class MoneyRequestFragment extends FermatWalletFragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -117,10 +120,6 @@ public class MoneyRequestFragment extends Fragment {
      */
     private ReferenceWalletSession walletSession;
 
-    /**
-     * Wallet preference settings
-     */
-    private WalletSettingsManager walletSettingsManager;
 
     public boolean fromContacts = false;
 
@@ -135,24 +134,21 @@ public class MoneyRequestFragment extends Fragment {
      *
      * @param position
      * @param walletSession
-     * @param walletSettingsManager
      * @return
      */
 
-    public static MoneyRequestFragment newInstance(int position,ReferenceWalletSession walletSession,WalletSettingsManager walletSettingsManager) {
+    public static MoneyRequestFragment newInstance(int position,ReferenceWalletSession walletSession) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
-        f.setWalletSettingsManager(walletSettingsManager);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
         return f;
     }
 
-    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, WalletSettingsManager walletSettingsManager, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
-        f.setWalletSettingsManager(walletSettingsManager);
         f.setContact(walletContact);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
@@ -486,8 +482,5 @@ public class MoneyRequestFragment extends Fragment {
         this.walletSession = walletSession;
     }
 
-    public void setWalletSettingsManager(WalletSettingsManager walletSettingsManager) {
-        this.walletSettingsManager = walletSettingsManager;
-    }
 
 }

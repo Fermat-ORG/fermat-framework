@@ -343,6 +343,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	public synchronized void readFromConnection(final SelectionKey connection) throws CloudCommunicationException {
 
         System.out.println("CloudFMPConnectionManager - Starting read data from Connection ");
+        System.out.println(" -------------------------------------------------------- ");
 
         /*
          * Extract the socket chanel from the connection
@@ -469,6 +470,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
              */
             throw wrapNIOSocketIOException(ex);
          }
+
+        System.out.println(" -------------------------------------------------------- ");
+        System.out.println("");
 	}
 
     /**
@@ -479,6 +483,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	public synchronized void writeToConnection(final SelectionKey connection) throws CloudCommunicationException {
 
         System.out.println("CloudFMPConnectionManager - Starting write to Connection ");
+        System.out.println(" -------------------------------------------------------- ");
 
         WritableByteChannel writableByteChannel = null;
 
@@ -522,7 +527,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                      */
                     String encryptedJson = AsymmectricCryptography.encryptMessagePublicKey(dataPacketToSend.toJson(), dataPacketToSend.getDestination());
 
-                    System.out.println("CloudFMPConnectionManager - Encrypted packet json to send  = " + encryptedJson);
+                    //System.out.println("CloudFMPConnectionManager - Encrypted packet json to send  = " + encryptedJson);
                     System.out.println("CloudFMPConnectionManager - Packet data length = " + encryptedJson.length());
 
                     /*
@@ -599,6 +604,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
              */
 			throw wrapNIOSocketIOException(ex);
 		}
+
+        System.out.println(" -------------------------------------------------------- ");
+        System.out.println("");
 	}
 
     /**

@@ -113,6 +113,7 @@ public class AcceptIntraUserTest extends TestCase {
 
 
     }
+
     @Ignore
     @Test
     public void acceptIntraUserConnectionTest_AcceptedOk_throwsCantAcceptRequestException() throws Exception{

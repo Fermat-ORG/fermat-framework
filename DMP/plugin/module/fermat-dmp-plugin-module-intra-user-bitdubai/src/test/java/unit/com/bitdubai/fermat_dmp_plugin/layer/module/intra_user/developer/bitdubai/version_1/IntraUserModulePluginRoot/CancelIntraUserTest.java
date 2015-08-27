@@ -115,6 +115,8 @@ public class CancelIntraUserTest extends TestCase {
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
+
+
     @Ignore
     @Test
     public void cancelIntraUserTest_CancelledOk_throwsIntraUserCancellingFailedException() throws Exception{

@@ -109,6 +109,7 @@ public class SetNewProfileImageTest extends TestCase {
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
+
     @Ignore
     @Test
     public void getSuggestionsToContactTest_GetOk_throwsCantSaveProfileImageException() throws Exception{

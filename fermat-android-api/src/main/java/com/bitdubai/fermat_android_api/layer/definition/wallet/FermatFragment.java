@@ -11,9 +11,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.S
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
- * Created by Matias Furszyfer on 2015.07.21..
+ * Common Android Fragment Base
+ *
+ * @author Matias Furszy
+ * @author Francisco Vasquez
+ * @version 1.1
  */
-public class FermatFragment extends Fragment{
+public abstract class FermatFragment extends Fragment {
 
     /**
      * FLAGS
@@ -42,12 +46,20 @@ public class FermatFragment extends Fragment{
         }
     }
 
+    /**
+     * Start a configuration Wizard
+     *
+     * @param key Enum Wizard registered type
+     */
     protected void startWizard(WizardTypes key) {
         if (context != null && isAttached) {
             context.showWizard(key);
         }
     }
 
+    /**
+     * Dismiss active wizard configuration
+     */
     protected void dismissWizard() {
         if (context != null && isAttached) {
             context.dismissWizard();
@@ -66,14 +78,29 @@ public class FermatFragment extends Fragment{
         isAttached = false;
     }
 
+    /**
+     * Setting up SubApp Session
+     *
+     * @param subAppsSession SubAppSession object
+     */
     public void setSubAppsSession(SubAppsSession subAppsSession) {
         this.subAppsSession = subAppsSession;
     }
 
+    /**
+     * Setting up SubAppSettings
+     *
+     * @param subAppSettings SubAppSettings object
+     */
     public void setSubAppSettings(SubAppSettings subAppSettings) {
         this.subAppSettings = subAppSettings;
     }
 
+    /**
+     * Setting up SubAppResourcesProviderManager
+     *
+     * @param subAppResourcesProviderManager SubAppResourcesProviderManager object
+     */
     public void setSubAppResourcesProviderManager(SubAppResourcesProviderManager subAppResourcesProviderManager) {
         this.subAppResourcesProviderManager = subAppResourcesProviderManager;
     }

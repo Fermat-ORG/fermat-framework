@@ -112,6 +112,7 @@ public class GetSuggestionsToContactTest extends TestCase {
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
     }
+
     @Ignore
     @Test
     public void getSuggestionsToContactTest_GetOk_throwsCantGetIntraUsersListException() throws Exception{

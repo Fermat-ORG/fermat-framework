@@ -137,10 +137,10 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
         try {
 
             if (databases.type==Databases.TYPE_ADDON) {
-                Addons addon = Addons.getByKey(databases.resource);
+                Addons addon = Addons.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
             } else if (databases.type==Databases.TYPE_PLUGIN) {
-                Plugins plugin = Plugins.getByKey(databases.resource);
+                Plugins plugin = Plugins.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
             }
 

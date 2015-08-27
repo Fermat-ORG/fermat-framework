@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings;
 
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.PreferenceWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
@@ -17,7 +18,24 @@ import java.util.UUID;
  */
 public class ReferenceWalletPreferenceSettings extends PreferenceWalletSettings{
 
-    ReferenceWalletPreferenceSettings(){
+    private int transactionToShow;
 
+    BalanceType balanceType;
+    private int transactionsToShow;
+
+    ReferenceWalletPreferenceSettings(){
+        transactionToShow=6;
+    }
+
+    public BalanceType getBalanceType() {
+        return balanceType;
+    }
+
+    public void setBalanceType(BalanceType balanceType) {
+        this.balanceType = balanceType;
+    }
+
+    public int getTransactionsToShow() {
+        return transactionsToShow;
     }
 }

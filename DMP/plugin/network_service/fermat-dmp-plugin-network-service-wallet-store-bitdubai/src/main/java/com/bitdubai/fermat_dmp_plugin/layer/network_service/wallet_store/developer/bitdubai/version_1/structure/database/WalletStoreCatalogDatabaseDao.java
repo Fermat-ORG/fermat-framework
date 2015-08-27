@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.InvalidDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.InvalidResultReturnedByDatabaseException;
@@ -109,17 +110,17 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
             database.closeDatabase();
     }
 
-    private DatabaseTableRecord getDesignerDatabaseTableRecord(Designer designer){
+    private DatabaseTableRecord getDesignerDatabaseTableRecord(com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designer.getId().toString());
+        record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designer.getPublicKey().toString()); //Todo: Revisar si guarda publickey o UUID id
         record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_NAME_COLUMN_NAME, designer.getAlias());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME, designer.getPublicKey());
 
         return record;
     }
 
-    private DatabaseTransaction addDesignerInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, Designer designer) throws InvalidDatabaseOperationException {
+    private DatabaseTransaction addDesignerInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer) throws InvalidDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME);
         DatabaseTableRecord record = getDesignerDatabaseTableRecord(designer);
 
@@ -140,17 +141,17 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return transaction;
     }
 
-    private DatabaseTableRecord getTranslatorDatabaseTableRecord (Translator translator){
+    private DatabaseTableRecord getTranslatorDatabaseTableRecord (com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translator.getId().toString());
+        record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translator.getPublicKey().toString()); //Todo: Revisar si guarda publickey o UIID id
         record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME, translator.getAlias());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME, translator.getPublicKey());
 
         return record;
     }
 
-    private DatabaseTransaction addTranslatorInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, Translator translator) throws InvalidDatabaseOperationException {
+    private DatabaseTransaction addTranslatorInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator) throws InvalidDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME);
         DatabaseTableRecord record = getTranslatorDatabaseTableRecord(translator);
 
@@ -250,7 +251,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return transaction;
     }
 
-    private DatabaseTableRecord getDeveloperInDatabaseTableRecord(Developer developer) {
+    private DatabaseTableRecord getDeveloperInDatabaseTableRecord(DeveloperIdentity developer) {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, developer.getPublicKey()); //Todo: Revisar Esta caso si guardara el publickey o id UUID
@@ -260,7 +261,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return record;
     }
 
-    private DatabaseTransaction addDeveloperInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, Developer developer) throws InvalidDatabaseOperationException {
+    private DatabaseTransaction addDeveloperInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, DeveloperIdentity developer) throws InvalidDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME);
         DatabaseTableRecord record = getDeveloperInDatabaseTableRecord(developer);
 
@@ -832,7 +833,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
      * @param designer
      * @throws CantExecuteDatabaseOperationException
      */
-    public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItemImpl catalogItemImpl, Developer developer, Language language, Translator translator, Skin skin, Designer designer) throws CantExecuteDatabaseOperationException {
+    public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator, Skin skin, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer) throws CantExecuteDatabaseOperationException {
         database = openDatabase();
         DatabaseTransaction transaction = database.newTransaction();
         try{

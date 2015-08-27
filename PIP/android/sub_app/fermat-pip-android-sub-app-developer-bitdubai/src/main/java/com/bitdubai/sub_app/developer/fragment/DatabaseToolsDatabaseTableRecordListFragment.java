@@ -106,10 +106,10 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
 
         try {
             if (resource.type== Databases.TYPE_ADDON) {
-                Addons addon = Addons.getByKey(resource.resource);
+                Addons addon = Addons.getByKey(resource.code);
                 this.developerDatabaseTableRecordList = databaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
             } else if (resource.type== Databases.TYPE_PLUGIN) {
-                Plugins plugin = Plugins.getByKey(resource.resource);
+                Plugins plugin = Plugins.getByKey(resource.code);
                 this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(plugin, developerDatabase, developerDatabaseTable);
             }
 
