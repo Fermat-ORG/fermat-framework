@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.session;
 
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
@@ -51,6 +52,11 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
     private WalletResourcesProviderManager walletResourcesProviderManager;
 
     /**
+     *  Wallet Settings
+     */
+    private WalletSettings walletSettings;
+
+    /**
      * Event manager.
      */
     // Ver si esto va acá
@@ -69,12 +75,12 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
 
 
 
-    public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager,WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager){//,EventManager eventManager){
+    public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager){//,EventManager eventManager){
         this.wallet=installedWallet;
         data= new HashMap<String,Object>();
         this.cryptoWalletManager=cryptoWalletManager;
         this.walletResourcesProviderManager=walletResourcesProviderManager;
-        //this.eventManager=eventManager;
+        this.walletSettings=walletSettings;
         this.errorManager=errorManager;
     }
 
@@ -147,6 +153,14 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
     @Override
     public WalletResourcesProviderManager getWalletResourcesProviderManager() {
         return walletResourcesProviderManager;
+    }
+
+    /**
+     *
+     */
+    @Override
+    public WalletSettings getWalletSettings() {
+        return this.walletSettings;
     }
 
     public WalletContact getLastContactSelected() {

@@ -51,6 +51,7 @@ public class ActorAddressBookCryptoModuleRegistry implements ActorAddressBookReg
         /**
          * I will try to create and initialize a new DAO
          */
+
         actorAddressBookDao = new ActorAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
         actorAddressBookDao.initialize();
 
@@ -66,6 +67,9 @@ public class ActorAddressBookCryptoModuleRegistry implements ActorAddressBookReg
         } catch (CantGetActorAddressBookException |ActorAddressBookNotFoundException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetActorAddressBookException(CantGetActorAddressBookException.DEFAULT_MESSAGE, e, "", "Uncaught error trying to get the actor.");
         }
     }
 
@@ -80,6 +84,9 @@ public class ActorAddressBookCryptoModuleRegistry implements ActorAddressBookReg
         } catch (CantRegisterActorAddressBookException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRegisterActorAddressBookException(CantRegisterActorAddressBookException.DEFAULT_MESSAGE, e, "", "Uncaught error trying to register the actor.");
         }
     }
 

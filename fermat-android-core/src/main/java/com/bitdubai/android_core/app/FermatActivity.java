@@ -340,16 +340,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
-        /**
-         * Making the pagerTab adapter
-         */
-
         adapter = new TabsPagerAdapter(getFragmentManager(),
                 getApplicationContext(),
                 WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
                 tabStrip,
                 walletSession,
-                getWalletSettingsManager(),
                 getWalletResourcesProviderManager());
 
         pagertabs.setAdapter(adapter);

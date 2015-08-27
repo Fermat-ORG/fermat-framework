@@ -104,7 +104,8 @@ public class MainFragment extends FermatFragment {
             Log.i(TAG, String.valueOf((informationPublishedComponentList != null? informationPublishedComponentList.size() : 0)));
 
         } catch (Exception ex) {
-            Log.e(TAG, ex.getMessage());
+            ex.printStackTrace();
+            //Log.e(TAG, ex.getMessage());
         }
     }
 

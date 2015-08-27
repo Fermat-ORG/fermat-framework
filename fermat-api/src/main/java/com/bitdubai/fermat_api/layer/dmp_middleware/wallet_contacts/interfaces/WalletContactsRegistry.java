@@ -24,21 +24,45 @@ import java.util.UUID;
  */
 public interface WalletContactsRegistry {
 
+    /**
+     * Throw this method you can get all the contacts linked to an specific wallet.
+     *
+     * @param walletPublicKey of the wallet where you're working.
+     * @return a list of instance of all wallet contacts related to the wallet.
+     * @throws CantGetAllWalletContactsException
+     */
     List<WalletContactRecord> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
 
-    List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException;
+    /**
+     * Throw this method you can get all the contacts linked to an specific wallet having in count pagination.
+     *
+     * @param walletPublicKey of the wallet where you're working.
+     * @param max             number of entities you want to bring
+     * @param offset          where do you start to bring the entities
+     * @return a list of instance of wallet contacts related to the wallet.
+     * @throws CantGetAllWalletContactsException
+     */
+    List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey,
+                                                          Integer max,
+                                                          Integer offset) throws CantGetAllWalletContactsException;
 
-    WalletContactRecord createWalletContact(UUID actorId, String actorName, Actors actorType, CryptoAddress receivedCryptoAddress, String walletPublicKey) throws CantCreateWalletContactException;
+    WalletContactRecord createWalletContact(UUID actorId,
+                                            String actorName,
+                                            Actors actorType,
+                                            CryptoAddress receivedCryptoAddress,
+                                            String walletPublicKey) throws CantCreateWalletContactException;
 
-    void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException;
+    void updateWalletContact(UUID contactId,
+                             CryptoAddress receivedCryptoAddress,
+                             String actorName) throws CantUpdateWalletContactException;
 
     void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException;
 
-    WalletContactRecord getWalletContactByNameAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException;
+    WalletContactRecord getWalletContactByNameAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException, WalletContactNotFoundException;
 
-    List<WalletContactRecord>  getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException;
+    List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException;
 
-    List<WalletContactRecord> getWalletContactsByActorId(UUID actorId) throws CantGetAllWalletContactsException;
+    WalletContactRecord getWalletContactByActorId(UUID actorId) throws CantGetWalletContactException, WalletContactNotFoundException;
 
     WalletContactRecord getWalletContactByContactId(UUID contactId) throws CantGetWalletContactException, WalletContactNotFoundException;
 }

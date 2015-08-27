@@ -69,6 +69,7 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
          */
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
+            this.database.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
             /**
@@ -147,10 +148,12 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            this.database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            this.database.closeDatabase();
             return returnedRecords;
         }
 

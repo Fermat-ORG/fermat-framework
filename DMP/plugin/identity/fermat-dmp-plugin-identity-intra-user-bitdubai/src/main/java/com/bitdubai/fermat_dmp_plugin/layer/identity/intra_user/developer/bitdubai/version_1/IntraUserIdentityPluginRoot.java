@@ -53,9 +53,9 @@ import java.util.UUID;
  * An Intra-User identity is used to "authenticate" in a wallet or some sub-apps.
  * The management is done through this plugin.
  * The User can create, list or set a new profile picture for an identity.
- *
+ * <p/>
  * The "authentication" is managed in each wallet or sub-app in which is used.
- *
+ * <p/>
  * Created by loui on 22/02/15.
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 07/08/15.
  *
@@ -64,7 +64,7 @@ import java.util.UUID;
  */
 
 
-public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithErrors, DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem, IntraUserIdentityManager, LogManagerForDevelopers,Service, Plugin {
+public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, IntraUserIdentityManager, LogManagerForDevelopers, Service, Plugin {
 
     private IntraUserIdentityDao intraUserIdentityDao;
     /**
@@ -107,9 +107,9 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
     /**
      * List Intra Users linked to current Device User
-     *
+     * <p/>
      * The Intra-Users are linked to the device with the publicKey (it can be acquired by deviceUserManager.getLoggedInDeviceUser()
-     *
+     * <p/>
      * IntraUserIdentityDao is used to database access (select).
      *
      * @return a list of instances of the class IntraUserIdentityIdentity found in structure package of the plugin
@@ -118,35 +118,31 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
     @Override
     public List<IntraUserIdentity> getIntraUsersFromCurrentDeviceUser() throws CantGetUserIntraUserIdentitiesException {
 
-        try
-        {
+        try {
 
-           DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            return   intraUserIdentityDao.getIntraUserFromCurrentDeviceUser(loggedUser);
-        }
-        catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS",e,"Error get logged user device","");
-       }
-         catch (CantGetIntraUserIdentitiesException e) {
-             throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS",e,"","");
-        }
-        catch (Exception e) {
-            throw new CantGetUserIntraUserIdentitiesException ("CAN'T GET INTRA USER IDENTITYS", FermatException.wrapException(e), "", "");
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            return intraUserIdentityDao.getIntraUserFromCurrentDeviceUser(loggedUser);
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS", e, "Error get logged user device", "");
+        } catch (CantGetIntraUserIdentitiesException e) {
+            throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS", FermatException.wrapException(e), "", "");
         }
     }
 
     /**
      * Create an Identity Intra-User
-     *
+     * <p/>
      * When an User decides to create a new identity, that is achieved throw this method.
      * The new Intra-User is linked to the current device user (it can be acquired by deviceUserManager.getLoggedInDeviceUser()
      * The key-pair is created with a new ECCKeyPair()
-     *
+     * <p/>
      * The user must have an alias and a profileImage for the identification, if not, give an Exception.
-     *
+     * <p/>
      * The privateKey must be saved in a file with "$publicKey" like name.
      * The profileImage must be saved in a file with "$publicKey_profileImage" like name.
-     *
+     * <p/>
      * IntraUserIdentityDao is used to database access (insert).
      *
      * @param alias        the alias that the user choose as intra user identity
@@ -156,28 +152,23 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
      */
     @Override
     public IntraUserIdentity createNewIntraUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserException {
-        try{
+        try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraUserIdentityDao.createNewUser(alias,publicKey,privateKey,loggedUser,profileImage);
+            intraUserIdentityDao.createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
-            return new IntraUserIdentityIdentity(alias,publicKey,privateKey,profileImage, pluginFileSystem, pluginId);
+            return new IntraUserIdentityIdentity(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantCreateNewIntraUserException("CAN'T CREATE NEW INTRA USER IDENTITY", e, "Error get logged user device", "");
+        } catch (CantCreateNewDeveloperException e) {
+            throw new CantCreateNewIntraUserException("CAN'T CREATE NEW INTRA USER IDENTITY", e, "Error save user on database", "");
+        } catch (Exception e) {
+            throw new CantCreateNewIntraUserException("CAN'T CREATE NEW INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
         }
-        catch(CantGetLoggedInDeviceUserException e)
-        {
-            throw new CantCreateNewIntraUserException("CAN'T CREATE NEW INTRA USER IDENTITY",e,"Error get logged user device","");
-        }
-        catch(CantCreateNewDeveloperException e)
-        {
-            throw new CantCreateNewIntraUserException("CAN'T CREATE NEW INTRA USER IDENTITY",e,"Error save user on database","");
-       }
-        catch (Exception e) {
-            throw new CantCreateNewIntraUserException ("CAN'T CREATE NEW INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
-         }
 
     }
 
@@ -185,7 +176,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
      * Service Interface implementation.
      */
     @Override
-    public void start() throws CantStartPluginException{
+    public void start() throws CantStartPluginException {
 
         /**
          * I created instance of IntraUserIdentityDao
@@ -194,7 +185,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
         try {
 
-            this.intraUserIdentityDao = new IntraUserIdentityDao(pluginDatabaseSystem,this.pluginFileSystem, this.pluginId);
+            this.intraUserIdentityDao = new IntraUserIdentityDao(pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
             this.intraUserIdentityDao.initializeDatabase();
 
@@ -202,7 +193,6 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_IDENTITY);
         }
-
 
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -236,7 +226,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
 
 
-        IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+        IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
 
 
@@ -244,7 +234,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
+        IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
@@ -252,20 +242,11 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
         try {
-            IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
-
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
-            return dbFactory.getDatabaseTableContent(developerObjectFactory,  developerDatabaseTable);
-        }catch (CantOpenDatabaseException cantOpenDatabaseException){
-            /**
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        }
-        catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeIntraUserIdentityDatabaseException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
@@ -340,7 +321,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
      */
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem  = pluginFileSystem;
+        this.pluginFileSystem = pluginFileSystem;
 
     }
 
@@ -349,6 +330,6 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
      */
     @Override
     public void setId(UUID pluginId) {
-     this.pluginId = pluginId;
+        this.pluginId = pluginId;
     }
 }

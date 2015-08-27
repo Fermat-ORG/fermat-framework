@@ -70,6 +70,7 @@ public class IntraUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -91,6 +92,7 @@ public class IntraUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
                    * We create the new database
                    */
                 database = intraUserIdentityDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -105,7 +107,7 @@ public class IntraUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
         /**
          * I only have one database on my plugin. I will return its name.
          */
-        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
+        List<DeveloperDatabase> databases = new ArrayList<>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase("Intra User", this.pluginId.toString()));
         return databases;
     }
@@ -147,7 +149,9 @@ public class IntraUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
             /**
              * if there was an error, I will returned an empty list.
              */
@@ -164,7 +168,7 @@ public class IntraUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

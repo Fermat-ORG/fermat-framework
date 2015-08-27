@@ -204,6 +204,6 @@ public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,Deals
     @Override
     public void setSettings(String xmlWalletSetting,String walletPublicKey) throws CantSaveWalletSettings {
         WalletSettings walletSettings = new WalletSettingsSettings(walletPublicKey,pluginFileSystem,pluginId,errorManager);
-        walletSettings.setPreferenceSettings(xmlWalletSetting,walletPublicKey);
+        //walletSettings.setPreferenceSettings(xmlWalletSetting,walletPublicKey);
     }
 }
