@@ -127,22 +127,13 @@ public class GetPendingTransactionsTest {
     @Test
     public void getPendingTransactionsTest_GetOk_ThrowsCantDeliverPendingTransactionsException() throws Exception {
 
+        //TODO: hay que mockear un HashMap<String, String> con trasacciones para que procese
          List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> transactionList=  bitcoinCryptoVault.getPendingTransactions(Specialist.DEVICE_USER_SPECIALIST);
 
         Assertions.assertThat(transactionList)
                 .isNotNull();
     }
 
-    @Ignore
-    @Test
-    public void getPendingTransactionsTest_GetError_ThrowsCantDeliverPendingTransactionsException() throws Exception {
 
-        when(mockDatabase.getTable(anyString())).thenReturn(null);
-        catchException(bitcoinCryptoVault).getPendingTransactions(Specialist.DEVICE_USER_SPECIALIST);
-
-        assertThat(caughtException())
-                .isNotNull()
-                .isInstanceOf(CantDeliverPendingTransactionsException.class);
-    }
 
 }
