@@ -19,6 +19,7 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -120,7 +121,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
     public static BalanceFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
-        balanceFragment.setReferenceWalletSession( walletSession);
+        balanceFragment.setReferenceWalletSession(walletSession);
         balanceFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return balanceFragment;
     }
@@ -135,6 +136,7 @@ public class BalanceFragment extends FermatWalletFragment {
         //setRetainInstance(true);
 
         referenceWalletPreferenceSettings =(ReferenceWalletPreferenceSettings)walletSettings;
+
         /**
          *
          */
@@ -253,7 +255,7 @@ public class BalanceFragment extends FermatWalletFragment {
         }
         */
 
-            lstCryptoWalletTransactions = cryptoWallet.getTransactions(5, 0, walletPublicKey);
+            lstCryptoWalletTransactions = cryptoWallet.getTransactions(referenceWalletPreferenceSettings.getTransactionsToShow(), 0, walletPublicKey);
 
 
             // testing purpose
@@ -263,16 +265,16 @@ public class BalanceFragment extends FermatWalletFragment {
 //        lstData.add(new ListComponent("Fer Lewn", "Paid 30 btc","person12"));
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
-                //TODO: este metodo va a desaparecer y se va a reemplazar por el metodo de getWalletContactById
+                if(cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())){
+                    ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
+                    lstData.add(listComponent);
+                }
 
-                //List<WalletContactRecord> lstWalletContact = cryptoWallet.getWalletContactByNameContainsAndWalletPublicKey(cryptoWalletTransaction.getInvolvedActorName(), walletPublicKey);
-
-                ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
-                lstData.add(listComponent);
             }
 
 
             Resources res = getResources();
+
 
             CustomComponentMati custonMati = (CustomComponentMati) rootView.findViewById(R.id.custonMati);
 
