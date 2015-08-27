@@ -173,10 +173,12 @@ public class DeveloperDatabaseFactory {
         try {
 
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
             return returnedRecords;
         }
 

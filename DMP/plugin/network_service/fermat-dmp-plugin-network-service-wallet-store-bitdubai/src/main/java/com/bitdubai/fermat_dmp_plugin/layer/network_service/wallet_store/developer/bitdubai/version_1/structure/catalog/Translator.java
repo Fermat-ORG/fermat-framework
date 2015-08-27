@@ -7,7 +7,6 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/23/15.
  */
-//public class Translator implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator {
 public class Translator implements com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator {
     UUID id;
     String alias;

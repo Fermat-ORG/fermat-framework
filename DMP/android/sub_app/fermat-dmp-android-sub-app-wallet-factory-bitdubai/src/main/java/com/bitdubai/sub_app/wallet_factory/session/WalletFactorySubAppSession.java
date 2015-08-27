@@ -33,18 +33,6 @@ public class WalletFactorySubAppSession implements com.bitdubai.fermat_android_a
      */
     private WalletFactoryManager walletFactoryManager;
 
-    /**
-     *  Projects opened
-     */
-
-
-    /**
-     * Event manager.
-     */
-    // Ver si esto va acá
-    //private EventManager eventManager;
-
-
 
     public WalletFactorySubAppSession(SubApps subApps, ErrorManager errorManager,WalletFactoryManager walletFactoryManager){
         this.subApps=subApps;

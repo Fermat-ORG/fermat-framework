@@ -643,7 +643,13 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             WalletCatalog walletCatalog = walletStoreManagerNetworkService.getWalletCatalogue();
 
             for (CatalogItem catalogItem : walletCatalog.getWalletCatalog(0, 0)) {
-                InstallationStatus installationStatus = getWalletInstallationStatus(catalogItem);
+
+                InstallationStatus installationStatus;
+                try {
+                    installationStatus = getWalletInstallationStatus(catalogItem);
+                } catch (Exception e) {
+                    installationStatus = InstallationStatus.NOT_INSTALLED;
+                }
                 WalletStoreCatalogueItem walletStoreCatalogueItem = getWalletCatalogueItem(catalogItem, installationStatus);
                 walletStoreCatalogueItemList.add(walletStoreCatalogueItem);
             }

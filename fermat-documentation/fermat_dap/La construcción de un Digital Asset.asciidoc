@@ -1,3 +1,5 @@
+Ante la idea de mandar a firmar algo a alguien para comprobar que tiene las cosas que dice tener falla porque el que intenta falsificar la identidad del portador simplemente le pide al verdadero portador lo que le pidieron a él firmar.
+
 == Definiciones
 
 Un Digital Asset (DA) es un conjunto de metadata asociada a un transaccion bitcoin.

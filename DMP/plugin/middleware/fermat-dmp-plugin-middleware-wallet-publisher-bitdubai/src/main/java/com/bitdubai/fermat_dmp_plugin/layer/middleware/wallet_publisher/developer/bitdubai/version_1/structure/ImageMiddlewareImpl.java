@@ -60,10 +60,10 @@ public class ImageMiddlewareImpl implements Image {
     }
 
     /**
-     * (non-Javadoc)
-     * @see ImageMiddleware#getComponentId()
+     * Get the Component Id
+     *
+     * @return UUID
      */
-    @Override
     public UUID getComponentId() {
         return componentId;
     }
@@ -79,10 +79,10 @@ public class ImageMiddlewareImpl implements Image {
 
 
     /**
-     * (non-Javadoc)
-     * @see ImageMiddleware#getFileId()
+     * Get the FileId
+     *
+     * @return UUID
      */
-    @Override
     public UUID getFileId() {
         return fileId;
     }
@@ -98,7 +98,7 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
-     * @see ImageMiddleware#getData()
+     * @see Image#getData()
      */
     @Override
     public byte[] getData() {

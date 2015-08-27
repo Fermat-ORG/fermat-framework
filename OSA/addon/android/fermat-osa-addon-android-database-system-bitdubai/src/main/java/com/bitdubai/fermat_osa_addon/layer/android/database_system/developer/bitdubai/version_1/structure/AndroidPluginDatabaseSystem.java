@@ -165,7 +165,9 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
         }
         encryptedString = encryptedString.replace("/","");
 
-        return encryptedString.replace("\n","");
+        // TODO COMMENTED FOR DATABASE LEAKS CHECK
+        //return encryptedString.replace("\n","");
+        return databaseName;
     }
 
 }

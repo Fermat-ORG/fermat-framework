@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -83,21 +82,20 @@ public class DatabaseToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        }
 
-        if (developerSubAppSession != null)
-            errorManager = developerSubAppSession.getErrorManager();
+        errorManager = developerSubAppSession.getErrorManager();
         try {
 
             ToolManager toolManager = developerSubAppSession.getToolManager();
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
-            if (errorManager != null)
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            if (errorManager != null)
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -111,29 +109,30 @@ public class DatabaseToolsFragment extends FermatFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.start, container, false);
         rootView.setTag(1);
-        gridView = (GridView) rootView.findViewById(R.id.gridView);
+        gridView=(GridView) rootView.findViewById(R.id.gridView);
         try {
 
             List<Plugins> plugins = databaseTools.getAvailablePluginList();
             List<Addons> addons = databaseTools.getAvailableAddonList();
 
 
-            mlist = new ArrayList<Resource>();
+
+            mlist=new ArrayList<Resource>();
 
             for (int i = 0; i < plugins.size(); i++) {
                 Resource item = new Resource();
                 item.picture = "plugin";
                 item.label = plugins.get(i).toString().toLowerCase().replace("_", " ");
-                item.resource = plugins.get(i).getKey();
-                item.type = Resource.TYPE_PLUGIN;
+                item.code = plugins.get(i).getKey();
+                item.type=Resource.TYPE_PLUGIN;
                 mlist.add(item);
             }
             for (int i = 0; i < addons.size(); i++) {
                 Resource item = new Resource();
                 item.picture = "addon";
                 item.label = addons.get(i).toString().replace("_", " ");
-                item.resource = addons.get(i).getCode();
-                item.type = Resource.TYPE_ADDON;
+                item.code = addons.get(i).getCode();
+                item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
             }
 
@@ -144,10 +143,10 @@ public class DatabaseToolsFragment extends FermatFragment {
                 gridView.setNumColumns(3);
             }
             AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
+            adapter.notifyDataSetChanged();
             gridView.setAdapter(adapter);
         } catch (Exception e) {
-            if (errorManager != null)
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -156,67 +155,62 @@ public class DatabaseToolsFragment extends FermatFragment {
     }
 
 
+
     public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
         this.developerSubAppSession = developerSubAppSession;
     }
 
 
-    public class AppListAdapter extends BaseAdapter {
+    public class AppListAdapter extends ArrayAdapter<Resource> {
 
-        private List<Resource> dataSet;
-        private Context context;
-        private int textViewResourceId;
 
         public AppListAdapter(Context context, int textViewResourceId, List<Resource> objects) {
-            this.context = context;
-            this.dataSet = objects;
-            this.textViewResourceId = textViewResourceId;
+            super(context, textViewResourceId, objects);
         }
 
         @Override
-        public int getCount() {
-            return dataSet != null ? dataSet.size() : 0;
-        }
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
-        @Override
-        public Object getItem(int position) {
-            return dataSet.get(position);
-        }
+            Resource item = getItem(position);
 
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup viewGroup) {
-            final Resource item = dataSet.get(position);
             ViewHolder holder;
-            if (view == null) {
-                view = LayoutInflater.from(context).inflate(R.layout.developer_app_grid_item, viewGroup, false);
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.developer_app_grid_item, parent, false);
+
+
                 holder = new ViewHolder();
-                holder.imageView = (ImageView) view.findViewById(R.id.image_view);
-                TextView textView = (TextView) view.findViewById(R.id.company_text_view);
+
+                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Resource item=(Resource) gridView.getItemAtPosition(position);
+
+                        //set the next fragment and params
+                        Object[] params = new Object[1];
+                        params[0] = item;
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),params);
+
+                    }
+                });
+
+                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;
-                view.setTag(holder);
+
+
+                convertView.setTag(holder);
             } else {
-                holder = (ViewHolder) view.getTag();
+                holder = (ViewHolder) convertView.getTag();
             }
 
             holder.companyTextView.setText(item.label);
-            holder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                    //set the next fragment and params
-                    Object[] params = new Object[1];
-                    params[0] = item;
-                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), params);
 
-                }
-            });
             switch (item.picture) {
                 case "plugin":
                     holder.imageView.setImageResource(R.drawable.addon);
@@ -232,14 +226,17 @@ public class DatabaseToolsFragment extends FermatFragment {
                     break;
             }
 
-            return view;
-        }
-    }
 
+
+            return convertView;
+        }
+
+    }
     /**
      * ViewHolder.
      */
     private class ViewHolder {
+
 
 
         public ImageView imageView;

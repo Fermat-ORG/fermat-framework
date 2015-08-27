@@ -329,6 +329,21 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+
+        /**
+         * I will initialize the handling of platform events.
+         */
+/*        EventListener eventListener;
+        EventHandler eventHandler;
+
+        try {
+            TestPublishWallet();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (CantPublishWalletInCatalogException e) {
+            e.printStackTrace();
+        }
+    */
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -573,10 +588,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             //New set. Sets the ScreenSize
             skin.setScreenSize(ScreenSize.MEDIUM);
 
-
-            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer designer;
-            //designer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer();
-            ////
             com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = new com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer() {
                 @Override
                 public String getAlias() {
@@ -593,13 +604,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                     return null;
                 }
             };
-            ////
-            //designer.setiD(UUID.randomUUID());
-            //designer.setAlias("Diseñador");
-            //designer.setPublicKey("DFSDFKSDFPSDFJSDFsdkfjskdf");
 
             skin.setDesigner(designer);
-
 
             DetailedCatalogItemImpl detailedCatalogItemImpl;
             detailedCatalogItemImpl = new DetailedCatalogItemImpl();
@@ -619,10 +625,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             language.setLanguageName(Languages.SPANISH);
             language.setLanguagePackageSizeInBytes(100);
 
-
-            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator translator;
-            //translator = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator();
-            ////
             com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = new com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator() {
                 @Override
                 public String getAlias() {
@@ -639,18 +641,11 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                     return null;
                 }
             };
-            ////
-
-            //translator.setId(UUID.randomUUID());
-            //translator.setAlias("Traductor");
-            //translator.setPublicKey("SDSDFSDFskdmfskdjfsdkjf");
             language.setTranslator(translator);
 
 
             detailedCatalogItemImpl.setLanguage(language);
-            //com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer developer;
-            //developer = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer();
-            ////
+
             DeveloperIdentity developerIdentity = new DeveloperIdentity() {
                 @Override
                 public String getAlias() {
@@ -667,11 +662,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                     return null;
                 }
             };
-            ///
 
-            //developer.setAlias(developerIdentity.getAlias());
-            //developer.setId(UUID.randomUUID());
-            //developer.setPublicKey(developerIdentity.getPublicKey());
             detailedCatalogItemImpl.setDeveloper(developerIdentity);
 
             catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);

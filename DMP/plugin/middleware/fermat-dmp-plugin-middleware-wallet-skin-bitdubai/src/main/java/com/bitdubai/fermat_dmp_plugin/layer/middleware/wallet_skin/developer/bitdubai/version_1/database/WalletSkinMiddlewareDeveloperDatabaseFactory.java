@@ -70,6 +70,7 @@ public class WalletSkinMiddlewareDeveloperDatabaseFactory implements DealsWithPl
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -91,6 +92,7 @@ public class WalletSkinMiddlewareDeveloperDatabaseFactory implements DealsWithPl
                    * We create the new database
                    */
                 database = walletSkinMiddlewareDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -153,10 +155,12 @@ public class WalletSkinMiddlewareDeveloperDatabaseFactory implements DealsWithPl
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
             return returnedRecords;
         }
 

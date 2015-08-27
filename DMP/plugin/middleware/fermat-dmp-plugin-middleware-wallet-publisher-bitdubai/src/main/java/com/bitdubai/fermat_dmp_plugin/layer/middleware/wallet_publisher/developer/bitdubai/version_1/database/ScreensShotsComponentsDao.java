@@ -31,6 +31,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao</code> have
@@ -132,7 +133,7 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -151,6 +152,17 @@ public class ScreensShotsComponentsDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -221,7 +233,8 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
-        }catch (DatabaseNotFoundException e) {
+
+        } catch (DatabaseNotFoundException e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -240,6 +253,17 @@ public class ScreensShotsComponentsDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -324,7 +348,7 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -343,6 +367,17 @@ public class ScreensShotsComponentsDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The database no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
+        } catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
@@ -462,6 +497,17 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
+        }catch (Exception e) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Other problems";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+
         }finally {
 
             if (getDataBase() != null){
@@ -474,92 +520,6 @@ public class ScreensShotsComponentsDao {
          */
         return list;
     };
-
-    /**
-     * Method that create a new entity in the data base.
-     *
-     *  @param entity ImageMiddlewareImpl to create.
-     *  @throws CantInsertRecordDataBaseException
-     */
-    public void create (ImageMiddlewareImpl entity) throws CantInsertRecordDataBaseException {
-
-        if (entity == null){
-            throw new IllegalArgumentException("The entity is required, can not be null");
-        }
-
-        try {
-
-            /*
-             * 1- Create the record to the entity
-             */
-            getDataBase().openDatabase();
-            DatabaseTableRecord entityRecord = constructFrom(entity);
-
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
-
-            /*
-             * 3.- Serialize the objects images into the xml file
-             */
-            imageManager.persist(entity);
-
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
-            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            throw cantInsertRecordDataBaseException;
-
-        } catch (CantPersistFileException cantPersistFileException) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
-            String context = contextBuffer.toString();
-            String possibleCause = "Can not update the file image";
-
-            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, cantPersistFileException, context, possibleCause);
-        } catch (CantCreateFileException cantCreateFileException) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
-            String context = contextBuffer.toString();
-            String possibleCause = "Can not update the file image";
-
-            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, cantCreateFileException, context, possibleCause);
-        } catch (DatabaseNotFoundException e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
-            String context = contextBuffer.toString();
-            String possibleCause = "The data base no exist";
-
-            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-        } catch (CantOpenDatabaseException e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
-            String context = contextBuffer.toString();
-            String possibleCause = "The data base no exist";
-
-            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-        }finally {
-
-            if (getDataBase() != null){
-                getDataBase().closeDatabase();
-            }
-        }
-
-    }
 
     /**
      * Method that update an entity in the data base.
@@ -696,25 +656,18 @@ public class ScreensShotsComponentsDao {
      * @param record with values from the table
      * @return ImageMiddlewareImpl setters the values from table
      */
-    private ImageMiddlewareImpl constructFrom(DatabaseTableRecord record){
+    private ImageMiddlewareImpl constructFrom(DatabaseTableRecord record) throws FileNotFoundException, CantCreateFileException {
 
-        try {
+        /*
+         * Construct object
+         */
+        ImageMiddlewareImpl imageMiddleware = new ImageMiddlewareImpl();
+        imageMiddleware.setFileId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME)));
+        imageMiddleware.setComponentId(UUID.fromString(record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME)));
+        imageMiddleware.setData(imageManager.loadImageFile(imageMiddleware.getFileId().toString()));
 
-            String fileIdImg = record.getStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME);
+        return imageMiddleware;
 
-            /*
-             * Xml File deserialize into the object image
-             */
-            return (ImageMiddlewareImpl) imageManager.load(fileIdImg);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        }
-
-
-        return null;
     }
 
     /**

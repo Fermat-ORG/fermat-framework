@@ -60,7 +60,6 @@ public class DeveloperDatabaseFactory {
             DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME, cryptoTransactionsTableColumns);
             tables.add(cryptoTransactionsTable);
 
-
             /**
              * Fermat transaction columns
              */
@@ -86,7 +85,6 @@ public class DeveloperDatabaseFactory {
             DeveloperDatabaseTable TransitionProtocol_StatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_NAME, TransitionProtocol_StatusTableColumns);
             tables.add(TransitionProtocol_StatusTable);
 
-
             return tables;
         }
         catch(Exception exception){
@@ -108,10 +106,12 @@ public class DeveloperDatabaseFactory {
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
             return returnedRecords;
         }
 
@@ -125,7 +125,7 @@ public class DeveloperDatabaseFactory {
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

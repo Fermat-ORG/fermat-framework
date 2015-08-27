@@ -73,11 +73,8 @@ public class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabase
         try {
             for(Map.Entry<String, List<IncomingExtraUserDataBaseConstants.ColumnDefinition>> tableDefinition: tablesDefinitions.entrySet()){
                 table = databaseFactory.newTableFactory(ownerId, tableDefinition.getKey());
-                System.err.println("INCOMING EXTRA USER REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
                 for(IncomingExtraUserDataBaseConstants.ColumnDefinition columnDefinition: tableDefinition.getValue()){
-                    System.err.println("INCOMING EXTRA USER REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
                     table.addColumn(columnDefinition.columnName, columnDefinition.columnDataType, columnDefinition.columnDataTypeSize, columnDefinition.columnIsPrimaryKey);
-
                 }
                 databaseFactory.createTable(table);
             }

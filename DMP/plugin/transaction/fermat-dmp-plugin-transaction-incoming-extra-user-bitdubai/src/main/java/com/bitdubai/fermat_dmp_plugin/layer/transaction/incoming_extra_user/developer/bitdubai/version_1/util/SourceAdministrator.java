@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.SourceNotRecognizedException;
 
 /**
  * Created by eze on 11/06/15.
@@ -18,16 +19,23 @@ import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingC
  */
 public class SourceAdministrator implements DealsWithIncomingCrypto {
 
-  private IncomingCryptoManager incomingCryptoManager;
+    private IncomingCryptoManager incomingCryptoManager;
 
-
-  public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(final EventSource eventSource){
+    public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(final EventSource eventSource) throws SourceNotRecognizedException {
         // This method will select the correct sender according to the specified source,
-        return incomingCryptoManager.getTransactionManager();
-  }
+        switch (eventSource) {
+            case CRYPTO_ROUTER:
+                return incomingCryptoManager.getTransactionManager();
+            default:
+                String exceptionMessage = "There is no administrator for this source";
+                String context = "The event source was: "+ eventSource.name() + "with code " + eventSource.getCode();
+                String possibleCause = "Value not considered in switch statement";
+                throw new SourceNotRecognizedException(exceptionMessage,null,context,possibleCause);
+        }
+    }
 
-  @Override
-  public void setIncomingCryptoManager(final IncomingCryptoManager incomingCryptoManager) {
-    this.incomingCryptoManager = incomingCryptoManager;
-  }
+    @Override
+    public void setIncomingCryptoManager(final IncomingCryptoManager incomingCryptoManager) {
+        this.incomingCryptoManager = incomingCryptoManager;
+    }
 }
