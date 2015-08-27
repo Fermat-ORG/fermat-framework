@@ -231,42 +231,42 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     @Override
     public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException {
-        return walletStoreModuleManager.getCatalogue();
+        return getWalletStoreModuleManager().getCatalogue();
     }
 
     @Override
     public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartLanguageInstallationException {
-        walletStoreModuleManager.installLanguage(walletCatalogueId, languageId);
+        getWalletStoreModuleManager().installLanguage(walletCatalogueId, languageId);
     }
 
     @Override
     public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartSkinInstallationException {
-        walletStoreModuleManager.installSkin(walletCatalogueId, skinId);
+        getWalletStoreModuleManager().installSkin(walletCatalogueId, skinId);
     }
 
     @Override
     public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
-        walletStoreModuleManager.installWallet(walletCategory, nicheWallet, skinId, languageId, walletCatalogueId, version);
+        getWalletStoreModuleManager().installWallet(walletCategory, nicheWallet, skinId, languageId, walletCatalogueId, version);
     }
 
     @Override
     public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartUninstallLanguageException {
-        walletStoreModuleManager.uninstallLanguage(walletCatalogueId, languageId);
+        getWalletStoreModuleManager().uninstallLanguage(walletCatalogueId, languageId);
     }
 
     @Override
     public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantStartUninstallSkinException {
-        walletStoreModuleManager.uninstallSkin(walletCatalogueId, skinId);
+        getWalletStoreModuleManager().uninstallSkin(walletCatalogueId, skinId);
     }
 
     @Override
     public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException {
-        walletStoreModuleManager.uninstallWallet(walletCatalogueId);
+        getWalletStoreModuleManager().uninstallWallet(walletCatalogueId);
     }
 
     @Override
     public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
-        return walletStoreModuleManager.getCatalogItemDetails(walletCatalogId);
+        return getWalletStoreModuleManager().getCatalogItemDetails(walletCatalogId);
     }
 
 
