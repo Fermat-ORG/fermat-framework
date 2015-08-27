@@ -69,7 +69,7 @@ public class DetailsActivityFragment extends FermatFragment {
         CatalogueItemDao catalogItem = (CatalogueItemDao) subAppsSession.getData(CATALOG_ITEM);
 
         ImageView walletBanner = (ImageView) rootView.findViewById(R.id.wallet_banner);
-        walletBanner.setImageResource(R.drawable.banner_club_1); // TODO Obtener valor de verdad
+        walletBanner.setImageDrawable(catalogItem.getWalletIcon()); // TODO Obtener valor de verdad
 
         ImageView walletIcon = (ImageView) rootView.findViewById(R.id.wallet_icon);
         walletIcon.setImageDrawable(catalogItem.getWalletIcon());
@@ -90,7 +90,7 @@ public class DetailsActivityFragment extends FermatFragment {
         totalInstalls.setText("10 install"); // TODO Obtener valor de verdad
 
         FermatTextView shortDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
-        shortDescription.setText(catalogItem.getSrcObj().getDescription()); // TODO Verificar si es larga o corta la descripcion
+        shortDescription.setText("Una descripcion"); // TODO Verificar si es larga o corta la descripcion
 
         RecyclerView screenshotsRecylerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
         // TODO preguntar como montar la lista de screenshots y donde se encuentra eso en los datos de la Wallet
