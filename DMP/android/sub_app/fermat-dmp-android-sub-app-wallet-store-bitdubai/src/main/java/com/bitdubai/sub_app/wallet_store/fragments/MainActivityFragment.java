@@ -88,32 +88,43 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             ErrorManager errorManager = subAppsSession.getErrorManager();
-            ArrayList<CatalogueItemDao> data = CatalogueItemDao.getTestData(getResources());
+            ArrayList<CatalogueItemDao> data;
+
             try {
                 WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
                 List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
                 data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems);
 
             } catch (CantGetRefinedCatalogException e) {
+                data = CatalogueItemDao.getTestData(getResources());
+
                 Log.e("NELSON", "CantGetRefinedCatalogException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
             } catch (NullPointerException e) {
+                data = CatalogueItemDao.getTestData(getResources());
+
                 Log.e("NELSON", "NullPointerException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
             } catch (CantGetWalletsFromCatalogueException e) {
+                data = CatalogueItemDao.getTestData(getResources());
+
                 Log.e("NELSON", "CantGetWalletsFromCatalogueException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             } catch (CantGetWalletIconException e) {
+                data = CatalogueItemDao.getTestData(getResources());
+
                 Log.e("NELSON", "CantGetWalletIconException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
             } catch (DatailedInformationNotFoundException e) {
+                data = CatalogueItemDao.getTestData(getResources());
+
                 Log.e("NELSON", "DatailedInformationNotFoundException", e);
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
