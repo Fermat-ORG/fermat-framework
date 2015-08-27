@@ -783,6 +783,15 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(walletPublisherMiddleware, Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE);
 
             /*
+             * Plugin Wallet publisher Module
+             * ----------------------------------
+             */
+
+            Plugin walletPublisherModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletStore();
+            injectPluginReferencesAndStart(walletPublisherModule, Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE);
+
+
+            /*
              * Plugin Wallet Store Middleware
              * ----------------------------------
              */
