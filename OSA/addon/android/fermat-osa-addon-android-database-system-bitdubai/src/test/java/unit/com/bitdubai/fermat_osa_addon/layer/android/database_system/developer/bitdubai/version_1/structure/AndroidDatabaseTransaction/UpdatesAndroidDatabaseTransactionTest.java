@@ -20,13 +20,14 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Shadows.shadowOf;
 
 import java.util.UUID;
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
  * Created by angel on 28/7/15.
  */
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = CustomBuildConfig.class)
 public class UpdatesAndroidDatabaseTransactionTest {
 
     private Activity mockActivity;

@@ -116,6 +116,7 @@ public class CancelIntraUserTest extends TestCase {
 
     }
 
+
     @Ignore
     @Test
     public void cancelIntraUserTest_CancelledOk_throwsIntraUserCancellingFailedException() throws Exception{
@@ -126,7 +127,6 @@ public class CancelIntraUserTest extends TestCase {
         assertThat(caughtException()).isNull();
 
     }
-
 
     @Ignore
     @Test

@@ -1,5 +1,9 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -17,6 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
+import org.bitcoinj.core.Address;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
@@ -28,24 +33,20 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 import java.util.UUID;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import unit.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.Common.MockedPluginFileSystem;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import org.bitcoinj.core.Address;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
- * Created by natalia on 26/08/15.
+ * Created by natalia on 27/08/15.
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class SendBitcoinsTest {
+public class GetDatabaseTest {
 
 
     @Mock
@@ -94,10 +95,13 @@ public class SendBitcoinsTest {
     private DatabaseTable mockTable;
 
     @Mock
-    private CryptoAddress mockCryptoAddress;
+    DeveloperDatabase mockDeveloperDatabase;
 
     @Mock
-    CryptoVaultDatabaseActions mockCryptoVaultDatabaseActions;
+    DeveloperDatabaseTable mockDeveloperDatabaseTable;
+
+    @Mock
+    DeveloperObjectFactory mockDeveloperObjectFactory;
 
     private UUID pluginId = UUID.randomUUID();
 
@@ -125,30 +129,37 @@ public class SendBitcoinsTest {
         when(mockDeviceUserManager.getLoggedInDeviceUser()).thenReturn(mockDeviceUser);
 
         when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
-        when(mockCryptoAddress.getAddress()).thenReturn("mwTdg897T6WEFRnFVm87APwpUeQb6jMgi6");
 
         bitcoinCryptoVaultPluginRoot.start();
     }
 
-   @Test
-    public void sendBitcoinsTest_SendGeneralException_ThrowsCouldNotSendMoneyException() throws Exception {
+    @Test
+    public void getDatabaseListTest() throws Exception {
 
-       catchException(bitcoinCryptoVaultPluginRoot).sendBitcoins(UUID.randomUUID().toString(), UUID.randomUUID(), mockCryptoAddress, 100);
+        List<DeveloperDatabase> developerDatabaseList = bitcoinCryptoVaultPluginRoot.getDatabaseList(mockDeveloperObjectFactory);
 
 
-        Assertions.assertThat(caughtException())
-                .isNotNull().isInstanceOf(CouldNotSendMoneyException.class);
+        Assertions.assertThat(developerDatabaseList)
+                .isNotNull();
     }
 
     @Test
-    public void sendBitcoinsTest_SendError_ThrowsCouldNotSendMoneyException() throws Exception {
+    public void getDatabaseTableListTest() throws Exception {
 
-        when(mockCryptoAddress.getAddress()).thenReturn("xxx");
-        catchException(bitcoinCryptoVaultPluginRoot).sendBitcoins(UUID.randomUUID().toString(),UUID.randomUUID(),mockCryptoAddress,100);
+        List<DeveloperDatabaseTable>  developerDatabaseTableList = bitcoinCryptoVaultPluginRoot.getDatabaseTableList(mockDeveloperObjectFactory, mockDeveloperDatabase);
 
-        assertThat(caughtException())
-                .isNotNull()
-                .isInstanceOf(InvalidSendToAddressException.class);
+
+        Assertions.assertThat(developerDatabaseTableList)
+                .isNotNull();
     }
 
+    @Test
+    public void getDatabaseTableContentTest() throws Exception {
+
+        List<DeveloperDatabaseTableRecord>  developerDatabaseTableRecordList = bitcoinCryptoVaultPluginRoot.getDatabaseTableContent(mockDeveloperObjectFactory, mockDeveloperDatabase,mockDeveloperDatabaseTable);
+
+
+        Assertions.assertThat(developerDatabaseTableRecordList)
+                .isNotNull();
+    }
 }

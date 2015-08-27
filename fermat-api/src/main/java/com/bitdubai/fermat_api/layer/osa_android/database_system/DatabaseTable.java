@@ -26,8 +26,6 @@ public interface DatabaseTable {
 
     public DatabaseTableColumn newColumn();
 
-    public List<String> getColumns();
-
     public List<DatabaseTableRecord> getRecords();
 
     public List<DatabaseVariable> getVariablesResult();
@@ -76,5 +74,9 @@ public interface DatabaseTable {
 
     public DatabaseTableRecord getRecordFromPk(String pk) throws Exception;
 
+    // modif leon
+    String makeFilter();
+    String getTableName();
+    List<DatabaseSelectOperator> getTableSelectOperator();
 
 }
