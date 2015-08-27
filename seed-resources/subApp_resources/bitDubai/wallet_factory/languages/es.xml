@@ -1,0 +1,25 @@
+<com.bitdubai.fermat__api.layer.all__definition.resources__structure.Language>
+    <id>2624ea54-d5a6-432a-977d-46fb00edee3d</id>
+    <name>Default</name>
+    <type>LATIN_AMERICAN_SPANISH</type>
+    <strings>
+        <entry>
+            <string>boton_aceptar</string>
+            <string>Accept</string>
+        </entry>
+        <entry>
+            <string>tab_balance_titulo</string>
+            <string>Balance</string>
+        </entry>
+        <entry>
+            <string>boton_atras</string>
+            <string>Back</string>
+        </entry>
+    </strings>
+    <version>
+        <major>1</major>
+        <minor>0</minor>
+        <patch>0</patch>
+        <versionSeparator>.</versionSeparator>
+    </version>
+</com.bitdubai.fermat__api.layer.all__definition.resources__structure.Language>

@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
@@ -26,6 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.Databas
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -49,7 +50,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseTableListFragment extends Fragment {
+public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS.getKey();
@@ -78,11 +79,10 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     /**
      * SubApp session
      */
-    DeveloperSubAppSession subAppsSession;
+    DeveloperSubAppSession developerSubAppSession;
 
-    public static DatabaseToolsDatabaseTableListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
+    public static DatabaseToolsDatabaseTableListFragment newInstance(int position) {
         DatabaseToolsDatabaseTableListFragment f = new DatabaseToolsDatabaseTableListFragment();
-        f.setSubAppsSession((DeveloperSubAppSession)subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -92,10 +92,12 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        errorManager = subAppsSession.getErrorManager();
+        //developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+        errorManager = developerSubAppSession.getErrorManager();
         setRetainInstance(true);
         try {
-            ToolManager toolManager = subAppsSession.getToolManager();
+            ToolManager toolManager = developerSubAppSession.getToolManager();
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -180,8 +182,8 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         this.developerDatabase = developerDatabase;
     }
 
-    public void setSubAppsSession(DeveloperSubAppSession subAppsSession) {
-        this.subAppsSession = subAppsSession;
+    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+        this.developerSubAppSession = developerSubAppSession;
     }
 
 
@@ -231,7 +233,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                         params[1] = developerDatabase;
                         params[2] = developerDatabaseTableList.get(position);
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_RECORDS,params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),params);
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);

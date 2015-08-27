@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum WalletType {
     NICHE("NICHE"),
-    REFERENCE("REFER");
+    REFERENCE("REFER"), ;
 
     private String code;
 

@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 28/07/15.
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 17/08/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -119,20 +119,59 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
          */
         List<String> projectColumns = new ArrayList<String>();
 
-        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_ID_COLUMN_NAME);
-        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DEVELOPER_PUBLIC_KEY_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME);
-        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PATH_COLUMN_NAME);
-        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME);
-        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLET_TYPE_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME);
-        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTOR_FACTORY_PROJECT_COLUMN_NAME);
-        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLISHER_IDENTITY_KEY_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Project addition.
          */
         DeveloperDatabaseTable projectTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME, projectColumns);
         tables.add(projectTable);
+
+        /**
+         * Table skin columns.
+         */
+        List<String> skinColumns = new ArrayList<String>();
+
+        skinColumns.add(WalletFactoryMiddlewareDatabaseConstants.SKIN_PROJECT_PUBLICKEY_COLUMN_NAME);
+        skinColumns.add(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME);
+        skinColumns.add(WalletFactoryMiddlewareDatabaseConstants.SKIN_DEFAULT_COLUMN_NAME);
+        /**
+         * Table skin addition.
+         */
+        DeveloperDatabaseTable skinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME, skinColumns);
+        tables.add(skinTable);
+
+        /**
+         * Table language columns.
+         */
+        List<String> languageColumns = new ArrayList<String>();
+
+        languageColumns.add(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME);
+        languageColumns.add(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME);
+        languageColumns.add(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_DEFAULT_COLUMN_NAME);
+        /**
+         * Table language addition.
+         */
+        DeveloperDatabaseTable languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME, languageColumns);
+        tables.add(languageTable);
+
+        /**
+         * Table navigation_structure columns.
+         */
+        List<String> navigation_structureColumns = new ArrayList<String>();
+
+        navigation_structureColumns.add(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME);
+        navigation_structureColumns.add(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME);
+        /**
+         * Table navigation_structure addition.
+         */
+        DeveloperDatabaseTable navigation_structureTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME, navigation_structureColumns);
+        tables.add(navigation_structureTable);
 
 
 

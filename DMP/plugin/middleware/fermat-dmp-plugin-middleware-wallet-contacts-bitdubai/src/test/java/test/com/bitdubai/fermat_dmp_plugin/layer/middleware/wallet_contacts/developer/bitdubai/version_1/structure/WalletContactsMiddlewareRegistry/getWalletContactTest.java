@@ -113,6 +113,6 @@ public class getWalletContactTest {
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
 
-        walletContactsMiddlewareRegistry.getWalletContactByActorId(testActorId);
+        walletContactsMiddlewareRegistry.getWalletContactsByActorId(testActorId);
     }
 }

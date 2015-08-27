@@ -8,7 +8,15 @@ import java.util.UUID;
 public interface Translator {
 
     public UUID getId();
+
     public String getName();
+
     public String getPublicKey();
+
+    public void setId(UUID id);
+
+    public void setName(String name);
+
+    public void setPublicKey(String publicKey);
 
 }

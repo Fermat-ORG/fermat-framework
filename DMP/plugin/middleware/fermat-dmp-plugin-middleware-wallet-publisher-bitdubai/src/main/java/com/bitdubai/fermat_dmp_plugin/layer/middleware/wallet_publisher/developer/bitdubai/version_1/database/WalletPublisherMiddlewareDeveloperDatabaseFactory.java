@@ -75,7 +75,7 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -96,7 +96,7 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
                   /*
                    * We create the new database
                    */
-                database = walletPublisherMiddlewareDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = walletPublisherMiddlewareDatabaseFactory.createDatabase(pluginId, WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -112,7 +112,7 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Publisher", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -126,8 +126,8 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
         List<String> iNFORMATIONPUBLISHEDCOMPONENTSColumns = new ArrayList<String>();
 
         iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DFP_ID_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DFP_NAME_COLUMN_NAME);
+        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_ID_COLUMN_NAME);
+        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_NAME_COLUMN_NAME);
         iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME);
         iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DESCRIPTIONS_COLUMN_NAME);
         iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME);

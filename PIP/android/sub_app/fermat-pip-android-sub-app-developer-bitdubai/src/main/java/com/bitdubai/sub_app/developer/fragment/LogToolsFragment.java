@@ -1,11 +1,9 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
@@ -34,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -56,7 +56,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragment extends Fragment {
+public class LogToolsFragment extends FermatFragment {
 
     private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS.getKey();
 
@@ -84,9 +84,8 @@ public class LogToolsFragment extends Fragment {
 
     Typeface tf;
 
-    public static LogToolsFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
+    public static LogToolsFragment newInstance(int position) {
         LogToolsFragment f = new LogToolsFragment();
-        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -97,6 +96,8 @@ public class LogToolsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
         tf= Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         errorManager = developerSubAppSession.getErrorManager();
         try {
@@ -285,7 +286,7 @@ public class LogToolsFragment extends Fragment {
 
                         params[0] = lst;
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS,params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(),params);
 
 
                     }

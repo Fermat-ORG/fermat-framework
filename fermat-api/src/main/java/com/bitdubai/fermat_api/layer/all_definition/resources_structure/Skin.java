@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -35,6 +37,11 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private Map<String,Layout> landscapeLayouts;
 
+    private ScreenSize screenSize;
+
+    private Designer designer;
+
+    private int size;
 
     public Skin(UUID id, String name, Version version, VersionCompatibility navigationStructureCompatibility, Map<String, Resource> resources, Map<String, Layout> portraitLayouts, Map<String, Layout> landscapeLayouts) {
         this.id = id;
@@ -46,9 +53,7 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.setLandscapeLayouts(landscapeLayouts);
     }
 
-    public Skin() {
-
-    }
+    public Skin(){};
 
     public UUID getId() {
         return id;
@@ -105,6 +110,31 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     public void setLandscapeLayouts(Map<String, Layout> landscapeLayouts) {
         this.landscapeLayouts = landscapeLayouts;
+    }
+
+
+    public ScreenSize getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(ScreenSize screenSize) {
+        this.screenSize = screenSize;
+    }
+
+    public Designer getDesigner() {
+        return designer;
+    }
+
+    public void setDesigner(Designer designer) {
+        this.designer = designer;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override

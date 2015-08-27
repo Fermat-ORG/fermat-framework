@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
@@ -24,6 +24,9 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconn
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -39,26 +42,27 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserConnectionAcceptedEventHandlers;
-import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserConnectionCancelledEventHandlers;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserDisconnectionEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserDeniedConnectionEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserRequestConnectionEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserActorDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantProcessNotificationsExceptions;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraUserConnectionException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.IntraUserDeniedConnectionEventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +82,8 @@ import java.util.regex.Pattern;
  * @since Java JDK 1.7
  */
 
-public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseManagerForDevelopers,DealsWithErrors, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service  {
+
+public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseManagerForDevelopers,DealsWithErrors, DealsWithEvents,DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service,Serializable  {
 
     private IntraUserActorDao intraUserActorDao;
 
@@ -97,9 +102,13 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     /**
      * DealsWithLogger interface member variable
      */
-    LogManager logManager;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    /**
+     * DealsWithIntraUsersNetworkService interface member variable
+     */
+    IntraUserManager intraUserNetworkServiceManager;
 
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
@@ -198,7 +207,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
         try
         {
-            this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ContactState.LOCALLY_DENIED);
+            this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ContactState.DENIED_LOCALLY);
         }
         catch(CantUpdateIntraUserConnectionException e)
         {
@@ -221,7 +230,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     public void disconnectIntraUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraUserException {
         try
         {
-            this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ContactState.LOCALLY_DISCONNECTED);
+            this.intraUserActorDao.updateIntraUserConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ContactState.DISCONNECTED_REMOTELY);
         }
         catch(CantUpdateIntraUserConnectionException e)
         {
@@ -337,7 +346,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     public void receivingIntraUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraUserException {
         try
         {
-            this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey,profileImage,ContactState.PENDING_LOCALLY_ACCEPTANCE);
+            this.intraUserActorDao.createNewIntraUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ContactState.PENDING_LOCALLY_ACCEPTANCE);
         }
         catch(CantAddPendingIntraUserException e)
         {
@@ -350,6 +359,15 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     }
 
+    /**
+     *DealsWithEvents Interface implementation.
+     */
+
+
+    @Override
+    public void setEventManager(EventManager DealsWithEvents) {
+        this.eventManager = DealsWithEvents;
+    }
 
     /**
      *DealsWithErrors Interface implementation.
@@ -358,6 +376,18 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
+    }
+
+
+
+    /**
+     * DealsWithIntraUsersNetworkService Interface implementation.
+     */
+
+    @Override
+    public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
+
+        this.intraUserNetworkServiceManager= intraUserManager;
     }
 
     /**
@@ -378,78 +408,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     }
 
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.ActorIntraUser");
-
-        /**
-         * I return the values.
-         */
-        return returnedClasses;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * Modify by Manuel on 25/07/2015
-         * I will wrap all this method within a try, I need to catch any generic java Exception
-         */
-        try{
-
-            /**
-             * I will check the current values and update the LogLevel in those which is different
-             */
-            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                /**
-                 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-                 */
-                if (IntraUserActorPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    IntraUserActorPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    IntraUserActorPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                } else {
-                    IntraUserActorPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                }
-            }
-
-        }catch (Exception exception){
-            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ IntraUserActorPluginRoot.newLoggingLevel ,"Check the cause");
-            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
-        }
-
-    }
-
-    /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return IntraUserActorPluginRoot.newLoggingLevel.get(correctedClass[0]);
-
-        } catch (Exception exception){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
-
-
-
-    /**
+      /**
      * Service Interface implementation.
      */
     @Override
@@ -457,29 +416,28 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         try {
             /**
              * I created instance of IntraUserActorDao
+             * and initialize Database
              */
             this.intraUserActorDao = new IntraUserActorDao(pluginDatabaseSystem,this.pluginFileSystem, this.pluginId);
 
             this.intraUserActorDao.initializeDatabase();
 
-        } catch (CantInitializeIntraUserActorDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
-        }
-
-        /**
+         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
         EventListener eventListener;
         EventHandler eventHandler;
 
+
         /**
          * Listener Accepted connection event
          */
        eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
-        eventHandler = new IntraUserConnectionCancelledEventHandlers();
-        ((IntraUserConnectionCancelledEventHandlers) eventHandler).setActorIntraUserManager(this);
+        eventHandler = new IntraUserConnectionAcceptedEventHandlers();
+        ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setActorIntraUserManager(this);
+        ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setEventManager(eventManager);
+        ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
@@ -487,9 +445,10 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         /**
          * Listener Cancelled connection event
          */
-       eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_CANCELLED);
-        eventHandler = new IntraUserConnectionAcceptedEventHandlers();
-        ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setActorIntraUserManager(this);
+       eventListener = eventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+        eventHandler = new IntraUserDisconnectionEventHandlers();
+        ((IntraUserDisconnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
+        ((IntraUserDisconnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
@@ -500,6 +459,9 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         eventListener = eventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION);
         eventHandler = new IntraUserRequestConnectionEventHandlers();
         ((IntraUserRequestConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
+        ((IntraUserRequestConnectionEventHandlers) eventHandler).setEventManager(this.eventManager);
+         ((IntraUserRequestConnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
@@ -510,15 +472,35 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED);
         eventHandler = new IntraUserDeniedConnectionEventHandlers();
         ((IntraUserDeniedConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
+        ((IntraUserDeniedConnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
         eventListener.setEventHandler(eventHandler);
+
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
 
+            /**
+             * I ask the list of pending requests to the Network Service to execute
+             */
 
+            this.processNotifications();
+
+            // set plugin status Started
         this.serviceStatus = ServiceStatus.STARTED;
 
 
+        } catch (CantProcessNotificationsExceptions e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
+
+        } catch (CantInitializeIntraUserActorDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
+        }
+       catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
+        }
 
     }
 
@@ -577,11 +559,11 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        Database database;
+
         try {
             IntraUserActorDeveloperDatabaseFactory dbFactory = new IntraUserActorDeveloperDatabaseFactory(this.pluginDatabaseSystem,this.pluginId);
 
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
+            this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
             return dbFactory.getDatabaseTableContent(developerObjectFactory,  developerDatabaseTable);
         }catch (CantOpenDatabaseException cantOpenDatabaseException){
             /**
@@ -598,8 +580,127 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager,DatabaseM
         return new ArrayList<>();
     }
 
+
+
+
     @Override
-    public void setEventManager(EventManager DealsWithEvents) {
-        this.eventManager = DealsWithEvents;
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.ActorIntraUser");
+
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
     }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * Modify by Manuel on 25/07/2015
+         * I will wrap all this method within a try, I need to catch any generic java Exception
+         */
+        try{
+
+            /**
+             * I will check the current values and update the LogLevel in those which is different
+             */
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+                /**
+                 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+                 */
+                if (IntraUserActorPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    IntraUserActorPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    IntraUserActorPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    IntraUserActorPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
+            }
+
+        }catch (Exception exception){
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ IntraUserActorPluginRoot.newLoggingLevel ,"Check the cause");
+            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+        }
+
+    }
+
+
+/**
+ * Private methods
+ */
+
+    /**
+     * Procces the list o f notifications from Intra User Network Services
+     * And update intra user actor contact state
+     * @throws CantProcessNotificationsExceptions
+     */
+    private void processNotifications() throws CantProcessNotificationsExceptions {
+
+        try
+        {
+
+            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getNotifications();
+
+
+            for (IntraUserNotification notification : intraUserNotificationes) {
+
+                String intraUserSedingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
+
+                switch ( notification.getNotificationDescriptor()){
+                    case ACCEPTED:
+                        this.acceptIntraUser("", intraUserSedingPublicKey);
+                        /**
+                         * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
+                         */
+                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
+                            break;
+                    case DISCONNECTED:
+                        this.disconnectIntraUser("", intraUserSedingPublicKey);
+                        break;
+                    case RECEIVED:
+                        this.receivingIntraUserRequestConnection("", "", intraUserSedingPublicKey, null);
+                        /**
+                         * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
+                         */
+                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
+                        break;
+                    case DENIED:
+                        this.denyConnection("",intraUserSedingPublicKey);
+                        break;
+                    default:
+                        break;
+
+                }
+
+                /**
+                 * I confirm the application in the Network Service
+                 */
+                intraUserNetworkServiceManager.confirmNotification("", intraUserSedingPublicKey);
+            }
+
+
+        }
+        catch(CantAcceptIntraUserException e)
+        {
+            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS",e,"","Error Update Contact State to Accepted");
+
+        }
+        catch(CantDisconnectIntraUserException e)
+        {
+            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS",e,"","Error Update Contact State to Disconnected");
+
+        }
+        catch(CantDenyConnectionException e)
+        {
+            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS",e,"","Error Update Contact State to Denied");
+
+        }
+        catch(Exception e)
+        {
+            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS",FermatException.wrapException(e),"","");
+
+        }
+    }
+
 }
