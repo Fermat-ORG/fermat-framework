@@ -219,7 +219,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 }
 
             database.setTransactionSuccessful();
-            database.endTransaction();
 
         } catch (Exception exception) {
 
