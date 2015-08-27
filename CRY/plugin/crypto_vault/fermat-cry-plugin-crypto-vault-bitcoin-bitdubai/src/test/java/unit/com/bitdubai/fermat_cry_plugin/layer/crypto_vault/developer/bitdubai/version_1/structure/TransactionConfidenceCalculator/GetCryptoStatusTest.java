@@ -88,6 +88,8 @@ public class GetCryptoStatusTest {
     }
 
     private void setUpMockitoGeneralRules() throws Exception{
+
+
         when(mockPluginDatabaseSystem.createDatabase(testOwnerId, deviceUserPublicKey)).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
@@ -95,8 +97,11 @@ public class GetCryptoStatusTest {
         Mockito.doReturn(mockRecord).when(mockRecords).get(0);
         when(mockRecord.getStringValue(anyString())).thenReturn("1234567891254789632547895745214785698745820000002586879256987000");
         when(mockDatabaseFactory.newTableFactory(anyString())).thenReturn(mockTableFactory);
-        when(mockWallet.getTransaction(any(mockTxHash.getClass()))).thenReturn(mockTransaction);
-       // when(mockTransaction.getConfidence().getConfidenceType()).thenReturn(mockConfidenceType);
+
+        Sha256Hash txHash = new Sha256Hash("1234567891254789632547895745214785698745820000002586879256987000");
+
+        when(mockWallet.getTransaction(txHash)).thenReturn(mockTransaction);
+
 
     }
 
@@ -120,7 +125,7 @@ public class GetCryptoStatusTest {
 
     @Ignore
     public void getCryptoStatusTest_ReturnCryptoStatusOk_ThrowsCantCalculateTransactionConfidenceException() throws Exception{
- //TODO: No puedo hacer el mock del TransactionConfidence.ConfidenceType
+ //TODO: No puedo hacer el mock del wallet transction
          mockWallet= new Wallet(NetworkParameters.fromID("org.bitcoin.test"));
 
         transactionConfidenceCalculator = new TransactionConfidenceCalculator(testOwnerId.toString(), mockDatabase, mockWallet);

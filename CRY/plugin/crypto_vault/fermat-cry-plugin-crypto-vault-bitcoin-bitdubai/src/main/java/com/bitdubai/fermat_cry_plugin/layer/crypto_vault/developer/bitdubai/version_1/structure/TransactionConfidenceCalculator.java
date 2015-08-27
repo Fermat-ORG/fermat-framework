@@ -86,7 +86,6 @@ public class TransactionConfidenceCalculator {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantCalculateTransactionConfidenceException("Error calculating the confidence of transaction.", cantLoadTableToMemory, null, "error in database plugin");
         }
-
         Sha256Hash txHash = new Sha256Hash(dbHash);
         this.transaction = vault.getTransaction(txHash);
 
