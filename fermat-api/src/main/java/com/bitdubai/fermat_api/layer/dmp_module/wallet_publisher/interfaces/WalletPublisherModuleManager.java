@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantPublishComponentException;
@@ -38,7 +39,7 @@ public interface WalletPublisherModuleManager {
      *
      * @return List<DescriptorFactoryProject>
      */
-    public List<WalletFactoryProject> getProjectsReadyToPublish();
+    public List<WalletFactoryProject> getProjectsReadyToPublish() throws CantGetWalletFactoryProjectException;
 
     /**
      * This method returns the information stored about the all published component
@@ -123,7 +124,7 @@ public interface WalletPublisherModuleManager {
     public void publishLanguage(Language language, byte[] icon, byte[] mainScreenShot, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
 
     /**
-     * This method publishes the wallet factory project <code>WalletDescriptorFactoryProject</code> with the wallet information in
+     * This method publishes the wallet factory project <code>WalletFactoryProject</code> with the wallet information in
      * the wallet store and register relevant information of this process.
      *
      * @param walletFactoryProject
