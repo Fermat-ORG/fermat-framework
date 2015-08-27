@@ -93,19 +93,17 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
-        if (developerSubAppSession != null)
-            errorManager = developerSubAppSession.getErrorManager();
+
+        errorManager = developerSubAppSession.getErrorManager();
         setRetainInstance(true);
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
-            if (errorManager != null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            if (errorManager != null)
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -131,28 +129,31 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
-        gridView = (GridView) rootView.findViewById(R.id.gridView);
+
+        lstTables=new ArrayList<DatabasesTable>();
+
+        gridView =(GridView) rootView.findViewById(R.id.gridView);
 
         try {
 
-            if (databases.type == Databases.TYPE_ADDON) {
-                Addons addon = Addons.getByKey(databases.resource);
+            if (databases.type==Databases.TYPE_ADDON) {
+                Addons addon = Addons.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
-            } else if (databases.type == Databases.TYPE_PLUGIN) {
-                Plugins plugin = Plugins.getByKey(databases.resource);
+            } else if (databases.type==Databases.TYPE_PLUGIN) {
+                Plugins plugin = Plugins.getByKey(databases.code);
                 this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
             }
 
-            lstTables = new ArrayList<>();
-            for (DeveloperDatabaseTable _db : developerDatabaseTableList){
+            for(int i = 0; i < developerDatabaseTableList.size() ; i++) {
                 //availableResources[i] = developerDatabaseList.get(i).getName();
                 DatabasesTable item = new DatabasesTable();
 
                 item.picture = "databases";
-                item.databases = _db.getName();
+                item.databases =  developerDatabaseTableList.get(i).getName();
                 //item.developer = plugins.get(i).getDeveloper().toString();
-                item.type = Resource.TYPE_PLUGIN;
+                item.type=Resource.TYPE_PLUGIN;
                 lstTables.add(item);
+
             }
 
             Configuration config = getResources().getConfiguration();
@@ -163,9 +164,9 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
             }
             //@SuppressWarnings("unchecked")
             //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-            AppListAdapter _adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, lstTables);
-            _adapter.notifyDataSetChanged();
-            gridView.setAdapter(_adapter);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, lstTables);
+            _adpatrer.notifyDataSetChanged();
+            gridView.setAdapter(_adpatrer);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -174,6 +175,7 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
         }
         return rootView;
     }
+
 
 
     public void setDeveloperDatabase(DeveloperDatabase developerDatabase) {
@@ -198,6 +200,8 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
             final DatabasesTable item = getItem(position);
 
 
+
+
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
@@ -205,6 +209,8 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
 
 
                 holder = new ViewHolder();
+
+
 
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
@@ -215,6 +221,7 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
 
 
                         DatabaseToolsDatabaseTableRecordListFragment dabaDatabaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableRecordListFragment();
+
                         dabaDatabaseToolsDatabaseTableListFragment.setResource(databases);
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabaseTable(developerDatabaseTableList.get(position));
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
@@ -226,7 +233,7 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                         params[1] = developerDatabase;
                         params[2] = developerDatabaseTableList.get(position);
 
-                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(), params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),params);
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
@@ -237,9 +244,9 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            TextView textView = (TextView) convertView.findViewById(R.id.company_text_view);
+            TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
             String formatedString = StringUtils.replaceStringByUnderScore(item.databases);
-            formatedString = StringUtils.splitCamelCase(formatedString);
+            formatedString=StringUtils.splitCamelCase(formatedString);
             textView.setText(formatedString);
 
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
@@ -255,7 +262,7 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                     break;
                 case "addon":
                     holder.imageView.setImageResource(R.drawable.table);
-                    holder.imageView.setTag("DeveloperRecordsFragment");
+                    holder.imageView.setTag("DeveloperRecordsFragment" );
                     break;
                 default:
                     holder.imageView.setImageResource(R.drawable.table);
@@ -268,11 +275,11 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
         }
 
     }
-
     /**
      * ViewHolder.
      */
     private class ViewHolder {
+
 
 
         public ImageView imageView;

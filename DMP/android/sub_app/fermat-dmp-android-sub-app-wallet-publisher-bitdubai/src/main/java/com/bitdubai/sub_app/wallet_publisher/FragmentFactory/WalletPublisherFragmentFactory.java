@@ -33,7 +33,7 @@ public class WalletPublisherFragmentFactory extends FermatSubAppFragmentFactory<
              * Executing fragments for BITCOIN REQUESTED.
              */
             case CWP_WALLET_PUBLISHER_MAIN_FRAGMENT:
-                currentFragment =  MainFragment.newInstance(0,null);
+                currentFragment =  MainFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found",new Exception(),fragments.toString(),"Swith failed");

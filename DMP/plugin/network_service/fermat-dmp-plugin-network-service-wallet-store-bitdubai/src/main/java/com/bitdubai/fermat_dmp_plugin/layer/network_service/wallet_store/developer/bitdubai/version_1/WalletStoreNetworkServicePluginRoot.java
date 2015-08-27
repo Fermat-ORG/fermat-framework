@@ -330,8 +330,17 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         /**
          * I will initialize the handling of platform events.
          */
-        EventListener eventListener;
+/*        EventListener eventListener;
         EventHandler eventHandler;
+
+        try {
+            TestPublishWallet();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (CantPublishWalletInCatalogException e) {
+            e.printStackTrace();
+        }
+    */
 
 
         this.serviceStatus = ServiceStatus.STARTED;

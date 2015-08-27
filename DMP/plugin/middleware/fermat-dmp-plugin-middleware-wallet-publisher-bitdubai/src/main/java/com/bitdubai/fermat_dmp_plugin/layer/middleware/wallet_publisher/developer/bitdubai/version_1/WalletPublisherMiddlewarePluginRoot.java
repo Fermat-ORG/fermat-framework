@@ -84,7 +84,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileSystem, DealsWithWalletFactory, DealsWithWalletStoreNetworkService, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewarePlugin, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers, DealsWithWalletSkin, DealsWithWalletLanguage {
+public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileSystem, DealsWithWalletFactory, DealsWithWalletStoreNetworkService, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewarePlugin, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
 
     /**
      * Represent the logManager
@@ -115,16 +115,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
      * Represent the walletStoreManager
      */
     private WalletStoreManager walletStoreManager;
-
-    /**
-     * Represent the walletLanguageManager
-     */
-    private WalletLanguageManager walletLanguageManager;
-
-    /**
-     * Represent the walletSkinManager
-     */
-    private WalletSkinManager walletSkinManager;
 
     /**
      * Represent the pluginFileSystem
@@ -180,8 +170,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
                 errorManager                == null ||
                 walletFactoryProjectManager == null ||
                 pluginFileSystem            == null ||
-                walletLanguageManager       == null ||
-                walletSkinManager           == null ||
                 pluginDatabaseSystem        == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -198,10 +186,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             contextBuffer.append("walletStoreManager: " + walletStoreManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginFileSystem: " + pluginFileSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("walletLanguageManager: " + walletLanguageManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("walletSkinManager: " + walletSkinManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
 
@@ -283,8 +267,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         /*
          * Validate required resources
          */
-        //TODO: DESCOMENTAR LA VALIDACION
-        //validateInjectedResources();
+        validateInjectedResources();
 
         try {
 
@@ -318,6 +301,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
+
 
         //test();
 
@@ -439,24 +423,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
     @Override
     public void setWalletStoreManager(WalletStoreManager walletStoreManager) {
         this.walletStoreManager = walletStoreManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithWalletLanguage#setWalletLanguageManager(WalletLanguageManager)
-     */
-    @Override
-    public void setWalletLanguageManager(WalletLanguageManager walletLanguageManager) {
-        this.walletLanguageManager = walletLanguageManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithWalletSkin#setWalletSkinManager(WalletSkinManager)
-     */
-    @Override
-    public void setWalletSkinManager(WalletSkinManager walletSkinManager) {
-        this.walletSkinManager = walletSkinManager;
     }
 
     /**
@@ -785,6 +751,9 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             for (InformationPublishedComponent info:list) {
                 System.out.println(info.toString());
             }
+
+            InformationPublishedComponent infoWithDetails = walletPublisherMiddlewareManager.getInformationPublishedComponentWithDetails(list.get(0).getId());
+            System.out.println(infoWithDetails.toString());
 
 
         } catch (CantGetPublishedComponentInformationException e) {
