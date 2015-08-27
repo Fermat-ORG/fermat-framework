@@ -2,7 +2,6 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
@@ -33,7 +32,7 @@ import java.util.UUID;
 
 /**
  * Created by Natalia on 09/02/2015..
- * 
+ *
  */
 
 /**
@@ -50,7 +49,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
      */
     Context context;
     String tableName;
-    SQLiteDatabase database;
+    AndroidDatabase database;
 
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
@@ -73,7 +72,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
      * @param tableName name table to use
      */
 
-    public AndroidDatabaseTable(Context context, SQLiteDatabase database, String tableName) {
+    public AndroidDatabaseTable(Context context, AndroidDatabase database, String tableName) {
         this.tableName = tableName;
         this.context = context;
         this.database = database;
@@ -252,6 +251,81 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
                 }
             }
+            this.database.openDatabase();
+            Cursor c = this.database.rawQuery("SELECT " + strRecords + " FROM " + tableName + " " + makeFilter(), null);
+            int columnsCant = 0;
+
+            this.variablesResult = new ArrayList<>();
+            if (c.moveToFirst()) {
+                do {
+                    /**
+                     * Get columns name to read values of files
+                     *
+                     */
+                    DatabaseVariable variable = new AndroidVariable();
+
+                    variable.setName("@" + c.getColumnName(columnsCant));
+                    variable.setValue(c.getString(columnsCant));
+
+                    this.variablesResult.add(variable);
+                    columnsCant++;
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (Exception exception) {
+            throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        } finally {
+            this.database.closeDatabase();
+        }
+    }
+
+    @Override
+    public void selectTransactionRecord(DatabaseTableRecord record) throws CantSelectRecordException {
+        /**
+         * First I get the table records with values.
+         * and construct de ContentValues array for SqlLite
+         */
+        try {
+            StringBuilder strRecords = new StringBuilder("");
+
+            List<DatabaseRecord> records = record.getValues();
+
+            //check if declared operators to apply on select or only define some fields
+
+            if (this.tableSelectOperator != null) {
+
+                for (int i = 0; i < tableSelectOperator.size(); ++i) {
+
+                    if (strRecords.length() > 0)
+                        strRecords.append(",");
+
+                    switch (tableSelectOperator.get(i).getType()) {
+                        case SUM:
+                            strRecords.append(" SUM (")
+                                    .append(tableSelectOperator.get(i).getColumn())
+                                    .append(") AS ")
+                                    .append(tableSelectOperator.get(i).getAliasColumn());
+                            break;
+                        case COUNT:
+                            strRecords.append(" COUNT (")
+                                    .append(tableSelectOperator.get(i).getColumn())
+                                    .append(") AS ")
+                                    .append(tableSelectOperator.get(i).getAliasColumn());
+                            break;
+                        default:
+                            strRecords.append(" ");
+                            break;
+                    }
+                }
+            } else {
+                for (int i = 0; i < records.size(); ++i) {
+
+                    if (strRecords.length() > 0)
+                        strRecords.append(",");
+                    strRecords.append(records.get(i).getName());
+
+                }
+            }
 
             Cursor c = this.database.rawQuery("SELECT " + strRecords + " FROM " + tableName + " " + makeFilter(), null);
             int columnsCant = 0;
@@ -276,8 +350,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
         } catch (Exception exception) {
             throw new CantSelectRecordException(CantSelectRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
-
-
     }
 
     /**
@@ -324,6 +396,59 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         strRecords.append(records.get(i).getName())
                                   .append(" = '")
                                   .append(records.get(i).getValue())
+                                .append("'");
+                    }
+                }
+            }
+
+            this.database.openDatabase();
+            this.database.execSQL("UPDATE " + tableName + " SET " + strRecords + " " + makeFilter());
+
+        } catch (Exception exception) {
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        } finally {
+            this.database.closeDatabase();
+        }
+    }
+
+    @Override
+    public void updateTransactionRecord(DatabaseTableRecord record) throws CantUpdateRecordException {
+
+        try {
+            List<DatabaseRecord> records = record.getValues();
+            StringBuilder strRecords = new StringBuilder();
+            // ContentValues recordUpdateList = new ContentValues();
+
+            /**
+             * I update only the fields marked as modified
+             *
+             */
+
+            for (int i = 0; i < records.size(); ++i) {
+
+                if (records.get(i).getChange()) {
+
+                    if (strRecords.length() > 0)
+                        strRecords.append(",");
+
+                    //I check if the value to change what I have to take a variable,
+                    // and look that at the result of the select
+
+                    if (records.get(i).getUseValueofVariable()) {
+                        for (int j = 0; j < variablesResult.size(); ++j) {
+
+                            if (variablesResult.get(j).getName().equals(records.get(i).getValue())){
+                                strRecords.append(records.get(i).getName())
+                                        .append(" = '")
+                                        .append(variablesResult.get(j).getValue())
+                                        .append("'");
+                            }
+                        }
+
+                    } else {
+                        strRecords.append(records.get(i).getName())
+                                .append(" = '")
+                                .append(records.get(i).getValue())
                                 .append("'");
                     }
                 }
@@ -385,13 +510,63 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 }
 
             }
+            this.database.openDatabase();
+            this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+        } catch (Exception exception) {
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        } finally {
+            this.database.closeDatabase();
+        }
+    }
+
+    @Override
+    public void insertTransactionRecord(DatabaseTableRecord record) throws CantInsertRecordException {
+
+        /**
+         * First I get the table records with values.
+         * and construct de ContentValues array for SqlLite
+         */
+        try {
+            StringBuilder strRecords = new StringBuilder("");
+            StringBuilder strValues = new StringBuilder("");
+
+            List<DatabaseRecord> records = record.getValues();
+
+
+            for (int i = 0; i < records.size(); ++i) {
+                //initialValues.put(records.get(i).getName(),records.get(i).getValue());
+
+                if (strRecords.length() > 0)
+                    strRecords.append(",");
+                strRecords.append(records.get(i).getName());
+
+                if (strValues.length() > 0)
+                    strValues.append(",");
+
+                //I check if the value to insert what I have to take a variable,
+                // and look that at the result of the select
+
+                if (records.get(i).getUseValueofVariable()) {
+                    for (int j = 0; j < variablesResult.size(); ++j) {
+
+                        if (variablesResult.get(j).getName().equals(records.get(i).getValue())) {
+                            strValues.append("'")
+                                    .append(variablesResult.get(j).getValue())
+                                    .append("'");
+                        }
+                    }
+                } else {
+                    strValues.append("'")
+                            .append(records.get(i).getValue())
+                            .append("'");
+                }
+
+            }
 
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         }
-
-
     }
 
     /**
@@ -420,6 +595,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
          *
          */
         try {
+            this.database.openDatabase();
             List<String> columns = getColumns();
             cursor = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence + offsetSentence, null);
             while (cursor.moveToNext()) {
@@ -443,6 +619,8 @@ public class AndroidDatabaseTable implements DatabaseTable {
             if (cursor != null)
                 cursor.close();
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
+        } finally {
+            this.database.closeDatabase();
         }
     }
 
@@ -453,14 +631,20 @@ public class AndroidDatabaseTable implements DatabaseTable {
      */
     @Override
     public boolean isTableExists() {
-
-        Cursor cursor = this.database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + this.tableName + "'", null);
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
+        try {
+            this.database.openDatabase();
+            Cursor cursor = this.database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + this.tableName + "'", null);
+            if (cursor != null) {
+                if (cursor.getCount() > 0) {
+                    cursor.close();
+                    return true;
+                }
                 cursor.close();
-                return true;
             }
-            cursor.close();
+        } catch (Exception e){
+            return false;
+        } finally {
+            this.database.closeDatabase();
         }
         return false;
     }
@@ -828,6 +1012,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 queryWhereClause = null;
             }
 
+            this.database.openDatabase();
             if (queryWhereClause != null) {
                 this.database.execSQL("DELETE FROM " + tableName + " WHERE " + queryWhereClause);
             } else {
@@ -836,44 +1021,52 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
         } catch (Exception exception) {
             throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        } finally {
+            this.database.closeDatabase();
         }
     }
 
     //testear haber si funciona así de abstracto o hay que hacerlo más especifico
     @Override
     public DatabaseTableRecord getRecordFromPk(String pk) throws Exception {
+        try {
+            this.database.openDatabase();
+            Cursor c = database.rawQuery(" SELECT * from " + tableName + " WHERE pk=" + pk, null);
 
-        Cursor c = database.rawQuery(" SELECT * from " + tableName + " WHERE pk=" + pk, null);
+            List<String> columns = getColumns();
+            DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
+            if (c.moveToFirst()) {
+                /**
+                 -                * Get columns name to read values of files
+                 *
+                 */
 
-        List<String> columns = getColumns();
-        DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
-        if (c.moveToFirst()) {
-            /**
-             -                * Get columns name to read values of files
-             *
-             */
+                List<DatabaseRecord> recordValues = new ArrayList<>();
 
-            List<DatabaseRecord> recordValues = new ArrayList<>();
+                for (int i = 0; i < columns.size(); ++i) {
+                    DatabaseRecord recordValue = new AndroidRecord();
+                    recordValue.setName(columns.get(i));
+                    recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i))));
+                    recordValue.setChange(false);
+                    recordValues.add(recordValue);
+                }
+                tableRecord1.setValues(recordValues);
 
-            for (int i = 0; i < columns.size(); ++i) {
-                DatabaseRecord recordValue = new AndroidRecord();
-                recordValue.setName(columns.get(i));
-                recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i))));
-                recordValue.setChange(false);
-                recordValues.add(recordValue);
+                if (c.moveToNext()) {
+                    //si pasa esto es porque hay algo mal
+                    throw new Exception(); //TODO:Se deberia lanzar una FermatException
+                }
+
+            } else {
+                return null;
             }
-            tableRecord1.setValues(recordValues);
-
-            if (c.moveToNext()) {
-                //si pasa esto es porque hay algo mal
-                throw new Exception(); //TODO:Se deberia lanzar una FermatException
-            }
-
-        } else {
+            c.close();
+            return tableRecord1;
+        } catch (Exception e) {
             return null;
+        } finally {
+            this.database.closeDatabase();
         }
-        c.close();
-        return tableRecord1;
     }
 
     @Override

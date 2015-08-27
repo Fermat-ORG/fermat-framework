@@ -50,6 +50,12 @@ public interface DatabaseTable {
 
     public void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;
 
+    public void selectTransactionRecord (DatabaseTableRecord record) throws CantSelectRecordException;
+
+    public void updateTransactionRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
+
+    public void insertTransactionRecord (DatabaseTableRecord record) throws CantInsertRecordException;
+
     public void loadToMemory() throws CantLoadTableToMemoryException;
 
     public boolean isTableExists();

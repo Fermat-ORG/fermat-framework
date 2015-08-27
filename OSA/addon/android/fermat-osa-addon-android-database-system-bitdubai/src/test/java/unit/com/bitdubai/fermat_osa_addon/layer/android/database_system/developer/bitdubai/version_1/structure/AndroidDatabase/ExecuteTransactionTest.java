@@ -20,12 +20,13 @@ import org.robolectric.annotation.Config;
 import java.util.UUID;
 
 import static org.robolectric.Shadows.shadowOf;
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
  * Created by jorgegonzalez on 2015.06.30..
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = CustomBuildConfig.class)
 public class ExecuteTransactionTest {
 
     private Activity mockActivity;
