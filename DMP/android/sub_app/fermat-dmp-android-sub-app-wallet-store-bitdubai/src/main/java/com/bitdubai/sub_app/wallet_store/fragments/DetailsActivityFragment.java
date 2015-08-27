@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,13 +77,15 @@ public class DetailsActivityFragment extends FermatFragment {
         installButton.setText(catalogItem.getInstallationStatusText());
 
         FermatTextView totalInstalls = (FermatTextView) rootView.findViewById(R.id.wallet_total_installs);
-        totalInstalls.setText("10 install"); // TODO Obtener valor de verdad
+        totalInstalls.setText("10"); // TODO Obtener valor de verdad
 
         FermatTextView shortDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
         shortDescription.setText("Una descripcion"); // TODO Verificar si es larga o corta la descripcion
 
         RecyclerView screenshotsRecylerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
-        // TODO preguntar como montar la lista de screenshots y donde se encuentra eso en los datos de la Wallet
+
+        LinearLayoutManager layout = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        screenshotsRecylerView.setLayoutManager(layout);
 
         return rootView;
     }

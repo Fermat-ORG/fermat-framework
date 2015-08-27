@@ -42,7 +42,7 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao,
         holder.walletIcon.setImageDrawable(data.getWalletIcon());
     }
 
-    class CatalogItemViewHolder extends FermatViewHolder implements View.OnClickListener {
+    class CatalogItemViewHolder extends FermatViewHolder {
         ImageView walletIcon;
         FermatTextView walletName;
         FermatTextView walletPublisherName;
@@ -55,21 +55,6 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao,
             walletName = (FermatTextView) itemView.findViewById(R.id.wallet_name);
             walletPublisherName = (FermatTextView) itemView.findViewById(R.id.wallet_publisher_name);
             installStatus = (FermatTextView) itemView.findViewById(R.id.wallet_installation_status);
-
-            this.itemView.setOnClickListener(this);
-            installStatus.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            //TODO: TESTING...
-            int layoutPosition = getLayoutPosition();
-            int adapterPosition = getAdapterPosition();
-
-            Toast.makeText(context,
-                    "Click en installStatus. LayoutPosition = " + layoutPosition + " - AdapterPosition = " + adapterPosition,
-                    Toast.LENGTH_SHORT).show();
-
         }
     }
 }
