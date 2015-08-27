@@ -21,6 +21,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develope
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.WalletSettingsMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1.WalletPublisherModuleModulePluginRootPlugin;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletWalletModulePluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
@@ -95,7 +97,7 @@ import java.util.UUID;
  */
 public class PluginsIdentityManager implements Serializable{
 
-    private static final Integer AMOUNT_OF_KNOWN_PLUGINS = 64;
+    private static final Integer AMOUNT_OF_KNOWN_PLUGINS = 66;
 
     private PlatformFileSystem platformFileSystem;
     private List<UUID> pluginIds = new ArrayList<>();
@@ -439,6 +441,12 @@ public class PluginsIdentityManager implements Serializable{
 
         if (plugin instanceof IntraUserNetworkServicePluginRoot)
             pluginIndex = 63;
+
+        if (plugin instanceof WalletSettingsMiddlewarePluginRoot){
+            pluginIndex = 64;
+        }
+        if (plugin instanceof WalletPublisherModuleModulePluginRootPlugin)
+            pluginIndex = 65;
 
         if (pluginIndex > 0)
             return pluginIds.get(pluginIndex);

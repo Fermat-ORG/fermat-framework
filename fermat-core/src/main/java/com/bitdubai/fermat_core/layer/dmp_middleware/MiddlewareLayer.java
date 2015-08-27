@@ -72,9 +72,9 @@ public class MiddlewareLayer implements PlatformLayer {
 
     public Plugin getmWalletSettingPlugin() { return mWalletSettingPlugin;}
 
-    public Plugin getWalletNavigationStructurePlugin() { return mWalletNavigationStructurePlugin;
+    public Plugin getWalletNavigationStructurePlugin() { return mWalletNavigationStructurePlugin; }
 
-    }
+
 
 
     @Override
