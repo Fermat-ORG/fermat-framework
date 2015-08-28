@@ -1,4 +1,6 @@
-Ante la idea de mandar a firmar algo a alguien para comprobar que tiene las cosas que dice tener falla porque el que intenta falsificar la identidad del portador simplemente le pide al verdadero portador lo que le pidieron a él firmar.
+Ante la idea de mandar a firmar algo a alguien para comprobar que tiene las cosas que dice tener 
+falla porque el que intenta falsificar la identidad del portador simplemente le pide al verdadero 
+portador lo que le pidieron a él firmar.
 
 == Definiciones
 
@@ -40,7 +42,7 @@ va a usar para crear el asset. +
 Agregaremos entonces a la metadata del asset este hash y dejaremos como información adjunta a la
 transacción que publicaremos la firma de la metadata. +
 
-Debemos definir con mayer precisión la metadata que compone al asset y también la forma de uso del
+Debemos definir con mayor precisión la metadata que compone al asset y también la forma de uso del
 mismo. Esto dependerá de los problemas que querramos atacar. Para esta etapa inicial nos concentramos
 en construir assets que tras ser emitido sólo pueden ser transferidos de su emisor a un destinatario
 sin alteraciones y luego de este portador nuevamente se transfiere al emisor original. Este tipo de
