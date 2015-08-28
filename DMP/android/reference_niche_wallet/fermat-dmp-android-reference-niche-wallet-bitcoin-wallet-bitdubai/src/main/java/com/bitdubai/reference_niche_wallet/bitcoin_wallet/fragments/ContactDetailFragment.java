@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
@@ -124,7 +125,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         }
 
         try {
-            List<WalletContactRecord> lst= cryptoWallet.listWalletContacts(wallet_id);
+            List<CryptoWalletWalletContact> lst = cryptoWallet.listWalletContacts(wallet_id);
 
         } catch (CantGetAllWalletContactsException e) {
             e.printStackTrace();
@@ -251,8 +252,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
-            for (WalletContactRecord wcr : walletContactRecords) {
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            for (CryptoWalletWalletContact wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
             }
         } catch (CantGetAllWalletContactsException e) {

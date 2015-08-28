@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import org.junit.Before;
@@ -26,9 +25,10 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by Nerio on 25/07/15.
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class findTest {
+public class FindTest {
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
     @Mock
@@ -45,7 +45,6 @@ public class findTest {
     private String walletPublicKey;
 
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
-    WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
 
     @Before

@@ -74,8 +74,7 @@ public class DenyConnectionTest extends TestCase {
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private IntraUserSettings intraUserSettings;
 
     private UUID pluginId;
 
@@ -107,14 +106,15 @@ public class DenyConnectionTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
 
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
-        //Todo: error java.lang.NoClassDefFoundError to access XMLParser class
-        when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
+         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
 
-    @Ignore
+
     @Test
     public void denyConnectionTest_DeniedOk_throwsIntraUserConectionDenegationFailedException() throws Exception{
 
@@ -125,7 +125,7 @@ public class DenyConnectionTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void denyConnection_DeniedError_throwsIntraUserConectionDenegationFailedException() throws Exception{
 

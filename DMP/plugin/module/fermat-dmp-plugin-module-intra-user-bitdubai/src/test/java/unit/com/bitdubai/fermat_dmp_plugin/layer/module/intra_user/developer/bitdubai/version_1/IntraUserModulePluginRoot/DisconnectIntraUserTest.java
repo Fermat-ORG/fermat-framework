@@ -68,17 +68,13 @@ public class DisconnectIntraUserTest  extends TestCase {
     @Mock
     private PluginTextFile mockIntraUserLoginXml;
 
-
     private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
-
 
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private IntraUserSettings intraUserSettings;
     private UUID pluginId;
-
 
     private String intraUserPublicKey ;
 
@@ -107,13 +103,15 @@ public class DisconnectIntraUserTest  extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
+
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
-        //Todo: error java.lang.NoClassDefFoundError  to access XMLParser class
          when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
 
-    @Ignore
+
     @Test
     public void disconnectIntraUserTest_DisconnectOk_throwsIntraUserDisconnectingFailedException() throws Exception{
 
@@ -124,7 +122,6 @@ public class DisconnectIntraUserTest  extends TestCase {
 
     }
 
-    @Ignore
     @Test
     public void disconnectIntraUserTest_DisconnectError_throwsIntraUserDisconnectingFailedException() throws Exception{
 

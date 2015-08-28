@@ -97,13 +97,7 @@ public class GetResultTest extends TestCase {
 
     @Before
     public void setUp() throws Exception{
-
-
-
-
         MockitoAnnotations.initMocks(this);
-
-
 
         setUpMockitoRules();
 
@@ -116,7 +110,7 @@ public class GetResultTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void createIntraUserTest_CreateOk_throwsCantGetIntraUserSearchResult() throws Exception{
 
@@ -129,7 +123,7 @@ public class GetResultTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void createIntraUserTest_Exception_throwsCantGetIntraUserSearchResult() throws Exception{
 
