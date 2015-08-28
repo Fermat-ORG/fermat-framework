@@ -3596,6 +3596,23 @@
 					</android>
 
 					<android
+							name="Crypto Broker Customer"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+
+					<android
 							name="Customers"
 							description=""
 							difficulty="6"
@@ -3705,6 +3722,22 @@
 				<plugins>
 					<plugin
 							name="Crypto Broker"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
+					<plugin
+							name="Crypto Broker Customer"
 							description=""
 							difficulty="4"
 							code-level="development"
