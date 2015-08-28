@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -33,7 +34,7 @@ public class TransactionExecutorFactory {
         } catch (CantLoadWalletException e) {
             throw e;
         } catch (Exception e) {
-            throw new CantLoadWalletException("An Unexpected Exception Happened",e,"","");
+            throw new CantLoadWalletException("An Unexpected Exception Happened", FermatException.wrapException(e),"","");
         }
 
     }
