@@ -23,7 +23,7 @@ Otro ejemplo sobre las situaciones en que estos dos balances difieren es al mome
 Cuando enviamos un débito, este será descontado del available balance y no se descontará del book balance hasta que
 no se confirme el envío exitoso de la transacción. +
 
-Por lo tanto, esta wallet deberá permitirnos manejar cŕeditos (ingresos), débitos (egresos) y consultas de balance
+Por lo tanto, esta wallet deberá permitirnos manejar créditos (ingresos), débitos (egresos) y consultas de balance
 de ambos tipos de balances. +
 
 A nivel del sistema, la modificación al book balance y la modificación al available balance son dos
@@ -31,7 +31,7 @@ transacciones distintas. La wallet deberá llevar una lista de todas las transac
 (sean del book balance o del availbable balance). +
 
 Notemos entonces que como vamos a tener una tabla de transacciones, requeriremos que la clave primaria
-de la misma ya no sea el hash de la transacción bitcoin asicuada, sino un UUID diferente. +
+de la misma ya no sea el hash de la transacción bitcoin asociada, sino un UUID diferente. +
 Analicemos esto con un ejemplo:
 
 Una transacción entrante es detectada por el módulo de la red bitcoin, los módulos transaccionales
@@ -70,7 +70,7 @@ La estructura de este plugin seguirá la estructura de nuestra descripción. +
 * El plugin root tendrá un método que retorna una Bitcoin Wallet a partir de un Id.
 * La bitcoin wallet tendrá un método que retorne las transacciones, este tendrá dos parámetros, el
 offset y la cantidad máxima de transacciones que se desean traer. Además deberá tener un método que
-retorne un objeto que permita hascer el débito, crédito y consulta de balance del Book Balance y otro
+retorne un objeto que permita hacer el débito, crédito y consulta de balance del Book Balance y otro
 método que retorne un objeto con igual interfaz pero que realice las operaciones sobre el Available
 Balance. +
 * Los objetos que manipulan el Available y Book Balance actuarán sobre un objeto intermedio que será
