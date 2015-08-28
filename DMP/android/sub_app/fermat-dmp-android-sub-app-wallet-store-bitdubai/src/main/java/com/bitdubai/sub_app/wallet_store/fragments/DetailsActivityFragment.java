@@ -85,7 +85,7 @@ public class DetailsActivityFragment extends FermatFragment {
         totalInstalls.setText("10"); // TODO Obtener valor de verdad
 
         FermatTextView shortDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
-        shortDescription.setText("Una descripcion"); // TODO Verificar si es larga o corta la descripcion
+        shortDescription.setText("Una descripcion. Una descripcion. Una descripcion. Una descripcion."); // TODO Colocar data verdadera
 
         ArrayList<Drawable> screenshotImgs = new ArrayList<>();
         screenshotImgs.add(getResources().getDrawable(R.drawable.wallet_screenshot_1));
