@@ -50,8 +50,8 @@ Fermat is moving towards version 1, but we're not stopping there. We have many f
 [documentation](https://github.com/bitDubai/fermat/fermat-documentation) that we're anxious to add. 
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet. 
 
-You can see some cool visualizations of the Fermat Platform and its P2P network at 
-[Fermat.org](https://www.fermat.org).
+You can see some cool visualizations of Fermat and its P2P network at 
+[Fermat.org](http://www.fermat.org).
 
 
 Mission / purpose:
@@ -228,7 +228,7 @@ Status of the Project:
 
 As of August 2015 the state of the project is the following:
 
-State of the code: Under development for 2 months. No realeses yet. 12 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+State of the code: Under development for 2 months. No realeses yet. 17 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
 Future path of development: Active (First release with very limited features schedulled for late September 2015).
 

@@ -19,7 +19,10 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.sub_app.manager.R;
+import com.bitdubai.sub_app.manager.fragment.provisory_classes.InstalledSubApp;
 
 
 import java.io.Serializable;
@@ -38,7 +41,7 @@ public class SubAppDesktopFragment extends Fragment {
     private static final String CWP_WALLET_PUBLISHER_MAIN = Activities.CWP_WALLET_PUBLISHER_MAIN.getCode();
     private static final String CWP_WALLET_RUNTIME_STORE_MAIN = Activities.CWP_WALLET_RUNTIME_STORE_MAIN.getCode();
 
-    private ArrayList<App> mlist;
+    private ArrayList<InstalledSubApp> mlist;
     private static int tabId;
 
     private int position;
@@ -79,24 +82,17 @@ public class SubAppDesktopFragment extends Fragment {
                         "wallet_store"
                 };
 
-        mlist = new ArrayList<App>();
+        mlist = new ArrayList<InstalledSubApp>();
 
 
-        for (int i = 0; i < installed.length; i++) {
-            if (installed[i] == "true") {
-                App item = new App();
-
-                item.picture = sub_app_picture[i];
-                item.company = sub_app_names[i];
-                item.rate = (float) Math.random() * 5;
-                item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
-                item.favorite = (float) Math.random() * 5;
-                item.timetoarraive = (float) Math.random() * 5;
-                item.sale = (float) Math.random() * 5;
-                item.installed = true;
-                mlist.add(item);
-            }
-        }
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"wallet_factory","Wallet factory","wallet_factory","wallet_factory",new Version(1,0,0));
+        mlist.add(installedSubApp);
+        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet publisher","wallet_publisher","wallet_publisher",new Version(1,0,0));
+        mlist.add(installedSubApp);
+        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet store","wallet_store","wallet_store",new Version(1,0,0));
+        mlist.add(installedSubApp);
+        installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer","developer_sub_app","developer_sub_app",new Version(1,0,0));
+        mlist.add(installedSubApp);
 
         GridView gridView = new GridView(getActivity());
 
@@ -159,17 +155,17 @@ public class SubAppDesktopFragment extends Fragment {
 
 
 
-    public class AppListAdapter extends ArrayAdapter<App> {
+    public class AppListAdapter extends ArrayAdapter<InstalledSubApp> {
 
 
-        public AppListAdapter(Context context, int textViewResourceId, List<App> objects) {
+        public AppListAdapter(Context context, int textViewResourceId, List<InstalledSubApp> objects) {
             super(context, textViewResourceId, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            App item = getItem(position);
+            final InstalledSubApp installedSubApp = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
@@ -183,11 +179,11 @@ public class SubAppDesktopFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.company);
+            holder.companyTextView.setText(installedSubApp.getSubAppName());
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.sub_apps);
-            switch (item.picture)
+            switch (installedSubApp.getSubAppIcon())
             {
                 case "developer_sub_app":
                     holder.imageView.setImageResource(R.drawable.developer_nuevo);
@@ -198,7 +194,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_SUB_APP_ALL_DEVELOPER,null);
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
 
                         }
                     });
@@ -211,7 +207,7 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_FACTORY_MAIN,null);
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
                         }
                     });
                     break;
@@ -225,7 +221,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_PUBLISHER_MAIN,null);
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
                         }
                     });
                     break;
@@ -239,7 +235,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
           //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).changeScreen(CWP_WALLET_RUNTIME_STORE_MAIN,null);
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
                         }
                     });
                     break;

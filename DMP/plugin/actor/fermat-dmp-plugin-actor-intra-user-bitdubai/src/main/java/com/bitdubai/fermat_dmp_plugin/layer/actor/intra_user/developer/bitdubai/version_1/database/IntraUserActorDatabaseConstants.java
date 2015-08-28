@@ -17,7 +17,7 @@ public class IntraUserActorDatabaseConstants {
      */
     public static final String INTRA_USER_DATABASE_NAME = "IntraUserActor";
 
-    static final String INTRA_USER_TABLE_NAME = "intra_user_actor";
+    public static final String INTRA_USER_TABLE_NAME = "intra_user_actor";
 
     static final String INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME = "intra_user_logged_in_publicKey";
     static final String INTRA_USER_NAME_COLUMN_NAME = "name";

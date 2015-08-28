@@ -4,8 +4,6 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
  * Created by Matias Furszyfer on 2015.08.12..
  */
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,25 +14,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
@@ -43,6 +39,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SectionIt
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,7 +50,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 
 /**
@@ -67,7 +63,7 @@ public class MoneyRequestFragment extends Fragment {
     String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
     /**
-     * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
+     * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
     private CryptoWalletManager cryptoWalletManager;
     private CryptoWallet cryptoWallet;
@@ -118,7 +114,7 @@ public class MoneyRequestFragment extends Fragment {
     /**
      * Wallet session
      */
-    private WalletSession walletSession;
+    private ReferenceWalletSession walletSession;
 
     /**
      * Wallet preference settings
@@ -142,7 +138,7 @@ public class MoneyRequestFragment extends Fragment {
      * @return
      */
 
-    public static MoneyRequestFragment newInstance(int position,WalletSession walletSession,WalletSettingsManager walletSettingsManager) {
+    public static MoneyRequestFragment newInstance(int position,ReferenceWalletSession walletSession,WalletSettingsManager walletSettingsManager) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
         f.setWalletSettingsManager(walletSettingsManager);
@@ -152,7 +148,7 @@ public class MoneyRequestFragment extends Fragment {
         return f;
     }
 
-    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, WalletSettingsManager walletSettingsManager, WalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, WalletSettingsManager walletSettingsManager, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
         f.setWalletSettingsManager(walletSettingsManager);
@@ -471,7 +467,7 @@ public class MoneyRequestFragment extends Fragment {
      *
      * @param walletSession
      */
-    public void setWalletSession(WalletSession walletSession) {
+    public void setWalletSession(ReferenceWalletSession walletSession) {
         this.walletSession = walletSession;
     }
 

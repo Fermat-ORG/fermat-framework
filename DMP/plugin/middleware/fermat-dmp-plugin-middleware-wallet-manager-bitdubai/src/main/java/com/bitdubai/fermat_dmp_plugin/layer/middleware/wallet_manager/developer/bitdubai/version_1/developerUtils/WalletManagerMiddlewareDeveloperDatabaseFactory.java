@@ -27,7 +27,6 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
 
     }
 
-
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         /**
          * I only have one database on my plugin. I will return its name.
@@ -35,8 +34,6 @@ public class WalletManagerMiddlewareDeveloperDatabaseFactory {
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE, pluginId));
         return databases;
-
-
     }
 
     public static List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {

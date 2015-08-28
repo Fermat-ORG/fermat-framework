@@ -78,6 +78,7 @@ public class DeveloperDatabaseFactory {
         itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME);
         itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME);
         itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME);
+        itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME);
 
 
 
@@ -118,7 +119,6 @@ public class DeveloperDatabaseFactory {
         walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME);
         walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME);
         walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME);
-        walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_URL_COLUMN_NAME);
         walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME);
         walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME);
         walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME);
@@ -141,7 +141,6 @@ public class DeveloperDatabaseFactory {
         walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME);
         walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME);
         walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME);
-        walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_URL_COLUMN_NAME);
         walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME);
         walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME);
         walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME);
@@ -172,6 +171,7 @@ public class DeveloperDatabaseFactory {
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
+
             selectedTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**

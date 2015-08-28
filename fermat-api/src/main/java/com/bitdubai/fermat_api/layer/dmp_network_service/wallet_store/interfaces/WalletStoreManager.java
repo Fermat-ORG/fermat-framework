@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 
 import java.net.URL;
 import java.util.List;
@@ -49,11 +51,11 @@ public interface WalletStoreManager {
 
     public Skin getSkin(UUID walletId) throws CantGetSkinException;
 
-    public Developer getDeveloper(UUID developerId) throws CantGetDeveloperException;
+    public DeveloperIdentity getDeveloper(UUID developerId) throws CantGetDeveloperException;
 
-    public Designer getDesigner(UUID designerId) throws CantGetDesignerException;
+    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner(UUID designerId) throws CantGetDesignerException;
 
-    public Translator getTranslator(UUID translatorId) throws CantGetTranslatorException;
+    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator(UUID translatorId) throws CantGetTranslatorException;
 
 
     /**
@@ -63,28 +65,52 @@ public interface WalletStoreManager {
      */
     public CatalogItem constructEmptyCatalogItem();
 
-    public Language constructLanguage(UUID skinId, String nameLanguage, String languageLabel, UUID walletId, Version version, Version initalWalletVersion, Version finalWalletVersion,  List<URL> videoPreviews, URL LanguageURL, long languageSizeInBytes, Translator translator, boolean isDefault );
+    public Language constructLanguage(UUID languageId,
+                                      Languages nameLanguage,
+                                      String languageLabel,
+                                      UUID walletId,
+                                      Version version,
+                                      Version initialWalletVersion,
+                                      Version finalWalletVersion,
+                                      List<URL> videoPreviews,
+                                      long languageSizeInBytes,
+                                      com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator,
+                                      boolean isDefault);
 
-    public Skin constructSkin(UUID skinId, String nameSkin, UUID walletId, ScreenSize screenSize, Version version, Version initalWalletVersion, Version finalWalletVersion, byte[] presentationImage, List<byte[]> previewImageList, boolean hasVideoPreview, List<URL> videoPreviews, URL skinURL, long skinSizeInBytes, Designer designer, boolean isDefault );
+    public Skin constructSkin(UUID skinId,
+                              String nameSkin,
+                              UUID walletId,
+                              ScreenSize screenSize,
+                              Version version,
+                              Version initialWalletVersion,
+                              Version finalWalletVersion,
+                              byte[] presentationImage,
+                              List<byte[]> previewImageList,
+                              boolean hasVideoPreview,
+                              List<URL> videoPreviews,
+                              int skinSizeInBytes,
+                              com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer,
+                              boolean isDefault);
 
     public CatalogItem constructCatalogItem(UUID walletId, int defaultSizeInBytes,
-                             String name, String description,
-                             WalletCategory walletCategory,
-                             byte[] icon,
-                             Version version,
-                             Version platformInitialVersion,
-                             Version platformFinalVersion,
-                             List<Skin> skins,
-                             Skin skin,
-                             Language language,
-                             List<Language> languages,
-                             Designer designer,
-                             Developer developer,
-                             Translator translator) throws CantGetWalletIconException;
+                                            String name, String description,
+                                            WalletCategory walletCategory,
+                                            byte[] icon,
+                                            Version version,
+                                            Version platformInitialVersion,
+                                            Version platformFinalVersion,
+                                            List<Skin> skins,
+                                            Skin skin,
+                                            Language language,
+                                            DeveloperIdentity developer,
+                                            List<Language> languages,
+                                            URL publisherWebsiteUrl) throws CantGetWalletIconException;
 
-    public Developer constructDeveloper(UUID developerId, String name, String PublicKey);
+    public DeveloperIdentity constructDeveloper(String name, String PublicKey);
 
-    public Designer constructDesigner(UUID designerrId, String name, String PublicKey);
+    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer constructDesigner(String alias, String PublicKey);
+
+    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator constructTranslator(String alias, String PublicKey);
 
 }
 

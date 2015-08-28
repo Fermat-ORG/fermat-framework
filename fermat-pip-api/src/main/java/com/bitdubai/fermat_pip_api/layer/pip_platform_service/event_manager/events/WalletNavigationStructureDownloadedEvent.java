@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 import java.util.UUID;
 
@@ -17,6 +17,8 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractPlatformEv
     private String linkToRepo;
 
     private String filename;
+
+    private String walletPublicKey;
 
 
     public WalletNavigationStructureDownloadedEvent() {
@@ -54,5 +56,12 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractPlatformEv
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getWalletPublicKey() {
+        return walletPublicKey;
+    }
+    public void setWalletPublicKey(String walletPublicKey){
+        this.walletPublicKey=walletPublicKey;
     }
 }

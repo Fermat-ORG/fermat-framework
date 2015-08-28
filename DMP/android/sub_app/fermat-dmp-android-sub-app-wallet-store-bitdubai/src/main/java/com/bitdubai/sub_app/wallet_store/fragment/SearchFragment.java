@@ -4,11 +4,11 @@ package com.bitdubai.sub_app.wallet_store.fragment;
  * MATIAS 13/5/2015
  */
 
+import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.sub_app.wallet_store.Model.App;
 import com.bitdubai.sub_app.wallet_store.Model.ItemsBD;
 import com.bitdubai.sub_app.wallet_store.Model.ViewHolder;
@@ -28,14 +30,14 @@ import java.util.List;
 //import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends FermatFragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static SearchFragment newInstance(int position) {
+    public static SearchFragment newInstance(int position,SubAppsSession subAppsSession) {
         SearchFragment f = new SearchFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
