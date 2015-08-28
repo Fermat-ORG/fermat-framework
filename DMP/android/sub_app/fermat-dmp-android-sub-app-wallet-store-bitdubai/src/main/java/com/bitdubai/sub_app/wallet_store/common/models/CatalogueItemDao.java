@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created on 22/08/15.
@@ -29,46 +30,44 @@ public class CatalogueItemDao implements Serializable {
     private static final long serialVersionUID = -8730067026050196759L;
 
 
-    private WalletStoreCatalogueItem catalogueItem;
-    private String developerName;
     private String installationStatusText;
     private String walletName;
+    private String description;
     private Drawable walletIcon;
-    private List<Drawable> skins;
+    private UUID id;
 
 
     /**
      * Crea un nuevo CatalogueItemDao
      *
      * @param catalogueItem un item del catalogo
-     * @throws DatailedInformationNotFoundException
-     * @throws CantGetWalletIconException
+     * @param res           resource object to generate the icon
      */
-    public CatalogueItemDao(WalletStoreCatalogueItem catalogueItem)
-            throws DatailedInformationNotFoundException, CantGetWalletIconException, CantGetSkinsException {
+    public CatalogueItemDao(WalletStoreCatalogueItem catalogueItem, Resources res) {
 
-        this.catalogueItem = catalogueItem;
+        id = catalogueItem.getId();
 
         walletName = catalogueItem.getName();
+
+        description = catalogueItem.getDescription();
 
         InstallationStatus installationStatus = catalogueItem.getInstallationStatus();
         installationStatusText = installationStatus.toString();
 
-        byte[] iconBytes = catalogueItem.getIcon();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(iconBytes);
-        walletIcon = Drawable.createFromStream(inputStream, "walletIcon");
 
-        WalletStoreDetailedCatalogItem detailedCatalogItem = catalogueItem.getWalletDetailedCatalogItem();
-        DeveloperIdentity developer = detailedCatalogItem.getDeveloper();
-        developerName = developer.getAlias();
+        try {
+            byte[] iconBytes = catalogueItem.getIcon();
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(iconBytes);
+            walletIcon = Drawable.createFromStream(inputStream, "walletIcon");
+        } catch (Exception e) {
+            walletIcon = res.getDrawable(R.drawable.wallet_1);
+        }
+
     }
 
-    public WalletStoreCatalogueItem getSrcObj() {
-        return catalogueItem;
-    }
 
-    public String getDeveloperName() {
-        return developerName;
+    public String getDescription() {
+        return description;
     }
 
     public String getInstallationStatusText() {
@@ -83,10 +82,13 @@ public class CatalogueItemDao implements Serializable {
         return walletIcon;
     }
 
+    public UUID getId() {
+        return id;
+    }
 
-    private CatalogueItemDao(String walletName, String developerName, String installationStatusText, Drawable walletIcon) {
+
+    private CatalogueItemDao(String walletName, String installationStatusText, Drawable walletIcon) {
         this.walletName = walletName;
-        this.developerName = developerName;
         this.installationStatusText = installationStatusText;
         this.walletIcon = walletIcon;
     }
@@ -97,10 +99,6 @@ public class CatalogueItemDao implements Serializable {
                 "Carrefour's wallet", "Gucci's wallet", "Bank Itau's wallet", "Mc donal's wallet", "Van's wallet",
                 "Samsung's wallet", "Popular Bank's wallet", "Sony's wallet", "BMW's wallet", "HP's wallet",
                 "Billabong's wallet", "Starbuck's wallet"};
-
-        String[] developerNames = {"by bitDubai", "by bitDubai", "by bitDubai", "by bitDubai", "by Boca Junios",
-                "by carrefour", "by Gucci", "by Bank Itau", "by McDonals", "by Vans", "by Samsung", "by bitDubai",
-                "by Sony", "by BMW", "by HP", "by Billabong", "by starbucks"};
 
         String[] prices = {"FREE", "$9.25", "FREE", "$7.65", "$5.32", "FREE", "$3.98", "FREE", "$0.24", "$3.40",
                 "FREE", "FREE", "20.01", "$1.00", "FREE", "FREE", "$3.21"};
@@ -119,25 +117,15 @@ public class CatalogueItemDao implements Serializable {
                 R.drawable.wallet_store_cover_photo_starbucks};
 
         ArrayList<CatalogueItemDao> testItems = new ArrayList<>();
-        for (int i = 0; i < walletIcons.length && i < installed.length && i < prices.length && i < developerNames.length && i < walletNames.length; i++) {
+        for (int i = 0; i < walletIcons.length && i < installed.length && i < prices.length && i < walletNames.length; i++) {
             String installedStr = installed[i] ? "INSTALLED" : prices[i];
             Drawable icon = res.getDrawable(walletIcons[i]);
-            CatalogueItemDao item = new CatalogueItemDao(walletNames[i], developerNames[i], installedStr, icon);
+            CatalogueItemDao item = new CatalogueItemDao(walletNames[i], installedStr, icon);
             testItems.add(item);
         }
 
         return testItems;
     }
 
-    public static ArrayList<CatalogueItemDao> getDataFromCatalogueItemList(List<WalletStoreCatalogueItem> catalogueItems)
-            throws DatailedInformationNotFoundException, CantGetWalletIconException, CantGetSkinsException {
 
-        ArrayList<CatalogueItemDao> data = new ArrayList<>();
-        for (WalletStoreCatalogueItem catalogItem : catalogueItems) {
-            CatalogueItemDao item = new CatalogueItemDao(catalogItem);
-            data.add(item);
-        }
-
-        return data;
-    }
 }

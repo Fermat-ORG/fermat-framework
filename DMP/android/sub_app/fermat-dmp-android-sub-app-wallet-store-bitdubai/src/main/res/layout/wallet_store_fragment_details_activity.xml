@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="false"
     android:background="@color/wallet_store_activities_background"
+    android:fillViewport="false"
     android:orientation="vertical">
 
     <LinearLayout
@@ -64,6 +64,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_alignParentTop="true"
                         android:singleLine="true"
+                        android:textColor="@android:color/black"
                         android:textSize="20sp"
                         fermat:typeface="CAVIAR_DREAMS_BOLD"
                         tools:text="Nombre de la wallet" />
@@ -76,6 +77,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_below="@id/wallet_name"
                         android:singleLine="true"
+                        android:textColor="@android:color/black"
                         android:textSize="14sp"
                         tools:text="Nombre del publisher" />
 
@@ -97,6 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
+                            android:textColor="@android:color/black"
                             android:textSize="14sp"
                             tools:text="Nombre del desarrollador" />
                     </LinearLayout>
@@ -121,15 +124,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
+                android:orientation="vertical">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/wallet_total_installs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:textColor="@android:color/black"
                     android:textSize="45sp"
                     tools:text="10" />
 
@@ -137,7 +141,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/wallet_installs" />
+                    android:text="@string/wallet_installs"
+                    android:textColor="@android:color/black" />
             </LinearLayout>
             <!-- /Descargas -->
 
@@ -145,8 +150,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -159,9 +164,11 @@
                     android:gravity="center"
                     android:inputType="textMultiLine"
                     android:maxLines="2"
+                    android:textColor="@android:color/black"
                     tools:text="Esto es una Prueba. Esto es una Prueba. Esto es una Prueba." />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/read_more_link"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -170,16 +177,15 @@
                     android:text="@string/wallet_more_details_button"
                     android:textColor="@color/wallet_store_link" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/wallet_screenshots_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="280dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/wallet_screenshots_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp" />
 
 
             </LinearLayout>

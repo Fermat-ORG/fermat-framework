@@ -37,9 +37,9 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao,
     @Override
     protected void bindHolder(CatalogItemViewHolder holder, CatalogueItemDao data, int position) {
         holder.walletName.setText(data.getWalletName());
-        holder.walletPublisherName.setText(data.getDeveloperName());
         holder.installStatus.setText(data.getInstallationStatusText());
         holder.walletIcon.setImageDrawable(data.getWalletIcon());
+        holder.walletPublisherName.setText("Publisher Name");
     }
 
     class CatalogItemViewHolder extends FermatViewHolder {
