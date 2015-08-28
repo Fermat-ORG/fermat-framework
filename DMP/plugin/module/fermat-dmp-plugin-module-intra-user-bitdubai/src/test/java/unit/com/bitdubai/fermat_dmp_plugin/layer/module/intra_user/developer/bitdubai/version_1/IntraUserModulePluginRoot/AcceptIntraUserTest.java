@@ -70,8 +70,7 @@ public class AcceptIntraUserTest extends TestCase {
     @Mock
     private PluginTextFile mockIntraUserLoginXml;
 
-    @Mock
-    IntraUserSettings intraUserSettings = new IntraUserSettings();
+    IntraUserSettings intraUserSettings ;
 
     private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
 
@@ -108,13 +107,15 @@ public class AcceptIntraUserTest extends TestCase {
 
     public void setUpMockitoRules()  throws Exception{
 
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
 
     }
 
-    @Ignore
+
     @Test
     public void acceptIntraUserConnectionTest_AcceptedOk_throwsCantAcceptRequestException() throws Exception{
 
@@ -125,7 +126,7 @@ public class AcceptIntraUserTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void acceptIntraUserConnectionTest_AcceptedError_throwsCantAcceptRequestException() throws Exception{
 

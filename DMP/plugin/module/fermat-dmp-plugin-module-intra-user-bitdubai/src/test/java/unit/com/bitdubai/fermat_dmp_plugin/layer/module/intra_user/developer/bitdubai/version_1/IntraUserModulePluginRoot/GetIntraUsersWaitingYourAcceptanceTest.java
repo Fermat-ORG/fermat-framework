@@ -76,8 +76,7 @@ public class GetIntraUsersWaitingYourAcceptanceTest extends TestCase {
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private IntraUserSettings intraUserSettings;
 
     private UUID pluginId;
 
@@ -88,10 +87,7 @@ public class GetIntraUsersWaitingYourAcceptanceTest extends TestCase {
     @Before
     public void setUp() throws Exception{
 
-
-        pluginId= UUID.randomUUID();
-
-        MockitoAnnotations.initMocks(this);
+  MockitoAnnotations.initMocks(this);
 
         pluginId= UUID.randomUUID();
         testIntraUserModulePluginRoot = new IntraUserModulePluginRoot();
@@ -108,14 +104,15 @@ public class GetIntraUsersWaitingYourAcceptanceTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
+
+        when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
     }
 
-    @Ignore
     @Test
     public void getIntraUsersWaitingYourAcceptanceTest_GetOk_throwsCantGetIntraUsersListException() throws Exception{
-
 
         intraUserInformationList = testIntraUserModulePluginRoot.getIntraUsersWaitingYourAcceptance();
 
@@ -124,7 +121,6 @@ public class GetIntraUsersWaitingYourAcceptanceTest extends TestCase {
 
     }
 
-    @Ignore
     @Test
     public void getIntraUsersWaitingYourAcceptanceTest_GetError_throwsCantGetIntraUsersListException() throws Exception{
 
