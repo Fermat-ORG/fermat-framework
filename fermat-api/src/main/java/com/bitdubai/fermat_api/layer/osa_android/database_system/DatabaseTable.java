@@ -28,8 +28,6 @@ public interface DatabaseTable {
 
     public List<DatabaseTableRecord> getRecords();
 
-    public List<DatabaseVariable> getVariablesResult();
-
     public DatabaseTableRecord getEmptyRecord();
 
     public void clearAllFilters();
@@ -41,8 +39,6 @@ public interface DatabaseTable {
     public DatabaseTableFilter getEmptyTableFilter();
 
     public DatabaseTableFilterGroup getEmptyTableFilterGroup();
-
-    public void selectRecord (DatabaseTableRecord record) throws CantSelectRecordException;
 
     public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
 
@@ -65,8 +61,6 @@ public interface DatabaseTable {
     public void setFilterTop(String top);
 
     public void setFilterOffSet(String offset);
-
-    public void setVarialbesResult(List<DatabaseVariable> variables);
 
     public void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
 

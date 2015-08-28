@@ -1,8 +1,8 @@
-package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1;
+package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.DeveloperBitDubai;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +12,7 @@ import org.junit.Test;
  */
 public class DeveloperBitDubaiTest {
 
+    // TODO PLEASE DON'T COPY AND PASTE WITHOUT CHECK AFTER...
     @Test
     public void constructorTest (){
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
@@ -30,5 +31,4 @@ public class DeveloperBitDubaiTest {
 
         Assert.assertEquals(developerBitDubai.getTimePeriod(), TimeFrequency.MONTHLY);
     }
-
 }

@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_core.layer.dmp_identity;
 
-
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
@@ -8,108 +7,57 @@ import com.bitdubai.fermat_api.layer.dmp_identity.IdentitySubsystem;
 import com.bitdubai.fermat_api.layer.dmp_identity.CantStartSubsystemException;
 import com.bitdubai.fermat_core.layer.dmp_identity.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_identity.designer.DesignerIdentitySubsystem;
-import com.bitdubai.fermat_core.layer.pip_Identity.developer.DeveloperIdentitySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_identity.publisher.PublisherIdentitySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_identity.translator.TranslatorIdentitySubsystem;
 
 /**
  * Created by natalia on 11/08/15.
+ * Modified by Leon Acosta on 28/08/2015.
  */
 public class IdentityLayer implements PlatformLayer {
 
+    private Plugin mIntraUser;
 
-    private Plugin intraUser;
+    private Plugin mPublisherIdentity;
 
-    private Plugin mpublisherIdentity;
+    private Plugin mTranslatorIdentity;
 
-    private Plugin mtranslatorIdentity;
-
-    private Plugin mdesignerIdentity;
-
-    public Plugin getPublisherIdentity() {
-        return mpublisherIdentity;
-    }
-
-    public Plugin getTranslatorIdentity() {
-        return mtranslatorIdentity;
-    }
-
-    public Plugin getDesignerIdentity() {
-        return mdesignerIdentity;
-    }
-
-    public Plugin getIntraUser() {
-        return intraUser;
-    }
-
+    private Plugin mDesignerIdentity;
 
     public void start() throws CantStartLayerException {
 
+        mDesignerIdentity = getPlugin(new DesignerIdentitySubsystem());
 
-        /**
-         * Let's start the Intra User Subsystem;
-         */
-        IdentitySubsystem intraUserSubsystem = new IntraUserSubsystem();
+        mIntraUser = getPlugin(new IntraUserSubsystem());
 
+        mPublisherIdentity = getPlugin(new PublisherIdentitySubsystem());
+
+        mTranslatorIdentity = getPlugin(new TranslatorIdentitySubsystem());
+
+    }
+
+    private Plugin getPlugin(IdentitySubsystem identitySubsystem) throws CantStartLayerException {
         try {
-            intraUserSubsystem.start();
-            intraUser = intraUserSubsystem.getPlugin();
-
+            identitySubsystem.start();
+            return identitySubsystem.getPlugin();
         } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartSubsystemException: " + e.getMessage());
-
             throw new CantStartLayerException();
         }
+    }
 
-        /**
-         * Start the Publisher identity plugin
-         */
-        IdentitySubsystem publisherIdentitySubsystem = new PublisherIdentitySubsystem();
-        try {
-            publisherIdentitySubsystem.start();
-            mpublisherIdentity = (publisherIdentitySubsystem).getPlugin();
+    public Plugin getIntraUser() {
+        return mIntraUser;
+    }
 
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartActorLayerException: " + e.getMessage());
+    public Plugin getPublisherIdentity() {
+        return mPublisherIdentity;
+    }
 
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-            throw new CantStartLayerException();
-        }
+    public Plugin getTranslatorIdentity() {
+        return mTranslatorIdentity;
+    }
 
-        /**
-         * Start the translator identity plugin
-         */
-        TranslatorIdentitySubsystem developerTransalatorSubsystem = new TranslatorIdentitySubsystem();
-        try {
-            developerTransalatorSubsystem.start();
-            mtranslatorIdentity = (developerTransalatorSubsystem).getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartActorLayerException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-            throw new CantStartLayerException();
-        }
-
-        /**
-         * Start the designer identity plugin
-         */
-        DesignerIdentitySubsystem developerDesignerSubsystem = new DesignerIdentitySubsystem();
-        try {
-            developerDesignerSubsystem.start();
-            mdesignerIdentity = (developerDesignerSubsystem).getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartActorLayerException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-            throw new CantStartLayerException();
-        }
+    public Plugin getDesignerIdentity() {
+        return mDesignerIdentity;
     }
 }
