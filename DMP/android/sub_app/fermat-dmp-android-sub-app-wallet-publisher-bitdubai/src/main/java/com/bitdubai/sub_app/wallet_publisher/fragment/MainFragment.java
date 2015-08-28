@@ -188,28 +188,33 @@ public class MainFragment extends FermatListFragment<InformationPublishedCompone
     }
 
     @Override
-    public ArrayList<InformationPublishedComponent> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) throws CantGetPublishedComponentInformationException {
-        ArrayList<InformationPublishedComponent> items = (ArrayList<InformationPublishedComponent>) walletPublisherModuleManager.getPublishedComponents(new PublisherIdentity() {
-            @Override
-            public String getAlias() {
-                return null;
-            }
+    public ArrayList<InformationPublishedComponent> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        ArrayList<InformationPublishedComponent> items = null;
+        try {
+            items = (ArrayList<InformationPublishedComponent>) walletPublisherModuleManager.getPublishedComponents(new PublisherIdentity() {
+                @Override
+                public String getAlias() {
+                    return null;
+                }
 
-            @Override
-            public String getPublicKey() {
-                return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
-            }
+                @Override
+                public String getPublicKey() {
+                    return "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
+                }
 
-            @Override
-            public String getWebsiteurl() {
-                return null;
-            }
+                @Override
+                public String getWebsiteurl() {
+                    return null;
+                }
 
-            @Override
-            public String createMessageSignature(String mensage) {
-                return null;
-            }
-        });
+                @Override
+                public String createMessageSignature(String mensage) {
+                    return null;
+                }
+            });
+        } catch (CantGetPublishedComponentInformationException e) {
+            CommonLogger.exception(TAG, e.getMessage(), e);
+        }
         CommonLogger.info(TAG, String.valueOf((informationPublishedComponentList != null ? informationPublishedComponentList.size() : 0)));
         return items; //todo: implement paging with refresh types and pos(values: 0 if the request is NEW and Last Item size if the request is OLD)
     }
