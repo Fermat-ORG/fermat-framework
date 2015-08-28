@@ -59,6 +59,12 @@ tasks.withType (FindBugs) {
     }
 }
 
+sourceSets {
+    test {
+        java.srcDirs = ['src/test/java', 'src/main/java']
+    }
+}
+
 def coverageSourceDirs = [
         'src/main/java'
 ]

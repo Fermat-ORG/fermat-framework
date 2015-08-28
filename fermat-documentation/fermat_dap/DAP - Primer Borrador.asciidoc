@@ -7,13 +7,13 @@
 
 
 
-Introducción
+*Introducción*
 
 
 La Plataforma de Digital Assets dentro de Fermat permite sentar los cimientos sobre los cuales se construirán otras funcionalides que administrarán ciertos tipos de assets más específicos para cada industria. En particular, por ejemplo, los assets asociados al márketing con todo su manejo específico se construirán en Fermat MKT.
 
 
-Digital Asset
+*Digital Asset*
 
 
 En Fermat definimos un Fermat Digital Asset como un asset emitido por algun actor del sistema, el cual está registrado en alguna crypto network, y que su propiedad puede ser transferida a otros actores del sistema incluyendo a extra users.
@@ -21,8 +21,7 @@ En Fermat definimos un Fermat Digital Asset como un asset emitido por algun acto
 
 En una primera etapa, nos vamos a focalizar en los mecanismos para emitir y transferir assets solo dentro de Fermat por su importancia táctica, dejando la interoperatividad con usuarios externos para el futuro.
 
-
-Características Principales
+*Características Principales*
 
 
 En general, todos los digital assets comparten las siguientes características:

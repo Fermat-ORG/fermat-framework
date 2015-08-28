@@ -251,7 +251,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     @Override
     public CatalogItem getCatalogItem(UUID walletId) throws CantGetCatalogItemException {
         return getWalletStoreManager().getCatalogItem(walletId);
-    }
+    }//Todo: Refactor a String para que acepte PublicKey
 
     @Override
     public DetailedCatalogItem getDetailedCatalogItem(UUID walletId) throws CantGetCatalogItemException {
@@ -261,12 +261,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     @Override
     public Language getLanguage(UUID walletId) throws CantGetWalletLanguageException {
         return getWalletStoreManager().getLanguage(walletId);
-    }
+    }//Todo: Refactor a String para que acepte PublicKey
 
     @Override
     public Skin getSkin(UUID walletId) throws CantGetSkinException {
         return getWalletStoreManager().getSkin(walletId);
-    }
+    }//Todo: Refactor a String para que acepte PublicKey
 
     @Override
     public DeveloperIdentity getDeveloper(UUID developerId) throws CantGetDeveloperException {
@@ -556,7 +556,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     //todo delete - TESTING
     public void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException {
         try {
-            UUID walletId = UUID.randomUUID();
+            UUID walletId = UUID.randomUUID(); //Todo: Refactor a String para que acepte PublicKey
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     System.out.println("Id to install: " + walletId.toString());
             CatalogItemImpl catalogItemImpl;
             catalogItemImpl = new CatalogItemImpl();
@@ -691,7 +691,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     public Language constructLanguage(UUID languageId,
                                       Languages nameLanguage,
                                       String languageLabel,
-                                      UUID walletId,
+                                      UUID walletId, //Todo: Refactor a String para que acepte PublicKey
                                       Version version,
                                       Version initialWalletVersion,
                                       Version finalWalletVersion,
@@ -706,7 +706,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         languageImpl.setId(languageId);
         languageImpl.setLanguageName(nameLanguage);
         languageImpl.setLanguageLabel(languageLabel);
-        languageImpl.setWalletId(walletId);
+        languageImpl.setWalletId(walletId); //Todo: Refactor a String para que acepte PublicKey
         languageImpl.setVersion(version);
         languageImpl.setInitialWalletVersion(initialWalletVersion);
         languageImpl.setFinalWalletVersion(finalWalletVersion);
@@ -719,7 +719,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
     public Skin constructSkin(UUID skinId,
                               String nameSkin,
-                              UUID walletId,
+                              UUID walletId, //Todo: Refactor a String para que acepte PublicKey
                               ScreenSize screenSize,
                               Version version,
                               Version initialWalletVersion,
@@ -737,7 +737,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
         skinImpl.setId(skinId);
         skinImpl.setName(nameSkin);
-        skinImpl.setWalletId(walletId);
+        skinImpl.setWalletId(walletId); //Todo: Refactor a String para que acepte PublicKey
         skinImpl.setScreenSize(screenSize);
         skinImpl.setVersion(version);
         skinImpl.setInitialWalletVersion(initialWalletVersion);
@@ -753,7 +753,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         return skinImpl;
     }
 
-    public CatalogItem constructCatalogItem(UUID walletId, int defaultSizeInBytes,
+    public CatalogItem constructCatalogItem(UUID walletId,  //Todo: Refactor a String para que acepte PublicKey
+                                            int defaultSizeInBytes,
                                             String name, String description,
                                             WalletCategory walletCategory,
                                             byte[] icon,
@@ -777,7 +778,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         catalogItemImpl.setName(name);
         catalogItemImpl.setCategory(walletCategory);
         catalogItemImpl.setDescription(description);
-        catalogItemImpl.setWalletCatalogId(walletId);
+        catalogItemImpl.setWalletCatalogId(walletId); //Todo: Refactor a String para que acepte PublicKey
         catalogItemImpl.setIcon(icon);
         catalogItemImpl.setpublisherWebsiteUrl(publisherWebsiteUrl);
 
@@ -791,7 +792,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         constructskin.setHasVideoPreview(false);
         constructskin.setInitialWalletVersion(skin.getInitialWalletVersion());
         constructskin.setVersion(skin.getVersion());
-        constructskin.setWalletId(walletId);
+        constructskin.setWalletId(walletId); //Todo: Refactor a String para que acepte PublicKey
         constructskin.setId(skin.getSkinId());
         constructskin.setName(skin.getSkinName());
         constructskin.setIsDefault(skin.isDefault());
