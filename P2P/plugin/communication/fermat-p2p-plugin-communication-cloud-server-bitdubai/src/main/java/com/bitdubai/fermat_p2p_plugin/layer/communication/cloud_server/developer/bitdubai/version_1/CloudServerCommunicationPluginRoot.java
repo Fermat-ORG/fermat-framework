@@ -190,6 +190,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
          */
         cloudServiceManager.registerNetworkServiceManager(new CloudNetworkServiceManager(communicationChannelAddressNS, executorService, netWorkServiceIdentity, networkService, availableVPNPorts));
 
+        System.out.println("CloudServerCommunicationPluginRoot - initialized Network Services Supported " + networkService+" on socket "+communicationChannelAddressNS);
     }
 
 
