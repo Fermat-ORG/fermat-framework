@@ -123,7 +123,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
      * Map of transactions ordered
      */
 
-    Map<Date,Set<CryptoWalletTransaction>> mapTransactionPerDate;
+    Map<String,Set<CryptoWalletTransaction>> mapTransactionPerDate;
 
     /**
      * Wallet session
@@ -168,7 +168,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
             cryptoWalletManager = walletSession.getCryptoWalletManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
 
-            mapTransactionPerDate= new HashMap<Date, Set<CryptoWalletTransaction>>();
+            mapTransactionPerDate= new HashMap<String, Set<CryptoWalletTransaction>>();
 
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -337,22 +337,37 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         return R.layout.transactions;
     }
 
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.transactions_recycler_view;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return false;
+    }
+
 
     /**
      *  Order transactions in a map
      */
-    private void loadTransactionMap(){
-        for(CryptoWalletTransaction transaction:lstTransactions){
-            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
-            if(!mapTransactionPerDate.containsKey(date)){
-                Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
-                cryptoWalletTransactionSet.add(transaction);
-                mapTransactionPerDate.put(date,cryptoWalletTransactionSet);
-            }else{
-                mapTransactionPerDate.get(date).add(transaction);
-            }
-        }
-    }
+//    private void loadTransactionMap(){
+//        for(CryptoWalletTransaction transaction:lstTransactions){
+//            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
+//            if(!mapTransactionPerDate.containsKey(date)){
+//                Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
+//                cryptoWalletTransactionSet.add(transaction);
+//                mapTransactionPerDate.put(date,cryptoWalletTransactionSet);
+//            }else{
+//                mapTransactionPerDate.get(date).add(transaction);
+//            }
+//        }
+//    }
 
     /**
      *  Obtain only the transactions that the user want
@@ -468,13 +483,6 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
 
     }
 
-    @Override
-    public RecyclerView getRecycler(View rootView) {
-        if (recyclerView == null) {
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.transactions_recycler_view);
-        }
-        return recyclerView;
-    }
 
     @Override
     public FermatAdapter getAdapter() {
@@ -489,16 +497,18 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
                 /**
                  * Load transactions
                  */
-                loadTransactionMap();
+                loadTransactionMap(lstTransactions);
+
+                convertToUIList();
 
 
-                for (Date date: mapTransactionPerDate.keySet()){
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-                    items.add(new SectionItem(sdf.format(date)));
-                    for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
-                        items.add(new EntryItem(cryptoWalletTransaction));
-                    }
-                }
+//                for (Date date: mapTransactionPerDate.keySet()){
+//                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+//                    items.add(new SectionItem(sdf.format(date)));
+//                    for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
+//                        items.add(new EntryItem(cryptoWalletTransaction));
+//                    }
+//                }
 
             } catch (CantGetTransactionsException e) {
                 e.printStackTrace();
@@ -508,6 +518,34 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
 
         }
         return adapter;
+    }
+    private void loadTransactionMap(List<CryptoWalletTransaction> lstTransactions){
+        Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
+        for(CryptoWalletTransaction transaction:lstTransactions){
+            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
+            if(!mapTransactionPerDate.containsKey(convertDateToString(date))){
+                cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
+                cryptoWalletTransactionSet.add(transaction);
+                mapTransactionPerDate.put(convertDateToString(date), cryptoWalletTransactionSet);
+            }else{
+                mapTransactionPerDate.get(convertDateToString(date)).add(transaction);
+            }
+        }
+    }
+    private List convertToUIList(){
+        for (String date: mapTransactionPerDate.keySet()){
+            //SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            items.add(new SectionItem(date));
+            for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
+                items.add(new EntryItem(cryptoWalletTransaction));
+            }
+        }
+        return items;
+    }
+
+    private String convertDateToString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        return sdf.format(date);
     }
 
     @Override
@@ -618,4 +656,23 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         this.walletSession = walletSession;
     }
 
+    /**
+     * implement this function to handle the result object through dynamic array
+     *
+     * @param result array of native object (handle result field with result[0], result[1],... result[n]
+     */
+    @Override
+    public void onPostExecute(Object... result) {
+
+    }
+
+    /**
+     * Implement this function to handle errors during the execution of any fermat worker instance
+     *
+     * @param ex Throwable object
+     */
+    @Override
+    public void onErrorOccurred(Exception ex) {
+
+    }
 }
