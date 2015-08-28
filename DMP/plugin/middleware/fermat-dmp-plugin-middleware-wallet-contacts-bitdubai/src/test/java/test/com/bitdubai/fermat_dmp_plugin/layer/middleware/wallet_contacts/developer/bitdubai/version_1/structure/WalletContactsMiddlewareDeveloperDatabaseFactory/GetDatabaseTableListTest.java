@@ -1,6 +1,5 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDeveloperDatabaseFactory;
 
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -19,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Nerio on 25/07/15.
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetDatabaseTableListTest {
@@ -30,16 +30,12 @@ public class GetDatabaseTableListTest {
 
     UUID pluginId;
 
-    DeveloperDatabase developerDatabase;
-
     WalletContactsMiddlewareDeveloperDatabaseFactory testDatabaseFactory;
 
     @Before
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
         testDatabaseFactory = new WalletContactsMiddlewareDeveloperDatabaseFactory(mockPluginDatabaseSystem,pluginId);
-     //   List<DeveloperDatabase> developerDatabaseList = testDatabaseFactory.getDatabaseList(developerObjectFactory);
-     //   developerDatabase = developerDatabaseList.get(0);
     }
 
     @Test

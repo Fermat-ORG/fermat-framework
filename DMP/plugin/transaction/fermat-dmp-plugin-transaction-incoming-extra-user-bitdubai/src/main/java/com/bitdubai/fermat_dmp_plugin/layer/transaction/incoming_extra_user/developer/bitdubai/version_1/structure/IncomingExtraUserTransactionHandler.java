@@ -21,7 +21,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.TransactionExecutorFactory;
 
-import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.22..
@@ -68,20 +67,24 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
 
 
     public void handleTransaction(Transaction<CryptoTransaction> transaction) throws CantGetWalletAddressBookRegistryException, CantGetWalletAddressBookException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, UnexpectedTransactionException {
-        WalletAddressBookRegistry walletAddressBookRegistry = this.walletAddressBookManager.getWalletAddressBookRegistry();
-        try{
-            WalletAddressBookRecord walletAddressBookRecord = walletAddressBookRegistry.getWalletCryptoAddressBookByCryptoAddress(transaction.getInformation().getAddressTo());
-            ReferenceWallet referenceWallet = walletAddressBookRecord.getWalletType();
-            String walletPublicKey = walletAddressBookRecord.getWalletPublicKey();
+        try {
+            WalletAddressBookRegistry walletAddressBookRegistry = this.walletAddressBookManager.getWalletAddressBookRegistry();
+            try {
+                WalletAddressBookRecord walletAddressBookRecord = walletAddressBookRegistry.getWalletCryptoAddressBookByCryptoAddress(transaction.getInformation().getAddressTo());
+                ReferenceWallet referenceWallet = walletAddressBookRecord.getWalletType();
+                String walletPublicKey = walletAddressBookRecord.getWalletPublicKey();
 
-            TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager,actorAddressBookManager);
-            TransactionExecutor executor = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
+                TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager, actorAddressBookManager);
+                TransactionExecutor executor = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
 
-            executor.executeTransaction(transaction);
-        } catch(WalletAddressBookNotFoundException exception){
-            //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
-            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
-        }catch(Exception exception){
+                executor.executeTransaction(transaction);
+            } catch (WalletAddressBookNotFoundException exception) {
+                //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
+                throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
+            }
+        } catch (CantGetWalletAddressBookRegistryException | CantGetWalletAddressBookException | CantLoadWalletException | CantRegisterCreditException | CantRegisterDebitException | UnexpectedTransactionException e){
+            throw e;
+        } catch (Exception exception) {
             //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
             throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
         }

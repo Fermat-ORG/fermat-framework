@@ -776,7 +776,6 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
                  * * *
                  */
 
-               // pluginFileSystem.deleteTextFile(pluginId, pluginId.toString(), INTRA_USER_LOGIN_FILE_NAME,FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 intraUserLoginXml = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), INTRA_USER_LOGIN_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
                 /**
