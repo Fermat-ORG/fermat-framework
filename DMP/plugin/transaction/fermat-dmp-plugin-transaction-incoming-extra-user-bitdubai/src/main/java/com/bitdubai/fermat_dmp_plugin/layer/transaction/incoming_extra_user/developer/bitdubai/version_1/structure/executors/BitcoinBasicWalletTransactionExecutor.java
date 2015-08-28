@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
@@ -32,23 +33,29 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
     }
 
     @Override
-    public void executeTransaction(Transaction<CryptoTransaction> transaction) throws  CantRegisterCreditException, CantRegisterDebitException, UnexpectedTransactionException {
-        switch (transaction.getInformation().getCryptoStatus()){
-            case ON_CRYPTO_NETWORK:
-                processOnCryptoNetworkTransaction(transaction);
-                break;
-            case ON_BLOCKCHAIN:
-                processOnBlockChainTransaction(transaction);
-                break;
-            //todo ezequiel, cambie de Reversed a REVERSED_ON_CRYPTO_NETWORK
-            case REVERSED_ON_CRYPTO_NETWORK:
-                processReversedOnCryptoNetworkTransaction(transaction);
-                break;
-            case REVERSED_ON_BLOCKCHAIN:
-                processReversedOnBlockchainTransaction(transaction);
-                break;
-            default:
-                throw new UnexpectedTransactionException("El crypto status no es esperado",null,"El cryptoStatus es: "+ transaction.getInformation().getCryptoStatus().getCode(),"");
+    public void executeTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException, CantRegisterDebitException, UnexpectedTransactionException {
+        try {
+            switch (transaction.getInformation().getCryptoStatus()) {
+                case ON_CRYPTO_NETWORK:
+                    processOnCryptoNetworkTransaction(transaction);
+                    break;
+                case ON_BLOCKCHAIN:
+                    processOnBlockChainTransaction(transaction);
+                    break;
+                //todo ezequiel, cambie de Reversed a REVERSED_ON_CRYPTO_NETWORK
+                case REVERSED_ON_CRYPTO_NETWORK:
+                    processReversedOnCryptoNetworkTransaction(transaction);
+                    break;
+                case REVERSED_ON_BLOCKCHAIN:
+                    processReversedOnBlockchainTransaction(transaction);
+                    break;
+                default:
+                    throw new UnexpectedTransactionException("El crypto status no es esperado", null, "El cryptoStatus es: " + transaction.getInformation().getCryptoStatus().getCode(), "");
+            }
+        } catch (CantRegisterCreditException | CantRegisterDebitException | UnexpectedTransactionException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new UnexpectedTransactionException("An Unexpected Exception Happened", FermatException.wrapException(e),"","");
         }
     }
 

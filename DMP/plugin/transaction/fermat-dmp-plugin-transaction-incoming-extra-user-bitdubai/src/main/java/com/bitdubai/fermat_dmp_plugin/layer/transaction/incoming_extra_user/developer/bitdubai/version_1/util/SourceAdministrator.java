@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -22,15 +23,21 @@ public class SourceAdministrator implements DealsWithIncomingCrypto {
     private IncomingCryptoManager incomingCryptoManager;
 
     public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(final EventSource eventSource) throws SourceNotRecognizedException {
-        // This method will select the correct sender according to the specified source,
-        switch (eventSource) {
-            case CRYPTO_ROUTER:
-                return incomingCryptoManager.getTransactionManager();
-            default:
-                String exceptionMessage = "There is no administrator for this source";
-                String context = "The event source was: "+ eventSource.name() + "with code " + eventSource.getCode();
-                String possibleCause = "Value not considered in switch statement";
-                throw new SourceNotRecognizedException(exceptionMessage,null,context,possibleCause);
+        try {
+            // This method will select the correct sender according to the specified source,
+            switch (eventSource) {
+                case CRYPTO_ROUTER:
+                    return incomingCryptoManager.getTransactionManager();
+                default:
+                    String exceptionMessage = "There is no administrator for this source";
+                    String context = "The event source was: " + eventSource.name() + "with code " + eventSource.getCode();
+                    String possibleCause = "Value not considered in switch statement";
+                    throw new SourceNotRecognizedException(exceptionMessage, null, context, possibleCause);
+            }
+        } catch (SourceNotRecognizedException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new SourceNotRecognizedException("Unexpected Exception", FermatException.wrapException(e),"","");
         }
     }
 
