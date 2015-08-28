@@ -68,7 +68,7 @@ public interface WalletStoreManager {
     public Language constructLanguage(UUID languageId,
                                       Languages nameLanguage,
                                       String languageLabel,
-                                      UUID walletId,
+                                      UUID walletId, //Todo: Refactor a String para que acepte PublicKey
                                       Version version,
                                       Version initialWalletVersion,
                                       Version finalWalletVersion,
@@ -79,7 +79,7 @@ public interface WalletStoreManager {
 
     public Skin constructSkin(UUID skinId,
                               String nameSkin,
-                              UUID walletId,
+                              UUID walletId, //Todo: Refactor a String para que acepte PublicKey
                               ScreenSize screenSize,
                               Version version,
                               Version initialWalletVersion,
@@ -92,7 +92,8 @@ public interface WalletStoreManager {
                               com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer,
                               boolean isDefault);
 
-    public CatalogItem constructCatalogItem(UUID walletId, int defaultSizeInBytes,
+    public CatalogItem constructCatalogItem(UUID walletId, //Todo: Refactor a String para que acepte PublicKey
+                                            int defaultSizeInBytes,
                                             String name, String description,
                                             WalletCategory walletCategory,
                                             byte[] icon,

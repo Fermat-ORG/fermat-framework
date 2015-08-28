@@ -7,6 +7,8 @@ import static com.googlecode.catchexception.CatchException.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +29,7 @@ import java.util.UUID;
  * Created by jorgegonzalez on 2015.06.27..
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = CustomBuildConfig.class, sdk = 21)
 public class OpenDatabaseTest {
 
     private Activity mockActivity;
@@ -45,6 +47,7 @@ public class OpenDatabaseTest {
     @Test
     public void OpenDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
+        System.out.println(mockContext);
         testDatabase.createDatabase(testDatabaseName);
         catchException(testDatabase).openDatabase();
         assertThat(caughtException()).isNull();
@@ -65,6 +68,18 @@ public class OpenDatabaseTest {
         catchException(testDatabase).openDatabase();
         assertThat(caughtException()).isInstanceOf(DatabaseNotFoundException.class);
         caughtException().printStackTrace();
+    }
+
+    @Test
+    public void OpenDatabase_DatabaseInPath_InvokedSuccesfully1() throws Exception{
+        testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
+        testDatabase.createDatabase(testDatabaseName);
+        catchException(testDatabase).openDatabase();
+        assertThat(caughtException()).isNull();
+        catchException(testDatabase).closeDatabase();
+        assertThat(caughtException()).isNull();
+        catchException(testDatabase).openDatabase();
+        assertThat(caughtException()).isNull();
     }
 
 }

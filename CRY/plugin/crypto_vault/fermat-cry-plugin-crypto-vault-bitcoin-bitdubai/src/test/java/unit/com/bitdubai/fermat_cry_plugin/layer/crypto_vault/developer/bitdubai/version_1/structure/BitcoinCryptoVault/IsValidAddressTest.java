@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 2015.07.10..
  */
-public class isValidAddressTest {
+public class IsValidAddressTest {
 
     @Test
     public void test() throws CantCreateCryptoWalletException {
@@ -21,7 +21,7 @@ public class isValidAddressTest {
         CryptoAddress badAddress = new CryptoAddress("sdfkjsdfkjsdflksdf", CryptoCurrency.BITCOIN);
         Assert.assertFalse(vault.isValidAddress(badAddress));
 
-        CryptoAddress goodAddress = new CryptoAddress("mmxw6KZzLEXfnvRSVkNUkg5TrG19DiBeaD", CryptoCurrency.BITCOIN);
+        CryptoAddress goodAddress = new CryptoAddress("mwTdg897T6WEFRnFVm87APwpUeQb6jMgi6", CryptoCurrency.BITCOIN);
         Assert.assertTrue(vault.isValidAddress(goodAddress));
     }
 }
