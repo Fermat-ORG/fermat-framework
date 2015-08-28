@@ -23,12 +23,19 @@ public class TransactionExecutorFactory {
     }
 
     public TransactionExecutor newTransactionExecutor(final ReferenceWallet walletType, final String walletPublicKey) throws CantLoadWalletException{
-        switch (walletType){
-            case BASIC_WALLET_BITCOIN_WALLET:
-                return createBitcoinBasicWalletExecutor(walletPublicKey);
-            default:
-                return null;
+        try {
+            switch (walletType) {
+                case BASIC_WALLET_BITCOIN_WALLET:
+                    return createBitcoinBasicWalletExecutor(walletPublicKey);
+                default:
+                    return null;
+            }
+        } catch (CantLoadWalletException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CantLoadWalletException("An Unexpected Exception Happened",e,"","");
         }
+
     }
 
     private TransactionExecutor createBitcoinBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletException {
