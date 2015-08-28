@@ -90,7 +90,7 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
             try {
                 WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
                 List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
-                data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems);
+                data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems, moduleManager);
 
             } catch (CantGetRefinedCatalogException e) {
                 Log.e("NELSON", "CantGetRefinedCatalogException", e);
