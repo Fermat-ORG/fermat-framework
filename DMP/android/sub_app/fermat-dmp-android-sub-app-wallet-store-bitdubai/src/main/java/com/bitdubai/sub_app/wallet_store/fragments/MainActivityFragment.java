@@ -29,6 +29,8 @@ import com.wallet_store.bitdubai.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.CATALOG_ITEM;
+
 /**
  * Fragment que luce como un Activity donde se muestra la lista de Wallets disponibles en el catalogo de la Wallet Store
  *
@@ -36,9 +38,6 @@ import java.util.List;
  * @version 1.0
  */
 public class MainActivityFragment extends FermatListFragment implements FermatListItemListeners<CatalogueItemDao> {
-    // STATIC
-    private static final String ARG_POSITION = "position";
-
     // MANAGERS
     private WalletStoreModuleManager moduleManager;
 
@@ -46,14 +45,10 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
     /**
      * Create a new instance of this fragment
      *
-     * @param position tab position
      * @return InstalledFragment instance object
      */
-    public static MainActivityFragment newInstance(int position) {
+    public static MainActivityFragment newInstance() {
         MainActivityFragment f = new MainActivityFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, position);
-        f.setArguments(args);
         return f;
     }
 
@@ -87,6 +82,7 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
         if (adapter == null) {
             ErrorManager errorManager = subAppsSession.getErrorManager();
             ArrayList<CatalogueItemDao> data = CatalogueItemDao.getTestData(getResources());
+
             try {
                 WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
                 List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
@@ -118,7 +114,7 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
             }
 
             adapter = new WalletStoreCatalogueAdapter(getActivity(), data);
-            ((WalletStoreCatalogueAdapter) adapter).setFermatListEventListener(this); // setting up event listeners
+            adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
     }
@@ -133,13 +129,15 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
 
     @Override
     public void onItemClickListener(CatalogueItemDao data, int position) {
+        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
         if (data != null) {
-            /*setting up fragment instance*/
-            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0);
-            fragment.setSubAppsSession(subAppsSession);
+            session.setData(CATALOG_ITEM, data);
+
+            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
+            fragment.setSubAppsSession(session);
             fragment.setSubAppSettings(subAppSettings);
             fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
-            /*transactions*/
+
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             FT.replace(R.id.activity_container, fragment);

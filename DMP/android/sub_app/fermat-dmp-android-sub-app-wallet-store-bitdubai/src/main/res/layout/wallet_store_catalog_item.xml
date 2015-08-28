@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fermat="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/wallet_store_catalog_item"
@@ -12,16 +10,13 @@
         android:id="@+id/wallet_icon_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_centerVertical="true"
         android:layout_margin="3dp"
         android:contentDescription="@string/wallet_icon"
-        tools:src="@drawable/wallet_store_cover_photo_mcdonals" />
+        tools:src="@drawable/icono_banco_1" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/wallet_icon_image"
-        android:layout_toRightOf="@+id/wallet_icon_image"
+        android:layout_height="match_parent"
         android:padding="6dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -53,11 +48,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/wallet_publisher_name"
-            android:textColor="@color/wallet_install_status"
-            android:textSize="12sp"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/wallet_store_link"
+            android:textSize="14sp"
             tools:text="INSTALL" />
     </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>
 
 

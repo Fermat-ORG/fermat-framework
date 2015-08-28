@@ -21,9 +21,6 @@ import com.wallet_store.bitdubai.R;
  * @version 1.0
  */
 public class MoreDetailsActivityFragment extends FermatFragment {
-    // STATIC
-    private static final String ARG_POSITION = "position";
-
     // MANAGERS
     private WalletStoreModuleManager moduleManager;
 
@@ -31,16 +28,10 @@ public class MoreDetailsActivityFragment extends FermatFragment {
     /**
      * Create a new instance of this fragment
      *
-     * @param position tab position
-     * @param session  WalletStoreSubAppSession instance object. This contains references to WalletStoreModuleManager and ErrorManager
      * @return InstalledFragment instance object
      */
-    public static MoreDetailsActivityFragment newInstance(int position) {
+    public static MoreDetailsActivityFragment newInstance() {
         MoreDetailsActivityFragment f = new MoreDetailsActivityFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, position);
-        f.setArguments(args);
-
         return f;
     }
 
