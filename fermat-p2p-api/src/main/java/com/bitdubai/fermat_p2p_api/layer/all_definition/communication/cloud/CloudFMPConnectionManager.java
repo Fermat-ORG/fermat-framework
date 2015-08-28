@@ -877,6 +877,8 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	private void initializeServer() throws CloudCommunicationException {
 		try{
 
+            System.out.println("CloudFMPConnectionManager - Binding to " + communicationChannelAddress.getSocketAddress());
+
             /*
              * Open the selector
              */

@@ -388,12 +388,13 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
              */
 			SelectionKey serverConnection = clientChannel.register(selector, SelectionKey.OP_CONNECT);
 
+            System.out.println("clientChannel.connect = " + communicationChannelAddress);
+
             /*
              * Connect the client channel whit the server
              */
 			clientChannel.connect(communicationChannelAddress.getSocketAddress());
 
-            System.out.println("clientChannel.connect = " + communicationChannelAddress);
             System.out.println("clientChannel.isConnectionPending() = "+clientChannel.isConnectionPending());
 
             /*
