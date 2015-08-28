@@ -334,7 +334,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
-            downloadLanguageFromRepo(linkToLanguage, skin.getName(),languageName, localStoragePath, screenSize);
+            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath, screenSize);
 
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
@@ -413,19 +413,19 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @param walletType
      * @param developer
      * @param screenSize
-     * @param skinName
+     * @param skinId
      * @param languageName
      * @throws WalletResourcesInstalationException
      */
     @Override
-    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName) throws WalletResourcesInstalationException {
+    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, UUID skinId, String languageName) throws WalletResourcesInstalationException {
 
         String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
         /**
          *  download language
          */
         String linkToLanguage = linkToRepo + "languages/";
-        downloadLanguageFromRepo(linkToLanguage, skinName, languageName, localStoragePath, screenSize);
+        downloadLanguageFromRepo(linkToLanguage, skinId, languageName, localStoragePath, screenSize);
 
         /**
          *  Fire event Wallet language installed
@@ -597,13 +597,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
-    private void downloadLanguageFromRepo(String linkToLanguage, String skinName,String languajeName, String localStoragePath,String screenSize) {
+    private void downloadLanguageFromRepo(String linkToLanguage, UUID skinId,String languajeName, String localStoragePath,String screenSize) {
 
         /**
          * download language
          */
         String linkToLanguageRepo = linkToLanguage+languajeName+".xml";
-        downloadLanguage(linkToLanguageRepo, languajeName, skinName, localStoragePath);
+        downloadLanguage(linkToLanguageRepo, languajeName, skinId, localStoragePath);
 
 
         //TODO: raise a event
@@ -706,11 +706,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         }
     }
-    private void downloadLanguage(String link,String languageName, String skinName,String localStoragePath) {
+    private void downloadLanguage(String link,String languageName, UUID skinId,String localStoragePath) {
         try {
             String languageXML = githubConnection.getFile(link);
 
-            recordXML(languageXML, languageName, skinName, localStoragePath);
+            recordXML(languageXML, languageName, skinId, localStoragePath);
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

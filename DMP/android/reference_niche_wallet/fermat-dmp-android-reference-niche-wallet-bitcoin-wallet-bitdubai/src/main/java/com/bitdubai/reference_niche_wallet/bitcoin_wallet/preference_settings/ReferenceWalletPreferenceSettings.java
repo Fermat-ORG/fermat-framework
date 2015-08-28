@@ -21,7 +21,6 @@ public class ReferenceWalletPreferenceSettings extends PreferenceWalletSettings{
     private int transactionToShow;
 
     BalanceType balanceType;
-    private int transactionsToShow;
 
     public ReferenceWalletPreferenceSettings(){
         transactionToShow=6;
@@ -36,6 +35,6 @@ public class ReferenceWalletPreferenceSettings extends PreferenceWalletSettings{
     }
 
     public int getTransactionsToShow() {
-        return transactionsToShow;
+        return transactionToShow;
     }
 }
