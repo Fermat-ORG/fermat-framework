@@ -10,6 +10,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by natalia on 28/08/15.
+ * a
  */
 public class DeveloperBitDubaiTest {
 

@@ -2,7 +2,6 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bi
 
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation;
 import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity;
 
 import org.junit.Before;
@@ -15,6 +14,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by natalia on 28/08/15.
+ *
  */
 public class IntraUserModuleLoginIdentityTest {
     IntraUserModuleLoginIdentity intraUserModuleLoginIdentity;
