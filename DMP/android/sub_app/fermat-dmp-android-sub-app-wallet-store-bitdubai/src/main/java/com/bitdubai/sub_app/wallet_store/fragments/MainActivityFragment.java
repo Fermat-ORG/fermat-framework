@@ -1,6 +1,8 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,12 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
@@ -21,10 +29,13 @@ import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
 import com.wallet_store.bitdubai.R;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.CATALOG_ITEM;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.PREVIEW_IMGS;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.DEVELOPER_NAME;
 
 /**
  * Fragment que luce como un Activity donde se muestra la lista de Wallets disponibles en el catalogo de la Wallet Store
@@ -112,8 +123,31 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     @Override
     public void onItemClickListener(WalletStoreListItem data, int position) {
         WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
-        if (data != null) {
-            session.setData(CATALOG_ITEM, data);
+
+        try {
+            DetailedCatalogItem catalogItemDetails = moduleManager.getCatalogItemDetails(data.getId());
+            DeveloperIdentity developer = catalogItemDetails.getDeveloper();
+            String developerAlias = developer.getAlias();
+
+            ArrayList<Drawable> previewImageDrawableList = null;
+            Skin skin = catalogItemDetails.getDefaultSkin();
+            if (skin != null) {
+                List<byte[]> previewImageList = skin.getPreviewImageList();
+                if (previewImageList != null) {
+                    previewImageDrawableList = new ArrayList<>();
+
+                    for (int i = 0; i < previewImageList.size(); i++) {
+                        byte[] previewImgBytes = previewImageList.get(i);
+                        ByteArrayInputStream inputStream = new ByteArrayInputStream(previewImgBytes);
+                        Drawable img = Drawable.createFromStream(inputStream, "preview_" + i);
+                        previewImageDrawableList.add(img);
+                    }
+                }
+            }
+
+            session.setData(BASIC_DATA, data);
+            session.setData(DEVELOPER_NAME, developerAlias);
+            session.setData(PREVIEW_IMGS, previewImageDrawableList);
 
             DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
             fragment.setSubAppsSession(session);
@@ -125,6 +159,16 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             FT.replace(R.id.activity_container, fragment);
             FT.addToBackStack(null);
             FT.commit();
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Hubo un problema");
+            builder.setMessage("No se pudieron obtener los detalles de la wallet seleccionada");
+            builder.setPositiveButton("OK", null);
+            builder.show();
         }
     }
 

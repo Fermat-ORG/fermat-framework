@@ -13,7 +13,9 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 public class WalletStoreSubAppSession implements SubAppsSession {
-    public static final String CATALOG_ITEM = "catalog item";
+    public static final String BASIC_DATA = "catalog item";
+    public static final String PREVIEW_IMGS = "preview images";
+    public static final String DEVELOPER_NAME = "developer name";
 
     /**
      * SubApps type
