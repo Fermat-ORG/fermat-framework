@@ -62,15 +62,15 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
 
     @Mock
     private PluginTextFile mockIntraUserLoginXml;
-
     @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    IntraUserIdentity mockIntraUserIdentity;
+
+    private IntraUserSettings intraUserSettings;
 
     private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
 
 
-    @Mock
-    IntraUserIdentity mockIntraUserIdentity;
+
 
 
     private UUID pluginId;
@@ -100,12 +100,14 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
 
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
     }
 
-    @Ignore
+
     @Test
     public void showAvailableLoginIdentitiesTest_GetOk_throwsCantShowLoginIdentitiesException() throws Exception{
 
@@ -117,7 +119,7 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void showAvailableLoginIdentitiesTest_GetError_throwsCantShowLoginIdentitiesException() throws Exception{
 
