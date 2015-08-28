@@ -72,7 +72,7 @@ Como funcionan?
 En términos generales, un Actor emite un Asset registrando un hash del Digital Asset en alguna blockchain. En otras palabras transfiere una cierta cantidad de crypto currency a una dirección que llamaremos Asset Genesis Address. La transacción donde se emite el asset le llamaremos Genesis Transaction. Al monto con el que se inicializa el asset le llamaremos Genesis Amount.
 
 
-Luego transfiere dicho asset a algún otro actor de la plataforma realalizando dos cosas a la vez:
+Luego transfiere dicho asset a algún otro actor de la plataforma realizando dos cosas a la vez:
 
 
     Transfiriendo el Genesis Amount a una dirección del destinatario.
