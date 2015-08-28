@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class CatalogItemImpl implements CatalogItem {
 
-    UUID id;
+    UUID id; //Todo: Refactor a String para que acepte PublicKey
     String name;
     WalletCategory category;
     String description;
@@ -54,7 +54,7 @@ public class CatalogItemImpl implements CatalogItem {
     @Override
     public UUID getId() {
         return id;
-    }
+    } //Todo: Refactor a String para que acepte PublicKey
 
     @Override
     public String getName() {
@@ -93,7 +93,7 @@ public class CatalogItemImpl implements CatalogItem {
 
     public void setWalletCatalogId(UUID id) {
         this.id = id;
-    }
+    } //Todo: Refactor a String para que acepte PublicKey
 
     public void setWalletName(String name) {
         this.name = name;
@@ -121,7 +121,7 @@ public class CatalogItemImpl implements CatalogItem {
 
     public void setId(UUID id) {
         this.id = id;
-    }
+    } //Todo: Refactor a String para que acepte PublicKey
 
     public void setName(String name) {
         this.name = name;

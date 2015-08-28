@@ -13,8 +13,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
  */
 public interface RecyclerListFragment {
 
-    RecyclerView getRecycler(View rootView);
-
     FermatAdapter getAdapter();
 
     RecyclerView.LayoutManager getLayoutManager();

@@ -17,7 +17,7 @@ public interface CatalogItem {
     /**
      * Catalog Wallet identifiers
      */
-    public UUID getId();
+    public UUID getId(); //Todo: Refactor a String para que acepte PublicKey
     public String getName();
     public WalletCategory getCategory();
 

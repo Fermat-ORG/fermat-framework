@@ -335,7 +335,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
          */
 /*        EventListener eventListener;
         EventHandler eventHandler;
-
+*/
         try {
             TestPublishWallet();
         } catch (MalformedURLException e) {
@@ -343,7 +343,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         } catch (CantPublishWalletInCatalogException e) {
             e.printStackTrace();
         }
-    */
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -557,7 +557,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     public void TestPublishWallet() throws MalformedURLException, CantPublishWalletInCatalogException {
         try {
             UUID walletId = UUID.randomUUID();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    System.out.println("Id to install: " + walletId.toString());
             CatalogItemImpl catalogItemImpl;
             catalogItemImpl = new CatalogItemImpl();
             catalogItemImpl.setId(walletId);
@@ -588,6 +587,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             //New set. Sets the ScreenSize
             skin.setScreenSize(ScreenSize.MEDIUM);
 
+            final String designerId = UUID.randomUUID().toString();
             com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = new com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer() {
                 @Override
                 public String getAlias() {
@@ -596,7 +596,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String getPublicKey() {
-                    return "DFSDFKSDFPSDFJSDFsdkfjskdf";
+                    return designerId;
                 }
 
                 @Override
@@ -625,6 +625,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             language.setLanguageName(Languages.SPANISH);
             language.setLanguagePackageSizeInBytes(100);
 
+
+            final String traductorId = UUID.randomUUID().toString();
             com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = new com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator() {
                 @Override
                 public String getAlias() {
@@ -633,7 +635,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String getPublicKey() {
-                    return "SDSDFSDFskdmfskdjfsdkjf";
+                    return traductorId;
                 }
 
                 @Override
@@ -646,6 +648,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
             detailedCatalogItemImpl.setLanguage(language);
 
+            final String devId = UUID.randomUUID().toString();
             DeveloperIdentity developerIdentity = new DeveloperIdentity() {
                 @Override
                 public String getAlias() {
@@ -654,7 +657,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String getPublicKey() {
-                    return "SDSDSDSDasdojasdiuahsdkasjdaskdasdk";
+                    return devId;
                 }
 
                 @Override
