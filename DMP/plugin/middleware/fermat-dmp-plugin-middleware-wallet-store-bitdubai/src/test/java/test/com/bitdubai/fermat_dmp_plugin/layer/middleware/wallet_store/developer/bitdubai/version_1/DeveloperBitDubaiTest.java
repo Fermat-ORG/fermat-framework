@@ -12,6 +12,7 @@ import org.junit.Test;
  */
 public class DeveloperBitDubaiTest {
 
+    // TODO PLEASE DON'T COPY AND PASTE WITHOUT CHECK AFTER...
     @Test
     public void constructorTest (){
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
@@ -30,5 +31,4 @@ public class DeveloperBitDubaiTest {
 
         Assert.assertEquals(developerBitDubai.getTimePeriod(), TimeFrequency.MONTHLY);
     }
-
 }
