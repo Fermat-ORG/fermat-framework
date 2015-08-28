@@ -175,12 +175,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
         try {
             List<DatabaseRecord> records = record.getValues();
             StringBuilder strRecords = new StringBuilder();
-            // ContentValues recordUpdateList = new ContentValues();
-
-            /**
-             * I update only the fields marked as modified
-             *
-             */
 
             for (int i = 0; i < records.size(); ++i) {
 
@@ -215,11 +209,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
      */
     @Override
     public void insertRecord(DatabaseTableRecord record) throws CantInsertRecordException {
-
         /**
          * First I get the table records with values.
          * and construct de ContentValues array for SqlLite
          */
+        SQLiteDatabase database = null;
         try {
             StringBuilder strRecords = new StringBuilder("");
             StringBuilder strValues = new StringBuilder("");
@@ -239,12 +233,12 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         .append(records.get(i).getValue())
                         .append("'");
             }
-            this.database.openDatabase();
-            this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+            database = this.database.getWritableDatabase();
+            database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         } catch (Exception exception) {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
-            this.database.closeDatabase();
+            if (database != null) database.close();
         }
     }
 
@@ -312,9 +306,10 @@ public class AndroidDatabaseTable implements DatabaseTable {
      */
     @Override
     public boolean isTableExists() {
+        SQLiteDatabase database = null;
         try {
-            this.database.openDatabase();
-            Cursor cursor = this.database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + this.tableName + "'", null);
+            database = this.database.getReadableDatabase();
+            Cursor cursor = database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + this.tableName + "'", null);
             if (cursor != null) {
                 if (cursor.getCount() > 0) {
                     cursor.close();
@@ -325,7 +320,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         } catch (Exception e) {
             return false;
         } finally {
-            this.database.closeDatabase();
+            if (database != null) database.close();
         }
         return false;
     }
@@ -433,25 +428,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
 
-    /**
-     * <p>Sets the number of records to be selected in query
-     *
-     * @param top number of records to select (in string)
-     */
-    @Override
-    public void setFilterTop(String top) {
-        this.top = top;
-    }
 
-
-    /**
-     * <p>Sets the records page
-     *
-     * @param offset filter offset
-     */
-    public void setFilterOffSet(String offset) {
-        this.offset = offset;
-    }
 
 
     /**
@@ -662,6 +639,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
 
     @Override
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
+        SQLiteDatabase database = null;
         try {
             List<DatabaseRecord> records = record.getValues();
 
@@ -682,17 +660,18 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 queryWhereClause = null;
             }
 
-            this.database.openDatabase();
+            database = this.database.getWritableDatabase();
             if (queryWhereClause != null) {
-                this.database.execSQL("DELETE FROM " + tableName + " WHERE " + queryWhereClause);
+                database.execSQL("DELETE FROM " + tableName + " WHERE " + queryWhereClause);
             } else {
-                this.database.execSQL("DELETE FROM " + tableName);
+                database.execSQL("DELETE FROM " + tableName);
             }
 
         } catch (Exception exception) {
             throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
-            this.database.closeDatabase();
+            if(database != null)
+                database.close();
         }
     }
 
@@ -741,9 +720,23 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
+    /**
+     * <p>Sets the number of records to be selected in query
+     *
+     * @param top number of records to select (in string)
+     */
     @Override
-    public String toString() {
-        return tableName;
+    public void setFilterTop(String top) {
+        this.top = top;
+    }
+
+    /**
+     * <p>Sets the records page
+     *
+     * @param offset filter offset
+     */
+    public void setFilterOffSet(String offset) {
+        this.offset = offset;
     }
 
     @Override
@@ -754,6 +747,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
     @Override
     public List<DatabaseSelectOperator> getTableSelectOperator() {
         return tableSelectOperator;
+    }
+
+    @Override
+    public String toString() {
+        return tableName;
     }
 }
 
