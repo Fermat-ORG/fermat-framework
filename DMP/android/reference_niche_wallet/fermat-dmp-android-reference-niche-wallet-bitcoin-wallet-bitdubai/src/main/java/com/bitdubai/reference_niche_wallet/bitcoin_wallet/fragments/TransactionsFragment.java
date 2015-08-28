@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -530,7 +531,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-            layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager = new GridLayoutManager(getActivity(),3);
         }
         return layoutManager;
     }
@@ -611,20 +612,6 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
 //        }
 //
 //    }
-
-    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
-        if (cryptoWalletTransaction.getContactId() != null) {
-            try {
-                WalletContactRecord walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
-                return walletContactRecord.getActorName();
-            } catch (Exception e) {
-                System.out.println("esta es para vos mati.");
-            }
-        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
-            return cryptoWalletTransaction.getInvolvedActor().getName();
-        }
-        return "Unknow";
-    }
 
     /**
      *  Set wallet session inside the fragment when is created

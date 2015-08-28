@@ -23,7 +23,7 @@ public class ReferenceWalletPreferenceSettings extends PreferenceWalletSettings{
     BalanceType balanceType;
 
     public ReferenceWalletPreferenceSettings(){
-        transactionToShow=6;
+        transactionToShow=10;
     }
 
     public BalanceType getBalanceType() {
