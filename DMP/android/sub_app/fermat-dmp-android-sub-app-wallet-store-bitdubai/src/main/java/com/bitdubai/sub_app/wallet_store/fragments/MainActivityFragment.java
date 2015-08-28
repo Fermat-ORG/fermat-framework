@@ -140,7 +140,8 @@ public class MainActivityFragment extends FermatListFragment<CatalogueItemDao> i
         try {
             WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
             List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
-            data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems);
+            //todo esto hay que arreglarlo
+            data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems, moduleManager);
         } catch (CantGetRefinedCatalogException e) {
             Log.e("NELSON", "CantGetRefinedCatalogException", e);
             errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
