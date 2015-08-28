@@ -278,7 +278,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              * ----------------------------------------
              */
             InformationPublishedComponentMiddlewareImpl informationPublishedComponentMiddlewareImpl = new InformationPublishedComponentMiddlewareImpl();
-            informationPublishedComponentMiddlewareImpl.setId(UUID.randomUUID());
+            informationPublishedComponentMiddlewareImpl.setId(UUID.randomUUID()); //Todo: Refactor a String para que acepte PublicKey
             informationPublishedComponentMiddlewareImpl.setWalletFactoryProjectId(walletFactoryProject.getProjectPublicKey());
             informationPublishedComponentMiddlewareImpl.setWalletFactoryProjectName(walletFactoryProject.getName());
             informationPublishedComponentMiddlewareImpl.setDescriptions(walletFactoryProject.getDescription());

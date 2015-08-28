@@ -17,7 +17,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
 
     UUID id;
     String name;
-    UUID walletId;
+    UUID walletId; //Todo: Refactor a String para que acepte PublicKey
     Version version;
     Version initialWalletVersion;
     Version finalWalletVersion;

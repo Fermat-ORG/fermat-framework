@@ -13,6 +13,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 public class WalletStoreSubAppSession implements SubAppsSession {
+    public static final String CATALOG_ITEM = "catalog item";
 
     /**
      * SubApps type
@@ -125,9 +126,5 @@ public class WalletStoreSubAppSession implements SubAppsSession {
     @Override
     public int hashCode() {
         return subApps.hashCode();
-    }
-
-    public void setCatalogItemDao(CatalogueItemDao item) {
-        selectedCatalogItem = item;
     }
 }
