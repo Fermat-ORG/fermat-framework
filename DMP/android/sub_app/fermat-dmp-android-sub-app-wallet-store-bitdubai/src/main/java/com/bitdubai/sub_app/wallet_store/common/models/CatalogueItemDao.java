@@ -7,7 +7,11 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.Installat
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DatailedInformationNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.wallet_store.bitdubai.R;
@@ -42,7 +46,7 @@ public class CatalogueItemDao implements Serializable {
      * @throws DatailedInformationNotFoundException
      * @throws CantGetWalletIconException
      */
-    public CatalogueItemDao(WalletStoreCatalogueItem catalogueItem) throws DatailedInformationNotFoundException, CantGetWalletIconException {
+    public CatalogueItemDao(WalletStoreCatalogueItem catalogueItem, WalletStoreModuleManager walletStoreModuleManager) throws DatailedInformationNotFoundException, CantGetWalletIconException {
 
         this.catalogueItem = catalogueItem;
 
@@ -51,7 +55,13 @@ public class CatalogueItemDao implements Serializable {
         InstallationStatus installationStatus = catalogueItem.getInstallationStatus();
         installationStatusText = installationStatus.toString();
 
-        WalletStoreDetailedCatalogItem detailedCatalogItem = catalogueItem.getWalletDetailedCatalogItem();
+        DetailedCatalogItem detailedCatalogItem = null;
+        try {
+            //detailedCatalogItem = (WalletStoreDetailedCatalogItem) catalogueItem.getDetailedCatalogItemImpl();
+            detailedCatalogItem = walletStoreModuleManager.getCatalogItemDetails(catalogueItem.getId());
+        } catch (CantGetWalletsCatalogException e) {
+            e.printStackTrace();
+        }
         DeveloperIdentity developer = detailedCatalogItem.getDeveloper();
         developerName = developer.getAlias();
 
@@ -126,12 +136,12 @@ public class CatalogueItemDao implements Serializable {
         return testItems;
     }
 
-    public static ArrayList<CatalogueItemDao> getDataFromCatalogueItemList(List<WalletStoreCatalogueItem> catalogueItems)
+    public static ArrayList<CatalogueItemDao> getDataFromCatalogueItemList(List<WalletStoreCatalogueItem> catalogueItems, WalletStoreModuleManager walletStoreModuleManager)
             throws DatailedInformationNotFoundException, CantGetWalletIconException {
 
         ArrayList<CatalogueItemDao> data = new ArrayList<>();
         for (WalletStoreCatalogueItem catalogItem : catalogueItems) {
-            CatalogueItemDao item = new CatalogueItemDao(catalogItem);
+            CatalogueItemDao item = new CatalogueItemDao(catalogItem, walletStoreModuleManager);
             data.add(item);
         }
 

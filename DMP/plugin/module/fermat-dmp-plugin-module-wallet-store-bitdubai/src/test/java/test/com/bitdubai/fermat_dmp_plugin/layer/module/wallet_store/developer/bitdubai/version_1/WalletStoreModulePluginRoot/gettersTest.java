@@ -1,34 +1,109 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
 
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalog;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import junit.framework.TestCase;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by rodrigo on 2015.07.07..
  */
-public class gettersTest {
+@RunWith(MockitoJUnitRunner.class)
+public class gettersTest extends TestCase {
+
+    @Mock
+    com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager walletStoreManagerNetworkService;
+    @Mock
+    WalletStoreCatalogue walletStoreCatalogue;
+    @Mock
+    WalletCatalog walletCatalog;
+    @Mock
+    WalletStoreManager walletStoreManager;
+    @Mock
+    ErrorManager errorManager;
+    @Mock
+    LogManager logManager;
+    @Mock
+    com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
+    @Mock
+    PluginDatabaseSystem pluginDatabaseSystem;
+    @Mock
+    PluginFileSystem pluginFileSystem;
+
     final char DOT = '.';
     final char SLASH = '/';
     final String CLASS_SUFFIX = ".class";
     final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
 
+
+    private WalletStoreModulePluginRoot walletStoreModulePluginRoot;
+
+    WalletStoreModuleManager walletStoreModuleManager;
+
+    @Before
+    public void setUp() {
+        walletStoreModulePluginRoot = new WalletStoreModulePluginRoot();
+        walletStoreModulePluginRoot.setWalletStoreManager(walletStoreManagerNetworkService);
+        //dealsWithWalletStoreNetworkService.setWalletStoreManager(walletStoreManagerNetworkService);
+/*        walletStoreModuleManager = new WalletStoreModuleManager(errorManager,logManager,walletStoreManagerMiddleware,walletStoreManagerNetworkService);
+        walletStoreModuleManager.setErrorManager(errorManager);
+        walletStoreModuleManager.setLogManager(logManager);
+        walletStoreModuleManager.setWalletStoreManager(walletStoreManagerMiddleware);
+        walletStoreModuleManager.setWalletStoreManager(walletStoreManagerNetworkService);*/
+        //dealsWithWalletStoreNetworkService.setWalletStoreManager(walletStoreManager);
+    }
+
+    @Ignore
+    @Test
+    public void getCatalogueTest() throws CantGetRefinedCatalogException {
+        try {
+            // when(walletStoreManager.getWalletCatalogue()).thenReturn(walletCatalog);
+
+            //when(walletStoreModuleManager.getCatalogue()).thenReturn(walletStoreCatalogue);
+            //when(walletStoreManagerNetworkService).thenReturn(walletCatalog);
+            walletStoreManagerNetworkService.getWalletCatalogue();
+            walletStoreModulePluginRoot.getWalletStoreModuleManager();
+            walletStoreModulePluginRoot.getCatalogue();
+        } catch (CantGetWalletsCatalogException e) {
+            e.printStackTrace();
+        }
+        System.out.println("paso ");
+//Assert.assertNotEquals(walletStoreCatalogue, walletStoreModuleManager.getCatalogue());
+
+    }
+
     @Test
     public void generateClassesTree() throws ClassNotFoundException {
 
-        String scannedPackage = WalletContactsMiddlewarePluginRoot.class.getPackage().getName();
-        List<Class<?>> classes = find(WalletContactsMiddlewarePluginRoot.class.getPackage().getName());
-        WalletContactsMiddlewarePluginRoot root = new WalletContactsMiddlewarePluginRoot();
+        List<Class<?>> classes = find(WalletStoreModulePluginRoot.class.getPackage().getName());
 
-
-        for (String myClass : root.getClassesFullPath()) {
+        for (String myClass : walletStoreModulePluginRoot.getClassesFullPath()) {
             /**
              * True if it exists
              */
@@ -37,7 +112,7 @@ public class gettersTest {
 
     }
 
-    private  List<Class<?>> find (String scannedPackage) {
+    private List<Class<?>> find(String scannedPackage) {
         String scannedPath = scannedPackage.replace(DOT, SLASH);
         URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
         if (scannedUrl == null) {
@@ -69,5 +144,11 @@ public class gettersTest {
         }
         return classes;
     }
+
+    @Test
+    public void getWalletStoreModuleManagerTest_ValidWalletNotNULL() {
+        Assert.assertNotNull(walletStoreModulePluginRoot.getWalletStoreModuleManager());
+    }
+
 
 }

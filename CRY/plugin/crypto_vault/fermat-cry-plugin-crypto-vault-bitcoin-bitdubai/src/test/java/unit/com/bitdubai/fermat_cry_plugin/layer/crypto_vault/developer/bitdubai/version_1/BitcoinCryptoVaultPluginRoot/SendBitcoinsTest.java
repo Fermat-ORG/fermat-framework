@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
@@ -124,24 +125,25 @@ public class SendBitcoinsTest {
         when(mockDeviceUserManager.getLoggedInDeviceUser()).thenReturn(mockDeviceUser);
 
         when(mockDeviceUser.getPublicKey()).thenReturn(userPublicKey);
-        when(mockCryptoAddress.getAddress()).thenReturn("17kzeh4N8g49GFvdDzSf8PjaPfyoD1MndL");
+        when(mockCryptoAddress.getAddress()).thenReturn("mwTdg897T6WEFRnFVm87APwpUeQb6jMgi6");
 
         bitcoinCryptoVaultPluginRoot.start();
     }
 
-   @Ignore
-    public void sendBitcoinsTest_SendOk_ThrowsCouldNotSendMoneyException() throws Exception {
-       //TODO: no valida la address como bien formada porque no coincide la version del NetworkParameters cuando valida en el constructor de la clase Address
+   @Test
+    public void sendBitcoinsTest_SendGeneralException_ThrowsCouldNotSendMoneyException() throws Exception {
 
-       String txHash = bitcoinCryptoVaultPluginRoot.sendBitcoins(UUID.randomUUID().toString(),UUID.randomUUID(),mockCryptoAddress,100);
+       catchException(bitcoinCryptoVaultPluginRoot).sendBitcoins(UUID.randomUUID().toString(), UUID.randomUUID(), mockCryptoAddress, 100);
 
-        Assertions.assertThat(txHash)
-                .isNotNull();
+
+        Assertions.assertThat(caughtException())
+                .isNotNull().isInstanceOf(CouldNotSendMoneyException.class);
     }
 
     @Test
     public void sendBitcoinsTest_SendError_ThrowsCouldNotSendMoneyException() throws Exception {
 
+        when(mockCryptoAddress.getAddress()).thenReturn("xxx");
         catchException(bitcoinCryptoVaultPluginRoot).sendBitcoins(UUID.randomUUID().toString(),UUID.randomUUID(),mockCryptoAddress,100);
 
         assertThat(caughtException())

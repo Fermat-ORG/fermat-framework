@@ -145,28 +145,46 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
         StringBuffer buffer = new StringBuffer();
 
         buffer.append("SELECT TABLES:");
+        if (selectTables == null)
+            selectTables = new ArrayList<>();
+
         for(DatabaseTable table : selectTables)
             buffer.append(" " + table.toString());
         buffer.append("\n");
 
         buffer.append("SELECT RECORDS:");
+
+        if (selectRecords == null)
+            selectRecords = new ArrayList<>();
         for(DatabaseTableRecord record : selectRecords)
             buffer.append(" " + record.toString());
         buffer.append("\n");
 
         buffer.append("INSERT TABLES:");
+
+        if (insertTables == null)
+            insertTables = new ArrayList<>();
         for(DatabaseTable table : insertTables)
             buffer.append(" " + table.toString());
         buffer.append("\n");
         buffer.append("INSERT RECORDS:");
+
+        if (insertRecords == null)
+            insertRecords = new ArrayList<>();
         for(DatabaseTableRecord record : insertRecords)
             buffer.append(" " + record.toString());
         buffer.append("\n");
         buffer.append("UPDATE TABLES:");
+
+        if (updateTables == null)
+            updateTables = new ArrayList<>();
         for(DatabaseTable table : updateTables)
             buffer.append(" " + table.toString());
         buffer.append("\n");
         buffer.append("UPDATE RECORDS:");
+
+        if (updateRecords == null)
+            updateRecords = new ArrayList<>();
         for(DatabaseTableRecord record : updateRecords)
             buffer.append(" " + record.toString());
         return buffer.toString();

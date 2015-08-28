@@ -26,11 +26,7 @@ public interface DatabaseTable {
 
     public DatabaseTableColumn newColumn();
 
-    public List<String> getColumns();
-
     public List<DatabaseTableRecord> getRecords();
-
-    public List<DatabaseVariable> getVariablesResult();
 
     public DatabaseTableRecord getEmptyRecord();
 
@@ -43,8 +39,6 @@ public interface DatabaseTable {
     public DatabaseTableFilter getEmptyTableFilter();
 
     public DatabaseTableFilterGroup getEmptyTableFilterGroup();
-
-    public void selectRecord (DatabaseTableRecord record) throws CantSelectRecordException;
 
     public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
 
@@ -68,13 +62,15 @@ public interface DatabaseTable {
 
     public void setFilterOffSet(String offset);
 
-    public void setVarialbesResult(List<DatabaseVariable> variables);
-
     public void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
 
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
 
     public DatabaseTableRecord getRecordFromPk(String pk) throws Exception;
 
+    // modif leon
+    String makeFilter();
+    String getTableName();
+    List<DatabaseSelectOperator> getTableSelectOperator();
 
 }
