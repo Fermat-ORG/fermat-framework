@@ -1,12 +1,16 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +19,31 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsFromCatalogueException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DatailedInformationNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
@@ -53,7 +69,7 @@ import java.util.Set;
 /**
  * Created by Matias Furszyfer
  */
-public class TransactionsFragment extends Fragment{
+public class TransactionsFragment extends FermatListFragment implements FermatListItemListeners<Item> {
 
     private static final String ARG_POSITION = "position";
 
@@ -120,7 +136,7 @@ public class TransactionsFragment extends Fragment{
     WalletResourcesProviderManager walletResourcesProviderManager;
     private boolean isLoading=false;
 
-    private EntryAdapter adapter;
+    //private EntryAdapter adapter;
 
     /**
      *
@@ -165,10 +181,10 @@ public class TransactionsFragment extends Fragment{
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    //@Override
+   // public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        try {
+        /*try {
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
             // Get ListView object from xml
             listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
@@ -187,7 +203,6 @@ public class TransactionsFragment extends Fragment{
 
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
             lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
-
             // Set the emptyView to the ListView
             TextView textViewEmptyListView = (TextView) rootView.findViewById(R.id.emptyElement);
 
@@ -196,9 +211,9 @@ public class TransactionsFragment extends Fragment{
                 listViewTransactions.setEmptyView(textViewEmptyListView);
             }
 
-            /**
+            *//**
              * Setting swipe Refresh
-             */
+             *//*
             swipeRefreshLayout.setColorSchemeColors(R.color.green);
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -239,8 +254,8 @@ public class TransactionsFragment extends Fragment{
 
                 private void isScrollCompleted() {
                     if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
-                        /*** In this way I detect if there's been a scroll which has completed ***/
-                        /*** do the work for load more date! ***/
+                        *//*** In this way I detect if there's been a scroll which has completed ***//*
+                        *//*** do the work for load more date! ***//*
                         if(!isLoading){
                             isLoading = true;
                             //loadMoreDAta();
@@ -251,9 +266,9 @@ public class TransactionsFragment extends Fragment{
             });
 
 
-            /**
+            *//**
              * Load transactions
-             */
+             *//*
             loadTransactionMap();
 
 
@@ -265,9 +280,9 @@ public class TransactionsFragment extends Fragment{
                 }
             }
 
-            /**
+            *//**
              *
-             */
+             *//*
             adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
 
@@ -299,10 +314,28 @@ public class TransactionsFragment extends Fragment{
 //        Drawable drawable = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
 //        imageView.setImageDrawable(drawable);
 
-        return rootView;
+        return rootView;*/
+    //}
+
+    /**
+     * Determine if this fragment use menu
+     *
+     * @return true if this fragment has menu, otherwise false
+     */
+    @Override
+    protected boolean hasMenu() {
+        return false;
     }
 
-
+    /**
+     * Get layout resource
+     *
+     * @return int layout resource Ex: R.layout.fragment_view
+     */
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.transactions;
+    }
 
 
     /**
@@ -400,82 +433,167 @@ public class TransactionsFragment extends Fragment{
         this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
+    /**
+     * onItem click listener event
+     *
+     * @param data
+     * @param position
+     */
+    @Override
+    public void onItemClickListener(Item data, int position) {
+        if (data != null) {
+            /*setting up fragment instance*/
+//            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance(0);
+//            fragment.setSubAppsSession(subAppsSession);
+//            fragment.setSubAppSettings(subAppSettings);
+//            fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
+//            /*transactions*/
+//            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
+//            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//            FT.replace(R.id.activity_container, fragment);
+//            FT.addToBackStack(null);
+//            FT.commit();
+            Toast.makeText(getActivity(),data.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
-     * List Item adapter
+     * On Long item Click Listener
+     *
+     * @param data
+     * @param position
      */
-
-    public class EntryAdapter extends ArrayAdapter<Item> {
-
-        private Context context;
-        private ArrayList<Item> items;
-        private LayoutInflater vi;
-
-        public EntryAdapter(Context context,ArrayList<Item> items) {
-            super(context,0, items);
-            this.context = context;
-            this.items = items;
-            vi = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-
-            final Item item = items.get(position);
-            if (item != null) {
-                if(item.isSection()){
-                    SectionItem si = (SectionItem)item;
-                    v = vi.inflate(R.layout.list_item_section, null);
-
-                    v.setOnClickListener(null);
-                    v.setOnLongClickListener(null);
-                    v.setLongClickable(false);
-
-                    final TextView sectionView = (TextView) v.findViewById(R.id.list_item_section_text);
-                    sectionView.setText(si.getTitle());
-
-                }else{
-                    EntryItem entryItem = (EntryItem)item;
-                    /**
-                     * Getting Views
-                     */
-                    v = vi.inflate(R.layout.wallets_bitcoin_fragment_transactions_list_items2,null);
-                    final TextView textView_contact_name =(TextView)v.findViewById(R.id.textView_contact_name);
-                    final TextView textView_type =(TextView)v.findViewById(R.id.textView_type);
-                    final TextView textView_amount =(TextView)v.findViewById(R.id.textView_amount);
-                    final TextView textView_time =(TextView)v.findViewById(R.id.textView_time);
-                    final ImageView imageView_contact =(ImageView)v.findViewById(R.id.imageView_contact);
-
-                    /**
-                     * Setting values and validations
-                     */
-                    if (textView_contact_name != null) {
-                        String actorName = getActorNameProvisorio(entryItem.cryptoWalletTransaction);
-                        textView_contact_name.setText(actorName);
-                    }
-
-                    if(textView_amount != null)
-                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode()));
-                    if(textView_time!=null){
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
-                    }
-                    if(textView_type!=null){
-                        if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.CREDIT){
-                            textView_type.setText(R.string.credit);
-                        }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.DEBIT){
-                            textView_type.setText(R.string.debit);
-                        }
-                    }
-
-                }
-            }
-            return v;
-        }
+    @Override
+    public void onLongItemClickListener(Item data, int position) {
 
     }
+
+    @Override
+    public RecyclerView getRecycler(View rootView) {
+        if (recyclerView == null) {
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.transactions_recycler_view);
+        }
+        return recyclerView;
+    }
+
+    @Override
+    public FermatAdapter getAdapter() {
+        if (adapter == null) {
+            //ErrorManager errorManager = subAppsSession.getErrorManager();
+            //ArrayList<Item> data = CatalogueItemDao.getTestData(getResources());
+            try {
+                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
+                BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
+                lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
+
+                /**
+                 * Load transactions
+                 */
+                loadTransactionMap();
+
+
+                for (Date date: mapTransactionPerDate.keySet()){
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                    items.add(new SectionItem(sdf.format(date)));
+                    for(CryptoWalletTransaction cryptoWalletTransaction: mapTransactionPerDate.get(date)){
+                        items.add(new EntryItem(cryptoWalletTransaction));
+                    }
+                }
+
+            } catch (CantGetTransactionsException e) {
+                e.printStackTrace();
+            }
+            adapter = new TransactionAdapter(getActivity(), items);
+            ((TransactionAdapter) adapter).setFermatListEventListener(this); // setting up event listeners
+
+        }
+        return adapter;
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity());
+        }
+        return layoutManager;
+    }
+
+
+//    /**
+//     * List Item adapter
+//     */
+//
+//    public class EntryAdapter extends ArrayAdapter<Item> {
+//
+//        private Context context;
+//        private ArrayList<Item> items;
+//        private LayoutInflater vi;
+//
+//        public EntryAdapter(Context context,ArrayList<Item> items) {
+//            super(context,0, items);
+//            this.context = context;
+//            this.items = items;
+//            vi = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        }
+//
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            View v = convertView;
+//
+//            final Item item = items.get(position);
+//            if (item != null) {
+//                if(item.isSection()){
+//                    SectionItem si = (SectionItem)item;
+//                    v = vi.inflate(R.layout.list_item_section, null);
+//
+//                    v.setOnClickListener(null);
+//                    v.setOnLongClickListener(null);
+//                    v.setLongClickable(false);
+//
+//                    final TextView sectionView = (TextView) v.findViewById(R.id.list_item_section_text);
+//                    sectionView.setText(si.getTitle());
+//
+//                }else{
+//                    EntryItem entryItem = (EntryItem)item;
+//                    /**
+//                     * Getting Views
+//                     */
+//                    v = vi.inflate(R.layout.wallets_bitcoin_fragment_transactions_list_items2,null);
+//                    final TextView textView_contact_name =(TextView)v.findViewById(R.id.textView_contact_name);
+//                    final TextView textView_type =(TextView)v.findViewById(R.id.textView_type);
+//                    final TextView textView_amount =(TextView)v.findViewById(R.id.textView_amount);
+//                    final TextView textView_time =(TextView)v.findViewById(R.id.textView_time);
+//                    final ImageView imageView_contact =(ImageView)v.findViewById(R.id.imageView_contact);
+//
+//                    /**
+//                     * Setting values and validations
+//                     */
+//                    if (textView_contact_name != null) {
+//                        String actorName = getActorNameProvisorio(entryItem.cryptoWalletTransaction);
+//                        textView_contact_name.setText(actorName);
+//                    }
+//
+//                    if(textView_amount != null)
+//                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode()));
+//                    if(textView_time!=null){
+//                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+//                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+//                    }
+//                    if(textView_type!=null){
+//                        if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.CREDIT){
+//                            textView_type.setText(R.string.credit);
+//                        }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.DEBIT){
+//                            textView_type.setText(R.string.debit);
+//                        }
+//                    }
+//
+//                }
+//            }
+//            return v;
+//        }
+//
+//    }
 
     private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
         if (cryptoWalletTransaction.getContactId() != null) {
