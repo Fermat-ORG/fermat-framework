@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.sub_app.wallet_store.common.UtilsFuncs;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.wallet_store.bitdubai.R;
 
@@ -36,10 +38,15 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListIt
     @Override
     protected void bindHolder(CatalogItemViewHolder holder, WalletStoreListItem data, int position) {
         holder.walletName.setText(data.getWalletName());
-        holder.installStatus.setText(data.getInstallationStatusText());
         holder.walletIcon.setImageDrawable(data.getWalletIcon());
         holder.walletPublisherName.setText("Publisher Name");
+
+        InstallationStatus installStatus = data.getInstallationStatus();
+        int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
+        holder.installStatus.setText(resId);
     }
+
+
 
     class CatalogItemViewHolder extends FermatViewHolder {
         ImageView walletIcon;

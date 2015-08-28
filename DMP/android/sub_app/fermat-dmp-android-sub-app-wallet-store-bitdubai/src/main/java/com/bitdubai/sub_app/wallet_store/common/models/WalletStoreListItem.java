@@ -22,7 +22,7 @@ public class WalletStoreListItem implements Serializable {
     private static final long serialVersionUID = -8730067026050196759L;
 
 
-    private String installationStatusText;
+    private InstallationStatus installationStatus;
     private String walletName;
     private String description;
     private Drawable walletIcon;
@@ -43,8 +43,7 @@ public class WalletStoreListItem implements Serializable {
 
         description = catalogueItem.getDescription();
 
-        InstallationStatus installationStatus = catalogueItem.getInstallationStatus();
-        installationStatusText = installationStatus.toString();
+        installationStatus = catalogueItem.getInstallationStatus();
 
 
         try {
@@ -62,8 +61,8 @@ public class WalletStoreListItem implements Serializable {
         return description;
     }
 
-    public String getInstallationStatusText() {
-        return installationStatusText;
+    public InstallationStatus getInstallationStatus() {
+        return installationStatus;
     }
 
     public String getWalletName() {
@@ -79,9 +78,9 @@ public class WalletStoreListItem implements Serializable {
     }
 
 
-    private WalletStoreListItem(String walletName, String installationStatusText, Drawable walletIcon) {
+    private WalletStoreListItem(String walletName, InstallationStatus installationStatus, Drawable walletIcon) {
         this.walletName = walletName;
-        this.installationStatusText = installationStatusText;
+        this.installationStatus = installationStatus;
         this.walletIcon = walletIcon;
     }
 
@@ -95,8 +94,11 @@ public class WalletStoreListItem implements Serializable {
         String[] prices = {"FREE", "$9.25", "FREE", "$7.65", "$5.32", "FREE", "$3.98", "FREE", "$0.24", "$3.40",
                 "FREE", "FREE", "20.01", "$1.00", "FREE", "FREE", "$3.21"};
 
-        boolean[] installed = {true, true, true, true, true, true, true, true, false, false, false, true,
-                false, false, false, false, false};
+        InstallationStatus[] installed = {InstallationStatus.INSTALLED, InstallationStatus.INSTALLED, InstallationStatus.INSTALLED,
+                InstallationStatus.INSTALLED, InstallationStatus.INSTALLED, InstallationStatus.INSTALLED, InstallationStatus.INSTALLED,
+                InstallationStatus.INSTALLED, InstallationStatus.NOT_INSTALLED, InstallationStatus.UPGRADE_AVAILABLE, InstallationStatus.NOT_INSTALLED,
+                InstallationStatus.INSTALLED, InstallationStatus.UPGRADE_AVAILABLE, InstallationStatus.NOT_INSTALLED, InstallationStatus.NOT_INSTALLED,
+                InstallationStatus.NOT_INSTALLED, InstallationStatus.NOT_INSTALLED};
 
         int[] walletIcons = {R.drawable.wallet_store_cover_photo_girl, R.drawable.wallet_store_cover_photo_boy,
                 R.drawable.wallet_store_cover_photo_lady, R.drawable.wallet_store_cover_photo_young,
@@ -110,9 +112,8 @@ public class WalletStoreListItem implements Serializable {
 
         ArrayList<WalletStoreListItem> testItems = new ArrayList<>();
         for (int i = 0; i < walletIcons.length && i < installed.length && i < prices.length && i < walletNames.length; i++) {
-            String installedStr = installed[i] ? "INSTALLED" : prices[i];
             Drawable icon = res.getDrawable(walletIcons[i]);
-            WalletStoreListItem item = new WalletStoreListItem(walletNames[i], installedStr, icon);
+            WalletStoreListItem item = new WalletStoreListItem(walletNames[i], installed[i], icon);
             testItems.add(item);
         }
 

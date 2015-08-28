@@ -15,8 +15,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.sub_app.wallet_store.common.UtilsFuncs;
 import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
@@ -93,15 +95,6 @@ public class DetailsActivityFragment extends FermatFragment {
         FermatTextView totalInstalls = (FermatTextView) rootView.findViewById(R.id.wallet_total_installs);
         totalInstalls.setText("10"); // TODO Obtener valor correcto
 
-        FermatButton installButton = (FermatButton) rootView.findViewById(R.id.wallet_install_button);
-        installButton.setText(catalogItem.getInstallationStatusText());
-        installButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "Installing...", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         FermatTextView readMoreLink = (FermatTextView) rootView.findViewById(R.id.read_more_link);
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,9 +103,31 @@ public class DetailsActivityFragment extends FermatFragment {
             }
         });
 
-        RecyclerView previewImagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
-        FermatTextView noPreviewImages = (FermatTextView) rootView.findViewById(R.id.no_preview_images);
+        FermatButton installButton = (FermatButton) rootView.findViewById(R.id.wallet_install_button);
+        InstallationStatus installStatus = catalogItem.getInstallationStatus();
+        int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
+        resId = (resId == R.string.wallet_status_installed) ? R.string.wallet_status_open : resId;
+        installButton.setText(resId);
+        installButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "Installing...", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        if (resId != R.string.wallet_status_install) {
+            FermatButton uninstallButton = (FermatButton) rootView.findViewById(R.id.wallet_uninstall_button);
+            uninstallButton.setText(R.string.wallet_status_uninstall);
+            uninstallButton.setVisibility(View.VISIBLE);
+            uninstallButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getActivity(), "Uninstalling...", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        RecyclerView previewImagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
         if (walletPreviewImgList != null) {
             LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);
             previewImagesRecyclerView.setLayoutManager(layout);
@@ -122,6 +137,8 @@ public class DetailsActivityFragment extends FermatFragment {
 
         } else {
             previewImagesRecyclerView.setVisibility(View.GONE);
+
+            FermatTextView noPreviewImages = (FermatTextView) rootView.findViewById(R.id.no_preview_images);
             noPreviewImages.setVisibility(View.VISIBLE);
         }
 
