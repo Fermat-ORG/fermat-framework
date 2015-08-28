@@ -578,24 +578,42 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Publisher");
-
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            runtimeTabStrip = new TabStrip();
-            runtimeTabStrip.setTabsColor("#d07b62");
-            runtimeTabStrip.setTabsTextColor("#FFFFFF");
-            runtimeTabStrip.setTabsIndicateColor("#b46a54");
-
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Wallet Publisher");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT);
-
-            runtimeTabStrip.addTab(runtimeTab);
-
-            runtimeActivity.setTabStrip(runtimeTabStrip);
-
             runtimeSubApp.addActivity(runtimeActivity);
 
+            runtimeSideMenu = new SideMenu();
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Personal Wallets");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Shops");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Commercial wallets");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Factory Projects");
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Published Wallets");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Wallet Store");
+            runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Exit");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setSideMenu(runtimeSideMenu);
 
 
             runtimeFragment = new Fragment();

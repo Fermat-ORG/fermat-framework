@@ -1,6 +1,6 @@
 
 
-include ':fermat-android-core', ':fermat-pip-plugin-network-service-subapp-resources-bitdubai', ':fermat-dmp-plugin-identity-translator-bitdubai', ':fermat-dap-api', ':fermat-dap-plugin-transaction-incoming-issuer-bitdubai', ':fermat-dap-network-service-asset-transmission-bitdubai', ':fermat-dap-plugin-identity-issuer-bitdubai', ':fermat-dap-plugin-network-service-asset-transmission-bitdubai', 'fermat-dmp-plugin-identity-translator-bitdubai'
+include ':fermat-android-core', ':fermat-pip-plugin-network-service-subapp-resources-bitdubai', ':fermat-dmp-plugin-identity-translator-bitdubai', ':fermat-dap-api', ':fermat-dap-plugin-transaction-incoming-issuer-bitdubai', ':fermat-dap-network-service-asset-transmission-bitdubai', ':fermat-dap-plugin-identity-issuer-bitdubai', ':fermat-dap-plugin-network-service-asset-transmission-bitdubai', ':fermat-dap-plugin-transaction-outgoing-intra-user-bitdubai', ':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai', ':fermat-dap-plugin-transaction-asset-issuing-bitdubai', 'fermat-dmp-plugin-identity-translator-bitdubai'
 include ':fermat-android-api'
 
 include ':fermat-core'
@@ -415,12 +415,21 @@ project(':fermat-dmp-plugin-identity-translator-bitdubai').projectDir = new File
 
 
 // DAP Projects
+include ':fermat-dap-plugin-transaction-asset-issuing-bitdubai'
+project(':fermat-dap-plugin-transaction-asset-issuing-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-asset-issuing-bitdubai')
 
 include ':fermat-dap-plugin-transaction-incoming-issuer-bitdubai'
 project(':fermat-dap-plugin-transaction-incoming-issuer-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-incoming-issuer-bitdubai')
+
+include ':fermat-dap-plugin-transaction-outgoing-intra-user-bitdubai'
+project(':fermat-dap-plugin-transaction-outgoing-intra-user-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-outgoing-intra-user-bitdubai')
+
+include ':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai'
+project(':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-outgoing-issuer-bitdubai')
 
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
 project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
 
 include ':fermat-dap-plugin-identity-issuer-bitdubai'
 project(':fermat-dap-plugin-identity-issuer-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-issuer-bitdubai')
+
