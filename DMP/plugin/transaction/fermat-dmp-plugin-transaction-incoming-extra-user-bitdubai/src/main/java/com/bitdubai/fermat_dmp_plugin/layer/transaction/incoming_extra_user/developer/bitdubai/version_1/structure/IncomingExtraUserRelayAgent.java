@@ -142,17 +142,13 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     }
 
     public boolean isRunning(){
-        if(this.relayAgent == null)
-            return false;
-
-        return this.relayAgent.isRunning();
+        return this.relayAgent != null && this.relayAgent.isRunning();
     }
 
     @Override
     public void stop()  {
         if(isRunning())
             this.relayAgent.stop();
-
     }
 
 
@@ -242,6 +238,8 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             try {
                 responsibleTransactionList.addAll(registry.getResponsibleTBATransactions());
             } catch (InvalidParameterException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             }
 

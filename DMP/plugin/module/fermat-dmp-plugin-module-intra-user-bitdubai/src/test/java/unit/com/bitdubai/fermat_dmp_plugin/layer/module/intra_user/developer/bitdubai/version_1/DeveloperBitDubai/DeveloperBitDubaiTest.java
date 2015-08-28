@@ -10,6 +10,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by natalia on 28/08/15.
+ * a
  */
 public class DeveloperBitDubaiTest {
 
@@ -21,7 +22,7 @@ public class DeveloperBitDubaiTest {
     }
 
     @Test
-    public void GetPluging() {
+    public void testGetPlugin() {
         assertThat(developTest.getPlugin()).isInstanceOf(IntraUserModulePluginRoot.class);
     }
 }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
@@ -419,7 +420,6 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
     private List<CatalogItemImpl> getAllCatalogItemsFromDatabase() throws InvalidResultReturnedByDatabaseException, CantExecuteDatabaseOperationException{
         List<CatalogItemImpl> catalogItemImpls = new ArrayList<CatalogItemImpl>();
 
-
         List<DatabaseTableRecord> records = getAllRecordsFromDatabase(WalletStoreCatalogDatabaseConstants.ITEM_TABLE_NAME);
 
         for (DatabaseTableRecord record : records){
@@ -475,22 +475,20 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         };
         List<DatabaseTableRecord> records = getRecordsFromDatabase(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TABLE_NAME, tableFilter);
 
-        List<Language> languages = new ArrayList<Language>();
+        List<com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language> languages = new ArrayList<>();
         for (DatabaseTableRecord record : records){
-            languages.add(getLanguageFromDatabase(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME)));
+            languages.add((com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language) getLanguageFromDatabase(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME)));
         }
 
         if (languages.size() == 0)
             throw new InvalidResultReturnedByDatabaseException(null, "Id: " + tableFilter.getValue() + " number of records: " + records.size(), "database inconsistency");
 
-        for (Language language : languages){
+        for (com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language language : languages){
             if (language.isDefault())
                 detailedCatalogItemImpl.setLanguage(language);
         }
 
-
-        //todo resolver
-        //detailedCatalogItemImpl.setLanguages(languages);
+        detailedCatalogItemImpl.setLanguages(languages);
 
         /**
          * Get skin records from database
@@ -527,7 +525,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
             }
         };
 
-        List<Skin> skins = new ArrayList<Skin>();
+        List<com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin> skins = new ArrayList<>();
         records = getRecordsFromDatabase(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME, tableFilter);
 
         for (DatabaseTableRecord record : records){
@@ -536,13 +534,13 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         if (skins.size() == 0)
             throw new InvalidResultReturnedByDatabaseException(null, "Id: " + tableFilter.getValue() + " number of records: " + records.size(), "database inconsistency");
 
-        for (Skin skin : skins){
+        for (com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin : skins){
             if (skin.isDefault())
                 detailedCatalogItemImpl.setDefaultSkin(skin);
         }
 
-        //todo why this does not work?
-        //detailedCatalogItemImpl.setSkins(skins);
+
+        detailedCatalogItemImpl.setSkins(skins);
 
         /**
          * Get rest of Item information from item table
@@ -741,12 +739,14 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
 
         DatabaseTableRecord record = records.get(0);
         Skin skin = new Skin();
-        skin.setId(walletId);
+        skin.setId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME));
+        skin.setWalletId(walletId);
         skin.setName(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME));
-        skin.setWalletId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME));
         skin.setInitialWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME)));
         skin.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME)));
         skin.setVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME)));
+        skin.setIsDefault(Boolean.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME)));
+        skin.setScreenSize(ScreenSize.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SCREEN_SIZE)));
 
         Designer designer = getDesigner(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME));
         skin.setDesigner(designer);
@@ -802,20 +802,19 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
 
         DatabaseTableRecord record = records.get(0);
         Language language = new Language();
-        language.setId(walletId);
+        language.setWalletId(walletId);
+        language.setId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME));
         language.setLanguageName(Languages.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME)));
         language.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME)));
         language.setInitialWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME)));
         language.setVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME)));
-        language.setIsDefault(Boolean.getBoolean(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME)));
+        language.setIsDefault(Boolean.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME)));
         language.setLanguageLabel(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME));
         language.setLanguagePackageSizeInBytes(record.getIntegerValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME));
 
         Translator translator = getTranslator(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME));
         language.setTranslator(translator);
 
-
-        language.setWalletId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME));
 
         return language;
 
@@ -905,7 +904,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
      */
     public Translator getTranslator(UUID translatorId) throws CantExecuteDatabaseOperationException {
         try{
-            DatabaseTableRecord record = getDesignerRecord(translatorId);
+            DatabaseTableRecord record = getTranslatorRecord(translatorId);
             Translator translator= new Translator();
             translator.setId(translatorId);
             translator.setAlias(record.getStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME));

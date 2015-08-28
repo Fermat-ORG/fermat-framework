@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.*;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,7 +29,7 @@ public interface CryptoWallet extends Serializable{
      * @return a list of instances of wallet contact records
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    List<WalletContactRecord> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
+    List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
 
     /**
      * List all wallet contact related to an specific wallet.
@@ -41,7 +40,7 @@ public interface CryptoWallet extends Serializable{
      * @return a list of instances of wallet contact records
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    List<WalletContactRecord> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException;
+    List<CryptoWalletWalletContact> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException;
 
     /**
      * Create a new contact for an specific wallet
@@ -54,11 +53,11 @@ public interface CryptoWallet extends Serializable{
      * @return an instance of the created publick key
      * @throws CantCreateWalletContactException if something goes wrong
      */
-    WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress,
-                                            String actorName,
-                                            Actors actorType,
-                                            ReferenceWallet referenceWallet,
-                                            String walletPublicKey) throws CantCreateWalletContactException;
+    CryptoWalletWalletContact createWalletContact(CryptoAddress receivedCryptoAddress,
+                                                  String actorName,
+                                                  Actors actorType,
+                                                  ReferenceWallet referenceWallet,
+                                                  String walletPublicKey) throws CantCreateWalletContactException;
 
     /**
      * Create a new contact with a photo for an specific wallet
@@ -72,11 +71,11 @@ public interface CryptoWallet extends Serializable{
      * @return an instance of the created publick key
      * @throws CantCreateWalletContactException if something goes wrong
      */
-    WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress,
-                                            String actorName, Actors actorType,
-                                            ReferenceWallet referenceWallet,
-                                            String walletPublicKey,
-                                            byte[] photo) throws CantCreateWalletContactException;
+    CryptoWalletWalletContact createWalletContact(CryptoAddress receivedCryptoAddress,
+                                                  String actorName, Actors actorType,
+                                                  ReferenceWallet referenceWallet,
+                                                  String walletPublicKey,
+                                                  byte[] photo) throws CantCreateWalletContactException;
 
     /**
      * updates the photo of an actor
@@ -110,10 +109,10 @@ public interface CryptoWallet extends Serializable{
      * @throws CantFindWalletContactException
      * @throws WalletContactNotFoundException
      */
-    WalletContactRecord findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException;
+    CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException;
 
-    List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName,
-                                                                               String walletPublicKey) throws CantGetWalletContactException;
+    List<CryptoWalletWalletContact> getWalletContactByNameContainsAndWalletPublicKey(String actorName,
+                                                                                     String walletPublicKey) throws CantGetWalletContactException;
 
     boolean isValidAddress(CryptoAddress cryptoAddress);
 

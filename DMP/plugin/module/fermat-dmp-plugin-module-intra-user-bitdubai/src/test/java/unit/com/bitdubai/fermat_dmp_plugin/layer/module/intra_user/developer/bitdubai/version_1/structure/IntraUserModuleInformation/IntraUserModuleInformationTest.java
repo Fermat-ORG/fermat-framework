@@ -8,12 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.UUID;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by natalia on 28/08/15.
+ * a
  */
 public class IntraUserModuleInformationTest {
 
@@ -26,12 +25,9 @@ public class IntraUserModuleInformationTest {
     @Mock
     private PluginFileSystem mockPluginFileSystem;
 
-    private UUID pluginId;
 
     @Before
     public void setUpVariable1(){
-        pluginId = UUID.randomUUID();
-
         name = "alias_1";
         publicKey = "publicKey_1";
         profileImage = new byte[10];
