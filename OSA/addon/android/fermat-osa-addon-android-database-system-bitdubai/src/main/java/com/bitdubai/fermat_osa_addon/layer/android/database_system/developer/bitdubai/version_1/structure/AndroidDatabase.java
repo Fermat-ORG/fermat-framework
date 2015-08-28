@@ -35,15 +35,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 
 /**
- * Created by ciencias on 23.12.14.
- * Modified by Leon Acosta (laion.cj91@gmail.com) on 27/08/2015.
- */
-
-/**
  * This class define methods to execute query and transactions on database
  * And method to get a database table definition
  * <p/>
- * *
+ *
+ * Created by ciencias on 23.12.14.
+ * Modified by Leon Acosta (laion.cj91@gmail.com) on 27/08/2015.
  */
 
 public class AndroidDatabase implements Database, DatabaseFactory, Serializable {
@@ -51,7 +48,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * database Interface member variables.
      */
-
     private Context context;
 
     private String databaseName;
@@ -122,7 +118,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      */
     @Override
     public DatabaseTransaction newTransaction() {
-
         return new AndroidDatabaseTransaction();
     }
 
@@ -147,10 +142,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException {
 
         if (transaction == null) {
-            String message = DatabaseTransactionFailedException.DEFAULT_MESSAGE;
             String context = "Transaction: null";
             String possibleReason = "The passed transaction can't be null";
-            throw new DatabaseTransactionFailedException(message, null, context, possibleReason);
+            throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
         List<DatabaseVariable> variablesResult = new ArrayList<>();
@@ -182,18 +176,14 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
             database.setTransactionSuccessful();
 
         } catch (Exception exception) {
-
             /**
              * for error not complete transaction
              */
-            String message = DatabaseTransactionFailedException.DEFAULT_MESSAGE;
-            FermatException cause = exception instanceof FermatException ? (FermatException) exception : FermatException.wrapException(exception);
-            String context = "Dabatase Name: " + databaseName;
+            String context = "Database Name: " + databaseName;
             context += DatabaseTransactionFailedException.CONTEXT_CONTENT_SEPARATOR;
             context += transaction.toString();
             String possibleReason = "The most reasonable thing to do here is check the cause as this is a triggered exception that can come from many situations";
-
-            throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
+            throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, exception, context, possibleReason);
 
         } finally {
             if(database != null) {
@@ -354,60 +344,40 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     }
 
     public SQLiteDatabase getWritableDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
-        String databasePath;
-
-        if (ownerId != null)
-            databasePath = context.getFilesDir().getPath() + "/databases/" + ownerId.toString();
-        else
-            databasePath = context.getFilesDir().getPath() + "/databases/";
-
-        databasePath += "/" + databaseName.replace("-", "") + ".db";
+        String databasePath = getDatabasePath();
 
         if (!(new File(databasePath)).exists()) {
-            String message = DatabaseNotFoundException.DEFAULT_MESSAGE;
             String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check if the constructed path is valid";
-            throw new DatabaseNotFoundException(message, null, context, possibleReason);
+            throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
         try {
             return SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READWRITE, null);
         } catch (SQLiteException exception) {
-            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(exception);
             String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check the cause for this error as we have already checked that the database exists";
-            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, exception, context, possibleReason);
         } catch (Exception e) {
             throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause for this error as we have already checked that the database exists");
         }
     }
 
     public SQLiteDatabase getReadableDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
-        String databasePath;
-
-        if (ownerId != null)
-            databasePath = context.getFilesDir().getPath() + "/databases/" + ownerId.toString();
-        else
-            databasePath = context.getFilesDir().getPath() + "/databases/";
-
-        databasePath += "/" + databaseName.replace("-", "") + ".db";
+        String databasePath = getDatabasePath();
 
         if (!(new File(databasePath)).exists()) {
-            String message = DatabaseNotFoundException.DEFAULT_MESSAGE;
             String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check if the constructed path is valid";
-            throw new DatabaseNotFoundException(message, null, context, possibleReason);
+            throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
         try {
             return SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READONLY, null);
         } catch (SQLiteException exception) {
-            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(exception);
             String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check the cause for this error as we have already checked that the database exists";
-            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, exception, context, possibleReason);
         } catch (Exception e) {
             throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause for this error as we have already checked that the database exists");
         }
@@ -430,10 +400,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         String databasePath = getDatabasePath();
 
         if (!(new File(databasePath)).exists()) {
-            String message = DatabaseNotFoundException.DEFAULT_MESSAGE;
             String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check if the constructed path is valid";
-            throw new DatabaseNotFoundException(message, null, context, possibleReason);
+            throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
         try {
@@ -503,8 +472,10 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     public void createDatabase(String databaseName) throws CantCreateDatabaseException {
 
         File storagePath = new File(getPath());
-        if (!storagePath.exists())
-            storagePath.mkdirs();
+
+        if (!storagePath.mkdirs())
+            if (!storagePath.exists())
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, null, "The directory couldn't be created.", "");
 
         /**
          * Hash data base name
@@ -512,10 +483,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         File databaseFile = new File(storagePath.getPath() + "/" + databaseName.replace("-", "") + ".db");
 
         if (databaseFile.exists()) {
-            String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
             String context = "database File: " + databaseFile.getPath();
             String possibleReasons = "This happens if the database has already been created";
-            throw new CantCreateDatabaseException(message, null, context, possibleReasons);
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, null, context, possibleReasons);
         }
 
 
@@ -525,13 +495,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             SQLiteDatabase.openOrCreateDatabase(databaseFile, null).close();
         } catch (SQLiteException ex) {
-            String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(ex);
             String context = "Storage Path: " + storagePath.getPath();
             context += CantCreateDatabaseException.CONTEXT_CONTENT_SEPARATOR;
             context += "database Name: " + databaseName;
             String possibleReasons = "This can happen if the database File where we wanted to create the database can't be created";
-            throw new CantCreateDatabaseException(message, cause, context, possibleReasons);
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, ex, context, possibleReasons);
         } catch (Exception e) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error as we have already checked that the database exists");
         }
@@ -576,19 +544,17 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
          * I check that the owner id is the same I currently have..
          */
         if (this.ownerId != ownerId) {
-            String message = InvalidOwnerIdException.DEFAULT_MESSAGE;
             String context = "database Owner Id: " + ownerId;
             context += InvalidOwnerIdException.CONTEXT_CONTENT_SEPARATOR;
             context += "Owner Id in the method invocation: " + ownerId;
             String possibleReason = "The owner Id passed in the Invocation doesn't belong to the Android database Owner, maybe this was a passed object";
-            throw new InvalidOwnerIdException(message, null, context, possibleReason);
+            throw new InvalidOwnerIdException(InvalidOwnerIdException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
         if (table == null) {
-            String message = CantCreateTableException.DEFAULT_MESSAGE;
             String context = "Owner Id : " + ownerId.toString();
             String possibleReason = "DatabaseTableFactory can't be null.";
-            throw new CantCreateTableException(message, null, context, possibleReason);
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
         /**
@@ -620,13 +586,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 executeQuery(query);
             }
         } catch (Exception ex) {
-            String message = CantCreateTableException.DEFAULT_MESSAGE;
-            FermatException cause = ex instanceof FermatException ? (FermatException) ex : FermatException.wrapException(ex);
             String context = "Owner Id : " + ownerId.toString();
             context += CantCreateTableException.CONTEXT_CONTENT_SEPARATOR;
             context += "DatabaseTableFactory Info: " + table.toString();
             String possibleReason = "Check the cause for the reason we are getting this error.";
-            throw new CantCreateTableException(message, cause, context, possibleReason);
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, ex, context, possibleReason);
         }
     }
 
@@ -681,5 +645,4 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     public DatabaseTableFactory newTableFactory(String tableName) {
         return new AndroidDatabaseTableFactory(tableName);
     }
-
 }
