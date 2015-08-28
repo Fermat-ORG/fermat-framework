@@ -4,7 +4,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
+import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,6 @@ public class WalletStoreSubAppSession implements SubAppsSession {
      * Wallet Store Module
      */
     private WalletStoreModuleManager walletStoreModuleManager;
-    private CatalogueItemDao selectedCatalogItem;
 
 
     /**

@@ -7,4 +7,5 @@
     <string name="wallet_icon">wallet icon</string>
     <string name="wallet_installs">Installed</string>
     <string name="wallet_more_details_button">READ MORE</string>
+    <string name="no_preview_images">No Preview Images</string>
 </resources>

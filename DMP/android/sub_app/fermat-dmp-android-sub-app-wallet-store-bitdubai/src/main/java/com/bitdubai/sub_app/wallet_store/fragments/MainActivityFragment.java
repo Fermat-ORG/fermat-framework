@@ -4,24 +4,19 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsFromCatalogueException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DatailedInformationNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
-import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
+import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
 import com.wallet_store.bitdubai.R;
@@ -37,7 +32,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MainActivityFragment extends FermatListFragment<CatalogueItemDao> implements FermatListItemListeners<CatalogueItemDao> {
+public class MainActivityFragment extends FermatListFragment<WalletStoreListItem> implements FermatListItemListeners<WalletStoreListItem> {
 
     /**
      * MANAGERS
@@ -48,7 +43,7 @@ public class MainActivityFragment extends FermatListFragment<CatalogueItemDao> i
     /**
      * DATA
      */
-    private ArrayList<CatalogueItemDao> catalogueItemList;
+    private ArrayList<WalletStoreListItem> catalogueItemList;
 
     /**
      * Create a new instance of this fragment
@@ -115,7 +110,7 @@ public class MainActivityFragment extends FermatListFragment<CatalogueItemDao> i
     }
 
     @Override
-    public void onItemClickListener(CatalogueItemDao data, int position) {
+    public void onItemClickListener(WalletStoreListItem data, int position) {
         WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
         if (data != null) {
             session.setData(CATALOG_ITEM, data);
@@ -134,8 +129,8 @@ public class MainActivityFragment extends FermatListFragment<CatalogueItemDao> i
     }
 
     @Override
-    public ArrayList<CatalogueItemDao> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        ArrayList<CatalogueItemDao> data;
+    public ArrayList<WalletStoreListItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        ArrayList<WalletStoreListItem> data;
 
         try {
             WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
@@ -143,7 +138,7 @@ public class MainActivityFragment extends FermatListFragment<CatalogueItemDao> i
 
             data = new ArrayList<>();
             for (WalletStoreCatalogueItem catalogItem : catalogueItems) {
-                CatalogueItemDao item = new CatalogueItemDao(catalogItem, getResources());
+                WalletStoreListItem item = new WalletStoreListItem(catalogItem, getResources());
                 data.add(item);
             }
 
@@ -151,14 +146,14 @@ public class MainActivityFragment extends FermatListFragment<CatalogueItemDao> i
             errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
-            data = CatalogueItemDao.getTestData(getResources());
+            data = WalletStoreListItem.getTestData(getResources());
         }
 
         return data;
     }
 
     @Override
-    public void onLongItemClickListener(CatalogueItemDao data, int position) {
+    public void onLongItemClickListener(WalletStoreListItem data, int position) {
         // do nothing
     }
 

@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 
 
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,15 +18,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
-import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
+import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
 import com.wallet_store.bitdubai.R;
@@ -75,7 +75,7 @@ public class DetailsActivityFragment extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wallet_store_fragment_details_activity, container, false);
 
-        CatalogueItemDao catalogItem = (CatalogueItemDao) subAppsSession.getData(CATALOG_ITEM);
+        WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(CATALOG_ITEM);
 
         FermatTextView shortDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
         FermatTextView developerName = (FermatTextView) rootView.findViewById(R.id.wallet_developer_name);
@@ -85,55 +85,62 @@ public class DetailsActivityFragment extends FermatFragment {
         ImageView walletBanner = (ImageView) rootView.findViewById(R.id.wallet_banner);
         ImageView walletIcon = (ImageView) rootView.findViewById(R.id.wallet_icon);
         FermatButton installButton = (FermatButton) rootView.findViewById(R.id.wallet_install_button);
-        RecyclerView screenshotsRecyclerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
         FermatTextView readMoreLink = (FermatTextView) rootView.findViewById(R.id.read_more_link);
+        RecyclerView previewImagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
+        FermatTextView noPreviewImages = (FermatTextView) rootView.findViewById(R.id.no_preview_images);
 
+        LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);
+        previewImagesRecyclerView.setLayoutManager(layout);
+
+        ImagesAdapter adapter = new ImagesAdapter(getActivity());
+        previewImagesRecyclerView.setAdapter(adapter);
+
+        shortDescription.setText(catalogItem.getDescription());
+        installButton.setText(catalogItem.getInstallationStatusText());
+        walletName.setText(catalogItem.getWalletName());
+        walletIcon.setImageDrawable(catalogItem.getWalletIcon());
+        walletBanner.setImageDrawable(catalogItem.getWalletIcon()); // TODO Obtener valor correcto
+        publisherName.setText("Publisher Name"); // TODO Obtener valor correcto
+        totalInstalls.setText("10"); // TODO Obtener valor correcto
+
+
+        DetailedCatalogItem catalogItemDetails = null;
         try {
-            WalletStoreDetailedCatalogItem catalogItemDetails = moduleManager.getCatalogItemDetails(catalogItem.getId());
-
-            DeveloperIdentity developer = catalogItemDetails.getDeveloper();
-            developerName.setText(developer.getAlias());
-            shortDescription.setText(catalogItem.getDescription());
-            installButton.setText(catalogItem.getInstallationStatusText());
-            walletName.setText(catalogItem.getWalletName());
-            walletBanner.setImageDrawable(catalogItem.getWalletIcon()); // TODO Obtener valor correcto
-            walletIcon.setImageDrawable(catalogItem.getWalletIcon());
-            publisherName.setText("Publisher Name"); // TODO Obtener valor correcto
-            totalInstalls.setText("10"); // TODO Obtener valor correcto
-
-            LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);
-            screenshotsRecyclerView.setLayoutManager(layout);
-
-            Skin skin = catalogItemDetails.getDefaultSkin();
-            ArrayList<Drawable> previewImageDrawableList = getPreviewImageDrawableList(skin);
-            ImagesAdapter adapter = new ImagesAdapter(getActivity(), previewImageDrawableList);
-            screenshotsRecyclerView.setAdapter(adapter);
-
+            catalogItemDetails = moduleManager.getCatalogItemDetails(catalogItem.getId());
         } catch (Exception e) {
             CommonLogger.exception(TAG, e.getMessage(), e);
             errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
-            walletName.setText(catalogItem.getWalletName());
-            shortDescription.setText(catalogItem.getDescription());
-            walletBanner.setImageDrawable(catalogItem.getWalletIcon());
-            walletIcon.setImageDrawable(catalogItem.getWalletIcon());
-            developerName.setText("Developer Name");
-            publisherName.setText("Publisher Name");
-            installButton.setText("INSTALL");
-            totalInstalls.setText("10");
-
-            ArrayList<Drawable> screenshotImgs = new ArrayList<>();
-            screenshotImgs.add(getResources().getDrawable(R.drawable.wallet_screenshot_1));
-            screenshotImgs.add(getResources().getDrawable(R.drawable.wallet_screenshot_2));
-            screenshotImgs.add(getResources().getDrawable(R.drawable.wallet_screenshot_3));
-
-            LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);
-            screenshotsRecyclerView.setLayoutManager(layout);
-
-            ImagesAdapter adapter = new ImagesAdapter(getActivity(), screenshotImgs);
-            screenshotsRecyclerView.setAdapter(adapter);
         }
+
+
+        if (catalogItemDetails != null) {
+            DeveloperIdentity developer = catalogItemDetails.getDeveloper();
+            developerName.setText(developer.getAlias());
+
+            try {
+                Skin skin = catalogItemDetails.getDefaultSkin();
+                ArrayList<Drawable> imageList = getDrawablePreviewImageList(skin);
+                adapter.changeDataSet(imageList);
+            } catch (Exception e) {
+                CommonLogger.exception(TAG, e.getMessage(), e);
+                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+                previewImagesRecyclerView.setVisibility(View.GONE);
+                noPreviewImages.setVisibility(View.VISIBLE);
+            }
+
+        } else {
+            developerName.setText("Developer Name");
+
+            ArrayList<Drawable> previewImageDrawableList = new ArrayList<>();
+            previewImageDrawableList.add(getResources().getDrawable(R.drawable.wallet_screenshot_1));
+            previewImageDrawableList.add(getResources().getDrawable(R.drawable.wallet_screenshot_2));
+            previewImageDrawableList.add(getResources().getDrawable(R.drawable.wallet_screenshot_3));
+            adapter.changeDataSet(previewImageDrawableList);
+        }
+
 
         installButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,16 +160,29 @@ public class DetailsActivityFragment extends FermatFragment {
     }
 
     @NonNull
-    private ArrayList<Drawable> getPreviewImageDrawableList(Skin skin) throws CantGetWalletIconException {
-        List<byte[]> previewImageList = skin.getPreviewImageList();
-        ArrayList<Drawable> previewImageDrawableList = new ArrayList<>();
+    private ArrayList<Drawable> getDrawablePreviewImageList(Skin skin) {
 
-        for (int i = 0; i < previewImageList.size(); i++) {
-            byte[] previewImgBytes = previewImageList.get(i);
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(previewImgBytes);
-            Drawable img = Drawable.createFromStream(inputStream, "preview_" + i);
-            previewImageDrawableList.add(img);
+        ArrayList<Drawable> previewImageDrawableList;
+        try {
+            previewImageDrawableList = new ArrayList<>();
+            List<byte[]> previewImageList = skin.getPreviewImageList();
+
+            for (int i = 0; i < previewImageList.size(); i++) {
+                byte[] previewImgBytes = previewImageList.get(i);
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(previewImgBytes);
+                Drawable img = Drawable.createFromStream(inputStream, "preview_" + i);
+                previewImageDrawableList.add(img);
+            }
+        } catch (Exception e) {
+            CommonLogger.exception(TAG, "Unable to load wallet preview images", e);
+            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE, UnexpectedSubAppExceptionSeverity.NOT_IMPORTANT, e);
+
+            previewImageDrawableList = new ArrayList<>();
+            previewImageDrawableList.add(getResources().getDrawable(R.drawable.wallet_screenshot_1));
+            previewImageDrawableList.add(getResources().getDrawable(R.drawable.wallet_screenshot_2));
+            previewImageDrawableList.add(getResources().getDrawable(R.drawable.wallet_screenshot_3));
         }
+
         return previewImageDrawableList;
     }
 }

@@ -4,22 +4,12 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DatailedInformationNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreDetailedCatalogItem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinsException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.wallet_store.bitdubai.R;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -28,7 +18,7 @@ import java.util.UUID;
  *
  * @author Nelson Ramirez
  */
-public class CatalogueItemDao implements Serializable {
+public class WalletStoreListItem implements Serializable {
     private static final long serialVersionUID = -8730067026050196759L;
 
 
@@ -40,12 +30,12 @@ public class CatalogueItemDao implements Serializable {
 
 
     /**
-     * Crea un nuevo CatalogueItemDao
+     * Crea un nuevo WalletStoreListItem
      *
      * @param catalogueItem un item del catalogo
      * @param res           resource object to generate the icon
      */
-    public CatalogueItemDao(WalletStoreCatalogueItem catalogueItem, Resources res) {
+    public WalletStoreListItem(WalletStoreCatalogueItem catalogueItem, Resources res) {
 
         id = catalogueItem.getId();
 
@@ -89,13 +79,13 @@ public class CatalogueItemDao implements Serializable {
     }
 
 
-    private CatalogueItemDao(String walletName, String installationStatusText, Drawable walletIcon) {
+    private WalletStoreListItem(String walletName, String installationStatusText, Drawable walletIcon) {
         this.walletName = walletName;
         this.installationStatusText = installationStatusText;
         this.walletIcon = walletIcon;
     }
 
-    public static ArrayList<CatalogueItemDao> getTestData(Resources res) {
+    public static ArrayList<WalletStoreListItem> getTestData(Resources res) {
 
         String[] walletNames = {"Girl's wallet", "Boy's wallet", "Ladies", "Young", "Boca Junior's wallet",
                 "Carrefour's wallet", "Gucci's wallet", "Bank Itau's wallet", "Mc donal's wallet", "Van's wallet",
@@ -118,11 +108,11 @@ public class CatalogueItemDao implements Serializable {
                 R.drawable.wallet_store_cover_photo_hp, R.drawable.wallet_store_cover_photo_billabong,
                 R.drawable.wallet_store_cover_photo_starbucks};
 
-        ArrayList<CatalogueItemDao> testItems = new ArrayList<>();
+        ArrayList<WalletStoreListItem> testItems = new ArrayList<>();
         for (int i = 0; i < walletIcons.length && i < installed.length && i < prices.length && i < walletNames.length; i++) {
             String installedStr = installed[i] ? "INSTALLED" : prices[i];
             Drawable icon = res.getDrawable(walletIcons[i]);
-            CatalogueItemDao item = new CatalogueItemDao(walletNames[i], installedStr, icon);
+            WalletStoreListItem item = new WalletStoreListItem(walletNames[i], installedStr, icon);
             testItems.add(item);
         }
 
