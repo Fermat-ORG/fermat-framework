@@ -40,7 +40,7 @@ public class getDatabaseTableListTest{
     private IntraUserIdentityDeveloperDatabaseFactory DatabaseFactory;
 
     @Test
-    public void initializeDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException, CantInitializeIntraUserIdentityDatabaseException {
+    public void getDatabaseTableListTest() throws Exception{
         UUID testOwnerId = UUID.randomUUID();
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
