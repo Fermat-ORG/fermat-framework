@@ -7,7 +7,6 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/23/15.
  */
-//public class Developer implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer {
 public class Developer implements com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity {
     UUID id;
     String alias;
@@ -35,11 +34,6 @@ public class Developer implements com.bitdubai.fermat_api.layer.pip_Identity.dev
     public UUID getId() {
         return this.id;
     }
-
-    //@Override
-    //public String getName() {
-    //return this.name;
-    //}
 
     @Override
     public String getPublicKey() {

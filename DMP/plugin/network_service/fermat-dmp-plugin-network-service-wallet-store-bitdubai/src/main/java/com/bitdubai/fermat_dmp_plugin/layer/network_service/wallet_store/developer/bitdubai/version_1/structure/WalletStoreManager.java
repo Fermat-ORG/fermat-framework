@@ -258,14 +258,11 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         }
     }
 
-    private byte[] getSkinContent(String directory, String fileName) throws  CantGetCatalogItemException{
-        try {
+    private byte[] getSkinContent(String directory, String fileName) throws FileNotFoundException, CantCreateFileException, CantLoadFileException {
             PluginBinaryFile skinFile = pluginFileSystem.getBinaryFile(pluginId, directory, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             skinFile.loadFromMedia();
             return skinFile.getContent();
-        } catch (FileNotFoundException | CantCreateFileException | CantLoadFileException exception) {
-          throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, null, null);
-        }
+
     }
 
     /**
@@ -279,12 +276,16 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
             DetailedCatalogItemImpl detailedCatalogItemImpl;
             detailedCatalogItemImpl = getDetailedCatalogItemFromDatabase (walletId);
             Skin defaultSkin = (Skin) detailedCatalogItemImpl.getDefaultSkin();
-            defaultSkin.setPresentationImage(getSkinContent(pluginId.toString(), defaultSkin.getSkinName()));
+            try {
+                defaultSkin.setPresentationImage(getSkinContent(pluginId.toString(), defaultSkin.getSkinName()));
+            } catch (FileNotFoundException | CantCreateFileException | CantLoadFileException e) {
+                defaultSkin.setPresentationImage(null);
+            }
             detailedCatalogItemImpl.setDefaultSkin(defaultSkin);
 
             return detailedCatalogItemImpl;
         } catch (Exception exception){
-            throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, null, null);
+          throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
 

@@ -13,7 +13,8 @@ import java.util.UUID;
  * Created by rodrigo on 7/23/15.
  */
 public class CatalogItemImpl implements CatalogItem {
-    UUID id;
+
+    UUID id; //Todo: Refactor a String para que acepte PublicKey
     String name;
     WalletCategory category;
     String description;
@@ -30,6 +31,7 @@ public class CatalogItemImpl implements CatalogItem {
 
     /**
      * overloaded constructor
+     *
      * @param id
      * @param name
      * @param category
@@ -52,7 +54,7 @@ public class CatalogItemImpl implements CatalogItem {
     @Override
     public UUID getId() {
         return id;
-    }
+    } //Todo: Refactor a String para que acepte PublicKey
 
     @Override
     public String getName() {
@@ -80,7 +82,7 @@ public class CatalogItemImpl implements CatalogItem {
     }
 
     @Override
-    public URL getpublisherWebsiteUrl(){
+    public URL getpublisherWebsiteUrl() {
         return publisherWebsiteUrl;
     }
 
@@ -90,8 +92,8 @@ public class CatalogItemImpl implements CatalogItem {
     }
 
     public void setWalletCatalogId(UUID id) {
-        this.id= id;
-    }
+        this.id = id;
+    } //Todo: Refactor a String para que acepte PublicKey
 
     public void setWalletName(String name) {
         this.name = name;
@@ -109,17 +111,17 @@ public class CatalogItemImpl implements CatalogItem {
         this.icon = icon;
     }
 
-        public void setDetailedCatalogItemImpl(DetailedCatalogItemImpl detailedCatalogItemImpl) {
+    public void setDetailedCatalogItemImpl(DetailedCatalogItemImpl detailedCatalogItemImpl) {
         this.detailedCatalogItemImpl = detailedCatalogItemImpl;
     }
 
-    public void setpublisherWebsiteUrl(URL publisherWebsiteUrl){
+    public void setpublisherWebsiteUrl(URL publisherWebsiteUrl) {
         this.publisherWebsiteUrl = publisherWebsiteUrl;
     }
 
     public void setId(UUID id) {
         this.id = id;
-    }
+    } //Todo: Refactor a String para que acepte PublicKey
 
     public void setName(String name) {
         this.name = name;

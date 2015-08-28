@@ -10,8 +10,9 @@ import java.util.UUID;
  * Created by rodrigo on 7/22/15.
  */
 public class Language implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language {
+
     UUID id;
-    UUID walletId;
+    UUID walletId; //Todo: Refactor a String para que acepte PublicKey
     Languages languageName;
     String languageLabel;
     int languagePackageSizeInBytes;
@@ -30,6 +31,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
 
     /**
      * overloaded constructor
+     *
      * @param id
      * @param walletId
      * @param languageName
@@ -63,7 +65,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
     @Override
     public UUID getWalletId() {
         return walletId;
-    }
+    } //Todo: Refactor a String para que acepte PublicKey
 
     @Override
     public Languages getLanguageName() {
@@ -108,7 +110,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
 
     public void setId(UUID id) {
         this.id = id;
-    }
+    } //Todo: Refactor a String para que acepte PublicKey
 
     public void setWalletId(UUID walletId) {
         this.walletId = walletId;
@@ -143,7 +145,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         this.translator = translator;
     }
 
-    public void setIsDefault(boolean isDefault){
+    public void setIsDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
 

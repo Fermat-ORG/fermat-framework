@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
@@ -20,6 +22,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletSt
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -35,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * @author ciencias
@@ -47,7 +51,7 @@ import java.util.UUID;
  * * *
  */
 
-public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService, WalletStoreModuleManager, LogManagerForDevelopers,Plugin, Service{
+public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService, WalletStoreModuleManager, LogManagerForDevelopers, Plugin, Service {
 
     /**
      * WalletStoreModulePluginRoot member variables
@@ -69,15 +73,13 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     /**
      * PlatformService Interface member variables.
      */
-    ServiceStatus serviceStatus;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-
 
     /**
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
-
 
     /**
      * DealsWithWalletStoreNetworkService interface member variable
@@ -89,27 +91,28 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
      */
     com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
 
-
     /**
      * Plugin Interface member variables.
      */
     UUID pluginId;
-
 
     /**
      * PlatformService Interface implementation.
      */
 
     @Override
-    public void start() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
+    public void start() throws CantStartPluginException {
+        try {
+            this.serviceStatus = ServiceStatus.STARTED;
+        } catch (Exception exception) {
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }    }
 
     @Override
     public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
     }
-    
+
     @Override
     public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
@@ -128,14 +131,14 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     /**
      * DealWithEvents Interface implementation.
      */
-    
+
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
     /**
-     *DealWithErrors Interface implementation. 
+     * DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -160,7 +163,6 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
         this.logManager = logManager;
     }
 
-
     /**
      * LogManagerForDevelopers Interface implementation.
      */
@@ -168,17 +170,32 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreCatalog");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreDatabaseConstants");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreDatabaseFactory");
-
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager");
         /**
          * I return the values.
          */
         return returnedClasses;
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return WalletStoreModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception exception) {
+            System.err.println("CantGetLogLevelByClass: " + exception.getMessage());
+            return LogLevel.MINIMAL_LOGGING;
+        }
+    }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
@@ -197,11 +214,11 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
                 WalletStoreModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-
     }
 
     /**
      * DealsWithWalletStoreMiddleware interface implementation
+     *
      * @param walletStoreManager
      */
     @Override
@@ -211,6 +228,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     /**
      * DEalswithWalletStoreNetworkService interface implementation
+     *
      * @param walletStoreManager
      */
     @Override
@@ -219,10 +237,10 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     }
 
     /**
-     * WalletStoreMOdule manager interface implementation
+     * WalletStoreModule manager interface implementation
      */
 
-    private com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager getWalletStoreModuleManager(){
+    public com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager getWalletStoreModuleManager() {
         if (walletStoreModuleManager == null)
             walletStoreModuleManager = new com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
 
@@ -231,44 +249,46 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     @Override
     public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException {
-        return walletStoreModuleManager.getCatalogue();
+        return getWalletStoreModuleManager().getCatalogue();
     }
 
     @Override
     public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartLanguageInstallationException {
-        walletStoreModuleManager.installLanguage(walletCatalogueId, languageId);
+        getWalletStoreModuleManager().installLanguage(walletCatalogueId, languageId);
     }
 
     @Override
     public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartSkinInstallationException {
-        walletStoreModuleManager.installSkin(walletCatalogueId, skinId);
+        getWalletStoreModuleManager().installSkin(walletCatalogueId, skinId);
     }
 
     @Override
     public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
-        walletStoreModuleManager.installWallet(walletCategory, nicheWallet, skinId, languageId, walletCatalogueId, version);
+        getWalletStoreModuleManager().installWallet(walletCategory, nicheWallet, skinId, languageId, walletCatalogueId, version);
     }
 
     @Override
     public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartUninstallLanguageException {
-        walletStoreModuleManager.uninstallLanguage(walletCatalogueId, languageId);
+        getWalletStoreModuleManager().uninstallLanguage(walletCatalogueId, languageId);
     }
 
     @Override
     public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantStartUninstallSkinException {
-        walletStoreModuleManager.uninstallSkin(walletCatalogueId, skinId);
+        getWalletStoreModuleManager().uninstallSkin(walletCatalogueId, skinId);
     }
 
     @Override
     public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException {
-        walletStoreModuleManager.uninstallWallet(walletCatalogueId);
+        getWalletStoreModuleManager().uninstallWallet(walletCatalogueId);
     }
 
     @Override
-    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
-        return walletStoreModuleManager.getCatalogItemDetails(walletCatalogId);
+    public DetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
+        try {
+            return walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
-
-
-
 }

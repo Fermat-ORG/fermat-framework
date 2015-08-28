@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Created by Nerio on 18/07/15.
+ * Created by Nerio on 22/08/15.
  */
 public class DeveloperBitDubaiTest {
 
@@ -23,7 +23,7 @@ public class DeveloperBitDubaiTest {
     public void getterTest(){
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
 
-        Assert.assertEquals(developerBitDubai.getAddress(), "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh");
+        Assert.assertEquals(developerBitDubai.getAddress(), "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");
 
         Assert.assertEquals(developerBitDubai.getAmountToPay(), 100);
 
