@@ -1,0 +1,13 @@
+[[AssetWallet-AssetWallet-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+     En Fermat, Asset Wallets (AsWa) son aquellas wallets que son capaces de entender el concepto de Fermat Digital Asset.
+     Teóricamente, una asset wallet entiende de Assets de una manera genérica, sin poder llegar a las condiciones específicas que dependen del tipo o sub-tipo de Asset.
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
