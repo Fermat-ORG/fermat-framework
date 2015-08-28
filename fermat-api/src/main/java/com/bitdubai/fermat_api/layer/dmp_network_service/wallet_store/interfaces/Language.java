@@ -18,7 +18,7 @@ public interface Language {
      * Language identifiers
      */
     public UUID getLanguageId();
-    public UUID getWalletId();
+    public UUID getWalletId(); //Todo: Refactor a String para que acepte PublicKey
     public Languages getLanguageName();
     public String getLanguageLabel();
 
