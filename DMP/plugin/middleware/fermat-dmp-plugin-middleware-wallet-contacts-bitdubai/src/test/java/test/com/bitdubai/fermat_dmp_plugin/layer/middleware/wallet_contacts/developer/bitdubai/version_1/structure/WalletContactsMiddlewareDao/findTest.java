@@ -94,7 +94,7 @@ public class findTest {
         when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(CryptoCurrency.BITCOIN.getCode());
 
 
-        walletContactsMiddlewareDao.findAllByActorId(testPluginId);
+        walletContactsMiddlewareDao.findByActorId(testPluginId);
     }
 
     @Test

@@ -134,4 +134,6 @@ public class DetailedCatalogItemImpl implements DetailedCatalogItem {
     public void setDeveloper(DeveloperIdentity developer) {
         this.developer = developer;
     }
+
+
 }

@@ -122,6 +122,6 @@ public class getWalletContactTest {
         when(mockDatabaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME)).thenReturn(CryptoCurrency.BITCOIN.getCode());
         walletContactsMiddlewareRegistry.initialize();
 
-        walletContactsMiddlewareRegistry.getWalletContactsByActorId(testActorId);
+        walletContactsMiddlewareRegistry.getWalletContactByActorId(testActorId);
     }
 }
