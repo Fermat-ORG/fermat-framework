@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsFromCatalogueException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.DatailedInformationNotFoundException;
@@ -24,6 +24,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
+import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
@@ -37,10 +38,18 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MainActivityFragment extends FermatListFragment implements FermatListItemListeners<CatalogueItemDao> {
-    // MANAGERS
-    private WalletStoreModuleManager moduleManager;
+public class MainActivityFragment extends FermatListFragment<CatalogueItemDao> implements FermatListItemListeners<CatalogueItemDao> {
 
+    /**
+     * MANAGERS
+     */
+    private WalletStoreModuleManager moduleManager;
+    private ErrorManager errorManager;
+
+    /**
+     * DATA
+     */
+    private ArrayList<CatalogueItemDao> catalogueItemList;
 
     /**
      * Create a new instance of this fragment
@@ -48,15 +57,20 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
      * @return InstalledFragment instance object
      */
     public static MainActivityFragment newInstance() {
-        MainActivityFragment f = new MainActivityFragment();
-        return f;
+        return new MainActivityFragment();
     }
 
     @Override
-    public void setSubAppsSession(SubAppsSession subAppsSession) {
-        super.setSubAppsSession(subAppsSession);
-        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
-        moduleManager = session.getWalletStoreModuleManager();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            // setting up  module
+            moduleManager = ((WalletStoreSubAppSession) subAppsSession).getWalletStoreModuleManager();
+            errorManager = subAppsSession.getErrorManager();
+            catalogueItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
     }
 
     @Override
@@ -70,50 +84,24 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
     }
 
     @Override
-    public RecyclerView getRecycler(View rootView) {
-        if (recyclerView == null) {
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.catalog_recycler_view);
-        }
-        return recyclerView;
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe_refresh;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.catalog_recycler_view;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
     }
 
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            ErrorManager errorManager = subAppsSession.getErrorManager();
-            ArrayList<CatalogueItemDao> data = CatalogueItemDao.getTestData(getResources());
-
-            try {
-                WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
-                List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
-                data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems);
-
-            } catch (CantGetRefinedCatalogException e) {
-                Log.e("NELSON", "CantGetRefinedCatalogException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
-            } catch (NullPointerException e) {
-                Log.e("NELSON", "NullPointerException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
-            } catch (CantGetWalletsFromCatalogueException e) {
-                Log.e("NELSON", "CantGetWalletsFromCatalogueException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            } catch (CantGetWalletIconException e) {
-                Log.e("NELSON", "CantGetWalletIconException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
-            } catch (DatailedInformationNotFoundException e) {
-                Log.e("NELSON", "DatailedInformationNotFoundException", e);
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-
-            adapter = new WalletStoreCatalogueAdapter(getActivity(), data);
+            adapter = new WalletStoreCatalogueAdapter(getActivity(), catalogueItemList);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -122,7 +110,7 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-            layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
         return layoutManager;
     }
@@ -147,7 +135,64 @@ public class MainActivityFragment extends FermatListFragment implements FermatLi
     }
 
     @Override
+    public ArrayList<CatalogueItemDao> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        ArrayList<CatalogueItemDao> data = CatalogueItemDao.getTestData(getResources());
+        try {
+            WalletStoreCatalogue catalogue = moduleManager.getCatalogue();
+            List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
+            //todo esto hay que arreglarlo
+            data = CatalogueItemDao.getDataFromCatalogueItemList(catalogueItems, moduleManager);
+        } catch (CantGetRefinedCatalogException e) {
+            Log.e("NELSON", "CantGetRefinedCatalogException", e);
+            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+        } catch (NullPointerException e) {
+            Log.e("NELSON", "NullPointerException", e);
+            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+        } catch (CantGetWalletsFromCatalogueException e) {
+            Log.e("NELSON", "CantGetWalletsFromCatalogueException", e);
+            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        } catch (CantGetWalletIconException e) {
+            Log.e("NELSON", "CantGetWalletIconException", e);
+            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+        } catch (DatailedInformationNotFoundException e) {
+            Log.e("NELSON", "DatailedInformationNotFoundException", e);
+            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+        return data;
+    }
+
+    @Override
     public void onLongItemClickListener(CatalogueItemDao data, int position) {
         // do nothing
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                catalogueItemList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(catalogueItemList);
+            }
+        }
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
     }
 }

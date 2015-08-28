@@ -149,7 +149,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         try {
             if (!database.isOpen())
                 openDatabase();
-            databaseTable = new AndroidDatabaseTable(context, this, tableName);
+            databaseTable = new AndroidDatabaseTable(this, tableName);
             return databaseTable;
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             String message = CantCreateTableException.DEFAULT_MESSAGE;
@@ -398,6 +398,36 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
 
         try {
             return SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READWRITE, null);
+        } catch (SQLiteException exception) {
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(exception);
+            String context = "database Constructed Path: " + databasePath;
+            String possibleReason = "Check the cause for this error as we have already checked that the database exists";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        } catch (Exception e) {
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause for this error as we have already checked that the database exists");
+        }
+    }
+
+    public SQLiteDatabase getReadableDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
+        String databasePath;
+
+        if (ownerId != null)
+            databasePath = context.getFilesDir().getPath() + "/databases/" + ownerId.toString();
+        else
+            databasePath = context.getFilesDir().getPath() + "/databases/";
+
+        databasePath += "/" + databaseName.replace("-", "") + ".db";
+
+        if (!(new File(databasePath)).exists()) {
+            String message = DatabaseNotFoundException.DEFAULT_MESSAGE;
+            String context = "database Constructed Path: " + databasePath;
+            String possibleReason = "Check if the constructed path is valid";
+            throw new DatabaseNotFoundException(message, null, context, possibleReason);
+        }
+
+        try {
+            return SQLiteDatabase.openDatabase(databasePath, null, SQLiteDatabase.OPEN_READONLY, null);
         } catch (SQLiteException exception) {
             String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(exception);

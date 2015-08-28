@@ -128,10 +128,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             throw new CantInitializeCryptoRegistryException(CantInitializeCryptoRegistryException.DEFAULT_MESSAGE, exception, "", "Check the cause to see why we couldn't open the database");
         } catch (Exception exception) {
             throw new CantInitializeCryptoRegistryException(CantInitializeCryptoRegistryException.DEFAULT_MESSAGE, exception, "", "Check the cause ");
-        } finally {
-            this.database.closeDatabase();
         }
-
     }
 
     // Used by the Monitor Agent
