@@ -2862,27 +2862,6 @@
 				</androids>
 			</layer>
 
-			<layer name="Sub App" language="java-android">
-				<androids>
-					<android
-							name="Asset Issuing"
-							description=""
-							difficulty="8"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-				</androids>
-			</layer>
-
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
@@ -2911,26 +2890,6 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-			<layer name="Sub App Module" language="java">
-				<plugins>
-					<plugin
-							name="Asset Issuing"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
