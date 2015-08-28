@@ -3687,7 +3687,7 @@
 					<plugin
 							name="Crypto Broker"
 							description=""
-							difficulty="3"
+							difficulty="4"
 							code-level="development"
 							>
 						<authors>
@@ -3703,7 +3703,7 @@
 					<plugin
 							name="Crypto Broker Customer"
 							description=""
-							difficulty="3"
+							difficulty="4"
 							code-level="development"
 							>
 						<authors>
@@ -3981,7 +3981,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Broker Fiat Pruchase"
+							name="Broker Cash Fiat Pruchase"
 							description=""
 							difficulty="0"
 							code-level="concept"
@@ -4011,7 +4011,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Retail Fiat Sale"
+							name="Retail Cash Fiat Sale"
 							description=""
 							difficulty="10"
 							code-level="development"
