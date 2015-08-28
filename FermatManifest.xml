@@ -2828,7 +2828,23 @@
 			<layer name="Reference Wallet">
 				<androids>
 					<android
-							name="Asset Wallet"
+							name="Asset Issuer"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Asset User"
 							description=""
 							difficulty="8"
 							code-level="development"
@@ -2870,7 +2886,23 @@
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
-							name="Asset Wallet"
+							name="Asset Issuer"
+							description=""
+							difficulty="3"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Asset User"
 							description=""
 							difficulty="3"
 							code-level="development"
@@ -2911,7 +2943,22 @@
 			<layer name="Actor" language="java">
 				<plugins>
 					<plugin
-							name="Issuer"
+							name="Asset Issuer"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Asset User"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -3126,7 +3173,7 @@
 			<layer name="Identity" language="java">
 				<plugins>
 					<plugin
-							name="Issuer"
+							name="Asset Issuer"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -3141,7 +3188,22 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
+					<plugin
+							name="Asset User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Nindriago" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
@@ -3163,7 +3225,38 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
+					<plugin
+							name="Asset Issuer"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Asset User"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
