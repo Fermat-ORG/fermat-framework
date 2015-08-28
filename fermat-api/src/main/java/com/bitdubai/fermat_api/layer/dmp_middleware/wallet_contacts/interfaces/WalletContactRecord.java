@@ -17,24 +17,6 @@ import java.util.UUID;
  */
 public interface WalletContactRecord {
 
-    /*****************************************************
-     * TODO: The actor id will be changed from UUID to an
-     *       String representing the public key of the actur
-     *       The same will happen with the wallet id
-     *       On the other hand, the contact id can stay as
-     *       a UUID
-     *****************************************************/
-
-    /**
-     * The method <code>getContactProfileImage</code> returns the contact profile image
-     *
-     * @return the profile image
-     * @throws CantGetContactProfileImageException
-     */
-    byte[] getContactProfileImage();
-
-    void setPhoto(byte[] photo);
-
     /**
      * Return the contactId
      *

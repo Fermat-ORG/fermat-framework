@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -70,8 +71,7 @@ public class AskIntraUserForAcceptanceTest extends TestCase {
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    IntraUserSettings intraUserSettings = new IntraUserSettings();
+    IntraUserSettings intraUserSettings;
 
     private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
 
@@ -108,17 +108,17 @@ public class AskIntraUserForAcceptanceTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
-        //Todo: error   java.lang.NoClassDefFoundError  to access XMLParser class
-          when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
+         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
 
     }
 
-    @Ignore
+
     @Test
-    public void askIntraUserForAcceptanceTest_AskedOk_throwsCantAcceptRequestException() throws Exception{
+    public void askIntraUserForAcceptanceTest_AskedOk_throwsCantStartRequestException() throws Exception{
 
 
         catchException(testIntraUserModulePluginRoot).askIntraUserForAcceptance(intraUserAlias, intraUserPublicKey, intraUserImageProfile);
@@ -127,17 +127,16 @@ public class AskIntraUserForAcceptanceTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
-    public void askIntraUserForAcceptanceTest_AskedError_throwsCantAcceptRequestException() throws Exception{
+    public void askIntraUserForAcceptanceTest_AskedError_throwsCantStartRequestException() throws Exception{
 
-        testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(null);
-
-        catchException(testIntraUserModulePluginRoot).askIntraUserForAcceptance(intraUserAlias, intraUserPublicKey, intraUserImageProfile);
+        testIntraUserModulePluginRoot.setActorIntraUserManager(null);
+        catchException(testIntraUserModulePluginRoot).askIntraUserForAcceptance(intraUserAlias, intraUserPublicKey, null);
 
         assertThat(caughtException())
                 .isNotNull()
-                .isInstanceOf(CantAcceptRequestException.class);
+                .isInstanceOf(CantStartRequestException.class);
 
 
     }

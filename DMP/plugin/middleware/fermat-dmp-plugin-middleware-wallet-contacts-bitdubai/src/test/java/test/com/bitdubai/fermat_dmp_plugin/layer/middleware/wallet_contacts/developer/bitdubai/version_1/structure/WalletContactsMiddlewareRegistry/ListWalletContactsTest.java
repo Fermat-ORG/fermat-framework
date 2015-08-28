@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
  * Created by Nerio on 04/08/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class listWalletContactsTest {
+public class ListWalletContactsTest {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -46,14 +46,12 @@ public class listWalletContactsTest {
 
     private String testWalletPublicKey;
 
-    WalletContactsMiddlewareDao walletContactsMiddlewareDao;
     WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
     @Before
     public void setUp() throws Exception {
         testPluginId = UUID.randomUUID();
         testWalletPublicKey = new ECCKeyPair().getPublicKey();
-        walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem);
         walletContactsMiddlewareRegistry = new WalletContactsMiddlewareRegistry();
         walletContactsMiddlewareRegistry.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         walletContactsMiddlewareRegistry.setPluginId(testPluginId);

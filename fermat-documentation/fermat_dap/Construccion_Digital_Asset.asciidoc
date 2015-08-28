@@ -1,4 +1,6 @@
-Ante la idea de mandar a firmar algo a alguien para comprobar que tiene las cosas que dice tener falla porque el que intenta falsificar la identidad del portador simplemente le pide al verdadero portador lo que le pidieron a él firmar.
+Ante la idea de mandar a firmar algo a alguien para comprobar que tiene las cosas que dice tener 
+falla porque el que intenta falsificar la identidad del portador simplemente le pide al verdadero 
+portador lo que le pidieron a él firmar.
 
 == Definiciones
 
@@ -40,7 +42,7 @@ va a usar para crear el asset. +
 Agregaremos entonces a la metadata del asset este hash y dejaremos como información adjunta a la
 transacción que publicaremos la firma de la metadata. +
 
-Debemos definir con mayer precisión la metadata que compone al asset y también la forma de uso del
+Debemos definir con mayor precisión la metadata que compone al asset y también la forma de uso del
 mismo. Esto dependerá de los problemas que querramos atacar. Para esta etapa inicial nos concentramos
 en construir assets que tras ser emitido sólo pueden ser transferidos de su emisor a un destinatario
 sin alteraciones y luego de este portador nuevamente se transfiere al emisor original. Este tipo de
@@ -69,8 +71,8 @@ Analicemos posibles ataques a nuestro planteo para falsificar DA.
   public key del hipotético creador del asset pero además
   el hash de la metadata.
 * Tras recibir un asset si se intenta duplicar creando otra genesis transaction sin modificar la
-  metadata y sin modificar la información que adjuntamos a la trasnacción bitcoin entonces no va a
-  coincidir el trandaction hash de la metadata con el de la genesis transaction del asset.
+  metadata y sin modificar la información que adjuntamos a la transacción bitcoin entonces no va a
+  coincidir el transaction hash de la metadata con el de la genesis transaction del asset.
 * Por otro lado si tras recibir un asset si se intenta duplicar creando otra genesis transaction pero
   esta vez se modifica la metadata para que aparezca el hash de la genesis transaction falsa entonces
   al colocar la firma de la metadata en la transacción bitcoin se va a dar el caso de que no va a
