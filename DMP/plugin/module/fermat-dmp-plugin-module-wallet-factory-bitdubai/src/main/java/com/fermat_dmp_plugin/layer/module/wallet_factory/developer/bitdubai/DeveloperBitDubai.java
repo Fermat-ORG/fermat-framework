@@ -34,7 +34,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
         //TODO: REVISAR
-      //  plugin = new WalletFactoryModulePluginRoot();
+        plugin = new WalletFactoryModulePluginRoot();
 
     }
 

@@ -12,7 +12,6 @@ import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-
 public class WalletStoreFragmentFactory extends FermatSubAppFragmentFactory<WalletStoreSubAppSession, WalletStorePreferenceSettings, WalletStoreFragmentsEnumType> {
 
 
@@ -22,24 +21,24 @@ public class WalletStoreFragmentFactory extends FermatSubAppFragmentFactory<Wall
 
         switch (fragments) {
             case CWP_WALLET_STORE_MAIN_ACTIVITY:
-                currentFragment = MainActivityFragment.newInstance(0);
+                currentFragment = MainActivityFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_DETAIL_ACTIVITY:
-                currentFragment = DetailsActivityFragment.newInstance(0);
+                currentFragment = DetailsActivityFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY:
-                currentFragment = MoreDetailsActivityFragment.newInstance(0);
+                currentFragment = MoreDetailsActivityFragment.newInstance();
                 break;
 
 
             case CWP_WALLET_STORE_ALL_FRAGMENT:
-                currentFragment = MainActivityFragment.newInstance(0);
+                currentFragment = MainActivityFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_FREE_FRAGMENT:
-                currentFragment = DetailsActivityFragment.newInstance(0);
+                currentFragment = DetailsActivityFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_PAID_FRAGMENT:
-                currentFragment = MoreDetailsActivityFragment.newInstance(0);
+                currentFragment = MoreDetailsActivityFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");

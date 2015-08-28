@@ -67,13 +67,18 @@ public class InstalledFragment extends FermatListFragment {
     }
 
     @Override
-    public RecyclerView getRecycler(View rootView) {
-        if (recyclerView == null) {
-            //// TODO: 19/08/15 implement layout of this fragment and get recyclerview id
-            recyclerView = (RecyclerView) rootView.findViewById(0);
-            recyclerView.setHasFixedSize(true);
-        }
-        return recyclerView;
+    protected int getSwipeRefreshLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return false;
     }
 
     @Override
@@ -92,5 +97,15 @@ public class InstalledFragment extends FermatListFragment {
             layoutManager = new GridLayoutManager(getActivity(), span);
         }
         return layoutManager;
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+
     }
 }

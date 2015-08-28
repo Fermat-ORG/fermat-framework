@@ -346,6 +346,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              * Create the informationPublishedComponent
              * ----------------------------------------
              */
+            InformationPublishedComponentMiddlewareImpl informationPublishedComponentMiddlewareImpl = new InformationPublishedComponentMiddlewareImpl();
+            informationPublishedComponentMiddlewareImpl.setId(UUID.randomUUID()); //Todo: Refactor a String para que acepte PublicKey
             informationPublishedComponentMiddlewareImpl.setId(UUID.randomUUID());
             informationPublishedComponentMiddlewareImpl.setWalletFactoryProjectId(walletFactoryProject.getProjectPublicKey());
             informationPublishedComponentMiddlewareImpl.setWalletFactoryProjectName(walletFactoryProject.getName());
@@ -503,8 +505,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             /*
              * Construct
              */
-            com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skinCatalogItem = constructSkinObject(catalogId,
-                                                                                                                                skinItem,
+            com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skinCatalogItem = constructSkinObject(skinItem,
                                                                                                                                 version,
                                                                                                                                 mainScreenShot,
                                                                                                                                 screenShotDetails,

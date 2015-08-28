@@ -4,8 +4,9 @@
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="black_overlay">#66000000</color>
     <color name="wallet_factory_orange">#ff9900</color>
-    <color name="wallet_install_status">#a07917</color>
+    <color name="wallet_store_link">#69b07f</color>
+    <color name="wallet_install_button">#69b07f</color>
     <color name="wallet_name_black">#66000000</color>
-    <color name="wallet_store_catalog_background">#f4f4f4</color>
+    <color name="wallet_store_activities_background">#fbf7ed</color>
 
 </resources>
