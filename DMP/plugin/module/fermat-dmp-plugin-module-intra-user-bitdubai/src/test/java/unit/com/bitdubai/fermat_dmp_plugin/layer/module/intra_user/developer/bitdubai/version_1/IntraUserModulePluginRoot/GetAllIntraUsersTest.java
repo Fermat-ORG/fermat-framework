@@ -114,7 +114,9 @@ public class GetAllIntraUsersTest extends TestCase {
     public void setUpMockitoRules()  throws Exception{
 
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
-        when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
+        //Todo: error  java.lang.NoClassDefFoundError to access XMLParser class
+           when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
+
     }
 
     @Ignore

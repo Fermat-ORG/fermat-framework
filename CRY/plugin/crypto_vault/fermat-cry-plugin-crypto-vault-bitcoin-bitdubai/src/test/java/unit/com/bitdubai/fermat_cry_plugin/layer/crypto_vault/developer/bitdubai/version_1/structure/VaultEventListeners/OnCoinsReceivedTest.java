@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
  * Created by rodrigo on 2015.07.16..
  */
 @RunWith(MockitoJUnitRunner.class)
-public class onCoinsReceivedTest {
+public class OnCoinsReceivedTest {
     @Mock
     EventManager eventManager;
 
@@ -57,8 +57,8 @@ public class onCoinsReceivedTest {
     @Mock
     DatabaseTransaction transaction;
 
-    @Ignore
-    @Test (expected = NullPointerException.class)
+
+    @Test
     public void test(){
         List<DatabaseTableRecord> records = mock(ArrayList.class);
         when(database.getTable(anyString())).thenReturn(table);
@@ -69,4 +69,6 @@ public class onCoinsReceivedTest {
         VaultEventListeners eventListeners = new VaultEventListeners(database,errorManager, eventManager, logManager);
         eventListeners.onCoinsReceived(wallet, tx, Coin.CENT, Coin.CENT);
     }
+
+
 }

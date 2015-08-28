@@ -823,7 +823,7 @@ public class Platform implements Serializable {
              * ----------------------------------
              */
             Plugin walletSettingsMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getmWalletSettingPlugin();
-            injectPluginReferencesAndStart(walletNavigationStructureMiddleware, Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
+            injectPluginReferencesAndStart(walletSettingsMiddleware, Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
 
 
             /*

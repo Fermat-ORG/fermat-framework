@@ -135,7 +135,6 @@ public class BalanceFragment extends FermatWalletFragment {
 
         //setRetainInstance(true);
 
-        referenceWalletPreferenceSettings =(ReferenceWalletPreferenceSettings)walletSettings;
 
         /**
          *
@@ -255,6 +254,10 @@ public class BalanceFragment extends FermatWalletFragment {
         }
         */
 
+            WalletSettings walletSettings = (WalletSettings)referenceWalletSession.getWalletSettings();
+            ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
+            //this.referenceWalletPreferenceSettings = walletSettings.getPreferenceSettings(referenceWalletPreferenceSettings);
+            this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
             lstCryptoWalletTransactions = cryptoWallet.getTransactions(referenceWalletPreferenceSettings.getTransactionsToShow(), 0, walletPublicKey);
 
 
@@ -265,10 +268,10 @@ public class BalanceFragment extends FermatWalletFragment {
 //        lstData.add(new ListComponent("Fer Lewn", "Paid 30 btc","person12"));
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
-                if(cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())){
+                //if(cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())){
                     ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
                     lstData.add(listComponent);
-                }
+                //}
 
             }
 
