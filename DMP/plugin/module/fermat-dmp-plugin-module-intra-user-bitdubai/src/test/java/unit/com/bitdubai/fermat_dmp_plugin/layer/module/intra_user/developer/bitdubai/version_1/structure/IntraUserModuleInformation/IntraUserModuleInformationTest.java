@@ -26,12 +26,9 @@ public class IntraUserModuleInformationTest {
     @Mock
     private PluginFileSystem mockPluginFileSystem;
 
-    private UUID pluginId;
 
     @Before
     public void setUpVariable1(){
-        pluginId = UUID.randomUUID();
-
         name = "alias_1";
         publicKey = "publicKey_1";
         profileImage = new byte[10];

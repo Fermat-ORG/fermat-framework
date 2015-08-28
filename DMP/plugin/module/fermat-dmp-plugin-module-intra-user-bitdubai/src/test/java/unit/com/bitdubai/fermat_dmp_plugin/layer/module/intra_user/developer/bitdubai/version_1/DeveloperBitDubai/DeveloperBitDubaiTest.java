@@ -21,7 +21,7 @@ public class DeveloperBitDubaiTest {
     }
 
     @Test
-    public void GetPluging() {
+    public void testGetPlugin() {
         assertThat(developTest.getPlugin()).isInstanceOf(IntraUserModulePluginRoot.class);
     }
 }
