@@ -76,8 +76,7 @@ public class GetSuggestionsToContactTest extends TestCase {
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private IntraUserSettings intraUserSettings;
 
     private UUID pluginId;
 
@@ -87,9 +86,6 @@ public class GetSuggestionsToContactTest extends TestCase {
 
     @Before
     public void setUp() throws Exception{
-
-
-        pluginId= UUID.randomUUID();
 
         MockitoAnnotations.initMocks(this);
 
@@ -109,23 +105,23 @@ public class GetSuggestionsToContactTest extends TestCase {
 
     public void setUpMockitoRules()  throws Exception{
 
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
+
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
     }
 
-    @Ignore
+
     @Test
     public void getSuggestionsToContactTest_GetOk_throwsCantGetIntraUsersListException() throws Exception{
 
-
         intraUserInformationList = testIntraUserModulePluginRoot.getSuggestionsToContact();
-
         Assertions.assertThat(intraUserInformationList)
                 .isNotNull();
 
     }
 
-    @Ignore
     @Test
     public void getSuggestionsToContactTest_GetError_throwsCantGetIntraUsersListException() throws Exception{
 

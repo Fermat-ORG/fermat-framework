@@ -62,19 +62,14 @@ public class SetNewProfileImageTest extends TestCase {
     @Mock
     private IntraUserIdentityManager mockIntraUserIdentityManager;
 
-
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private IntraUserSettings intraUserSettings;
 
     @Mock
     private PluginTextFile mockIntraUserLoginXml;
-
-
-    private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
-
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
+    private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
 
     private UUID pluginId;
     private String intraUserPublicKey;
@@ -85,8 +80,6 @@ public class SetNewProfileImageTest extends TestCase {
     @Before
     public void setUp() throws Exception{
 
-
-
         MockitoAnnotations.initMocks(this);
 
         pluginId= UUID.randomUUID();
@@ -95,6 +88,7 @@ public class SetNewProfileImageTest extends TestCase {
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
         testIntraUserModulePluginRoot.setIntraUserManager(mockIntraUserIdentityManager);
+
 
         setUpMockitoRules();
         testIntraUserModulePluginRoot.setId(pluginId);
@@ -105,15 +99,16 @@ public class SetNewProfileImageTest extends TestCase {
 
     public void setUpMockitoRules()  throws Exception{
 
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
+
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
-
-    @Ignore
-    @Test
+@Ignore
+     @Test
     public void getSuggestionsToContactTest_GetOk_throwsCantSaveProfileImageException() throws Exception{
-
 
         catchException(testIntraUserModulePluginRoot).setNewProfileImage(intraUserImageProfile, intraUserPublicKey);
 
@@ -121,11 +116,9 @@ public class SetNewProfileImageTest extends TestCase {
 
     }
 
-    @Ignore
     @Test
     public void getSuggestionsToContactTest_GetError_throwsCantSaveProfileImageException() throws Exception{
 
-        testIntraUserModulePluginRoot.setIntraUserManager(null);
 
         catchException(testIntraUserModulePluginRoot).setNewProfileImage(intraUserImageProfile,intraUserPublicKey);
 
