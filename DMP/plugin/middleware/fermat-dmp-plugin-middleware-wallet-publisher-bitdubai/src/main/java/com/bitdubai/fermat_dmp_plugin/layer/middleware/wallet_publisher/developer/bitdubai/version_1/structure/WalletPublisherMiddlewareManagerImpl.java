@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
@@ -36,6 +38,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -346,9 +349,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              * Create the informationPublishedComponent
              * ----------------------------------------
              */
-            InformationPublishedComponentMiddlewareImpl informationPublishedComponentMiddlewareImpl = new InformationPublishedComponentMiddlewareImpl();
-            informationPublishedComponentMiddlewareImpl.setId(UUID.randomUUID()); //Todo: Refactor a String para que acepte PublicKey
-            informationPublishedComponentMiddlewareImpl.setId(UUID.randomUUID());
             informationPublishedComponentMiddlewareImpl.setWalletFactoryProjectId(walletFactoryProject.getProjectPublicKey());
             informationPublishedComponentMiddlewareImpl.setWalletFactoryProjectName(walletFactoryProject.getName());
             informationPublishedComponentMiddlewareImpl.setDescriptions(walletFactoryProject.getDescription());
@@ -436,14 +436,14 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             informationPublishedComponentMiddlewareImpl.setPublicationTimestamp(new Timestamp(System.currentTimeMillis()));
             informationPublishedComponentDao.update(informationPublishedComponentMiddlewareImpl);
 
-       } catch (CantPublishWalletInCatalogException e) {
-            e.printStackTrace();
-        } catch (CantInsertRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantGetWalletIconException e) {
-            e.printStackTrace();
+       } catch (Exception exception) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The Wallet Publisher encounter a problem";
+            throw new CantPublishComponentMiddlewareException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+
         }
 
     }
@@ -505,7 +505,8 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             /*
              * Construct
              */
-            com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skinCatalogItem = constructSkinObject(skinItem,
+            com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skinCatalogItem = constructSkinObject(catalogId,
+                                                                                                                                skinItem,
                                                                                                                                 version,
                                                                                                                                 mainScreenShot,
                                                                                                                                 screenShotDetails,
