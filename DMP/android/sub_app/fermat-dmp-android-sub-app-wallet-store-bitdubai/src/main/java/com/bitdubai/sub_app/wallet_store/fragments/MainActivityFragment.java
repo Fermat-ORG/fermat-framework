@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.sub_app.wallet_store.common.DetailedCatalogItemLoader;
+import com.bitdubai.sub_app.wallet_store.common.DetailedCatalogItemLoaderListener;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
@@ -122,54 +124,34 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
     @Override
     public void onItemClickListener(WalletStoreListItem data, int position) {
-        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
 
-        try {
-            DetailedCatalogItem catalogItemDetails = moduleManager.getCatalogItemDetails(data.getId());
-            DeveloperIdentity developer = catalogItemDetails.getDeveloper();
-            String developerAlias = developer.getAlias();
+        DetailedCatalogItemLoaderListener listener = new DetailedCatalogItemLoaderListener() {
+            @Override
+            public void onPostExecute(boolean processComplete) {
+                if(processComplete){
+                    DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
+                    fragment.setSubAppsSession(subAppsSession);
+                    fragment.setSubAppSettings(subAppSettings);
+                    fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
 
-            ArrayList<Drawable> previewImageDrawableList = null;
-            Skin skin = catalogItemDetails.getDefaultSkin();
-            if (skin != null) {
-                List<byte[]> previewImageList = skin.getPreviewImageList();
-                if (previewImageList != null) {
-                    previewImageDrawableList = new ArrayList<>();
+                    FragmentTransaction FT = getActivity().getFragmentManager().beginTransaction();
+                    FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    FT.replace(R.id.activity_container, fragment);
+                    FT.addToBackStack(null);
+                    FT.commit();
 
-                    for (int i = 0; i < previewImageList.size(); i++) {
-                        byte[] previewImgBytes = previewImageList.get(i);
-                        ByteArrayInputStream inputStream = new ByteArrayInputStream(previewImgBytes);
-                        Drawable img = Drawable.createFromStream(inputStream, "preview_" + i);
-                        previewImageDrawableList.add(img);
-                    }
+                } else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Hubo un problema");
+                    builder.setMessage("No se pudieron obtener los detalles de la wallet seleccionada");
+                    builder.setPositiveButton("OK", null);
+                    builder.show();
                 }
             }
+        };
 
-            session.setData(BASIC_DATA, data);
-            session.setData(DEVELOPER_NAME, developerAlias);
-            session.setData(PREVIEW_IMGS, previewImageDrawableList);
-
-            DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
-            fragment.setSubAppsSession(session);
-            fragment.setSubAppSettings(subAppSettings);
-            fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
-
-            FragmentTransaction FT = this.getFragmentManager().beginTransaction();
-            FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            FT.replace(R.id.activity_container, fragment);
-            FT.addToBackStack(null);
-            FT.commit();
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Hubo un problema");
-            builder.setMessage("No se pudieron obtener los detalles de la wallet seleccionada");
-            builder.setPositiveButton("OK", null);
-            builder.show();
-        }
+        DetailedCatalogItemLoader loader = new DetailedCatalogItemLoader(moduleManager, subAppsSession, data, listener);
+        loader.execute();
     }
 
     @Override
