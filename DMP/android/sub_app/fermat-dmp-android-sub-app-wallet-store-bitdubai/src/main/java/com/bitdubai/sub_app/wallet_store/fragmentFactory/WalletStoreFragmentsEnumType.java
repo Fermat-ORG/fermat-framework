@@ -8,16 +8,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 
 public enum WalletStoreFragmentsEnumType implements FermatFragmentsEnumType<WalletStoreFragmentsEnumType> {
 
-
     CWP_WALLET_STORE_MAIN_ACTIVITY("CWSMA"),
     CWP_WALLET_STORE_DETAIL_ACTIVITY("CWSDA"),
     CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWSMDA"),
-
-    /**
-     * Va a ser eliminado. No se usa.
-     */
-    @Deprecated
-    CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT("CWSANF"),
 
     /**
      * Va a ser eliminado. Usando momentaneamente para probar {@link com.bitdubai.sub_app.wallet_store.fragments.MainActivityFragment}
@@ -33,12 +26,7 @@ public enum WalletStoreFragmentsEnumType implements FermatFragmentsEnumType<Wall
      * Va a ser eliminado. Usando momentaneamente para probar {@link com.bitdubai.sub_app.wallet_store.fragments.MoreDetailsActivityFragment}
      */
     @Deprecated
-    CWP_WALLET_STORE_PAID_FRAGMENT("CWSPF"),
-    /**
-     * Va a ser eliminado. No se usa.
-     */
-    @Deprecated
-    CWP_WALLET_STORE_SEARCH_MODE("CWSSM")
+    CWP_WALLET_STORE_PAID_FRAGMENT("CWSPF")
     ;
 
 
@@ -46,9 +34,6 @@ public enum WalletStoreFragmentsEnumType implements FermatFragmentsEnumType<Wall
 
     WalletStoreFragmentsEnumType(String key) {
         this.key = key;
-    }
-
-    WalletStoreFragmentsEnumType() {
     }
 
     @Override
@@ -68,8 +53,6 @@ public enum WalletStoreFragmentsEnumType implements FermatFragmentsEnumType<Wall
                 return fragments;
             }
         }
-        // throw an IllegalArgumentException or return null
-        // throw new IllegalArgumentException("the given number doesn't match any Status.");
         return null;
     }
 }
