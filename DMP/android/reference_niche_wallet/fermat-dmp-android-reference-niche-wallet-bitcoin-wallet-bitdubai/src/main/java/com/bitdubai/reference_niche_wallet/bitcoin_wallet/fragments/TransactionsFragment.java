@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -531,7 +530,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null) {
-            layoutManager = new GridLayoutManager(getActivity(),3);
+            layoutManager = new LinearLayoutManager(getActivity());
         }
         return layoutManager;
     }
