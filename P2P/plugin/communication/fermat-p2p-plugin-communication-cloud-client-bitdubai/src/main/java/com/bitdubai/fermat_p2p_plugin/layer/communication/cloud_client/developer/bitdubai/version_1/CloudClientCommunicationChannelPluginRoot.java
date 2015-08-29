@@ -59,7 +59,7 @@ import java.util.regex.Pattern;
  */
 public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, CommunicationLayerManager, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
-    public static final String HOST_CLOUD_SERVER = "192.168.1.5";
+    public static final String HOST_CLOUD_SERVER = "192.168.1.2";
 
     public static final int PORT_CLOUD_SERVER = 9090;
 
