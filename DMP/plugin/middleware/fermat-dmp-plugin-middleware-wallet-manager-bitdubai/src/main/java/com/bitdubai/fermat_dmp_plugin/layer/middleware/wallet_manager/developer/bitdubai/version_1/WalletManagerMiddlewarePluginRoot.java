@@ -276,7 +276,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
         this.serviceStatus = ServiceStatus.STARTED;
         //TODO:delete this line
-        //testMethod();
+        testMethod();
 
     }
     @Override
@@ -758,7 +758,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             wIP.startInstallation(WalletType.NICHE,"testWallet","123456","654321","098765",null,testUUID,testVersion, ScreenSize.MEDIUM.toString(),testUUID,testVersion,"Skin",null,testUUID,testVersion,Languages.LATIN_AMERICAN_SPANISH, "es","MAP","1.0.0");
             LOG.info("Rastro Atómico:"+wIP.getInstallationProgress().getCode());
         } catch (Exception e) {
-            LOG.info(e.getMessage());
+            LOG.info("TEST ERROR:"+e.getMessage());
             e.printStackTrace();
         }
 
