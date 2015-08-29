@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,7 +72,7 @@ public class DetailsActivityFragment extends FermatFragment {
 
         WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
         String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
-        ArrayList<Drawable> walletPreviewImgList = (ArrayList<Drawable>) subAppsSession.getData(PREVIEW_IMGS);
+
 
 
         FermatTextView developerName = (FermatTextView) rootView.findViewById(R.id.wallet_developer_name);
@@ -84,10 +85,10 @@ public class DetailsActivityFragment extends FermatFragment {
         walletName.setText(catalogItem.getWalletName());
 
         ImageView walletIcon = (ImageView) rootView.findViewById(R.id.wallet_icon);
-        walletIcon.setImageDrawable(catalogItem.getWalletIcon());
+        walletIcon.setImageBitmap(catalogItem.getWalletIcon());
 
         ImageView walletBanner = (ImageView) rootView.findViewById(R.id.wallet_banner);
-        walletBanner.setImageDrawable(catalogItem.getWalletIcon()); // TODO Obtener valor correcto
+        walletBanner.setImageBitmap(catalogItem.getWalletIcon()); // TODO Obtener valor correcto
 
         FermatTextView publisherName = (FermatTextView) rootView.findViewById(R.id.wallet_publisher_name);
         publisherName.setText("Publisher Name"); // TODO Obtener valor correcto
@@ -127,6 +128,7 @@ public class DetailsActivityFragment extends FermatFragment {
             });
         }
 
+        ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
         RecyclerView previewImagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
         if (walletPreviewImgList != null) {
             LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);

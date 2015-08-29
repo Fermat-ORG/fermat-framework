@@ -1,6 +1,8 @@
 package com.bitdubai.sub_app.wallet_store.common;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v4.util.ArrayMap;
 
@@ -47,7 +49,7 @@ public class DetailCatalogItemWorker extends FermatWorker {
         DeveloperIdentity developer = catalogItemDetails.getDeveloper();
         String developerAlias = developer.getAlias();
 
-        ArrayList<Drawable> previewImageDrawableList = null;
+        ArrayList<Bitmap> previewImageDrawableList = null;
         Skin skin = catalogItemDetails.getDefaultSkin();
         if (skin != null) {
             List<byte[]> previewImageList = skin.getPreviewImageList();
@@ -56,8 +58,7 @@ public class DetailCatalogItemWorker extends FermatWorker {
 
                 for (int i = 0; i < previewImageList.size(); i++) {
                     byte[] previewImgBytes = previewImageList.get(i);
-                    ByteArrayInputStream inputStream = new ByteArrayInputStream(previewImgBytes);
-                    Drawable img = Drawable.createFromStream(inputStream, "preview_" + i);
+                    Bitmap img = BitmapFactory.decodeByteArray(previewImgBytes, 0, previewImgBytes.length);
                     previewImageDrawableList.add(img);
                 }
             }
