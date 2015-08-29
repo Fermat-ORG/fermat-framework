@@ -1,0 +1,23 @@
+[[wallet-asset-over-bitcoin-BitDubai-V1]]
+== Version 1
+    El componente Over Bitcoin Wallet registrara todas las transacciones contables que ocurran en la Reference Asset Wallet, y almacenara dicha transacción en la base de datos,
+  de esa manera el componente podra emitir todo los movimientos registrados en el Asset Wallets.
+
+
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+    Se crearan las siguientes Interfaces:
+      BitCoinWalletAsset:
+         Implementara todo el objeto que manipulara la información de la Asset.
+
+      BitCoinWalletAssetManager:
+         Implementara la interfaz publica hacia los otros pluggins.
+
+      DealsWithBitCoinWalletAssets:
+         Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.
