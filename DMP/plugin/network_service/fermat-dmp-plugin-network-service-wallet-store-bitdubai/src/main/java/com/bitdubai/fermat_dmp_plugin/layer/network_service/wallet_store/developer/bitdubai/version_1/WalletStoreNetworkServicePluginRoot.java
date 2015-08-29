@@ -66,7 +66,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.DealsWithPlatformInfo;
@@ -566,13 +565,13 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             catalogItemImpl.setDescription("Prueba de insert");
             catalogItemImpl.setpublisherWebsiteUrl(new URL("http://examples.com/pages"));
 
-            byte[] myIcon = new byte[]{114, 22};
+            byte[] myIcon = new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
             catalogItemImpl.setIcon(myIcon);
             catalogItemImpl.setWalletCatalogId(walletId);
 
             com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skin;
             skin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
-            byte[] presentationImage = new byte[]{114, 22};
+            byte[] presentationImage = new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
             skin.setPresentationImage(presentationImage);
             skin.setSkinSizeInBytes(100);
             skin.setFinalWalletVersion(new Version(1, 0, 0));
@@ -580,6 +579,11 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             skin.setInitialWalletVersion(new Version("1.0.0"));
             skin.setVersion(new Version(1, 0, 0));
             skin.setWalletId(walletId);
+            List<byte[]> imagelists = new ArrayList<>();
+            imagelists.add(presentationImage);
+            imagelists.add(presentationImage);
+            imagelists.add(presentationImage);
+            skin.setPreviewImageList(imagelists);
             skin.setId(UUID.randomUUID());
             skin.setName("Mi skin");
             skin.setIsDefault(true);
@@ -610,6 +614,9 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             DetailedCatalogItemImpl detailedCatalogItemImpl;
             detailedCatalogItemImpl = new DetailedCatalogItemImpl();
             detailedCatalogItemImpl.setDefaultSkin(skin);
+            List<Skin> skins = new ArrayList<>();
+            skins.add(skin);
+            detailedCatalogItemImpl.setSkins(skins);
             detailedCatalogItemImpl.setVersion(new Version("1.0.0"));
             detailedCatalogItemImpl.setPlatformInitialVersion(new Version("1.0.0"));
             detailedCatalogItemImpl.setPlatformFinalVersion(new Version("1.0.0"));

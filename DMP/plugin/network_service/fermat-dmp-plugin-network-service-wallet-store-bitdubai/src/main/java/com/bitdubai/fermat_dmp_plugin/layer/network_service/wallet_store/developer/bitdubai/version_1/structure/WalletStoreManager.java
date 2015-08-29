@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
@@ -131,7 +130,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         return dbDAO;
     }
 
-    private void publishItemInDB (CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator, Skin skin, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer) throws CantPublishItemInCatalogException {
+    private void publishItemInDB (CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator, com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer) throws CantPublishItemInCatalogException {
         try {
             getDatabaseDAO().catalogDatabaseOperation(DatabaseOperations.INSERT, catalogItemImpl, developer, language, translator, skin, designer);
         } catch (CantExecuteDatabaseOperationException e) {
@@ -169,9 +168,16 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
             com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = catalogItemImpl.getDetailedCatalogItemImpl().getDefaultLanguage().getTranslator();
             Skin skin = (Skin) catalogItemImpl.getDetailedCatalogItemImpl().getDefaultSkin();
             com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = skin.getDesigner();
-            this.publishItemInDB(catalogItemImpl, developer, language, translator, skin, designer);
-
+            // I publish all the wallet info except the skin
+            this.publishItemInDB(catalogItemImpl, developer, language, translator, null, designer);
+            // I save the icon file of the wallet.
             saveCatalogItemIconFile(catalogItemImpl);
+
+            // I publish the skin and the presentation images.
+            for (com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skinToPublish: catalogItemImpl.getDetailedCatalogItemImpl().getSkins()){
+                this.publishSkin(skinToPublish);
+            }
+
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new CantPublishWalletInCatalogException(CantPublishWalletInCatalogException.DEFAULT_MESSAGE, exception, "Publish Wallet", "Wallet Store");
@@ -183,7 +189,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      * @param skin
      * @throws CantPublishSkinInCatalogException
      */
-    public void publishSkin (Skin skin) throws CantPublishSkinInCatalogException{
+    public void publishSkin (com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin) throws CantPublishSkinInCatalogException{
         try {
             publishItemInDB(null, null, null, null, skin, null);
             saveImageIntoFile(skin.getSkinId().toString(), skin.getSkinName(), skin.getPresentationImage());
@@ -275,9 +281,10 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         try{
             DetailedCatalogItemImpl detailedCatalogItemImpl;
             detailedCatalogItemImpl = getDetailedCatalogItemFromDatabase (walletId);
+
             Skin defaultSkin = (Skin) detailedCatalogItemImpl.getDefaultSkin();
             try {
-                defaultSkin.setPresentationImage(getSkinContent(pluginId.toString(), defaultSkin.getSkinName()));
+                defaultSkin.setPresentationImage(getSkinContent(walletId.toString(), defaultSkin.getSkinName()));
             } catch (FileNotFoundException | CantCreateFileException | CantLoadFileException e) {
                 defaultSkin.setPresentationImage(null);
             }
@@ -288,6 +295,8 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
           throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
+
+
 
     /**
      * Gets the catalogItem from the database
