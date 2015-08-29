@@ -111,6 +111,10 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
                    */
                 throw new CantInitializeIntraUserIdentityDatabaseException(CantInitializeIntraUserIdentityDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
             }
+        } catch (Exception e) {
+
+            throw new CantInitializeIntraUserIdentityDatabaseException(CantInitializeIntraUserIdentityDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Error.");
+
         }
     }
 
@@ -228,6 +232,35 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
     }
 
 
+    public byte[] getIntraUserProfileImagePrivateKey(String publicKey) throws CantGetIntraUserIdentityProfileImageException {
+        byte[] profileImage;
+        try {
+            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    IntraUserIdentityPluginRoot.INTRA_USERS_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+
+            file.loadFromMedia();
+
+            profileImage = file.getContent();
+
+        } catch (CantLoadFileException e) {
+            throw new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
+
+        }
+        catch (FileNotFoundException |CantCreateFileException e) {
+            throw new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
+        }
+        catch (Exception e) {
+            throw  new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ",FermatException.wrapException(e),"", "");
+        }
+
+        return profileImage;
+    }
+
 
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
@@ -242,17 +275,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
      */
 
 
-    private Database openDatabase() throws CantExecuteDatabaseOperationException {
-        try {
-            return pluginDatabaseSystem.openDatabase(pluginId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw  new CantExecuteDatabaseOperationException("ERROR OPEN DATABASE",exception,"", "Error in database plugin.");
 
-        }
-        catch (Exception e) {
-            throw  new CantExecuteDatabaseOperationException("ERROR OPEN DATABASE",FermatException.wrapException(e),"", "Error in database plugin.");
-        }
-    }
 
     private void  persistNewUserPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
         try {
@@ -329,35 +352,6 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         }
 
         return privateKey;
-    }
-
-    public byte[] getIntraUserProfileImagePrivateKey(String publicKey) throws CantGetIntraUserIdentityProfileImageException {
-        byte[] profileImage;
-        try {
-            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    IntraUserIdentityPluginRoot.INTRA_USERS_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-
-
-            file.loadFromMedia();
-
-            profileImage = file.getContent();
-
-        } catch (CantLoadFileException e) {
-            throw new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
-
-        }
-        catch (FileNotFoundException |CantCreateFileException e) {
-            throw new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
-        }
-        catch (Exception e) {
-            throw  new CantGetIntraUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ",FermatException.wrapException(e),"", "");
-        }
-
-        return profileImage;
     }
 
     /**

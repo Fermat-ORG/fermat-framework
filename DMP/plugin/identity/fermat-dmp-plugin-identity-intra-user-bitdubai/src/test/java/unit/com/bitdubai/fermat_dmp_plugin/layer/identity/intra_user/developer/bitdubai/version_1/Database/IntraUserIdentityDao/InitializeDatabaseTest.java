@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.Database.IntraUserIdentityDao;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -24,6 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class initializeDatabaseTest{
+public class InitializeDatabaseTest {
 
     private IntraUserIdentityDao identityDao;
 
@@ -60,20 +61,21 @@ public class initializeDatabaseTest{
     }
 
     @Test
-    public void SetPluginTest() throws CantInitializeIntraUserIdentityDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException, CantGetIntraUserIdentityPrivateKeyException, CantGetIntraUserIdentitiesException, CantCreateNewDeveloperException {
+    public void initializeDatabaseTest() throws CantInitializeIntraUserIdentityDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException, CantGetIntraUserIdentityPrivateKeyException, CantGetIntraUserIdentitiesException, CantCreateNewDeveloperException {
         identityDao.initializeDatabase();
 
         catchException(identityDao).initializeDatabase();
         assertThat(CatchException.<Exception>caughtException()).isNull();
 
-        ECCKeyPair eccKeyPair = new ECCKeyPair();
+    }
 
-        byte[] profile = new byte[10];
+    @Test
+    public void initializeDatabaseTest_Error_ThrowsCantInitializeIntraUserIdentityDatabaseException() throws Exception {
 
-
-
-        catchException(identityDao).createNewUser("alias", eccKeyPair.getPublicKey(), eccKeyPair.getPrivateKey(), mockDeviceUser, profile);
+        when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenThrow(CantOpenDatabaseException.class);
+        catchException(identityDao).initializeDatabase();
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
+
     }
 
 }

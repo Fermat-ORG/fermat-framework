@@ -48,7 +48,7 @@ public class StatusTest {
     private IntraUserIdentityPluginRoot pluginRoot;
 
     @Test
-    public void getClassTest() throws CantOpenDatabaseException, DatabaseNotFoundException, CantStartPluginException {
+    public void getStatusTest() throws CantOpenDatabaseException, DatabaseNotFoundException, CantStartPluginException {
 
         UUID testOwnerId = UUID.randomUUID();
 

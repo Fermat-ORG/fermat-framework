@@ -99,6 +99,10 @@ public class IntraUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
                    */
                 throw new CantInitializeIntraUserIdentityDatabaseException(cantCreateDatabaseException.getMessage());
             }
+        } catch (Exception e) {
+
+            throw new CantInitializeIntraUserIdentityDatabaseException(e.getMessage());
+
         }
     }
 

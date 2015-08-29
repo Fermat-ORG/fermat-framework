@@ -128,8 +128,8 @@ public class TransactionAdapter extends FermatAdapter<Item, TransactionAdapter.T
         @Override
         public void onClick(View view) {
             //TODO: TESTING...
-            int layoutPosition = getLayoutPosition();
-            int adapterPosition = getAdapterPosition();
+            //int layoutPosition = getLayoutPosition();
+            //int adapterPosition = getAdapterPosition();
 
 //            if (view.getId() == R.id.wallet_installation_status) {
 //                Toast.makeText(context,
