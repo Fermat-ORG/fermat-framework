@@ -80,21 +80,15 @@ public class GetAllIntraUsersTest extends TestCase {
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private IntraUserSettings intraUserSettings;
 
     private UUID pluginId;
-
 
     private List<IntraUserInformation> intraUserInformationList = new ArrayList<IntraUserInformation>();
 
 
     @Before
     public void setUp() throws Exception{
-
-
-        pluginId= UUID.randomUUID();
-
         MockitoAnnotations.initMocks(this);
 
         pluginId= UUID.randomUUID();
@@ -112,17 +106,16 @@ public class GetAllIntraUsersTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
 
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
-        //Todo: error  java.lang.NoClassDefFoundError to access XMLParser class
-           when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
+         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
 
-    @Ignore
     @Test
     public void getAllIntraUsersTest_GetOk_throwsCantGetIntraUsersListExceptionException() throws Exception{
-
 
         intraUserInformationList = testIntraUserModulePluginRoot.getAllIntraUsers();
 
@@ -131,7 +124,6 @@ public class GetAllIntraUsersTest extends TestCase {
 
     }
 
-    @Ignore
     @Test
     public void getAllIntraUsersTest_GetError_throwsCantGetIntraUsersListExceptionException() throws Exception{
 
@@ -142,8 +134,6 @@ public class GetAllIntraUsersTest extends TestCase {
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantGetIntraUsersListException.class);
-
-
     }
 }
 

@@ -80,8 +80,8 @@ public class LoginTest extends TestCase {
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    IntraUserSettings intraUserSettings = new IntraUserSettings();
+
+    IntraUserSettings intraUserSettings;
     @Mock
     XMLParser xmlParser;
 
@@ -115,15 +115,15 @@ public class LoginTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
 
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
-        //Todo: error  java.lang.NoClassDefFoundError  to access XMLParser class
-         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
+        when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
 
-    @Ignore
+
     @Test
     public void loginIntraUserTest_LoggedOk_throwsCantLoginIntraUserException() throws Exception{
 
@@ -134,7 +134,7 @@ public class LoginTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void loginIntraUser_CantLogged_throwsCantLoginIntraUserException() throws Exception{
 

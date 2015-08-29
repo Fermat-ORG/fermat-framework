@@ -71,8 +71,8 @@ Analicemos posibles ataques a nuestro planteo para falsificar DA.
   public key del hipotético creador del asset pero además
   el hash de la metadata.
 * Tras recibir un asset si se intenta duplicar creando otra genesis transaction sin modificar la
-  metadata y sin modificar la información que adjuntamos a la trasnacción bitcoin entonces no va a
-  coincidir el trandaction hash de la metadata con el de la genesis transaction del asset.
+  metadata y sin modificar la información que adjuntamos a la transacción bitcoin entonces no va a
+  coincidir el transaction hash de la metadata con el de la genesis transaction del asset.
 * Por otro lado si tras recibir un asset si se intenta duplicar creando otra genesis transaction pero
   esta vez se modifica la metadata para que aparezca el hash de la genesis transaction falsa entonces
   al colocar la firma de la metadata en la transacción bitcoin se va a dar el caso de que no va a

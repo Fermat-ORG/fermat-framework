@@ -165,6 +165,10 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
+        catch (Exception e) {
+            FermatException e1 = new CantDeliverDatabaseException("Unexpected Exception",e,"","");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e1);
+        }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
     }
@@ -259,12 +263,12 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
              * If I can not initialize the Registry then I can not start the service.
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
-            System.err.print("INCOMING CRYPTO: CantInitializeCryptoRegistryException");
             throw new CantStartPluginException(cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
-
-        // TODO : COMMENTED PRINTLN
-        //System.err.println("INCOMING CRYPTO: REGISTRY INITIALIZED");
+        catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+        }
 
 
         /**
@@ -283,7 +287,10 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
             throw new CantStartPluginException(cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
-
+        catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+        }
         /**
          * I will start the Relay Agent.
          */
@@ -304,6 +311,11 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
             throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+        }
+        catch (Exception e){
+            this.eventRecorder.stop();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
         /**
@@ -328,10 +340,14 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
 
             throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
+        catch (Exception e){
+            this.eventRecorder.stop();
+            this.relay.stop();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+        }
 
         this.serviceStatus = ServiceStatus.STARTED;
-        // TODO COMMENTED PRINTLN
-        //System.out.println("IncomingExtraUser Plugin Started");
     }
 
     @Override

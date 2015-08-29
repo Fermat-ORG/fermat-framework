@@ -27,9 +27,10 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by root on 04/08/15.
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class getWalletContactTest {
+public class GetWalletContactTest {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -52,7 +53,6 @@ public class getWalletContactTest {
 
     private String testSearchName;
 
-    WalletContactsMiddlewareDao walletContactsMiddlewareDao;
     WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
     @Before
@@ -64,7 +64,6 @@ public class getWalletContactTest {
         testDatabaseTableRecordList = new ArrayList<>();
         testDatabaseTableRecordList.add(mockDatabaseTableRecord);
 
-        walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem);
         walletContactsMiddlewareRegistry = new WalletContactsMiddlewareRegistry();
         walletContactsMiddlewareRegistry.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         walletContactsMiddlewareRegistry.setPluginId(testPluginId);

@@ -42,6 +42,7 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
@@ -236,8 +237,8 @@ public class ReceiveFragment extends Fragment {
         List<WalletContact> contacts = new ArrayList<>();
 
         try {
-            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
-            for (WalletContactRecord wcr : walletContactRecords) {
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
+            for (CryptoWalletWalletContact wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
             }
         } catch (CantGetAllWalletContactsException e) {

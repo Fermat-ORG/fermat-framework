@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
  * Created by Nerio on 04/08/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class getWalletContactsRegistryTest {
+public class GetWalletContactsRegistryTest {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;

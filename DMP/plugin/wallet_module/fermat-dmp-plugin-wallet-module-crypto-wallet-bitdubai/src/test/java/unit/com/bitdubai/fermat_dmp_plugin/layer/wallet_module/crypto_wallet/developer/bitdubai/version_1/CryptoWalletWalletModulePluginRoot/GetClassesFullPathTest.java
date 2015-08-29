@@ -71,7 +71,7 @@ public class GetClassesFullPathTest {
             try {
                 classes.add(Class.forName(className));
             } catch (ClassNotFoundException ignore) {
-                throw new FermatException("GetClassessFullPathTest", ignore, null, null);
+                throw new FermatException("GetClassesFullPathTest", ignore, null, null);
             }
         }
         return classes;

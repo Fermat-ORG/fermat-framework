@@ -1,8 +1,6 @@
 package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -10,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import org.junit.Before;
@@ -28,9 +25,10 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by Nerio on 04/08/15.
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class walletContactDatabaseTest {
+public class WalletContactDatabaseTest {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -48,10 +46,8 @@ public class walletContactDatabaseTest {
     private WalletContactRecord mockWalletContactRecord;
 
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
-    WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
     private UUID testPluginId;
-    private CryptoAddress receivedCryptoAddress;
     private List<DatabaseTableRecord> databaseTableRecordList;
     private Actors actorType;
 
