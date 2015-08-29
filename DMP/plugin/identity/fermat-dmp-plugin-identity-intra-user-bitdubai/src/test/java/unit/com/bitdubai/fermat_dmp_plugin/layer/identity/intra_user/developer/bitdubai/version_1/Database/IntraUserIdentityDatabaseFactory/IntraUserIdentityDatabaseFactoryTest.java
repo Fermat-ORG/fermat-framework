@@ -1,12 +1,17 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.Database.IntraUserIdentityDatabaseFactory;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDatabaseFactory;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -14,6 +19,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -28,17 +36,98 @@ public class IntraUserIdentityDatabaseFactoryTest{
     private IntraUserIdentityDatabaseFactory databaseFactory;
 
     @Mock
+    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    @Mock
     private Database mockDatabase;
+    @Mock
+    private DatabaseFactory mockDatabaseFactory;
+    @Mock
+    private DatabaseTable mockTable;
+
 
     @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    private DatabaseTableFactory mockTableFactory;
+
+    private UUID testOwnerId;
+
+    @Before
+    public void setUp() throws Exception{
+        testOwnerId = UUID.randomUUID();
+
+        when(mockPluginDatabaseSystem.createDatabase(testOwnerId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME)).thenReturn(mockDatabase);
+        when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
+        when(mockDatabaseFactory.newTableFactory(testOwnerId,IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME)).thenReturn(mockTableFactory);
+    }
 
     @Test
-    public void IntraUserIdentityDatabaseFactoryTest() throws CantOpenDatabaseException, DatabaseNotFoundException, CantCreateDatabaseException {
-        when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
+    public void IntraUserIdentityDatabaseFactoryTestConstructor() throws CantOpenDatabaseException, DatabaseNotFoundException, CantCreateDatabaseException {
 
         databaseFactory = new IntraUserIdentityDatabaseFactory(mockPluginDatabaseSystem);
         databaseFactory.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
+    }
+
+
+
+    @Test
+    public void CreateDatabase_DatabaseAndTablesProperlyCreated_ReturnsDatabase() throws Exception{
+        databaseFactory = new IntraUserIdentityDatabaseFactory(mockPluginDatabaseSystem);
+        Database checkDatabase = databaseFactory.createDatabase(testOwnerId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
+
+        assertThat(checkDatabase).isEqualTo(mockDatabase);
+    }
+
+    @Test
+    public void CreateDatabase_PluginSystemCantCreateDatabase_ThrowsCantCreateDatabaseException() throws Exception{
+        when(mockPluginDatabaseSystem.createDatabase(testOwnerId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME)).thenThrow(new CantCreateDatabaseException("MOCK", null, null, null));
+
+        databaseFactory = new IntraUserIdentityDatabaseFactory(mockPluginDatabaseSystem);
+        catchException(databaseFactory).createDatabase(testOwnerId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
+
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCreateDatabaseException.class);
+    }
+
+    @Test
+    public void CreateDatabase_CantCreateTables_ThrowsCantCreateDatabaseException() throws Exception{
+
+        when(mockDatabaseFactory.newTableFactory(testOwnerId,IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME)).thenReturn(null);
+
+        databaseFactory = new IntraUserIdentityDatabaseFactory(mockPluginDatabaseSystem);
+          catchException(databaseFactory).createDatabase(testOwnerId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
+
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCreateDatabaseException.class);
+    }
+
+
+
+    @Test
+    public void CreateDatabase_ConflictedIdWhenCreatingTables_ThrowsCantCreateDatabaseException() throws Exception{
+        when(mockDatabaseFactory.newTableFactory(testOwnerId,IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME)).thenReturn(null);
+
+        databaseFactory = new IntraUserIdentityDatabaseFactory(mockPluginDatabaseSystem);
+        catchException(databaseFactory).createDatabase(testOwnerId,IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
+
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCreateDatabaseException.class);
+    }
+
+
+
+    @Test
+    public void CreateDatabase_GeneralExceptionThrown_ThrowsCantCreateDatabaseException() throws Exception{
+        when(mockDatabase.getDatabaseFactory()).thenReturn(null);
+
+        databaseFactory = new IntraUserIdentityDatabaseFactory(mockPluginDatabaseSystem);
+
+        catchException(databaseFactory).createDatabase(testOwnerId, IntraUserIdentityDatabaseConstants.INTRA_USER_DATABASE_NAME);
+
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantCreateDatabaseException.class);
     }
 }

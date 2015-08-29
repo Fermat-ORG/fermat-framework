@@ -1,21 +1,20 @@
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces;
+package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetContactProfileImageException;
 
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.WalletContactRecord</code>
- * indicates the functionality of a WalletContactRecord and its attributes
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact</code>
+ * indicates the functionality of a CryptoWalletWalletContact and its attributes
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/06/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 28/08/2015.
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WalletContactRecord {
+public interface CryptoWalletWalletContact {
 
     /**
      * Return the contactId
@@ -59,5 +58,12 @@ public interface WalletContactRecord {
      * @return String
      */
     String getActorName();
+
+    /**
+     * Return the profilePicture
+     *
+     * @return byte[]
+     */
+    byte[] getProfilePicture();
 
 }

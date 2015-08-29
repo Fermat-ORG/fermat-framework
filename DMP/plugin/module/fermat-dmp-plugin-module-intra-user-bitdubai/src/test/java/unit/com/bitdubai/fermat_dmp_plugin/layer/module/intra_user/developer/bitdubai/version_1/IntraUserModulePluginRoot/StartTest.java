@@ -58,8 +58,8 @@ public class StartTest extends TestCase {
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    IntraUserSettings intraUserSettings = new IntraUserSettings();
+
+    IntraUserSettings intraUserSettings;
 
     private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
 
@@ -80,14 +80,15 @@ public class StartTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
 
     }
 
-    @Ignore
+
     @Test
     public void teststart_ThePlugInHasStartedOk_ThrowsCantStartPluginException() throws Exception {
 
@@ -96,7 +97,7 @@ public class StartTest extends TestCase {
         Assertions.assertThat(serviceStatus).isEqualTo(ServiceStatus.STARTED);
     }
 
-    @Ignore
+
     @Test
     public void startTest_IntraUserModulePluginRootCanStarted_throwsCantStartPluginException() throws Exception {
 

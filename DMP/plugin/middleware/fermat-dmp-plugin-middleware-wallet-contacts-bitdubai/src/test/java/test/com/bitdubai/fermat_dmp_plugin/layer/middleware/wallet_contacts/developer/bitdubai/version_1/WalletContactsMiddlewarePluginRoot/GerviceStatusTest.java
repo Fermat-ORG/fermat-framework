@@ -13,7 +13,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.S
 /**
  * Created by Nerio on 18/07/15.
  */
-public class serviceStatusTest {
+public class GerviceStatusTest {
 
     @Test
     public void pausedTest(){

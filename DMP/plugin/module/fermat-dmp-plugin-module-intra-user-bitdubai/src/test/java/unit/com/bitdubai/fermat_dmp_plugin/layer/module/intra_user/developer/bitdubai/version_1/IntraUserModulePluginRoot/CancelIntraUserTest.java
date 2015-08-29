@@ -77,8 +77,7 @@ public class CancelIntraUserTest extends TestCase {
     @Mock
     private IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private IntraUserSettings intraUserSettings;
 
     private UUID pluginId;
 
@@ -111,24 +110,23 @@ public class CancelIntraUserTest extends TestCase {
 
     public void setUpMockitoRules()  throws Exception{
 
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
     }
 
 
-    @Ignore
     @Test
     public void cancelIntraUserTest_CancelledOk_throwsIntraUserCancellingFailedException() throws Exception{
 
-
         catchException(testIntraUserModulePluginRoot).cancelIntraUser(intraUserPublicKey);
-
         assertThat(caughtException()).isNull();
 
     }
 
-    @Ignore
+
     @Test
     public void cancelIntraUserTest_CancelError_throwsIntraUserCancellingFailedException() throws Exception{
 
