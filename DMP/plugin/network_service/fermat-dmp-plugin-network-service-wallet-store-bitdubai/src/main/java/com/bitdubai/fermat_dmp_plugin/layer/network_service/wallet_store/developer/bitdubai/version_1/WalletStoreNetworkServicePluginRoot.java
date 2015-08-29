@@ -48,7 +48,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -73,6 +77,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -676,6 +681,19 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             detailedCatalogItemImpl.setDeveloper(developerIdentity);
 
             catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);
+
+
+            //create an example icon file
+            PluginTextFile file = pluginFileSystem.createTextFile(this.pluginId, "rodrigo", "archivo", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            file.setContent(myIcon.toString());
+            file.persistToMedia();
+
+
+            //retrieve it
+            PluginTextFile loadedFile = pluginFileSystem.getTextFile(this.pluginId, "rodrigo", "archivo", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            loadedFile.loadFromMedia();
+            byte[] loadedIcon = loadedFile.getContent().getBytes(Charset.forName("UTF-8"));
+
 
 
             this.publishWallet(catalogItemImpl);
