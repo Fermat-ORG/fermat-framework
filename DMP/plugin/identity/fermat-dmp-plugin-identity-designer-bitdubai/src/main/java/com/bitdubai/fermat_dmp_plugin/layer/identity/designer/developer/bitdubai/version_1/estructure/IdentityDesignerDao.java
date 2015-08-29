@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -197,10 +197,10 @@ public class IdentityDesignerDao {
      * @param deviceUser device user
      * @throws CantGetUserDeveloperIdentitiesException
      */
-    public List<Designer> getDesignersFromCurrentDeviceUser(DeviceUser deviceUser) throws CantGetUserDeveloperIdentitiesException {
+    public List<DesignerIdentity> getDesignersFromCurrentDeviceUser(DeviceUser deviceUser) throws CantGetUserDeveloperIdentitiesException {
 
 
-        List<Designer> list = new ArrayList<Designer>(); // Developer list.
+        List<DesignerIdentity> list = new ArrayList<DesignerIdentity>(); // Developer list.
         DatabaseTable table; // Developer table.
 
         // Get developers identities list.

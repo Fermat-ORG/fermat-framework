@@ -27,7 +27,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     List<URL> videoPreviews;
     URL url;
     long skinSizeInBytes;
-    com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer;
+    com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer;
     boolean isDefault;
     ScreenSize screenSize;
 
@@ -127,7 +127,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     }
 
     @Override
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner() {
+    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner() {
         return designer;
     }
 
@@ -184,7 +184,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         this.skinSizeInBytes = skinSizeInBytes;
     }
 
-    public void setDesigner(com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer) {
+    public void setDesigner(com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer) {
         this.designer = designer;
     }
 
