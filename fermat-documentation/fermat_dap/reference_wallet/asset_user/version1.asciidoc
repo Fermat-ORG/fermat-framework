@@ -1,4 +1,4 @@
-[[AssetOverBitcoin-AssetBitcoin-BitDubai-V1]]
+[[referencie-wallet-asset-user-BitDubai-V1]]
 = Version 1
 
 == Plug-in Description
