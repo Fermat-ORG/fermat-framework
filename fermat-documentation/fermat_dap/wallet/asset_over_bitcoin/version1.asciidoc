@@ -8,16 +8,24 @@
 
 == Plug-in Structure
 
+    DAP===>wallet===>fermat-dap-plugin-wallet-asset-over-bitcoin-bitdubai
+
 == Events
 
 == Implementation Details
 
     Se crearan las siguientes Interfaces:
-      BitCoinWalletAsset:
+      bitcoinwalletasset:
          Implementara todo el objeto que manipulara la información de la Asset.
 
-      BitCoinWalletAssetManager:
+      bitCoinwalletassetmanager:
          Implementara la interfaz publica hacia los otros pluggins.
 
-      DealsWithBitCoinWalletAssets:
+      dealswithbitcoinwalletassets:
          Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.
+
+      bitcoinwalletassettransaction:
+         Implementara la interfaz para el registro de la transacción involucrada.
+
+      bitcoinwalletassetsubsystem:
+         Implementara la interfaz para el comportamiento del Pluggin.
