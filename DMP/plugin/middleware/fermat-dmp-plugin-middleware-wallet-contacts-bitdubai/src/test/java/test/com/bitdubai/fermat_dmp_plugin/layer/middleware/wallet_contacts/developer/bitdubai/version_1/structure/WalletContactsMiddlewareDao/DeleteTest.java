@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDao;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import org.junit.Before;
@@ -32,9 +31,10 @@ import static org.mockito.Mockito.when;
 
 /**
  * Created by Leon Acosta (laion.cj91@gmail.com) on 21/08/2015.
+ *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class deleteTest {
+public class DeleteTest {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -53,13 +53,12 @@ public class deleteTest {
 
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
 
-    private UUID testPluginId;
     private UUID testContactId;
     private List<DatabaseTableRecord> databaseTableRecordList;
 
     @Before
     public void setUp() throws Exception{
-        testPluginId = UUID.randomUUID();
+        UUID testPluginId = UUID.randomUUID();
         testContactId = UUID.randomUUID();
         databaseTableRecordList = new ArrayList<>();
         databaseTableRecordList.add(mockDatabaseTableRecord);
@@ -83,9 +82,7 @@ public class deleteTest {
     @Test (expected = CantDeleteWalletContactException.class)
     public void deleteWalletContact_ContactIdIsRequiredException() throws Exception {
 
-        testContactId = null;
-
-        walletContactsMiddlewareDao.delete(testContactId);
+        walletContactsMiddlewareDao.delete(null);
     }
 
     @Test (expected = CantDeleteWalletContactException.class)

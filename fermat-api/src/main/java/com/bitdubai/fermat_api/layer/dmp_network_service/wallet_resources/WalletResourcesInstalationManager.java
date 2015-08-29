@@ -51,11 +51,11 @@ public interface WalletResourcesInstalationManager {
      * @param walletType
      * @param developer
      * @param screenSize
-     * @param skinName
+     * @param skinId
      * @param languageName
      * @throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException
      */
-    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String languageName) throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
+    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, UUID skinId, String languageName) throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 
 
     /**

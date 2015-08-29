@@ -1,0 +1,10 @@
+[[AssetIssuing-AssetIssuing-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
