@@ -3071,6 +3071,45 @@
 				</androids>
 			</layer>
 
+			<layer name="Sub App">
+				<androids>
+					<android
+							name="Asset Issuer"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="ronnervelazquez"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Asset User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="ronnervelazquez"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
@@ -3101,6 +3140,45 @@
 							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Sub App Module" language="java">
+				<plugins>
+					<plugin
+							name="Asset Issuer"
+							description=""
+							difficulty="2"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="Franklinmarcano1970"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Asset User"
+							description=""
+							difficulty="2"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="Franklinmarcano1970"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
