@@ -3064,6 +3064,22 @@
 						<certifications>
 						</certifications>
 					</android>
+					<android
+							name="Redeem Point"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
 				</androids>
 			</layer>
 
@@ -3103,6 +3119,23 @@
 						<certifications>
 						</certifications>
 					</android>
+					<android
+							name="Redeem Point"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="ronnervelazquez"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
 				</androids>
 			</layer>
 
@@ -3126,6 +3159,22 @@
 					</plugin>
 					<plugin
 							name="Asset User"
+							description=""
+							difficulty="3"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Redeem Point"
 							description=""
 							difficulty="3"
 							code-level="development"
@@ -3179,6 +3228,23 @@
 						<certifications>
 						</certifications>
 					</plugin>
+					<plugin
+							name="Redeem Pointr"
+							description=""
+							difficulty="2"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="Franklinmarcano1970"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
@@ -3201,6 +3267,21 @@
 					</plugin>
 					<plugin
 							name="Asset User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Redeem Point"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -3394,7 +3475,39 @@
 			<layer name="Wallet" language="java">
 				<plugins>
 					<plugin
-							name="Assets Over Bitcoin"
+							name="Assets Issuer Wallet"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Assets User Wallet"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Redeem Point Wallet"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -3432,6 +3545,22 @@
 					</plugin>
 					<plugin
 							name="Asset User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Nindriago" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Redeem Point"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -3499,6 +3628,22 @@
 						<certifications>
 						</certifications>
 					</plugin>
+					<plugin
+							name="Redeem Point"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
@@ -3517,7 +3662,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
