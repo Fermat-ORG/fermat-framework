@@ -2203,106 +2203,7 @@
 						<certifications>
 						</certifications>
 					</android>
-					<android
-							name="Bank Notes"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
 				</androids>
-			</layer>
-
-			<layer name="Sub App">
-				<androids>
-				</androids>
-			</layer>
-
-			<layer name="Wallet Module" language="java">
-				<plugins>
-					<plugin
-							name="Crypto Commodity Money"
-							description=""
-							difficulty="1"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="laderuner" scope="implementation" percentage="60"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Discount Wallet"
-							description=""
-							difficulty="4"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="laderuner" scope="implementation" percentage="60"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Bank Notes Wallet"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
-			<layer name="Sub App Module" language="java">
-				<plugins>
-				</plugins>
-			</layer>
-
-			<layer name="Middleware" language="java">
-				<plugins>
-					<plugin
-							name="Bank Notes"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
 			</layer>
 
 			<layer name="Request" language="java">
@@ -2560,6 +2461,95 @@
 						<certifications>
 						</certifications>
 					</plugin>
+				</plugins>
+			</layer>
+
+		</platform>
+
+		<platform code="BNP" name="Bank Notes Platform" logo="BNP_logo.png">
+
+			<layer name="Reference Wallet">
+				<androids>
+					<android
+							name="Bank Notes"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
+			<layer name="Wallet Module" language="java">
+				<plugins>
+					<plugin
+							name="Bank Notes Wallet"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Middleware" language="java">
+				<plugins>
+					<plugin
+							name="Bank Notes"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Wallet" language="java">
+				<plugins>
+					<plugin
+							name="Bank Notes"
+							description=""
+							difficulty="4"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Network Service" language="java">
+				<plugins>
 					<plugin
 							name="Bank Notes"
 							description=""
