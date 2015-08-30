@@ -13,9 +13,7 @@ We believe in people with passion who are crazy enough to think they can change 
 How will we do it?
 ---------------------
 
-Not stopping until we reach our goal.
-
-While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
+Not stopping until we reach our goal and finding an answer to the following questions:
 
 * How can we isolate ordinary people from the perceived complexity? 
 * How can we use the collective intelligence of the developer community? 
@@ -30,7 +28,7 @@ What is Fermat?
 
 Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
 
-Technically Fermat is an open-source P2P system that handles a stack of multiple platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+Technically Fermat is an open-source P2P system with a plug-ins architecture that handles a stack of platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
 What makes Fermat different from other wallet platforms or services?
 
@@ -47,7 +45,7 @@ What makes Fermat different from other wallet platforms or services?
 * **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. 
 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
-[documentation](https://github.com/bitDubai/fermat/fermat-documentation) that we're anxious to add. 
+[documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation) that we're anxious to add. 
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet. 
 
 You can see some cool visualizations of Fermat and its P2P network at 
