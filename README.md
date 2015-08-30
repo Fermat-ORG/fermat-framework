@@ -52,14 +52,14 @@ You can see some cool visualizations of Fermat and its P2P network at
 [Fermat.org](http://www.fermat.org).
 
 
-Mission / purpose:
+Mission / Purpose
 ------------------------------------------------
 
 
 > Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.
 
 
-Fermat principles:
+Fermat Principles
 ------------------------------------------------
 
 
