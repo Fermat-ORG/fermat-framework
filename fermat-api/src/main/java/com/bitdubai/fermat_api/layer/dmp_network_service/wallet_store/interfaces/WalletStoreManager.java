@@ -68,7 +68,7 @@ public interface WalletStoreManager {
     public Language constructLanguage(UUID languageId,
                                       Languages nameLanguage,
                                       String languageLabel,
-                                      UUID walletId,
+                                      UUID walletId, //Todo: Refactor a String para que acepte PublicKey
                                       Version version,
                                       Version initialWalletVersion,
                                       Version finalWalletVersion,
@@ -79,7 +79,7 @@ public interface WalletStoreManager {
 
     public Skin constructSkin(UUID skinId,
                               String nameSkin,
-                              UUID walletId,
+                              UUID walletId, //Todo: Refactor a String para que acepte PublicKey
                               ScreenSize screenSize,
                               Version version,
                               Version initialWalletVersion,
@@ -88,11 +88,12 @@ public interface WalletStoreManager {
                               List<byte[]> previewImageList,
                               boolean hasVideoPreview,
                               List<URL> videoPreviews,
-                              int skinSizeInBytes,
+                              long skinSizeInBytes,
                               com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer,
                               boolean isDefault);
 
-    public CatalogItem constructCatalogItem(UUID walletId, int defaultSizeInBytes,
+    public CatalogItem constructCatalogItem(UUID walletId, //Todo: Refactor a String para que acepte PublicKey
+                                            int defaultSizeInBytes,
                                             String name, String description,
                                             WalletCategory walletCategory,
                                             byte[] icon,
@@ -105,12 +106,6 @@ public interface WalletStoreManager {
                                             DeveloperIdentity developer,
                                             List<Language> languages,
                                             URL publisherWebsiteUrl) throws CantGetWalletIconException;
-
-    public DeveloperIdentity constructDeveloper(String name, String PublicKey);
-
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer constructDesigner(String alias, String PublicKey);
-
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator constructTranslator(String alias, String PublicKey);
 
 }
 

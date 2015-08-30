@@ -83,7 +83,7 @@ public class InitializeTest {
     }
 
     @Test
-    public void Initialize_DatabaseNotFoundAndCreateDatabaseFailed_ThrowsCantInitializeCryptoRegistryException() throws Exception{
+    public void testInitialize_DatabaseNotFoundAndCreateDatabaseFailed_ThrowsCantInitializeCryptoRegistryException() throws Exception{
         when(mockPluginDatabaseSystem.openDatabase(testId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE)).thenThrow(new DatabaseNotFoundException("MOCK", null, null, null));
         when(mockPluginDatabaseSystem.createDatabase(testId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE)).thenThrow(new CantCreateDatabaseException("MOCK", null, null, null));
         testRegistry = new IncomingExtraUserRegistry();

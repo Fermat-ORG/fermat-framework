@@ -1,5 +1,6 @@
 package com.bitdubai.android_core.app;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.FermatException;
@@ -31,6 +34,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
+import java.util.concurrent.Executors;
+
 
 /**
  * Created by Matias Furszyfer
@@ -42,7 +47,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
  * -- Luis.
  */
 
-public class StartActivity extends FragmentActivity {
+public class StartActivity extends FragmentActivity implements FermatWorkerCallBack{
 
 
     public static final String START_ACTIVITY_INIT = "Init";
@@ -81,7 +86,12 @@ public class StartActivity extends FragmentActivity {
             int applicationState = ((ApplicationSession)getApplication()).getApplicationState();
 
             if(applicationState==ApplicationSession.STATE_NOT_CREATED) {
-                new GetTask(this).execute();
+                mDialog = new ProgressDialog(this);
+                mDialog.setMessage("Please wait...");
+                mDialog.show();
+                GetTask getTask = new GetTask(this,this);
+                getTask.setCallBack(this);
+                Executors.newSingleThreadExecutor().execute(getTask);
             }else if (applicationState == ApplicationSession.STATE_STARTED ){
                 fermatInit();
             }
@@ -101,86 +111,96 @@ public class StartActivity extends FragmentActivity {
         return true;
     }
 
-    class GetTask extends AsyncTask<Object, Void, Boolean> {
-        Context context;
+    /**
+     * implement this function to handle the result object through dynamic array
+     *
+     * @param result array of native object (handle result field with result[0], result[1],... result[n]
+     */
+    @Override
+    public void onPostExecute(Object... result) {
+        mDialog.dismiss();
 
-        GetTask(Context context) {
-            this.context = context;
+        // Indicate that app was loaded.
+        WAS_START_ACTIVITY_LOADED = true;
+        fermatInit();
+    }
+
+    /**
+     * Implement this function to handle errors during the execution of any fermat worker instance
+     *
+     * @param ex Throwable object
+     */
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        ex.printStackTrace();
+    }
+
+    class GetTask extends FermatWorker{
+
+
+        public GetTask(Activity activity,FermatWorkerCallBack fermatWorkerCallBack){
+            super(activity,fermatWorkerCallBack);
         }
 
+
+        /**
+         * This function is used for the run method of the fermat background worker
+         *
+         * @throws Exception any type of exception
+         */
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mDialog = new ProgressDialog(context);
-            mDialog.setMessage("Please wait...");
-            mDialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(Object... params) {
-            //init runtime app
-
-            Context context = getApplicationContext();
-
-            platform = ((ApplicationSession)getApplication()).getFermatPlatform();
+        protected Object doInBackground() throws Exception {
 
 
-            //set Os Addons in platform
-            fileSystemOs = new AndroidOsFileSystem();
-            fileSystemOs.setContext(context);
-            platform.setFileSystemOs(fileSystemOs);
+                Context context = getApplicationContext();
 
-            databaseSystemOs = new AndroidOsDataBaseSystem();
-            databaseSystemOs.setContext(context);
-            platform.setDataBaseSystemOs(databaseSystemOs);
+                platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
-        //    locationSystemOs = new AndroidOsLocationSystem();
-        //    locationSystemOs.setContext(context);
-        //    platform.setLocationSystemOs(locationSystemOs);
 
-            loggerSystemOs = new LoggerAddonRoot();
-            try {
-                ((Service) loggerSystemOs).start();
-                platform.setLoggerSystemOs(loggerSystemOs);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            }
+                //set Os Addons in platform
+                fileSystemOs = new AndroidOsFileSystem();
+                fileSystemOs.setContext(context);
+                platform.setFileSystemOs(fileSystemOs);
 
-        //execute start platform
-            try {
+                databaseSystemOs = new AndroidOsDataBaseSystem();
+                databaseSystemOs.setContext(context);
+                platform.setDataBaseSystemOs(databaseSystemOs);
+
+                //    locationSystemOs = new AndroidOsLocationSystem();
+                //    locationSystemOs.setContext(context);
+                //    platform.setLocationSystemOs(locationSystemOs);
+
+                loggerSystemOs = new LoggerAddonRoot();
+                try {
+                    ((Service) loggerSystemOs).start();
+                    platform.setLoggerSystemOs(loggerSystemOs);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                }
+
+                //execute start platform
+                try {
 
                     platform.start();
 
-            } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            }
+                } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                }
 
 
-            /**
-             * get platform object
-             */
+                /**
+                 * get platform object
+                 */
 
-            platformContext = platform.getCorePlatformContext();
+                platformContext = platform.getCorePlatformContext();
 
 
-            PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
-            setPlatformDeviceInfo(platformInfoManager);
+                PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
+                setPlatformDeviceInfo(platformInfoManager);
 
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-
-            mDialog.dismiss();
-
-            // Indicate that app was loaded.
-            WAS_START_ACTIVITY_LOADED = true;
-            fermatInit();
+                return true;
         }
     }
 

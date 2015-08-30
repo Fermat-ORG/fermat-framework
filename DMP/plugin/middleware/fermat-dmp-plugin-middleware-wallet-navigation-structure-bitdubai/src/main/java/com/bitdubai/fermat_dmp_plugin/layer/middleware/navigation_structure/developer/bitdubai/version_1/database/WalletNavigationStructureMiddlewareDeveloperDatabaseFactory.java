@@ -45,23 +45,21 @@ public class WalletNavigationStructureMiddlewareDeveloperDatabaseFactory impleme
 
     Database database;
 
-    public WalletNavigationStructureMiddlewareDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId){
+    public WalletNavigationStructureMiddlewareDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
 
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
-        this.pluginId=pluginId;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
 
     }
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
 
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        try{
+        try {
 
             databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Navigation Structure", this.pluginId.toString()));
 
-        }catch(Exception exception){
-
-            FermatException fermatException=new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + pluginId.toString(),"Check the cause");
+        } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
 
         }
@@ -76,7 +74,7 @@ public class WalletNavigationStructureMiddlewareDeveloperDatabaseFactory impleme
 
         List<String> projectColumns = new ArrayList<String>();
 
-        try{
+        try {
 
             projectColumns.add(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY);
             projectColumns.add(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY);
@@ -86,9 +84,9 @@ public class WalletNavigationStructureMiddlewareDeveloperDatabaseFactory impleme
             DeveloperDatabaseTable projectTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME, projectColumns);
             tables.add(projectTable);
 
-        }catch(Exception exception){
+        } catch (Exception exception) {
 
-            FermatException fermatException=new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + pluginId.toString(),"Check the cause");
+            FermatException fermatException = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + pluginId.toString(), "Check the cause");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, fermatException);
 
         }
@@ -110,10 +108,12 @@ public class WalletNavigationStructureMiddlewareDeveloperDatabaseFactory impleme
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
             return returnedRecords;
         }
 
@@ -127,7 +127,7 @@ public class WalletNavigationStructureMiddlewareDeveloperDatabaseFactory impleme
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record
@@ -142,40 +142,42 @@ public class WalletNavigationStructureMiddlewareDeveloperDatabaseFactory impleme
         return returnedRecords;
     }
 
-    public void initializeDatabase() throws CantInitializeWalletNavigationStructureMiddlewareDatabaseException{
+    public void initializeDatabase() throws CantInitializeWalletNavigationStructureMiddlewareDatabaseException {
 
-        try{
+        try {
 
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database.closeDatabase();
 
         } catch (CantOpenDatabaseException exception) {
 
-            throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,exception,"Trying to open the database","Check the cause");
+            throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, exception, "Trying to open the database", "Check the cause");
 
         } catch (DatabaseNotFoundException exception) {
 
-            WalletNavigationStructureMiddlewareDatabaseFactory walletNavigationStructureMiddlewareDatabaseFactory=new WalletNavigationStructureMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
-            try{
+            WalletNavigationStructureMiddlewareDatabaseFactory walletNavigationStructureMiddlewareDatabaseFactory = new WalletNavigationStructureMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
+            try {
 
-                this.database=walletNavigationStructureMiddlewareDatabaseFactory.createDatabase(pluginId,pluginId.toString());
+                this.database = walletNavigationStructureMiddlewareDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database.closeDatabase();
 
-            }catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
-                throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE,cantCreateDatabaseException, "Trying to create the database","Check the cause");
+                throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "Trying to create the database", "Check the cause");
 
             }
 
-        } catch(Exception exception){
+        } catch (Exception exception) {
 
-            throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantInitializeWalletNavigationStructureMiddlewareDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"","Check the cause");
+            throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantInitializeWalletNavigationStructureMiddlewareDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "", "Check the cause");
 
         }
 
     }
 
-    public void setErrorManager(ErrorManager errorManager){
+    public void setErrorManager(ErrorManager errorManager) {
 
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
 
     }
 

@@ -154,13 +154,15 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
     }
 
     @Override
-    public WalletContactRecord getWalletContactByNameAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException {
+    public WalletContactRecord getWalletContactByNameAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException, WalletContactNotFoundException {
         WalletContactRecord walletContactRecord;
         try {
             walletContactRecord = walletContactsMiddlewareDao.findByNameAndWalletPublicKey(actorName, walletPublicKey);
             return walletContactRecord;
         } catch (CantGetWalletContactException e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (WalletContactNotFoundException e){
             throw e;
         } catch (Exception e){
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -180,11 +182,9 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
     }
 
     @Override
-    public List<WalletContactRecord> getWalletContactsByActorId(UUID actorId) throws CantGetAllWalletContactsException {
-        List<WalletContactRecord> walletContactRecordList;
+    public WalletContactRecord getWalletContactByActorId(UUID actorId) throws CantGetWalletContactException, WalletContactNotFoundException {
         try {
-            walletContactRecordList = walletContactsMiddlewareDao.findAllByActorId(actorId);
-            return walletContactRecordList;
+            return walletContactsMiddlewareDao.findByActorId(actorId);
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;

@@ -20,10 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -31,6 +35,7 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
@@ -55,7 +60,7 @@ import java.util.Set;
 /**
  * Created by Matias Furszyfer
  */
-public class MoneyRequestFragment extends Fragment {
+public class MoneyRequestFragment extends FermatWalletFragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -116,10 +121,6 @@ public class MoneyRequestFragment extends Fragment {
      */
     private ReferenceWalletSession walletSession;
 
-    /**
-     * Wallet preference settings
-     */
-    private WalletSettingsManager walletSettingsManager;
 
     public boolean fromContacts = false;
 
@@ -134,24 +135,21 @@ public class MoneyRequestFragment extends Fragment {
      *
      * @param position
      * @param walletSession
-     * @param walletSettingsManager
      * @return
      */
 
-    public static MoneyRequestFragment newInstance(int position,ReferenceWalletSession walletSession,WalletSettingsManager walletSettingsManager) {
+    public static MoneyRequestFragment newInstance(int position,ReferenceWalletSession walletSession) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
-        f.setWalletSettingsManager(walletSettingsManager);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
         return f;
     }
 
-    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, WalletSettingsManager walletSettingsManager, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static MoneyRequestFragment newInstance(int position, WalletContact walletContact, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
         MoneyRequestFragment f = new MoneyRequestFragment();
         f.setWalletSession(walletSession);
-        f.setWalletSettingsManager(walletSettingsManager);
         f.setContact(walletContact);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
@@ -432,7 +430,7 @@ public class MoneyRequestFragment extends Fragment {
                      * Setting values and validations
                      */
                     if (textView_contact_name != null) {
-                        String actorName = entryItem.cryptoWalletTransaction.getInvolvedActorName();
+                        String actorName = getActorNameProvisorio(entryItem.cryptoWalletTransaction);
                         if(actorName!=null)
                             textView_contact_name.setText(actorName);
                         else textView_contact_name.setText(R.string.nullActorName);
@@ -462,6 +460,20 @@ public class MoneyRequestFragment extends Fragment {
 
     }
 
+    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
+        if (cryptoWalletTransaction.getContactId() != null) {
+            try {
+                CryptoWalletWalletContact walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
+                return walletContactRecord.getActorName();
+            } catch (Exception e) {
+                System.out.println("esta es para vos mati.");
+            }
+        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
+            return cryptoWalletTransaction.getInvolvedActor().getName();
+        }
+        return "Unknow";
+    }
+
     /**
      *  Set wallet session inside the fragment when is created
      *
@@ -471,8 +483,5 @@ public class MoneyRequestFragment extends Fragment {
         this.walletSession = walletSession;
     }
 
-    public void setWalletSettingsManager(WalletSettingsManager walletSettingsManager) {
-        this.walletSettingsManager = walletSettingsManager;
-    }
 
 }

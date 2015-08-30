@@ -397,6 +397,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * I generate the address in the BitcoinJ format
              */
+
+
             address = new Address(this.networkParameters, addressTo.getAddress());
 
             /**

@@ -1,17 +1,18 @@
-package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1;
+package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.DeveloperBitDubai;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Created by Nerio on 18/07/15.
+ * Created by Nerio on 22/08/15.
  */
 public class DeveloperBitDubaiTest {
 
+    // TODO PLEASE DON'T COPY AND PASTE WITHOUT CHECK AFTER...
     @Test
     public void constructorTest (){
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
@@ -22,7 +23,7 @@ public class DeveloperBitDubaiTest {
     public void getterTest(){
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
 
-        Assert.assertEquals(developerBitDubai.getAddress(), "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh");
+        Assert.assertEquals(developerBitDubai.getAddress(), "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");
 
         Assert.assertEquals(developerBitDubai.getAmountToPay(), 100);
 
@@ -30,5 +31,4 @@ public class DeveloperBitDubaiTest {
 
         Assert.assertEquals(developerBitDubai.getTimePeriod(), TimeFrequency.MONTHLY);
     }
-
 }

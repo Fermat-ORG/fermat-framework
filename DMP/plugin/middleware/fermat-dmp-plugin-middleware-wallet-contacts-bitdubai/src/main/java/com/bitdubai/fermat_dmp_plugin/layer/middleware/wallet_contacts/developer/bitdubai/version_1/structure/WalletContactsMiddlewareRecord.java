@@ -50,8 +50,6 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
      */
     Actors actorType;
 
-    private byte[] photo = null;
-
     /**
      * Constructor with parameters
      *
@@ -82,17 +80,6 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
         this.contactId = contactId;
         this.receivedCryptoAddress = receivedCryptoAddress;
         this.walletPublicKey = walletPublicKey;
-    }
-
-    // TODO: IMPLEMENT THIS METHOD
-    @Override
-    public void setPhoto(byte[] photo){
-        this.photo = photo;
-    }
-
-    @Override
-    public byte[] getContactProfileImage() {
-        return this.photo;
     }
 
     /**

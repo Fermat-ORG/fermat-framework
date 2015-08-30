@@ -19,6 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformLayers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
@@ -763,7 +765,7 @@ public class Platform implements Serializable {
              * Plugin Wallet Factory Middleware
              * ----------------------------------
              */
-            Plugin walletFactoryMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getmWalletFactoryPlugin();
+            Plugin walletFactoryMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletFactoryPlugin();
             injectPluginReferencesAndStart(walletFactoryMiddleware, Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE);
 
 
@@ -771,7 +773,7 @@ public class Platform implements Serializable {
              * Plugin Wallet Manager Middleware
              * ----------------------------------
              */
-            Plugin walletManagerMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getmWalletManagerPlugin();
+            Plugin walletManagerMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletManagerPlugin();
             injectPluginReferencesAndStart(walletManagerMiddleware, Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE);
 
 
@@ -779,15 +781,24 @@ public class Platform implements Serializable {
              * Plugin Wallet Publisher Middleware
              * ----------------------------------
              */
-            Plugin walletPublisherMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getmWalletPublisherPlugin();
+            Plugin walletPublisherMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletPublisherPlugin();
             injectPluginReferencesAndStart(walletPublisherMiddleware, Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE);
+
+            /*
+             * Plugin Wallet publisher Module
+             * ----------------------------------
+             */
+
+            Plugin walletPublisherModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletPublisher();
+            injectPluginReferencesAndStart(walletPublisherModule, Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE);
+
 
             /*
              * Plugin Wallet Store Middleware
              * ----------------------------------
              */
 
-            Plugin walletStoreMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getmWalletStorePlugin();
+            Plugin walletStoreMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletStorePlugin();
             injectPluginReferencesAndStart(walletStoreMiddleware, Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE);
 
 
@@ -806,6 +817,13 @@ public class Platform implements Serializable {
              */
             Plugin walletNavigationStructureMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletNavigationStructurePlugin();
             injectPluginReferencesAndStart(walletNavigationStructureMiddleware, Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE);
+
+             /*
+             * Plugin Wallet settings Middleware
+             * ----------------------------------
+             */
+            Plugin walletSettingsMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletSettingsPlugin();
+            injectPluginReferencesAndStart(walletSettingsMiddleware, Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
 
 
             /*
@@ -929,8 +947,8 @@ public class Platform implements Serializable {
              * Plugin Wallet factory
              * -----------------------------
              */
-            //  Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
-            //  injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
+              Plugin walletFactoryModule =  ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletFactory();
+              injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
 
             /*
              * Plugin Wallet Manager
@@ -1211,6 +1229,11 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithIntraUsersNetworkService) {
                 ((DealsWithIntraUsersNetworkService) plugin).setIntraUserNetworkServiceManager((IntraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE));
             }
+            if (plugin instanceof DealsWithWalletSettings){
+                ((DealsWithWalletSettings) plugin).setWalletSettingsManager((WalletSettingsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE));
+            }
+
+
 
             /*
              * Register the plugin into the platform context
@@ -1220,7 +1243,7 @@ public class Platform implements Serializable {
             /*
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
-            plugin.setId(pluginsIdentityManager.getPluginId(plugin, descriptor));
+            plugin.setId(pluginsIdentityManager.getPluginId(descriptor));
 
             /*
              * Start the plugin service

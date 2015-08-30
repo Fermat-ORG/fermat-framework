@@ -34,7 +34,5 @@ public class IncomingCryptoOnBlockchainNetworkWaitingTransferenceExtraUserEventH
             eventRecorderService.saveEvent(platformEvent);
         else
             throw  new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, null, "Event: " + platformEvent.getEventType().toString(), "This should have been IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent");
-
     }
-
 }

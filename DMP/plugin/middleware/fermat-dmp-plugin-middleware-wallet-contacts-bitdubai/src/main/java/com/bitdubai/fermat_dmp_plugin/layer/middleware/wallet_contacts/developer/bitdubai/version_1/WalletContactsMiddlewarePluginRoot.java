@@ -55,10 +55,7 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         List<DeveloperDatabase> developerDatabaseList = null;
         try {
             WalletContactsMiddlewareDeveloperDatabaseFactory dbFactory = new WalletContactsMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            dbFactory.initializeDatabase();
             developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
-        } catch (CantInitializeWalletContactsDatabaseException we) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
@@ -77,10 +74,7 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         List<DeveloperDatabaseTable> developerDatabaseTableList = null;
         try {
             WalletContactsMiddlewareDeveloperDatabaseFactory dbFactory = new WalletContactsMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            dbFactory.initializeDatabase();
             developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
-        } catch (CantInitializeWalletContactsDatabaseException we) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, we);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
@@ -141,6 +135,8 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
      * WalletContactsManager Interface implementation.
      */
     public WalletContactsRegistry getWalletContactsRegistry() throws CantGetWalletContactRegistryException {
+        logManager.log(WalletContactsMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "WalletContacts Registry Initializing...", null, null);
+
         /**
          * I created instance of WalletCryptoAddressBookRegistry
          */
@@ -157,6 +153,7 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         } catch (Exception exception){
             throw new CantGetWalletContactRegistryException(CantGetWalletContactRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
+        logManager.log(WalletContactsMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "WalletContacts Registry created Successfully...", null, null);
 
         return walletContactsRegistry;
     }
@@ -253,7 +250,7 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
 
     public static LogLevel getLogLevelByClass(String className){
         try{
-            String[] correctedClass = className.split((Pattern.quote("$")));
+            String[] correctedClass = className.split(Pattern.quote("$"));
             return WalletContactsMiddlewarePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             return LogLevel.MODERATE_LOGGING;

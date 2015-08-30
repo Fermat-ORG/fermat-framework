@@ -123,7 +123,6 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            database.openDatabase();
             DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
@@ -133,7 +132,7 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
             for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 for (DatabaseRecord field : row.getValues()) {
-                    developerRow.add(field.getValue().toString());
+                    developerRow.add(field.getValue());
                 }
                 returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
             }

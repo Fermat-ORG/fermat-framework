@@ -22,12 +22,14 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
@@ -492,7 +494,7 @@ public class TransactionsBookFragment extends Fragment{
                      * Setting values and validations
                      */
                     if (textView_contact_name != null) {
-                        String actorName = entryItem.cryptoWalletTransaction.getInvolvedActorName();
+                        String actorName = getActorNameProvisorio(entryItem.cryptoWalletTransaction);
                         if(actorName!=null)
                         textView_contact_name.setText(actorName);
                         else textView_contact_name.setText(R.string.nullActorName);
@@ -505,7 +507,7 @@ public class TransactionsBookFragment extends Fragment{
                             textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(),ShowMoneyType.BITCOIN.getCode())+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
                         }
                     if(textView_time!=null){
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
                         textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
                     }
                     if(textView_type!=null){
@@ -521,6 +523,20 @@ public class TransactionsBookFragment extends Fragment{
             return v;
         }
 
+    }
+
+    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
+        if (cryptoWalletTransaction.getContactId() != null) {
+            try {
+                CryptoWalletWalletContact walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
+                return walletContactRecord.getActorName();
+            } catch (Exception e) {
+                System.out.println("esta es para vos mati.");
+            }
+        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
+            return cryptoWalletTransaction.getInvolvedActor().getName();
+        }
+        return "Unknow";
     }
 
     /**
