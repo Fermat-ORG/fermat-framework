@@ -1925,7 +1925,7 @@
 			<layer name="Composite Wallet" language="java">
 				<plugins>
 					<plugin
-							name="Multi Account Wallet"
+							name="Multi Account"
 							description=""
 							difficulty="0"
 							code-level="concept"
@@ -2468,7 +2468,7 @@
 			<layer name="Composite Wallet" language="java">
 				<plugins>
 					<plugin
-							name="Multi Account Wallet"
+							name="Multi Account"
 							description=""
 							difficulty="0"
 							code-level="concept"
