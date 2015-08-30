@@ -1250,6 +1250,28 @@
 				</androids>
 			</layer>
 
+			<layer name="Engine" language="java">
+				<plugins>
+					<plugin
+							name="Wallet Runtime"
+							description=""
+							difficulty="8"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
 			<layer name="Sub App Module" language="java">
 				<plugins>
 					<plugin
@@ -1402,6 +1424,23 @@
 						<certifications>
 						</certifications>
 					</plugin>
+					<plugin
+							name="Wallet Settings"
+							description=""
+							difficulty="3"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
@@ -1474,6 +1513,649 @@
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 						</authors>
 						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Wallet Community"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="License" language="java">
+				<addons>
+					<addon
+							name="Wallet"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</addon>
+				</addons>
+			</layer>
+
+		</platform>
+
+		<platform code="CCP" name="Crypto Currency Platform" logo="CCP_logo.png">
+
+			<layer name="Reference Wallet">
+				<androids>
+					<android
+							name="Bitcoin Wallet"
+							description=""
+							difficulty="8"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Bitcoin Loss Protected"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
+			<layer name="Sub App">
+				<androids>
+					<android
+							name="Intra User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+							name="Extra User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
+			<layer name="Wallet Module" language="java">
+				<plugins>
+					<plugin
+							name="Crypto Wallet"
+							description=""
+							difficulty="3"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="lnacosta" type="implementation"></certification>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Sub App Module" language="java">
+				<plugins>
+					<plugin
+							name="Intra User"
+							description=""
+							difficulty="2"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="nattyco"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Extra User"
+							description=""
+							difficulty="2"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Actor" language="java">
+				<plugins>
+					<plugin
+							name="Intra User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="nattyco"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by=""></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Extra User"
+							description=""
+							difficulty="4"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="nattyco"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Middleware" language="java">
+				<plugins>
+					<plugin
+							name="Wallet Contacts"
+							description=""
+							difficulty="6"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="lnacosta" type="implementation"></certification>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Request" language="java">
+				<plugins>
+					<plugin
+							name="Crypto Request"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="lnacosta" type="implementation"></certification>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Digital Money Transaction" language="java">
+				<plugins>
+					<plugin
+							name="Incoming Device User"
+							description=""
+							difficulty="1"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Incoming Extra User"
+							description=""
+							difficulty="10"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Incoming Intra User"
+							description=""
+							difficulty="10"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Intra Wallet"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Outgoing Device User"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Outgoing Extra User"
+							description=""
+							difficulty="10"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Outgoing Intra User"
+							description=""
+							difficulty="10"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Inter Account"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Composite Wallet" language="java">
+				<plugins>
+					<plugin
+							name="Multi Account Wallet"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Wallet" language="java">
+				<plugins>
+					<plugin
+							name="Bitcoin Wallet"
+							description=""
+							difficulty="4"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification signed-by="EzequielPostan" type="implementation"></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Bitcoin Loss Protected"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="World" language="java">
+				<plugins>
+					<plugin
+							name="Crypto Index"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="laderuner" scope="implementation" percentage="60"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="laderuner" ></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Blockchain Info"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Coinapult"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Shape Shift"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Coinbase"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Identity" language="java">
+				<plugins>
+					<plugin
+							name="Intra User"
+							description=""
+							difficulty="4"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="nattyco"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Network Service" language="java">
+				<plugins>
+					<plugin
+							name="Intra User"
+							description="Enables searching for Intra Users and conecting one to the other"
+							difficulty="6"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+							<author name="nattyco" scope="unit-tests" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="nattyco"></mantainer>
+						</mantainers>
+						<certifications>
+							<certification type="implementation" signed-by=""></certification>
+							<certification type="testing" signed-by=""></certification>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Crypto Address"
+							description="Enables the underground exchange of crypto addresses"
+							difficulty="5"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
+							<author name="lnacosta" scope="unit-tests" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Crypto Request"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Crypto Transmission"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="EzequielPostan"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
