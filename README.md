@@ -13,7 +13,7 @@ We believe in people with passion who are crazy enough to think they can change 
 How will we do it?
 ---------------------
 
-Not stopping until we reach our goal and finding an answer to the following questions:
+Not stopping until we reach our goal and finding the answers to the following questions:
 
 * How can we isolate ordinary people from the perceived complexity? 
 * How can we use the collective intelligence of the developer community? 
