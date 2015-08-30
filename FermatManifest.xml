@@ -3229,7 +3229,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Redeem Pointr"
+							name="Redeem Point"
 							description=""
 							difficulty="2"
 							code-level="development"
@@ -5890,7 +5890,9 @@
 </platforms>
 
 	<super_layers>
+
 		<super_layer code="P2P" name="Peer to Peer Network">
+
 			<layer name="Communication" language="java">
 				<plugins>
 					<plugin
@@ -6019,8 +6021,11 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 		</super_layer>
+
 		<super_layer code="CRY" name="Crypto">
+
 			<layer name="Crypto Router" language="java">
 				<plugins>
 					<plugin
@@ -6057,6 +6062,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="Crypto Module" language="java">
 				<plugins>
 					<plugin
@@ -6095,6 +6101,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="Crypto Vault" language="java">
 				<plugins>
 					<plugin
@@ -6178,6 +6185,7 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 			<layer name="Crypto Network" language="java">
 				<plugins>
 					<plugin
@@ -6244,8 +6252,11 @@
 					</plugin>
 				</plugins>
 			</layer>
+
 		</super_layer>
+
 		<super_layer code="OSA" name="Operative System API">
+
 			<layer name="Multi OS" language="java">
 				<addons>
 					<addon
@@ -6286,6 +6297,7 @@
 					</addon>
 				</addons>
 			</layer>
+
 			<layer name="Andoid" language="java">
 				<addons>
 					<addon
@@ -6432,6 +6444,9 @@
 					</addon>
 				</addons>
 			</layer>
+
 		</super_layer>
+
 	</super_layers>
+
 </fermat>
