@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
@@ -412,11 +413,18 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		if(networkServicesRegistryByTypeCache.containsKey(networkService)){
 
             /*
+             * Decrypt the data packet json object string
+             */
+            String decryptedJsonMessageContent = AsymmectricCryptography.decryptMessagePrivateKey(fMPPacketReceive.getMessage(), identity.getPrivateKey());
+
+            System.out.println("CloudServiceManager - decryptedJsonMessageContent = "+decryptedJsonMessageContent);
+
+            /*
              * Get identity of the remote network service in the value of the message
              */
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
-            JsonObject messageReceived = parser.parse(fMPPacketReceive.getMessage()).getAsJsonObject();
+            JsonObject messageReceived = parser.parse(decryptedJsonMessageContent).getAsJsonObject();
 
             /*
              * Construct the message structure info

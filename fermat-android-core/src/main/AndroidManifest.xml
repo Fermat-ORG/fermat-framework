@@ -59,12 +59,14 @@
             </intent-filter>
         </activity>
 
+        <!--
         <receiver android:name="com.bitdubai.android_core.app.BootupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        -->
 
         <!-- Falta darle el permiso a alguien para que pueda o no apagar el servicio este -->
         <service android:name="com.bitdubai.android_core.app.LoaderService"

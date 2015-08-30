@@ -92,8 +92,8 @@ public class CreateIntraUserTest extends TestCase {
     @Mock
     private PluginTextFile mockIntraUserLoginXml;
 
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+
+    private IntraUserSettings intraUserSettings;
 
     private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
 
@@ -107,13 +107,10 @@ public class CreateIntraUserTest extends TestCase {
     UUID pluginId;
     private String intraUserAlias = "intraUserTest";
 
-    private byte[] intraUserImageProfile = new byte[0];
+    private byte[] intraUserImageProfile = new byte[10];
 
     @Before
     public void setUp() throws Exception{
-
-
-        pluginId= UUID.randomUUID();
 
         MockitoAnnotations.initMocks(this);
 
@@ -135,15 +132,17 @@ public class CreateIntraUserTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
+         when(mockIntraUserIdentityManager.createNewIntraUser(intraUserAlias, intraUserImageProfile)).thenReturn(mockIntraUserIdentity);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
-        when(mockIntraUserIdentityManager.createNewIntraUser(intraUserAlias,intraUserImageProfile)).thenReturn(mockIntraUserIdentity);
-
-
+        when(mockIntraUserIdentity.getAlias()).thenReturn(intraUserAlias);
+        when(mockIntraUserIdentity.getPublicKey()).thenReturn(UUID.randomUUID().toString());
+        when(mockIntraUserIdentity.getProfileImage()).thenReturn(intraUserImageProfile);
     }
 
-    @Ignore
+
     @Test
     public void createIntraUserTest_CreateOk_throwsCouldNotCreateIntraUserException() throws Exception{
 
@@ -156,7 +155,7 @@ public class CreateIntraUserTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void createIntraUserTest_Exception_throwsCouldNotCreateIntraUserException() throws Exception{
 

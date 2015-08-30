@@ -22,7 +22,7 @@ public interface Skin {
      */
     public UUID getSkinId();
     public String getSkinName();
-    public UUID getWalletId();
+    public UUID getWalletId(); //Todo: Refactor a String para que acepte PublicKey
 
     public ScreenSize getScreenSize();
 
@@ -44,7 +44,7 @@ public interface Skin {
     /**
      * Skin resource information
      */
-    //public URL getSkinURL(); //Eliminar
+
     public long getSkinSizeInBytes();
 
     /**

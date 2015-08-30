@@ -61,7 +61,16 @@ public class PublisherIdentityRecord implements PublisherIdentity {
     public String createMessageSignature(String mensage) throws CantSingMessageException {
 
         try{
-            return AsymmectricCryptography.createMessageSignature(mensage,privateKey);
+
+            /*
+             * Get the message hash
+             */
+            String messageHash = AsymmectricCryptography.encryptMessagePublicKey(mensage, publicKey);
+
+            /*
+             * Create the message signature
+             */
+            return AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
         }
         catch(Exception e)
         {

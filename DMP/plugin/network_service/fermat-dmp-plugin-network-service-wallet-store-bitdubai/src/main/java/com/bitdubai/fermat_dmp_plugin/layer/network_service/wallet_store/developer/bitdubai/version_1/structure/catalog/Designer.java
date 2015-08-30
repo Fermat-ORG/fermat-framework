@@ -7,7 +7,6 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/22/15.
  */
-//public class Designer implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer {
 public class Designer implements com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer {
     UUID id;
     String alias;
@@ -32,7 +31,7 @@ public class Designer implements com.bitdubai.fermat_api.layer.dmp_identity.desi
     }
 
     @Override
-    public String getAlias() { return null; }
+    public String getAlias() { return alias; }
 
     /**
      * Get the public key of the represented designer

@@ -208,7 +208,6 @@ public class WalletAddressBookCryptoModulePluginRoot implements Crypto, Database
         WalletAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new WalletAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         List<DeveloperDatabase> developerDatabaseList = null;
         try {
-            dbFactory.initializeDatabase();
             developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
@@ -227,7 +226,6 @@ public class WalletAddressBookCryptoModulePluginRoot implements Crypto, Database
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         try {
             WalletAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new WalletAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            dbFactory.initializeDatabase();
             List<DeveloperDatabaseTable> developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
             return developerDatabaseTableList;
         } catch (Exception e) {

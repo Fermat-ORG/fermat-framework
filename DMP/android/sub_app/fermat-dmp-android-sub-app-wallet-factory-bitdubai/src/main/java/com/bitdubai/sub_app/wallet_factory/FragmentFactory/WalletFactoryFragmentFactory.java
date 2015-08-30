@@ -15,38 +15,38 @@ import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<WalletFactorySubAppSession,WalletFactoryPreferenceSettings,WalletFactoryFragmentsEnumType> {
+public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<WalletFactorySubAppSession, WalletFactoryPreferenceSettings, WalletFactoryFragmentsEnumType> {
 
 
-    public WalletFactoryFragmentFactory(){}
+    public WalletFactoryFragmentFactory() {
+    }
 
 
     @Override
     public FermatFragment getFermatFragment(WalletFactoryFragmentsEnumType fragments) throws FragmentNotFoundException {
         FermatFragment currentFragment = null;
 
-        switch (fragments){
+        switch (fragments) {
             /**
              * Executing fragments for BITCOIN REQUESTED.
              */
             case CWP_WALLET_FACTORY_PROJECTS_FRAGMENT:
-                currentFragment =  ProjectsFragment.newInstance(0, null);
+                currentFragment = ProjectsFragment.newInstance();
                 break;
             case CWP_WALLET_FACTORY_MAIN_FRAGMENT:
-                currentFragment = MainFragment.newInstance(0, null);
+                currentFragment = MainFragment.newInstance();
                 break;
             case CWP_WALLET_FACTORY_MANAGER_FRAGMENT:
-                currentFragment =  ManagerFragment.newInstance(0, null);
+                currentFragment = ManagerFragment.newInstance();
                 break;
-
             case CWP_WALLET_FACTORY_SEND_FRAGMENT:
-                currentFragment =  SendFragment.newInstance(0,null);
+                currentFragment = SendFragment.newInstance();
                 break;
             case CWP_WALLET_FACTORY_EDIT_MODE:
-                currentFragment = EditableWalletFragment.newInstance(0, null, false, null);
+                currentFragment = EditableWalletFragment.newInstance(false);
                 break;
             default:
-                throw new FragmentNotFoundException("Fragment not found",new Exception(),fragments.getKey(),"Swith failed");
+                throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");
         }
         return currentFragment;
     }

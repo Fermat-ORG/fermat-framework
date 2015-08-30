@@ -4,6 +4,7 @@ import android.app.Fragment;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
@@ -34,7 +35,7 @@ public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_andro
      */
 
     @Override
-    public Fragment getFragment(String code,WalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException {
+    public Fragment getFragment(String code,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException {
 
         Fragment currentFragment = null;
         try {
@@ -48,7 +49,7 @@ public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_andro
                  * Executing fragments for BITCOIN REQUESTED.
                  */
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
-                    currentFragment = BalanceFragment.newInstance(0, refereceWalletSession, walletSettingsManager, walletResourcesProviderManager);
+                    currentFragment = BalanceFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                     currentFragment = ReceiveFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
@@ -70,7 +71,7 @@ public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_andro
                     currentFragment = ContactDetailFragment.newInstance(refereceWalletSession, walletResourcesProviderManager);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST:
-                    currentFragment = MoneyRequestFragment.newInstance(0, null, walletSettingsManager, refereceWalletSession, walletResourcesProviderManager);
+                    currentFragment = MoneyRequestFragment.newInstance(0, null, refereceWalletSession, walletResourcesProviderManager);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK:
                     currentFragment = TransactionsBookFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager, 0);

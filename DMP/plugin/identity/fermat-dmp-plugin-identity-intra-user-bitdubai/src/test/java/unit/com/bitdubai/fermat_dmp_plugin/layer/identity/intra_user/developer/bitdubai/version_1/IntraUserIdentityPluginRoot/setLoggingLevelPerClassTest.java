@@ -53,7 +53,7 @@ public class setLoggingLevelPerClassTest {
     private IntraUserIdentityPluginRoot pluginRoot;
 
     @Test
-    public void getClassTest() throws CantOpenDatabaseException, DatabaseNotFoundException, CantCreateNewIntraUserException {
+    public void setLoggingLevelPerClassTest() throws CantOpenDatabaseException, DatabaseNotFoundException, CantCreateNewIntraUserException {
         UUID testOwnerId = UUID.randomUUID();
 
         pluginRoot = new IntraUserIdentityPluginRoot();
@@ -70,11 +70,8 @@ public class setLoggingLevelPerClassTest {
         newLoggingLevel.put(eccKeyPair.getPrivateKey(), LogLevel.AGGRESSIVE_LOGGING);
 
         pluginRoot.setLoggingLevelPerClass(newLoggingLevel);
-        pluginRoot.setLoggingLevelPerClass(newLoggingLevel);
 
-        byte[] profile = new byte[100];
 
-        catchException(pluginRoot).createNewIntraUser("alias", profile);
-        assertThat(CatchException.<Exception>caughtException()).isNotNull();
+
     }
 }

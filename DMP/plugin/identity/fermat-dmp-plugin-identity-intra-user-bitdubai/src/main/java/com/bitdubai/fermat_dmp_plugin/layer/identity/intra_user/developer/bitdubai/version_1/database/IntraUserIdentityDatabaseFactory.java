@@ -47,7 +47,7 @@ public class IntraUserIdentityDatabaseFactory implements DealsWithPluginDatabase
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
@@ -55,17 +55,11 @@ public class IntraUserIdentityDatabaseFactory implements DealsWithPluginDatabase
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
-        }
 
         /**
          * Next, I will add the needed tables.
          */
-        try {
+
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
@@ -80,20 +74,36 @@ public class IntraUserIdentityDatabaseFactory implements DealsWithPluginDatabase
 
             table.addIndex(IntraUserIdentityDatabaseConstants.INTRA_USER_FIRST_KEY_COLUMN);
 
-            try {
+
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
+
+            return database;
+
+        } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-        } catch (InvalidOwnerIdException invalidOwnerId) {
+
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            /**
+             * I can not handle this situation.
+             */
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+        }
+        catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
         }
-        return database;
+        catch (Exception e) {
+            /**
+             * This shouldn't happen here because I was the one who gave the owner id to the database file system,
+             * but anyway, if this happens, I can not continue.
+             */
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "General Exception.");
+        }
+
     }
 
     /**

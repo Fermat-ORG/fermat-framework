@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -16,29 +15,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-
-
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentsObjects;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.ListComponent;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by Matias Furszyfer on 02/06/2015.
  */
-public class BalanceFragment extends Fragment {
+public class BalanceFragment extends FermatWalletFragment {
 
     String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
@@ -94,10 +93,7 @@ public class BalanceFragment extends Fragment {
 
     private ReferenceWalletSession referenceWalletSession;
 
-    /**
-     * Preference setting
-     */
-    WalletSettingsManager walletSettingsManager;
+    ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings;
 
     /**
      * list of last 5 transactions
@@ -117,10 +113,9 @@ public class BalanceFragment extends Fragment {
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,ReferenceWalletSession walletSession,WalletSettingsManager walletSettingsManager,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static BalanceFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
-        balanceFragment.setReferenceWalletSession( walletSession);
-        balanceFragment.setWalletSettingManager(walletSettingsManager);
+        balanceFragment.setReferenceWalletSession(walletSession);
         balanceFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return balanceFragment;
     }
@@ -133,6 +128,8 @@ public class BalanceFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //setRetainInstance(true);
+
+
         /**
          *
          */
@@ -199,9 +196,6 @@ public class BalanceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if(savedInstanceState!=null){
-            cryptoWallet =(CryptoWallet) savedInstanceState.get(CRYPTO_WALLET_PARAM);
-        }
         try {
 
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
@@ -245,10 +239,6 @@ public class BalanceFragment extends Fragment {
             });
 
 
-            List<CryptoWalletTransaction> cryptoWalletTransactions = null;
-            cryptoWalletTransactions = cryptoWallet.getTransactions(5, 0, walletPublicKey);
-
-
             List<CustomComponentsObjects> lstData = new ArrayList<CustomComponentsObjects>();
 
             //when we have transactions
@@ -258,7 +248,11 @@ public class BalanceFragment extends Fragment {
         }
         */
 
-            lstCryptoWalletTransactions = cryptoWallet.getTransactions(5, 0, walletPublicKey);
+            WalletSettings walletSettings = (WalletSettings)referenceWalletSession.getWalletSettings();
+            ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
+            //this.referenceWalletPreferenceSettings = walletSettings.getPreferenceSettings(referenceWalletPreferenceSettings);
+            this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
+            lstCryptoWalletTransactions = cryptoWallet.getTransactions(referenceWalletPreferenceSettings.getTransactionsToShow(), 0, walletPublicKey);
 
 
             // testing purpose
@@ -268,19 +262,23 @@ public class BalanceFragment extends Fragment {
 //        lstData.add(new ListComponent("Fer Lewn", "Paid 30 btc","person12"));
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
-                //TODO: este metodo va a desaparecer y se va a reemplazar por el metodo de getWalletContactById
-                List<WalletContactRecord> lstWalletContact = cryptoWallet.getWalletContactByNameContainsAndWalletPublicKey(cryptoWalletTransaction.getInvolvedActorName(), walletPublicKey);
-                lstData.add(new ListComponent(cryptoWalletTransaction,lstWalletContact.get(0)));
+                if(cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())){
+                    ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
+                    lstData.add(listComponent);
+                }
+
             }
 
 
             Resources res = getResources();
 
+
             CustomComponentMati custonMati = (CustomComponentMati) rootView.findViewById(R.id.custonMati);
 
             custonMati.setResources(res);
 
-
+            custonMati.setWalletResources(referenceWalletSession.getWalletResourcesProviderManager());
+            custonMati.setWalletSettings(referenceWalletPreferenceSettings);
             custonMati.setDataList(lstData);
 
 
@@ -293,21 +291,35 @@ public class BalanceFragment extends Fragment {
             custonMati.setSeeAlltransactionsEvent(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((FermatScreenSwapper) getActivity()).changeActivity("CWRWBWBV1T");
+                            ((FermatScreenSwapper) getActivity()).changeActivity("CWRWBWBV1T");
                 }
             });
         } catch (CantGetTransactionsException e){
-
-        } catch (CantGetWalletContactException e) {
             e.printStackTrace();
         } catch (Exception e){
-
+            e.printStackTrace();
         }
 
 
         return rootView;
     }
 
+
+
+
+    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
+        if (cryptoWalletTransaction.getContactId() != null) {
+            try {
+                CryptoWalletWalletContact walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
+                return walletContactRecord.getActorName();
+            } catch (Exception e) {
+                System.out.println("esta es para vos mati.");
+            }
+        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
+            return cryptoWalletTransaction.getInvolvedActor().getName();
+        }
+        return "Unknow";
+    }
 
     /*
         Method to change the balance type
@@ -406,10 +418,6 @@ public class BalanceFragment extends Fragment {
      */
     public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
-    }
-
-    public void setWalletSettingManager(WalletSettingsManager walletSettingManager) {
-        this.walletSettingsManager = walletSettingManager;
     }
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {

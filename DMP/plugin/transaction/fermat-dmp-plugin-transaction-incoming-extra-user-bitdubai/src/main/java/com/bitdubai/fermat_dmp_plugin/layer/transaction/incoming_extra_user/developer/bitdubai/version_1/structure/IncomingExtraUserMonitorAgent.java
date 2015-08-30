@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.SourceNotRecognizedException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -262,6 +263,9 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 // we can report the exception and try again in next call.
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
                 return;
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                return;
             }
         }
 
@@ -273,7 +277,10 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             TransactionProtocolManager<CryptoTransaction> source = null;
             try {
                 source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
-            } catch (InvalidParameterException e) {
+            } catch (InvalidParameterException | SourceNotRecognizedException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                return;
+            } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 return;
             }
@@ -285,13 +292,11 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 // Now we save the list in the registry
                 this.registry.acknowledgeTransactions(transactionList);
                 System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
-            } catch (CantDeliverPendingTransactionsException e) {
+            } catch (CantDeliverPendingTransactionsException | CantAcknowledgeTransactionException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                //if somethig wrong happenned we try in the next round
                 return;
-            } catch (CantAcknowledgeTransactionException e) {
+            } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                //if somethig wrong happenned we try in the next round
                 return;
             }
 
@@ -303,6 +308,9 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             try {
                 acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
             } catch (InvalidParameterException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                return;
+            } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 return;
             }
@@ -319,6 +327,9 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                     //       la transacción
                     // We will inform the exception and try again in the next round
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    return;
                 }
             }
             // After finishing all the steps we mark the event as seen.
@@ -328,6 +339,9 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             } catch (CantReadEventException | CantSaveEventException exception) { // There are two exceptions and we react in the same way to both
                 // We will inform the exception and try again in the next round
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                return;
             }
         }
         

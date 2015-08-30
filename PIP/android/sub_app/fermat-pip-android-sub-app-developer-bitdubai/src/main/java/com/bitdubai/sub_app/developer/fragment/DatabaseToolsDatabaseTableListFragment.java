@@ -92,7 +92,7 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
 
         errorManager = developerSubAppSession.getErrorManager();
         setRetainInstance(true);
