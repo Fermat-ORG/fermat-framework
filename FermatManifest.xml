@@ -2592,13 +2592,12 @@
 					<android
 							name="Brand Wallet"
 							description=""
-							difficulty="8"
-							code-level="development"
+							difficulty="0"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2695,12 +2694,11 @@
 							name="Brand Wallet"
 							description=""
 							difficulty="3"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2883,12 +2881,11 @@
 							name="Brand Wallet"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2990,7 +2987,6 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Rart3001" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
