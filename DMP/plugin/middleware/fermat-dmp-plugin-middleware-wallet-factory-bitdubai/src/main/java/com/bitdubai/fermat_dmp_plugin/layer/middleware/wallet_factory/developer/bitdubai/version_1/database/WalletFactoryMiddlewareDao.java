@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinException;
@@ -464,6 +466,26 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
             @Override
             public void setSize(int size) {
+
+            }
+
+            @Override
+            public WalletCategory getWalletCategory() {
+                return null;
+            }
+
+            @Override
+            public void setWalletCategory(WalletCategory walletCategory) {
+
+            }
+
+            @Override
+            public FactoryProjectType getFactoryProjectType() {
+                return null;
+            }
+
+            @Override
+            public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
 
             }
         };

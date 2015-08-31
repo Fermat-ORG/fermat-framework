@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -671,6 +672,26 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
+
+            }
+
+            @Override
+            public WalletCategory getWalletCategory() {
+                return WalletCategory.BRANDED_NICHE_WALLET;
+            }
+
+            @Override
+            public void setWalletCategory(WalletCategory walletCategory) {
+
+            }
+
+            @Override
+            public FactoryProjectType getFactoryProjectType() {
+                return FactoryProjectType.WALLET;
+            }
+
+            @Override
+            public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
 
             }
         };
