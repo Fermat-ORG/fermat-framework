@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
@@ -73,7 +74,7 @@ public class ListWalletContactsTest extends TestCase {
 
     @Test
     public void testListWalletContacts_NotNull() throws Exception {
-        List<WalletContactRecord> walletContactRecordsList = walletModuleCryptoWallet.listWalletContacts(walletPublicKey);
+        List<CryptoWalletWalletContact> walletContactRecordsList = walletModuleCryptoWallet.listWalletContacts(walletPublicKey);
         assertThat(walletContactRecordsList).isNotNull();
     }
 

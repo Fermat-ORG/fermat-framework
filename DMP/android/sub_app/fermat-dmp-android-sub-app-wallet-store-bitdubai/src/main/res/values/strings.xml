@@ -6,5 +6,11 @@
     <string name="description_search">Search</string>
     <string name="wallet_icon">wallet icon</string>
     <string name="wallet_installs">Installed</string>
+    <string name="wallet_status_install">INSTALL</string>
+    <string name="wallet_status_installed">INSTALLED</string>
+    <string name="wallet_status_uninstall">UNINSTALL</string>
+    <string name="wallet_status_upgrade">UPGRADE</string>
+    <string name="wallet_status_open">UPGRADE</string>
     <string name="wallet_more_details_button">READ MORE</string>
+    <string name="no_preview_images">No Preview Images</string>
 </resources>
