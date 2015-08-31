@@ -3,4 +3,8 @@ apply plugin: 'java'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':fermat-cry-api')
+    compile ('org.bitcoinj:bitcoinj-core:0.13.2'){
+        exclude module: 'scrypt'
+    }
+    testCompile 'junit:junit:4.12'
 }
