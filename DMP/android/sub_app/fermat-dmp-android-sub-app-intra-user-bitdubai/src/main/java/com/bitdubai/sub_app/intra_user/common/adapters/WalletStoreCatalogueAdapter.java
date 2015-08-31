@@ -1,0 +1,67 @@
+package com.bitdubai.sub_app.intra_user.common.adapters;
+
+import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+
+import com.bitdubai.sub_app.intra_user.common.UtilsFuncs;
+import com.bitdubai.sub_app.intra_user.common.models.WalletStoreListItem;
+import com.intra_user.bitdubai.R;
+
+import java.util.ArrayList;
+
+/**
+ * Created on 22/08/15.
+ * Adapter para el RecliclerView del MainFragment que muestra el catalogo de Wallets disponibles en el store
+ *
+ * @author Nelson Ramirez
+ */
+public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListItem, WalletStoreCatalogueAdapter.CatalogItemViewHolder> {
+    public WalletStoreCatalogueAdapter(Context context, ArrayList<WalletStoreListItem> dataSet) {
+        super(context, dataSet);
+    }
+
+    @Override
+    protected CatalogItemViewHolder createHolder(View itemView, int type) {
+        return new CatalogItemViewHolder(itemView);
+    }
+
+    @Override
+    protected int getCardViewResource() {
+        return R.layout.wallet_store_catalog_item;
+    }
+
+    @Override
+    protected void bindHolder(CatalogItemViewHolder holder, WalletStoreListItem data, int position) {
+        holder.walletName.setText(data.getWalletName());
+        holder.walletIcon.setImageDrawable(data.getWalletIcon());
+        holder.walletPublisherName.setText("Publisher Name");
+
+        InstallationStatus installStatus = data.getInstallationStatus();
+        int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
+        holder.installStatus.setText(resId);
+    }
+
+
+
+    class CatalogItemViewHolder extends FermatViewHolder {
+        ImageView walletIcon;
+        FermatTextView walletName;
+        FermatTextView walletPublisherName;
+        FermatTextView installStatus;
+
+        protected CatalogItemViewHolder(View itemView) {
+            super(itemView);
+
+            walletIcon = (ImageView) itemView.findViewById(R.id.wallet_icon_image);
+            walletName = (FermatTextView) itemView.findViewById(R.id.wallet_name);
+            walletPublisherName = (FermatTextView) itemView.findViewById(R.id.wallet_publisher_name);
+            installStatus = (FermatTextView) itemView.findViewById(R.id.wallet_installation_status);
+        }
+    }
+}
