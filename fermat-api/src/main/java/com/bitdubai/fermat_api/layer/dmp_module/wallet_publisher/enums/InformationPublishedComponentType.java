@@ -48,7 +48,7 @@ public enum InformationPublishedComponentType {
     public String getCode()   { return this.code; }
 
     /**
-     * Get the DescriptorFactoryProjectType representation from code
+     * Get the FactoryProjectType representation from code
      *
      * @param code
      * @return InformationPublishedComponentType
@@ -64,7 +64,7 @@ public enum InformationPublishedComponentType {
             case"L":
                 return LANGUAGE;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the DescriptorFactoryProjectType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FactoryProjectType enum");
 
         }
     }

@@ -9,7 +9,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType</code> define
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType</code> define
  * all the types have a Descriptor Factory Project.
  * <p/>
  *
@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum DescriptorFactoryProjectType {
+public enum FactoryProjectType {
 
     /**
      *  Definitions types
@@ -37,7 +37,7 @@ public enum DescriptorFactoryProjectType {
      *
      * @param code
      */
-    DescriptorFactoryProjectType(String code) {
+    FactoryProjectType(String code) {
         this.code = code;
     }
 
@@ -49,13 +49,13 @@ public enum DescriptorFactoryProjectType {
     public String getCode()   { return this.code; }
 
     /**
-     * Get the DescriptorFactoryProjectType representation from code
+     * Get the FactoryProjectType representation from code
      *
      * @param code
-     * @return DescriptorFactoryProjectType
+     * @return FactoryProjectType
      * @throws InvalidParameterException
      */
-    public static DescriptorFactoryProjectType getByCode(String code) throws InvalidParameterException {
+    public static FactoryProjectType getByCode(String code) throws InvalidParameterException {
 
         switch(code) {
             case"W":
@@ -65,7 +65,7 @@ public enum DescriptorFactoryProjectType {
             case"L":
                 return LANGUAGE;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the DescriptorFactoryProjectType enum");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FactoryProjectType enum");
 
         }
     }
