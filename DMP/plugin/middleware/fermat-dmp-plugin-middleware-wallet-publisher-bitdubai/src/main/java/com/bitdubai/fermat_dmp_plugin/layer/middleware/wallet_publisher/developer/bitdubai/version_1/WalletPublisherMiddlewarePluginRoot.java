@@ -504,7 +504,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             String signature = "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
             URL publisherWebsiteUrl = new URL("http://www.publishertest.com");
 
-            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, WalletCategory.REFERENCE_WALLET, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations,  initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
         } catch (Exception e) {
             e.printStackTrace();

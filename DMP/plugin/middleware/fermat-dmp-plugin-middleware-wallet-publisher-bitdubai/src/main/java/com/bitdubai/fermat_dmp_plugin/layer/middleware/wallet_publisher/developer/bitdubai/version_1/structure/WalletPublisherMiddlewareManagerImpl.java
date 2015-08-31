@@ -248,10 +248,10 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishSkin(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, String, String)
+     * @see WalletPublisherMiddlewareManager#publishSkin(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, URL, String, String)
      */
     @Override
-    public void publishSkin(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    public void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
          /*
          * Construct the  Information Published Component
@@ -266,16 +266,16 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0), publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishLanguage(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, String, String)
+     * @see WalletPublisherMiddlewareManager#publishLanguage(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, URL, String, String)
      */
     @Override
-    public void publishLanguage(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    public void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
         /*
          * Construct the  Information Published Component
@@ -290,16 +290,16 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0), publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, String, String)
+     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, URL, String, String)
      */
     @Override
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
         /*
          * Construct the  Information Published Component
@@ -314,7 +314,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(0,0,0), new Version(0,0,0), initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
     }
 
 
@@ -323,7 +323,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      *
      * @param informationPublishedComponentMiddlewareImpl
      * @param walletFactoryProject
-     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -338,12 +337,12 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @param signature
      * @throws CantPublishComponentMiddlewareException
      */
-    private void publishComponent(InformationPublishedComponentMiddlewareImpl informationPublishedComponentMiddlewareImpl, WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    private void publishComponent(InformationPublishedComponentMiddlewareImpl informationPublishedComponentMiddlewareImpl, WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
         try {
 
             Version defaultVersion = new Version(1, 0, 0);
-            CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
+            CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, null, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
 
             /* ----------------------------------------
              * Create the informationPublishedComponent

@@ -92,7 +92,6 @@ public interface WalletPublisherModuleManager {
      * the wallet store and register relevant information of this process.
      *
      * @param walletFactoryProject
-     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -100,20 +99,16 @@ public interface WalletPublisherModuleManager {
      * @param observations
      * @param initialWalletVersion
      * @param finalWalletVersion
-     * @param initialPlatformVersion
-     * @param finalPlatformVersion
-     * @param publisherWebsiteUrl
      * @param publisherIdentity
      * @throws CantPublishComponentException
      */
-    public void publishSkin(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
+    public void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
 
     /**
      * This method publishes the language factory project <code>LanguageDescriptorFactoryProject</code> with the language information in
      * the wallet store and register relevant information of this process.
      *
      * @param walletFactoryProject
-     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -121,34 +116,27 @@ public interface WalletPublisherModuleManager {
      * @param observations
      * @param initialWalletVersion
      * @param finalWalletVersion
-     * @param initialPlatformVersion
-     * @param finalPlatformVersion
-     * @param publisherWebsiteUrl
      * @param publisherIdentity
      * @throws CantPublishComponentException
      */
-    public void publishLanguage(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
+    public void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
 
     /**
      * This method publishes the wallet factory project <code>WalletFactoryProject</code> with the wallet information in
      * the wallet store and register relevant information of this process.
      *
      * @param walletFactoryProject
-     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
      * @param videoUrl
      * @param observations
-     * @param initialWalletVersion
-     * @param finalWalletVersion
      * @param initialPlatformVersion
-     * @param publisherWebsiteUrl
      * @param finalPlatformVersion
      * @param publisherIdentity
      * @throws CantPublishComponentException
      */
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
+    public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
 
 
 }

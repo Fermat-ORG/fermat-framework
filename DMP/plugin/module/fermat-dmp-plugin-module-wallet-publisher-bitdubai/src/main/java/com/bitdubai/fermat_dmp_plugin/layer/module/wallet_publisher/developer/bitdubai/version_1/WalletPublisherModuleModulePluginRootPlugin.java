@@ -373,22 +373,22 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherModuleManager#publishSkin(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, PublisherIdentity)
+     * @see WalletPublisherModuleManager#publishSkin(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
     @Override
-    public void publishSkin(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
+    public void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
              */
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishSkin(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishSkin(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity.getPublicKey(), signature);
 
             /*
              * Mark the project like publish
@@ -402,22 +402,22 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherModuleManager#publishLanguage(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, PublisherIdentity)
+     * @see WalletPublisherModuleManager#publishLanguage(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
     @Override
-    public void publishLanguage(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
+    public void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0),  new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
              */
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishLanguage(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishLanguage(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity.getPublicKey(), signature);
 
             /*
              * Mark the project like publish
@@ -431,21 +431,21 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherModuleManager#publishWallet(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, PublisherIdentity)
+     * @see WalletPublisherModuleManager#publishWallet(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
+    public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(0,0,0), new Version(0,0,0), initialPlatformVersion, finalPlatformVersion,  new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
              */
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialPlatformVersion, finalPlatformVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity.getPublicKey(), signature);
 
             /*
              * Mark the project like publish
