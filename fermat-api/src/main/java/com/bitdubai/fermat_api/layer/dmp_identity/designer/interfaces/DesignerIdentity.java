@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMe
  * @author natalia on 03/08/15.
  */
 
-public interface Designer {
+public interface DesignerIdentity {
 
     /**
      * Get the alias of the represented designer identity

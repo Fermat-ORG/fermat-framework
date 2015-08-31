@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSing
  * @author natalia on 03/08/15.
  */
 
-public interface Translator {
+public interface TranslatorIdentity {
 
     /**
      * Get the alias of the represented translator identity
