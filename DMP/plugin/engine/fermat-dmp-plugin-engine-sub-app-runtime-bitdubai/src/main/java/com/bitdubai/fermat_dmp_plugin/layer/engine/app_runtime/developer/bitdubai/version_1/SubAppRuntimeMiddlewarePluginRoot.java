@@ -1009,26 +1009,29 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
 
-            statusBar.setColor("#b46a54");
+            statusBar.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Intra User connections");
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
 //            runtimeTabStrip = new TabStrip();
 //            runtimeTabStrip.setTabsColor("#d07b62");
 //            runtimeTabStrip.setTabsTextColor("#FFFFFF");
 //            runtimeTabStrip.setTabsIndicateColor("#b46a54");
-
-
-
             //mati
             runtimeSearchView = new SearchView();
             runtimeSearchView.setLabel("Search");
             runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeMainMenu = new MainMenu();
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Settings");
+            runtimeMainMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setMainMenu(runtimeMainMenu);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());

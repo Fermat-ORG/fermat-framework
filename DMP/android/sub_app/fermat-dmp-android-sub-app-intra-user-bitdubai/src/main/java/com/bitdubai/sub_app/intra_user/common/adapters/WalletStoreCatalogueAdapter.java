@@ -33,35 +33,35 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListIt
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.wallet_store_catalog_item;
+        return R.layout.intra_user_connection_item;
     }
 
     @Override
     protected void bindHolder(CatalogItemViewHolder holder, WalletStoreListItem data, int position) {
-        holder.walletName.setText(data.getWalletName());
-        holder.walletIcon.setImageDrawable(data.getWalletIcon());
-        holder.walletPublisherName.setText("Publisher Name");
+        holder.txtView_profile_name.setText(data.getWalletName());
+        holder.imageView_profile_connection.setImageDrawable(data.getWalletIcon());
+        holder.txtView_profile_phrase.setText("Siempre hacia adelante");
 
         InstallationStatus installStatus = data.getInstallationStatus();
         int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
-        holder.installStatus.setText(resId);
+        holder.txtView_profile_status.setText(resId);
     }
 
 
 
     class CatalogItemViewHolder extends FermatViewHolder {
-        ImageView walletIcon;
-        FermatTextView walletName;
-        FermatTextView walletPublisherName;
-        FermatTextView installStatus;
+        ImageView imageView_profile_connection;
+        FermatTextView txtView_profile_name;
+        FermatTextView txtView_profile_phrase;
+        FermatTextView txtView_profile_status;
 
         protected CatalogItemViewHolder(View itemView) {
             super(itemView);
 
-            walletIcon = (ImageView) itemView.findViewById(R.id.wallet_icon_image);
-            walletName = (FermatTextView) itemView.findViewById(R.id.wallet_name);
-            walletPublisherName = (FermatTextView) itemView.findViewById(R.id.wallet_publisher_name);
-            installStatus = (FermatTextView) itemView.findViewById(R.id.wallet_installation_status);
+            imageView_profile_connection = (ImageView) itemView.findViewById(R.id.imageView_profile_connection);
+            txtView_profile_name = (FermatTextView) itemView.findViewById(R.id.txtView_profile_name);
+            txtView_profile_phrase = (FermatTextView) itemView.findViewById(R.id.txtView_profile_phrase);
+            txtView_profile_status = (FermatTextView) itemView.findViewById(R.id.txtView_profile_status);
         }
     }
 }

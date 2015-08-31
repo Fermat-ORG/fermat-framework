@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ActionMenuView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +66,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeMan
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 
@@ -77,12 +79,17 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
+import com.squareup.picasso.Picasso;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import static android.widget.Toast.*;
+import static java.lang.System.gc;
 
 /**
  * Created by Matias Furszyfer
@@ -91,6 +98,7 @@ import java.util.Vector;
 public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications {
 
     private static final String TAG = "fermat-core";
+    private MainMenu mainMenu;
 
     /**
      * Navigation menu
@@ -132,8 +140,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
         }
     }
 
@@ -148,16 +156,29 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public boolean onCreateOptionsMenu(Menu menu) {
 
         try {
-            MenuInflater inflater = getMenuInflater();
+            if(mainMenu!=null){
+                for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem: mainMenu.getMenuItems()){
+                    MenuItem item = menu.add (menuItem.getLabel());
+//                item.setOnMenuItemClickListener (new ActionMenuView.OnMenuItemClickListener(){
+//                    @Override
+//                    public boolean onMenuItemClick (MenuItem item){
+//
+//                        //makeText(, "Mati",LENGTH_SHORT).show();
+//                        return true;
+//                    }
+//                });
+                }
+            }
 
-            /**
-             *  Our future code goes here...
-             */
+
+            return true;
+
+
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -189,8 +210,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -201,48 +222,26 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void loadBasicUI(Activity activity) {
 
         try {
-            /**
-             * Get tabs to paint
-             */
             TabStrip tabs = activity.getTabStrip();
-            /**
-             * Get activities fragment
-             */
+
             Map<String, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment> fragments = activity.getFragments();
-            /**
-             * get actionBar to paint
-             */
+
             TitleBar titleBar = activity.getTitleBar();
-            /**
-             * Get mainMenu to paint
-             */
+
             MainMenu mainMenu = activity.getMainMenu();
-            /**
-             * Get NavigationDrawer to paint
-             */
+
             SideMenu sideMenu = activity.getSideMenu();
 
-            /**
-             * Pick the layout
-             */
             setMainLayout(sideMenu);
 
-            /**
-             * Paint tabs in layout
-             */
+            setMainMenu(mainMenu);
+
             paintTabs(tabs, activity);
 
-            /**
-             * Paint statusBar
-             */
             paintStatusBar(activity.getStatusBar());
-            /**
-             * Paint titleBar
-             */
+
             paintTitleBar(titleBar, activity);
-            /**
-             * Setting up Wizards...
-             */
+
             if (tabs != null && tabs.getWizards() != null)
                 setWizards(tabs.getWizards());
 
@@ -251,11 +250,18 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
         }
     }
 
+    private void paintMainMenu(MainMenu mainMenu) {
+
+    }
+
+    private void setMainMenu(MainMenu mainMenu){
+        this.mainMenu = mainMenu;
+    }
 
     public Activity getActivityUsedType() {
         Activity activity = null;
@@ -330,13 +336,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Method used from a Wallet to paint tabs
      */
     protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, WalletSession walletSession) {
-        /**
-         * Get pager from xml
-         */
+
         PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
-        /**
-         * Get pagerTabs
-         */
+
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
@@ -364,19 +366,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Method used from a subApp to paint tabs
      */
     protected void setPagerTabs(SubApp subApp, TabStrip tabStrip, SubAppsSession subAppsSession) {
-        /**
-         * Get pager from xml
-         */
+
         PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
-        /**
-         * Get pagerTabs
-         */
+
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
-        /**
-         * Making the pagerTab adapter
-         */
 
         String subAppType = subApp.getType().getCode();
 
@@ -531,7 +526,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                     // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
-                    window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/home3.png"), null));
+
+                    gc();
+                    InputStream inputStream= getAssets().open("drawables/home3.png");
+
+
+                    window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -614,8 +614,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
 
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
         }
     }
 
@@ -653,8 +653,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
 
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
+            makeText(getApplicationContext(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
         }
     }
 
@@ -733,7 +733,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         } catch (Exception ex) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getApplicationContext(), "Oooops! recovering from system error", LENGTH_SHORT).show();
         }
     }
 
@@ -847,6 +847,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     public WalletStoreModuleManager getWalletStoreModuleManager() {
         return (WalletStoreModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_STORE_MODULE);
+    }
+
+    /**
+     *  Get IntraUserModuleManager
+     */
+    public IntraUserModuleManager getIntraUserModuleManager() {
+        return (IntraUserModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
     }
 
     /**
