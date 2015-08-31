@@ -1209,23 +1209,6 @@
 			<layer name="Sub App" language="java-android">
 				<androids>
 					<android
-							name="Wallet Manager"
-							description=""
-							difficulty="4"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="fvasquezjatar"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
 							name="Wallet Factory"
 							description=""
 							difficulty="10"
@@ -1279,6 +1262,28 @@
 				</androids>
 			</layer>
 
+			<layer name="Desktop" language="java-android">
+				<androids>
+					<android
+							name="Wallet Manager"
+							description=""
+							difficulty="4"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
 			<layer name="Engine" language="java">
 				<plugins>
 					<plugin
@@ -1303,23 +1308,6 @@
 
 			<layer name="Sub App Module" language="java">
 				<plugins>
-					<plugin
-							name="Wallet Manager"
-							description=""
-							difficulty="4"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="darkestpriest" scope="implementation" percentage="80"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="darkestpriest"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 					<plugin
 							name="Wallet Factory"
 							description=""
@@ -1372,6 +1360,28 @@
 						</mantainers>
 						<certifications>
 							<certification signed-by="acostarodrigo" type="implementation"></certification>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Desktop Module" language="java">
+				<plugins>
+					<plugin
+							name="Wallet Manager"
+							description=""
+							difficulty="4"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="80"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="darkestpriest"></mantainer>
+						</mantainers>
+						<certifications>
 						</certifications>
 					</plugin>
 				</plugins>
