@@ -1565,7 +1565,7 @@
 							name="Bitcoin Wallet"
 							description=""
 							difficulty="8"
-							code-level="production"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1620,7 +1620,7 @@
 					<android
 							name="Extra User"
 							description=""
-							difficulty="4"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
@@ -1641,7 +1641,7 @@
 							name="Crypto Wallet"
 							description=""
 							difficulty="3"
-							code-level="production"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1680,7 +1680,7 @@
 					<plugin
 							name="Extra User"
 							description=""
-							difficulty="2"
+							difficulty="0"
 							code-level="concept"
 							>
 						<authors>
