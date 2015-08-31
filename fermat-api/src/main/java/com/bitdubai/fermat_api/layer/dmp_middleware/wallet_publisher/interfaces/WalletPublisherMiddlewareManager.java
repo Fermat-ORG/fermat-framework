@@ -82,7 +82,8 @@ public interface WalletPublisherMiddlewareManager{
      * This method publishes the skin factory project <code>SkinDescriptorFactoryProject</code> with the skin information in
      * the wallet store and register relevant information of this process.
      *
-     * @param skin
+     * @param walletFactoryProject
+     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -92,27 +93,35 @@ public interface WalletPublisherMiddlewareManager{
      * @param finalWalletVersion
      * @param initialPlatformVersion
      * @param finalPlatformVersion
+     * @param publisherWebsiteUrl
      * @param publisherIdentityPublicKey
+     * @param signature
      * @throws CantPublishComponentException
      */
-    public void publishSkin(Skin skin, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    public void publishSkin(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
+     *
      * This method publishes the language factory project <code>LanguageDescriptorFactoryProject</code> with the language information in
      * the wallet store and register relevant information of this process.
      *
-     * @param language
+     * @param walletFactoryProject
+     * @param walletCategory
      * @param icon
      * @param mainScreenShot
+     * @param screenShotDetails
+     * @param videoUrl
      * @param observations
      * @param initialWalletVersion
      * @param finalWalletVersion
      * @param initialPlatformVersion
      * @param finalPlatformVersion
+     * @param publisherWebsiteUrl
      * @param publisherIdentityPublicKey
+     * @param signature
      * @throws CantPublishComponentException
      */
-    public void publishLanguage(Language language, byte[] icon, byte[] mainScreenShot, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    public void publishLanguage(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
      * This method publishes the wallet factory project <code>WalletDescriptorFactoryProject</code> with the wallet information in

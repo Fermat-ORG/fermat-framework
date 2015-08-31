@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure;
 
 import java.nio.channels.SelectionKey;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -35,7 +37,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	private Map<String, CloudNetworkServiceVPN> activeVPNConnections = new ConcurrentHashMap<String, CloudNetworkServiceVPN>();
 	
 	public CloudNetworkServiceManager(final CommunicationChannelAddress address, final ExecutorService executor, final ECCKeyPair keyPair, final NetworkServices networkService, final Collection<Integer> availableVPNPorts) throws IllegalArgumentException{
-		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
+		super(address, executor, keyPair, CloudFMPConnectionManagerMode.FMP_SERVER);
 		if(networkService == null)
 			throw new IllegalArgumentException();
 		this.networkService = networkService;
@@ -280,5 +282,10 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 
 		return new RegisteringAddressHasNotRequestedConnectionException(message, null, context, possibleReason);
 
+	}
+
+	public List<String> getNetworkServicesConnectedList(){
+
+		return  new ArrayList<>(activeVPNConnections.keySet());
 	}
 }
