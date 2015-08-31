@@ -2127,7 +2127,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Network Service" language="java">
+			<layer name="Actor Network Service" language="java">
 				<plugins>
 					<plugin
 							name="Intra User"
@@ -2149,6 +2149,11 @@
 							<certification type="testing" signed-by=""></certification>
 						</certifications>
 					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Network Service" language="java">
+				<plugins>
 					<plugin
 							name="Crypto Address"
 							description="Enables the underground exchange of crypto addresses"
