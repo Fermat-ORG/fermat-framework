@@ -1621,15 +1621,13 @@
 							name="Extra User"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1683,15 +1681,13 @@
 							name="Extra User"
 							description=""
 							difficulty="2"
-							code-level="development"
+							code-level="conccept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
