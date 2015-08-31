@@ -83,7 +83,6 @@ public interface WalletPublisherMiddlewareManager{
      * the wallet store and register relevant information of this process.
      *
      * @param walletFactoryProject
-     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -91,14 +90,12 @@ public interface WalletPublisherMiddlewareManager{
      * @param observations
      * @param initialWalletVersion
      * @param finalWalletVersion
-     * @param initialPlatformVersion
-     * @param finalPlatformVersion
      * @param publisherWebsiteUrl
      * @param publisherIdentityPublicKey
      * @param signature
      * @throws CantPublishComponentException
      */
-    public void publishSkin(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    public void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
      *
@@ -106,7 +103,6 @@ public interface WalletPublisherMiddlewareManager{
      * the wallet store and register relevant information of this process.
      *
      * @param walletFactoryProject
-     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -114,35 +110,30 @@ public interface WalletPublisherMiddlewareManager{
      * @param observations
      * @param initialWalletVersion
      * @param finalWalletVersion
-     * @param initialPlatformVersion
-     * @param finalPlatformVersion
      * @param publisherWebsiteUrl
      * @param publisherIdentityPublicKey
      * @param signature
      * @throws CantPublishComponentException
      */
-    public void publishLanguage(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    public void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
      * This method publishes the wallet factory project <code>WalletDescriptorFactoryProject</code> with the wallet information in
      * the wallet store and register relevant information of this process.
      *
      * @param walletFactoryProject
-     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
      * @param videoUrl
      * @param observations
-     * @param initialWalletVersion
-     * @param finalWalletVersion
      * @param initialPlatformVersion
      * @param finalPlatformVersion
      * @param publisherWebsiteUrl
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
 
 
