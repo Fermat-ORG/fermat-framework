@@ -45,7 +45,7 @@ public class AssetsVaultPluginRoot implements AssetsVaultManager, CryptoVault, D
 
     @Override
     public String getUserPublicKey() {
-        return null;
+        return "assetsVault";
     }
 
     @Override
@@ -83,11 +83,6 @@ public class AssetsVaultPluginRoot implements AssetsVaultManager, CryptoVault, D
 
         vault = new Wallet(RegTestParams.get());
         bitcoinCryptoNetworkManager.setVault(this);
-        try {
-            bitcoinCryptoNetworkManager.connectToBitcoinNetwork();
-        } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
-            cantConnectToBitcoinNetwork.printStackTrace();
-        }
 
         this.serviceStatus = ServiceStatus.STARTED;
         System.out.println("Asset Vault started.");
