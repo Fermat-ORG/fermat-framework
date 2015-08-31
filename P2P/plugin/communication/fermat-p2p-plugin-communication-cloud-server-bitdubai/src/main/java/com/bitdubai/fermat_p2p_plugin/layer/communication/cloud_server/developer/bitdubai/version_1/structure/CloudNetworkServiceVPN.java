@@ -25,7 +25,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	private Set<String> participants = new ConcurrentSkipListSet<String>();
 	
 	public CloudNetworkServiceVPN(final CommunicationChannelAddress address, final ExecutorService executor, final com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair keyPair, final NetworkServices networkService, final Collection<String> participants) throws IllegalArgumentException{
-		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
+		super(address, executor, new ECCKeyPair(keyPair.getPrivateKey(), keyPair.getPublicKey()), CloudFMPConnectionManagerMode.FMP_SERVER);
 		if(networkService == null)
 			throw new IllegalArgumentException();
 		this.networkService = networkService;
