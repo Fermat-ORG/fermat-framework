@@ -496,10 +496,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             URL videoUrl = new URL("http://www.youtube.com/watch?v=pBzjx7V3Ldw");
             String observations = "Its Rock!";
-            Version initialWalletVersion = new Version(1,0,0);
-            Version finalWalletVersion = new Version(1,0,0);;
-            Version initialPlatformVersion = new Version(1,0,0);;
-            Version finalPlatformVersion = new Version(1,0,0);;
+            Version initialPlatformVersion = new Version(1,0,0);
+            Version finalPlatformVersion = new Version(1,0,0);
             String publisherIdentityPublicKey = "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             String signature = "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
             URL publisherWebsiteUrl = new URL("http://www.publishertest.com");
