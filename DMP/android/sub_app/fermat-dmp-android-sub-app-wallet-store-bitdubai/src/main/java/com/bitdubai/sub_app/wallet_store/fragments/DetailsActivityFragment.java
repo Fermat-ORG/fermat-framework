@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -26,11 +27,15 @@ import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.DEVELOPER_NAME;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.LANGUAGE_ID;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.PREVIEW_IMGS;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.SKIN_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.WALLET_VERSION;
 
 
 /**
@@ -70,8 +75,13 @@ public class DetailsActivityFragment extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wallet_store_fragment_details_activity, container, false);
 
+        ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
         WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
         String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
+        Version version = (Version) subAppsSession.getData(WALLET_VERSION);
+        UUID languageId = (UUID) subAppsSession.getData(LANGUAGE_ID);
+        UUID skinId = (UUID) subAppsSession.getData(SKIN_ID);
+
 
 
 
@@ -128,7 +138,7 @@ public class DetailsActivityFragment extends FermatFragment {
             });
         }
 
-        ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
+
         RecyclerView previewImagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
         if (walletPreviewImgList != null) {
             LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);

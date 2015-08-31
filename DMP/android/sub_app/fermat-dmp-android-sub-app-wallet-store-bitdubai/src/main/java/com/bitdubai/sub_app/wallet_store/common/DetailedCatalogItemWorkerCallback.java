@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.wallet_store.common;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v4.util.ArrayMap;
 
@@ -23,7 +22,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
 
 /**
  * Created by nelson on 29/08/15.
- * Clase CallBack para {@link DetailCatalogItemWorker}
+ * Clase CallBack para {@link DetailedCatalogItemWorker}
  */
 public class DetailedCatalogItemWorkerCallback implements FermatWorkerCallBack {
     private final Activity activity;

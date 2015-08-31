@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.wallet_store.bitdubai.R;
@@ -31,6 +32,7 @@ public class WalletStoreListItem implements Serializable {
     private String description;
     private Bitmap walletIcon;
     private UUID id;
+    private WalletCategory category;
 
 
     /**
@@ -42,6 +44,8 @@ public class WalletStoreListItem implements Serializable {
     public WalletStoreListItem(WalletStoreCatalogueItem catalogueItem, Resources res) {
 
         id = catalogueItem.getId();
+
+        category = catalogueItem.getCategory();
 
         walletName = catalogueItem.getName();
 
@@ -64,6 +68,14 @@ public class WalletStoreListItem implements Serializable {
         return description;
     }
 
+    public WalletCategory getCategory() {
+        return category;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
     public InstallationStatus getInstallationStatus() {
         return installationStatus;
     }
@@ -74,10 +86,6 @@ public class WalletStoreListItem implements Serializable {
 
     public Bitmap getWalletIcon() {
         return walletIcon;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
 

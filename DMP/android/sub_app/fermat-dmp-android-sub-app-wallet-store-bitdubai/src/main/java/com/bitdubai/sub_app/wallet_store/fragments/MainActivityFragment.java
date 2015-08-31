@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletSt
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.sub_app.wallet_store.common.DetailCatalogItemWorker;
+import com.bitdubai.sub_app.wallet_store.common.DetailedCatalogItemWorker;
 import com.bitdubai.sub_app.wallet_store.common.DetailedCatalogItemWorkerCallback;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
@@ -116,7 +116,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         DetailedCatalogItemWorkerCallback workerCallback = new DetailedCatalogItemWorkerCallback(
                 data, activity, subAppsSession, subAppSettings, subAppResourcesProviderManager);
 
-        DetailCatalogItemWorker worker = new DetailCatalogItemWorker(activity, workerCallback);
+        DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(activity, workerCallback);
         worker.setCatalogItemId(data.getId());
         worker.setModuleManager(moduleManager);
         worker.run();
