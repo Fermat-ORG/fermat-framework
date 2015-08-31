@@ -3,15 +3,12 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.version_1.s
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.JsonService;
 
 import org.fest.assertions.api.Assertions;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 

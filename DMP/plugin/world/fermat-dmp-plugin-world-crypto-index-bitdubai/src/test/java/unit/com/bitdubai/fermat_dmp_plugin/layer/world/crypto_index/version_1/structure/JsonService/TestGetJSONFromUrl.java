@@ -1,13 +1,10 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.version_1.structure.JsonService;
 
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.JsonService;
-import junit.framework.TestCase;
 
 import org.fest.assertions.api.Assertions;
 import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.io.IOException;
 
