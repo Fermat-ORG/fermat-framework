@@ -276,7 +276,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
         this.serviceStatus = ServiceStatus.STARTED;
         //TODO:delete this line
-        testMethod();
+        //testMethod();
 
     }
     @Override
@@ -520,8 +520,11 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
      */
     public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException{
         try {
-
+            Logger LOG = Logger.getGlobal();
+            LOG.info("MAP_WALLET_CATEGORY:"+walletCategory);
+            LOG.info("MAP_WPI:"+walletPlatformIdentifier);
             eventManager.raiseEvent( new WalletInstalledEvent(EventType.WALLET_INSTALLED));
+            LOG.info("MAP_EVENT:"+eventManager.toString());
             return new WalletManagerMiddlewareInstallationProcess(this.walletResources,walletCategory,walletPlatformIdentifier,this.pluginDatabaseSystem,pluginId);
 
         } catch (Exception e){

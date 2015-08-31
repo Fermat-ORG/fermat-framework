@@ -104,12 +104,13 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                                   String languageLabel,
                                   String developerName,
                                   String navigationStructureVersion) throws CantInstallWalletException {
-        //Logger LOG = Logger.getGlobal();
+        Logger LOG = Logger.getGlobal();
         try {
             /**
              * Start the installation process
              */
             installationProgress = InstallationStatus.INSTALLING;
+            LOG.info("INSTALANDO:"+installationProgress);
 
             if(!isWalletInstalled(walletCatalogueId)){
                 /**
@@ -133,6 +134,8 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                  * Set status installed
                  */
                 installationProgress = InstallationStatus.INSTALLED;
+                LOG.info("INSTALADO:"+installationProgress);
+
             }
 
         // TODO: Le tendria que pasar la wallet public key
