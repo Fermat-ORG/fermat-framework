@@ -541,7 +541,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public WalletType getWalletType() {
-                return null;
+                return WalletType.NICHE;
             }
 
             @Override

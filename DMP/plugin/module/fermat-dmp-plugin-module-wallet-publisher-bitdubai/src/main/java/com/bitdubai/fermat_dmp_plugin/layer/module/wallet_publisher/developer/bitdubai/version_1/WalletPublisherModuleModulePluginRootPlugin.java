@@ -12,10 +12,6 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
@@ -40,6 +36,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.DealsWithPlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherModuleModulePluginRootPlugin implements Service, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherModuleManager
+public class WalletPublisherModuleModulePluginRootPlugin implements Service, DealsWithPlatformInfo, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherModuleManager
 {
 
     /**
@@ -106,6 +105,11 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
      * Represent the walletFactoryProjectManager
      */
     private WalletFactoryProjectManager walletFactoryProjectManager;
+
+    /**
+     * Represent the platformInfoManager
+     */
+    private PlatformInfoManager platformInfoManager;
 
     /**
      * Constructor
@@ -246,6 +250,15 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
     @Override
     public void setWalletFactoryProjectManager(WalletFactoryProjectManager walletFactoryProjectManager) {
         this.walletFactoryProjectManager = walletFactoryProjectManager;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see DealsWithPlatformInfo#setPlatformInfoManager(PlatformInfoManager)
+     */
+    @Override
+    public void setPlatformInfoManager(PlatformInfoManager platformInfoManager) {
+        this.platformInfoManager = platformInfoManager;
     }
 
     /**
@@ -505,4 +518,28 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
          */
         return publisherIdentity.createMessageSignature(stringDataToSing.toString());
     }
+
+
+    /**
+     * (non-Javadoc)
+     * @see  @see WalletPublisherModuleManager#getPlatformVersions()
+     */
+    public List<Version> getPlatformVersions() throws com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException{
+
+        List<Version> versions = new ArrayList<>();
+        try {
+
+            versions.add(platformInfoManager.getPlatformInfo().getVersion());
+
+        } catch (CantLoadPlatformInformationException e) {
+            e.printStackTrace();
+
+            new com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException( e.getLocalizedMessage(), e, "Wallet Publisher", "");
+        }
+
+        return  versions;
+
+    }
+
+
 }
