@@ -3007,7 +3007,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Network Service" language="java">
+			<layer name="Actor Network Service" language="java">
 				<plugins>
 					<plugin
 							name="Shop"
@@ -3054,6 +3054,11 @@
 						<certifications>
 						</certifications>
 					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Network Service" language="java">
+				<plugins>
 					<plugin
 							name="Purchase Transmission"
 							description=""
