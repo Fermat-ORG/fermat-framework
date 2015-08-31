@@ -1268,7 +1268,7 @@
 							name="Wallet Manager"
 							description=""
 							difficulty="4"
-							code-level="production"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1371,7 +1371,7 @@
 							name="Wallet Manager"
 							description=""
 							difficulty="4"
-							code-level="production"
+							code-level="development"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
