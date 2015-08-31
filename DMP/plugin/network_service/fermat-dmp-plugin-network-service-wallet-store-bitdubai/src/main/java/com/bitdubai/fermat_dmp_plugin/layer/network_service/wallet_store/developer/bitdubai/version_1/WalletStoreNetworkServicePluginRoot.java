@@ -48,7 +48,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -75,6 +79,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -567,13 +572,13 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             catalogItemImpl.setDescription("Prueba de insert");
             catalogItemImpl.setpublisherWebsiteUrl(new URL("http://examples.com/pages"));
 
-            byte[] myIcon = new byte[]{114, 22};
+            byte[] myIcon = new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
             catalogItemImpl.setIcon(myIcon);
             catalogItemImpl.setWalletCatalogId(walletId);
 
             com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skin;
             skin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
-            byte[] presentationImage = new byte[]{114, 22};
+            byte[] presentationImage = new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
             skin.setPresentationImage(presentationImage);
             skin.setSkinSizeInBytes(100);
             skin.setFinalWalletVersion(new Version(1, 0, 0));
@@ -581,6 +586,11 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             skin.setInitialWalletVersion(new Version("1.0.0"));
             skin.setVersion(new Version(1, 0, 0));
             skin.setWalletId(walletId);
+            List<byte[]> imagelists = new ArrayList<>();
+            imagelists.add(presentationImage);
+            imagelists.add(presentationImage);
+            imagelists.add(presentationImage);
+            skin.setPreviewImageList(imagelists);
             skin.setId(UUID.randomUUID());
             skin.setName("Mi skin");
             skin.setIsDefault(true);
@@ -611,6 +621,9 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             DetailedCatalogItemImpl detailedCatalogItemImpl;
             detailedCatalogItemImpl = new DetailedCatalogItemImpl();
             detailedCatalogItemImpl.setDefaultSkin(skin);
+            List<Skin> skins = new ArrayList<>();
+            skins.add(skin);
+            detailedCatalogItemImpl.setSkins(skins);
             detailedCatalogItemImpl.setVersion(new Version("1.0.0"));
             detailedCatalogItemImpl.setPlatformInitialVersion(new Version("1.0.0"));
             detailedCatalogItemImpl.setPlatformFinalVersion(new Version("1.0.0"));
@@ -670,6 +683,19 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             detailedCatalogItemImpl.setDeveloper(developerIdentity);
 
             catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);
+
+
+            //create an example icon file
+            PluginTextFile file = pluginFileSystem.createTextFile(this.pluginId, "rodrigo", "archivo", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            file.setContent(myIcon.toString());
+            file.persistToMedia();
+
+
+            //retrieve it
+            PluginTextFile loadedFile = pluginFileSystem.getTextFile(this.pluginId, "rodrigo", "archivo", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            loadedFile.loadFromMedia();
+            byte[] loadedIcon = loadedFile.getContent().getBytes(Charset.forName("UTF-8"));
+
 
 
             this.publishWallet(catalogItemImpl);

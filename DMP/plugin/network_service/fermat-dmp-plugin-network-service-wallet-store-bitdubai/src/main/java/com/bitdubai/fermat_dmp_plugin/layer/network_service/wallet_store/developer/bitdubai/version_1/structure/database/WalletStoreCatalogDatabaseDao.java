@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
@@ -215,7 +216,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return transaction;
     }
 
-    private DatabaseTableRecord getSkinRecord(Skin skin){
+    private DatabaseTableRecord getSkinRecord(com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, skin.getSkinId());
@@ -232,7 +233,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return record;
     }
 
-    private DatabaseTransaction addSkinInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, Skin skin) throws InvalidDatabaseOperationException {
+    private DatabaseTransaction addSkinInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin) throws InvalidDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME);
         DatabaseTableRecord record = getSkinRecord(skin);
 
@@ -833,7 +834,8 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
      * @param designer
      * @throws CantExecuteDatabaseOperationException
      */
-    public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, TranslatorIdentity translator, Skin skin, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer) throws CantExecuteDatabaseOperationException {
+    public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, TranslatorIdentity translator,  com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin, DesignerIdentity designer) throws CantExecuteDatabaseOperationException {
+
         database = openDatabase();
         DatabaseTransaction transaction = database.newTransaction();
         try{

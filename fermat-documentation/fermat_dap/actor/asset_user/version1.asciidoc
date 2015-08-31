@@ -1,4 +1,4 @@
-[[AssetIssuing-AssetIssuing-BitDubai-V1]]
+[[actor-asset-user-BitDubai-V1]]
 = Version 1
 
 == Plug-in Description

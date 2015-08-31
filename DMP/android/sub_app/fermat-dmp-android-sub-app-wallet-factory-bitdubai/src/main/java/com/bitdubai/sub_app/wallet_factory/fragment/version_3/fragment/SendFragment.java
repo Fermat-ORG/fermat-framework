@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
+import com.squareup.picasso.Picasso;
 
 
 public class SendFragment extends FermatFragment {
@@ -248,6 +249,7 @@ public class SendFragment extends FermatFragment {
                 send_to_contact.setTag("SendToContactActivity|" + groupPosition + "|" + childPosition);
 
                 ImageView send_message = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
+
                 send_message.setTag("ChatOverTrxActivity|" + groupPosition + "|" + childPosition);
 
 
