@@ -18,19 +18,19 @@ import java.util.UUID;
  */
 public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWalletContact {
 
-    UUID contactId;
+    private UUID contactId;
 
-    String walletPublicKey;
+    private String walletPublicKey;
 
-    Actors actorType;
+    private Actors actorType;
 
-    CryptoAddress receivedCryptoAddress;
+    private CryptoAddress receivedCryptoAddress;
 
-    UUID actorId;
+    private UUID actorId;
 
-    String actorName;
+    private String actorName;
 
-    byte[] profilePicture;
+    private byte[] profilePicture;
 
     public CryptoWalletWalletModuleWalletContact(WalletContactRecord walletContactRecord, byte[] profilePicture) {
         this.contactId = walletContactRecord.getContactId();
@@ -39,7 +39,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         this.receivedCryptoAddress = walletContactRecord.getReceivedCryptoAddress();
         this.actorId = walletContactRecord.getActorId();
         this.actorName = walletContactRecord.getActorName();
-        this.profilePicture = profilePicture;
+        this.profilePicture = profilePicture != null ? profilePicture.clone() : null;
     }
 
     public CryptoWalletWalletModuleWalletContact(WalletContactRecord walletContactRecord) {
@@ -78,34 +78,6 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
 
     @Override
     public byte[] getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setContactId(UUID contactId) {
-        this.contactId = contactId;
-    }
-
-    public void setWalletPublicKey(String walletPublicKey) {
-        this.walletPublicKey = walletPublicKey;
-    }
-
-    public void setActorType(Actors actorType) {
-        this.actorType = actorType;
-    }
-
-    public void setReceivedCryptoAddress(CryptoAddress receivedCryptoAddress) {
-        this.receivedCryptoAddress = receivedCryptoAddress;
-    }
-
-    public void setActorId(UUID actorId) {
-        this.actorId = actorId;
-    }
-
-    public void setActorName(String actorName) {
-        this.actorName = actorName;
-    }
-
-    public void setProfilePicture(byte[] profilePicture) {
-        this.profilePicture = profilePicture;
+        return profilePicture != null ? profilePicture.clone() : null;
     }
 }
