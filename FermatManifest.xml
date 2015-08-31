@@ -3629,24 +3629,8 @@
 				</plugins>
 			</layer>
 
-			<layer name="Network Service" language="java">
+			<layer name="Actor Network Service" language="java">
 				<plugins>
-					<plugin
-							name="Asset Transmission"
-							description=""
-							difficulty="8"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Rart3001" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 					<plugin
 							name="Asset Issuer"
 							description=""
@@ -3681,6 +3665,27 @@
 					</plugin>
 					<plugin
 							name="Redeem Point"
+							description=""
+							difficulty="8"
+							code-level="development"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Rart3001" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Network Service" language="java">
+				<plugins>
+					<plugin
+							name="Asset Transmission"
 							description=""
 							difficulty="8"
 							code-level="development"
