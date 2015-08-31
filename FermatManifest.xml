@@ -196,10 +196,12 @@
 			<layer name="Niche Wallet" language="java-android"></layer>
 			<layer name="Reference Wallet" language="java-android"></layer>
 			<layer name="Sub App" language="java-android"></layer>
+			<layer name="Desktop" language="java-android"></layer>
 			<layer name="empty layer 1"></layer>
 			<layer name="Engine" language="java"></layer>
 			<layer name="Wallet Module" language="java"></layer>
 			<layer name="Sub App Module" language="java"></layer>
+			<layer name="Desktop Module" language="java"></layer>
 			<layer name="Agent" language="java"></layer>
 			<layer name="Actor" language="java"></layer>
 			<layer name="Middleware" language="java"></layer>
@@ -486,23 +488,6 @@
 						</certifications>
 					</android>
 					<android
-							name="Sub App Manager"
-							description=""
-							difficulty="3"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
 							name="System Monitor"
 							description=""
 							difficulty="0"
@@ -544,6 +529,28 @@
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 						</authors>
 						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
+			<layer name="Desktop" language="java-android">
+				<androids>
+					<android
+							name="Sub App Manager"
+							description=""
+							difficulty="3"
+							code-level="production"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -670,6 +677,26 @@
 					</plugin>
 					<plugin
 							name="Reviews"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Desktop Module" language="java">
+				<plugins>
+					<plugin
+							name="Sub App Manager"
 							description=""
 							difficulty="0"
 							code-level="concept"
