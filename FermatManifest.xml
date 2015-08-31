@@ -1681,7 +1681,7 @@
 							name="Extra User"
 							description=""
 							difficulty="2"
-							code-level="conccept"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
