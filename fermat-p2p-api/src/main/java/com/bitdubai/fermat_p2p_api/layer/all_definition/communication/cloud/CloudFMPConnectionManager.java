@@ -139,25 +139,23 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      *
      * @param communicationChannelAddress
      * @param executorService
-     * @param privateKey
-     * @param publicKey
+     * @param keyPair
      * @param mode
      * @throws IllegalArgumentException
      */
-	public CloudFMPConnectionManager(final CommunicationChannelAddress communicationChannelAddress, final ExecutorService executorService, final String privateKey, final String publicKey, final CloudFMPConnectionManagerMode mode) throws IllegalArgumentException{
+	public CloudFMPConnectionManager(final CommunicationChannelAddress communicationChannelAddress, final ExecutorService executorService, final ECCKeyPair keyPair, final CloudFMPConnectionManagerMode mode) throws IllegalArgumentException{
 
         //Validate argument
 		if(communicationChannelAddress == null ||
                 executorService        == null ||
-                privateKey == null || privateKey.isEmpty() ||
-                publicKey  == null || privateKey.isEmpty()) {
+                keyPair == null) {
 
             throw new IllegalArgumentException();
         }
 
 		this.communicationChannelAddress = communicationChannelAddress;
 		this.executorService             = executorService;
-		this.identity                    = new ECCKeyPair(privateKey,publicKey);
+		this.identity                    = keyPair;
 		this.mode                        = mode;
 		this.running                     = new AtomicBoolean(false);
         this.unregisteredConnections     = new ConcurrentHashMap<>();
@@ -448,15 +446,41 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                  */
                 processIncomingPacket(incomingPacket, connection);
 
+            }else {
+
+                System.out.println("CloudFMPConnectionManager - No Data received, channel client closed");
+
+                /*
+                 * Close the channel
+                 */
+                closeSocketChannelAndCancelConnection(channel, connection);
             }
 
-		} catch(UnsupportedEncodingException ex){
+		} catch (IllegalArgumentException ex){
+
+            System.out.println("CloudFMPConnectionManager - Invalid MAC, package chuck loose");
+
+            ex.printStackTrace();
+
+            //TODO: RESPOND PACKAGE LOOSE TO CLIENT
+
+        } catch(UnsupportedEncodingException ex){
 
             System.out.println("CloudFMPConnectionManager - THIS IS NEVER GOING TO HAPPEN, Error = " + ex.getMessage());
+
+            /*
+             * Close the channel
+             */
+            closeSocketChannelAndCancelConnection(channel, connection);
 
 		} catch (FMPException ex) {
 
             System.out.println("CloudFMPConnectionManager - Error = " + ex.getMessage());
+
+            /*
+             * Close the channel
+             */
+            closeSocketChannelAndCancelConnection(channel, connection);
 
 		}catch(IOException ex){
 
@@ -852,6 +876,8 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      */
 	private void initializeServer() throws CloudCommunicationException {
 		try{
+
+            System.out.println("CloudFMPConnectionManager - Binding to " + communicationChannelAddress.getSocketAddress());
 
             /*
              * Open the selector
