@@ -215,6 +215,7 @@
 			<layer name="Wallet" language="java"></layer>
 			<layer name="World" language="java"></layer>
 			<layer name="Identity" language="java"></layer>
+			<layer name="Actor Network Service" language="java"></layer>
 			<layer name="Network Service" language="java"></layer>
 			<layer name="empty layer 2"></layer>
 			<layer super_layer="P2P"></layer>
@@ -893,6 +894,26 @@
 				</plugins>
 			</layer>
 
+			<layer name="Actor Network Service" language="java">
+				<plugins>
+					<plugin
+							name="Developer"
+							description=""
+							difficulty="0"
+							code-level="concept"
+							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
 			<layer name="Network Service" language="java">
 				<plugins>
 					<plugin
@@ -914,21 +935,6 @@
 					</plugin>
 					<plugin
 							name="System Monitor"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Developer"
 							description=""
 							difficulty="0"
 							code-level="concept"
