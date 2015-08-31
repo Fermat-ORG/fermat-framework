@@ -4845,7 +4845,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Network Service" language="java">
+			<layer name="Actor Network Service" language="java">
 				<plugins>
 					<plugin
 							name="Crypto Broker"
@@ -5786,7 +5786,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Network Service" language="java">
+			<layer name="Actor Network Service" language="java">
 				<plugins>
 					<plugin
 							name="Crypto Wholesaler"
@@ -5921,7 +5921,6 @@
 
 			<layer name="Network Service" language="java">
 				<plugins>
-
 					<plugin
 							name="Device Private Network"
 							description=""
@@ -5937,7 +5936,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 				</plugins>
 			</layer>
 
