@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 
 import java.net.URL;
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
     Version version;
     Version initialWalletVersion;
     Version finalWalletVersion;
-    com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator;
+    TranslatorIdentity translator;
     boolean isDefault;
 
     /**
@@ -99,7 +100,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
     }
 
     @Override
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator() {
+    public TranslatorIdentity getTranslator() {
         return translator;
     }
 
@@ -141,7 +142,7 @@ public class Language implements com.bitdubai.fermat_api.layer.dmp_network_servi
         this.finalWalletVersion = finalWalletVersion;
     }
 
-    public void setTranslator(com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator) {
+    public void setTranslator(TranslatorIdentity translator) {
         this.translator = translator;
     }
 

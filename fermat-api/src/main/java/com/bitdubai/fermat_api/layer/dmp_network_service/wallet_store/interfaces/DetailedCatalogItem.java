@@ -38,6 +38,6 @@ public interface DetailedCatalogItem {
     public Version getPlatformFinalVersion();
 
     public DeveloperIdentity getDeveloper();
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner();
+    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner();
 
 }

@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.*;
 
-import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -38,7 +37,7 @@ public interface Language {
     /**
      * Translator information
      */
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator();
+    public TranslatorIdentity getTranslator();
 
     public boolean isDefault();
 
