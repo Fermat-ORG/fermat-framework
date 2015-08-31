@@ -63,7 +63,6 @@ public interface WalletStoreModuleManager {
      * @throws CantStartInstallationException
      */
     public void installWallet(WalletCategory walletCategory,
-                              NicheWallet nicheWallet,
                               UUID skinId,
                               UUID languageId,
                               UUID walletCatalogueId,

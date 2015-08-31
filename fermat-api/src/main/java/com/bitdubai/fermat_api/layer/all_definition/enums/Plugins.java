@@ -25,6 +25,7 @@ public enum Plugins {
     BITDUBAI_WALLET_MANAGER_MODULE("BWALLMANM", Developers.BITDUBAI),
     BITDUBAI_WALLET_FACTORY_MODULE("BWALLFACM", Developers.BITDUBAI),
     BITDUBAI_BITCOIN_CRYPTO_VAULT("BBTCCRYV", Developers.BITDUBAI),
+    BITDUBAI_ASSETS_CRYPTO_VAULT("BASSTCRYV", Developers.BITDUBAI),
     BITDUBAI_INTRA_USER_FACTORY_MODULE("BINUSFACM", Developers.BITDUBAI),
     BITDUBAI_INTRA_USER_ACTOR("BINUSERA", Developers.BITDUBAI),
     BITDUBAI_INTRA_USER_IDENTITY("BINUSERI", Developers.BITDUBAI),
@@ -82,6 +83,7 @@ public enum Plugins {
     BITDUBAI_DEVELOPER_MODULE("BDEVMOD", Developers.BITDUBAI);
 
 
+
     private String code;
     private Developers developer;
 
@@ -126,6 +128,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_WALLET_FACTORY_MODULE;
             case "BBTCCRYV":
                 return Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT;
+            case "BASSTCRYV":
+                return Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT;
             case "BBNWWM":
                 return Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE;
             case "BCLPWWM":
