@@ -82,13 +82,20 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryProject.getProjectPublicKey());
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, walletFactoryProject.getName());
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME, walletFactoryProject.getDescription());
-        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME, walletFactoryProject.getProjectState().value());
+        if (walletFactoryProject.getProjectState().value() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME, walletFactoryProject.getProjectState().value());
+        if (walletFactoryProject.getWalletCategory().getCode() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME, walletFactoryProject.getWalletCategory().getCode());
+        if (walletFactoryProject.getFactoryProjectType().getCode() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME, walletFactoryProject.getFactoryProjectType().getCode());
         if (walletFactoryProject.getWalletType() != null)
             record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME, walletFactoryProject.getWalletType().getCode());
         if (walletFactoryProject.getCreationTimestamp() != null)
             record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getCreationTimestamp().toString());
         if (walletFactoryProject.getLastModificationTimestamp() != null)
             record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getLastModificationTimestamp().toString());
+
+        record.setIntegerValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME, walletFactoryProject.getSize());
 
         return record;
     }
@@ -519,10 +526,21 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         try {
             walletFactoryProject.setWalletType(WalletType.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME)));
         } catch (InvalidParameterException e) {
-            throw new DatabaseOperationException("Can't get Wallet Type value from database. Incorrect code.", e, "saved value: " + projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME), null );
+            // If I couldn't get the walletType I will define it Reference and continue
+            walletFactoryProject.setWalletType(WalletType.REFERENCE);
         }
+
+        try {
+            walletFactoryProject.setWalletCategory(WalletCategory.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME)));
+        } catch (InvalidParameterException e) {
+            walletFactoryProject.setWalletCategory(WalletCategory.REFERENCE_WALLET);
+        }
+
+        walletFactoryProject.setFactoryProjectType(FactoryProjectType.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME)));
+
         walletFactoryProject.setCreationTimestamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME)));
         walletFactoryProject.setLastModificationTimeststamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME)));
+        walletFactoryProject.setSize(projectsRecord.getIntegerValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME));
 
         return walletFactoryProject;
     }
