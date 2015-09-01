@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,19 +18,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ActionMenuView;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
@@ -48,7 +48,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -61,6 +60,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
+import com.bitdubai.fermat_android_api.engine.PaintActionBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
@@ -79,7 +79,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
-import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ import static java.lang.System.gc;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications {
+public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActionBar {
 
     private static final String TAG = "fermat-core";
     private MainMenu mainMenu;
@@ -156,9 +155,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public boolean onCreateOptionsMenu(Menu menu) {
 
         try {
+            //mainMenu = getActivityUsedType().getMainMenu();
             if(mainMenu!=null){
                 for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem: mainMenu.getMenuItems()){
                     MenuItem item = menu.add (menuItem.getLabel());
+
 //                item.setOnMenuItemClickListener (new ActionMenuView.OnMenuItemClickListener(){
 //                    @Override
 //                    public boolean onMenuItemClick (MenuItem item){
@@ -168,6 +169,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //                    }
 //                });
                 }
+                //getMenuInflater().inflate(R.menu.wallet_store_activity_wallet_menu, menu);
+
             }
 
 
@@ -255,10 +258,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
-    private void paintMainMenu(MainMenu mainMenu) {
-
-    }
-
     private void setMainMenu(MainMenu mainMenu){
         this.mainMenu = mainMenu;
     }
@@ -291,12 +290,21 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 getActionBar().setTitle(title);
                 getActionBar().show();
                 setActionBarProperties(title, activity);
+                paintToolbarIcon(titleBar);
             } else {
                 getActionBar().hide();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void paintToolbarIcon(TitleBar titleBar) {
+        if(titleBar.getIconName()!=null){
+
+            getActionBar().setIcon(R.drawable.world);
+        }
+
     }
 
     /**
@@ -738,6 +746,15 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
 
+    @Override
+    public void paintComboBoxInActionBar(ArrayAdapter adapter,ActionBar.OnNavigationListener listener) {
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        //ArrayAdapter<String> itemsAdapter =
+          //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
+        getActionBar().setListNavigationCallbacks(adapter,listener);
+    }
+
+
     /**
      * Get wallet session manager
      *
@@ -942,4 +959,5 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //            .putString(FlickrFetchr.PREF_LAST_RESULT_ID, resultId)
 //    .commit();
     }
+
 }
