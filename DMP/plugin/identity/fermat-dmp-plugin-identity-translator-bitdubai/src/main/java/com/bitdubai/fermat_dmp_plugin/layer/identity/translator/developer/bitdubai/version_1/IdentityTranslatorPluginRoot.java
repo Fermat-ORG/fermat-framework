@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1;
 
 
-
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
@@ -31,8 +30,8 @@ import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreat
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantCreateNewTranslatorException;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantGetUserTranslatorIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorManager;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -46,6 +45,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdub
 import com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.estructure.IdentityTranslatorDao;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.estructure.IdentityTranslatorTranslator;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,13 +61,13 @@ import java.util.UUID;
  * -Translator manages identities type .
  * -Keep track of the different identities and relationship withthe Device Users.
  * -Serves layers above list Translators returning linked to Device User who is logged in.
- *-Create a new Translator , which automatically associated with this log User Device .
- *- You should allow signing messages using the private key of the Translator.
- *
+ * -Create a new Translator , which automatically associated with this log User Device .
+ * - You should allow signing messages using the private key of the Translator.
+ * <p/>
  * * * * * * *
  */
 
-public class IdentityTranslatorPluginRoot implements DatabaseManagerForDevelopers,DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithErrors,DealsWithLogger, LogManagerForDevelopers,Plugin,Service,TranslatorManager {
+public class IdentityTranslatorPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, Service, TranslatorIdentityManager {
 
     /**
      * PlugIn Interface member variables.
@@ -138,16 +138,15 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IdentityTranslatorDatabaseConstants.TRANSLATOR_DB_NAME);
             return IdentityTranslatorDeveloperDataBaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
-        }catch (CantOpenDatabaseException cantOpenDatabaseException){
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        }
-        catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
@@ -163,12 +162,12 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
     }
 
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager =errorManager;
+        this.errorManager = errorManager;
     }
 
 
@@ -189,7 +188,7 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
 
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem  = pluginFileSystem;
+        this.pluginFileSystem = pluginFileSystem;
 
     }
 
@@ -218,8 +217,8 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
 
 
         /**
-   * I return the values.
-   */
+         * I return the values.
+         */
         return returnedClasses;
     }
 
@@ -252,7 +251,7 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
         /**
          * I created instance of IdentityTranslatorDao
          */
-        this.identityTranslatorDao = new IdentityTranslatorDao(errorManager,pluginDatabaseSystem,pluginId, this.pluginFileSystem);
+        this.identityTranslatorDao = new IdentityTranslatorDao(errorManager, pluginDatabaseSystem, pluginId, this.pluginFileSystem);
 
 
         try {
@@ -289,52 +288,44 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
      * Translator Manager Interface implementation
      */
     @Override
-    public List<Translator> getTranslatorsFromCurrentDeviceUser() throws CantGetUserTranslatorIdentitiesException {
+    public List<TranslatorIdentity> getTranslatorsFromCurrentDeviceUser() throws CantGetUserTranslatorIdentitiesException {
 
         try {
 
             return this.identityTranslatorDao.getDevelopersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
 
-        }
-        catch (CantGetLoggedInDeviceUserException e) {
+        } catch (CantGetLoggedInDeviceUserException e) {
 
             throw new CantGetUserTranslatorIdentitiesException("CAN'T GET TRANSLATORS LIST", e, "Translator Identity", ".");
-        }
-        catch (CantGetUserDeveloperIdentitiesException e)
-        {
-            throw new CantGetUserTranslatorIdentitiesException ("CAN'T GET TRANSLATORS LIST", e, "Translator Identity", "");
+        } catch (CantGetUserDeveloperIdentitiesException e) {
+            throw new CantGetUserTranslatorIdentitiesException("CAN'T GET TRANSLATORS LIST", e, "Translator Identity", "");
         }
 
     }
 
     @Override
-    public Translator createNewTranslator(String alias) throws CantCreateNewTranslatorException {
+    public TranslatorIdentity createNewTranslator(String alias) throws CantCreateNewTranslatorException {
 
         // Create the new developer.
         try {
 
-            ECCKeyPair keyPair= new ECCKeyPair();
+            ECCKeyPair keyPair = new ECCKeyPair();
 
             identityTranslatorDao.createNewTranslator(alias, keyPair, deviceUserManager.getLoggedInDeviceUser());
 
-
-            return new IdentityTranslatorTranslator(alias,keyPair.getPublicKey(), keyPair.getPrivateKey());
+            return new IdentityTranslatorTranslator(alias, keyPair.getPublicKey(), keyPair.getPrivateKey());
 
         } catch (CantGetLoggedInDeviceUserException e) {
 
-           throw new CantCreateNewTranslatorException ("CAN'T CREATE TRANSLATOR IDENTITY", e, "Translator Identity", ".");
+            throw new CantCreateNewTranslatorException("CAN'T CREATE TRANSLATOR IDENTITY", e, "Translator Identity", ".");
 
         } catch (CantCreateNewDeveloperException e) {
 
-            throw new CantCreateNewTranslatorException ("CAN'T CREATE TRANSLATOR IDENTITY", e, "Translator Identity", "");
+            throw new CantCreateNewTranslatorException("CAN'T CREATE TRANSLATOR IDENTITY", e, "Translator Identity", "");
 
         }
 
     }
-
-
-
-
 
 
 }

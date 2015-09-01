@@ -38,7 +38,7 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListIt
     @Override
     protected void bindHolder(CatalogItemViewHolder holder, WalletStoreListItem data, int position) {
         holder.walletName.setText(data.getWalletName());
-        holder.walletIcon.setImageDrawable(data.getWalletIcon());
+        holder.walletIcon.setImageBitmap(data.getWalletIcon());
         holder.walletPublisherName.setText("Publisher Name");
 
         InstallationStatus installStatus = data.getInstallationStatus();

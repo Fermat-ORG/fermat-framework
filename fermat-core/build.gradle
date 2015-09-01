@@ -17,6 +17,7 @@ dependencies {
     compile project(':fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
     compile project(':fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
     compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 
     compile project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 

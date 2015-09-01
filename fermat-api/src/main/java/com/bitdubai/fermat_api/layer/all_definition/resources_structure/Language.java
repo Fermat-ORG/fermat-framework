@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatLanguage;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +15,9 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language</code>
  * implements the functionality of a Fermat Language.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/07/15.
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -35,7 +36,7 @@ public class Language implements FermatLanguage {
 
     private Version version;
 
-    private Translator translator;
+    private TranslatorIdentity translator;
 
     private int size;
 
@@ -99,6 +100,7 @@ public class Language implements FermatLanguage {
     public Map<String, String> getStrings() {
         return strings;
     }
+
     @Override
     public Version getVersion() {
         return version;
@@ -128,11 +130,11 @@ public class Language implements FermatLanguage {
         this.version = version;
     }
 
-    public Translator getTranslator() {
+    public TranslatorIdentity getTranslator() {
         return translator;
     }
 
-    public void setTranslator(Translator translator) {
+    public void setTranslator(TranslatorIdentity translator) {
         this.translator = translator;
     }
 

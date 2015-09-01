@@ -1,7 +1,13 @@
 package com.bitdubai.sub_app.wallet_store.common;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.wallet_store.bitdubai.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
 import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.NOT_UNINSTALLED;
@@ -20,5 +26,21 @@ public enum UtilsFuncs {
             return R.string.wallet_status_upgrade;
 
         return R.string.wallet_status_install;
+    }
+
+    public ArrayList<Bitmap> getBitmapList(List<byte[]> byteArrayList) {
+        ArrayList<Bitmap> bitmapImageList = null;
+
+        if (byteArrayList != null) {
+            bitmapImageList = new ArrayList<>();
+
+            for (int i = 0; i < byteArrayList.size(); i++) {
+                byte[] previewImgBytes = byteArrayList.get(i);
+                Bitmap img = BitmapFactory.decodeByteArray(previewImgBytes, 0, previewImgBytes.length);
+                bitmapImageList.add(img);
+            }
+        }
+
+        return bitmapImageList;
     }
 }

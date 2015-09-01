@@ -19,6 +19,8 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 
 import java.net.URL;
 import java.util.List;
@@ -53,9 +55,9 @@ public interface WalletStoreManager {
 
     public DeveloperIdentity getDeveloper(UUID developerId) throws CantGetDeveloperException;
 
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner(UUID designerId) throws CantGetDesignerException;
+    public DesignerIdentity getDesigner(UUID designerId) throws CantGetDesignerException;
 
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator(UUID translatorId) throws CantGetTranslatorException;
+    public TranslatorIdentity getTranslator(UUID translatorId) throws CantGetTranslatorException;
 
 
     /**
@@ -74,7 +76,7 @@ public interface WalletStoreManager {
                                       Version finalWalletVersion,
                                       List<URL> videoPreviews,
                                       long languageSizeInBytes,
-                                      com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator,
+                                      TranslatorIdentity translator,
                                       boolean isDefault);
 
     public Skin constructSkin(UUID skinId,
@@ -89,7 +91,7 @@ public interface WalletStoreManager {
                               boolean hasVideoPreview,
                               List<URL> videoPreviews,
                               long skinSizeInBytes,
-                              com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer,
+                              com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer,
                               boolean isDefault);
 
     public CatalogItem constructCatalogItem(UUID walletId, //Todo: Refactor a String para que acepte PublicKey

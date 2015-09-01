@@ -55,7 +55,6 @@ public interface WalletStoreModuleManager {
      * wallet manager.
      *
      * @param walletCategory the category of the wallet to install
-     * @param nicheWallet the type of the wallet to install
      * @param skinId the skin to install with the wallet
      * @param languageId the language to install in the wallet
      * @param walletCatalogueId the wallet identifier in the catalogue
@@ -63,7 +62,6 @@ public interface WalletStoreModuleManager {
      * @throws CantStartInstallationException
      */
     public void installWallet(WalletCategory walletCategory,
-                              NicheWallet nicheWallet,
                               UUID skinId,
                               UUID languageId,
                               UUID walletCatalogueId,
