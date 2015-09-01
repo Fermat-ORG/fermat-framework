@@ -263,8 +263,8 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
     }
 
     @Override
-    public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
-        getWalletStoreModuleManager().installWallet(walletCategory, nicheWallet, skinId, languageId, walletCatalogueId, version);
+    public void installWallet(WalletCategory walletCategory, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
+        getWalletStoreModuleManager().installWallet(walletCategory, skinId, languageId, walletCatalogueId, version);
     }
 
     @Override
