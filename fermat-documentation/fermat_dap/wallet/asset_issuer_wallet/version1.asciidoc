@@ -1,31 +1,33 @@
-[[wallet-asset-over-bitcoin-BitDubai-V1]]
+[[wallet-asset-issuer-BitDubai-V1]]
 == Version 1
-    El componente Over Bitcoin Wallet registrara todas las transacciones contables que ocurran en la Reference Asset Wallet, y almacenara dicha transacción en la base de datos,
-  de esa manera el componente podra emitir todo los movimientos registrados en el Asset Wallets.
+    El componente asset issuer wallet registrara todas las transacciones contables que ocurran en la Reference Asset Issuer Wallet, y almacenara dicha transacción en la base de datos,
+  de esa manera el componente podra emitir todo los movimientos registrados en el Asset Issuer Wallet.
+    Todas las transacciones deberan de pasar por el componente "Transacction" que sera en el que determine si la operacion debera ser persitida en la base de datos del componente asset
+  issuer wallet.
 
 
 == Plug-in Description
 
 == Plug-in Structure
 
-    fermat-dap-api===>wallet===>fermat-dap-plugin-wallet-asset-over-bitcoin-bitdubai
+    fermat-dap-api===>layer===>fermat-dap-plugin-wallet-asset-issuer
 
 == Events
 
 == Implementation Details
 
     Se crearan las siguientes Interfaces:
-      bitcoinwalletasset:
+      assetissuerwallet:
          Implementara todo el objeto que manipulara la información de la Asset.
 
-      bitCoinwalletassetmanager:
+      assetissuerwalletmanager:
          Implementara la interfaz publica hacia los otros pluggins.
 
-      dealswithbitcoinwalletassets:
+      dealswithassetissuerwallet:
          Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.
 
-      bitcoinwalletassettransaction:
+      assetissuerwallettransaction:
          Implementara la interfaz para el registro de la transacción involucrada.
 
-      bitcoinwalletassetsubsystem:
-         Implementara la interfaz para el comportamiento del Pluggin.
+      assetissuerwalletsubsystem:
+         Implementara la interfaz para el comportamiento del modulo.
