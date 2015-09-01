@@ -1,4 +1,4 @@
-package AndroidDatabase;
+package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
 import android.app.Activity;
 import android.content.Context;
@@ -33,8 +33,6 @@ public class Set_Get_AndroidDatabaseTest {
     private String testDatabaseName = "testDatabase";
     private String testDatabaseName_cambio = "testDatabaseName_cambio";
 
-    private DatabaseTransaction transaction_1;
-
     @Before
     public void Up_Set_Get_AndroidDatabase(){
         mockActivity = Robolectric.setupActivity(Activity.class);
@@ -43,23 +41,10 @@ public class Set_Get_AndroidDatabaseTest {
         testDatabase = new AndroidDatabase(mockContext, testDatabaseName);
 
         testDatabase.setDatabaseName(testDatabaseName_cambio);
-        transaction_1 = testDatabase.newTransaction();
-
-        testDatabase.setDatabaseTransaction(transaction_1);
     }
 
     @Test
     public void Name_AndroidDatabase(){
         assertThat(testDatabase.getDatabaseName()).isEqualTo(testDatabaseName_cambio);
-    }
-
-    @Test
-    public void Transaction_AndroidDatabase(){
-        assertThat(testDatabase.getDatabaseTransaction()).isEqualTo(transaction_1);
-    }
-
-    @Test
-    public void Get_Table_AndroidDatabase(){
-        assertThat(testDatabase.getDatabaseTransaction()).isEqualTo(transaction_1);
     }
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fermat="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/wallet_store_catalog_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF">
+
+    <ImageView
+        android:id="@+id/imageView_profile_connection"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="3dp"
+        android:contentDescription="@string/wallet_icon"
+        tools:src="@drawable/adrian_profile_picture" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="6dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/txtView_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:singleLine="true"
+            android:paddingLeft="7dp"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            fermat:typeface="CAVIAR_DREAMS_BOLD"
+            tools:text="Nombre de la wallet" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/txtView_profile_phrase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/txtView_profile_name"
+            android:singleLine="true"
+            android:paddingLeft="7dp"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            tools:text="Nombre del publisher" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/txtView_profile_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/wallet_store_link"
+            android:textSize="12sp"
+            tools:text="connect" />
+    </RelativeLayout>
+</LinearLayout>
+
+
