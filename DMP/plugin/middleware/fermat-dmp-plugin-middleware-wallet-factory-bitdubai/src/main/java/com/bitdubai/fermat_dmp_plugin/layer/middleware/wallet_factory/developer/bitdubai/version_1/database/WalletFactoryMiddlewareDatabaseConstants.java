@@ -5,7 +5,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer
  */
 public class WalletFactoryMiddlewareDatabaseConstants {
 
-    static final String DATABASE_NAME = "Factory";
+    public static final String DATABASE_NAME = "Factory";
 
     /**
      * Project database table definition.
@@ -25,32 +25,32 @@ public class WalletFactoryMiddlewareDatabaseConstants {
     /**
      * skin database table definition.
      */
-    static final String SKIN_TABLE_NAME = "skin";
+    public static final String SKIN_TABLE_NAME = "skin";
 
-    static final String SKIN_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
-    static final String SKIN_SKIN_ID_COLUMN_NAME = "skin_id";
-    static final String SKIN_DEFAULT_COLUMN_NAME = "default";
+    public static final String SKIN_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
+    public static final String SKIN_SKIN_ID_COLUMN_NAME = "skin_id";
+    public static final String SKIN_DEFAULT_COLUMN_NAME = "isDefault";
 
-    static final String SKIN_FIRST_KEY_COLUMN = "project_publickey";
+    public static final String SKIN_FIRST_KEY_COLUMN = "project_publickey";
 
     /**
      * language database table definition.
      */
-    static final String LANGUAGE_TABLE_NAME = "language";
+    public static final String LANGUAGE_TABLE_NAME = "language";
 
-    static final String LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
-    static final String LANGUAGE_LANGUAGE_ID_COLUMN_NAME = "language_id";
-    static final String LANGUAGE_DEFAULT_COLUMN_NAME = "default";
+    public static final String LANGUAGE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
+    public static final String LANGUAGE_LANGUAGE_ID_COLUMN_NAME = "language_id";
+    public static final String LANGUAGE_DEFAULT_COLUMN_NAME = "isDefault";
 
     static final String LANGUAGE_FIRST_KEY_COLUMN = "project_publickey";
 
     /**
      * navigation_structure database table definition.
      */
-    static final String NAVIGATION_STRUCTURE_TABLE_NAME = "navigation_structure";
+    public static final String NAVIGATION_STRUCTURE_TABLE_NAME = "navigation_structure";
 
-    static final String NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
-    static final String NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME = "publicKey";
+    public static final String NAVIGATION_STRUCTURE_PROJECT_PUBLICKEY_COLUMN_NAME = "project_publickey";
+    public static final String NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME = "publicKey";
 
-    static final String NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN = "project_publickey";
+    public static final String NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN = "project_publickey";
 }

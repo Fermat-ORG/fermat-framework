@@ -54,14 +54,12 @@ public interface WalletFactoryProject {
     void setDefaultSkin(Skin skin);
     List<Skin> getSkins();
     void setSkins(List<Skin> skins);
-    void deleteSkin(Skin skin);
 
     //Language getters
     Language getDefaultLanguage();
     void setDefaultLanguage(Language language);
     List<Language> getLanguages();
     void setLanguages (List<Language> languages);
-    void deleteLanguage (Language language);
 
     //Navigation Structure
     WalletNavigationStructure getNavigationStructure();

@@ -227,4 +227,12 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
         }
     }
+
+    private void test(){
+        try {
+            this.getClosedProjects().size();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -14,6 +14,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -182,6 +184,8 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
 
         } catch (DatabaseOperationException | MissingProjectDataException | CantPersistFileException | CantCreateFileException e) {
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, walletFactoryProject.getName(), null);
+        } catch (GitHubRepositoryNotFoundException | GitHubNotAuthorizedException e) {
+            //for now I'm ignoring github errors.
         } catch (Exception exception){
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, exception, walletFactoryProject.getName(), null);
         }
@@ -195,170 +199,176 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     public WalletFactoryProject getNewWalletFactoryProject() throws CantCreateWalletFactoryProjectException {
         try{
             WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
+                String publicKey;
+                String name;
+                String description;
+                WalletType walletType;
+                WalletFactoryProjectState walletFactoryProjectState;
+                Timestamp creationTimestamp;
+                Timestamp lastModificationTimestamp;
+                Skin skin;
+                List<Skin> skins;
+                Language language;
+                List<Language> languages;
+                WalletNavigationStructure navigationStructure;
+                int size;
+                WalletCategory walletCategory;
+                FactoryProjectType factoryProjectType;
+
+
                 @Override
                 public String getProjectPublicKey() {
-                    ECCKeyPair publicKey = new ECCKeyPair();
-                    return publicKey.getPublicKey().toString();
+                    return publicKey;
                 }
 
                 @Override
                 public void setProjectPublickKey(String publickKey) {
-
+                    this.publicKey = publickKey;
                 }
 
                 @Override
                 public String getName() {
-                    return null;
+                    return this.name;
                 }
 
                 @Override
                 public void setName(String name) {
-
+                    this.name = name;
                 }
 
                 @Override
                 public String getDescription() {
-                    return null;
+                    return this.description;
                 }
 
                 @Override
                 public void setDescription(String description) {
-
+                    this.description = description;
                 }
 
                 @Override
                 public WalletType getWalletType() {
-                    return null;
+                    return walletType;
                 }
 
                 @Override
                 public void setWalletType(WalletType walletType) {
-
+                    this.walletType = walletType;
                 }
 
                 @Override
                 public WalletFactoryProjectState getProjectState() {
-                    return WalletFactoryProjectState.IN_PROGRESS;
+                    return walletFactoryProjectState;
                 }
 
                 @Override
                 public void setProjectState(WalletFactoryProjectState projectState) {
-
+                    this.walletFactoryProjectState = projectState;
                 }
 
                 @Override
                 public Timestamp getCreationTimestamp() {
-                    java.util.Date date = new java.util.Date();
-                    return new Timestamp(date.getTime());
+                    return creationTimestamp;
                 }
 
                 @Override
                 public void setCreationTimestamp(Timestamp timestamp) {
-
+                    this.creationTimestamp = timestamp;
                 }
 
                 @Override
                 public Timestamp getLastModificationTimestamp() {
-                    return null;
+                    return lastModificationTimestamp;
                 }
 
                 @Override
                 public void setLastModificationTimeststamp(Timestamp timestamp) {
-
+                    lastModificationTimestamp = timestamp;
                 }
 
                 @Override
                 public Skin getDefaultSkin() {
-                    return null;
+                    return skin;
                 }
 
                 @Override
                 public void setDefaultSkin(Skin skin) {
-
+                    this.skin = skin;
                 }
 
                 @Override
                 public List<Skin> getSkins() {
-                    return null;
-                }
-
-
-                @Override
-                public void deleteSkin(Skin skin) {
-
+                    return this.skins;
                 }
 
                 @Override
                 public Language getDefaultLanguage() {
-                    return null;
+                    return language;
                 }
 
                 @Override
                 public void setDefaultLanguage(Language language) {
-
+                    this.language = language;
                 }
 
                 @Override
                 public List<Language> getLanguages() {
-                    return null;
-                }
-
-
-                @Override
-                public void deleteLanguage(Language language) {
-
+                    return languages;
                 }
 
                 @Override
                 public WalletNavigationStructure getNavigationStructure() {
-                    return null;
+                    return navigationStructure;
                 }
 
                 @Override
                 public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
-
+                    this.navigationStructure = navigationStructure;
                 }
+
 
                 @Override
                 public void setSkins(List<Skin> skins) {
-
+                    this.skins = skins;
                 }
 
                 @Override
                 public void setLanguages(List<Language> languages) {
-
+                    this.languages = languages;
                 }
 
                 @Override
                 public int getSize() {
-                    return 0;
+                    return size;
                 }
 
                 @Override
                 public void setSize(int size) {
+                    this.size = size;
                 }
 
                 @Override
                 public WalletCategory getWalletCategory() {
-                    return null;
+                    return walletCategory;
                 }
 
                 @Override
                 public void setWalletCategory(WalletCategory walletCategory) {
-
+                    this.walletCategory = walletCategory;
                 }
 
                 @Override
                 public FactoryProjectType getFactoryProjectType() {
-                    return FactoryProjectType.WALLET;
+                    return factoryProjectType;
                 }
 
                 @Override
                 public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
+                    this.factoryProjectType = factoryProjectType;
 
                 }
             };
-            saveWalletFactoryProject(walletFactoryProject);
+
 
             return walletFactoryProject;
         } catch (Exception exception){

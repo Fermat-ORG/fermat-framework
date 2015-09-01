@@ -47,7 +47,7 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
@@ -89,7 +89,8 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+            /**
              * Create skin table.
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME);
@@ -105,7 +106,9 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create language table.
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME);
@@ -121,7 +124,9 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create navigation_structure table.
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME);

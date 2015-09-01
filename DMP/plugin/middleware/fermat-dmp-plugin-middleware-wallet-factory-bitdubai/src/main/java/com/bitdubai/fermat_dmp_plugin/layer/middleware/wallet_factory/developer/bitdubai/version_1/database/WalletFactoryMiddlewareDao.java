@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -62,8 +63,16 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return databaseTable;
     }
 
-    private Database openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
-        database = pluginDatabaseSystem.openDatabase(this.pluginId, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME);
+    private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
+        try {
+            database = pluginDatabaseSystem.openDatabase(this.pluginId, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME);
+        } catch (DatabaseNotFoundException e) {
+            /**
+             * if the database is not found, then I will create it
+             */
+            WalletFactoryMiddlewareDatabaseFactory databaseFactory = new WalletFactoryMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
+            database = databaseFactory.createDatabase(this.pluginId, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME);
+        }
         return database;
     }
 
@@ -74,9 +83,12 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, walletFactoryProject.getName());
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME, walletFactoryProject.getDescription());
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME, walletFactoryProject.getProjectState().value());
-        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME, walletFactoryProject.getWalletType().getCode());
-        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getCreationTimestamp().toString());
-        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getLastModificationTimestamp().toString());
+        if (walletFactoryProject.getWalletType() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME, walletFactoryProject.getWalletType().getCode());
+        if (walletFactoryProject.getCreationTimestamp() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getCreationTimestamp().toString());
+        if (walletFactoryProject.getLastModificationTimestamp() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getLastModificationTimestamp().toString());
 
         return record;
     }
@@ -246,7 +258,6 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      * @throws MissingProjectDataException
      */
     public void saveWalletFactoryProjectData(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException{
-        Database database=null;
         try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
@@ -327,165 +338,172 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
     private WalletFactoryProject getEmptyWalletFactoryProject(){
         WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
+            String publicKey;
+            String name;
+            String description;
+            WalletType walletType;
+            WalletFactoryProjectState walletFactoryProjectState;
+            Timestamp creationTimestamp;
+            Timestamp lastModificationTimestamp;
+            Skin skin;
+            List<Skin> skins;
+            Language language;
+            List<Language> languages;
+            WalletNavigationStructure navigationStructure;
+            int size;
+            WalletCategory walletCategory;
+            FactoryProjectType factoryProjectType;
+
+
             @Override
             public String getProjectPublicKey() {
-                return null;
+                return publicKey;
             }
 
             @Override
             public void setProjectPublickKey(String publickKey) {
-
+                this.publicKey = publickKey;
             }
 
             @Override
             public String getName() {
-                return null;
+                return this.name;
             }
 
             @Override
             public void setName(String name) {
-
+                this.name = name;
             }
 
             @Override
             public String getDescription() {
-                return null;
+                return this.description;
             }
 
             @Override
             public void setDescription(String description) {
-
+                this.description = description;
             }
 
             @Override
             public WalletType getWalletType() {
-                return null;
+                return walletType;
             }
 
             @Override
             public void setWalletType(WalletType walletType) {
-
+                this.walletType = walletType;
             }
 
             @Override
             public WalletFactoryProjectState getProjectState() {
-                return null;
+                return walletFactoryProjectState;
             }
 
             @Override
             public void setProjectState(WalletFactoryProjectState projectState) {
-
+                this.walletFactoryProjectState = projectState;
             }
 
             @Override
             public Timestamp getCreationTimestamp() {
-                return null;
+                return creationTimestamp;
             }
 
             @Override
             public void setCreationTimestamp(Timestamp timestamp) {
-
+                this.creationTimestamp = timestamp;
             }
 
             @Override
             public Timestamp getLastModificationTimestamp() {
-                return null;
+                return lastModificationTimestamp;
             }
 
             @Override
             public void setLastModificationTimeststamp(Timestamp timestamp) {
-
+                lastModificationTimestamp = timestamp;
             }
 
             @Override
             public Skin getDefaultSkin() {
-                return null;
+                return skin;
             }
 
             @Override
             public void setDefaultSkin(Skin skin) {
-
+                this.skin = skin;
             }
 
             @Override
             public List<Skin> getSkins() {
-                return null;
-            }
-
-
-            @Override
-            public void deleteSkin(Skin skin) {
-
+                return this.skins;
             }
 
             @Override
             public Language getDefaultLanguage() {
-                return null;
+                return language;
             }
 
             @Override
             public void setDefaultLanguage(Language language) {
-
+                this.language = language;
             }
 
             @Override
             public List<Language> getLanguages() {
-                return null;
-            }
-
-
-            @Override
-            public void deleteLanguage(Language language) {
-
+                return languages;
             }
 
             @Override
             public WalletNavigationStructure getNavigationStructure() {
-                return null;
+                return navigationStructure;
             }
 
             @Override
             public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
-
+                this.navigationStructure = navigationStructure;
             }
+
 
             @Override
             public void setSkins(List<Skin> skins) {
-
+                this.skins = skins;
             }
 
             @Override
             public void setLanguages(List<Language> languages) {
-
+                this.languages = languages;
             }
 
             @Override
             public int getSize() {
-                return 0;
+                return size;
             }
 
             @Override
             public void setSize(int size) {
-
+                this.size = size;
             }
 
             @Override
             public WalletCategory getWalletCategory() {
-                return null;
+                return walletCategory;
             }
 
             @Override
             public void setWalletCategory(WalletCategory walletCategory) {
-
+                this.walletCategory = walletCategory;
             }
 
             @Override
             public FactoryProjectType getFactoryProjectType() {
-                return null;
+                return factoryProjectType;
             }
 
             @Override
             public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
+                this.factoryProjectType = factoryProjectType;
 
             }
         };
