@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.common;
+package com.bitdubai.sub_app.wallet_store.common.workers;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.sub_app.wallet_store.common.UtilsFuncs;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.common;
+package com.bitdubai.sub_app.wallet_store.common.workers;
 
 import android.app.Activity;
 import android.app.AlertDialog;
