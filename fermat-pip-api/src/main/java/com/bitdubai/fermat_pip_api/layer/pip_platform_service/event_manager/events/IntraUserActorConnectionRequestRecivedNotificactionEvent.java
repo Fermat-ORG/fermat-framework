@@ -7,28 +7,12 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 /**
  * Created by natalia on 01/09/15.
  */
-public class IntraUserActorConnectionRequestRecivedNotificactionEvent implements PlatformEvent {
+public class IntraUserActorConnectionRequestRecivedNotificactionEvent extends AbstractPlatformEvent {
     private EventType eventType;
     private EventSource eventSource;
 
     public IntraUserActorConnectionRequestRecivedNotificactionEvent(EventType eventType){
-        this.eventType = eventType;
-    }
-
-
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
-
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
+        super(eventType);
     }
 
 

@@ -86,7 +86,7 @@ public enum EventType {
 
     INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICOBWTEU") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener( eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent(); }
+        public PlatformEvent getEvent() { return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent(this); }
     },
 
     INCOMING_CRYPTO_ON_CRYPTO_NETWORK("ICOCN") {
@@ -96,7 +96,7 @@ public enum EventType {
 
     INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICOCNWTEU") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(); }
+        public PlatformEvent getEvent() { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(this); }
     },
 
     INCOMING_CRYPTO_RECEIVED("ICR") {
@@ -166,7 +166,7 @@ public enum EventType {
 
     INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICROBWTEU") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent(); }
+        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent(this); }
     },
 
     INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK("ICROCN") {
@@ -176,7 +176,7 @@ public enum EventType {
 
     INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICROCNWTEU") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent(); }
+        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent(this); }
     },
 
     INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE("TWT") {
@@ -318,7 +318,7 @@ public enum EventType {
 
     WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED("WRNSD") {
         public EventListener getListener(EventMonitor eventMonitor) { return new WalletNavigationStructureDownloadedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletNavigationStructureDownloadedEvent(); }
+        public PlatformEvent getEvent() { return new WalletNavigationStructureDownloadedEvent(this); }
     },
 
     WALLET_UNINSTALLED("WU1") {
