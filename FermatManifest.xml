@@ -6323,7 +6323,7 @@
 
 		</super_layer>
 
-		<super_layer code="OSA" name="Operative System API">
+		<super_layer code="OSA" name="Operating System API">
 
 			<layer name="Multi OS" language="java">
 				<addons>
