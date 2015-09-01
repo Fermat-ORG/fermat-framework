@@ -6366,7 +6366,7 @@
 				</addons>
 			</layer>
 
-			<layer name="Andoid" language="java">
+			<layer name="Android" language="java">
 				<addons>
 					<addon
 							name="File System"
