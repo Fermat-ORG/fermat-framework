@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.D
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.DealsWithAssetsVault;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
@@ -834,6 +836,13 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
 
             /*
+             * Plugin Assets Crypto Vault
+             * ----------------------------------
+             */
+            Plugin assetsCryptoVault = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER)).getmAssetsVault();
+            injectPluginReferencesAndStart(assetsCryptoVault , Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT);
+
+            /*
              * Plugin Incoming Crypto Crypto Router
              * ----------------------------------
              */
@@ -1102,6 +1111,10 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithCryptoVault) {
                 ((DealsWithCryptoVault) plugin).setCryptoVaultManager((CryptoVaultManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT));
+            }
+
+            if (plugin instanceof DealsWithAssetsVault) {
+                ((DealsWithAssetsVault) plugin).setAssetsVaultManager((AssetsVaultManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT));
             }
 
             if (plugin instanceof DealsWithDeveloperModule) {
