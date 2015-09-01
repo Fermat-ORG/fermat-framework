@@ -16,6 +16,9 @@ public class WalletStoreSubAppSession implements SubAppsSession {
     public static final String BASIC_DATA = "catalog item";
     public static final String PREVIEW_IMGS = "preview images";
     public static final String DEVELOPER_NAME = "developer name";
+    public static final String SKIN_ID = "skin id";
+    public static final String LANGUAGE_ID = "skin id";
+    public static final String WALLET_VERSION = "wallet version";
 
     /**
      * SubApps type

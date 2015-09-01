@@ -15,10 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-//import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
@@ -133,7 +131,6 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-
     PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
@@ -523,8 +520,11 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
      */
     public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException{
         try {
-
+            Logger LOG = Logger.getGlobal();
+            LOG.info("MAP_WALLET_CATEGORY:"+walletCategory);
+            LOG.info("MAP_WPI:"+walletPlatformIdentifier);
             eventManager.raiseEvent( new WalletInstalledEvent(EventType.WALLET_INSTALLED));
+            LOG.info("MAP_EVENT:"+eventManager.toString());
             return new WalletManagerMiddlewareInstallationProcess(this.walletResources,walletCategory,walletPlatformIdentifier,this.pluginDatabaseSystem,pluginId);
 
         } catch (Exception e){
@@ -761,7 +761,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             wIP.startInstallation(WalletType.NICHE,"testWallet","123456","654321","098765",null,testUUID,testVersion, ScreenSize.MEDIUM.toString(),testUUID,testVersion,"Skin",null,testUUID,testVersion,Languages.LATIN_AMERICAN_SPANISH, "es","MAP","1.0.0");
             LOG.info("Rastro Atómico:"+wIP.getInstallationProgress().getCode());
         } catch (Exception e) {
-            LOG.info(e.getMessage());
+            LOG.info("TEST ERROR:"+e.getMessage());
             e.printStackTrace();
         }
 

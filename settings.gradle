@@ -1,5 +1,5 @@
 
-include ':fermat-android-core'
+include ':fermat-android-core', ':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
 include ':fermat-android-api'
 
 include ':fermat-core'
@@ -15,6 +15,9 @@ include ':fermat-cry-api'
 // Milestone 1 project:
 include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
 project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+
+include ':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
+project(':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 
 // Milestone 1 project:
 include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'

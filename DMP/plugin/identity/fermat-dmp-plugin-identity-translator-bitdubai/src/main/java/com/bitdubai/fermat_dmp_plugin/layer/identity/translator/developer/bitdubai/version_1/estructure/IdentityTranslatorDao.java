@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
@@ -197,11 +197,11 @@ public class IdentityTranslatorDao{
      * @param deviceUser device user
      * @throws CantGetUserDeveloperIdentitiesException
      */
-    public List<Translator> getDevelopersFromCurrentDeviceUser (DeviceUser deviceUser) throws CantGetUserDeveloperIdentitiesException {
+    public List<TranslatorIdentity> getDevelopersFromCurrentDeviceUser (DeviceUser deviceUser) throws CantGetUserDeveloperIdentitiesException {
 
 
         // Setup method.
-        List<Translator> list = new ArrayList<Translator>(); // Developer list.
+        List<TranslatorIdentity> list = new ArrayList<TranslatorIdentity>(); // Developer list.
         DatabaseTable table; // Developer table.
 
         // Get developers identities list.

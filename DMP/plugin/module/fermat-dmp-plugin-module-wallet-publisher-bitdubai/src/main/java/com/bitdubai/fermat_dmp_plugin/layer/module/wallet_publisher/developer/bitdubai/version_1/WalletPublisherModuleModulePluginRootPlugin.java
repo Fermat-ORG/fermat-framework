@@ -12,10 +12,6 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
@@ -40,6 +36,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.DealsWithPlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherModuleModulePluginRootPlugin implements Service, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherModuleManager
+public class WalletPublisherModuleModulePluginRootPlugin implements Service, DealsWithPlatformInfo, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherModuleManager
 {
 
     /**
@@ -106,6 +105,11 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
      * Represent the walletFactoryProjectManager
      */
     private WalletFactoryProjectManager walletFactoryProjectManager;
+
+    /**
+     * Represent the platformInfoManager
+     */
+    private PlatformInfoManager platformInfoManager;
 
     /**
      * Constructor
@@ -250,6 +254,15 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     * @see DealsWithPlatformInfo#setPlatformInfoManager(PlatformInfoManager)
+     */
+    @Override
+    public void setPlatformInfoManager(PlatformInfoManager platformInfoManager) {
+        this.platformInfoManager = platformInfoManager;
+    }
+
+    /**
+     * (non-Javadoc)
      * @see Plugin#setId(UUID)
      */
     @Override
@@ -373,22 +386,22 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherModuleManager#publishSkin(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, PublisherIdentity)
+     * @see WalletPublisherModuleManager#publishSkin(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
     @Override
-    public void publishSkin(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
+    public void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
              */
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishSkin(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishSkin(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity.getPublicKey(), signature);
 
             /*
              * Mark the project like publish
@@ -402,22 +415,22 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherModuleManager#publishLanguage(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, PublisherIdentity)
+     * @see WalletPublisherModuleManager#publishLanguage(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
     @Override
-    public void publishLanguage(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
+    public void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0),  new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
              */
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishLanguage(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishLanguage(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity.getPublicKey(), signature);
 
             /*
              * Mark the project like publish
@@ -431,21 +444,21 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherModuleManager#publishWallet(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, PublisherIdentity)
+     * @see WalletPublisherModuleManager#publishWallet(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
+    public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
 
         try {
 
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(0,0,0), new Version(0,0,0), initialPlatformVersion, finalPlatformVersion,  new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
              */
-            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentity.getPublicKey(), signature);
+            walletPublisherMiddlewarePlugin.getWalletPublisherMiddlewareManagerInstance().publishWallet(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialPlatformVersion, finalPlatformVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity.getPublicKey(), signature);
 
             /*
              * Mark the project like publish
@@ -505,4 +518,28 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
          */
         return publisherIdentity.createMessageSignature(stringDataToSing.toString());
     }
+
+
+    /**
+     * (non-Javadoc)
+     * @see  @see WalletPublisherModuleManager#getPlatformVersions()
+     */
+    public List<Version> getPlatformVersions() throws com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException{
+
+        List<Version> versions = new ArrayList<>();
+        try {
+
+            versions.add(platformInfoManager.getPlatformInfo().getVersion());
+
+        } catch (CantLoadPlatformInformationException e) {
+            e.printStackTrace();
+
+            new com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException( e.getLocalizedMessage(), e, "Wallet Publisher", "");
+        }
+
+        return  versions;
+
+    }
+
+
 }

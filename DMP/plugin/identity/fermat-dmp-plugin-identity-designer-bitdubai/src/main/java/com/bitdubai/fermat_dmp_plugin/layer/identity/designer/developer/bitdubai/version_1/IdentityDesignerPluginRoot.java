@@ -29,8 +29,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantCreateNewDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantGetUserDesignerIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerManager;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentityManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDao;
@@ -67,7 +67,7 @@ import java.util.UUID;
  * * * * * * *
  */
 
-public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithErrors,DealsWithLogger, LogManagerForDevelopers,Plugin,Service,DesignerManager {
+public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithErrors,DealsWithLogger, LogManagerForDevelopers,Plugin,Service,DesignerIdentityManager {
 
     /**
      * PlugIn Interface member variables.
@@ -289,7 +289,7 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
      * Translator Manager Interface implementation
      */
     @Override
-    public List<Designer> getDesignersFromCurrentDeviceUser() throws CantGetUserDesignerIdentitiesException {
+    public List<DesignerIdentity> getDesignersFromCurrentDeviceUser() throws CantGetUserDesignerIdentitiesException {
 
         try {
 
@@ -308,7 +308,7 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
     }
 
     @Override
-    public Designer createNewDesigner(String alias) throws CantCreateNewDesignerException {
+    public DesignerIdentity createNewDesigner(String alias) throws CantCreateNewDesignerException {
 
         // Create the new developer.
         try {
