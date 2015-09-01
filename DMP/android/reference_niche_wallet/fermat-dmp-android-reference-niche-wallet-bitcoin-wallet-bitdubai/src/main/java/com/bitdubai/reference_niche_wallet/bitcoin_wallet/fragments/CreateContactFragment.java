@@ -45,6 +45,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.squareup.picasso.Picasso;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.validateAddress;
 
@@ -187,10 +188,10 @@ public class CreateContactFragment extends Fragment {
                 public void onClick(View view) {
                     if (!detailsVisible) {
                         showDetails();
-                        detailsButton.setImageDrawable(rootView.getResources().getDrawable(R.drawable.ic_arrow_up_grey));
+                        Picasso.with(getActivity()).load(R.drawable.ic_arrow_up_grey).into(detailsButton);
                     } else {
                         hideDetails();
-                        detailsButton.setImageDrawable(rootView.getResources().getDrawable(R.drawable.ic_arrow_down_grey));
+                        Picasso.with(getActivity()).load(R.drawable.ic_arrow_down_grey).into(detailsButton);
                     }
                 }
             });
