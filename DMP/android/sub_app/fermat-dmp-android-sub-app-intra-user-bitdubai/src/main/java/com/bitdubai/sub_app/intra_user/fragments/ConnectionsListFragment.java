@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.intra_user.fragments;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -8,19 +9,30 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.PaintActionBar;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUserSearchResult;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.sub_app.intra_user.adapters.CheckBoxListItem;
+import com.bitdubai.sub_app.intra_user.adapters.ListAdapter;
 import com.bitdubai.sub_app.intra_user.common.adapters.IntraUserConnectionsAdapter;
 import com.bitdubai.sub_app.intra_user.common.models.IntraUserConnectionListItem;
 import com.bitdubai.sub_app.intra_user.common.models.WalletStoreListItem;
@@ -35,7 +47,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.31..
  */
 
-public class ConnectionsListFragment extends FermatListFragment<IntraUserConnectionListItem> implements FermatListItemListeners<IntraUserConnectionListItem>, SearchView.OnQueryTextListener {
+public class ConnectionsListFragment extends FermatListFragment<IntraUserConnectionListItem> implements FermatListItemListeners<IntraUserConnectionListItem>, SearchView.OnQueryTextListener, SearchView.OnCloseListener, ActionBar.OnNavigationListener {
 
     IntraUserModuleManager intraUserModuleManager;
     private ErrorManager errorManager;
@@ -57,15 +69,18 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
             errorManager = subAppsSession.getErrorManager();
             intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
+            paintCheckBoxInActionBar();
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //inflater.inflate(R.menu.wallet_store_activity_wallet_menu, menu);
-       // inflater.inflate(R.menu.wallet_store_activity_wallet_menu, menu);
+
         super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.wallet_store_activity_wallet_menu, menu);
 
         //MenuItem menuItem = new SearchView(getActivity());
 
@@ -73,12 +88,48 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         mSearchView.setOnQueryTextListener(this);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setOnCloseListener(this);
 
 
 
-        //mSearchView.setIconifiedByDefault(false);
+
+
+//        List<String> lst = new ArrayList<String>();
+//        lst.add("Matias");
+//        lst.add("Work");
+//        ArrayAdapter<String> itemsAdapter =
+//                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lst);
+//        MenuItem item = menu.findItem(R.id.spinner);
+//        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+//
+//        spinner.setAdapter(itemsAdapter); // set the adapter to provide layout of rows and content
+//        //s.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
 
     }
+
+    private void paintCheckBoxInActionBar(){
+
+        try {
+            List<IntraUserLoginIdentity> availableIdentities =intraUserModuleManager.showAvailableLoginIdentities();
+
+            List<CheckBoxListItem> lstCheckBox = new ArrayList<CheckBoxListItem>();
+
+            for(IntraUserLoginIdentity intraUserLoginIdentity: availableIdentities){
+                lstCheckBox.add(new CheckBoxListItem(null,intraUserLoginIdentity));
+            }
+
+            ListAdapter listAdapter = new ListAdapter(getActivity(),R.layout.itemlistrow,lstCheckBox);
+
+
+            ((PaintActionBar) getActivity()).paintComboBoxInActionBar(listAdapter, this);
+        } catch (CantShowLoginIdentitiesException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     /**
      * Determine if this fragment use menu
@@ -87,7 +138,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
      */
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     /**
@@ -215,13 +266,59 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     }
 
     @Override
-    public boolean onQueryTextSubmit(String s) {
-        Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
+    public boolean onQueryTextSubmit(String name) {
+
+        IntraUserSearch intraUserSearch = intraUserModuleManager.searchIntraUser();
+        intraUserSearch.setNameToSearch(name);
+        //TODO: cuando esté el network service, esto va a descomentarse
+//        try {
+//            adapter.changeDataSet(intraUserSearch.getResult());
+//
+//        } catch (CantGetIntraUserSearchResult cantGetIntraUserSearchResult) {
+//            cantGetIntraUserSearchResult.printStackTrace();
+//        }
+
+        adapter.changeDataSet(IntraUserConnectionListItem.getTestDataExample(getResources()));
+
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
+        //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
+        if(s.length()==0){
+            adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onClose() {
+        if(!mSearchView.isActivated()){
+            adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(int position, long idItem) {
+        try {
+            IntraUserLoginIdentity intraUserLoginIdentity = intraUserModuleManager.showAvailableLoginIdentities().get(position);
+            intraUserModuleManager.login(intraUserLoginIdentity.getPublicKey());
+            //TODO: para despues
+            //adapter.changeDataSet(intraUserModuleManager.getAllIntraUsers());
+
+            //mientras tanto testeo
+            adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
+
+            return true;
+        } catch (CantShowLoginIdentitiesException e) {
+            e.printStackTrace();
+        } catch (CantLoginIntraUserException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }
