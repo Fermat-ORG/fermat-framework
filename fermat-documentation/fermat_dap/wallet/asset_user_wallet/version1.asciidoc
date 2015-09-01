@@ -8,7 +8,7 @@
 
 == Plug-in Structure
 
-    DAP===>wallet===>fermat-dap-plugin-wallet-asset-over-bitcoin-bitdubai
+    fermat-dap-api===>wallet===>fermat-dap-plugin-wallet-asset-over-bitcoin-bitdubai
 
 == Events
 
