@@ -10,7 +10,7 @@
 
 == Plug-in Structure
 
-    fermat-dap-api===>layer===>fermat-dap-plugin-wallet-asset-issuer
+    fermat-dap-api===>layer===>dap_wallet===>asset_issuer_wallet
 
 == Events
 
