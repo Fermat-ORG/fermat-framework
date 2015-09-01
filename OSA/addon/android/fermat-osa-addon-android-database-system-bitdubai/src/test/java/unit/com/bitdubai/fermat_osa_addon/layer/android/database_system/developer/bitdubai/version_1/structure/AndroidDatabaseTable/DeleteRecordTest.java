@@ -1,4 +1,4 @@
-package AndroidDatabaseTable;
+package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTable;
 
 import android.app.Activity;
 import android.content.Context;

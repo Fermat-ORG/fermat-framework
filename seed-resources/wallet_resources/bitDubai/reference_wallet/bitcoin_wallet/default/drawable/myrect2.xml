@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:bottom="1dp">
+        <shape
+            android:shape="rectangle">
+            <solid android:color="#ffc3ad87" />
+        </shape>
+    </item>
+</layer-list><!-- From: file:/home/natalia/StudioProjects/fermat/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/res/drawable/myrect2.xml -->

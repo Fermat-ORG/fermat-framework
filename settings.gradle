@@ -380,6 +380,11 @@ project(':fermat-dmp-plugin-middleware-wallet-manager-bitdubai').projectDir = ne
 include ':fermat-dmp-plugin-middleware-wallet-settings-bitdubai'
 project(':fermat-dmp-plugin-middleware-wallet-settings-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-settings-bitdubai')
 
+// Intra user
+include ':fermat-dmp-android-sub-app-intra-user-bitdubai'
+project(':fermat-dmp-android-sub-app-intra-user-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai')
+
+
 // Milestone 2 project network service:
 
 include ':fermat-dmp-plugin-network-service-wallet-statistics-bitdubai'
