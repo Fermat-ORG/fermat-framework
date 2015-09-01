@@ -12,7 +12,7 @@
         android:layout_height="80dp"
         android:layout_margin="3dp"
         android:contentDescription="@string/wallet_icon"
-        tools:src="@drawable/icono_banco_1" />
+        tools:src="@drawable/wallet_1" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,6 +27,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:singleLine="true"
+            android:textColor="@android:color/black"
             android:textSize="20sp"
             fermat:typeface="CAVIAR_DREAMS_BOLD"
             tools:text="Nombre de la wallet" />
@@ -39,6 +40,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@id/wallet_name"
             android:singleLine="true"
+            android:textColor="@android:color/black"
             android:textSize="14sp"
             tools:text="Nombre del publisher" />
 
@@ -46,9 +48,9 @@
             android:id="@+id/wallet_installation_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
             android:textColor="@color/wallet_store_link"
             android:textSize="14sp"
             tools:text="INSTALL" />

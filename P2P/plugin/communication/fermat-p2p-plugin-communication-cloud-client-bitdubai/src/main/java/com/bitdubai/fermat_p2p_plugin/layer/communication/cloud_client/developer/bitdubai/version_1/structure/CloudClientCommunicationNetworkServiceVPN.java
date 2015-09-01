@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteServiceException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
@@ -94,7 +95,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
      */
 	public CloudClientCommunicationNetworkServiceVPN(final CommunicationChannelAddress vpnAddress, final ExecutorService executor, final String clientPrivateKey, final String vpnIdentityPublicKey, final String peerIdentityPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
 
-        super(vpnAddress, executor, clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey), CloudFMPConnectionManagerMode.FMP_CLIENT);
+        super(vpnAddress, executor, new ECCKeyPair(clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey)), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.vpnIdentityPublicKey = vpnIdentityPublicKey;
 		this.peerIdentityPublicKey = peerIdentityPublicKey;
 		this.networkService = networkService;

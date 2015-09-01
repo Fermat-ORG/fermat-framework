@@ -4,7 +4,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
+import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,12 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 public class WalletStoreSubAppSession implements SubAppsSession {
-    public static final String CATALOG_ITEM = "catalog item";
+    public static final String BASIC_DATA = "catalog item";
+    public static final String PREVIEW_IMGS = "preview images";
+    public static final String DEVELOPER_NAME = "developer name";
+    public static final String SKIN_ID = "skin id";
+    public static final String LANGUAGE_ID = "skin id";
+    public static final String WALLET_VERSION = "wallet version";
 
     /**
      * SubApps type
@@ -34,7 +39,6 @@ public class WalletStoreSubAppSession implements SubAppsSession {
      * Wallet Store Module
      */
     private WalletStoreModuleManager walletStoreModuleManager;
-    private CatalogueItemDao selectedCatalogItem;
 
 
     /**

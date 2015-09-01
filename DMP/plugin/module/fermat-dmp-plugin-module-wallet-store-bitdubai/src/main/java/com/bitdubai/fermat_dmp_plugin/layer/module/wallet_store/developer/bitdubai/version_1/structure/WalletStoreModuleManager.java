@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
@@ -46,12 +47,9 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalog;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -231,7 +229,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         return walletStoreCatalogueItem;
     }
 
-    private com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+    private com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner(UUID designerId) throws CantGetDesignerException {
         return walletStoreManagerNetworkService.getDesigner(designerId);
     }
 
@@ -298,7 +296,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner() {
+            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner() {
                 return skin.getDesigner();
             }
 
@@ -366,7 +364,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator() {
+            public TranslatorIdentity getTranslator() {
                 return language.getTranslator();
             }
 
@@ -422,7 +420,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner() {
+            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner() {
                 return detailedCatalogItem.getDesigner();
             }
         };
@@ -518,14 +516,13 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
      * start the installation of the passed wallet.
      *
      * @param walletCategory
-     * @param nicheWallet
      * @param skinId
      * @param languageId
      * @param walletCatalogueId
      * @param version
      * @throws CantStartInstallationException
      */
-    public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
+    public void installWallet(WalletCategory walletCategory,  UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
             CatalogItem catalogItem = walletStoreManagerNetworkService.getCatalogItem(walletCatalogueId);

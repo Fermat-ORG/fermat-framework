@@ -13,7 +13,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer
  */
 public class WalletManagerMiddlewareDatabaseConstants {
 
-    public static final String WALLET_MANAGER_WALLETS_DATABASE = "WalleDatabase";
+    public static final String WALLET_MANAGER_WALLETS_DATABASE = "WalletDatabase";
 
     /**
      * Wallet Manager Wallets Table database table definition.

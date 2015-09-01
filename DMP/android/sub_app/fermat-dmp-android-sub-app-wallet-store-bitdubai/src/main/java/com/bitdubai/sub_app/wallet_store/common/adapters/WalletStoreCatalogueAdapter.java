@@ -3,12 +3,13 @@ package com.bitdubai.sub_app.wallet_store.common.adapters;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.sub_app.wallet_store.common.UtilsFuncs;
+import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao, WalletStoreCatalogueAdapter.CatalogItemViewHolder> {
-    public WalletStoreCatalogueAdapter(Context context, ArrayList<CatalogueItemDao> dataSet) {
+public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListItem, WalletStoreCatalogueAdapter.CatalogItemViewHolder> {
+    public WalletStoreCatalogueAdapter(Context context, ArrayList<WalletStoreListItem> dataSet) {
         super(context, dataSet);
     }
 
@@ -35,12 +36,17 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao,
     }
 
     @Override
-    protected void bindHolder(CatalogItemViewHolder holder, CatalogueItemDao data, int position) {
+    protected void bindHolder(CatalogItemViewHolder holder, WalletStoreListItem data, int position) {
         holder.walletName.setText(data.getWalletName());
-        holder.walletPublisherName.setText(data.getDeveloperName());
-        holder.installStatus.setText(data.getInstallationStatusText());
-        holder.walletIcon.setImageDrawable(data.getWalletIcon());
+        holder.walletIcon.setImageBitmap(data.getWalletIcon());
+        holder.walletPublisherName.setText("Publisher Name");
+
+        InstallationStatus installStatus = data.getInstallationStatus();
+        int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
+        holder.installStatus.setText(resId);
     }
+
+
 
     class CatalogItemViewHolder extends FermatViewHolder {
         ImageView walletIcon;

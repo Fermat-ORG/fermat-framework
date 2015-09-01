@@ -21,24 +21,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.DealsWithWalletLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguageManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
@@ -496,15 +491,13 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             URL videoUrl = new URL("http://www.youtube.com/watch?v=pBzjx7V3Ldw");
             String observations = "Its Rock!";
-            Version initialWalletVersion = new Version(1,0,0);
-            Version finalWalletVersion = new Version(1,0,0);;
-            Version initialPlatformVersion = new Version(1,0,0);;
-            Version finalPlatformVersion = new Version(1,0,0);;
+            Version initialPlatformVersion = new Version(1,0,0);
+            Version finalPlatformVersion = new Version(1,0,0);
             String publisherIdentityPublicKey = "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             String signature = "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
             URL publisherWebsiteUrl = new URL("http://www.publishertest.com");
 
-            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, WalletCategory.REFERENCE_WALLET, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations,  initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -548,7 +541,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public WalletType getWalletType() {
-                return null;
+                return WalletType.NICHE;
             }
 
             @Override
@@ -679,6 +672,26 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
 
             }
+
+            @Override
+            public WalletCategory getWalletCategory() {
+                return WalletCategory.BRANDED_NICHE_WALLET;
+            }
+
+            @Override
+            public void setWalletCategory(WalletCategory walletCategory) {
+
+            }
+
+            @Override
+            public FactoryProjectType getFactoryProjectType() {
+                return FactoryProjectType.WALLET;
+            }
+
+            @Override
+            public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
+
+            }
         };
 
         return walletFactoryProject;
@@ -692,7 +705,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         skin.setId(UUID.randomUUID());
         skin.setName("Skin Publication Test " + System.currentTimeMillis());
         skin.setScreenSize(ScreenSize.SMALL);
-        skin.setDesigner(new Designer() {
+        skin.setDesigner(new DesignerIdentity() {
             @Override
             public String getAlias() {
                 return "Rart3001";
@@ -721,7 +734,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         language.setName("Language Publication Test " + System.currentTimeMillis());
         language.setType(Languages.LATIN_AMERICAN_SPANISH);
         language.setVersion(new Version(1, 0, 0));
-        language.setTranslator(new Translator() {
+        language.setTranslator(new TranslatorIdentity() {
             @Override
             public String getAlias() {
                 return "Rart3001";
