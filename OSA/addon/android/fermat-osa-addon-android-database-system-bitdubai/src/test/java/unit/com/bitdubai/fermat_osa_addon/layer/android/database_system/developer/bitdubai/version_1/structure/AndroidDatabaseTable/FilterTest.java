@@ -1,4 +1,4 @@
-package AndroidDatabaseTable;
+package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTable;
 
 import android.app.Activity;
 import android.content.Context;
@@ -100,8 +100,5 @@ public class FilterTest {
         testDatabaseTable.setStringFilter("testColumn1", "0", DatabaseFilterType.GRATER_THAN);
         testDatabaseTable.setStringFilter("testColumn1", "2", DatabaseFilterType.LESS_THAN);
 
-        testDatabaseTable.selectRecord(testTableRecord_2);
-
-        assertThat(testDatabaseTable.getVariablesResult().get(0).getValue()).isEqualTo("1");
     }
 }
