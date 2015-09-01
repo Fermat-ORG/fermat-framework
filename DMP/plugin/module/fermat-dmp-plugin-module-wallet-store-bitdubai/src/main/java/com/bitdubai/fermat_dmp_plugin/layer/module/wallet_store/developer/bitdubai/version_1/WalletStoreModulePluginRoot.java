@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -264,6 +265,8 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     @Override
     public void installWallet(WalletCategory walletCategory, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
+        Logger LOG = Logger.getGlobal();
+        LOG.info("MA_WALLET_STORE_PLUGIN_ROOT:" + getWalletStoreModuleManager());
         getWalletStoreModuleManager().installWallet(walletCategory, skinId, languageId, walletCatalogueId, version);
     }
 

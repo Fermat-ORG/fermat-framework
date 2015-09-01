@@ -65,6 +65,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by rodrigo on 7/29/15.
@@ -536,6 +537,9 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             For now, we'll pass null to the  walletPrivateKey, walletIconName, skinPreview method arguments
             TODO: Get the real values for this null objects.
             */
+            Logger LOG = Logger.getGlobal();
+            LOG.info("MAP_STORE_MODULE:"+walletInstallationProcess);
+            LOG.info("MAP_CATALOGUE:"+walletCatalogueId);
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
                     catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
                     walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
