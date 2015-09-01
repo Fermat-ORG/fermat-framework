@@ -31,35 +31,6 @@ public enum EventType {
         public PlatformEvent getEvent() { return new BegunWalletInstallationEvent(this); }
     },
 
-    BITCOIN_BLOCKCHAIN_DOWNLOADED("BBD") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    BITCOIN_CRYPTO_WALLET_LOADED("BCWL") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    BITCOIN_NEW_CRYPTO_WALLET_CREATED("BNCWC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    BITCOIN_NEW_PEER_CONNECTED("BNPC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    BITCOIN_NEW_PEER_CONNECTED_INTRA_USER("BNPCIU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    DEVICE_CONNECTIVITY_NETWORK_CHANGE("DCNC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
 
     DEVICE_USER_CREATED("DUC") {
         public EventListener getListener(EventMonitor eventMonitor) { return new DeviceUserCreatedEventListener(this, eventMonitor); }
@@ -76,10 +47,7 @@ public enum EventType {
         public PlatformEvent getEvent() { return new DeviceUserLoggedOutEvent(this); }
     },
 
-    ESTABLISHED_NETWORK_SERVICE_CONNECTION("SNSC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
+
 
     FINISHED_WALLET_INSTALLATION("FWI") {
         public EventListener getListener(EventMonitor eventMonitor) { return new FinishedWalletInstallationEventListener(this, eventMonitor); }
@@ -241,24 +209,30 @@ public enum EventType {
         public PlatformEvent getEvent() { return null; }
     },
 
+    ESTABLISHED_NETWORK_SERVICE_CONNECTION("SNSC") {
+        public EventListener getListener(EventMonitor eventMonitor) { return null; }
+        public PlatformEvent getEvent() { return null; }
+    },
+
+
     INTRA_USER_CONNECTION_ACCEPTED("IUCA") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserActorConnectionAcceptedEventListener(this, eventMonitor); }
         public PlatformEvent getEvent() { return new IntraUserActorConnectionAcceptedEvent(this); }
     },
 
     INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION("IUCAN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
+        public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserActorConnectionAcceptedNotificactionEventListener(this, eventMonitor); }
+        public PlatformEvent getEvent() { return new IntraUserActorConnectionAcceptedNotificactionEvent(this); }
+    },
+
+    INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION("IUCRRN") {
+        public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserActorConnectionRequestRecivedNotificactionEventListener(this, eventMonitor);  }
+        public PlatformEvent getEvent() { return new IntraUserActorConnectionRequestRecivedNotificactionEvent(this); }
     },
 
     INTRA_USER_CONNECTION_DENIED("IUCD") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserDeniedConnectionEventListener(this, eventMonitor); }
         public PlatformEvent getEvent() { return new IntraUserActorConnectionDeniedEvent(this); }
-    },
-
-    INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION("IUCRRN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
     },
 
     INTRA_USER_CONTACT_CREATED("ICC") {
@@ -276,25 +250,11 @@ public enum EventType {
         public PlatformEvent getEvent() { return new IntraUserLoggedInEvent(this); }
     },
 
-    INTRA_USER_LOGGED_OUT("ILO") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return new IntraUserLoggedOutEvent(this); }
-    },
-
     INTRA_USER_REQUESTED_CONNECTION("IURC") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserActorRequestConnectionEventListener(this, eventMonitor); }
         public PlatformEvent getEvent() { return new IntraUserActorRequestConnectionEvent(this); }
     },
 
-    INTRA_USER_REQUESTED_CONNECTION_RECEIVED("IURCR") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    INTRA_USER_REQUESTED_CONNECTION_RECEIVED_NOTIFICATION("IURCRN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
 
     MONEY_RECEIVED("MR1") {
         public EventListener getListener(EventMonitor eventMonitor) { return new MoneyReceivedEventListener(this, eventMonitor); }
@@ -306,14 +266,14 @@ public enum EventType {
         public PlatformEvent getEvent() { return new NavigationStructureUpdatedEvent(this); }
     },
 
-    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
     NEW_NOTIFICATION("NN") {
         public EventListener getListener(EventMonitor eventMonitor) { return null; }
         public PlatformEvent getEvent() { return new NewNotificationEvent(); }
+    },
+
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
+        public EventListener getListener(EventMonitor eventMonitor) { return null; }
+        public PlatformEvent getEvent() { return null; }
     },
 
     OUTGOING_MONEY_REQUEST_APPROVED("OMRA") {
