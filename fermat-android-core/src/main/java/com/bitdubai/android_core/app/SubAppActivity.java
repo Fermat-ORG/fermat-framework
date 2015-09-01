@@ -658,7 +658,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager toolManager = getToolManager();
                     WalletStoreModuleManager walletStoreModuleManager = getWalletStoreModuleManager();
                     WalletPublisherModuleManager walletPublisherModuleManager = getWalletPublisherManager();
-                    subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), toolManager,walletStoreModuleManager,walletPublisherModuleManager);
+                    subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), toolManager,walletStoreModuleManager,walletPublisherModuleManager,getIntraUserModuleManager());
                 }
             }
 

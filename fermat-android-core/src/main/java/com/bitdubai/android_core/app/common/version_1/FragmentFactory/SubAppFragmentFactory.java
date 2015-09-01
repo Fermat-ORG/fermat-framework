@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.FragmentFactory;
 
 
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
+import com.bitdubai.sub_app.intra_user.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.wallet_factory.FragmentFactory.WalletFactoryFragmentFactory;
 import com.bitdubai.sub_app.wallet_publisher.FragmentFactory.WalletPublisherFragmentFactory;
 import com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentFactory;
@@ -22,6 +23,8 @@ public class SubAppFragmentFactory {
                 return new WalletPublisherFragmentFactory();
             case "CDA":
                 return new DeveloperSubAppFragmentFactory();
+            case "CIU":
+                return new IntraUserFragmentFactory();
             default:
                 return null;
 
