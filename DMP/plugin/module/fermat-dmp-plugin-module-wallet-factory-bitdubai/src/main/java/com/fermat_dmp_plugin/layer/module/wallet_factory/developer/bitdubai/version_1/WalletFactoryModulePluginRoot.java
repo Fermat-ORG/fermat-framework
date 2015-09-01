@@ -90,6 +90,7 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
     @Override
     public void start() {
         walletFactoryModuleManager = new WalletFactoryModuleManager(walletFactoryProjectManager);
+        test();
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -225,6 +226,14 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
              walletFactoryModuleManager.closeProject(walletFactoryProject);
         } catch (Exception e){
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
+        }
+    }
+
+    private void test(){
+        try {
+            this.getClosedProjects().size();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
