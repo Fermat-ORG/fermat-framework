@@ -1,4 +1,4 @@
-package AndroidDatabaseSelectOperator;
+package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseSelectOperator;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseSelectOperator;

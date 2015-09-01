@@ -133,6 +133,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
     @Override
     public void onErrorOccurred(Exception ex) {
         ex.printStackTrace();
+        Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
+                Toast.LENGTH_LONG).show();
     }
 
     class GetTask extends FermatWorker{

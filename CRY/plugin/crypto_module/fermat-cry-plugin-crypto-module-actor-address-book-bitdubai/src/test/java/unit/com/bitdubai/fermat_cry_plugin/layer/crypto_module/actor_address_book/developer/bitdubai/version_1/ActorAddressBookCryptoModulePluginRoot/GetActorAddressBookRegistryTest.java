@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
@@ -32,6 +33,9 @@ public class GetActorAddressBookRegistryTest extends TestCase {
     ErrorManager errorManager;
 
     @Mock
+    LogManager logManager;
+
+    @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
 
     @Mock
@@ -50,6 +54,7 @@ public class GetActorAddressBookRegistryTest extends TestCase {
         actorAddressBookCryptoModulePluginRoot = new ActorAddressBookCryptoModulePluginRoot();
         actorAddressBookCryptoModulePluginRoot.setId(pluginId);
         actorAddressBookCryptoModulePluginRoot.setErrorManager(errorManager);
+        actorAddressBookCryptoModulePluginRoot.setLogManager(logManager);
         actorAddressBookCryptoModulePluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
     }
 
