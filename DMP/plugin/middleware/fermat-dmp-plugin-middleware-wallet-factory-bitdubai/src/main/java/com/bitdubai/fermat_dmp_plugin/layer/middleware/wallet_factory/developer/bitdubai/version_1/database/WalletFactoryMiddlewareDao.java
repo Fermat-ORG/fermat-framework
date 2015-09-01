@@ -82,11 +82,11 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryProject.getProjectPublicKey());
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, walletFactoryProject.getName());
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME, walletFactoryProject.getDescription());
-        if (walletFactoryProject.getProjectState().value() != null)
+        if (walletFactoryProject.getProjectState() != null)
             record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME, walletFactoryProject.getProjectState().value());
-        if (walletFactoryProject.getWalletCategory().getCode() != null)
-            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME, walletFactoryProject.getWalletCategory().getCode());
-        if (walletFactoryProject.getFactoryProjectType().getCode() != null)
+        if (walletFactoryProject.getWalletCategory() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME, walletFactoryProject.getWalletCategory().name());
+        if (walletFactoryProject.getFactoryProjectType() != null)
             record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME, walletFactoryProject.getFactoryProjectType().getCode());
         if (walletFactoryProject.getWalletType() != null)
             record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME, walletFactoryProject.getWalletType().getCode());
