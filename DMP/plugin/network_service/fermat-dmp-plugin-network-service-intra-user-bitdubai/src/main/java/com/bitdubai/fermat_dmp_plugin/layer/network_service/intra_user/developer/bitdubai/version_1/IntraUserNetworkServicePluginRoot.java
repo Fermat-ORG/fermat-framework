@@ -10,9 +10,15 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
@@ -62,7 +68,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, Plugin {
+public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDevelopers,IntraUserManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, Plugin {
 
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
@@ -128,75 +134,42 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         this.intraUserNetworkServiceManagersCache = new HashMap<>();
     }
 
+
     /**
-     * Initialize the event listener and configure
+     * DatabaseManagerForDevelopers Interface implementation.
      */
-    private void initializeListener(IntraUserNetworkServiceManager intraUserNetworkServiceManager){
 
-        /*
-         * Listen and handle incoming network service connection request event
-         */
-        EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
-        eventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
 
-        /*
-         * Listen and handle established network service connection event
-         */
-        eventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
-        eventListener.setEventHandler(new IntraUserEstablishedRequestedNetworkServiceConnectionHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+
+        IntraUserNetworkServiceDeveloperDatabaseFactory dbFactory = new IntraUserNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+
+
     }
 
-    /**
-     * This method initialize the database
-     *
-     * @throws CantInitializeNetworkIntraUserDataBaseException
-     */
-    private void initializeDb() throws CantInitializeNetworkIntraUserDataBaseException {
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        IntraUserNetworkServiceDeveloperDatabaseFactory dbFactory = new IntraUserNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+
         try {
-            /*
-             * Open new database connection
-             */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COINAPULT_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-        } catch (DatabaseNotFoundException e) {
-
-            /*
-             * The database no exist may be the first time the plugin is running on this device,
-             * We need to create the new database
-             */
-            IntraUserNetworkServiceDatabaseFactory intraUserNetworkServiceDatabaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                /*
-                 * We create the new database
-                 */
-                this.dataBase = intraUserNetworkServiceDatabaseFactory.createDatabase(pluginId);
-
-            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-            }
+            IntraUserNetworkServiceDeveloperDatabaseFactory dbFactory = new IntraUserNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeNetworkIntraUserDataBaseException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
-
+        // If we are here the database could not be opened, so we return an empry list
+        return new ArrayList<>();
     }
+
+
 
     /**
      * Service Interface implementation.
@@ -213,7 +186,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 /*
                  * Create a new key pair for this execution
                  */
-                eccKeyPair = new ECCKeyPair();
+               // eccKeyPair = new ECCKeyPair();
 
                 /*
                  * Initialize the data base
@@ -524,6 +497,76 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
     @Override
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) {
+
+    }
+
+    /**
+     * Initialize the event listener and configure
+     */
+    private void initializeListener(IntraUserNetworkServiceManager intraUserNetworkServiceManager){
+
+        /*
+         * Listen and handle incoming network service connection request event
+         */
+        EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
+        eventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        /*
+         * Listen and handle established network service connection event
+         */
+        eventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
+        eventListener.setEventHandler(new IntraUserEstablishedRequestedNetworkServiceConnectionHandler(this));
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+    }
+
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeNetworkIntraUserDataBaseException
+     */
+    private void initializeDb() throws CantInitializeNetworkIntraUserDataBaseException {
+        try {
+            /*
+             * Open new database connection
+             */
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            IntraUserNetworkServiceDatabaseFactory intraUserNetworkServiceDatabaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.dataBase = intraUserNetworkServiceDatabaseFactory.createDatabase(pluginId);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
 
     }
 }
