@@ -18,7 +18,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
@@ -45,7 +48,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IntraUserNetworkServiceCommunicationManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
@@ -68,7 +71,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDevelopers,IntraUserManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, Plugin {
+public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDevelopers, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, IntraUserManager,NetworkService, Service, Plugin {
 
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
@@ -113,7 +116,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     /**
      * Holds the intraUserNetworkServiceManagersCache
      */
-    private Map<UUID, IntraUserNetworkServiceManager>  intraUserNetworkServiceManagersCache;
+    private Map<UUID, IntraUserNetworkServiceCommunicationManager>  intraUserNetworkServiceManagersCache;
 
     /**
      * Represent the dataBase
@@ -416,12 +419,12 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
      * @param pluginClientId the plugin client id
      * @return IntraUserNetworkServiceManager the intra user network service manager
      */
-    public IntraUserNetworkServiceManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
+    public IntraUserNetworkServiceCommunicationManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
 
         /*
          * Create a new instance
          */
-        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
+        IntraUserNetworkServiceCommunicationManager manager = new IntraUserNetworkServiceCommunicationManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
@@ -446,7 +449,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
      * @param pluginClientId
      * @return IntraUserNetworkServiceManager
      */
-    public IntraUserNetworkServiceManager getIntraUserNetworkServiceManager(UUID pluginClientId){
+    public IntraUserNetworkServiceCommunicationManager getIntraUserNetworkServiceManager(UUID pluginClientId){
 
         return  intraUserNetworkServiceManagersCache.get(pluginClientId);
     }
@@ -466,8 +469,18 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     }
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) {
+    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException {
+      try
+      {
+          //Save request
 
+          //fire evento to intra user
+            getIntraUserNetworkServiceDao().saveAskIntraUserForAcceptanceRequest(intraUserLoggedInPublicKey, intraUserLoggedInName,  intraUserToAddPublicKey,  myProfileImage);
+      }
+      catch (Exception e)
+      {
+
+      }
     }
 
     @Override
@@ -503,7 +516,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     /**
      * Initialize the event listener and configure
      */
-    private void initializeListener(IntraUserNetworkServiceManager intraUserNetworkServiceManager){
+    private void initializeListener(IntraUserNetworkServiceCommunicationManager intraUserNetworkServiceManager){
 
         /*
          * Listen and handle incoming network service connection request event
@@ -569,5 +582,10 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             }
         }
 
+    }
+
+    private IntraUserNetworkServiceDao getIntraUserNetworkServiceDao() throws CantExecuteDatabaseOperationException {
+        IntraUserNetworkServiceDao intraUserNetworkServiceDao = new IntraUserNetworkServiceDao(pluginDatabaseSystem, pluginId);
+        return intraUserNetworkServiceDao;
     }
 }

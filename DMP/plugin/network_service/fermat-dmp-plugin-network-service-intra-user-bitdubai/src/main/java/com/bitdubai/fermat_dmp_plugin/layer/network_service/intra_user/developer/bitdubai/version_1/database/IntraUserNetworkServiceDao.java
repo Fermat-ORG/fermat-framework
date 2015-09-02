@@ -1,11 +1,17 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 
 import java.util.UUID;
@@ -14,6 +20,10 @@ import java.util.UUID;
  * Created by natalia on 02/09/15.
  */
 public class IntraUserNetworkServiceDao {
+
+    UUID databaseOwnerId;
+    String databaseName;
+
 
     /**
      * Represent the Plugin Database.
@@ -38,42 +48,46 @@ public class IntraUserNetworkServiceDao {
      */
     Database database;
 
-    /**
-     * This method open or creates the database i'll be working with     *
 
-     * @throws CantInitializeNetworkIntraUserDataBaseException
-     */
-    public void initializeDatabase() throws CantInitializeNetworkIntraUserDataBaseException {
-        try {
-             /*
-              * Open new database connection
-              */
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-            database.closeDatabase();
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new CantInitializeNetworkIntraUserDataBaseException(CantInitializeNetworkIntraUserDataBaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        } catch (DatabaseNotFoundException e) {
-             /*
-              * The database no exist may be the first time the plugin is running on this device,
-              * We need to create the new database
-              */
-            IntraUserNetworkServiceDatabaseFactory databaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-            try {
-                  /*
-                   * We create the new database
-                   */
-                database = databaseFactory.createDatabase(this.pluginId);
-                database.closeDatabase();
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                  /*
-                   * The database cannot be created. I can not handle this situation.
-                   */
-                throw new CantInitializeNetworkIntraUserDataBaseException(CantInitializeNetworkIntraUserDataBaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
-            }
-        } catch (Exception e) {
+    public void saveAskIntraUserForAcceptanceRequest(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) throws CantExecuteDatabaseOperationException {
+        try
+        {
+            database = openDatabase();
+            DatabaseTable table = this.database.getTable(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
 
-            throw new CantInitializeNetworkIntraUserDataBaseException(CantInitializeNetworkIntraUserDataBaseException.DEFAULT_MESSAGE, e, "", "Generic Error.");
+            record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey);
+            record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME, intraUserLoggedInName);
+            record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME,intraUserLoggedInPublicKey);
 
+            table.insertRecord(record);
+            closeDatabase();
+        }  catch (CantInitializeNetworkIntraUserDataBaseException e){
+            closeDatabase();
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,e,"", "Error save record to ask intra user acceptance");
+
+        }  catch (Exception exception){
+            closeDatabase();
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,exception, "", "Error save record to ask intra user acceptance");
         }
+    }
+
+    private Database openDatabase() throws CantInitializeNetworkIntraUserDataBaseException {
+        try {
+            if(database == null)
+                database = pluginDatabaseSystem.openDatabase(this.databaseOwnerId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            else
+                database.openDatabase();
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            throw new CantInitializeNetworkIntraUserDataBaseException(CantInitializeNetworkIntraUserDataBaseException.DEFAULT_MESSAGE,cantOpenDatabaseException, "Trying to open database " + databaseName, "Error in Database plugin");
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            throw new CantInitializeNetworkIntraUserDataBaseException(CantInitializeNetworkIntraUserDataBaseException.DEFAULT_MESSAGE,databaseNotFoundException, "Trying to open database " + databaseName, "Error in Database plugin. Database should already exists.");
+        }
+        return database;
+    }
+
+    private void closeDatabase(){
+        if(database != null)
+            database.closeDatabase();
     }
 }
