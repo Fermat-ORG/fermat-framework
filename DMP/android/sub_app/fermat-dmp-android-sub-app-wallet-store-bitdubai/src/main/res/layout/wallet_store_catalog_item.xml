@@ -44,6 +44,15 @@
             android:textSize="14sp"
             tools:text="Nombre del publisher" />
 
+        <ImageView
+            android:id="@+id/options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@android:drawable/ic_menu_more" />
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/wallet_installation_status"
             android:layout_width="wrap_content"
