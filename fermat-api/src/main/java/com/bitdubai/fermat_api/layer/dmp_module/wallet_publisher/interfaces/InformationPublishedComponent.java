@@ -7,7 +7,6 @@
 
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.enums.InformationPublishedComponentType;
 

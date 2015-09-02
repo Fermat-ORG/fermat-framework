@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -111,7 +113,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
             database.closeDatabase();
     }
 
-    private DatabaseTableRecord getDesignerDatabaseTableRecord(com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer){
+    private DatabaseTableRecord getDesignerDatabaseTableRecord(com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designer.getPublicKey().toString()); //Todo: Revisar si guarda publickey o UUID id
@@ -121,7 +123,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return record;
     }
 
-    private DatabaseTransaction addDesignerInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer) throws InvalidDatabaseOperationException {
+    private DatabaseTransaction addDesignerInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer) throws InvalidDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME);
         DatabaseTableRecord record = getDesignerDatabaseTableRecord(designer);
 
@@ -142,7 +144,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return transaction;
     }
 
-    private DatabaseTableRecord getTranslatorDatabaseTableRecord (com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator){
+    private DatabaseTableRecord getTranslatorDatabaseTableRecord (TranslatorIdentity translator){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translator.getPublicKey().toString()); //Todo: Revisar si guarda publickey o UIID id
@@ -152,7 +154,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return record;
     }
 
-    private DatabaseTransaction addTranslatorInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator) throws InvalidDatabaseOperationException {
+    private DatabaseTransaction addTranslatorInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, TranslatorIdentity translator) throws InvalidDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME);
         DatabaseTableRecord record = getTranslatorDatabaseTableRecord(translator);
 
@@ -832,7 +834,8 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
      * @param designer
      * @throws CantExecuteDatabaseOperationException
      */
-    public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator, com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin, com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer) throws CantExecuteDatabaseOperationException {
+    public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, TranslatorIdentity translator,  com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin, DesignerIdentity designer) throws CantExecuteDatabaseOperationException {
+
         database = openDatabase();
         DatabaseTransaction transaction = database.newTransaction();
         try{
