@@ -1,5 +1,5 @@
 
-include ':fermat-android-core', ':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
+include ':fermat-android-core'
 include ':fermat-android-api'
 
 include ':fermat-core'
@@ -428,7 +428,6 @@ project(':fermat-dap-plugin-transaction-asset-issuing-bitdubai').projectDir = ne
 include ':fermat-dap-plugin-transaction-incoming-issuer-bitdubai'
 project(':fermat-dap-plugin-transaction-incoming-issuer-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-incoming-issuer-bitdubai')
 
-
 include ':fermat-dap-plugin-transaction-outgoing-intra-user-bitdubai'
 project(':fermat-dap-plugin-transaction-outgoing-intra-user-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-outgoing-intra-user-bitdubai')
 
@@ -440,6 +439,12 @@ project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projec
 
 include ':fermat-dap-plugin-identity-issuer-bitdubai'
 project(':fermat-dap-plugin-identity-issuer-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-issuer-bitdubai')
+
+include ':fermat-dap-plugin-identity-user-bitdubai'
+project(':fermat-dap-plugin-identity-user-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-user-bitdubai')
+
+include ':fermat-dap-plugin-identity-redem-point-bitdubai'
+project(':fermat-dap-plugin-identity-redem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redem-point-bitdubai')
 
 include ':fermat-dap-plugin-actor-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-issuer-bitdubai')
