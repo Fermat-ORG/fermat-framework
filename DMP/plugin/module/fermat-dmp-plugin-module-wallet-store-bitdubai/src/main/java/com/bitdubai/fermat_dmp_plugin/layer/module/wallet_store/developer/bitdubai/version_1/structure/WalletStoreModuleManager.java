@@ -522,7 +522,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
      * @param version
      * @throws CantStartInstallationException
      */
-    public void installWallet(WalletCategory walletCategory,  UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
+    public void installWallet(WalletCategory walletCategory, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
             CatalogItem catalogItem = walletStoreManagerNetworkService.getCatalogItem(walletCatalogueId);
