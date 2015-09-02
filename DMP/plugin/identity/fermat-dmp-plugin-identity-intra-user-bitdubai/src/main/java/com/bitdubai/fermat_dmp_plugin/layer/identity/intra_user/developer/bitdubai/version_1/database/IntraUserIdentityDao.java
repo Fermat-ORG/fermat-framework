@@ -170,7 +170,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
     }
 
 
-    public List<IntraUserIdentity> getIntraUserFromCurrentDeviceUser (DeviceUser deviceUser) throws CantGetIntraUserIdentitiesException {
+    public List<IntraUserIdentity> getAllIntraUserFromCurrentDeviceUser (DeviceUser deviceUser) throws CantGetIntraUserIdentitiesException {
 
 
         // Setup method.
@@ -230,6 +230,7 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
         // Return the list values.
         return list;
     }
+
 
 
     public byte[] getIntraUserProfileImagePrivateKey(String publicKey) throws CantGetIntraUserIdentityProfileImageException {

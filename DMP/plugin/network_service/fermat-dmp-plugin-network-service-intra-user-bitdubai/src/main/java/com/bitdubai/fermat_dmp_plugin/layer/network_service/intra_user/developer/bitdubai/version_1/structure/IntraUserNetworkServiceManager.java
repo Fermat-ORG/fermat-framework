@@ -309,7 +309,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
     }
 
     @Override
-    public List<IntraUser> getIntraUsersSuggestions() throws ErrorSearchingSuggestionsException {
+    public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException {
         return null;
     }
 
