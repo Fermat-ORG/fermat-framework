@@ -8,3 +8,55 @@
 
 * /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/Language.java
 
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/CatalogItemImpl.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/DetailedCatalogItemImpl.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceMessage.java
+
+
+- Method Private
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/database/WalletStoreCatalogDatabaseDao.java
+
+    private DatabaseTransaction getDatabaseTransaction()
+
+
+
+- Method Public
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/IncomingMessageDAO.java
+
+    public WalletStoreNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/OutgoingMessageDAO.java
+
+    public WalletStoreNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceLocalAgent.java
+
+    public void sendMessage(Message message)
+
+    public String getRemoteNetworkServicePublicKey()
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceMessage.java
+
+    public void setSignature(String signature)
+
+
+- Class
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/WalletStoreNetworkServiceDatabaseFactory.java
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceManager.java
