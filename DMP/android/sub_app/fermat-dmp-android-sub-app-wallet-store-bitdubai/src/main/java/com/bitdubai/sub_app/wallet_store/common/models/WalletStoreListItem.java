@@ -1,8 +1,13 @@
 package com.bitdubai.sub_app.wallet_store.common.models;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.wallet_store.bitdubai.R;
@@ -25,8 +30,9 @@ public class WalletStoreListItem implements Serializable {
     private InstallationStatus installationStatus;
     private String walletName;
     private String description;
-    private Drawable walletIcon;
+    private Bitmap walletIcon;
     private UUID id;
+    private WalletCategory category;
 
 
     /**
@@ -39,6 +45,8 @@ public class WalletStoreListItem implements Serializable {
 
         id = catalogueItem.getId();
 
+        category = catalogueItem.getCategory();
+
         walletName = catalogueItem.getName();
 
         description = catalogueItem.getDescription();
@@ -48,10 +56,9 @@ public class WalletStoreListItem implements Serializable {
 
         try {
             byte[] iconBytes = catalogueItem.getIcon();
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(iconBytes);
-            walletIcon = Drawable.createFromStream(inputStream, "walletIcon");
+            walletIcon = BitmapFactory.decodeByteArray(iconBytes, 0, iconBytes.length);
         } catch (Exception e) {
-            walletIcon = res.getDrawable(R.drawable.wallet_1);
+            walletIcon = BitmapFactory.decodeResource(res, R.drawable.wallet_1);
         }
 
     }
@@ -59,6 +66,14 @@ public class WalletStoreListItem implements Serializable {
 
     public String getDescription() {
         return description;
+    }
+
+    public WalletCategory getCategory() {
+        return category;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public InstallationStatus getInstallationStatus() {
@@ -69,16 +84,12 @@ public class WalletStoreListItem implements Serializable {
         return walletName;
     }
 
-    public Drawable getWalletIcon() {
+    public Bitmap getWalletIcon() {
         return walletIcon;
     }
 
-    public UUID getId() {
-        return id;
-    }
 
-
-    private WalletStoreListItem(String walletName, InstallationStatus installationStatus, Drawable walletIcon) {
+    private WalletStoreListItem(String walletName, InstallationStatus installationStatus, Bitmap walletIcon) {
         this.walletName = walletName;
         this.installationStatus = installationStatus;
         this.walletIcon = walletIcon;
@@ -112,7 +123,7 @@ public class WalletStoreListItem implements Serializable {
 
         ArrayList<WalletStoreListItem> testItems = new ArrayList<>();
         for (int i = 0; i < walletIcons.length && i < installed.length && i < prices.length && i < walletNames.length; i++) {
-            Drawable icon = res.getDrawable(walletIcons[i]);
+            Bitmap icon = BitmapFactory.decodeResource(res, walletIcons[i]);
             WalletStoreListItem item = new WalletStoreListItem(walletNames[i], installed[i], icon);
             testItems.add(item);
         }

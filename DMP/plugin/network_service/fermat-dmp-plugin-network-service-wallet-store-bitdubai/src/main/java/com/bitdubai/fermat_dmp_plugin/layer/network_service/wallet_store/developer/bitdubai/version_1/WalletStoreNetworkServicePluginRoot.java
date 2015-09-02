@@ -58,6 +58,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseFactory;
@@ -278,12 +280,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
     @Override
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+    public DesignerIdentity getDesigner(UUID designerId) throws CantGetDesignerException {
         return getWalletStoreManager().getDesigner(designerId);
     }
 
     @Override
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
+    public TranslatorIdentity getTranslator(UUID translatorId) throws CantGetTranslatorException {
         return getWalletStoreManager().getTranslator(translatorId);
     }
 
@@ -597,7 +599,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             skin.setScreenSize(ScreenSize.MEDIUM);
 
             final String designerId = UUID.randomUUID().toString();
-            com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = new com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer() {
+            DesignerIdentity designer = new DesignerIdentity() {
                 @Override
                 public String getAlias() {
                     return "Diseñador";
@@ -639,7 +641,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
 
             final String traductorId = UUID.randomUUID().toString();
-            com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = new com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator() {
+            TranslatorIdentity translator = new TranslatorIdentity() {
                 @Override
                 public String getAlias() {
                     return "Traductor";
@@ -725,7 +727,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                                       Version finalWalletVersion,
                                       List<URL> videoPreviews,
                                       long languageSizeInBytes,
-                                      com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator,
+                                      TranslatorIdentity translator,
                                       boolean isDefault)
     {
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language languageImpl;
@@ -757,7 +759,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                               boolean hasVideoPreview,
                               List<URL> videoPreviews,
                               long skinSizeInBytes,
-                              com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer,
+                              DesignerIdentity designer,
                               boolean isDefault )
     {
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skinImpl;

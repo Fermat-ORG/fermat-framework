@@ -7,10 +7,9 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationMiddlewareException;
@@ -22,7 +21,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Comp
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
@@ -34,11 +32,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.develope
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ScreensShotsComponentsDao;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -138,7 +133,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              */
             Map<String, Object> filters = new HashMap<>();
             filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publisherIdentityPublicKey);
-            filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME, DescriptorFactoryProjectType.WALLET.getCode());
+            filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME, FactoryProjectType.WALLET.getCode());
 
             /*
              * Load the data from data base
@@ -166,7 +161,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              */
             Map<String, Object> filters = new HashMap<>();
             filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publisherIdentityPublicKey);
-            filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME, DescriptorFactoryProjectType.SKIN.getCode());
+            filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME, FactoryProjectType.SKIN.getCode());
 
 
             /*
@@ -195,7 +190,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              */
             Map<String, Object> filters = new HashMap<>();
             filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publisherIdentityPublicKey);
-            filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME, DescriptorFactoryProjectType.LANGUAGE.getCode());
+            filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME, FactoryProjectType.LANGUAGE.getCode());
 
 
             /*
@@ -248,10 +243,10 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishSkin(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, String, String)
+     * @see WalletPublisherMiddlewareManager#publishSkin(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, URL, String, String)
      */
     @Override
-    public void publishSkin(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    public void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
          /*
          * Construct the  Information Published Component
@@ -266,16 +261,16 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0), publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishLanguage(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, String, String)
+     * @see WalletPublisherMiddlewareManager#publishLanguage(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, URL, String, String)
      */
     @Override
-    public void publishLanguage(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    public void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
         /*
          * Construct the  Information Published Component
@@ -290,16 +285,16 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0), publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
     }
 
     /**
      * (non-Javadoc)
-     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProject, WalletCategory, byte[], byte[], List, URL, String, Version, Version, Version, Version, URL, String, String)
+     * @see WalletPublisherMiddlewareManager#publishWallet(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, URL, String, String)
      */
     @Override
-    public void publishWallet(WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
         /*
          * Construct the  Information Published Component
@@ -314,7 +309,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, walletCategory, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(0,0,0), new Version(0,0,0), initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
     }
 
 
@@ -323,7 +318,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      *
      * @param informationPublishedComponentMiddlewareImpl
      * @param walletFactoryProject
-     * @param walletCategory
      * @param icon
      * @param mainScreenShot
      * @param screenShotDetails
@@ -338,17 +332,18 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @param signature
      * @throws CantPublishComponentMiddlewareException
      */
-    private void publishComponent(InformationPublishedComponentMiddlewareImpl informationPublishedComponentMiddlewareImpl, WalletFactoryProject walletFactoryProject, WalletCategory walletCategory, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
+    private void publishComponent(InformationPublishedComponentMiddlewareImpl informationPublishedComponentMiddlewareImpl, WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentMiddlewareException {
 
         try {
 
             Version defaultVersion = new Version(1, 0, 0);
-            CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletCategory, defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
+            CatalogItem catalogItem = constructCatalogItemObject(walletFactoryProject, walletFactoryProject.getWalletCategory(), defaultVersion, icon, mainScreenShot, screenShotDetails, videoUrl, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl);
 
             /* ----------------------------------------
              * Create the informationPublishedComponent
              * ----------------------------------------
              */
+            informationPublishedComponentMiddlewareImpl.setId(UUID.randomUUID());
             informationPublishedComponentMiddlewareImpl.setWalletFactoryProjectId(walletFactoryProject.getProjectPublicKey());
             informationPublishedComponentMiddlewareImpl.setWalletFactoryProjectName(walletFactoryProject.getName());
             informationPublishedComponentMiddlewareImpl.setDescriptions(walletFactoryProject.getDescription());

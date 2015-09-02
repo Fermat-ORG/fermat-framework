@@ -1,0 +1,6 @@
+<!-- res/drawable/myrect.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#f3e4c4"/>
+     />
+</shape><!-- From: file:/home/natalia/StudioProjects/fermat/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/res/drawable/myrect.xml -->
