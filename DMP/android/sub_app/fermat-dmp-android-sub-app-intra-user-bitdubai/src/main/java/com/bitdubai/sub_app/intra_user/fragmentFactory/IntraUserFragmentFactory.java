@@ -27,10 +27,10 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_DETAIL_ACTIVITY:
-                currentFragment = DetailsActivityFragment.newInstance();
+                currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY:
-                currentFragment = MoreDetailsActivityFragment.newInstance();
+                currentFragment = ConnectionsListFragment.newInstance();
                 break;
 
 
@@ -38,10 +38,10 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_FREE_FRAGMENT:
-                currentFragment = DetailsActivityFragment.newInstance();
+                currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_PAID_FRAGMENT:
-                currentFragment = MoreDetailsActivityFragment.newInstance();
+                currentFragment = ConnectionsListFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");
