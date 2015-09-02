@@ -488,7 +488,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     }
 
     @Override
-    public List<IntraUser> getIntraUsersSuggestions() throws ErrorSearchingSuggestionsException {
+    public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException {
         return null;
     }
 

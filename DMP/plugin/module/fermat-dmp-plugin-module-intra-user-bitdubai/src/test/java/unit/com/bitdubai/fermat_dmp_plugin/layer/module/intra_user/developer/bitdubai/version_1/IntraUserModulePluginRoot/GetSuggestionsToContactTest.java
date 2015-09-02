@@ -116,7 +116,7 @@ public class GetSuggestionsToContactTest extends TestCase {
     @Test
     public void getSuggestionsToContactTest_GetOk_throwsCantGetIntraUsersListException() throws Exception{
 
-        intraUserInformationList = testIntraUserModulePluginRoot.getSuggestionsToContact();
+        intraUserInformationList = testIntraUserModulePluginRoot.getSuggestionsToContact(0,10);
         Assertions.assertThat(intraUserInformationList)
                 .isNotNull();
 
@@ -127,7 +127,7 @@ public class GetSuggestionsToContactTest extends TestCase {
 
         testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(null);
 
-        catchException(testIntraUserModulePluginRoot).getSuggestionsToContact();
+        catchException(testIntraUserModulePluginRoot).getSuggestionsToContact(0,10);
 
         assertThat(caughtException())
                 .isNotNull()

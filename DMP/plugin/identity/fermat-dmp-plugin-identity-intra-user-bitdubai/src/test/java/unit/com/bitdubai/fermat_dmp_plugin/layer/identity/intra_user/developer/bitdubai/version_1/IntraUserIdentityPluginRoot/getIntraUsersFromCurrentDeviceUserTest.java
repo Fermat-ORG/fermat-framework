@@ -102,7 +102,7 @@ public class getIntraUsersFromCurrentDeviceUserTest {
     public void getIntraUsersFromCurrentDeviceUserException() throws CantOpenDatabaseException, DatabaseNotFoundException, CantGetUserIntraUserIdentitiesException {
         when(mockDatabase.getTable(IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME)).thenReturn(null);
 
-          catchException(pluginRoot).getIntraUsersFromCurrentDeviceUser();
+          catchException(pluginRoot).getAllIntraUsersFromCurrentDeviceUser();
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
 
     }
@@ -111,7 +111,7 @@ public class getIntraUsersFromCurrentDeviceUserTest {
     public void getIntraUsersFromCurrentDeviceUser_GetOk() throws CantOpenDatabaseException, DatabaseNotFoundException, CantGetUserIntraUserIdentitiesException {
 
 //TODO Ejecucion con OK error en for each sobre los records hay que ver como se mockea eso
-        catchException(pluginRoot).getIntraUsersFromCurrentDeviceUser();
+        catchException(pluginRoot).getAllIntraUsersFromCurrentDeviceUser();
         assertThat(CatchException.<Exception>caughtException()).isNull();
 
     }
