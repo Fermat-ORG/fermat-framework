@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_store.common;
+package com.bitdubai.sub_app.wallet_store.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
