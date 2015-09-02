@@ -1,5 +1,5 @@
 
-include ':fermat-android-core', ':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
+include ':fermat-android-core', ':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai', ':fermat-wpd-api'
 include ':fermat-android-api'
 
 include ':fermat-core'

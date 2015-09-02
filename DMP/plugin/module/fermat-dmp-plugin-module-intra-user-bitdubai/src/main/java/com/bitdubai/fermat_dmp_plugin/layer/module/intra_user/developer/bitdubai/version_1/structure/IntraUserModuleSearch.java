@@ -73,7 +73,7 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             /**
              * search Device User intra users  from intra user identity
              */
-            List<IntraUserIdentity>  intraUserIdentityList = this.intraUserIdentityManager.getIntraUsersFromCurrentDeviceUser();
+            List<IntraUserIdentity>  intraUserIdentityList = this.intraUserIdentityManager.getAllIntraUsersFromCurrentDeviceUser();
 
             /**
              * I only add intra users belonging to the Device User log

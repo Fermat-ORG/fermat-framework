@@ -7,27 +7,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 /**
  * Created by rodrigo on 2015.07.08..
  */
-public class IncomingCryptoReversedOnCryptoNetworkEvent implements PlatformEvent {
-    EventType eventType;
-    EventSource eventSource;
+public class IncomingCryptoReversedOnCryptoNetworkEvent extends AbstractPlatformEvent {
 
 
-    public IncomingCryptoReversedOnCryptoNetworkEvent(EventType eventType) {
-        this.eventType = eventType;
-    }
-
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
-
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
+    public IncomingCryptoReversedOnCryptoNetworkEvent(EventType eventType){
+        super(eventType);
     }
 }
