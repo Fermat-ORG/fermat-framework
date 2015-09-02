@@ -68,7 +68,7 @@
 						</certifications>
 					</library>
 					<library
-							name="CRY Core"
+							name="BCH Core"
 							description=""
 							difficulty="0"
 							code-level="concept"
@@ -232,7 +232,7 @@
 			<layer name="empty layer 2"></layer>
 			<layer super_layer="P2P"></layer>
 			<layer name="empty layer 3"></layer>
-			<layer super_layer="CRY"></layer>
+			<layer super_layer="BCH"></layer>
 			<layer name="empty layer 4"></layer>
 			<layer name="License" language="java"></layer>
 			<layer name="Plugin" language="java"></layer>
@@ -298,7 +298,7 @@
 						</certifications>
 					</library>
 					<library
-							name="CRY Api"
+							name="BCH Api"
 							description=""
 							difficulty="10"
 							code-level="development"
@@ -447,6 +447,11 @@
 		</platform>
 
 		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png">
+
+			<dependencies>
+				<dependency code="COR"></dependency>
+				<dependency code="OSA"></dependency>
+			</dependencies>
 
 			<layer name="Sub App" language="java-android">
 				<androids>
@@ -6116,7 +6121,7 @@
 
 		</super_layer>
 
-		<super_layer code="CRY" name="Crypto">
+		<super_layer code="BCH" name="Crypto">
 
 			<layer name="Crypto Router" language="java">
 				<plugins>
