@@ -358,10 +358,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 }
 
-                @Override
-                public void deleteSkin(Skin skin) {
-
-                }
 
                 @Override
                 public Language getDefaultLanguage() {
@@ -383,10 +379,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 }
 
-                @Override
-                public void deleteLanguage(Language language) {
-
-                }
 
                 @Override
                 public WalletNavigationStructure getNavigationStructure() {

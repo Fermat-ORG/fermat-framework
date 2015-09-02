@@ -119,7 +119,7 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
             userPublicKey = createNewDeviceUser("test1", "test1");
             DeviceUser deviceUser = getDeviceUser(userPublicKey);
             System.out.println("soy una direccion "+deviceUser.getPublicKey());
-            return getDeviceUser(userPublicKey);
+            return deviceUser;
         } catch (Exception e) {
             try {
                 return getDeviceUser(userPublicKey);

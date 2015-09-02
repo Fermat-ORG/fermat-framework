@@ -61,6 +61,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         super.onCreate(savedInstanceState);
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
 
+
         try {
 
             /*
