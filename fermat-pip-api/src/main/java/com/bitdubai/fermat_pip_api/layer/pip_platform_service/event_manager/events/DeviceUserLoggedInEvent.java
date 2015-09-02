@@ -8,11 +8,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
  * Created by ciencias on 24.01.15.
  * modified by  by Leon Acosta (laion.cj91@gmail.com) on 27/06/2015.
  */
-public class DeviceUserLoggedInEvent implements PlatformEvent {
+public class DeviceUserLoggedInEvent  extends AbstractPlatformEvent {
+
 
     private String publicKey;
-    private EventType eventType;
-    private EventSource eventSource;
 
     public void setPublicKey (String publicKey){
         this.publicKey = publicKey;
@@ -22,23 +21,10 @@ public class DeviceUserLoggedInEvent implements PlatformEvent {
         return this.publicKey;
     }
 
-    public DeviceUserLoggedInEvent(EventType eventType){
-        this.eventType = eventType;
+
+    public DeviceUserLoggedInEvent(EventType eventType) {
+        super(eventType);
     }
 
 
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
-
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
-    }
 }

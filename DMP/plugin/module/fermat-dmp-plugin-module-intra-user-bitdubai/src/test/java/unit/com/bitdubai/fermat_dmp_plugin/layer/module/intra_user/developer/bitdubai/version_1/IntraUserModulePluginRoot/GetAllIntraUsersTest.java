@@ -117,7 +117,7 @@ public class GetAllIntraUsersTest extends TestCase {
     @Test
     public void getAllIntraUsersTest_GetOk_throwsCantGetIntraUsersListExceptionException() throws Exception{
 
-        intraUserInformationList = testIntraUserModulePluginRoot.getAllIntraUsers();
+        intraUserInformationList = testIntraUserModulePluginRoot.getAllIntraUsers(0,10);
 
         Assertions.assertThat(intraUserInformationList)
                 .isNotNull();
@@ -129,7 +129,7 @@ public class GetAllIntraUsersTest extends TestCase {
 
         testIntraUserModulePluginRoot.setActorIntraUserManager(null);
 
-        catchException(testIntraUserModulePluginRoot).getAllIntraUsers();
+        catchException(testIntraUserModulePluginRoot).getAllIntraUsers(0,10);
 
         assertThat(caughtException())
                 .isNotNull()

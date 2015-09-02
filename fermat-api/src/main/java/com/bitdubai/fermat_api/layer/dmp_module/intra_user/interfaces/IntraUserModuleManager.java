@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
@@ -61,7 +62,7 @@ public interface IntraUserModuleManager {
      * @return a list with information of intra users
      * @throws CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getSuggestionsToContact() throws CantGetIntraUsersListException;
+    public List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws CantGetIntraUsersListException;
 
     /**
      * The method <code>searchIntraUser</code> gives us an interface to manage a search for a particular
@@ -125,7 +126,7 @@ public interface IntraUserModuleManager {
      * @return the list of intra users connected to the logged in intra user
      * @throws CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getAllIntraUsers() throws CantGetIntraUsersListException;
+    public List<IntraUserInformation> getAllIntraUsers(int max,int offset) throws CantGetIntraUsersListException;
 
     /**
      * The method <code>getIntraUsersWaitingYourAcceptance</code> returns the list of intra users waiting to be accepted
@@ -134,7 +135,7 @@ public interface IntraUserModuleManager {
      * @return the list of intra users waiting to be accepted or rejected by the  logged in intra user
      * @throws CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance() throws CantGetIntraUsersListException;
+    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(int max,int offset) throws CantGetIntraUsersListException;
 
     /**
      * The method <code>getIntraUsersWaitingTheirAcceptance</code> list the intra users that haven't
@@ -144,6 +145,12 @@ public interface IntraUserModuleManager {
      * logged in intra user.
      * @throws CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance() throws CantGetIntraUsersListException;
+    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(int max,int offset) throws CantGetIntraUsersListException;
 
+    /**
+     *
+     * @return active IntraUserLoginIdentity
+     * @throws CantShowLoginIdentitiesException
+     */
+    public IntraUserLoginIdentity getActiveIntraUserIdentity() throws CantGetActiveLoginIdentityException;
 }
