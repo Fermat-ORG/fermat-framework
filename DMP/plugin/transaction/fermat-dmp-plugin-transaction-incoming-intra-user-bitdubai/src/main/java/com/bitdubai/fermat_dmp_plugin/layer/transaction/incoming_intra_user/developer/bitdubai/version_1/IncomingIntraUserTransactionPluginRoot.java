@@ -23,7 +23,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedFromIntraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedFromIntraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedFromIntraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.MoneyReceivedEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoMetadataEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +83,8 @@ public class IncomingIntraUserTransactionPluginRoot implements Service, Incoming
 
 
         eventListener = eventManager.getNewListener(EventType.MONEY_RECEIVED);
-        eventHandler = new MoneyReceivedEventHandler();
-        ((MoneyReceivedEventHandler) eventHandler).setIncomingIntraUserManager(this);
+        eventHandler = new IncomingCryptoMetadataEventHandler();
+        ((IncomingCryptoMetadataEventHandler) eventHandler).setIncomingIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
