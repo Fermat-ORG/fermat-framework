@@ -15,6 +15,7 @@ public enum Plugins {
     BITDUBAI_CRYPTO_INDEX("BCRYPTOINW", Developers.BITDUBAI),
     BITDUBAI_BITCOIN_CRYPTO_NETWORK("BBTCCNET", Developers.BITDUBAI),
     BITDUBAI_CLOUD_CHANNEL("BCLOUDC", Developers.BITDUBAI),
+    BITDUBAI_COMMUNICATION_CHANNEL("BCCH", Developers.BITDUBAI),
     BITDUBAI_CLOUD_SERVER_COMMUNICATION("BCLOUSC", Developers.BITDUBAI),
     BITDUBAI_USER_NETWORK_SERVICE("BUSERNETS", Developers.BITDUBAI),
     BITDUBAI_TEMPLATE_NETWORK_SERVICE("BTEMNETS", Developers.BITDUBAI),
@@ -112,6 +113,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK;
             case "BCLOUDC":
                 return Plugins.BITDUBAI_CLOUD_CHANNEL;
+            case "BCCH":
+                return Plugins.BITDUBAI_COMMUNICATION_CHANNEL;
             case "BCLOUSC":
                 return Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION;
             case "BUSERNETS":

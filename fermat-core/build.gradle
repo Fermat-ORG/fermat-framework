@@ -47,6 +47,9 @@ dependencies {
     compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
     compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
+ //   compile project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
+//    compile project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai')
+
 
 // DMP Projects (Plugins)
 

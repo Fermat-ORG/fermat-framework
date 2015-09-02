@@ -583,6 +583,15 @@ public class Platform implements Serializable {
             Plugin cloudCommunication = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getCloudPlugin();
             injectPluginReferencesAndStart(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
 
+
+            /*
+             * Plugin Communication Server
+             * -----------------------------
+             */
+            Plugin communicationServer = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getCommunicationServerPlugin();
+            injectPluginReferencesAndStart(communicationServer, Plugins.BITDUBAI_CLOUD_CHANNEL);
+
+
             /*
              * Plugin Blockchain Info World
              * -----------------------------

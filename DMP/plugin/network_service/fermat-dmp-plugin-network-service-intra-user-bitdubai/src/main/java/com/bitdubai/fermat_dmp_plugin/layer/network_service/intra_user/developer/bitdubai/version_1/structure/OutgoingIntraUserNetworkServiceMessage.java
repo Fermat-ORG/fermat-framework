@@ -8,7 +8,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.OutgoingIntraUserNetworkServiceMessage</code>
- * represent a Outgoing Message
+ * represent a Outgoing FermatMessage
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 24/06/15.
  *

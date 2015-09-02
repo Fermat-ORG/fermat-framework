@@ -30,7 +30,7 @@ public class CoinbaseWorldSubsystem  implements WorldSubsystem {
         }
         catch (Exception e)
         {
-            System.err.println("Exception: " + e.getMessage());
+            System.err.println("Exception: " + e.getFermatMessage());
             throw new CantStartSubsystemException();
         }
 */

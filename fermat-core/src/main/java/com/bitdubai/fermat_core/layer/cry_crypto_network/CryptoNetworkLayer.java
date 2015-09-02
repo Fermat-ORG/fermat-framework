@@ -62,7 +62,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
             plugin.add(cryptoNetworkSubsystem);
         }
         catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+            System.err.println("CantStartCryptoNetworkException: " + e.getFermatMessage());
         }
          */
          
@@ -76,7 +76,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
             plugin.add(cryptoNetworkSubsystem);
         }
         catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+            System.err.println("CantStartCryptoNetworkException: " + e.getFermatMessage());
         }
 
         if (plugin.size() == 0) {

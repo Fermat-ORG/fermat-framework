@@ -192,7 +192,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		possibleReason += " even though this might be due to improper client message flow, it can also be a threading problem";
 		possibleReason += " as we can process a register packet for a connection that has already been registered, we need to improve this";
 
-		String context = "Packet Data: " + packet.toString();
+		String context = "CommunicationFermatPacket Data: " + packet.toString();
 		context += RegisteringAddressHasNotRequestedConnectionException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Is this connection already registered? " + registeredConnections.containsKey(packet.getSender());
 

@@ -62,7 +62,7 @@
             android:background="#747474" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/type"
+            android:id="@+id/fermatPacketType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

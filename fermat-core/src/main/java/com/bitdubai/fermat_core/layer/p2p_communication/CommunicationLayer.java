@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_core.layer.p2p_communication.comunication_server.CommunicationServerSubsystem;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.*;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.enums.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_core.layer.p2p_communication.cloud_client.CloudClientSubsystem;
@@ -25,6 +26,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
     private Plugin mCloudPlugin;
     private Plugin mCloudServerPlugin;
+    private Plugin mCommunicationServerPlugin;
 
     /**
      * CommunicationLayerManager Interface member variables.
@@ -47,6 +49,11 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     public Plugin getCloudServerPlugin(){
         return mCloudServerPlugin;
     }
+
+    public Plugin getCommunicationServerPlugin(){
+        return mCommunicationServerPlugin;
+    }
+
 
     /**
      * PlatformLayer Interface implementation.
@@ -91,6 +98,28 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
              */
             throw new CantStartLayerException();
         }
+
+
+        /**
+         *
+         */
+        CommunicationSubsystem comunicationServerSubsystem = new CommunicationServerSubsystem();
+
+        try {
+
+            comunicationServerSubsystem.start();
+            mCommunicationServerPlugin = comunicationServerSubsystem.getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+            throw new CantStartLayerException();
+        }
+
+
     }
 
 

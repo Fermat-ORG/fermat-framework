@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://www.netbeans.org/ns/project/1">
-    <type>org.netbeans.modules.apisupport.project</type>
+    <fermatPacketType>org.netbeans.modules.apisupport.project</fermatPacketType>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>fermat.full</code-name-base>
@@ -393,8 +393,8 @@
                 <package>com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-discount-wallet-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-discount-wallet-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-dmp-plugin-network-service-money-bitdubai-1.0.jar</runtime-relative-path>
@@ -413,20 +413,20 @@
                 <binary-origin>release/modules/ext/fermat-pip-addon-hardware-local-device-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-crypto-loss-protected-wallet-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-crypto-loss-protected-wallet-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-fiat-over-crypto-loss-protected-wallet-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-fiat-over-crypto-loss-protected-wallet-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-pip-addon-platform-service-location-subsystem-bitdubai-1.0.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/fermat-pip-addon-platform-service-location-subsystem-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-fiat-over-crypto-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-fiat-over-crypto-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-osa-addon-android-database-system-bitdubai-1.0.1.jar</runtime-relative-path>
@@ -465,8 +465,8 @@
                 <binary-origin>release/modules/ext/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-multi-account-wallet-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-multi-account-wallet-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-dmp-plugin-world-coinbase-bitdubai-1.0.jar</runtime-relative-path>
@@ -557,8 +557,8 @@
                 <binary-origin>release/modules/ext/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai-1.0.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai-1.0.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-crypto-wallet-bitdubai-1.0.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-crypto-wallet-bitdubai-1.0.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-dmp-plugin-network-service-wallet-community-bitdubai-1.0.jar</runtime-relative-path>
@@ -597,8 +597,8 @@
                 <binary-origin>release/modules/ext/fermat-dmp-plugin-middleware-bank-notes-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-bank-notes-wallet-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-niche-wallet-fermatPacketType-bank-notes-wallet-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-cry-plugin-crypto-network-bitcoin-bitdubai-1.0.1.jar</runtime-relative-path>
