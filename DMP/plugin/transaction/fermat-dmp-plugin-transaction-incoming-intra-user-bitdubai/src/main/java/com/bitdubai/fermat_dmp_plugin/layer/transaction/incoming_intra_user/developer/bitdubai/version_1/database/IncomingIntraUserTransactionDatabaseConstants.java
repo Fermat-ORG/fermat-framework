@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserTransactionDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.database.IncomingIntraUserTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
