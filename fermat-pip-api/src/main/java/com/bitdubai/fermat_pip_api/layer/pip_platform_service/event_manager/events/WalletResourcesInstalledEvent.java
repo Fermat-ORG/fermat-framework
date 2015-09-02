@@ -9,10 +9,10 @@ import java.util.UUID;
 /**
  * Created by loui on 18/02/15.
  */
-public class WalletResourcesInstalledEvent implements PlatformEvent {
+public class WalletResourcesInstalledEvent extends AbstractPlatformEvent {
    //Loui TODO: cambiar walletType por la variable correspodiente del tipo de dato correspondiente.
     private UUID walletType;
-    private EventType eventType;
+
     private EventSource eventSource;
 
     public void setWalletType (UUID walletType){
@@ -24,22 +24,9 @@ public class WalletResourcesInstalledEvent implements PlatformEvent {
     }
 
     public WalletResourcesInstalledEvent (EventType eventType){
-        this.eventType = eventType;
+        super(eventType);
     }
 
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
 
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
-    }
 }
 

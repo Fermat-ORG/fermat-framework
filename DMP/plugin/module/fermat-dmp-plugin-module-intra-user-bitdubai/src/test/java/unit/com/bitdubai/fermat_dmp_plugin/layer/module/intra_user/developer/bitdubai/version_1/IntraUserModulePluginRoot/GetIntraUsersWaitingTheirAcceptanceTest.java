@@ -115,7 +115,7 @@ public class GetIntraUsersWaitingTheirAcceptanceTest extends TestCase {
     public void getAllIntraUsersTest_GetOk_throwsCantGetIntraUsersListException() throws Exception{
 
 
-        intraUserInformationList = testIntraUserModulePluginRoot.getIntraUsersWaitingTheirAcceptance();
+        intraUserInformationList = testIntraUserModulePluginRoot.getIntraUsersWaitingTheirAcceptance(0,10);
 
         Assertions.assertThat(intraUserInformationList)
                 .isNotNull();
@@ -127,7 +127,7 @@ public class GetIntraUsersWaitingTheirAcceptanceTest extends TestCase {
 
         testIntraUserModulePluginRoot.setActorIntraUserManager(null);
 
-        catchException(testIntraUserModulePluginRoot).getIntraUsersWaitingTheirAcceptance();
+        catchException(testIntraUserModulePluginRoot).getIntraUsersWaitingTheirAcceptance(0,10);
 
         assertThat(caughtException())
                 .isNotNull()

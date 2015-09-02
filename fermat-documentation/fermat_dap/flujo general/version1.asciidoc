@@ -35,6 +35,9 @@ El issuer define propiedades generales de assets, y dependiendo del tipo de asse
 
 Una vez finalizado y cerrado el asset, se genera la Genesis Transaction.
 
+= Transferencia y confirmación de Asset a beneficiario
+
+
 = Consumo de Assests
 
  1) La branded wallet específica de un tipo de Asset (por ej. vourcher), al iniciarse la plataforma registra en el cloud server su existencia con su direccion de Bitcoin,
