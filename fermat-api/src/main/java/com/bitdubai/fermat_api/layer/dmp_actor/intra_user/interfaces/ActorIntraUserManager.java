@@ -85,7 +85,7 @@ public interface ActorIntraUserManager {
      * @return the list of intra users the logged in intra user has as connections.
      * @throws CantGetIntraUSersException
      */
-    List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException;
 
     /**
      * The method <code>getWaitingYourAcceptanceIntraUsers</code> shows the list of all intra users
@@ -95,7 +95,7 @@ public interface ActorIntraUserManager {
      * @return the list of intra users the logged in intra user has as connections.
      * @throws CantGetIntraUSersException
      */
-    List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException;
 
     /**
      * The method <code>getWaitingTheirAcceptanceIntraUsers</code> shows the list of all intra users
@@ -105,6 +105,6 @@ public interface ActorIntraUserManager {
      * @return the list of intra users the logged in intra user has as connections.
      * @throws CantGetIntraUSersException
      */
-    List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException;
     
 }

@@ -9,12 +9,11 @@ import java.util.UUID;
 /**
  * Created by loui on 05/02/15.
  */
-public class WalletInstalledEvent implements PlatformEvent {
+public class WalletInstalledEvent extends AbstractPlatformEvent {
     private UUID walletId;
-    private EventType eventType;
-    private EventSource eventSource;
+
     private String publicKey;
-    
+
     public void setWalletId (UUID walletId){
         this.walletId = walletId;        
     }
@@ -28,21 +27,6 @@ public class WalletInstalledEvent implements PlatformEvent {
     }
     
     public WalletInstalledEvent (EventType eventType){
-        this.eventType = eventType;        
-    }
-
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
-
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
+        super(eventType);
     }
 }
