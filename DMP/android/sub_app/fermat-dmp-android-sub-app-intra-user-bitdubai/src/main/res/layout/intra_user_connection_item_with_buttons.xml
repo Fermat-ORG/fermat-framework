@@ -66,6 +66,27 @@
                     android:textSize="12sp"
                     tools:text="Nombre del publisher" />
 
+
+                <ImageView
+                    android:id="@+id/imageView_chat"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/wallet_icon"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    tools:src="@drawable/ic_action_chat" />
+
+
+                <ImageView
+                    android:id="@+id/imageView_add_connection"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/wallet_icon"
+                    android:layout_marginRight="7dp"
+                    android:layout_toLeftOf="@id/imageView_chat"
+                    tools:src="@drawable/ic_action_add_person_grey" />
+
+
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/txtView_profile_status"
                     android:layout_width="wrap_content"
