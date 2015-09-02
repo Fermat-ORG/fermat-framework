@@ -28,7 +28,7 @@ public interface IntraUserManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    public List<IntraUser> getIntraUsersSuggestions() throws ErrorSearchingSuggestionsException;
+    public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException;
 
     /**
      * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.

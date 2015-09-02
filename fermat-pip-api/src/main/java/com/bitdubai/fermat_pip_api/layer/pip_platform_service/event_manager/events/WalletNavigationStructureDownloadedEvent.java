@@ -21,8 +21,8 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractPlatformEv
     private String walletPublicKey;
 
 
-    public WalletNavigationStructureDownloadedEvent() {
-        super(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+    public WalletNavigationStructureDownloadedEvent(EventType eventType){
+        super(eventType);
     }
 
     public UUID getSkinId() {

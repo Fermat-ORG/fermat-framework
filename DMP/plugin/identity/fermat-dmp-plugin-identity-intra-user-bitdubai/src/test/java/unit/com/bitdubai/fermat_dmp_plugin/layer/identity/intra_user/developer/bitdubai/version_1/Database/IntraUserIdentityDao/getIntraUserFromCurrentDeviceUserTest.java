@@ -75,9 +75,9 @@ public class getIntraUserFromCurrentDeviceUserTest {
     @Test
     public void getIntraUserFromCurrentDeviceUserTest_Getok() throws CantInitializeIntraUserIdentityDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException, CantGetIntraUserIdentityPrivateKeyException, CantGetIntraUserIdentitiesException, CantCreateNewDeveloperException, CantGetIntraUserIdentityProfileImageException, FileNotFoundException, CantCreateFileException {
         identityDao.initializeDatabase();
-        identityDao.getIntraUserFromCurrentDeviceUser(mockDeviceUser);
+        identityDao.getAllIntraUserFromCurrentDeviceUser(mockDeviceUser);
 
-        catchException(identityDao).getIntraUserFromCurrentDeviceUser(mockDeviceUser);
+        catchException(identityDao).getAllIntraUserFromCurrentDeviceUser(mockDeviceUser);
         assertThat(caughtException()).isNull();
 
 
@@ -87,11 +87,11 @@ public class getIntraUserFromCurrentDeviceUserTest {
     public void getIntraUserFromCurrentDeviceUserTest_GetError() throws CantInitializeIntraUserIdentityDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException, CantGetIntraUserIdentityPrivateKeyException, CantGetIntraUserIdentitiesException, CantCreateNewDeveloperException, CantGetIntraUserIdentityProfileImageException, FileNotFoundException, CantCreateFileException {
         identityDao.initializeDatabase();
 
-        identityDao.getIntraUserFromCurrentDeviceUser(mockDeviceUser);
+        identityDao.getAllIntraUserFromCurrentDeviceUser(mockDeviceUser);
 
         when(mockDatabase.getTable(IntraUserIdentityDatabaseConstants.INTRA_USER_TABLE_NAME)).thenReturn(null);
 
-        catchException(identityDao).getIntraUserFromCurrentDeviceUser(mockDeviceUser);
+        catchException(identityDao).getAllIntraUserFromCurrentDeviceUser(mockDeviceUser);
         assertThat(caughtException()).isNotNull().isInstanceOf(CantGetIntraUserIdentitiesException.class);
 
 
