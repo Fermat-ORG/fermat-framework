@@ -4,7 +4,7 @@ Readme
 Welcome to Fermat! 
 -------------------
 
-As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto while others fiat over crypto) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. 
+As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. 
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. 
 
@@ -13,9 +13,7 @@ We believe in people with passion who are crazy enough to think they can change 
 How will we do it?
 ---------------------
 
-Not stopping until we reach our goal.
-
-While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
+Not stopping until we reach our goal and finding the answers to the following questions:
 
 * How can we isolate ordinary people from the perceived complexity? 
 * How can we use the collective intelligence of the developer community? 
@@ -30,34 +28,38 @@ What is Fermat?
 
 Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
 
-Technically Fermat is an open-source P2P digital wallet platform that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+Technically Fermat is an open-source P2P system built on a plug-ins architecture that handles a stack of platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
 What makes Fermat different from other wallet platforms or services?
 
 * **Fermat is P2P.** This makes it censorship resistent and difficult to be attacked.
 
+* **Fermat is built with plugins.** This enables functionality to be reused and opens the door to any developer to participate.
+
 * **Fermat runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party. 
+
+* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat user base. 
 
 * **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
 
 * **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. 
 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
-[documentation](https://github.com/bitDubai/fermat/fermat-documentation) that we're anxious to add. 
+[documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation) that we're anxious to add. 
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet. 
 
-You can see some cool visualizations of the Fermat Platform and its P2P network at 
-[Fermat.org](https://www.fermat.org).
+You can see some cool visualizations of Fermat and its P2P network at 
+[Fermat.org](http://www.fermat.org).
 
 
-Mission / purpose:
+Mission / Purpose
 ------------------------------------------------
 
 
-> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allowing them to choose which currency to use, regardless of the place they live or where they were born.
+> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.
 
 
-Fermat principles:
+Fermat Principles
 ------------------------------------------------
 
 
@@ -82,7 +84,7 @@ Fermat principles:
 * No centralized point to be attacked.
 * Multiple identities and roles per user.
 * Device Private Network (DPN) concept.
-* Pocket Money concept and a Multi-Signature Vault owned by the DPN concept.
+* Pocket Money concept and a Multi-Signature Vault owned by the DPN.
 * Reviews and Reputation concepts. 
 
 
@@ -224,7 +226,7 @@ Status of the Project:
 
 As of August 2015 the state of the project is the following:
 
-State of the code: Under development for 2 months. No realeses yet. 12 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+State of the code: Under development for 2 months. No realeses yet. 17 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
 Future path of development: Active (First release with very limited features schedulled for late September 2015).
 
