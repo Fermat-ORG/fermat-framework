@@ -752,6 +752,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         //ArrayAdapter<String> itemsAdapter =
           //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
         getActionBar().setListNavigationCallbacks(adapter,listener);
+        adapter.notifyDataSetChanged();
     }
 
 
