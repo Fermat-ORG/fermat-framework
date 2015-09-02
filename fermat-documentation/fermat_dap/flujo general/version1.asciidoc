@@ -30,6 +30,7 @@ Interacion y Flujo de pluggin, subapp, explicacion.
 
 Quizas para una primera version, la plataforma tenga definido el contrato de características de los tipos y subtipos de Assests soportados.
 Por ejemplo, para el asset tipo voucher, existirán x condiciones que el issuer debe especificar.
+Deberiamos de enfocarnos a manipular los asset con la informacion basica, y con dicha informacion.
 
 El issuer define propiedades generales de assets, y dependiendo del tipo de asset, las condiciones que aplican. --> Resultado: Digital Asset.
 
@@ -37,8 +38,26 @@ Una vez finalizado y cerrado el asset, se genera la Genesis Transaction.
 
 = Transferencia y confirmación de Asset a beneficiario
 
+= Registro en Asset Issuer Wallet
+
+Es importante mencionar que este proceso realizara una transaccion contable al Asset del Issuer, aumentando la cantidad de Asset originado por el Asset en su creacion,
+para que cuando sea enviado a un Asset User, le sea debitado dicho asset al Issuet y acreditados al Asset User, de esta forma podriamos conocer cuantos Asset de ese tipo
+han sido creados y estan disponible para su envio, todo esta operacion debe ser originado mediante una transaccion de la capa transaction.
+
+= Registro en Asset User Wallet
+
+Este proceso realizara una transaccion contable al Asset del User, aumentando la cantidad de Asset User enviado por el Asset Issuer, y acreditando dicho asset al Issuet
+de esta forma podriamos conocer cuantos Asset de ese tipo tiene disponible el Aset User para su intercambio, todo esta operacion debe ser originado mediante una transaccion
+de la capa transaction.
+
+= Registro en Redeem Point Wallet
+
+Este proceso determina el intercambio del Asset User donde mediante un metodo donde se pase las direcciones correspondiente se realizara una transaccion contable al Asset del User, disminuyendo la cantidad de Asset User,
+y acreditando o retornando dicho asset al Asset Issuer o alguna wallet que determine la Redemcion.
+Aclarar que pasa con este Asset si se puede volver a enviar.
 
 = Consumo de Assests
+
 
  1) La branded wallet específica de un tipo de Asset (por ej. vourcher), al iniciarse la plataforma registra en el cloud server su existencia con su direccion de Bitcoin,
  para que el issuer (en forma automática) envíe el asset al usuario que tiene instalada la wallet.
