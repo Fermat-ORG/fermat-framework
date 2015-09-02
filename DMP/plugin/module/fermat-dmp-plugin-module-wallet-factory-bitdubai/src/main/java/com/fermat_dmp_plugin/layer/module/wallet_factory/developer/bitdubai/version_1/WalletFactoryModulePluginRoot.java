@@ -90,7 +90,7 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
     @Override
     public void start() {
         walletFactoryModuleManager = new WalletFactoryModuleManager(walletFactoryProjectManager);
-        test();
+        //test();
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
