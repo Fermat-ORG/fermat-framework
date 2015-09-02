@@ -111,7 +111,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         super.onCreate(savedInstanceState);
         setUpScreenComponents();
 
-        user_address_wallet= getWalletAddress(walletContact.name);
+        user_address_wallet= getWalletAddress(walletContact.actorId);
 
         showQRCodeAndAddress();
 
@@ -136,11 +136,11 @@ public class ReceiveFragmentDialog extends Dialog implements
 
     }
 
-    private String getWalletAddress(String contact_name) {
+    private String getWalletAddress(UUID actor_id) {
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, actor_id, Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
             walletAddres = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

@@ -75,13 +75,92 @@ public class IntraUserConnectionListItem implements Item{
 
     public static ArrayList<IntraUserConnectionListItem> getTestData(Resources resources) {
         ArrayList<IntraUserConnectionListItem> lst = new ArrayList<IntraUserConnectionListItem>();
-        Drawable d=resources.getDrawable(R.drawable.celine_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        Drawable d=resources.getDrawable(R.drawable.mati_profile); // the drawable (Captain Obvious, to the rescue!!!)
         Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
         byte[] bitmapdata = stream.toByteArray();
-        IntraUserConnectionListItem intraUserConnectionListItem = new IntraUserConnectionListItem("Matias Furszyfer","keep moving forward",bitmapdata,"connect");
+        IntraUserConnectionListItem intraUserConnectionListItem = new IntraUserConnectionListItem("Matias Furszyfer","Keep moving forward",bitmapdata,"connect");
         lst.add(intraUserConnectionListItem);
+
+        d=resources.getDrawable(R.drawable.deniz_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        bitmap = ((BitmapDrawable)d).getBitmap();
+        stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmapdata = stream.toByteArray();
+        intraUserConnectionListItem = new IntraUserConnectionListItem("Deniz Perez","Love playing with bitcoin",bitmapdata,"disconnect");
+        lst.add(intraUserConnectionListItem);
+
+        d=resources.getDrawable(R.drawable.kimberly_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        bitmap = ((BitmapDrawable)d).getBitmap();
+        stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmapdata = stream.toByteArray();
+        intraUserConnectionListItem = new IntraUserConnectionListItem("Kimberly Reumw","Moving around the world",bitmapdata,"connect");
+        lst.add(intraUserConnectionListItem);
+
+        d=resources.getDrawable(R.drawable.ginny_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        bitmap = ((BitmapDrawable)d).getBitmap();
+        stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmapdata = stream.toByteArray();
+        intraUserConnectionListItem = new IntraUserConnectionListItem("Giany Reumw","Making people laugh",bitmapdata,"connect");
+        lst.add(intraUserConnectionListItem);
+
+        d=resources.getDrawable(R.drawable.brant_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        bitmap = ((BitmapDrawable)d).getBitmap();
+        stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmapdata = stream.toByteArray();
+        intraUserConnectionListItem = new IntraUserConnectionListItem("Brant Wess","Nothing to say",bitmapdata,"disconnect");
+        lst.add(intraUserConnectionListItem);
+
+        d=resources.getDrawable(R.drawable.taylor_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        bitmap = ((BitmapDrawable)d).getBitmap();
+        stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmapdata = stream.toByteArray();
+        intraUserConnectionListItem = new IntraUserConnectionListItem("Taylor eustar","Like you",bitmapdata,"connect");
+        lst.add(intraUserConnectionListItem);
+
+        return lst;
+
+    }
+    public static ArrayList<IntraUserConnectionListItem> getTestDataExample(Resources resources) {
+        ArrayList<IntraUserConnectionListItem> lst = new ArrayList<IntraUserConnectionListItem>();
+        Drawable d=resources.getDrawable(R.drawable.mati_profile); // the drawable (Captain Obvious, to the rescue!!!)
+        Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+        byte[] bitmapdata = stream.toByteArray();
+        IntraUserConnectionListItem intraUserConnectionListItem = new IntraUserConnectionListItem("Matias Furszyfer","Keep moving forward",bitmapdata,"connect");
+        lst.add(intraUserConnectionListItem);
+
+        d=resources.getDrawable(R.drawable.kimberly_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        bitmap = ((BitmapDrawable)d).getBitmap();
+        stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmapdata = stream.toByteArray();
+        intraUserConnectionListItem = new IntraUserConnectionListItem("Kimberly Reumw","Moving around the world",bitmapdata,"connect");
+        lst.add(intraUserConnectionListItem);
+
+        d=resources.getDrawable(R.drawable.lucia_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        bitmap = ((BitmapDrawable)d).getBitmap();
+        stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmapdata = stream.toByteArray();
+        intraUserConnectionListItem = new IntraUserConnectionListItem("Lucia Perez","Want to play with you",bitmapdata,"disconnect");
+        lst.add(intraUserConnectionListItem);
+
+
+        d=resources.getDrawable(R.drawable.guillermo_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        bitmap = ((BitmapDrawable)d).getBitmap();
+        stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmapdata = stream.toByteArray();
+        intraUserConnectionListItem = new IntraUserConnectionListItem("joe Reumw","Moving around the world",bitmapdata,"connect");
+        lst.add(intraUserConnectionListItem);
+
         return lst;
 
 

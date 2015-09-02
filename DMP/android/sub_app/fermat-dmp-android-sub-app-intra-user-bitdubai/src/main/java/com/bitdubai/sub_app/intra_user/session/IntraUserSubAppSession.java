@@ -38,6 +38,7 @@ public class IntraUserSubAppSession implements SubAppsSession {
     private IntraUserModuleManager intraUserModuleManager;
 
 
+
     /**
      * Create a session for the Wallet Store SubApp
      *
