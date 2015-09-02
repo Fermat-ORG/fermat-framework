@@ -3121,9 +3121,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -3137,9 +3138,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -3153,9 +3155,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -3174,10 +3177,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="ronnervelazquez"></mantainer>
+							<mantainer name="fvasquezjatar"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -3191,10 +3194,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="ronnervelazquez"></mantainer>
+							<mantainer name="fvasquezjatar"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -3208,10 +3211,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="ronnervelazquez" scope="implementation" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="ronnervelazquez"></mantainer>
+							<mantainer name="fvasquezjatar"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
