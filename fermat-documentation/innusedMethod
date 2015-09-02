@@ -1,0 +1,82 @@
+= Metodos sin uso en fermat
+
+- Constructors
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/Translator.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/Skin.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/Language.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/CatalogItemImpl.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/DetailedCatalogItemImpl.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceMessage.java
+
+
+- Method Private
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/database/WalletStoreCatalogDatabaseDao.java
+
+    private DatabaseTransaction getDatabaseTransaction()
+
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_store/developer/bitdubai/version_1/structure/WalletStoreModuleManager.java
+
+    private InstallationStatus getSkinInstallationStatus(UUID skinId)
+
+    private InstallationStatus getLanguageInstallationStatus(UUID languageId)
+
+    private WalletStoreSkin getWalletStoreSkin(final Skin skin, final InstallationStatus installationStatus)
+
+    private com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner(UUID designerId)
+
+    private WalletStoreLanguage getWalletStoreLanguage(final Language language, final InstallationStatus installationStatus)
+
+    private DeveloperIdentity getDeveloper(UUID developerId)
+
+
+- Method Public
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/IncomingMessageDAO.java
+
+    public WalletStoreNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/OutgoingMessageDAO.java
+
+    public WalletStoreNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceLocalAgent.java
+
+    public void sendMessage(Message message)
+
+    public String getRemoteNetworkServicePublicKey()
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceMessage.java
+
+    public void setSignature(String signature)
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_store/developer/bitdubai/version_1/structure/database/WalletStoreMiddlewareDatabaseDao.java
+
+    public void setPluginId(UUID pluginId)
+
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_store/developer/bitdubai/version_1/structure/WalletStoreModuleManager.java
+
+    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException
+
+- Class
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/WalletStoreNetworkServiceDatabaseFactory.java
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceManager.java
