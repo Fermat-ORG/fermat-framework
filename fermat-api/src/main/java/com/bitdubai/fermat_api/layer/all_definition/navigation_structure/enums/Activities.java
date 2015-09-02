@@ -16,6 +16,11 @@ public enum Activities {
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN ("CWRWBWBV1M"),
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS("CWRWBWBV1T"),
 
+    /**
+     * Intra user
+     */
+    CWP_INTRA_USER_ACTIVITY("CIUA"),
+
     //Wallet store
     CWP_WALLET_STORE_MAIN_ACTIVITY("CWSMA"),
     CWP_WALLET_STORE_DETAIL_ACTIVITY("CWSDA"),
@@ -178,6 +183,8 @@ public enum Activities {
                 return Activities.CWP_WALLET_FACTORY_EDIT_WALLET;
             case "CWPM":
                 return Activities.CWP_WALLET_PUBLISHER_MAIN;
+            case "CIUA":
+                return CWP_INTRA_USER_ACTIVITY;
 
         }
         // throw an IllegalArgumentException or return null
