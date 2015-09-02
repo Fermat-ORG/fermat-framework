@@ -83,7 +83,7 @@ public class IntraUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
                   /*
                    * We create the new database
                    */
-                database = intraUserIdentityDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = intraUserIdentityDatabaseFactory.createDatabase(pluginId);
                 database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
@@ -117,14 +117,18 @@ public class IntraUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
          */
         List<String> intraUserColumns = new ArrayList<String>();
 
-        intraUserColumns.add(IntraUserNetworkServicesDatabaseConstants.INTRA_USER_NETWORK_SERVICE_ID_COLUMN_NAME);
-        intraUserColumns.add(IntraUserNetworkServicesDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME);
-        intraUserColumns.add(IntraUserNetworkServicesDatabaseConstants.INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME);
-        intraUserColumns.add(IntraUserNetworkServicesDatabaseConstants.INTRA_USER_INTRA_USER_ALIAS_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_ID_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_PROFILE_PICTURE_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME);
+
+
         /**
          * Table Intra User addition.
          */
-        DeveloperDatabaseTable intraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(IntraUserNetworkServicesDatabaseConstants.INTRA_USER_NETWORK_SERVICE_TABLE_NAME, intraUserColumns);
+        DeveloperDatabaseTable intraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_NAME, intraUserColumns);
         tables.add(intraUserTable);
 
 

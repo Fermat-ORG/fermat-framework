@@ -48,7 +48,7 @@ public class IntraUserNetworkServiceDao {
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, IntraUserNetworkServicesDatabaseConstants.INTRA_USER_NETWORK_SERVICE_DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             database.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeNetworkIntraUserDataBaseException(CantInitializeNetworkIntraUserDataBaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
@@ -62,7 +62,7 @@ public class IntraUserNetworkServiceDao {
                   /*
                    * We create the new database
                    */
-                database = databaseFactory.createDatabase(this.pluginId, IntraUserNetworkServicesDatabaseConstants.INTRA_USER_NETWORK_SERVICE_DATABASE_NAME);
+                database = databaseFactory.createDatabase(this.pluginId);
                 database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*

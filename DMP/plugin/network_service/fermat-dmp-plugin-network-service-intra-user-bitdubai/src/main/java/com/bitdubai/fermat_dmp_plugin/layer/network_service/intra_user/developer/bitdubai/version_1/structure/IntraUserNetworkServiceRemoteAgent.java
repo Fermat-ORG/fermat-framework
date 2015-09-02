@@ -263,7 +263,7 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Read all pending message from database
                      */
-                    List<OutgoingIntraUserNetworkServiceMessage> messages = outgoingMessageDataAccessObject.findAll(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME,
+                    List<OutgoingIntraUserNetworkServiceMessage> messages = outgoingMessageDataAccessObject.findAll(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME,
                                                                                                                   MessagesStatus.PENDING_TO_SEND.getCode());
                     /*
                      * For each message
