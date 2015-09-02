@@ -96,6 +96,8 @@ public class IncomingIntraUserTransactionDeveloperDatabaseFactory implements Dea
                    * The database cannot be created. I can not handle this situation.
                    */
                 throw new CantInitializeIncomingIntraUserTransactionDatabaseException(cantCreateDatabaseException.getMessage());
+            } catch (Exception e2) {
+                throw new CantInitializeIncomingIntraUserTransactionDatabaseException(e2.getMessage());
             }
         }
     }
@@ -192,6 +194,8 @@ public class IncomingIntraUserTransactionDeveloperDatabaseFactory implements Dea
             /**
              * if there was an error, I will returned an empty list.
              */
+            return returnedRecords;
+        } catch (Exception e) {
             return returnedRecords;
         }
 
