@@ -9,6 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartInstallationException;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+//import java.util.logging.Logger;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -52,7 +55,7 @@ import java.util.regex.Pattern;
  * * *
  */
 
-public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService, WalletStoreModuleManager, LogManagerForDevelopers, Plugin, Service {
+public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWalletManager, DealsWithEvents, DealsWithLogger, DealsWithWalletStoreMiddleware, DealsWithWalletStoreNetworkService, WalletStoreModuleManager, LogManagerForDevelopers, Plugin, Service {
 
     /**
      * WalletStoreModulePluginRoot member variables
@@ -245,6 +248,8 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
         if (walletStoreModuleManager == null)
             walletStoreModuleManager = new com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
 
+        //TEST
+        walletStoreModuleManager.setWalletManagerManager(walletManagerManager);
         return walletStoreModuleManager;
     }
 
@@ -265,8 +270,8 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
 
     @Override
     public void installWallet(WalletCategory walletCategory, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("MA_WALLET_STORE_PLUGIN_ROOT:" + getWalletStoreModuleManager());
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("MA_WALLET_STORE_PLUGIN_ROOT:" + getWalletStoreModuleManager());
         getWalletStoreModuleManager().installWallet(walletCategory, skinId, languageId, walletCatalogueId, version);
     }
 
@@ -293,5 +298,17 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithEv
             return null;
         }
 
+    }
+    /**
+     * DealsWithWalletManager interface variable and implementation
+     * Added by Manuel perez on 02/09/2015
+     * This implementation sets the WalletManagerManager, fixing the installation process
+     */
+    WalletManagerManager walletManagerManager;
+    @Override
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
+        this.walletManagerManager = walletManagerManager;
+        Logger LOG = Logger.getGlobal();
+        LOG.info("MAP_ROOT_SETWMM:"+this.walletManagerManager);
     }
 }
