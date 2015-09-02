@@ -233,7 +233,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         ArrayList<IntraUserConnectionListItem> data=null;
 
         try {
-            List<IntraUserInformation> lstIntraUser = intraUserModuleManager.getAllIntraUsers();
+            List<IntraUserInformation> lstIntraUser = intraUserModuleManager.getAllIntraUsers(0,10);
             //List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
 
             data = new ArrayList<>();

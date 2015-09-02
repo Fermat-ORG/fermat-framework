@@ -298,7 +298,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         }
 
 
-        //test();
+        test();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -612,11 +612,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             }
 
             @Override
-            public void deleteSkin(Skin skin) {
-
-            }
-
-            @Override
             public Language getDefaultLanguage() {
                 return constructLanguageTest();
             }
@@ -638,10 +633,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             }
 
-            @Override
-            public void deleteLanguage(Language language) {
-
-            }
 
             @Override
             public WalletNavigationStructure getNavigationStructure() {

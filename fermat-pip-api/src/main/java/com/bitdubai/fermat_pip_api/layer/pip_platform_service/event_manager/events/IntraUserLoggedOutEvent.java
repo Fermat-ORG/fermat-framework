@@ -23,18 +23,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserLoggedOutEvent implements PlatformEvent {
-
-
-    /**
-     * Represent the eventType
-     */
-    private EventType eventType;
-
-    /**
-     * Represent the eventSource
-     */
-    private EventSource eventSource;
+public class IntraUserLoggedOutEvent extends AbstractPlatformEvent {
 
     /**
      * Represent the intraUserId
@@ -47,51 +36,21 @@ public class IntraUserLoggedOutEvent implements PlatformEvent {
      * @param eventType
      */
     public IntraUserLoggedOutEvent(EventType eventType){
-        this.eventType = eventType;
+        super(eventType);
     }
 
     /**
      * Constructor with parameters
      *
-     * @param eventSource
      * @param eventType
      * @param intraUserId
      */
-    public IntraUserLoggedOutEvent(EventSource eventSource, EventType eventType, UUID intraUserId) {
-        this.eventSource = eventSource;
-        this.eventType = eventType;
+    public IntraUserLoggedOutEvent(EventType eventType, UUID intraUserId) {
+        super(eventType);
         this.intraUserId = intraUserId;
     }
 
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#getEventType()
-     */
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
 
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#setSource(EventSource)
-     */
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#getSource()
-     */
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
-    }
 
     /**
      * Get the id of the intra user logged in

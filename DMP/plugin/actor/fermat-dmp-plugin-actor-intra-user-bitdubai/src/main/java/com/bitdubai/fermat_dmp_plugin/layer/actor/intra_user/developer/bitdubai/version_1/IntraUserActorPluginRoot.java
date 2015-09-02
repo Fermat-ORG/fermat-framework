@@ -248,9 +248,9 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      * @throws CantGetIntraUSersException
      */
     @Override
-    public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException {
         try {
-            return this.intraUserActorDao.getAllIntraUsers(intraUserLoggedInPublicKey);
+            return this.intraUserActorDao.getAllIntraUsers(intraUserLoggedInPublicKey,max, offset);
         } catch (CantGetIntraUsersListException e) {
             throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -269,9 +269,9 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      */
 
     @Override
-    public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException {
         try {
-            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_LOCALLY_ACCEPTANCE);
+            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraUsersListException e) {
             throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -290,9 +290,9 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      */
 
     @Override
-    public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException {
         try {
-            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_REMOTELY_ACCEPTANCE);
+            return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraUsersListException e) {
             throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
