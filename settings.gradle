@@ -2,12 +2,13 @@
 include ':fermat-android-core'
 include ':fermat-android-api'
 
-include ':fermat-core'
 include ':fermat-api'
+include ':fermat-core'
+include ':fermat-cry-api'
 include ':fermat-dap-api'
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
-include ':fermat-cry-api'
+include ':fermat-wpd-api'
 
 
 // CRY Projects

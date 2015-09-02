@@ -39,6 +39,9 @@ que aplican. --> Resultado: Digital Asset.
 
 Una vez finalizado y cerrado el asset, se genera la Genesis Transaction.
 
+= Transferencia y confirmación de Asset a beneficiario
+
+
 = Consumo de Assests
 
  1) La branded wallet específica de un tipo de Asset (por ej. vourcher), al iniciarse la plataforma
