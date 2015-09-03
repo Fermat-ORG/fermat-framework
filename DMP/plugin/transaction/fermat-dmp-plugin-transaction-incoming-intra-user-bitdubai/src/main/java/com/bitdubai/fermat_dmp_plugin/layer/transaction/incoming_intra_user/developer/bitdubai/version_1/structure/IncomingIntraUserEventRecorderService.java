@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The class <code></code>
+ * The class <code>com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserEventRecorderService</code>
+ * is responsible to manage the event arrival from the different components that inform metadata reception
+ * and crypto transaction receptions
  */
 public class IncomingIntraUserEventRecorderService {
 
