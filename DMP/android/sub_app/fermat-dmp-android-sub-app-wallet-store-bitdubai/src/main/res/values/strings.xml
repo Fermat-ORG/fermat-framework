@@ -10,7 +10,11 @@
     <string name="wallet_status_installed">INSTALLED</string>
     <string name="wallet_status_uninstall">UNINSTALL</string>
     <string name="wallet_status_upgrade">UPGRADE</string>
-    <string name="wallet_status_open">UPGRADE</string>
+    <string name="wallet_status_open">OPEN</string>
     <string name="wallet_more_details_button">READ MORE</string>
     <string name="no_preview_images">No Preview Images</string>
+    <string name="menu_item_install_wallet">Install</string>
+    <string name="menu_item_detail_wallet">Details</string>
+    <string name="menu_item_open_wallet">Open</string>
+    <string name="cannot_collect_wallet_details">No se pudieron obtener los detalles de la wallet seleccionada</string>
 </resources>

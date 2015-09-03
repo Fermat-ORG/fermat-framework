@@ -403,6 +403,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         catalogItemImpl.setCategory(WalletCategory.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME)));
         catalogItemImpl.setDescription(record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME));
         catalogItemImpl.setDefaultSizeInBytes(record.getIntegerValue(WalletStoreCatalogDatabaseConstants.ITEM_SIZE_COLUMN_NAME));
+        catalogItemImpl.setId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.ITEM_ID_COLUMN_NAME));
         /**
          * the detailed catalog item will be null at this point.
          */
