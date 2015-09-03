@@ -119,13 +119,19 @@
 
     public static void error(String tag, String msg)
 
-* /home/nerio/fermat/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/util/CommonLogger.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/util/CommonLogger.java
 
     public static void info(String tag, String msg)
 
     public static void debug(String tag, String msg)
 
     public static void error(String tag, String msg)
+
+* /DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/intra_user/developer/bitdubai/version_1/exceptions/CantInitializeIntraUserActorDatabaseException.java
+
+    public CantInitializeIntraUserActorDatabaseException()
+
+
 
 - Class
 
@@ -138,3 +144,4 @@
 * /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/fragment/version_3/utils/SmartFragmentStatePagerAdapter.java
 * /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/MyLayoutInflaterFactory.java
 * /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_manager/WalletManagerSubApp.java
+* /DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/intra_user/developer/bitdubai/version_1/exceptions/CantGetIntraUserActorException.java
