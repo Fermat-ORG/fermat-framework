@@ -1,0 +1,147 @@
+= Metodos sin uso en fermat
+
+- Constructors
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/Translator.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/Skin.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/Language.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/CatalogItemImpl.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/catalog/DetailedCatalogItemImpl.java
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceMessage.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/common/adapters/ImagesAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/common/adapters/IntraUserConnectionsAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/common/models/WalletStoreListItem.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/session/IntraUserSubAppSession.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/session/WalletFactorySubAppSession.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_publisher/adapters/InformationPublishedComponentAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_publisher/adapters/WalletFactoryProjectsAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/common/adapters/ImagesAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/session/WalletStoreSubAppSession.java
+
+
+- Method Private
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/database/WalletStoreCatalogDatabaseDao.java
+
+    private DatabaseTransaction getDatabaseTransaction()
+
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_store/developer/bitdubai/version_1/structure/WalletStoreModuleManager.java
+
+    private InstallationStatus getSkinInstallationStatus(UUID skinId)
+
+    private InstallationStatus getLanguageInstallationStatus(UUID languageId)
+
+    private WalletStoreSkin getWalletStoreSkin(final Skin skin, final InstallationStatus installationStatus)
+
+    private com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner(UUID designerId)
+
+    private WalletStoreLanguage getWalletStoreLanguage(final Language language, final InstallationStatus installationStatus)
+
+    private DeveloperIdentity getDeveloper(UUID developerId)
+
+
+- Method Public
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/IncomingMessageDAO.java
+
+    public WalletStoreNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/OutgoingMessageDAO.java
+
+    public WalletStoreNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<WalletStoreNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceLocalAgent.java
+
+    public void sendMessage(Message message)
+
+    public String getRemoteNetworkServicePublicKey()
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceMessage.java
+
+    public void setSignature(String signature)
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_store/developer/bitdubai/version_1/structure/database/WalletStoreMiddlewareDatabaseDao.java
+
+    public void setPluginId(UUID pluginId)
+
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_store/developer/bitdubai/version_1/structure/WalletStoreModuleManager.java
+
+    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/adapters/CheckBoxListItem.java
+
+    public void setIntraUserIdentity(IntraUserLoginIdentity intraUserIdentity)
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/common/models/IntraUserConnectionListItem.java
+
+     public void setProfilePhrase(String profilePhrase)
+
+    public void setProfileImage(byte[] profileImage)
+
+    public void setConnectionStatus(String connectionStatus)
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/fragments/MainActivityFragment.java
+
+    public static MainActivityFragment newInstance()
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/util/CommonLogger.java
+
+    public static void info(String tag, String msg)
+
+    public static void debug(String tag, String msg)
+
+    public static void error(String tag, String msg)
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/util/CommonLogger.java
+
+    public static void info(String tag, String msg)
+
+    public static void debug(String tag, String msg)
+
+    public static void error(String tag, String msg)
+
+* /DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/intra_user/developer/bitdubai/version_1/exceptions/CantInitializeIntraUserActorDatabaseException.java
+
+    public CantInitializeIntraUserActorDatabaseException()
+
+
+
+- Class
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/WalletStoreNetworkServiceDatabaseFactory.java
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceManager.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/fragments/RegisterIntraUserFragment.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/src/main/java/com/bitdubai/sub_app/shop_manager/fragment/ShopDesktopFragment.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/fragment/version_3/utils/BusProvider.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/fragment/version_3/utils/FragmentEvent.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/fragment/version_3/utils/SmartFragmentStatePagerAdapter.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/MyLayoutInflaterFactory.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_manager/WalletManagerSubApp.java
+* /DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/intra_user/developer/bitdubai/version_1/exceptions/CantGetIntraUserActorException.java

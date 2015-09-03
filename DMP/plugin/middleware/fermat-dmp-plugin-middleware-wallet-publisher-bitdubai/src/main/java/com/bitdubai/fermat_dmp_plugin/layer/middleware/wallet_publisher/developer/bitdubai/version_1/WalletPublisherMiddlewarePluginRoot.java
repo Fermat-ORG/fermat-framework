@@ -298,7 +298,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         }
 
 
-        test();
+        //test();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
