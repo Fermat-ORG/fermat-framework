@@ -32,6 +32,23 @@
 
 * /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/session/WalletStoreSubAppSession.java
 
+* /DMP/plugin/identity/fermat-dmp-plugin-identity-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/identity/publisher/publisher/bitdubai/version_1/structure/PublisherIdentityRecord.java
+
+* /DMP/plugin/identity/fermat-dmp-plugin-identity-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/identity/publisher/publisher/bitdubai/version_1/PublisherIdentityPluginRoot.java
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/beans/dto/Bill.java
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/beans/dto/Coin.java
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/beans/dto/Depot.java
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/beans/dto/ItemByAccount.java
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/beans/dto/ItemByDepot.java
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/beans/dto/Record.java
+
+
 
 - Method Private
 
@@ -131,7 +148,27 @@
 
     public CantInitializeIntraUserActorDatabaseException()
 
+* /DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/engine/app_runtime/developer/bitdubai/version_1/structure/RuntimeSubApp.java
 
+    public void addLanguagePackage (LanguagePackage languagePackage)
+
+* /DMP/plugin/identity/fermat-dmp-plugin-identity-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/identity/publisher/publisher/bitdubai/version_1/structure/PublisherIdentityDao.java
+
+    public void setDeveloperIdentityDatabaseFactory(PublisherIdentityDatabaseFactory databaseFactory)
+
+* /DMP/plugin/identity/fermat-dmp-plugin-identity-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/identity/publisher/publisher/bitdubai/version_1/structure/PublisherIdentityRecord.java
+
+    public void setAlias (String alias)
+
+    public void setPublicKey (String publicKey)
+
+* /DMP/plugin/identity/fermat-dmp-plugin-identity-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/identity/publisher/publisher/bitdubai/version_1/PublisherIdentityPluginRoot.java
+
+    public void setPluginId(UUID pluginId)
+
+    public void setServiceStatus(ServiceStatus serviceStatus)
+
+    public void setDao(PublisherIdentityDao dao)
 
 - Class
 
@@ -145,6 +182,11 @@
 * /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/MyLayoutInflaterFactory.java
 * /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_manager/WalletManagerSubApp.java
 * /DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/intra_user/developer/bitdubai/version_1/exceptions/CantGetIntraUserActorException.java
+* /DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/composite_wallet/multi_account_wallet/developer/bitdubai/version_1/exceptions/CantCalculateBalanceException.java
+* /DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/composite_wallet/multi_account_wallet/developer/bitdubai/version_1/exceptions/CantInitializeWalletException.java
+* /DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/composite_wallet/multi_account_wallet/developer/bitdubai/version_1/interfaces/AccountService.java
+* /DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/composite_wallet/multi_account_wallet/developer/bitdubai/version_1/interfaces/WalletService.java
+* /DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/composite_wallet/multi_account_wallet/developer/bitdubai/version_1/MultiAccountWalletCompositeWalletPluginRoot.java
 
 
 = Refactor Pendientes por hacer:
@@ -152,3 +194,10 @@
 * Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.
 
 - class
+
+= Consideraciones para DAP
+
+* Crear una DAPException para poder manejar todo tipo de Exception que se presente
+
+* Validar todos los SET y GET con THROWS para asegurar que tengan valores y no se generen
+Excepciones desencadenadas de NULL
