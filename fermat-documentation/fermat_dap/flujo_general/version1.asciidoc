@@ -36,24 +36,44 @@ en el Digital Asset.
 * El Digital Asset es considerado creado y cerrado.
 
 
+ Detalles de Modulos:
+
+ * Asset Issuer (Module)
+ Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Asset Issuet (sub app)
+
+ * Asset Issuer (Sub App Module)
+ Registrara toda la logica de negocio que seran expuestas para la Asset Issuet (module)
+
+ * Asset User (Module)
+   Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Asset User (sub app)
+
+ * Asset User (Sub App Module)
+   Registrara toda la logica de negocio que seran expuestas para la Asset User (module)
+
+ * Redeem Point (Module)
+   Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Redeem Point (sub app)
+
+ * Redeem Point (Sub App Module)
+   Registrara toda la logica de negocio que seran expuestas para la Redeem Point (module)
+
 [Manuel completar más info de la transacción]
 
 Realizadas estas operaciones, y al momento de recibir el GenesisAmount en la Asset Vault, las operaciones de crédito dentro de la
 Asset Wallet deben ocurrir.
 
- * Registro en Asset Issuer Wallet
 
-Es importante mencionar que este proceso realizara una transaccion contable al Asset del Issuer, aumentando la cantidad de Asset originado por el Asset en su creacion,
-para que cuando sea enviado a un Asset User, le sea debitado dicho asset a la wallet Issuet y acreditados a la walletAsset User, de esta forma podriamos conocer cuantos Asset de ese tipo
-han sido creados y estan disponible para su envio, todo esta operacion debe ser originado mediante una transaccion de la capa transaction.
+ * *Asset Issuer Wallet (wallet)*
 
-* Registro en Asset User Wallet
+Realizara una transaccion contable al balance (asset issuet wallet), debitando la cantidad de Asset originado en su creacion, en el momento en que
+el Issuer envie un Asset a un User, este le sea acreditado dicho al (asset issuet wallet) y debitado a la (asset user wallet), de esta forma el Issuer podria determinar el balance total enviado y disponible en su Book Address,
+todo esta operacion debe ser originado mediante una transaccion de la capa transaction.
 
-Este proceso realizara una transaccion contable a la wallet Asset del User, aumentando la cantidad de Asset User enviado por el Asset Issuer, y acreditando dicho asset a la wallet Issuet,
-de esta forma podriamos conocer cuantos Asset de ese tipo tiene disponible el Aset User para su intercambio, todo esta operacion debe ser originado mediante una transaccion
+* *Asset User Wallet (wallet)*
+
+Este proceso realizara una transaccion contable a la (asset user wallet), debitando el disponible de asset, y acreditando cuando sea redimido el asset,todo esta operacion debe ser originado mediante una transaccion
 de la capa transaction.
 
-* Registro en Redeem Point Wallet
+* *Redeem Point Wallet (wallet)*
 
 Este proceso determina el intercambio de la wallet Asset User donde mediante un metodo donde se pase las direcciones correspondiente se realizara una transaccion contable a la Asset del User, disminuyendo la cantidad de la wallet Asset User,
 y acreditando o retornando dicho asset a la Asset Issuer en punto Reddem Point o en alguna wallet que determine la Redemcion.
