@@ -82,6 +82,9 @@ Una vez que la Asset Wallet autoriza la instalación o descarga del Digital Asse
 de la genesis transaction a la Asset Vault del destinatario. Una vez realizada correctamente la transferencia de fondos, se debe notificar a las capas que controlan la UI la
 correcta instalación/descarga del Asset.
 
+*Preguntar al team*:
+¿Un asset puede ser descargado o instalado por algún otro medio distinto a la red de fermat? ¿Se podría recibir vía código QR?
+
 = Registro en Asset Issuer Wallet
 
 Es importante mencionar que este proceso realizara una transaccion contable al Asset del Issuer, aumentando la cantidad de Asset originado por el Asset en su creacion,
@@ -100,7 +103,11 @@ Este proceso determina el intercambio del Asset User donde mediante un metodo do
 y acreditando o retornando dicho asset al Asset Issuer o alguna wallet que determine la Redemcion.
 Aclarar que pasa con este Asset si se puede volver a enviar.
 
+Redeem Point debe utilizar el plugin Incoming Issuer para realizar la verificación de la validez de la Genesis Transaction del Digital Asset, ya que este plugin es el encargado
+de estar pendiente de la llegada de un Digital Asset. Una vez verificada la genesis transaction se debe realizar la trasferencia del monto crypto del dispositivo del usuario.
 
-
+Una vez verificada la genesis transaction por parte del Redeem Point, se debe notificar al plugin Outgoing Issuer que debe realizar la transferencia del monto crypto asociado
+a la genesis transaction hacía el dispositivo que va a recibir el digital asset para su "redemción". Una vez que se produzca la transferencia del monto del Digital Asset
+el dispositivo del beneficiero del asset debe proceder a registrar el consumo del mencionado Asset y proceder a su inhabilitación (¿?) del dispositivo y registrarlo como consumido.
 
 #
