@@ -14,6 +14,24 @@
 
 * /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceMessage.java
 
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/common/adapters/ImagesAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/common/adapters/IntraUserConnectionsAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/common/models/WalletStoreListItem.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/session/IntraUserSubAppSession.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/session/WalletFactorySubAppSession.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_publisher/adapters/InformationPublishedComponentAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_publisher/adapters/WalletFactoryProjectsAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/common/adapters/ImagesAdapter.java
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/session/WalletStoreSubAppSession.java
+
 
 - Method Private
 
@@ -77,6 +95,46 @@
 
     public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException
 
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/adapters/CheckBoxListItem.java
+
+    public void setIntraUserIdentity(IntraUserLoginIdentity intraUserIdentity)
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/common/models/IntraUserConnectionListItem.java
+
+     public void setProfilePhrase(String profilePhrase)
+
+    public void setProfileImage(byte[] profileImage)
+
+    public void setConnectionStatus(String connectionStatus)
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/fragments/MainActivityFragment.java
+
+    public static MainActivityFragment newInstance()
+
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/util/CommonLogger.java
+
+    public static void info(String tag, String msg)
+
+    public static void debug(String tag, String msg)
+
+    public static void error(String tag, String msg)
+
+* /home/nerio/fermat/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_store/util/CommonLogger.java
+
+    public static void info(String tag, String msg)
+
+    public static void debug(String tag, String msg)
+
+    public static void error(String tag, String msg)
+
 - Class
+
 * /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/WalletStoreNetworkServiceDatabaseFactory.java
 * /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/WalletStoreNetworkServiceManager.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai/src/main/java/com/bitdubai/sub_app/intra_user/fragments/RegisterIntraUserFragment.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/src/main/java/com/bitdubai/sub_app/shop_manager/fragment/ShopDesktopFragment.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/fragment/version_3/utils/BusProvider.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/fragment/version_3/utils/FragmentEvent.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/fragment/version_3/utils/SmartFragmentStatePagerAdapter.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/MyLayoutInflaterFactory.java
+* /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_manager/WalletManagerSubApp.java
