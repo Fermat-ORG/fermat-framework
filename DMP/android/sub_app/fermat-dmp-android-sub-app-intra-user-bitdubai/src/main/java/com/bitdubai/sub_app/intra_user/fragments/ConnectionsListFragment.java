@@ -77,11 +77,11 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
             intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
             isStartList = true;
 
-//            System.out.println("ACAAAAAA");
-//            System.out.println(System.currentTimeMillis());
-           // paintCheckBoxInActionBar();
-//            System.out.println(System.currentTimeMillis());
-//            System.out.println("ACAAAAAA");
+            System.out.println("ACAAAAAA");
+            System.out.println(System.currentTimeMillis());
+            paintCheckBoxInActionBar();
+            System.out.println(System.currentTimeMillis());
+            System.out.println("ACAAAAAA");
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
