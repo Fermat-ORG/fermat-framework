@@ -6166,24 +6166,7 @@
 			<layer name="Crypto Module" language="java">
 				<plugins>
 					<plugin
-							name="Actor Address Book"
-							description=""
-							difficulty="5"
-							code-level="production"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="lnacosta" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="lnacosta"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Wallet Address Book"
+							name="Crypto Address Book"
 							description=""
 							difficulty="5"
 							code-level="production"
