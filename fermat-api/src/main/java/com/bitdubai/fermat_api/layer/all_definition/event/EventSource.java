@@ -11,6 +11,7 @@ public enum EventSource {
     COMMUNICATION_CLOUD_PLUGIN ("CCL"),
     NETWORK_SERVICE_TEMPLATE_PLUGIN ("NTP"),
     NETWORK_SERVICE_INTRA_USER_PLUGIN ("NIU"),
+    NETWORK_SERVICE_CRYPTO_TRANSMISSION ("NCT"),
     NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN ("NWR"),
     NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN ("NWC"),
     MIDDLEWARE_APP_RUNTIME_PLUGIN ("MAR"),
@@ -50,6 +51,8 @@ public enum EventSource {
                 return EventSource.NETWORK_SERVICE_INTRA_USER_PLUGIN;
             case "NWR":
                 return EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN;
+            case "NCT":
+                return EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION;
             case "NWC":
                 return EventSource.NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN;
             case "MAR":

@@ -47,11 +47,11 @@ public interface WalletContactRecord {
     CryptoAddress getReceivedCryptoAddress();
 
     /**
-     * Return the actorId
+     * Return the actor public key
      *
-     * @return UUID
+     * @return String
      */
-    UUID getActorId();
+    String getActorPublicKey();
 
     /**
      * Return the actorName
